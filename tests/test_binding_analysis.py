@@ -110,3 +110,14 @@ def test_gzip_input_hashes_compressed_file_and_preserves_results(tmp_path):
     assert result['artifact']['metrics_sha256'] == hashlib.sha256(metrics.read_bytes()).hexdigest()
     assert result['artifact']['metrics_file'] == 'metrics.jsonl.gz'
     assert result['aggregates'][0]['metrics']['exact_path_completion']['mean'] == .5
+
+
+def test_standalone_help_without_site_packages(tmp_path):
+    import subprocess
+    import sys
+    from pathlib import Path
+    import topoformer.binding_analysis as analysis
+    result = subprocess.run([sys.executable, '-S', str(Path(analysis.__file__)), '--help'],
+                            cwd=tmp_path, capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    assert '--no-plots' in result.stdout

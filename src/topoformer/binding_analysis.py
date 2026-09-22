@@ -10,7 +10,10 @@ import math
 from pathlib import Path
 import statistics
 
-from .grounding_analysis import describe, validate_finite
+if __package__:
+    from .grounding_analysis import describe, validate_finite
+else:  # Standalone artifact analysis must not import topoformer (and Torch).
+    from grounding_analysis import describe, validate_finite
 
 NODES = (16, 32, 64, 128)
 DEPTHS = (4, 8, 16, 32, 64)
