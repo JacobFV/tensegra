@@ -118,3 +118,33 @@ def test_undefined_confidence_never_rewards_placeholder_completion(monkeypatch):
                    dict(name='ambiguous', nodes=8, depth=2, ambiguous=True), 5)
     assert all(r['answered'] == 2 and r['correct'] == 0 and r['defined_examples'] == 0
                for r in row['confidence'])
+
+
+def test_selector_supplement_preserves_original_defaults():
+    from topoformer.runtime_study import MAIN_VARIANTS
+    assert len(MAIN_VARIANTS) == 10
+    assert RuntimeStudyConfig().variants == list(MAIN_VARIANTS)
+    assert 'selector_graph_data' not in MAIN_VARIANTS
+
+
+def test_oracle_selector_supplies_equivalent_semantics_not_exact_node():
+    from topoformer.runtime_study import build_model, make_data, forward_model
+    config = RuntimeStudyConfig()
+    batch = make_data(config, 3, nodes=8, depth=2, count=2)
+    model = build_model(config, 0, 'oracle_selector_protected')
+    result = forward_model(model, batch, 'oracle_selector_protected')
+    expected = batch['gold']['selector_mask'].float()
+    expected = expected / expected.sum(-1, keepdim=True)
+    assert result['lowering_override_used']
+    assert torch.equal(result['used_binding_probabilities'], expected)
+    assert bool((expected.gt(0).sum(-1) > 1).any())
+    assert result['output_logits'].requires_grad
+
+
+def test_selector_controls_keep_parameter_initialization_identical():
+    from topoformer.runtime_study import build_model
+    config = RuntimeStudyConfig()
+    normal = build_model(config, 0, 'graph_data').state_dict()
+    selected = build_model(config, 0, 'selector_graph_data').state_dict()
+    assert normal.keys() == selected.keys()
+    assert all(torch.equal(normal[k], selected[k]) for k in normal)

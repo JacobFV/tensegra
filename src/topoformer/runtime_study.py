@@ -33,10 +33,21 @@ VARIANTS = {
 }
 
 
+# Freeze the original ten defaults; subsequent retrieval-prior controls are a
+# separately configured, explicitly post-main-launch supplement.
+MAIN_VARIANTS = tuple(VARIANTS)
+VARIANTS.update({
+    'selector_graph_data': dict(mode='graph_data', beta=1., policy=False, selector_read=True),
+    'selector_protected': dict(mode='protected_learned', beta=1., policy=False, selector_read=True),
+    'oracle_selector_protected': dict(mode='protected_learned', beta=1., policy=False,
+                                      selector_read=True, oracle_selector=True),
+})
+
+
 @dataclass
 class RuntimeStudyConfig:
     seeds: list[int] = field(default_factory=lambda: [0, 1, 2])
-    variants: list[str] = field(default_factory=lambda: list(VARIANTS))
+    variants: list[str] = field(default_factory=lambda: list(MAIN_VARIANTS))
     steps: int = 400
     warmup_steps: int = 200
     checkpoints: list[int] = field(default_factory=lambda: [0, 25, 50, 100, 200, 300, 400])
@@ -118,12 +129,25 @@ def data_hash(batch):
                         for group in ('public', 'gold')})
 
 
-def build_model(config, seed):
+def build_model(config, seed, variant=None):
     from .runtime_model import RuntimeBindingModel
     from . import runtime_tasks as data
     torch.manual_seed(seed)
     return RuntimeBindingModel(vocab_size=data.VOCAB_SIZE, n_ops=len(data.OPS),
-                               width=config.width, heads=2, n_relations=data.N_RELATIONS)
+                               width=config.width, heads=2, n_relations=data.N_RELATIONS,
+                               selector_read=bool(variant and VARIANTS[variant].get('selector_read')))
+
+
+def forward_model(model, batch, variant):
+    override = None
+    if VARIANTS[variant].get('oracle_selector'):
+        from .runtime_tasks import OPS
+        # Oracle supplies semantic equivalence classes, not exact runtime-node
+        # identities. Shadowed lexical bindings retain their ambiguity here.
+        binding = batch['gold']['selector_mask'].float()
+        binding = binding / binding.sum(-1, keepdim=True).clamp_min(1)
+        override = (F.one_hot(batch['gold']['ops'], len(OPS)).float(), binding)
+    return model(batch['public'], mode=_model_mode(variant), lowering_override=override)
 
 
 def select_actions(prediction, mask, *, sample=False):
@@ -174,7 +198,7 @@ def train_update(model, optimizer, batch, variant, phase, config, baseline):
     model.train()
     optimizer.zero_grad(set_to_none=True)
     tick = time.perf_counter()
-    prediction = model(batch['public'], mode=_model_mode(variant))
+    prediction = forward_model(model, batch, variant)
     mask, gold = batch['public']['step_mask'], batch['gold']
     binding = lowering_loss(prediction, gold, mask)
     symbolic_seconds = 0.
@@ -239,10 +263,10 @@ def evaluate(model, variant, config, condition, seed):
     public, gold = batch['public'], batch['gold']
     mask = public['step_mask'].bool()
     tick = time.perf_counter()
-    prediction = model(public, mode=_model_mode(variant))
+    prediction = forward_model(model, batch, variant)
     neural_seconds = time.perf_counter() - tick
     ops, selectors, _ = select_actions(prediction, mask)
-    if VARIANTS[variant].get('oracle'):
+    if VARIANTS[variant].get('oracle') or VARIANTS[variant].get('oracle_selector'):
         ops, selectors = gold['ops'], gold['selectors']
     equivalent = gold['selector_mask'].bool()
     if equivalent.shape[-1] + 1 == prediction['binding_logits'].shape[-1]:
@@ -394,7 +418,7 @@ def evaluate(model, variant, config, condition, seed):
 
 
 def train_run(config, variant, seed, source, checkpoint_dir=None):
-    model = build_model(config, seed)
+    model = build_model(config, seed, variant)
     initial_hashes = {name: tensor_hash(value) for name, value in model.state_dict().items()}
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.learning_rate, weight_decay=0.)
     curve, schedule, losses = [], [], []
