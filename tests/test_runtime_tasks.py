@@ -153,3 +153,25 @@ def test_surface_and_output_decoders_reflect_observed_templates():
     assert render_output(1,1)=='yes'
     assert render_output(0,2)=='negative'
     assert render_output(4,1).startswith('[invalid')
+
+
+@pytest.mark.parametrize('family', ['nested','aliases','mixed'])
+@pytest.mark.parametrize('depth', [4,16,32])
+def test_matched_decoy_requires_correct_root_despite_identical_path_labels(family,depth):
+    from topoformer.runtime_execution import run_actions
+    batch=make_batch(1,nodes=2,depth=depth,family=family,seed=901)
+    task=batch['tasks'][0]
+    decoy_selector=next(i for i,node_id in enumerate(task.candidates)
+                        if task.runtime.nodes[node_id].kind=='binding'
+                        and str(task.runtime.nodes[node_id].payload).startswith('decoy_'))
+    original=task.gold_actions
+    changed=((original[0][0],decoy_selector),)+original[1:]
+    swapped=run_actions(task,changed)
+    assert swapped.valid and swapped.result!=task.gold_result
+    assert changed[1:]==original[1:]
+    # Original and decoy terminal slots have the same observable lexical key.
+    final=original[-1][1]
+    alternatives=batch['gold']['selector_mask'][0,-1,:-1].nonzero().flatten()
+    assert len(alternatives)>=2
+    keys=batch['public']['candidate_keys'][0]
+    assert all(keys[i].equal(keys[final]) for i in alternatives)

@@ -91,9 +91,10 @@ def _one(seed, nodes, depth, family, style):
         rt.builtin(name)
     names = [f'v_{rng.getrandbits(48):012x}' for _ in range(nodes + depth + 5)]
     actions = []
+    decoy_binding = None
     if family in ('nested', 'aliases', 'mixed'):
         expected_result = rng.randint(-12, 12)
-        value = rt.scalar(expected_result); reverse = []
+        value = rt.scalar(expected_result); reverse = []; shape = []
         for step in range(depth):
             if step % 2:
                 index = rng.randrange(3)
@@ -101,14 +102,28 @@ def _one(seed, nodes, depth, family, style):
                 children[index] = value
                 value = rt.array(children)
                 reverse.append((OPS.index('index'), _slot(rt,value,'index',index)))
+                shape.append(('index',index))
             else:
                 field = names[step+1]
                 value = rt.record({field: value, f'junk_{step}': rt.scalar(rng.randint(-12,12))})
                 reverse.append((OPS.index('field'), _slot(rt,value,'field',field)))
+                shape.append(('field',field))
         binding = rt.bind(names[0], value, scope)
         if family == 'aliases':
             binding = rt.bind(names[-1], value, scope)
         actions = [(0,binding)] + list(reversed(reverse))
+        # Matched decoy prevents the last field name from identifying a unique
+        # answer globally. Both chains expose identical semantic path labels.
+        decoy_result = rng.choice([n for n in range(-12,13) if n != expected_result])
+        decoy = rt.scalar(decoy_result)
+        for step,(kind,label) in enumerate(shape):
+            if kind == 'index':
+                children = [rt.scalar(rng.randint(-12,12)) for _ in range(3)]
+                children[label] = decoy
+                decoy = rt.array(children)
+            else:
+                decoy = rt.record({label:decoy, f'junk_{step}':rt.scalar(rng.randint(-12,12))})
+        decoy_binding = rt.bind(f'decoy_{rng.getrandbits(48):012x}',decoy,scope)
     else:
         start = rng.randint(-4,4)
         binding = rt.bind(names[0], rt.scalar(start), scope)
@@ -143,6 +158,10 @@ def _one(seed, nodes, depth, family, style):
     executed=run_actions(trial,action_ids)
     assert executed.valid, executed.trace
     assert executed.result == expected_result, (executed.result, expected_result)
+    if decoy_binding is not None:
+        decoy_actions = ((0,ids[decoy_binding]),) + action_ids[1:]
+        decoy_executed = run_actions(trial,decoy_actions)
+        assert decoy_executed.valid and decoy_executed.result == decoy_result
     trial.gold_result=expected_result
     trial.gold_registers=tuple(x['register'] for x in executed.trace)
     trial.surface=tuple(f'{OPS[op]} {rt.nodes[node].payload}' for op,node in actions)
