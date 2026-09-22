@@ -15,3 +15,5 @@ Decisions:
 - Size-transfer sparse graphs have fixed expected indegree 3. This avoids the original fixed-density generator's increasing neighbor count as N grows.
 - Efficiency thresholds are defined using validation oracle and zero-predictor errors before inspecting test outcomes. Unreached thresholds are censored.
 - Preserve full paired seed effects; three seeds are exploratory evidence, not a significance claim.
+
+Pre-implementation refinement: shared efficiency normalization is fitted on the smallest (8-trajectory) training subset, so larger training pools do not leak distribution statistics into the smallest sample budget. The same statistics are reused at every count.
