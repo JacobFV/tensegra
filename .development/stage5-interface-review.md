@@ -81,7 +81,7 @@ The frozen main experiment completed all **30 runs** at clean source `2e95c9ff94
 
 All **30 saved checkpoints** loaded with `weights_only=True`; variant/seed, configuration, source, finite tensors, final state hashes, and exact checkpoint inventory match their raw metric rows. Every recorded Python source hash matches the frozen checkout. The compressed raw-file hash and each checkpoint-file hash are recorded in `.development/results/stage5/main/audit.json`.
 
-This audit establishes artifact consistency and provenance, not statistical significance or broad architectural superiority. The separately sourced selector-read supplement is still pending; its cross-study pairing must be checked after completion.
+This audit establishes artifact consistency and provenance, not statistical significance or broad architectural superiority. At this point in the audit, the separately sourced selector-read supplement was still pending; its completed cross-study verification is recorded below.
 
 ## Completed supplement and cross-study audit
 
@@ -90,3 +90,5 @@ The frozen selector supplement completed all **nine runs** at clean source `4ca8
 A separate streaming cross-study comparison checked every supplemental variant against every main variant with the same seed: **90 comparisons**. All initialization hashes, training-schedule hashes, and all 29 evaluation/curve data hashes per comparison match exactly. Resolved configuration values differ **only in the variant list**. Both compressed metric hashes and comparison records are saved in `.development/results/stage5/selector/cross-main-pairing.json`.
 
 The final source snapshot `6282ecb` passed the complete **359-test suite in 3.59 seconds** in the independent remote checkout. Main and supplemental training checkouts were untouched. Both experiment sets are approved as internally consistent and reproducible artifacts, subject to the scientific limitations already documented; this is not a claim that their outcomes establish the broader thesis.
+
+After inclusion of the selector artifacts and omission of empty confidence plots, the complete suite was rerun at `c2d9715`: **359 tests passed in 3.56 seconds**. Every selector manifest entry was rehashed successfully, including the newly recorded independent audit and cross-main pairing JSON files.
