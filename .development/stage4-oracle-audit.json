@@ -1,0 +1,20 @@
+{
+  "source_commit": "3b63b88fee75b45887f11837164af659dc882a2d",
+  "source_clean": true,
+  "control": "exact_attention_traverse",
+  "implementation": "src/topoformer/traversal_oracle.py",
+  "learned": false,
+  "nodes": 128,
+  "depth": 64,
+  "batch_size": 16,
+  "threads": 2,
+  "evaluation_seed_rule": "40000000 + seed * 100000 + offset; offset=0,16,...,112",
+  "configuration": "BindingStudyConfig defaults; same public make_data/model_inputs as main corner",
+  "seconds": 2.6067219749093056,
+  "results": [
+    {"seed": 0, "examples": 128, "task_correct": 128, "complete_65_state_paths": 128},
+    {"seed": 1, "examples": 128, "task_correct": 128, "complete_65_state_paths": 128},
+    {"seed": 2, "examples": 128, "task_correct": 128, "complete_65_state_paths": 128}
+  ],
+  "interpretation": "Privileged exact identity matching and hard structural attention solve the joint extrapolation corner; this verifies substrate mechanics, not learned binding. Gold targets/path nodes were used only to score outputs."
+}
