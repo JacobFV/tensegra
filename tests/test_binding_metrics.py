@@ -99,3 +99,45 @@ def test_drift_and_interference_geometry():
     result = binding_diagnostics(records, batch)['per_step']
     assert torch.allclose(result['post_identity_drift'], torch.zeros(2, 1))
     assert torch.allclose(result['write_override_norm'], torch.full((2, 1), 2.))
+
+
+@pytest.mark.parametrize('invalid', [float('nan'), float('inf'), -0.1, 1.1])
+def test_cycle_rejects_nonprobability_pushforward(invalid):
+    records, batch = fixture([[1, 1]])
+    records[0]['pnext'] = torch.zeros(1, 1, 4)
+    records[0]['pnext'][0, 0, 0] = invalid
+    with pytest.raises(ValueError, match='cycle target'):
+        binding_losses(records, batch)
+
+
+def test_cycle_rejects_multiedge_mass_and_invalid_full_targets():
+    records, batch = fixture([[1, 1]])
+    records[0]['pnext'] = torch.full((1, 1, 4), .3)
+    with pytest.raises(ValueError, match='cycle target'):
+        binding_losses(records, batch)
+    records[0]['next_distribution'] = torch.full((1, 1, 5), .1)
+    with pytest.raises(ValueError, match='cycle target'):
+        binding_losses(records, batch)
+
+
+def test_cycle_retains_null_and_tolerates_only_roundoff():
+    records, batch = fixture([[1, 1]])
+    records[0]['pnext'] = torch.zeros(1, 1, 4)
+    records[0]['pq_after'] = torch.tensor([[[0., 0., 0., 0., 1.]]])
+    assert binding_losses(records, batch)['cycle'] == 0
+    records[0]['pnext'][0, 0, 0] = -1e-7
+    assert binding_losses(records, batch)['cycle'] == 0
+
+
+def test_relation_attention_support_handles_multiple_and_missing_edges():
+    records, batch = fixture([[1, 1]])
+    gold = int(batch['path_nodes'][0, 0])
+    relation = int(batch['relations'][0, 0])
+    batch['adjacency'][0, relation, gold].zero_()
+    batch['adjacency'][0, relation, gold, :2] = 1
+    records[0]['attention'] = torch.full((1, 1, 1, 5), .2)
+    result = binding_diagnostics(records, batch)
+    assert result['per_step']['relation_attention_mass'].item() == pytest.approx(.4)
+    batch['adjacency'][0, relation, gold].zero_()
+    result = binding_diagnostics(records, batch)
+    assert result['per_step']['relation_attention_mass'].item() == 0

@@ -18,10 +18,21 @@ def _query(record, name):
 
 
 def _next(record):
-    if 'next_distribution' in record:
-        return _query(record, 'next_distribution')
-    real = _query(record, 'pnext')
-    return torch.cat((real, (1 - real.sum(-1, keepdim=True)).clamp_min(0)), -1)
+    # Cycle KL is defined only for (sub)stochastic transitions. General graph
+    # attention may accept multi-edge adjacency, but cannot silently reuse that
+    # unnormalized pushforward as a probability target.
+    full = 'next_distribution' in record
+    probability = _query(record, 'next_distribution' if full else 'pnext')
+    mass = probability.sum(-1, keepdim=True)
+    tolerance = 1e-5
+    if (not torch.isfinite(probability).all() or (probability < -tolerance).any()
+            or (mass > 1 + tolerance).any()
+            or (full and (mass < 1 - tolerance).any())):
+        raise ValueError('cycle target must be nonnegative finite probability mass <= 1; full targets must sum to 1')
+    probability = probability.clamp_min(0)  # Roundoff only, never renormalize.
+    if full:
+        return probability
+    return torch.cat((probability, (1 - probability.sum(-1, keepdim=True)).clamp_min(0)), -1)
 
 
 def _log(probability):
