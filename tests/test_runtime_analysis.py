@@ -63,6 +63,23 @@ class AnalysisTests(unittest.TestCase):
             self.assertEqual(len(list(a.read_rows(path))),6)
             self.assertEqual(len(a.file_hash(path)),64)
 
+    def test_neural_execution_undefined_and_runtime_sizes_preserved(self):
+        data=list(rows())
+        for row in data:
+            row['metric_semantics']={'execution_counts':'auxiliary audit'}
+            cell=row['evaluations'][0]
+            cell['execution_accuracy']=None
+            cell['complete_trajectory_accuracy']=None
+            cell['oracle_lifting_accuracy']=None
+            cell['runtime_nodes']={'min':30,'max':40,'mean':35.}
+        result=a.summarize(data,CONFIG)
+        cell=result['aggregates'][0]
+        self.assertIsNone(cell['pooled_rates']['execution_accuracy'])
+        self.assertEqual(cell['pooled_rates']['result_accuracy'],.5)
+        self.assertEqual(cell['runtime_nodes']['min'],30)
+        self.assertEqual(cell['runtime_nodes']['max'],40)
+        self.assertEqual(result['provenance'][0]['metric_semantics']['execution_counts'],'auxiliary audit')
+
     def test_mixed_source_rejected(self):
         broken=list(rows()); broken[-1]['source']['commit']='different'
         with self.assertRaisesRegex(ValueError,'source'):

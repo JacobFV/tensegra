@@ -88,7 +88,10 @@ def _aggregate(items):
     pooled_cell={'counts':dict(counts)}
     for key in metrics:
         if metrics[key]['n']==0: pooled_cell[key]=None
-    return dict(seeds=[seed for seed,_ in items],counts=dict(counts),metrics=metrics,pooled_rates=rates(pooled_cell))
+    sizes=[cell['runtime_nodes'] for _,cell in items if cell.get('runtime_nodes')]
+    runtime_nodes=None if not sizes else dict(min=min(s['min'] for s in sizes),max=max(s['max'] for s in sizes),
+                                             seed_means=describe([s['mean'] for s in sizes]))
+    return dict(seeds=[seed for seed,_ in items],counts=dict(counts),metrics=metrics,pooled_rates=rates(pooled_cell),runtime_nodes=runtime_nodes)
 
 
 def summarize(rows, config):
@@ -106,12 +109,12 @@ def summarize(rows, config):
         seen.add(key); sources.add(json.dumps(row['source'],sort_keys=True)); configs.add(row['config_hash'])
         training=row['training']; identities[key]=(training.get('schedule_hash'),training.get('initial_state_hash'))
         provenance.append(dict(variant=key[0],seed=key[1],source=row['source'],config_hash=row['config_hash'],
-                               schedule_hash=training.get('schedule_hash'),initial_state_hash=training.get('initial_state_hash')))
+                               schedule_hash=training.get('schedule_hash'),initial_state_hash=training.get('initial_state_hash'),metric_semantics=row.get('metric_semantics')))
         resources.append(dict(variant=key[0],seed=key[1],**row.get('resources',{})))
         cells=row['evaluations']; names=[cell['condition'] for cell in cells]
         if len(names)!=len(set(names)) or not required.issubset(names): raise ValueError('missing/duplicate evaluation grid')
         for cell in cells:
-            groups[(key[0],cell['condition'])].append((key[1],{k:v for k,v in cell.items() if k in ('settings','data_hash','counts',*RATE_COUNTS)}))
+            groups[(key[0],cell['condition'])].append((key[1],{k:v for k,v in cell.items() if k in ('settings','data_hash','counts','runtime_nodes',*RATE_COUNTS)}))
             for risk in cell.get('confidence',[]):
                 confidence[(key[0],cell['condition'],risk['threshold'])].append((key[1],risk))
             for family,part in cell.get('family_breakdown',{}).items():
