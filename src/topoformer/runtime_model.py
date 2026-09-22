@@ -58,7 +58,7 @@ class RuntimeBindingModel(nn.Module):
     def __init__(self, vocab_size, n_ops, *, key_dim=16, width=48, heads=2,
                  n_types=8, n_relations=6, output_classes=129, result_classes=129,
                  result_min=-64, result_scale=64., n_styles=3, temperature=.15,
-                 strength=4., max_words=32):
+                 strength=4., max_words=32, selector_read=False):
         super().__init__()
         if width % heads or temperature <= 0 or result_scale <= 0:
             raise ValueError('invalid dimensions, temperature or result scale')
@@ -66,6 +66,7 @@ class RuntimeBindingModel(nn.Module):
         self.n_relations, self.max_words = n_relations, max_words
         self.result_scale, self.result_min = float(result_scale), result_min
         self.temperature, self.strength = float(temperature), float(strength)
+        self.selector_read = bool(selector_read)
         self.words = nn.Embedding(vocab_size, width, padding_idx=0)
         self.word_positions = nn.Embedding(max_words, width)
         layer = nn.TransformerEncoderLayer(width, heads, 2 * width, dropout=0.,
@@ -111,7 +112,7 @@ class RuntimeBindingModel(nn.Module):
         rbf = torch.exp(-.5 * ((result.float()[..., None] - self.lift_centers) / self.lift_rbf_width).square())
         return self.lifter(torch.cat((numeric, rbf, self.style(style.long())), -1))
 
-    def forward(self, public, *, mode='runtime'):
+    def forward(self, public, *, mode='runtime', lowering_override=None):
         if mode not in self.MODES:
             raise ValueError(f'unknown mode {mode}')
         surface = public['surface'].long()
@@ -142,6 +143,25 @@ class RuntimeBindingModel(nn.Module):
         answer = {'op_logits': op_logits, 'binding_logits': binding_logits,
                   'confidences': binding_confidence(op_logits, binding_logits, public.get('candidate_groups')),
                   'clause_states': clause}
+        used_op = op_logits.softmax(-1)
+        used_binding = binding_logits.softmax(-1)
+        if lowering_override is not None:
+            if not self.selector_read or mode == 'runtime':
+                raise ValueError('lowering override requires selector_read neural control')
+            if not isinstance(lowering_override, (tuple, list)) or len(lowering_override) != 2:
+                raise ValueError('lowering override must be (operation, selector) probabilities')
+            used_op, used_binding = lowering_override
+            for supplied, expected in ((used_op, op_logits), (used_binding, binding_logits)):
+                if supplied.shape != expected.shape or not torch.isfinite(supplied).all():
+                    raise ValueError('invalid lowering override shape or nonfinite probability')
+                if (supplied < 0).any() or not torch.allclose(supplied.sum(-1), torch.ones_like(supplied[..., 0]), atol=1e-5, rtol=1e-5):
+                    raise ValueError('lowering override must contain probability distributions')
+            if (used_binding[..., :-1] * (~mask[:, None])).abs().sum() > 1e-6:
+                raise ValueError('lowering override assigns mass to padded candidates')
+        answer['lowering_override_used'] = lowering_override is not None
+        if self.selector_read:
+            answer['used_op_probabilities'] = used_op
+            answer['used_binding_probabilities'] = used_binding
         if mode == 'runtime':
             return answer
         memory = (self.memory_key(public['candidate_keys'])
@@ -198,7 +218,15 @@ class RuntimeBindingModel(nn.Module):
             logits = torch.where(valid[:, None], logits, torch.zeros_like(logits))
             attention = logits.softmax(-1) * memory_mask
             retrieved = torch.bmm(attention[:, None], memory).squeeze(1)
-            inputs = torch.cat((clause[:, t], retrieved), -1)
+            instruction = clause[:, t]
+            if self.selector_read:
+                # A semantic retrieval prior, not an exact transition: actual node
+                # values/features enter a learned update and no runtime op is run.
+                semantic_read = torch.bmm(used_binding[:, t, :-1, None].transpose(1, 2),
+                                          memory[:, :node_count]).squeeze(1)
+                retrieved = retrieved + semantic_read
+                instruction = instruction + used_op[:, t] @ self.operation.weight
+            inputs = torch.cat((instruction, retrieved), -1)
             update = self.recurrent(inputs, state)
             active = public['step_mask'][:, t].bool()[:, None]
             state = torch.where(active, update, state)

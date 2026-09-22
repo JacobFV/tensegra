@@ -58,3 +58,25 @@ contains no output-class, sign, comparison or report rule. The final MLP must
 still learn output mapping. This evaluates bounded report labels, not free prose.
 A test verifies neighboring-value discrimination, finite scalar gradients,
 nontrainable centers and complete dependence on learned output parameters.
+
+## Separately labeled semantic-read controls
+
+After the main experiment source freeze, optional `selector_read=True` adds the
+predicted selector-weighted node-memory vector to ordinary attended memory. The
+predicted operation distribution also combines the existing operation-head weight
+rows into the recurrent instruction. Graph-data mode reads its message-enriched
+node memory. Every resulting update remains learned; no pointer transition or
+interpreter primitive runs. This tests whether the original neural controls were
+limited by lacking a direct read from their supervised lowering head.
+
+The default is false and introduces no parameters or random draws. The separately
+labeled privileged control may pass `lowering_override=(operation_probs,
+selector_probs)` explicitly, outside public inputs. Shapes, distributions and
+padding are validated. Prediction logits remain unchanged for auxiliary metrics;
+returned diagnostics distinguish used probabilities and override status. This
+privilege must be disclosed and must never be described as learned binding.
+
+Validation: 22 model tests pass remotely. An independent isolated import of
+`runtime_model.py` from frozen main source `2e95` compared identical seeded
+initialization and every tensor output in all five default modes: bitexact.
+No main training checkout or artifacts were changed by this source comparison.

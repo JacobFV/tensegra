@@ -171,3 +171,40 @@ def test_lifting_rbf_is_numeric_prior_not_output_rule():
     assert m.lift(values.detach(), torch.zeros(2, dtype=torch.long)).eq(0).all()
     assert 'lift_centers' in dict(m.named_buffers())
     assert 'lift_centers' not in dict(m.named_parameters())
+
+
+def test_selector_read_changes_no_parameters_or_initialization():
+    torch.manual_seed(12)
+    plain = RuntimeBindingModel(64, 7, width=16)
+    torch.manual_seed(12)
+    selected = RuntimeBindingModel(64, 7, width=16, selector_read=True)
+    assert plain.state_dict().keys() == selected.state_dict().keys()
+    for name in plain.state_dict():
+        torch.testing.assert_close(plain.state_dict()[name], selected.state_dict()[name], atol=0, rtol=0)
+    selected.selector_read = False
+    public = sample()
+    torch.testing.assert_close(plain(public, mode='graph_data')['output_logits'],
+                               selected(public, mode='graph_data')['output_logits'], atol=0, rtol=0)
+
+
+def test_selector_read_task_gradient_reaches_lowerer_and_override_is_explicit():
+    m, public = model(), sample()
+    m.selector_read = True
+    output = m(public, mode='protected_learned')
+    output['output_logits'].square().sum().backward()
+    assert m.lower_key.weight.grad.abs().sum() > 0
+    assert m.lower_query.weight.grad.abs().sum() > 0
+    assert m.operation.weight.grad.abs().sum() > 0
+    op = torch.zeros_like(output['op_logits']); op[..., 0] = 1
+    binding = torch.zeros_like(output['binding_logits']); binding[..., 0] = 1
+    first = m(public, mode='protected_learned', lowering_override=(op, binding))
+    binding2 = binding.roll(1, -1)
+    second = m(public, mode='protected_learned', lowering_override=(op, binding2))
+    assert first['lowering_override_used']
+    assert not torch.allclose(first['output_logits'], second['output_logits'])
+    torch.testing.assert_close(first['binding_logits'], output['binding_logits'])
+    with pytest.raises(ValueError, match='probability'):
+        m(public, mode='none', lowering_override=(op, binding * 2))
+    m.selector_read = False
+    with pytest.raises(ValueError, match='requires'):
+        m(public, mode='none', lowering_override=(op, binding))
