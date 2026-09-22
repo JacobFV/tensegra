@@ -256,21 +256,27 @@ def _aggregate(rows, kinds):
         ) / len([row for row in domain if row["mode_name"] == name]))
         comparisons = [selected[kind]] + sorted({row["mode_name"] for row in domain
                                                  if row["mode"] == "hard"})
-        paired[kind] = {}
+        domain_pairs = {}
         for name in comparisons:
             raw, normalized = [], []
             for row in domain:
                 if row["mode_name"] != name:
                     continue
-                base = next(candidate for candidate in domain
-                            if candidate["seed"] == row["seed"] and candidate["mode"] == "none")
+                base = next((candidate for candidate in domain
+                             if candidate["seed"] == row["seed"]
+                             and candidate["mode"] == "none"), None)
+                if base is None:
+                    continue
                 raw.append({"seed": row["seed"],
                             "difference": row["test_raw_mse"] - base["test_raw_mse"]})
                 normalized.append({"seed": row["seed"],
                                    "difference": (row["test_normalized_mse"]
                                                   - base["test_normalized_mse"])})
-            paired[kind][name] = {"raw": _statistics(raw),
-                                  "normalized": _statistics(normalized)}
+            if raw:
+                domain_pairs[name] = {"raw": _statistics(raw),
+                                      "normalized": _statistics(normalized)}
+        if domain_pairs:
+            paired[kind] = domain_pairs
     return selected, paired
 
 

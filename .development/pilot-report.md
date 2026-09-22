@@ -6,18 +6,20 @@ This pilot tests whether a supplied directed read graph improves prediction in t
 synthetic dynamical-system generators. It is a small, paired experiment rather
 than a generalization or scaling study. The `sparse` generator samples a sparse
 dependency graph; the `robot` generator uses a fixed robot-shaped topology. Both
-use the same positive, uniform-neighbor mechanism, and the topology is fixed within
-each domain. They therefore test whether this shared mechanism is easier to learn
-when its graph is exposed, not arbitrary signed edge coefficients, new-graph
+use the same positive, uniform-neighbor mechanism. Topology is fixed within each
+domain/seed run: sparse topology varies across seeds, while robot topology is the
+same across seeds. They therefore test whether this shared mechanism is easier to
+learn when its graph is exposed, not arbitrary signed edge coefficients, new-graph
 transfer, physical robot dynamics, or vision-language-action behavior.
 
 Each domain used 12 nodes, four history steps, 128/32/32 independently generated
 train/validation/test trajectories, three seeds, and training-only scalar
 normalization. The graph predictor had width 32, four heads, two attention layers,
-17,089 parameters, batch size 32, and 300 Adam steps at learning rate 0.001. The
+17,089 parameters, batch size 32, and 300 AdamW steps at learning rate 0.001. The
 tokenwise MLP had 193 parameters. One-step test MSE, ten-step recursive rollout
-MSE, and a transient initial-state shift were recorded. The shift set starts fresh
-trajectories at twice the usual initial-state scale with `burn_in=0`; it is a
+MSE, and a transient initial-state-shift metric were recorded. That transient
+metric is also ten-step recursive rollout MSE: its fresh trajectories start at
+twice the usual initial-state scale with `burn_in=0`. It is a
 transient scale shift on the same graph and mechanism, not new-graph transfer.
 
 The five graph-predictor conditions were no structure, true-graph soft bias at
@@ -139,7 +141,7 @@ To reproduce the pilot in a fresh output directory:
 
 ```sh
 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
-  python3 -m topoformer.experiment \
+  .venv/bin/python -m topoformer.experiment \
   --config configs/pilot.json --output results/pilot-reproduction
 ```
 

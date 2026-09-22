@@ -6,33 +6,40 @@ shared, nonnegative, uniform-neighbor mechanism. That makes topology identifiabl
 to a shared permutation-equivariant predictor, but it does not test arbitrary
 edge coefficients or physical rigid-body dynamics.
 
-Create a reproducible environment and install the project:
+Create a reproducible environment:
 
 ```sh
 python3 -m venv .venv
 .venv/bin/python -m pip install --upgrade pip
-.venv/bin/python -m pip install -e '.[test]'
 ```
 
-For a CPU-only environment, install PyTorch from its CPU wheel index first, then
-install the project:
+For a CPU-only environment, install PyTorch from its CPU wheel index, then install
+the project:
 
 ```sh
 .venv/bin/python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
 .venv/bin/python -m pip install -e '.[test]'
 ```
 
+Alternatively, let pip select the PyTorch build available from its default index:
+
+```sh
+.venv/bin/python -m pip install -e '.[test]'
+```
+
 Run the tests in the prepared environment:
 
 ```sh
-OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src python -m pytest
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
+  .venv/bin/python -m pytest
 ```
 
 Run the paired pilot:
 
 ```sh
 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
-  python -m topoformer.experiment --config configs/pilot.json --output results/pilot
+  .venv/bin/python -m topoformer.experiment \
+  --config configs/pilot.json --output results/pilot
 ```
 
 The runner validates configuration before allocating data, uses training-only

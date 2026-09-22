@@ -86,6 +86,33 @@ def test_selection_and_pairing_are_reported_per_kind(tmp_path):
             assert {"values", "mean", "std"} <= comparison["normalized"].keys()
 
 
+def test_soft_only_run_writes_summary_without_paired_claim(tmp_path):
+    config = tiny_config()
+    config["modes"] = [{"name": "soft1", "mode": "soft", "strength": 1.0}]
+    summary = run(config, tmp_path / "soft-only")
+    assert summary["complete"]
+    assert summary["selected_soft_mode"] == {"sparse": "soft1"}
+    assert summary["paired_differences"] == {}
+    persisted = json.loads((tmp_path / "soft-only" / "summary.json").read_text())
+    assert persisted["paired_differences"] == {}
+
+
+def test_incomplete_or_later_unbiased_mode_is_not_paired():
+    rows = [
+        {"kind": "sparse", "seed": 0, "model": "graph", "mode_name": "soft1",
+         "mode": "soft", "graph_source": "true", "run_complete": True,
+         "validation_normalized_mse": 0.4, "test_raw_mse": 0.2,
+         "test_normalized_mse": 0.5},
+        {"kind": "sparse", "seed": 0, "model": "graph", "mode_name": "none",
+         "mode": "none", "graph_source": "true", "run_complete": False,
+         "validation_normalized_mse": 0.6, "test_raw_mse": 0.3,
+         "test_normalized_mse": 0.7},
+    ]
+    selected, paired = experiment._aggregate(rows, ["sparse"])
+    assert selected == {"sparse": "soft1"}
+    assert paired == {}
+
+
 def test_deadline_curve_records_last_completed_step():
     model = torch.nn.Linear(2, 1)
     x = torch.randn(4, 2)
