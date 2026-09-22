@@ -1,0 +1,11 @@
+# Stage 3 traversal data
+
+The graph comprises independently sampled total directed functions, one destination per source/relation. Cycles and self-edges are permitted; every instruction sequence has one exact destination. Identity keys are normalized independent Gaussian vectors. Opaque integer node labels are fresh per graph and do not encode edges or payloads. Payloads are independent categorical samples. Entity memory tokens and unrelated distractors are jointly shuffled per example. Node ordering is exchangeable; no canonical graph position is exposed as an input feature.
+
+`make_batch` returns model inputs `entity_keys`, `adjacency`, `node_ids`, `token_keys`, `token_values`, `start_keys`, `relations`. `targets`, `token_nodes`, `start_nodes`, `path_nodes`, and `clean_adjacency` are labels/diagnostics only. Models must explicitly select their input fields, never consume the entire diagnostic dictionary implicitly. `oracle_traverse(adjacency, start_nodes, relations)` returns the exact node path using only supplied graph, start, and instruction sequence. The oracle is an algorithmic control, not evidence of learned traversal.
+
+Composition `train` excludes consecutive relation pair `(0,1)`; `heldout` forces that pair at a random position and requires at least two steps and two relation types. Other held-out axes are generated using fresh seeds, larger graph sizes/depths, and different distractor counts. Continuous identity keys have no finite vocabulary to memorize; integer IDs are metadata only. This is a keyed identity benchmark, not natural-language name understanding.
+
+Corruption independently rewires a requested Bernoulli fraction of graph rows to a different destination, preserving functionality. Gold paths/answers always follow the clean graph; only supplied adjacency changes. Realized corruption fluctuates around its requested rate. A single-node graph cannot be rewired. Node embeddings contain no values, paths, instruction positions, or topological preprocessing.
+
+Tests cover reproducibility without perturbing global model RNG, shuffled token identity mapping, null distractor labels, exact traversal through depth 32, graph relabeling equivariance, payload independence, composition separation, and unchanged targets under corruption.
