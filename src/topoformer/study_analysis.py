@@ -137,7 +137,8 @@ def _evaluation_rows(runs: Sequence[Mapping[str, Any]]) -> tuple[list[dict[str, 
         base = {key: run.get(key) for key in (
             "suite", "domain", "seed", "mode", "variant", "strength", "train_config",
             "trajectory_count", "count", "train_count", "train_sizes", "mechanism",
-            "corruption", "fraction", "train_size", "eval_size")}
+            "corruption", "fraction", "train_size", "eval_size", "schedule_hash",
+            "shared_initialization_hash")}
         base["mode"] = base["mode"] or base["variant"]
         base["trajectory_count"] = base["trajectory_count"] or base["count"] or base["train_count"]
         base["train_config"] = base["train_config"] or _train_config(run)
@@ -343,7 +344,9 @@ def _paired_contrasts(rows: Sequence[Mapping[str, Any]], selection: Mapping[tupl
     for stratum, items in sorted(strata.items(), key=lambda item: tuple(str(x) for x in item[0])):
         for baseline, treatment in pairs:
             result = _matched_pair_summary(items, baseline, treatment)
-            if result["n_pairs"] or result["excluded"]["incomplete"] or result["excluded"]["unmatched"]:
+            if (result["n_pairs"] or result["excluded"]["incomplete"]
+                    or result["excluded"]["unmatched"] or result["excluded"]["duplicate_references"]
+                    or result["excluded"]["pairing_provenance_mismatch"]):
                 results.append({**dict(zip(keys, stratum)), "baseline": baseline,
                                 "treatment": treatment, **result,
                                 "selected_by_validation": _mode_selected(
@@ -373,7 +376,21 @@ def _matched_pair_summary(items: Sequence[Mapping[str, Any]], baseline: str,
                     (row.get("graph_hash"), row.get("trajectory_seed")))
         by_seed[seed][str(mode)][identity].append(float(row["value"]))
     effects, unmatched, duplicates = [], [], []
+    provenance_mismatch = []
     for seed in sorted(by_seed, key=str):
+        seed_rows = [row for row in items if row.get("seed") == seed
+                     and row.get("mode") in (baseline, treatment)]
+        provenance = {mode: {(row.get("schedule_hash"), row.get("shared_initialization_hash"))
+                             for row in seed_rows if row.get("mode") == mode}
+                      for mode in (baseline, treatment)}
+        valid_provenance = (all(len(provenance[mode]) == 1 for mode in (baseline, treatment))
+                            and provenance[baseline] == provenance[treatment]
+                            and all(None not in pair for pair in provenance[baseline]))
+        if not valid_provenance:
+            provenance_mismatch.append({"seed": seed,
+                                        "baseline": [list(pair) for pair in sorted(provenance[baseline], key=str)],
+                                        "treatment": [list(pair) for pair in sorted(provenance[treatment], key=str)]})
+            continue
         modes = by_seed[seed]
         duplicate_keys = [key for mode in (baseline, treatment) for key, values in modes[mode].items()
                           if len(values) != 1]
@@ -393,7 +410,8 @@ def _matched_pair_summary(items: Sequence[Mapping[str, Any]], baseline: str,
     return {"effects": effects, "mean": statistics.fmean(values) if values else None,
             "population_sd": statistics.pstdev(values) if values else None, "n_pairs": len(effects),
             "excluded": {"incomplete": sorted(incomplete, key=str), "unmatched": unmatched,
-                         "duplicate_references": duplicates}}
+                         "duplicate_references": duplicates,
+                         "pairing_provenance_mismatch": provenance_mismatch}}
 
 
 def _corruption_reference_contrasts(
@@ -464,22 +482,24 @@ def _efficiency_summary(runs: Sequence[Mapping[str, Any]], config: Mapping[str, 
         auc_by_count = {}
         for run in sorted(items, key=lambda item: item.get("train_count", 0)):
             count = run.get("train_count")
-            points = [(point["step"], point["normalized_mse"])
-                      for point in run.get("validation_curve", [])
-                      if _finite(point.get("step")) and _finite(point.get("normalized_mse"))]
+            raw_curve = run.get("validation_curve", [])
+            points = [(point.get("step"), point.get("normalized_mse")) for point in raw_curve]
+            finite_curve = all(_finite(step) and _finite(value) for step, value in points)
             steps = [point[0] for point in points]
-            valid_curve = (len(steps) == len(set(steps)) and steps == sorted(steps)
+            valid_curve = (finite_curve and len(steps) == len(set(steps)) and steps == sorted(steps)
                            and steps and steps[0] == 0 and steps[-1] == budget)
             if not valid_curve:
                 exclusions["invalid_efficiency_curves"] += 1
             else:
                 curves.append({"trajectory_count": count, "points": points})
             auc_by_count[str(count)] = complete_normalized_auc(points, budget) if valid_curve else None
-            threshold_by_count[str(count)] = {
+            threshold_by_count[str(count)] = ({
                 key: {"threshold": run.get("thresholds", {}).get(key),
                       "s_epsilon": run.get("threshold_steps", {}).get(key),
                       "censored": run.get("threshold_steps", {}).get(key) is None}
-                for key in ("10", "25", "50")}
+                for key in ("10", "25", "50")} if valid_curve else {
+                key: {"threshold": None, "s_epsilon": None, "censored": True,
+                      "invalid_curve": True} for key in ("10", "25", "50")})
         starts = [item.get("validation_curve", [{}])[0] for item in items if item.get("validation_curve")]
         references = {(point.get("oracle_normalized_mse"), point.get("zero_normalized_mse")) for point in starts}
         if len(references) != 1:
@@ -617,10 +637,12 @@ def render_markdown(summary: Mapping[str, Any]) -> str:
             lines.append("| " + " | ".join(_fmt(row[key]) for key in
                                                 ("suite", "domain", "train_config", "strength")) + " |")
     lines += ["", "## Resource accounting", "",
-              "| suite | mode | parameters | optimizer examples | training seconds | peak RSS KiB |",
-              "|---|---|---:|---:|---:|---:|"]
+              "| suite | domain | mode | train config | count | mechanism | identity | parameters | optimizer examples | training seconds | peak RSS KiB |",
+              "|---|---|---|---|---:|---|---|---:|---:|---:|---:|"]
     for row in summary["resources"]:
-        lines.append(f"| {_fmt(row['suite'])} | {_fmt(row['mode'])} | "
+        lines.append(f"| {_fmt(row['suite'])} | {_fmt(row['domain'])} | {_fmt(row['mode'])} | "
+                     f"{_fmt(row['train_config'])} | {_fmt(row['train_count'])} | "
+                     f"{_fmt(row['mechanism'])} | {_fmt(row['node_identity'])} | "
                      f"{_fmt(row['parameters']['mean'])} | {_fmt(row['optimizer_examples']['mean'])} | "
                      f"{_fmt(row['training_seconds']['mean'])} | {_fmt(row['peak_rss_kib'])} |")
     lines += ["", "Thresholds and model choices use validation metrics only. Unreached efficiency thresholds are represented by null values with censoring, never by fabricated counts or speedups.", ""]

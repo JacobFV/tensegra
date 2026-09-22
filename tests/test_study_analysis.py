@@ -134,6 +134,7 @@ def _run(mode, evaluations, curve=None):
     return {"suite": "transfer", "domain": "sparse", "seed": 0, "mode": mode,
             "mechanism": "uniform", "train_sizes": [12], "train_count": 8,
             "corruption": "clean", "fraction": 0, "status": "complete",
+            "schedule_hash": "schedule-0", "shared_initialization_hash": "initial-0",
             "normalization": {"mean": 0.0, "std": 1.0},
             "normalization_trajectories_per_graph": 8,
             "validation_curve": curve or [{"step": 0, "normalized_mse": 2.0,
@@ -172,6 +173,25 @@ def test_pairing_matches_reordered_graphs_and_averages_effects_within_seed():
     contrast = next(row for row in summary["paired_contrasts"]
                     if row["metric_name"] == "one_step_normalized_mse")
     assert contrast["effects"] == [{"seed": 0, "effect": 3.0, "n_references": 2}]
+
+
+@pytest.mark.parametrize("field", ["schedule_hash", "shared_initialization_hash"])
+def test_pairing_rejects_mismatched_or_missing_provenance(field):
+    baseline = _run("none", [_evaluation("g0", 10)])
+    treatment = _run("soft4", [_evaluation("g0", 10, 1)])
+    treatment[field] = "different"
+    summary = analyze_runs([baseline, treatment], {"checkpoints": [0], "counts": [8]})
+    contrast = next(row for row in summary["paired_contrasts"]
+                    if row["metric_name"] == "one_step_normalized_mse")
+    assert contrast["n_pairs"] == 0
+    assert contrast["excluded"]["pairing_provenance_mismatch"]
+
+    treatment.pop(field)
+    summary = analyze_runs([baseline, treatment], {"checkpoints": [0], "counts": [8]})
+    contrast = next(row for row in summary["paired_contrasts"]
+                    if row["metric_name"] == "one_step_normalized_mse")
+    assert contrast["n_pairs"] == 0
+    assert contrast["excluded"]["pairing_provenance_mismatch"]
 
 
 def test_efficiency_auc_uses_configured_budget_not_observed_maximum():
