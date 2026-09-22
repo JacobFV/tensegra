@@ -96,3 +96,30 @@ def test_keyed_supplement_pairs_only_with_keyed_controls():
     pairs = {(r['treatment'], r['control']) for r in result['paired_task_differences']}
     assert pairs == {('soft', 'none'), ('soft_keyed', 'none_keyed'), ('soft_keyed', 'graph_input_keyed')}
     assert 'separate comparison family' in render_report(result)
+
+
+def test_cli_records_analysis_code_hash_separately_from_training_source(tmp_path):
+    import hashlib
+    import json
+    from pathlib import Path
+    import topoformer.grounding_analysis as analysis
+    metrics = tmp_path / 'metrics.jsonl'
+    metrics.write_text(''.join(json.dumps(row) + '\n' for row in fixture_rows()))
+    output = tmp_path / 'report'
+    analysis.main([str(metrics), str(output), '--no-plots'])
+    result = json.loads((output / 'summary.json').read_text())
+    assert result['source'] == {'commit': 'abc'}
+    assert result['artifact']['analyzer_sha256'] == hashlib.sha256(Path(analysis.__file__).read_bytes()).hexdigest()
+    assert result['artifact']['metrics_sha256'] == hashlib.sha256(metrics.read_bytes()).hexdigest()
+
+
+def test_keyed_graph_input_example_is_rendered():
+    from topoformer.grounding_analysis import summarize, render_report
+    rows = fixture_rows()
+    for row in rows:
+        row['variant'] = 'soft_keyed' if row['variant'] == 'soft' else 'graph_input_keyed'
+        row['evaluations'][0]['example'] = [dict(step=0, gold_node=3, grounded_node=3,
+                                                next_node=5, max_probability=.9, entropy=.1,
+                                                next_attention_mass=.1)]
+    report = render_report(summarize(rows))
+    assert '### graph_input_keyed:' in report

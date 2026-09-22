@@ -206,7 +206,7 @@ def render_report(summary):
     for example in summary["examples"]:
         if example["seed"] != summary["seeds"][0] or example["condition"]["depth"] not in (4, 16, 32):
             continue
-        if example["variant"] not in ("soft", "random_init", "known", "frozen", "soft_keyed"):
+        if example["variant"] not in ("soft", "random_init", "known", "frozen", "soft_keyed", "graph_input_keyed"):
             continue
         lines += ["", f'### {example["variant"]}: {example["condition"]}', "",
                   "| Step | True pre-step node | Most likely grounded node | Actual next node | Grounding max probability | Entropy | Next-token attention |", "|---:|---|---|---|---:|---:|---:|"]
@@ -221,7 +221,7 @@ def render_report(summary):
         lines.append("| " + variant + " | " + " | ".join(fmt(value) for value in values) + " |")
     for run in summary["runs"]:
         lines += ["", f'### {run["variant"]}, seed {run["seed"]}', "", "```json", json.dumps({k: run[k] for k in ("resources", "model")}, indent=2, sort_keys=True), "```"]
-    lines += ["", "## Provenance", "", "```json", json.dumps({"source": summary["source"], "config_hash": summary["config_hash"]}, indent=2, sort_keys=True), "```", ""]
+    lines += ["", "## Provenance", "", "```json", json.dumps({"source": summary["source"], "config_hash": summary["config_hash"], "analysis_artifact": summary.get("artifact")}, indent=2, sort_keys=True), "```", ""]
     return "\n".join(lines)
 
 
@@ -236,7 +236,7 @@ def write_plots(summary, directory):
     directory.mkdir(parents=True, exist_ok=True)
     files = []
     core = {"soft", "random_init", "known", "hard", "none", "graph_input", "frozen", "permuted",
-            "soft_keyed", "none_keyed", "graph_input_keyed"}
+            "soft_keyed", "none_keyed", "graph_input_keyed", "soft_strength4"}
     for axis in ("depth", "nodes", "corruption", "distractors"):
         panels = defaultdict(lambda: defaultdict(list))
         fixed = [key for key in CONDITION_FIELDS if key not in ("condition", axis)]
@@ -302,7 +302,9 @@ def main(argv=None):
     rows = [json.loads(line) for line in args.metrics.read_text().splitlines() if line.strip()]
     summary = summarize(rows, expected_seeds=args.seeds)
     args.outdir.mkdir(parents=True, exist_ok=True)
-    summary["artifact"] = {"metrics_sha256": hashlib.sha256(args.metrics.read_bytes()).hexdigest()}
+    summary["artifact"] = {"metrics_sha256": hashlib.sha256(args.metrics.read_bytes()).hexdigest(),
+                           "analyzer_file": "src/topoformer/grounding_analysis.py",
+                           "analyzer_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
     summary["plots"] = {"available": False, "files": []} if args.no_plots else write_plots(summary, args.outdir / "figures")
     (args.outdir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True, allow_nan=False) + "\n")
     report = render_report(summary)
