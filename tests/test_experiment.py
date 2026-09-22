@@ -4,6 +4,8 @@ import pytest
 import torch
 
 from topoformer.experiment import run, validate_config
+from topoformer.evaluation import rollout
+from topoformer.training import train_model
 
 
 def tiny_config():
@@ -39,10 +41,84 @@ def test_tiny_run_is_deterministic_paired_and_writes_artifacts(tmp_path):
     assert {r["mode_name"] for r in runs if r["model"] == "graph"} == {"none", "soft1", "hard"}
     graph_runs = [r for r in runs if r["model"] == "graph"]
     assert len({r["initial_state_hash"] for r in graph_runs}) == 1
-    assert len({tuple(r["batch_indices"]) for r in graph_runs}) == 1
+    assert len({(r["batch_schedule_seed"], r["batch_schedule_hash"]) for r in graph_runs}) == 1
     assert len({tuple(sorted(r["split_seeds"].items())) for r in graph_runs}) == 1
     for row in runs:
         assert row["test_raw_mse"] >= 0 and row["test_normalized_mse"] >= 0
     assert (tmp_path / "a" / "metrics.jsonl").exists()
     summary = json.loads((tmp_path / "a" / "summary.json").read_text())
     assert "paired_differences" in summary and "privileged_oracle" in {r["model"] for r in runs}
+
+
+def test_refuses_nonempty_output_directory(tmp_path):
+    output = tmp_path / "occupied"
+    output.mkdir()
+    sentinel = output / "keep.txt"
+    sentinel.write_text("keep")
+    with pytest.raises(FileExistsError):
+        run(tiny_config(), output)
+    assert sentinel.read_text() == "keep"
+
+
+def test_rows_use_consistent_resource_and_training_schema(tmp_path):
+    summary = run(tiny_config(), tmp_path / "schema")
+    common = {"parameters", "optimizer_steps_completed", "curve", "wall_seconds",
+              "process_peak_rss_kib", "cuda_peak_bytes"}
+    for row in summary["runs"]:
+        assert common <= row.keys()
+        if row["model"] in {"zero", "privileged_oracle", "persistence"}:
+            assert row["parameters"] == 0
+            assert row["optimizer_steps_completed"] == 0
+            assert row["curve"] == []
+
+
+def test_selection_and_pairing_are_reported_per_kind(tmp_path):
+    config = tiny_config()
+    config.update(kinds=["sparse", "robot"], nodes=9)
+    summary = run(config, tmp_path / "per-kind")
+    assert set(summary["selected_soft_mode"]) == {"sparse", "robot"}
+    assert set(summary["paired_differences"]) == {"sparse", "robot"}
+    for comparisons in summary["paired_differences"].values():
+        for comparison in comparisons.values():
+            assert {"raw", "normalized"} <= comparison.keys()
+            assert {"values", "mean", "std"} <= comparison["raw"].keys()
+            assert {"values", "mean", "std"} <= comparison["normalized"].keys()
+
+
+def test_deadline_curve_records_last_completed_step():
+    model = torch.nn.Linear(2, 1)
+    x = torch.randn(4, 2)
+    y = torch.randn(4, 1)
+    curve = train_model(model, x, y, (x, y), steps=5, batch_size=2,
+                        validation_interval=5, batch_indices=torch.tensor([[0, 1]] * 5),
+                        deadline=0)
+    assert curve[-1]["step"] == 1
+
+
+def test_tiny_deadline_writes_coherent_partial_row(tmp_path):
+    config = tiny_config()
+    config.update(optimizer_steps=10_000, validation_interval=10_000,
+                  max_wall_seconds=0.05)
+    summary = run(config, tmp_path / "partial")
+    assert not summary["complete"]
+    assert len(summary["runs"]) == 1
+    row = summary["runs"][0]
+    assert 0 < row["optimizer_steps_completed"] < config["optimizer_steps"]
+    assert row["curve"][-1]["step"] == row["optimizer_steps_completed"]
+    assert json.loads((tmp_path / "partial" / "summary.json").read_text())["complete"] is False
+
+
+def test_rollout_calls_predictor_once_per_horizon_step():
+    class CountingPersistence(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.calls = 0
+
+        def forward(self, x):
+            self.calls += 1
+            return x[..., -1]
+
+    model = CountingPersistence()
+    series = torch.randn(2, 8, 3)
+    rollout(model, series, history=2, horizon=4, mean=torch.tensor(0.0), std=torch.tensor(1.0))
+    assert model.calls == 4

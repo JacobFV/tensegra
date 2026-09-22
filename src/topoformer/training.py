@@ -11,7 +11,23 @@ def train_model(model, x, y, validation, *, graph=None, mode="none", strength=0.
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
     if batch_indices is None:
         batch_indices = torch.randint(len(x), (steps, batch_size), device=x.device)
-    started, curve = time.monotonic(), []
+    started = time.monotonic()
+    curve = []
+    last_step = 0
+    last_loss = None
+
+    def record(step, train_loss):
+        with torch.no_grad():
+            vx, vy = validation
+            vp = model(vx, graph, mode=mode, strength=strength) if graph is not None else model(vx)
+            validation_loss = torch.nn.functional.mse_loss(vp, vy).item()
+        point = {"step": step, "train_loss": train_loss,
+                 "validation_loss": validation_loss,
+                 "elapsed_seconds": time.monotonic() - started}
+        curve.append(point)
+        if progress:
+            progress(point)
+
     for step, indices in enumerate(batch_indices, 1):
         if step > 1 and deadline is not None and time.monotonic() >= deadline:
             break
@@ -20,13 +36,10 @@ def train_model(model, x, y, validation, *, graph=None, mode="none", strength=0.
         loss = torch.nn.functional.mse_loss(prediction, y[indices])
         loss.backward()
         optimizer.step()
+        last_step = step
+        last_loss = loss.item()
         if step % validation_interval == 0 or step == steps or (deadline is not None and time.monotonic() >= deadline):
-            with torch.no_grad():
-                vx, vy = validation
-                vp = model(vx, graph, mode=mode, strength=strength) if graph is not None else model(vx)
-                validation_loss = torch.nn.functional.mse_loss(vp, vy).item()
-            point = {"step": step, "train_loss": loss.item(), "validation_loss": validation_loss,
-                     "elapsed_seconds": time.monotonic() - started}
-            curve.append(point)
-            if progress: progress(point)
+            record(step, last_loss)
+    if last_step and (not curve or curve[-1]["step"] != last_step):
+        record(last_step, last_loss)
     return curve
