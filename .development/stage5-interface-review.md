@@ -74,3 +74,11 @@ All original ten variant defaults remain frozen. The three supplemental variants
 At exact source `4ca8fb9`, a separate remote Git checkout passed **358 tests in 3.81 seconds**. An independent import of the frozen `2e95c9f` model also confirmed bitexact initialization and every tensor output across all five default modes. The running main checkout was never modified. Two preliminary test-copy attempts failed solely because the copied test environment lacked the audit scripts and then Git metadata; the complete independent checkout resolved both environment omissions without source changes.
 
 **Approved to freeze `4ca8fb9` for the separately labeled nine-run selector supplement.** Main and supplemental experiments must retain distinct source/configuration provenance, with paired data/initialization verified from their resulting artifacts rather than assumed.
+
+## Completed main experiment audit
+
+The frozen main experiment completed all **30 runs** at clean source `2e95c9ff9403e9a2226a66bb0e875b762cb8736d`. The independent streaming audit passed **870 cells**: 20 final conditions, two initial evaluations, and seven learning-curve checkpoints per run. All paired initialization, training-schedule, evaluation-data, source and configuration identities agree. Per-example scored counts, intersections, conditional denominators, family/style totals, and confidence populations passed.
+
+All **30 saved checkpoints** loaded with `weights_only=True`; variant/seed, configuration, source, finite tensors, final state hashes, and exact checkpoint inventory match their raw metric rows. Every recorded Python source hash matches the frozen checkout. The compressed raw-file hash and each checkpoint-file hash are recorded in `.development/results/stage5/main/audit.json`.
+
+This audit establishes artifact consistency and provenance, not statistical significance or broad architectural superiority. The separately sourced selector-read supplement is still pending; its cross-study pairing must be checked after completion.

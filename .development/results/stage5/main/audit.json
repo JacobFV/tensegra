@@ -1,0 +1,354 @@
+{
+  "schema_version": 1,
+  "passed": true,
+  "runs": 30,
+  "cells": 870,
+  "final_conditions": 20,
+  "metrics_sha256": "8960994a6075bd8983c39e1d2a6bbc3ae9c3b98863ac2fe9ea8fb01aa922924c",
+  "config_sha256": "ebb06680214fb78d8a428732645d14512d2f8948c66bb78cca0df67b592afeb9",
+  "source": {
+    "commit": "2e95c9ff9403e9a2226a66bb0e875b762cb8736d",
+    "dirty": false,
+    "files": {
+      "src/topoformer/__init__.py": "a597933984bcde7b51e2dcc92f39749bc2c7600623265647e60156eab7265730",
+      "src/topoformer/attention.py": "ac1486c8f5398bba9e084e2ddda85ba402ed9633638e68029c54149fe0152854",
+      "src/topoformer/binding_analysis.py": "fbd98f6dfdc0e59c77081d32bda9430ca02027402b085d5ed25d755b46db90bf",
+      "src/topoformer/binding_metrics.py": "aca234bb0fa99d6c58f6ef076e979590b09f5a127a0f443f7537d1ae0f9c1741",
+      "src/topoformer/binding_model.py": "c4cf128528f8faf6fcca7b8e9ea66aaaaf3bed21bc589b9750ec741334c6f2c4",
+      "src/topoformer/binding_study.py": "f88e71ce05532384abf653fd723f04571a6fae971e49a36b7a6a0f10a721c0ee",
+      "src/topoformer/data.py": "c4ce845820c7efb26a701c0dfcd2f6ecbcb7e38b045f3918e61416e17b387b21",
+      "src/topoformer/evaluation.py": "c5fe751c5e6cb55d3ee88a2c3f1f8b08e8513438a76f11eeeb39aeb34a86ee11",
+      "src/topoformer/experiment.py": "fa34e5fe18132ad1a4d59bfc42fc74949aeabe88977877a8b67b087757f3d763",
+      "src/topoformer/graphs.py": "16ce61cc40a48d9e294fa215f6ec512c4fdc2d82273867b59146f75e112d9a07",
+      "src/topoformer/grounding.py": "2296c904aa8e997c219e67a7e0d4f9791723a4fc05d168668537731dde449ae7",
+      "src/topoformer/grounding_analysis.py": "5f9725b42562edadff60170392d65216767433ed44fd3929b4f95ff855bb700a",
+      "src/topoformer/grounding_study.py": "f2f51cfa2801332aab2edad6a28069a8890afa2a3b2c373aa31f8c14e6820927",
+      "src/topoformer/model.py": "3eeb52c71fb6a23dcee7a7064fb198b17a8ccbc7eae05ec918075c5a3ca5237b",
+      "src/topoformer/runtime_analysis.py": "e33c5212c80d641035583a1175f617c7ca2f3b635b37a37fa97286ef0a4f6d39",
+      "src/topoformer/runtime_execution.py": "69511906499d125862d1384a41513eed737db4ecbbd235367d6e317bcdef3963",
+      "src/topoformer/runtime_graph.py": "c7c9884febf8dc15009ddb337ae4c885058186d0faa7741c38247697e9e3eefe",
+      "src/topoformer/runtime_model.py": "c74ff481686c6b7fed126299290891c3a0521006614b9693aab15c16ee31e553",
+      "src/topoformer/runtime_study.py": "f597502a7d26a47cef575bf080177c3a72644056541bcb338e6150f0de767406",
+      "src/topoformer/runtime_tasks.py": "0ef99f2d3ef8a5e250365e5c4695cf520ce915889ecbb0126532ff744755bfac",
+      "src/topoformer/study.py": "27c6667a7c0ea68cbd2b33796b95ef3bc3083b399078946336e80c62352fe71b",
+      "src/topoformer/study_analysis.py": "b012d9edb9756fb641a92f6331377e01bb2e9f84d638c44cc764051b8fe461a3",
+      "src/topoformer/study_data.py": "59d3293c7114598ff14d533f0cf040184068d67c77f36418286431cf276a1b1d",
+      "src/topoformer/study_model.py": "455ed9b4e8eea422cb1da5db36dd525319b1bae81743bc407586b1565170e94f",
+      "src/topoformer/tiny_language.py": "3b96e7c4da737e751101e825091236e920503c92a7ae3e23302a775cd3a1f6c8",
+      "src/topoformer/tiny_runtime.py": "bdffbf18a0bd05fd2b6f7984e331e00a0f112740c13c2b3c0f0cd5634fef00aa",
+      "src/topoformer/training.py": "697cfd27c0db940bcc489f02e25b7504aaff80305a46dc24dc465cbd11176a43",
+      "src/topoformer/traversal_data.py": "714cf6d2cecf03bccc3ad7dd17cb092fa233b6599d8e0a702ef62fc579a874a6",
+      "src/topoformer/traversal_model.py": "3bce439db58f4482b7760ae174a103eda151958e3a44f281d675aa72634afeb6",
+      "src/topoformer/traversal_oracle.py": "d690fe5d4b10ce8accf5dd8d1157166194a5dd6fde80ff4d122c1e52cf3bcb66"
+    }
+  },
+  "checkpoint_verification": true,
+  "paired_initialization_schedule_data": true,
+  "records": [
+    {
+      "variant": "oracle",
+      "seed": 0,
+      "final_state_hash": "c6957a7ebb75d4cb50d958ea7d8bb06e3d838ce06795c18d879a2da1a07bf316",
+      "checkpoint": {
+        "filename": "oracle-seed0.pt",
+        "sha256": "fcf9d9b73f22eae2a102d8177fa62a9c043e5da9aae8450c5ecd139c2b09c611",
+        "state_hash": "c6957a7ebb75d4cb50d958ea7d8bb06e3d838ce06795c18d879a2da1a07bf316"
+      }
+    },
+    {
+      "variant": "supervised",
+      "seed": 0,
+      "final_state_hash": "06a45d7a27ea5468b595147cb0b8b2986700749f2b822509bc54777731995a95",
+      "checkpoint": {
+        "filename": "supervised-seed0.pt",
+        "sha256": "9ec1a4f125cfb11d71a19cf4fc1aa17c63bae8a653603f021edae6fa61ff3c6f",
+        "state_hash": "06a45d7a27ea5468b595147cb0b8b2986700749f2b822509bc54777731995a95"
+      }
+    },
+    {
+      "variant": "task_only",
+      "seed": 0,
+      "final_state_hash": "114a60a498224c4656022f553c68de970ee1f620f9f21c21e778ce561d44f887",
+      "checkpoint": {
+        "filename": "task_only-seed0.pt",
+        "sha256": "739132365c12e415aa74e1f39ac0fd95c8c8d3d94580c041353c90b12a5b9e7d",
+        "state_hash": "114a60a498224c4656022f553c68de970ee1f620f9f21c21e778ce561d44f887"
+      }
+    },
+    {
+      "variant": "warm_weak",
+      "seed": 0,
+      "final_state_hash": "b7b7a511372edf2e477108bbe15394062030a46222fedd4309381a81d651b17b",
+      "checkpoint": {
+        "filename": "warm_weak-seed0.pt",
+        "sha256": "bcb44cce87f72136f21fc5fcdd1da13d700ab7c33038313b6aa2c19733c0f356",
+        "state_hash": "b7b7a511372edf2e477108bbe15394062030a46222fedd4309381a81d651b17b"
+      }
+    },
+    {
+      "variant": "warm_task",
+      "seed": 0,
+      "final_state_hash": "fa80267baef4e5fdbd0dd0214594b78e5863d007a8de569ce0b7eb33162e7cf5",
+      "checkpoint": {
+        "filename": "warm_task-seed0.pt",
+        "sha256": "66b20556d87779ec81997f2efbb49105492bfb2d0ffd9757457a8fcfb24fdc28",
+        "state_hash": "fa80267baef4e5fdbd0dd0214594b78e5863d007a8de569ce0b7eb33162e7cf5"
+      }
+    },
+    {
+      "variant": "warm_frozen",
+      "seed": 0,
+      "final_state_hash": "a312a98bb9de3e7fae6d1c5d8c07cf3c053e0884d92057e6f6d9cfeaee5570e3",
+      "checkpoint": {
+        "filename": "warm_frozen-seed0.pt",
+        "sha256": "5e8337977de2b8d1499bc9c6e6065110f832d89e5709fb6b7fd9a0ffdcfbbc0f",
+        "state_hash": "a312a98bb9de3e7fae6d1c5d8c07cf3c053e0884d92057e6f6d9cfeaee5570e3"
+      }
+    },
+    {
+      "variant": "neural",
+      "seed": 0,
+      "final_state_hash": "33afaf73182632ea489350dd018da8c5264ba709c71fe1ed2cff99765914518b",
+      "checkpoint": {
+        "filename": "neural-seed0.pt",
+        "sha256": "8ec8a33984d4088795c6d32b08d83e3c9c56cc156db0b061ec4b15590df15022",
+        "state_hash": "33afaf73182632ea489350dd018da8c5264ba709c71fe1ed2cff99765914518b"
+      }
+    },
+    {
+      "variant": "graph_data",
+      "seed": 0,
+      "final_state_hash": "38ed63de11066380bacbb6f4527752a6e2d1b447ee4e1d05a9f99160be6392a0",
+      "checkpoint": {
+        "filename": "graph_data-seed0.pt",
+        "sha256": "380115ed11d352a636e858b22d6bd74442eceff50eed6ad14e35ca04646fe2e1",
+        "state_hash": "38ed63de11066380bacbb6f4527752a6e2d1b447ee4e1d05a9f99160be6392a0"
+      }
+    },
+    {
+      "variant": "soft_structure",
+      "seed": 0,
+      "final_state_hash": "709d31ffe930331936e48dd1ad5d32bf982b2ddd9814a347e3946a87222b3c08",
+      "checkpoint": {
+        "filename": "soft_structure-seed0.pt",
+        "sha256": "02f5412d9d933d474674e2c2bff83f9f4fd95a152ee33c7321dc4783eb7897d1",
+        "state_hash": "709d31ffe930331936e48dd1ad5d32bf982b2ddd9814a347e3946a87222b3c08"
+      }
+    },
+    {
+      "variant": "protected_learned",
+      "seed": 0,
+      "final_state_hash": "ac0e30071cf4c0a8d9e1b1685580b3ceb552efb441e7a7a702df24dc6dade7d8",
+      "checkpoint": {
+        "filename": "protected_learned-seed0.pt",
+        "sha256": "12e5ffbf024d621414e1011207b7c1538fa9c8dbc3df1e1ecb7ebcb585b89290",
+        "state_hash": "ac0e30071cf4c0a8d9e1b1685580b3ceb552efb441e7a7a702df24dc6dade7d8"
+      }
+    },
+    {
+      "variant": "oracle",
+      "seed": 1,
+      "final_state_hash": "dc720cce5334a0f6b74d52dd237d5ebc505b778dc18088231817710fda705124",
+      "checkpoint": {
+        "filename": "oracle-seed1.pt",
+        "sha256": "287f7c689fe2eaffc6a18f2de88269502f522151a5facfa98ea285c5afcfba7a",
+        "state_hash": "dc720cce5334a0f6b74d52dd237d5ebc505b778dc18088231817710fda705124"
+      }
+    },
+    {
+      "variant": "supervised",
+      "seed": 1,
+      "final_state_hash": "7996f26f76e9306f628d81d85b078f379a91e554017b8eec16f05fcfa4fb0483",
+      "checkpoint": {
+        "filename": "supervised-seed1.pt",
+        "sha256": "ca6e8316c4156ef14bfaa196fe34073f2cdd0b2008520b83571b49787b02d5d7",
+        "state_hash": "7996f26f76e9306f628d81d85b078f379a91e554017b8eec16f05fcfa4fb0483"
+      }
+    },
+    {
+      "variant": "task_only",
+      "seed": 1,
+      "final_state_hash": "23b634782f55768245f3af8aa147f9ff205fb6a9c00153212c8e7a73a9cc14df",
+      "checkpoint": {
+        "filename": "task_only-seed1.pt",
+        "sha256": "1cf6fdbcb96ea15601f423cabc6a7588547689b83e6863a7aa7bb8d33d9dc521",
+        "state_hash": "23b634782f55768245f3af8aa147f9ff205fb6a9c00153212c8e7a73a9cc14df"
+      }
+    },
+    {
+      "variant": "warm_weak",
+      "seed": 1,
+      "final_state_hash": "5ad0ae9e0f3cd22455190f2171c8ca91f69f77b8685187a2dc7e22ddbeda6cbe",
+      "checkpoint": {
+        "filename": "warm_weak-seed1.pt",
+        "sha256": "061b25d87e299bb0b3eacbb9d653e58a35379fea31ed5ea8f56b607a649c7667",
+        "state_hash": "5ad0ae9e0f3cd22455190f2171c8ca91f69f77b8685187a2dc7e22ddbeda6cbe"
+      }
+    },
+    {
+      "variant": "warm_task",
+      "seed": 1,
+      "final_state_hash": "c88c0107c4934f865930a1eb22dfa265d8ee06220aa5bae350440265d910c6d8",
+      "checkpoint": {
+        "filename": "warm_task-seed1.pt",
+        "sha256": "52b481a3635d2327f50d1a9486e58279f03f8d45020f693d953f544ee774ea3a",
+        "state_hash": "c88c0107c4934f865930a1eb22dfa265d8ee06220aa5bae350440265d910c6d8"
+      }
+    },
+    {
+      "variant": "warm_frozen",
+      "seed": 1,
+      "final_state_hash": "6100d01a2d85dd9d97025a6197d6ed4a3dadf709b5accc4d57a8c4f26acee7df",
+      "checkpoint": {
+        "filename": "warm_frozen-seed1.pt",
+        "sha256": "4b697c18d13b62b5a6bb43792ed247ffbca8386d076e7d67b90974c941381b18",
+        "state_hash": "6100d01a2d85dd9d97025a6197d6ed4a3dadf709b5accc4d57a8c4f26acee7df"
+      }
+    },
+    {
+      "variant": "neural",
+      "seed": 1,
+      "final_state_hash": "8f6fc9675efc882b4172beea02a492d09efaba91256a38c50661965ddf6a54f8",
+      "checkpoint": {
+        "filename": "neural-seed1.pt",
+        "sha256": "fb5c54ff35e12436279cb61c037499f364eae4f0e4511a3e5c4c9a630df48661",
+        "state_hash": "8f6fc9675efc882b4172beea02a492d09efaba91256a38c50661965ddf6a54f8"
+      }
+    },
+    {
+      "variant": "graph_data",
+      "seed": 1,
+      "final_state_hash": "450d6fad14bee7c1a054396f50ea26e54a16e6d64a84063f23b2cd68d4117781",
+      "checkpoint": {
+        "filename": "graph_data-seed1.pt",
+        "sha256": "86ffe0f0a61526f82f6d827eeabf04e48e6688918fd1e01d84b63976364d7545",
+        "state_hash": "450d6fad14bee7c1a054396f50ea26e54a16e6d64a84063f23b2cd68d4117781"
+      }
+    },
+    {
+      "variant": "soft_structure",
+      "seed": 1,
+      "final_state_hash": "28ca820c4b8895cf88f8e1d94d1ff5068d62308823fae5b05974186d3eebf9b3",
+      "checkpoint": {
+        "filename": "soft_structure-seed1.pt",
+        "sha256": "56cc972fcd3410783d61a835c0e229173e9abc10482d94a35c6b241f6f276e38",
+        "state_hash": "28ca820c4b8895cf88f8e1d94d1ff5068d62308823fae5b05974186d3eebf9b3"
+      }
+    },
+    {
+      "variant": "protected_learned",
+      "seed": 1,
+      "final_state_hash": "f1645494156cc64819e2697039c56d982c502f926e66196d48458762179122df",
+      "checkpoint": {
+        "filename": "protected_learned-seed1.pt",
+        "sha256": "df3e7c628bb08760bd841593b4def93a97473f434ba0b4830e2765f7abf9140d",
+        "state_hash": "f1645494156cc64819e2697039c56d982c502f926e66196d48458762179122df"
+      }
+    },
+    {
+      "variant": "oracle",
+      "seed": 2,
+      "final_state_hash": "6307d3339cbd6ad7f3346d9358fc74d137cd79a31f2b7e41e2b2b93f000879cd",
+      "checkpoint": {
+        "filename": "oracle-seed2.pt",
+        "sha256": "108510d99a6a5c58892401ef43d630571db09fb71f90fb95de21a105fc119434",
+        "state_hash": "6307d3339cbd6ad7f3346d9358fc74d137cd79a31f2b7e41e2b2b93f000879cd"
+      }
+    },
+    {
+      "variant": "supervised",
+      "seed": 2,
+      "final_state_hash": "310b80da401400de30e0fd0ec9f9cee3dbefc84d65663c95e600a344f7a286de",
+      "checkpoint": {
+        "filename": "supervised-seed2.pt",
+        "sha256": "05f0c7634a7a6266671b555bfef1682bb46c9c11cc153de7e3079625a6529c77",
+        "state_hash": "310b80da401400de30e0fd0ec9f9cee3dbefc84d65663c95e600a344f7a286de"
+      }
+    },
+    {
+      "variant": "task_only",
+      "seed": 2,
+      "final_state_hash": "1fbc13ce4102ee9e287548f20018177cb7ff0f81fd7c907c19b514cacdb59f52",
+      "checkpoint": {
+        "filename": "task_only-seed2.pt",
+        "sha256": "7e1b006c1a0606b1064538476c373c1314ae4f93be8d3133401e54e2f17a0bba",
+        "state_hash": "1fbc13ce4102ee9e287548f20018177cb7ff0f81fd7c907c19b514cacdb59f52"
+      }
+    },
+    {
+      "variant": "warm_weak",
+      "seed": 2,
+      "final_state_hash": "875e6106ecf6542abed877ee3aef2a21426f00fb622f8051f7c8c42b741517e9",
+      "checkpoint": {
+        "filename": "warm_weak-seed2.pt",
+        "sha256": "dddff9d0b23bf3babd62ece9a29a299babe61516ca4e2ac200aac6bef854a599",
+        "state_hash": "875e6106ecf6542abed877ee3aef2a21426f00fb622f8051f7c8c42b741517e9"
+      }
+    },
+    {
+      "variant": "warm_task",
+      "seed": 2,
+      "final_state_hash": "7e4813ec0d5c0da8a7d9c242c2167e90b520efca355cace4a0e2d6729579cc8f",
+      "checkpoint": {
+        "filename": "warm_task-seed2.pt",
+        "sha256": "c2a5424e27ee7229b3f8f7c670ae6c555167d6fc6df386f47032b0d9ea7fe9c3",
+        "state_hash": "7e4813ec0d5c0da8a7d9c242c2167e90b520efca355cace4a0e2d6729579cc8f"
+      }
+    },
+    {
+      "variant": "warm_frozen",
+      "seed": 2,
+      "final_state_hash": "ed4517f83150c65fc8889336fa16961df7757b66128c8a530ceeaee03f8a285b",
+      "checkpoint": {
+        "filename": "warm_frozen-seed2.pt",
+        "sha256": "242c38d40356c0dd721b75e2a372d60b017f63a5531bbcbc1e71fda62c415536",
+        "state_hash": "ed4517f83150c65fc8889336fa16961df7757b66128c8a530ceeaee03f8a285b"
+      }
+    },
+    {
+      "variant": "neural",
+      "seed": 2,
+      "final_state_hash": "14cbfaa27eac479faab8300da20fb808364d248829f322e66a4891fd0db38b8b",
+      "checkpoint": {
+        "filename": "neural-seed2.pt",
+        "sha256": "86f0fb9a3e1762d13e2be507aedc278b35ba0d03a44ff66abf8ba8893eb92892",
+        "state_hash": "14cbfaa27eac479faab8300da20fb808364d248829f322e66a4891fd0db38b8b"
+      }
+    },
+    {
+      "variant": "graph_data",
+      "seed": 2,
+      "final_state_hash": "3f17e8767b6587ee365cb74a7ea5fa9e31d0b8c3404b7c36b7a1ba83b49e6876",
+      "checkpoint": {
+        "filename": "graph_data-seed2.pt",
+        "sha256": "39238bc9579ac1c5a897047d8522bc2f5b116b24cc37159c0e92501d703836a3",
+        "state_hash": "3f17e8767b6587ee365cb74a7ea5fa9e31d0b8c3404b7c36b7a1ba83b49e6876"
+      }
+    },
+    {
+      "variant": "soft_structure",
+      "seed": 2,
+      "final_state_hash": "a5fbebdfafb2450fcb63c9da2dd3cfafe5f2b992997ba66a40a2991257986cec",
+      "checkpoint": {
+        "filename": "soft_structure-seed2.pt",
+        "sha256": "031bba2fc681049842695c1d5246a24512ab4d0cb235eada00a02c8ce7e25c8b",
+        "state_hash": "a5fbebdfafb2450fcb63c9da2dd3cfafe5f2b992997ba66a40a2991257986cec"
+      }
+    },
+    {
+      "variant": "protected_learned",
+      "seed": 2,
+      "final_state_hash": "9a615b9a55b3cb211c4fcd0887b2b2630efa833515beb9452fd6912ed070eb21",
+      "checkpoint": {
+        "filename": "protected_learned-seed2.pt",
+        "sha256": "5060e83c50e4156d068eb99aacc8849fc79a24a75edd9772856d6a561a7f7261",
+        "state_hash": "9a615b9a55b3cb211c4fcd0887b2b2630efa833515beb9452fd6912ed070eb21"
+      }
+    }
+  ],
+  "caveats": [
+    "Undefined task outcomes excluded; no success inferred from placeholder values.",
+    "Neural trajectory audits are external exact executions, not neural execution trajectories.",
+    "Training timing includes diagnostic work where explicitly labeled."
+  ]
+}
