@@ -60,7 +60,7 @@ def graph_structure(read_graph, mode):
     ...
 ```
 
-- [ ] Add failing tests for zero-bias equivalence, positive directed edge bonus,
+- [x] Add failing tests for zero-bias equivalence, positive directed edge bonus,
   rectangular query/key shapes, broadcast shape rejection, nonfinite inputs,
   padding/causal masking, all-masked rows, isolated nodes, and gradients.
   Pin edge orientation with this test:
@@ -74,19 +74,19 @@ assert weights[0, 0, 0, 2] > weights[0, 0, 0, 1]
 torch.testing.assert_close(weights[0, 0, 2], torch.full((3,), 1/3))
 ```
 
-- [ ] Create the isolated remote environment, install the package's minimal
+- [x] Create the isolated remote environment, install the package's minimal
   dependencies, and record actual versions. Try CPU first for these small tests;
   validate GPU support separately without forcing a system-wide upgrade.
-- [ ] Run `python -m pytest tests/test_attention.py -q` and confirm the initial
+- [x] Run `python -m pytest tests/test_attention.py -q` and confirm the initial
   failure comes from the missing implementation.
-- [ ] Implement the score equation, broadcast validation, additive bias, masked
+- [x] Implement the score equation, broadcast validation, additive bias, masked
   softmax, and output contraction. Compute scores and softmax in float32 for low
   precision inputs; preserve float64 when inputs use it. Return outputs in the
   value dtype. Require compatible devices and floating query/key/value tensors.
   Use `masked_fill(~allowed, -torch.inf)` after bias addition. Reject rows with no
   legal key; validate finite scalar/tensor strengths. Do not expand logits into
   copies per graph relation in this initial single-relation reference.
-- [ ] Run the attention tests, obtain review, fix findings, then commit and push.
+- [x] Run the attention tests, obtain review, fix findings, then commit and push.
 
 ## Task 2: Reproducible sequence and morphology generators
 
@@ -113,7 +113,7 @@ def corrupt_graph(graph: torch.Tensor, *, mode: str, seed: int):
     ...
 ```
 
-- [ ] Write tests for reproducibility, invalid counts/history, no global RNG
+- [x] Write tests for reproducibility, invalid counts/history, no global RNG
   mutation, bounded finite trajectories, exact dependency support, isolated nodes,
   asymmetry, morphology connectivity, and disjoint seeded trajectories.
   Verify window alignment explicitly:
@@ -125,8 +125,8 @@ torch.testing.assert_close(x[0], series[0, :2].T)
 torch.testing.assert_close(y[0], series[0, 2])
 ```
 
-- [ ] Run `python -m pytest tests/test_data.py -q` and confirm failures.
-- [ ] Implement seeded sparse directed nonlinear dynamics and a branching robot
+- [x] Run `python -m pytest tests/test_data.py -q` and confirm failures.
+- [x] Implement seeded sparse directed nonlinear dynamics and a branching robot
   tree using local `torch.Generator` instances. For the robot, use a torso/root,
   left/right arm and leg branches and terminal hand/foot joints; additional nodes
   extend the branches. Require at least nine nodes for that named morphology.
@@ -134,11 +134,11 @@ torch.testing.assert_close(y[0], series[0, 2])
   absolute row sums of W at most 0.8. Include the self term in read_graph.
   Warm up 32 steps, then store requested trajectories. State plainly that this is
   synthetic local coupling rather than a physical rigid-body simulator.
-- [ ] Build graph corruption without altering generator weights or datasets.
+- [x] Build graph corruption without altering generator weights or datasets.
   Reversal may equal the original for undirected robot graphs, so flag redundant
   controls. Permuting both graph axes preserves its degree multiset but is not
   necessarily a degree-preserving rewiring per named node; label it accurately.
-- [ ] Test one-step dependency by perturbing a non-parent with noise disabled and
+- [x] Test one-step dependency by perturbing a non-parent with noise disabled and
   asserting the target update is unchanged. Run tests, review, commit, and push.
 
 ## Task 3: Shared predictor and paired pilot runner
@@ -248,5 +248,5 @@ behavior, not the entire research hypothesis.
 Self-review: interfaces are consistent; every first-pilot task has ownership,
 validation, and a commit boundary. The broader design's unimplemented requirements
 are listed under deferred stages rather than silently claimed covered.
-Execution preference is already supplied: subagents. Awaiting user review of this
-written plan before dispatch, as required by the installed writing-plans skill.
+User approved this plan and selected subagents. Task 1 is implemented and reviewed;
+Task 2 is complete; Task 3 is in progress. Controller rulings and evidence are recorded in journal.md.

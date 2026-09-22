@@ -81,3 +81,30 @@
   attention. Rectangular query/key lengths and isolated-node hard masks are tested.
 - CUDA correctness remains untested in this CPU environment. No GPU performance
   or compatibility conclusion is drawn from device-preserving code alone.
+
+### Pilot comparison protocol (before results)
+
+- Primary result: paired held-out one-step normalized MSE for true-graph soft
+  attention versus absent structure, reported separately for sparse and robot
+  domains. Select lambda from {1, 4} by mean validation MSE, never test MSE.
+- Secondary results: hard graph masking, permuted graph bias, tokenwise MLP,
+  persistence, recursive 10-step rollout, and transient initial-state shift.
+  Report all three seeds and paired dispersion; these are pilot observations,
+  not reliable population-level significance or scaling-law estimates.
+- Keep zero and privileged generator-mean diagnostics visible to expose the
+  stationary noise floor. No graph transfer or physical robot-control claim.
+
+### Synthetic generators implemented
+
+- Sparse directed and named robot-tree generators now share the same bounded
+  nonlinear neighbor update. Explicit self recurrence is included in read support.
+- Added seeded graph corruptions, trajectory-local history windows, independent
+  random generators, and burn-in/initial-scale controls. A reversed undirected
+  robot graph is flagged as a redundant control rather than a meaningful ablation.
+- Remote verification: generator suite 27 passed; full suite 47 passed in 0.77 s.
+  Command: `OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src
+  .venv/bin/python -m pytest -q`. Commit: 876adce. Independent review pending.
+- Review clarification: `initial_scale` changes the state before burn-in, which
+  is the intended meaning. The transient-shift evaluation will explicitly set
+  `burn_in=0`; shifting after warmup would be a different intervention. Retained
+  the generator API and require an integration check of the runner's choice.

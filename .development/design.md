@@ -1,8 +1,8 @@
 # Topoformer: programmable structure in attention
 
-Status: user confirmed the staged direction and requested easy sequence/robot
-experiments first, using subagents to implement. Implementation plan review is next;
-implementation and experiments have not started.
+Status: user approved the first implementation plan and subagent execution. The
+attention core is implemented and reviewed; sequence/robot generators and paired
+experiments are in progress. The broader research stages remain future work.
 
 ## Objective and sequence
 
