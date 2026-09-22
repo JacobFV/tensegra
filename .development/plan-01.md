@@ -76,7 +76,8 @@ torch.testing.assert_close(weights[0, 0, 2], torch.full((3,), 1/3))
 
 - [x] Create the isolated remote environment, install the package's minimal
   dependencies, and record actual versions. Try CPU first for these small tests;
-  validate GPU support separately without forcing a system-wide upgrade.
+  this pilot uses CPU-only Torch. CUDA validation is deferred until a GPU run
+  is needed, following the recorded environment ruling.
 - [x] Run `python -m pytest tests/test_attention.py -q` and confirm the initial
   failure comes from the missing implementation.
 - [x] Implement the score equation, broadcast validation, additive bias, masked

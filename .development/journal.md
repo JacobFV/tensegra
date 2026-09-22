@@ -108,3 +108,33 @@
   is the intended meaning. The transient-shift evaluation will explicitly set
   `burn_in=0`; shifting after warmup would be a different intervention. Retained
   the generator API and require an integration check of the runner's choice.
+
+### Generator signal preflight
+
+- Before learned-model training, sampled each domain at n=12, generator seeds
+  0/1/2, trajectory seeds 1000/1001/1002, count=128, steps=40, default warmup/noise.
+  Evaluated every consecutive state pair on remote CPU from revision 0638242.
+- Persistence raw MSE ranged 1.393e-4 to 1.443e-4; privileged generator mean MSE
+  ranged 1.002e-4 to 1.010e-4, matching the configured 1e-4 innovation variance.
+  Zero prediction ranged 1.713e-4 to 2.288e-4. There is measurable predictive
+  signal beyond persistence. This diagnostic is not a learned-model result and
+  uses separate seeds from the final experiment's split policy.
+
+### Predictor and runner verification / review
+
+- Initial implementation 88145f4 passed 57 remote tests and a tiny smoke run.
+  Parent also ran the CLI from the exact remote Git checkout with both domains,
+  all five attention variants, two optimizer steps, and one seed: 18 total rows,
+  identical graph-model initial hashes/batches, finite errors, correct revision.
+- Review confirmed node-count independence, permutation equivariance, hard-mask
+  locality and reachable positive controls, train-only normalization, and
+  prediction-fed rollout semantics. It requested per-domain selection/paired
+  reporting, complete baseline metadata, an explicit NumPy dependency, protection
+  against overwriting existing results, and smaller orchestration helpers.
+- Fixes are underway before full pilot training. CPU peak RSS will be labeled
+  process-lifetime rather than misrepresented as independently reset per mode.
+- First runner review fixes (f29fdf0) passed 63 tests. Parent repeated the clean
+  remote CLI smoke across both domains/all five modes: 18 finite rows, paired
+  initialization, and exact revision. Scoped review accepted all prior fixes,
+  but found a new deadline-boundary issue: a completed mode could be followed by
+  another after budget expiry. A focused regression/fix is in progress.
