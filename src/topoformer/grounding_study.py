@@ -160,6 +160,19 @@ def build_model(config, variant, seed):
     model = TraversalTransformer(key_dim=config.key_dim, width=config.width, heads=config.heads,
                                  classes=config.classes, relations=config.relations,
                                  temperature=config.temperature, strength=options.pop('strength', config.strength), **options)
+    # Module construction order changes with projection_period; copy ordinary
+    # computation parameters from a canonical same-seed model for fair pairing.
+    if options.get('projection_period', 1) != 1:
+        torch.manual_seed(seed)
+        canonical = TraversalTransformer(key_dim=config.key_dim, width=config.width, heads=config.heads,
+            classes=config.classes, relations=config.relations, temperature=config.temperature,
+            strength=config.strength)
+        reference = canonical.state_dict()
+        state = model.state_dict()
+        for name in state:
+            if not name.startswith('grounders.') and name != 'strengths' and name in reference and state[name].shape == reference[name].shape:
+                state[name] = reference[name].clone()
+        model.load_state_dict(state)
     return model, mode
 
 
@@ -283,6 +296,17 @@ def train_run(config, variant, seed, source):
         train_seconds += time.perf_counter() - tick
     evaluations = [evaluate(model, mode, config, condition, 40_000_000 + seed * 100_000)
                    for i, condition in enumerate(conditions(config))]
+    # Plain inference excludes diagnostic grounding probes and oracle evaluation.
+    benchmark_batch = model_inputs(make_data(config, 60_000_000 + seed, depth=config.max_train_depth,
+                                             batch_size=config.eval_batch_size))
+    model.eval()
+    with torch.no_grad():
+        for _ in range(3):
+            model(benchmark_batch, mode=mode)
+        tick = time.perf_counter()
+        for _ in range(10):
+            model(benchmark_batch, mode=mode)
+        inference_seconds = (time.perf_counter() - tick) / 10
     temperatures = {name: float(module.temperature.detach()) for name, module in model.named_modules()
                     if hasattr(module, 'temperature') and isinstance(module.temperature, torch.Tensor) and module.temperature.numel() == 1}
     return dict(schema_version=1, variant=variant, seed=seed, config_hash=fingerprint(asdict(config)), source=source,
@@ -293,7 +317,9 @@ def train_run(config, variant, seed, source):
                            strengths=model.structure_coefficients(), temperatures=temperatures),
                 resources=dict(seconds=time.perf_counter()-started, train_seconds=train_seconds,
                                peak_rss_mib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024,
-                               device='cpu', threads=config.threads, torch_version=torch.__version__),
+                               device='cpu', threads=config.threads, torch_version=torch.__version__,
+                               inference_batch_seconds=inference_seconds, inference_batch_size=config.eval_batch_size,
+                               inference_depth=config.max_train_depth, inference_repeats=10),
                 evaluations=evaluations)
 
 

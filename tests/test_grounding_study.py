@@ -74,3 +74,12 @@ def test_correct_start_does_not_count_as_completed_path():
     assert result['exact_pre_step_grounding'] == 1.
     assert result['exact_path_completion'] == 0.
     assert result['exact_attention_path_completion'] == 0.
+
+
+def test_periodic_grounders_preserve_common_parameter_initialization():
+    config = tiny()
+    base, _ = build_model(config, 'soft', 2)
+    periodic, _ = build_model(config, 'period4', 2)
+    for name, tensor in base.state_dict().items():
+        if not name.startswith('grounders.') and name != 'strengths':
+            torch.testing.assert_close(tensor, periodic.state_dict()[name], rtol=0, atol=0)
