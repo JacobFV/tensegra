@@ -253,3 +253,40 @@ The separately gated `configs/stage4-adaptive.json` compares two fresh pointer
 models with base strength frozen at 4: fixed versus null-aware entropy modulation.
 It changes content attention, while the explicit pointer transition remains intact.
 Run it with the same `topoformer.binding_study` command and a separate output directory.
+
+## Minimal protected runtime
+
+Stage 5 adds an exact immutable language and a separate learned lowering/lifting
+study. The runtime keeps bindings, values, slots, functions, call instances and
+frames distinct, validates typed primitives, and rejects invalid operations
+without partial state changes. It never evaluates generated host-language code.
+
+```python
+from topoformer.tiny_language import execute
+
+assert execute('let x = 5; let y = add(x, 3); mul(y, 2)').value == 16
+assert execute('let car = {wheels: [{radius: 10}, {radius: 13}]}; '
+               'car.wheels[1].radius').value == 13
+```
+
+The learned benchmark supplies segmented operation clauses and noisy selector
+features. A small transformer lowers them into protected runtime operations;
+a learned head lifts scalar results into numeric, comparison or sign reports.
+Scheduling and lexical-scope resolution remain supplied runtime semantics.
+Matched neural controls receive the same initial graph as typed edge records.
+
+```sh
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
+  .venv/bin/python -m topoformer.runtime_study \
+  --config configs/stage5-smoke.json --output results/runtime-smoke
+
+python3 src/topoformer/runtime_analysis.py \
+  results/runtime/metrics.jsonl.gz results/runtime/analysis \
+  --config results/runtime/config.json
+```
+
+See the [Stage 5 methods](.development/stage5-methods.md),
+[implementation plan](.development/plan-05.md), and
+[report](.development/stage5-report.md) for supervision boundaries, controls,
+confidence accounting and the distinction between interpreter support and
+what the neural benchmark measures.
