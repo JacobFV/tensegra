@@ -1,54 +1,110 @@
 # Stage 5: learned lowering into a protected executable runtime
 
-**Experiment status: the frozen 30-run main sweep is in progress; results and the separately declared nine-run stronger-control supplement are pending.** This draft states the reporting framework, not empirical conclusions.
+**The supervised model learned a useful lowering/execution interface, but the full language-to-latent round trip remains partial.** After training on depths 1–4, it obtains **96.88% ± 1.56% exact results and complete semantic trajectories at depth 32 with 64 distractor bindings**. Every correctly lowered trajectory in that clean joint-shift cell executes correctly. Learned output accuracy is only **72.40% ± 2.39%**, chiefly because numeric output lifting remains weak. Held-out surface word order and reduced-supervision maintenance fail substantially.
 
-## What is being tested
+The frozen main sweep contains 30 runs. A separately declared nine-run stronger neural-control supplement is pending; comparisons below identify the original controls and will be extended with that supplement. Values with ± are means and sample standard deviations across three seeds, not population confidence intervals. Counts pool the three seeds.
 
-The question is whether learned semantic lowering can drive an exact typed runtime, then return its result to a learned output task. The independent language supports immutable bindings, records, arrays, pure definitions/calls, lexical frames and returns. The learned benchmark is narrower: externally segmented and ordered clauses select seven operations and observable semantic operands. Lexical name resolution, scope traversal and arithmetic semantics remain exact supplied algorithms.
+## What was built and what was learned
 
-The model sees synthetic operation words, noisy continuous lexical reference keys and a shuffled full initial runtime world. It does not learn to parse free prose, construct an execution schedule or plan calls to arbitrary user-defined functions. Output lifting predicts numeric-report, comparison and sign classes, optionally rendered with fixed phrases. It is not learned natural-language generation.
+The exact interpreter supports immutable `let` bindings, numeric literals, records, arrays, field/index access, pure function definitions/calls, lexical blocks and returns. Names, bindings, values, slots, definitions, invocations, arguments, frames and returned wrappers have distinct runtime identities. Typed primitives validate operations before protected-state updates; rejected calls roll back transactionally. Computed values and return wrappers appear only during actual execution. No generated host-language `eval`, mutation, loops, recursion or closures are present.
 
-See [methods](stage5-methods.md), [design](stage5-design.md), [runtime review](stage5-runtime-review.md), and [learned-interface review](stage5-interface-review.md).
+The learned experiment uses a narrower interface. A small transformer receives already segmented and ordered clauses containing synthetic operation words and noisy continuous lexical reference features. It selects among seven operations—resolve, field, index, add, subtract, reversed subtraction and multiply—and observable semantic operands. The runtime resolves the selected name in the current scope and applies the operation to the actual current register. Protected identities cannot be overwritten by neural MLPs. Wrong decisions persist or reject; gold state is never restored.
 
-## Protocol and controls
+This is learned semantic-selector lowering around supplied semantics. It is **not** learned parsing, scheduling, arbitrary user-function call planning or discovery of lexical-scope algorithms. The exact language supports nested user functions; the learned composition task uses sequential builtins. Output lifting predicts bounded numeric-report, comparison and sign classes, rendered by fixed phrases if desired. It is not free-form language generation.
 
-Main source `2e95c9f` uses three paired seeds, ten variants, 400 updates and 64 examples per condition. Training depths are 1–4 post-resolution operations; evaluation depths are 4/8/16/32. The count axis is 8/32/64 additional distractor bindings, **not total graph nodes**. Every program has an initial resolve clause, making total schedule length D+1. Actual runtime-node ranges will accompany final tables.
+All neural controls observe the same initial values, types, lexical features, scope/index payloads and directed typed graph. Candidates are shuffled and IDs are not neural features. Equivalent names, field/index selectors and literals share reference keys; supervised loss accepts equivalent selectors. Lookup worlds have matched target/decoy chains with identical structural labels and different leaves, preventing unique-final-field retrieval from bypassing the starting object. [Methods](stage5-methods.md) describe the full implementation and boundaries.
 
-Main controls share parameters, public information and data schedules. Ordinary neural prediction observes directed typed edge-record tokens; graph-data and soft-structure controls add respective structure pathways. Neural controls receive lowering supervision and direct numeric-result labels. A protected learned register tests architectural separation without exact transitions. Privileged oracle lowering bounds the execution/output interface. Cold supervised, cold answer-only, warm weak, warm task-only and warm frozen variants separate acquisition from maintenance.
+## Protocol and main results
 
-The separately disclosed supplement addresses a remaining retrieval-prior confound: it feeds predicted selector/op distributions directly to graph-data and protected learned controllers, and includes an oracle-selector protected learned control. This was specified after partial first-seed main results became visible, uses the same budget and adds no exact semantics. It will be reported separately, with pairing and unchanged-default verification.
+Main source [`2e95c9f`](https://github.com/JacobFV/topoformer/commit/2e95c9ff9403e9a2226a66bb0e875b762cb8736d) was frozen before the sweep. Each variant trains for 400 updates of batch 16; warm variants use 200 supervised updates before their intervention. Training uses depths 1–4 and 8/16 distractor bindings. Evaluation crosses depths 4/8/16/32 with 8/32/64 distractors, plus eight diagnostic conditions, at 64 examples per seed and condition.
 
-## Results awaiting complete artifacts
+Depth excludes initial resolution: D32 has **33 supplied clauses**. N64 means **64 additional distractor bindings**, not a 64-node graph. The shallow cell contains 26–69 candidate nodes, mean 47.02; the joint cell contains 166–489, mean 322.64. The six task families have a fixed mix. Final checkpoints are used without OOD selection.
 
-The final report will contain three-seed means and sample standard deviations, paired contrasts and denominators for:
+| Main variant | D4/N8 exact result or neural numeric prediction | D4/N8 output | D32/N64 exact result or neural numeric prediction | D32/N64 output |
+|---|---:|---:|---:|---:|
+| Oracle lowering + exact runtime | 100.00 ± 0.00 | 75.00 ± 4.13 | 100.00 ± 0.00 | 73.44 ± 1.56 |
+| Supervised lowering + exact runtime | 100.00 ± 0.00 | 75.00 ± 2.71 | **96.88 ± 1.56** | **72.40 ± 2.39** |
+| Cold answer-only + exact runtime | 3.65 ± 2.39 | 30.73 ± 3.25 | 5.21 ± 1.80 | 39.06 ± 5.63 |
+| Warm weak + exact runtime | 76.56 ± 12.79 | 58.33 ± 4.77 | 11.98 ± 5.49 | 29.69 ± 7.81 |
+| Warm task-only + exact runtime | 25.00 ± 22.70 | 34.90 ± 15.81 | 1.04 ± 0.90 | 19.27 ± 7.38 |
+| Warm frozen + exact runtime | 81.25 ± 13.89 | 61.98 ± 11.93 | 66.15 ± 16.71 | 49.48 ± 15.65 |
+| Ordinary neural, graph tokens | 7.29 ± 0.90 | 38.02 ± 2.39 | 8.33 ± 5.49 | 43.23 ± 3.93 |
+| Graph-data message passing | 6.77 ± 2.39 | 39.06 ± 1.56 | 6.25 ± 1.56 | 43.75 ± 9.50 |
+| Soft structural attention | 7.81 ± 1.56 | 38.02 ± 2.39 | 7.29 ± 3.93 | 43.23 ± 3.93 |
+| Protected learned transition | 3.65 ± 3.25 | 40.62 ± 4.13 | 4.69 ± 1.56 | 47.92 ± 7.86 |
 
-| Boundary | Primary measure | Necessary distinction |
-|---|---|---|
-| Semantic lowering | Selector and primitive accuracy; all decisions correct | Selector equivalence is not unique entity/scope disambiguation |
-| Exact computation | Runtime result and complete semantic trajectory | Neural result classification is a different quantity |
-| Conditional execution | Exact result given all lowering decisions correct | Null denominators remain undefined |
-| Output lifting | End-task output; correct-result lifting audit | Correct sign/comparison can conceal a wrong scalar |
-| Generalization | Depth × distractor-count matrices | Depth also changes actual graph size |
-| Confidence | Actual invoked errors, risk and coverage | Deferral is unanswered, not correct task execution |
+All table entries are percentages. Neural numeric predictions are not interpreter executions. Their auxiliary lowerings can be audited through the interpreter, but those counterfactual trajectories are not trajectories of their own computation. Neural controls receive the same lowering supervision and additional numeric-result labels, so weak numeric performance cannot be attributed to withholding those targets.
 
-The core table will compare shallow and joint-OOD anchors. Separate heatmaps will show output, exact-result and trajectory performance, rather than treating one as a proxy for another. Family/style breakdowns and majority-class frequencies will contextualize aggregate output accuracy. The external interpreter audit of a neural control's auxiliary lowering will never be called that neural controller's own symbolic trajectory.
+The original neural models learn the auxiliary selector/operation task very well yet fail to turn those features into accurate arithmetic/state computation. At D32/N64 their selector accuracy is approximately 99.9% and operation accuracy 100%. This motivates the separately declared direct-selector-read controls rather than a broad conclusion that graph context or message passing cannot work.
 
-## Acquisition, maintenance and reward interpretation
+![Supervised depth and distractor-count matrices](results/stage5/main/analysis/figures/supervised-matrix.png)
 
-Step-zero curves distinguish learned behavior from supplied priors. Warm curricula are identical through update 200, after which weak supervision, answer reward and frozen lowering diverge. Changes in selector, operation, execution and lifting accuracy through update 400 will be inspected separately.
+## Where execution errors now occur
 
-The policy reward is the final lifted output label. Because comparison/sign outputs are many-to-one functions of numeric results, a semantically wrong program can earn reward. A negative answer-only result would reflect this identification problem together with sparse credit and optimization; it would not establish that task-only semantic binding is impossible. The frozen warm control isolates whether continuing policy updates help or damage an already trained interface.
+The supervised joint cell has 6,329/6,336 correct selectors and 6,336/6,336 correct operations. Complete lowering, complete trajectory and correct final scalar all coincide at **186/192**. Conditional execution after complete correct lowering is **186/186**; no clean-cell executor error is required to explain these failures. One failed program rejects a schema; the other incorrect outcomes arise from semantic choices. The correct binding probability is 186/192, while output correctness conditional on that event is **137/186 = 73.66%**.
 
-## Confidence, uncertainty and invalid inputs
+The six families retain exact-result accuracy of 30/30 aliases, 32/33 composition, 30/30 mixed interpretation, 32/33 nested access, 30/33 argument ordering and 32/33 scope. These are small family samples, not precise family-level estimates. Scope success means that learned name selection successfully drives supplied lexical resolution. It does not mean the network inferred which same-name binding instance a scope algorithm should select.
 
-The implemented gate is local selective invocation of exact primitives, with type/schema validation. It does not add new evidence or another neural inference pass after deferral. Threshold curves under medium/high noise will report actual reachable invocations separately from hypothetical clause gates. Missing-reference and invalid-schema examples have undefined answers; their appropriate rejection/deferral rates are reported without placeholder-label task accuracy.
+These observations support a narrow architectural result: cold supervised semantic lowering can control exact protected state over substantially longer supplied schedules. Unlike Stage 4's strongest initialized pointer result, the lowerer begins random. Step-zero shallow validation has 3.85% selector accuracy, 18.75% operation accuracy, and zero completed results or outputs. After 400 supervised updates that fixed validation set has perfect lowering/execution and 68.75% output accuracy. The separate shallow final-evaluation set gives the table's 75%; these are different samples, not conflicting measurements.
 
-No null examples occur during training. Unbound rejection is therefore an extrapolation stress test, not a trained skill. Confidence is based on entropy/margin and semantic groups, not a calibrated probability. No OOD-selected operating threshold will be used to manufacture a favorable task score.
+## Output lifting is the leading clean-condition bottleneck
 
-## Failure analysis, resources and reproducibility
+At the joint shift, 49 of 186 correct supervised runtime results produce an incorrect learned output. Only six programs have incorrect runtime results. Two of those six nevertheless obtain the correct output label: sign and comparison can conceal a wrong scalar. Total output correctness therefore must not substitute for execution correctness.
 
-Final failure analysis will distinguish selector errors, primitive errors, schema rejection, incorrect execution after correct lowering, and lifting errors after correct execution. Recovery means the actual wrong state later matches the correct semantic state, not a fresh gold restart. Failure-case examples are illustrative; aggregate raw counts supply frequencies.
+Supplying the correct scalar directly to the same supervised lifter yields 143/192 correct outputs, versus 139/192 for the complete pipeline. By style:
 
-The report will link compressed raw records, resolved configs, source hashes, analysis/audit outputs, plots and representative traces. Timing will separate actual symbolic copying/execution from neural-plus-diagnostic overhead; it is not a hardware-independent speed claim. Source/config/initialization/schedule/evaluation hashes will establish reproducibility and paired comparisons.
+| Joint-cell style | Pipeline output | Correct-scalar lifting audit |
+|---|---:|---:|
+| Numeric report | 17/52 = 32.69% | 19/52 = 36.54% |
+| Comparison | 59/73 = 80.82% | 61/73 = 83.56% |
+| Sign | 63/67 = 94.03% | 63/67 = 94.03% |
 
-The success criterion remains a learned lowering/exact execution/learned lifting round trip with meaningful OOD structural advantage. Interpreter correctness alone is insufficient, and exact computation with weak output lifting is partial success. No result here would establish spontaneous crystallization, general language induction or broad superiority to graph/message-passing architectures.
+Even privileged oracle lowering reaches only 16/52 numeric reports, while reaching 62/73 comparisons and 63/67 signs. The substrate does exact arithmetic; the learned report head has not mastered the bounded numerical output map in this budget. The pre-main RBF feature change improved shallow oracle lifting but did not solve it. That declared prior and paired pilot are documented in [methods](stage5-methods.md); no main-run retuning was performed.
+
+## Reducing supervision damages the learned interface
+
+All warm variants share the supervised trajectory through update 200: validation selector accuracy 99.58%, operation accuracy 95.00%, and exact result 81.77%. At update 400:
+
+| Post-warm training | Selector accuracy | Operation accuracy | Validation exact result |
+|---|---:|---:|---:|
+| Continue full supervision | 100.00% | 100.00% | 100.00% |
+| Freeze lowerer, train lifter | 99.58% | 95.00% | 81.77% |
+| Auxiliary weight .1 + answer reward | 93.44% | 98.75% | 76.56% |
+| Answer reward only | 56.98% | 81.15% | 23.96% |
+
+The frozen comparison makes the maintenance failure concrete: continuing policy updates can damage an existing semantic interface. Small local degradation becomes severe across 33 decisions, yielding 11.46% complete trajectories for warm weak and 0.52% for warm task-only at the joint shift. Freezing preserves 66.15%, but also preserves the imperfect halfway-trained lowerer.
+
+Cold answer-only acquires no complete joint trajectories. Its 39.06% output accuracy coexists with 5.21% exact results and 0.05% selector accuracy. REINFORCE rewards the final lifted label, not numeric-result equality or semantic correctness. Many wrong programs can share the correct comparison/sign label. These runs expose sparse credit and reward non-identifiability as well as optimization difficulty; they do not establish that task-only binding is impossible. The current recipe does not satisfy the requested supervision-reduction milestone.
+
+![Step-zero and training curves](results/stage5/main/analysis/figures/learning-curves.png)
+
+## Surface generalization and confidence limits
+
+The held-out reordered-template condition is a strong negative result. Supervised selector accuracy remains 849/960, but operation accuracy falls to **396/960 = 41.25%**. Only 2/192 numeric results and 6/192 output labels are correct; 181 programs reject. This is a primitive-recognition failure, despite training on canonical and synonym templates. It rules out describing this stage as robust unstructured-language lowering.
+
+Medium reference noise reduces correct results to 120/192; high noise reduces them to 4/192. Confidence provides a risk/coverage tradeoff, not recovered reasoning. For the supervised model under medium noise:
+
+| Threshold | Answer coverage | Wrong-result risk among answers | Correct results / all examples | Wrong invoked lowerings |
+|---|---:|---:|---:|---:|
+| 0 | 160/192 = 83.33% | 40/160 = 25.00% | 62.50% | 65/864 |
+| .2 | 111/192 = 57.81% | 21/111 = 18.92% | 46.88% | 33/656 |
+| .4 | 39/192 = 20.31% | 3/39 = 7.69% | 18.75% | 4/323 |
+| .6 | 2/192 = 1.04% | 0/2 | 1.04% | 0/87 |
+
+These are predeclared threshold points, not an OOD-selected operating policy. At .4, 98 correct lowerings are unnecessarily deferred among 871 correct local decisions. Zero observed risk at .6 is based on only two answers. High-noise .4 yields no answers and therefore undefined answer risk, not perfect accuracy. Actual invoked counts exclude unreachable later steps; hypothetical all-clause gates are separate artifact fields.
+
+With the initial reference erased, no answer is defined. Without a gate, 121/192 programs nevertheless finish, illustrating failure to learn null grounding from valid-only training. Threshold .4 defers 191 and still executes one complete program; .6 defers all. Invalid-schema inputs are rejected 192/192 even at threshold zero, before any valid primitive invocation. This is supplied type safety, not neural understanding of invalidity. The implementation does not gather new evidence or run another inference pass after deferral. Occasional semantic-state recovery in noisy cases is recorded, but no learned recovery mechanism is established.
+
+## Interventions, artifacts and interpretation
+
+Permuting the lowering-to-runtime mapping reduces supervised exact and output accuracy to zero. Corrupting scalar-value edges in both the observable graph and executor world, while retaining clean targets, reduces exact results to 106/192. All semantic selectors remain correct under their clean labels in these interventions. Their generic “execution failure after correct lowering” counters therefore measure deliberately broken correspondence/world agreement, not interpreter defects. Conditional executor reliability claims refer to clean, aligned inputs.
+
+The main sweep took approximately **21.2 minutes** on the linked CPU machine with two threads; process peak RSS reached **1,948.5 MiB**. This includes repeated confidence sweeps and diagnostic interpreter runs. Stored symbolic execution excludes oracle scoring; neural-plus-diagnostic timing is not a kernel profiler. The linked machine, not the constrained local workstation, performed training and large-artifact analysis.
+
+The [main audit](results/stage5/main/audit.json) validates 30 checkpoints and 870 recorded evaluation/curve cells, source/config identity and paired initialization/schedule/data hashes. [Resolved configuration](results/stage5/main/config.json), [compressed raw metrics](results/stage5/main/metrics.jsonl.gz), [aggregate analysis](results/stage5/main/analysis/summary.json), [manifest](results/stage5/main/manifest.json), [runtime review](stage5-runtime-review.md) and [interface review](stage5-interface-review.md) make the result inspectable. Raw rows retain illustrative failure traces; they are not substitutes for aggregate failure denominators. Analysis-source hashes are distinct from immutable training-source hashes.
+
+### Stronger-control supplement: pending
+
+The post-launch supplement feeds learned semantic distributions directly into graph-data/protected neural controllers and adds a privileged oracle-semantic-selector protected controller. It adds no exact transitions or parameters. Final results and pairing audit will be incorporated here before completion; the main table alone does not settle the strongest neural-interface comparison.
+
+The useful positive result is learned supervised lowering followed by reliable exact computation through the tested structural extrapolation. The full goal remains incomplete: numerical lifting, held-out surface recognition and reduced-supervision stability fail materially, and null confidence supplies abstention rather than reasoning recovery. Those boundaries are now separately measurable. This stage does not justify claims of spontaneous crystallization, autonomous language induction or pretrained-model readiness.
