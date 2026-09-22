@@ -129,7 +129,7 @@ def select_soft_strength(rows: Sequence[Mapping[str, Any]]) -> dict[tuple[Any, A
 def _evaluation_rows(runs: Sequence[Mapping[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, int]]:
     flat: list[dict[str, Any]] = []
     exclusions = {"incomplete_runs": 0, "nonfinite_evaluations": 0, "duplicate_evaluations": 0,
-                  "nonfinite_coefficients": 0}
+                  "nonfinite_coefficients": 0, "invalid_evaluation_step": 0}
     for run in runs:
         if run.get("status") != "complete":
             exclusions["incomplete_runs"] += 1
@@ -138,7 +138,7 @@ def _evaluation_rows(runs: Sequence[Mapping[str, Any]]) -> tuple[list[dict[str, 
             "suite", "domain", "seed", "mode", "variant", "strength", "train_config",
             "trajectory_count", "count", "train_count", "train_sizes", "mechanism",
             "corruption", "fraction", "train_size", "eval_size", "schedule_hash",
-            "shared_initialization_hash")}
+            "shared_initialization_hash", "completed_steps")}
         base["mode"] = base["mode"] or base["variant"]
         base["trajectory_count"] = base["trajectory_count"] or base["count"] or base["train_count"]
         base["train_config"] = base["train_config"] or _train_config(run)
@@ -178,7 +178,11 @@ def _evaluation_rows(runs: Sequence[Mapping[str, Any]]) -> tuple[list[dict[str, 
                 exclusions["nonfinite_evaluations"] += 1
                 continue
             row["split"] = row.get("split", row.get("partition", "validation"))
-            row["step"] = row.get("step", row.get("checkpoint", 0))
+            explicit_step = row.get("step", row.get("checkpoint"))
+            if explicit_step is not None and explicit_step != run.get("completed_steps"):
+                exclusions["invalid_evaluation_step"] += 1
+                continue
+            row["step"] = explicit_step if explicit_step is not None else run.get("completed_steps")
             row["eval_size"] = row.get("eval_size") or row.get("nodes")
             for metric_name, metric in metrics.items():
                 flat.append({**row, "metric_name": metric_name, "value": metric})
@@ -664,6 +668,7 @@ def write_plots(summary: Mapping[str, Any], output: Path) -> None:
         by_mode: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
         for row in efficiency:
             by_mode[str(row["mode"])].append(row)
+        colors = {mode: plt.cm.tab10(index % 10) for index, mode in enumerate(sorted(by_mode))}
         for mode, mode_rows in sorted(by_mode.items()):
             counts = sorted({int(count) for row in mode_rows for count in row["auc_by_train_count"]})
             means, spreads = [], []
@@ -671,10 +676,11 @@ def write_plots(summary: Mapping[str, Any], output: Path) -> None:
                 values = [row["auc_by_train_count"].get(str(count)) for row in mode_rows]
                 stats = _mean_sd(value for value in values if value is not None)
                 means.append(stats["mean"]); spreads.append(stats["population_sd"])
-            axes[0].errorbar(counts, means, yerr=spreads, marker="o", capsize=3, label=mode)
+            axes[0].errorbar(counts, means, yerr=spreads, marker="o", capsize=3,
+                             color=colors[mode], label=mode)
             for row in mode_rows:
                 values = [row["auc_by_train_count"].get(str(count)) for count in counts]
-                axes[0].plot(counts, values, alpha=.15, linewidth=.8)
+                axes[0].plot(counts, values, alpha=.2, linewidth=.8, color=colors[mode])
         axes[0].set(xscale="log", xlabel="training trajectories", ylabel="normalized validation AUC",
                     title="Efficiency curves (mean ± population SD)")
         axes[0].legend(fontsize=8)
@@ -683,17 +689,17 @@ def write_plots(summary: Mapping[str, Any], output: Path) -> None:
         max_count = max(int(count) for row in efficiency for count in row["auc_by_train_count"])
         offsets = {mode: (index - (len(by_mode) - 1) / 2) * .04
                    for index, mode in enumerate(sorted(by_mode))}
-        colors = {mode: plt.cm.tab10(index % 10) for index, mode in enumerate(sorted(by_mode))}
         for mode, mode_rows in sorted(by_mode.items()):
             labeled = False
-            for row in mode_rows:
+            for seed_index, row in enumerate(sorted(mode_rows, key=lambda item: str(item.get("seed")))):
+                seed_offset = (seed_index - (len(mode_rows) - 1) / 2) * .012
                 for index, label in enumerate(threshold_labels):
                     value = row["minimum_count_thresholds"][label]["n_epsilon"]
                     if value is None:
-                        axes[1].scatter(index + offsets[mode], max_count, marker="x", alpha=.7,
+                        axes[1].scatter(index + offsets[mode] + seed_offset, max_count, marker="x", alpha=.8,
                                         color=colors[mode], label=mode if not labeled else None)
                     else:
-                        axes[1].scatter(index + offsets[mode], value, marker="o", alpha=.7,
+                        axes[1].scatter(index + offsets[mode] + seed_offset, value, marker="o", alpha=.8,
                                         color=colors[mode], label=mode if not labeled else None)
                     labeled = True
         axes[1].set(xticks=list(x), xticklabels=("10% gap", "25% gap", "50% gap"),
@@ -706,14 +712,49 @@ def write_plots(summary: Mapping[str, Any], output: Path) -> None:
         fig.savefig(stem.with_suffix(".svg")); fig.savefig(stem.with_suffix(".png"), dpi=160)
         plt.close(fig)
 
+    primary_metrics = {"one_step_normalized_mse", "deterministic_rollout_normalized_mse",
+                       "stochastic_rollout_normalized_mse"}
+    transfer_rows = summary.get("suites", {}).get("transfer", {}).get("aggregates", [])
+    transfer_terminal = [row for row in transfer_rows if row.get("split") == "test"
+                         and row.get("metric_name") in primary_metrics
+                         and _finite(row.get("mean")) and _finite(row.get("eval_size"))]
+    transfer_facets: dict[tuple[str, str], list[Mapping[str, Any]]] = defaultdict(list)
+    for row in transfer_terminal:
+        transfer_facets[(str(row.get("domain")), str(row.get("metric_name")))].append(row)
+    for (domain, metric_name), facet_rows in transfer_facets.items():
+        regimes: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+        for row in facet_rows:
+            regimes[str(row.get("train_config"))].append(row)
+        fig, axes = plt.subplots(len(regimes), 1, squeeze=False,
+                                 figsize=(9, max(4, 3.8 * len(regimes))))
+        modes = sorted({str(row.get("mode")) for row in facet_rows})
+        colors = {mode: plt.cm.tab10(index % 10) for index, mode in enumerate(modes)}
+        for axis, (regime, regime_rows) in zip(axes[:, 0], sorted(regimes.items())):
+            for mode in modes:
+                mode_rows = sorted((row for row in regime_rows if str(row.get("mode")) == mode),
+                                   key=lambda row: float(row["eval_size"]))
+                if not mode_rows:
+                    continue
+                nodes = [int(row["eval_size"]) for row in mode_rows]
+                axis.errorbar(nodes, [row["mean"] for row in mode_rows],
+                              yerr=[row["population_sd"] for row in mode_rows], marker="o",
+                              capsize=3, color=colors[mode], label=mode)
+            axis.set(xlabel="evaluation nodes", ylabel="normalized MSE", title=regime,
+                     xticks=sorted({int(row["eval_size"]) for row in regime_rows}))
+            axis.legend(fontsize=8)
+        fig.suptitle(f"transfer: {domain} — {metric_name}")
+        fig.tight_layout()
+        safe_metric = metric_name.replace("_normalized_mse", "")
+        stem = output / f"transfer-{domain}-{safe_metric}"
+        fig.savefig(stem.with_suffix(".svg")); fig.savefig(stem.with_suffix(".png"), dpi=160)
+        plt.close(fig)
+
     for suite in sorted(summary.get("suites", {})):
-        if str(suite).startswith("efficiency"):
+        if str(suite).startswith("efficiency") or suite == "transfer":
             continue
         rows = summary.get("suites", {}).get(suite, {}).get("aggregates", [])
         terminal = [row for row in rows if row.get("split") in ("test", "runtime_corruption")
-                    and row.get("metric_name") in {"one_step_normalized_mse",
-                                                   "deterministic_rollout_normalized_mse",
-                                                   "stochastic_rollout_normalized_mse"}
+                    and row.get("metric_name") in primary_metrics
                     and _finite(row.get("mean"))]
         facets: dict[tuple[str, str], list[Mapping[str, Any]]] = defaultdict(list)
         for row in terminal:

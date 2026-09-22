@@ -8,6 +8,7 @@ from topoformer.study_analysis import (
     efficiency_thresholds,
     paired_effects,
     select_soft_strength,
+    write_plots,
 )
 
 
@@ -135,6 +136,7 @@ def _run(mode, evaluations, curve=None):
             "mechanism": "uniform", "train_sizes": [12], "train_count": 8,
             "corruption": "clean", "fraction": 0, "status": "complete",
             "schedule_hash": "schedule-0", "shared_initialization_hash": "initial-0",
+            "completed_steps": 0,
             "normalization": {"mean": 0.0, "std": 1.0},
             "normalization_trajectories_per_graph": 8,
             "validation_curve": curve or [{"step": 0, "normalized_mse": 2.0,
@@ -230,3 +232,27 @@ def test_downstream_rows_mark_validation_selected_strength_despite_test_preferen
             if row["metric_name"] == "one_step_normalized_mse"]
     assert {row["mode"]: row["selected_by_validation"] for row in rows} == {
         "soft1": True, "soft4": False}
+
+
+def test_test_metrics_are_labeled_with_completed_training_step():
+    run = _run("none", [_evaluation("g0", 10)])
+    run["completed_steps"] = 600
+    summary = analyze_runs([run], {"checkpoints": [0, 600], "counts": [8]})
+    test_rows = [row for row in summary["suites"]["transfer"]["aggregates"]
+                 if row["split"] == "test"]
+    assert test_rows and {row["step"] for row in test_rows} == {600}
+
+
+def test_transfer_plot_writes_svg_and_png_artifacts(tmp_path):
+    pytest.importorskip("matplotlib")
+    evaluations = []
+    for index, nodes in enumerate((12, 32, 64, 128)):
+        evaluation = _evaluation(f"g{nodes}", 10 + index, offset=index)
+        evaluation["nodes"] = nodes
+        evaluations.append(evaluation)
+    summary = analyze_runs([_run("none", evaluations)], {"checkpoints": [0], "counts": [8]})
+
+    write_plots(summary, tmp_path)
+
+    assert (tmp_path / "transfer-sparse-one_step.svg").stat().st_size > 1000
+    assert (tmp_path / "transfer-sparse-one_step.png").stat().st_size > 1000
