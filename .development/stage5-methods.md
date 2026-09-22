@@ -2,7 +2,7 @@
 
 This stage tests a deliberately narrow neural/runtime boundary. A learned lowerer selects semantic operations and operands from noisy lexical features; a small immutable interpreter executes those selections through protected state; a learned output head interprets the resulting scalar. The experiment does not ask the network to discover the language semantics or invent a program schedule. The independent exact language has broader syntax than the learned benchmark. Those two deliverables must not be conflated.
 
-The main experiment freezes source at `2e95c9f` with 400 updates, 200 warm-start updates, three paired seeds and ten variants. Results remain pending at this methods revision. The final report and archived resolved configuration record actual coverage and provenance. Earlier stages are preserved.
+The main experiment freezes source at `2e95c9f` with 400 updates, 200 warm-start updates, three paired seeds and ten variants. The completed main experiment has 30 runs, followed by the separately disclosed nine-run semantic-read supplement at `4ca8fb9`. The report and archived resolved configurations record results, coverage and provenance. Earlier stages are preserved.
 
 ## Exact language and runtime
 

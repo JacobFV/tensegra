@@ -2,7 +2,7 @@
 
 **The supervised model learned a useful lowering/execution interface, but the full language-to-latent round trip remains partial.** After training on depths 1–4, it obtains **96.88% ± 1.56% exact results and complete semantic trajectories at depth 32 with 64 distractor bindings**. Every correctly lowered trajectory in that clean joint-shift cell executes correctly. Learned output accuracy is only **72.40% ± 2.39%**, chiefly because numeric output lifting remains weak. Held-out surface word order and reduced-supervision maintenance fail substantially.
 
-The frozen main sweep contains 30 runs. A separately declared nine-run stronger neural-control supplement is pending; comparisons below identify the original controls and will be extended with that supplement. Values with ± are means and sample standard deviations across three seeds, not population confidence intervals. Counts pool the three seeds.
+The completed experiment contains 30 frozen main runs and a separately declared nine-run stronger neural-control supplement. The supplement does not close the execution gap in this small-model, fixed-budget comparison. Values with ± are means and sample standard deviations across three seeds, not population confidence intervals. Counts pool the three seeds.
 
 ## What was built and what was learned
 
@@ -35,7 +35,7 @@ Depth excludes initial resolution: D32 has **33 supplied clauses**. N64 means **
 
 All table entries are percentages. Neural numeric predictions are not interpreter executions. Their auxiliary lowerings can be audited through the interpreter, but those counterfactual trajectories are not trajectories of their own computation. Neural controls receive the same lowering supervision and additional numeric-result labels, so weak numeric performance cannot be attributed to withholding those targets.
 
-The original neural models learn the auxiliary selector/operation task very well yet fail to turn those features into accurate arithmetic/state computation. At D32/N64 their selector accuracy is approximately 99.9% and operation accuracy 100%. This motivates the separately declared direct-selector-read controls rather than a broad conclusion that graph context or message passing cannot work.
+The original neural models learn the auxiliary selector/operation task very well yet fail to turn those features into accurate arithmetic/state computation. At D32/N64 their selector accuracy is approximately 99.9% and operation accuracy 100%. The direct-selector-read controls below test this remaining retrieval-interface concern; their outcome still does not establish that graph context or message passing cannot work in general.
 
 ![Supervised depth and distractor-count matrices](results/stage5/main/analysis/figures/supervised-matrix.png)
 
@@ -58,6 +58,8 @@ Supplying the correct scalar directly to the same supervised lifter yields 143/1
 | Numeric report | 17/52 = 32.69% | 19/52 = 36.54% |
 | Comparison | 59/73 = 80.82% | 61/73 = 83.56% |
 | Sign | 63/67 = 94.03% | 63/67 = 94.03% |
+
+For class-frequency context, the pooled joint-cell empirical majority labels occur in 7/52 numeric examples (13.46%), 41/73 comparisons (56.16%) and 32/67 sign examples (47.76%). Shallow frequencies are 11.54%, 54.79% and 47.76%, respectively. These are posthoc empirical frequencies, not trained baseline scores or an OOD-selected predictor. [Regenerated frequency artifacts](results/stage5/main/class-frequencies.json) match the archived paired data hashes.
 
 Even privileged oracle lowering reaches only 16/52 numeric reports, while reaching 62/73 comparisons and 63/67 signs. The substrate does exact arithmetic; the learned report head has not mastered the bounded numerical output map in this budget. The pre-main RBF feature change improved shallow oracle lifting but did not solve it. That declared prior and paired pilot are documented in [methods](stage5-methods.md); no main-run retuning was performed.
 
@@ -105,8 +107,18 @@ The main sweep took approximately **21.2 minutes** on the linked CPU machine wit
 
 The [main audit](results/stage5/main/audit.json) validates 30 checkpoints and 870 recorded evaluation/curve cells, source/config identity and paired initialization/schedule/data hashes. [Resolved configuration](results/stage5/main/config.json), [compressed raw metrics](results/stage5/main/metrics.jsonl.gz), [aggregate analysis](results/stage5/main/analysis/summary.json), [manifest](results/stage5/main/manifest.json), [runtime review](stage5-runtime-review.md) and [interface review](stage5-interface-review.md) make the result inspectable. Raw rows retain illustrative failure traces; they are not substitutes for aggregate failure denominators. Analysis-source hashes are distinct from immutable training-source hashes.
 
-### Stronger-control supplement: pending
+### Stronger controls: direct semantic reads still do not supply execution
 
-The post-launch supplement feeds learned semantic distributions directly into graph-data/protected neural controllers and adds a privileged oracle-semantic-selector protected controller. It adds no exact transitions or parameters. Final results and pairing audit will be incorporated here before completion; the main table alone does not settle the strongest neural-interface comparison.
+While partial first-seed main results were visible, a separate supplement was declared and frozen at source `4ca8fb9`. It feeds selector-weighted observable memory and operation-probability-weighted instruction features directly into graph-data or protected learned controllers. The privileged version supplies exact semantic operations and uniform mass over equivalent selectors, not a unique gold runtime identity. No exact pointer, arithmetic or scope algorithm is added. All use the same 400-update/three-seed budget. This is disclosed post-launch work, not retroactive preregistration.
+
+| Supplement variant | D4/N8 numeric prediction | D4/N8 output | D32/N64 numeric prediction | D32/N64 output |
+|---|---:|---:|---:|---:|
+| Learned-selector graph-data | 5.21 ± 0.90 | 35.42 ± 3.25 | 5.21 ± 1.80 | 45.31 ± 7.16 |
+| Learned-selector protected state | 4.17 ± 2.39 | 39.06 ± 3.12 | 5.21 ± 1.80 | 44.79 ± 8.61 |
+| Oracle-selector protected state | 3.65 ± 3.25 | 35.42 ± 4.77 | 6.25 ± 3.12 | 39.06 ± 4.13 |
+
+The learned interfaces again reach approximately 99.9% local selector accuracy and 100% operation accuracy at the joint shift. The oracle interface is correct by construction. Nevertheless, exact numeric prediction remains 5–6%. Merely making the semantic selector available to these learned transitions does not reproduce the supplied executor under this budget. The gap therefore survives this stronger retrieval control; it is evidence for the benefit of known exact transitions within the tested architecture, not metric-space superiority or a universal comparison against graph networks. These baselines are weak even in-distribution, so the result is not solely an isolated extrapolation advantage.
+
+The optional connection adds no parameters or random draws, and independent seeded comparisons found bitexact unchanged default behavior against frozen main source. The [supplement summary](results/stage5/selector/analysis/summary.json), [config](results/stage5/selector/config.json) and [raw records](results/stage5/selector/metrics.jsonl.gz) retain all nine runs. Internal coverage/data pairing checks pass; the independent cross-main checkpoint/pairing audit is still being finalized at this revision. The supplement took another 4.9 minutes, for approximately 26.1 minutes total recorded run time across both sweeps.
 
 The useful positive result is learned supervised lowering followed by reliable exact computation through the tested structural extrapolation. The full goal remains incomplete: numerical lifting, held-out surface recognition and reduced-supervision stability fail materially, and null confidence supplies abstention rather than reasoning recovery. Those boundaries are now separately measurable. This stage does not justify claims of spontaneous crystallization, autonomous language induction or pretrained-model readiness.
