@@ -11,9 +11,22 @@ from .runtime_graph import RuntimeGraph
 from .traversal_model import TraversalTransformer
 
 
+def binding_confidence(probabilities):
+    """Entropy confidence discounted by unbound mass; final slot is null.
+
+    This modulates attention logit bias only, never the explicit pointer write.
+    """
+    if probabilities.shape[-1] <= 1:
+        return torch.zeros_like(probabilities[..., 0])
+    entropy = -(probabilities * probabilities.clamp_min(torch.finfo(probabilities.dtype).tiny).log()).sum(-1)
+    concentration = (1 - entropy / math.log(probabilities.shape[-1])).clamp(0, 1)
+    return ((1 - probabilities[..., -1]) * concentration).clamp(0, 1)
+
+
 class BindingTransformer(TraversalTransformer):
     def __init__(self, *, matcher="cosine", identity_update="attention",
-                 identity_only=True, null_init=0.65, heads=4, **kwargs):
+                 identity_only=True, null_init=0.65, heads=4,
+                 adaptive_strength=False, **kwargs):
         if matcher not in {"dot", "cosine"}:
             raise ValueError("matcher must be dot or cosine")
         if identity_update not in {"mixed", "attention", "pointer"}:
@@ -23,6 +36,7 @@ class BindingTransformer(TraversalTransformer):
         super().__init__(heads=heads, **kwargs)
         self.matcher, self.identity_update = matcher, identity_update
         self.identity_only = bool(identity_only)
+        self.adaptive_strength = bool(adaptive_strength)
         with torch.no_grad():
             for g in self.grounders:
                 g.query_null_logit.fill_(null_init)
@@ -100,6 +114,10 @@ class BindingTransformer(TraversalTransformer):
             route = None if fast_none else induce_bias(pq, selected[:, None], pk)[:, 0]
             strengths = self.strengths[slot].expand(self.heads, -1)
             strengths = strengths[:, relation if self.typed else torch.zeros_like(relation)].T
+            confidence = None if pq is None else binding_confidence(pq)
+            if self.adaptive_strength and confidence is not None:
+                # One recurrent query per example; broadcast over heads.
+                strengths = strengths * confidence
             bias = None if fast_none else route[:, None] * strengths[:, :, None, None]
             allowed = None
             current_memory = memory
@@ -149,6 +167,7 @@ class BindingTransformer(TraversalTransformer):
                 diagnostics.append({"pq": pq, "pq_after": pq_after, "pk": pk, "attention": attention,
                                     "bias": route, "content_bias": content_bias,
                                     "strengths": strengths, "state": state,
+                                    "binding_confidence": confidence,
                                     "state_before": state_before, "state_after": state,
                                     "identity_write": identity_write,
                                     "identity_proposal": proposal[..., :self.key_dim],

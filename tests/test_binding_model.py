@@ -136,3 +136,56 @@ def test_pointer_rejects_untyped_union_with_branching():
     adjacency[:, 1] = adjacency[:, 1].roll(1, -1)
     with pytest.raises(ValueError, match='substochastic'):
         model(dict(batch, adjacency=adjacency))
+
+
+def test_adaptive_disabled_preserves_parameters_rng_and_outputs():
+    torch.manual_seed(42)
+    default = BindingTransformer()
+    state = torch.random.get_rng_state()
+    torch.manual_seed(42)
+    disabled = BindingTransformer(adaptive_strength=False)
+    assert torch.equal(state, torch.random.get_rng_state())
+    for name, parameter in default.state_dict().items():
+        assert torch.equal(parameter, disabled.state_dict()[name])
+    batch = make_batch(batch_size=2, depth=3)
+    for mode in default.MODES:
+        assert torch.equal(default(batch, mode=mode), disabled(batch, mode=mode))
+
+
+def test_confidence_real_uniform_null_and_gradients():
+    from topoformer.binding_model import binding_confidence
+    probabilities = torch.tensor([[1., 0., 0.], [1/3, 1/3, 1/3], [0., 0., 1.]], requires_grad=True)
+    confidence = binding_confidence(probabilities)
+    assert torch.allclose(confidence, torch.tensor([1., 0., 0.]), atol=1e-7)
+    confidence.sum().backward()
+    assert torch.isfinite(probabilities.grad).all()
+    scores = torch.tensor([[2., 1., -1.]], requires_grad=True)
+    value = binding_confidence(scores.softmax(-1))
+    value.sum().backward()
+    assert 0 < value.item() < 1
+    assert torch.isfinite(scores.grad).all() and scores.grad.abs().sum() > 0
+
+
+def test_adaptive_strength_modulates_attention_not_pointer_identity_write():
+    fixed = BindingTransformer(identity_update='pointer')
+    adaptive = BindingTransformer(identity_update='pointer', adaptive_strength=True)
+    adaptive.load_state_dict(fixed.state_dict())
+    batch = make_batch(batch_size=2, depth=4)
+    _, first = fixed(batch, return_diagnostics=True)
+    logits, changed = adaptive(batch, return_diagnostics=True)
+    for a, b in zip(first, changed):
+        assert torch.equal(a['identity_write'], b['identity_write'])
+        assert torch.equal(a['pnext'], b['pnext'])
+        assert torch.equal(b['strengths'], a['strengths'] * b['binding_confidence'])
+        assert ((b['binding_confidence'] >= 0) & (b['binding_confidence'] <= 1)).all()
+    assert not torch.equal(first[0]['attention'], changed[0]['attention'])
+    F.cross_entropy(logits, batch['targets']).backward()
+    assert torch.isfinite(adaptive.grounders[0].query_projection.weight.grad).all()
+    assert adaptive.grounders[0].query_projection.weight.grad.abs().sum() > 0
+
+
+@pytest.mark.parametrize('write', ['mixed', 'attention'])
+def test_adaptive_zero_strength_equivalence(write):
+    model = BindingTransformer(identity_update=write, strength=0, adaptive_strength=True)
+    batch = make_batch(batch_size=2, depth=3)
+    assert torch.equal(model(batch, mode='none'), model(batch, mode='soft'))
