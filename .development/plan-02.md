@@ -44,3 +44,8 @@ Variants: none, soft, hard, graph_input, learned, typed. Graphs [N,N] or [B,N,N]
 - [ ] Implement artifact-only analysis, efficiency/paired summaries and exportable figures; record exact thresholds and selection rules.
 - [ ] Write detailed `.development/stage2-report.md` including negative results, limits and next milestone decision; update README and journal.
 - [ ] Independent code/scientific review, address findings, run covering checks; commit/push artifacts and reports.
+
+### Supplementary control — identity-enabled fixed-graph efficiency
+- [ ] Model optional `node_count` creates learnable node embeddings with consistent state keys; default behavior unchanged. Test exact paired zero-alpha behavior, embedding gradients, and size validation.
+- [ ] Runner `efficiency_identity` repeats counts/seeds/domains with none/soft4/hard; explicit `node_identity` metadata. No identities in transfer.
+- [ ] Analysis treats both efficiency suites separately and explains representational limitation of the identity-free no-graph baseline.

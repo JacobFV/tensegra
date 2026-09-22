@@ -24,3 +24,7 @@ Noise-free recursive reference starts from the same observed test history and it
 ## Resources
 
 Remote gb10-direct CPU venv, OMP/BLAS threads 2; no local training. Single study process, bounded per-suite deadline and output overwrite protection. Checkpoint curves provide optimizer budgets without redundant restarts. Old artifacts remain immutable. Commit and push code, then source-revision-bound results, then detailed reports.
+
+## Pre-result supplementary control: fixed variable identities
+
+The identity-free predictor is permutation equivariant. Without graph or variable identities it cannot directly encode an arbitrary fixed asymmetric adjacency by variable name. Efficiency against this baseline can reflect missing information/representational limits, not only difficulty learning topology. Before observing stage-2 results, add `efficiency_identity`: identical fixed-graph sweep with a learned node embedding table shared in initialization and parameter count across none/soft4/hard. This adds 108 runs. Only this supplementary suite uses fixed node identities; runtime transfer retains fully node-count-agnostic models. Report both suites, and do not attribute all identity-free gains to optimization. Table capacity makes adjacency representation possible, but 600-step convergence is not guaranteed.

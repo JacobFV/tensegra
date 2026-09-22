@@ -19,3 +19,5 @@ Decisions:
 Pre-implementation refinement: shared efficiency normalization is fitted on the smallest (8-trajectory) training subset, so larger training pools do not leak distribution statistics into the smallest sample budget. The same statistics are reused at every count.
 
 Before any stage-2 result, added the tighter 10% remaining oracle-to-zero gap threshold alongside 25% and 50%; the pilot suggests the looser targets could saturate early. Report every threshold without selecting one for the strongest result.
+
+Before full experiments: identified a scientific limitation of identity-free fixed-graph baselines. Added preregistered `efficiency_identity` supplementary suite with matched learned node embeddings for none/soft4/hard across all sample budgets and seeds. This permits fixed variable identities to help learn adjacency. It costs 108 additional runs; it is separate from node-count-agnostic transfer. No stage-2 result motivated this addition.
