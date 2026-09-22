@@ -6,7 +6,7 @@ Stage 3 tests whether a recurrent neural state can remain bound to runtime entit
 
 One recurrent update is invoked for every supplied relation instruction. Evaluation at greater depth therefore gives the model proportionally more computation and an explicit execution schedule. The experiment does not test discovery of a program counter, autonomous stopping, latent plan induction, lexical name resolution, or natural-language interpretation. The primary model also begins with an identity-coordinate alignment prior. The experiment is designed to characterize when this binding-and-traversal mechanism works and how it fails, rather than to presume successful latent grounding.
 
-The preregistered full configuration is [`configs/stage3.json`](../configs/stage3.json). It contains 13 variants, 3 seeds, and 400 optimizer steps per run, for 39 trained runs. The main launch source is `2adc87c`; its exact-source gate passed 206 tests in 2.16 seconds. Results are not included here; this document fixes the interpretation of the ongoing experiment before its metrics are inspected.
+The preregistered full configuration is [`configs/stage3.json`](../configs/stage3.json). It contains 13 variants, 3 seeds, and 400 optimizer steps per run, for 39 trained runs. The feasibility pilot contains six variants for one seed and 100 steps. A separately labeled keyed supplement contains three variants, three seeds, and 400 steps, adding nine runs. The main launch source is `2adc87c`; its exact-source gate passed 206 tests in 2.16 seconds. The keyed source is `27ca0a2`, gated by 211 tests in 2.18 seconds. Results are not included here; this document fixes their interpretation.
 
 ## Runtime graph task
 
@@ -67,7 +67,7 @@ The default temperature is 0.05. The default learned models use one grounding mo
 
 The primary learned models contain an explicit keyed-binding prior. The first 16 query-state and memory coordinates contain the random identity key. Query/key latent projections begin as \(\sqrt{16}I\) on those coordinates, entity projections begin as \(I\), and both null logits begin at 0.65. Because entity keys are unit-normalized, the square-root scale cancels the kernel's \(1/\sqrt{d_g}\) factor at initialization. The initial real-entity score is consequently an identity-key dot product competing with a null threshold of 0.65, followed by temperature 0.05.
 
-The `random_init` control removes this alignment: all four projections use ordinary random initialization and null logits start at zero. It retains the same task, loss, architecture, and structural strength. A gap between `soft` and `random_init` measures dependence on the coordinate prior; it cannot be described as evidence that the primary model discovered arbitrary identity binding unaided.
+The `random_init` control removes this alignment: all four projections use ordinary random initialization and null logits start at zero. Thus it removes both the coordinate-matching prior and the initial null-threshold calibration; its null behavior is not an isolated test of projection initialization. It retains the same task, loss, architecture, and structural strength. A gap between `soft` and `random_init` measures dependence on the combined initialization prior; it cannot be described as evidence that the primary model discovered arbitrary identity binding unaided.
 
 ### Known cosine grounding is a different mechanism
 
@@ -112,6 +112,12 @@ All 13 variants receive the same public task inputs and relation schedule.
 | `shared_strength` | Same as `soft`, but shares one coefficient across heads for each relation instead of learning separate head coefficients. |
 | `untyped` | Replaces the instructed typed relation with the union/max over relation adjacencies and uses relation-agnostic strengths. The instruction embedding remains available to content attention. |
 | `period4` | Uses four separately trained grounding/strength slots for training depths 1–4 and cycles them at deeper steps. Ordinary computation parameters are copied from a canonical same-seed initialization. This tests per-step projections without introducing untrained parameters at extrapolation depths. |
+
+### Supplemental keyed intervention
+
+The keyed supplement adds a fixed content-attention term \(8\cos(h_t^{id},k_j)\), computed between the current state's identity prefix and each immutable token key. `none_keyed` uses this content term without structural routing. `soft_keyed` combines it with learned soft structural routing initialized at strength 16. `graph_input_keyed` applies it after fixed-cosine graph-message construction; the configured structural coefficient is inactive in graph-input mode because that mode supplies the graph through values rather than structural logits.
+
+The intervention does not make the mechanisms identical. For direct soft routing, cosine content favors the current-identity token while graph bias favors the successor token. For graph input, the successor message is stored in the current/source token value, so both graph construction and content retrieval favor the source-token position. The supplement diagnoses this interaction and sensitivity to a stronger structural coefficient; it is not folded into the original 13-variant grid or described as an all-else-equal ranking of graph encodings.
 
 The direct functional oracle and exact one-hot attention oracle are evaluation controls rather than trained variants. The direct oracle indexes the supplied adjacency exactly. The attention oracle binds keys by exact tensor equality and traverses shuffled memory with one-hot legal attention. Both are privileged algorithms and test task/routing algebra; their success is not neural grounding evidence. Under corrupted supplied adjacency they follow the corrupted structure, while gold targets remain clean, exposing the task's information limit.
 
@@ -181,6 +187,8 @@ Training time measures forward/backward optimization only. Total run time includ
 Peak RSS is the process-wide cumulative high-water mark reported by the operating system. Because all variants execute sequentially in one process, it is not an isolated per-model allocation and should not be subtracted or treated as precise incremental memory. Parameter counts, device, thread count, Torch version, training examples, timing, strengths, temperatures, initial/final hashes, schedule hash, and evaluation data hashes are retained.
 
 Each completed run is appended and flushed to JSONL. Resume requires the exact resolved configuration hash and the same source-file hashes; duplicate run keys or mismatched provenance abort. Nonfinite loss or metrics abort rather than yielding a partial successful row. Analysis requires a complete variant-by-condition-by-seed grid, common provenance, matched schedule/evaluation hashes, and finite metrics before paired summaries are produced.
+
+The final code, analyzer, render, and artifact state at source `85e6017` passed 215 tests in 2.17 seconds. The committed audit covers the six-run pilot, 39-run main family, nine-run keyed supplement, and 50 hashed artifacts.
 
 ## Interpretation limits
 
