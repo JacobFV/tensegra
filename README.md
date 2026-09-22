@@ -240,3 +240,16 @@ losslessly compressed `.jsonl.gz` metrics. See the
 [Stage 4 design](.development/stage4-design.md) and
 [methods](.development/stage4-methods.md) for the architectural priors, supervision
 boundaries and preregistered stability gate before adaptive-strength experiments.
+
+The [Stage 4 report](.development/stage4-report.md) includes the completed 69-run
+matrix, raw metrics, heatmaps, and independent audits. At depth 64 on 128 nodes,
+identity-initialized explicit pointer writes achieve 99.74% task accuracy and 100%
+complete paths; protected attention writes achieve 92.45% and 90.89%. The pointer
+paths were already perfect at initialization. Randomly initialized pointer models
+with grounding supervision reach 83.85% task accuracy and 86.20% complete paths.
+These results distinguish preserving supplied binding from learning it from scratch.
+
+The separately gated `configs/stage4-adaptive.json` compares two fresh pointer
+models with base strength frozen at 4: fixed versus null-aware entropy modulation.
+It changes content attention, while the explicit pointer transition remains intact.
+Run it with the same `topoformer.binding_study` command and a separate output directory.
