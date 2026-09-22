@@ -82,3 +82,11 @@ The frozen main experiment completed all **30 runs** at clean source `2e95c9ff94
 All **30 saved checkpoints** loaded with `weights_only=True`; variant/seed, configuration, source, finite tensors, final state hashes, and exact checkpoint inventory match their raw metric rows. Every recorded Python source hash matches the frozen checkout. The compressed raw-file hash and each checkpoint-file hash are recorded in `.development/results/stage5/main/audit.json`.
 
 This audit establishes artifact consistency and provenance, not statistical significance or broad architectural superiority. The separately sourced selector-read supplement is still pending; its cross-study pairing must be checked after completion.
+
+## Completed supplement and cross-study audit
+
+The frozen selector supplement completed all **nine runs** at clean source `4ca8fb9e7f55ef401c0fabedb208d55b57ad7cf6`. Independent verification passed **261 cells** and all nine `weights_only=True` checkpoints, including finite tensors, metadata, final-state hashes, checkpoint inventory, and frozen source-file hashes. Results are recorded in `.development/results/stage5/selector/audit.json`.
+
+A separate streaming cross-study comparison checked every supplemental variant against every main variant with the same seed: **90 comparisons**. All initialization hashes, training-schedule hashes, and all 29 evaluation/curve data hashes per comparison match exactly. Resolved configuration values differ **only in the variant list**. Both compressed metric hashes and comparison records are saved in `.development/results/stage5/selector/cross-main-pairing.json`.
+
+The final source snapshot `6282ecb` passed the complete **359-test suite in 3.59 seconds** in the independent remote checkout. Main and supplemental training checkouts were untouched. Both experiment sets are approved as internally consistent and reproducible artifacts, subject to the scientific limitations already documented; this is not a claim that their outcomes establish the broader thesis.
