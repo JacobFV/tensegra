@@ -29,3 +29,11 @@ Before main training, inspection identified that a single object chain with glob
 ## Main study launch
 
 Frozen main source: `2e95c9ff9403e9a2226a66bb0e875b762cb8736d`, clean remote checkout `~/topoformer-runtime-run`. The full suite passed 353 tests in 3.30 seconds; all ten variants passed the six-family smoke including every diagnostic intervention, and the artifact analyzer accepted those records. Main configuration is 400 updates, warm boundary 200, batch 16, three seeds, 64 examples per condition, 12 depth/distractor cells plus 8 stress conditions. It runs sequentially with two CPU threads. No model/data/training edits will alter this checkout while the study runs.
+
+## Disclosed stronger-control supplement during main execution
+
+While first-seed main results were becoming visible, interface inspection identified a remaining mechanism comparison: graph-data and protected-learned controls share supervised clause features but do not directly consume the learned selector/op distributions in their neural transitions. The Stage3 keyed-control result makes this distinction scientifically important. The frozen main runs remain unchanged.
+
+A separate three-variant supplement will directly feed predicted semantic reads to graph-data and protected-learned controllers, plus a privileged known-lowering protected-neural control. This adds `P_selector @ observable_node_memory` to content retrieval and an operation-distribution read of the existing operation weights to clause state; it does not add exact arithmetic, scope resolution or interpreter transitions. Oracle lowering uses explicitly supplied semantic distributions only in its labeled condition. Default behavior, parameter shapes, initial RNG and common data schedules must match the main models before their results are reused as comparisons. The extra connection is an architectural control, not a claim that metric attention is superior.
+
+The supplement is fixed to the same 400-update/three-seed budget and main evaluation conditions. It is disclosed post-main-launch work, not retroactive preregistration. No OOD checkpoint selection or result-dependent budget tuning is permitted.
