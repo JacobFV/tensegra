@@ -169,3 +169,27 @@ separate answer accuracy, binding trajectories and attention trajectories.
 See the [Stage 3 design](.development/stage3-design.md),
 [model assumptions](.development/stage3-model-notes.md) and
 [leakage review](.development/stage3-leakage-review.md).
+
+The [Stage 3 report](.development/stage3-report.md) separates the main 39-run study
+from a nine-run stronger content-prior control. [Methods](.development/stage3-methods.md),
+[main raw metrics](.development/results/stage3/main/metrics.jsonl),
+[supplement raw metrics](.development/results/stage3/keyed/metrics.jsonl), and
+[figures and diagnostic trajectories](.development/results/stage3/main/analysis/report.md)
+are included. Identity-initialized grounding supports some depth transfer;
+random initialization and joint depth/size transfer remain weak. A stronger
+graph-as-data control removes the evidence for metric-specific superiority.
+
+Reproduce the supplemental control and analyze either family's metrics separately:
+
+```sh
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
+  .venv/bin/python -m topoformer.grounding_study \
+  --config configs/stage3-keyed.json --output results/grounding-keyed
+
+PYTHONPATH=src .venv/bin/python -m topoformer.grounding_analysis \
+  results/grounding/metrics.jsonl results/grounding-analysis
+```
+
+Figures use optional `matplotlib`; add `--no-plots` for tables and JSON only.
+Without Torch installed, invoke `python3 src/topoformer/grounding_analysis.py`
+directly with the same arguments to avoid importing the Torch-backed package.
