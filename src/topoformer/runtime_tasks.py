@@ -25,6 +25,35 @@ RESULT_MIN, RESULT_MAX, RESULT_SCALE, OUTPUT_CLASSES = -64, 64, 64., 129
 KINDS = ('scalar', 'record', 'array', 'binding', 'field_slot', 'index_slot', 'function', 'frame')
 
 
+# Human-readable surface vocabulary. Reference features are a separate channel;
+# these words are generated tokens, not evidence of general natural-language parsing.
+TOKEN_WORDS = {0: '[pad]', 32: 'please', 33: 'the referenced item', 34: 'now'}
+TOKEN_WORDS.update({1+i: word for i,word in enumerate(('resolve','read field','read index','add','subtract','subtract from','multiply'))})
+TOKEN_WORDS.update({16+i: word for i,word in enumerate(('find name','get property','take element','plus','minus','reverse subtract','times'))})
+
+
+def decode_surface(tokens, reference_label=None):
+    phrase = ' '.join(TOKEN_WORDS.get(int(token), f'[token {int(token)}]') for token in tokens if int(token))
+    return phrase if reference_label is None else f'{phrase}; reference: {reference_label}'
+
+
+def render_output(predicted_class, style):
+    """Fixed text decoder after a learned output class, not a learned text generator."""
+    value = int(predicted_class)
+    if style == 0 and 0 <= value < OUTPUT_CLASSES:
+        return f'the value is {value + RESULT_MIN}'
+    if style == 1 and value in (0,1):
+        return ('no', 'yes')[value]
+    if style == 2 and value in (0,1,2):
+        return ('negative', 'zero', 'positive')[value]
+    return '[invalid output class for requested style]'
+
+
+def _surface_tokens(op, template):
+    cue = 16+op if template == 'paraphrase' else 1+op
+    return [34,33,cue,32] if template == 'heldout' else [32,cue,33,34]
+
+
 @dataclass
 class RuntimeTask:
     runtime: Runtime
@@ -63,7 +92,8 @@ def _one(seed, nodes, depth, family, style):
     names = [f'v_{rng.getrandbits(48):012x}' for _ in range(nodes + depth + 5)]
     actions = []
     if family in ('nested', 'aliases', 'mixed'):
-        value = rt.scalar(rng.randint(-12, 12)); reverse = []
+        expected_result = rng.randint(-12, 12)
+        value = rt.scalar(expected_result); reverse = []
         for step in range(depth):
             if step % 2:
                 index = rng.randrange(3)
@@ -84,10 +114,11 @@ def _one(seed, nodes, depth, family, style):
         binding = rt.bind(names[0], rt.scalar(start), scope)
         if family == 'scope':
             scope = rt.frame(scope)
-            binding = rt.bind(names[0], rt.scalar(rng.randint(-4,4)), scope)
+            start = rng.randint(-4,4)
+            binding = rt.bind(names[0], rt.scalar(start), scope)
         actions = [(0,binding)]
         # add/sub and +/-1 multiplication keep every intermediate in [-64,64]
-        current = rt.to_python(rt.value_of(binding))
+        current = start
         for step in range(depth):
             op = rng.choice(('add','sub','rsub','mul'))
             operand = rng.choice((-1,1)) if op == 'mul' else rng.randint(-1,1)
@@ -98,18 +129,21 @@ def _one(seed, nodes, depth, family, style):
                          'rsub':lambda:operand-current,'mul':lambda:current*operand}[op]()
             if abs(predicted)>60: operand=0; op='add'; predicted=current
             actions.append((OPS.index(op),rt.scalar(operand))); current=predicted
+        expected_result = current
     # Each distractor is an independently named visible scalar binding.
     for name in names[depth+2:depth+2+nodes]:
         rt.bind(name,rt.scalar(rng.randint(-12,12)),rt.root_scope)
     candidates=list(rt.nodes); rng.shuffle(candidates)
     ids={node:i for i,node in enumerate(candidates)}
     action_ids=tuple((op,ids[node]) for op,node in actions)
-    # Run the separately correct interpreter on a copy solely to obtain labels.
+    # Labels come from generator-side scalar arithmetic / the selected leaf.
+    # Execution independently checks that the constructed world matches them.
     from .runtime_execution import run_actions
     trial = RuntimeTask(rt,scope,tuple(candidates),action_ids,0,family,style,rng.randint(-8,8),(),())
     executed=run_actions(trial,action_ids)
     assert executed.valid, executed.trace
-    trial.gold_result=int(executed.result)
+    assert executed.result == expected_result, (executed.result, expected_result)
+    trial.gold_result=expected_result
     trial.gold_registers=tuple(x['register'] for x in executed.trace)
     trial.surface=tuple(f'{OPS[op]} {rt.nodes[node].payload}' for op,node in actions)
     return trial
@@ -188,8 +222,7 @@ def make_batch(batch_size=32, nodes=8, depth=4, seed=0, noise=.1,
             # Cue tokens correspond to operation words, not supplied operation IDs.
             # Heldout templates reorder trained lexical pieces; paraphrases use
             # synonymous token 16+op, observed during mixed-template training.
-            cue=(16+op if template=='paraphrase' else 1+op)
-            public['surface'][row,j]=torch.tensor([32,cue,33,34] if template!='heldout' else [34,33,cue,32])
+            public['surface'][row,j]=torch.tensor(_surface_tokens(op,template))
             public['reference'][row,j]=keys[selector]+noise*torch.randn(key_dim,generator=gen)
         if ambiguous or invalid:
             t.expected_valid=False
@@ -206,9 +239,13 @@ def make_batch(batch_size=32, nodes=8, depth=4, seed=0, noise=.1,
             else:
                 # Deliberately ill-typed: field access before any object binding.
                 gold['ops'][row,0]=1
-                public['surface'][row,0,1]=2 if template!='paraphrase' else 17
+                public['surface'][row,0]=torch.tensor(_surface_tokens(1,template))
                 actions[0]=(1,actions[0][1])
             t.gold_actions=tuple(actions)
+        t.surface=tuple(decode_surface(public['surface'][row,j].tolist(),
+                        '[missing cue]' if selector>=len(t.candidates) else
+                        repr(t.runtime.nodes[t.candidates[selector]].payload))
+                        for j,(_,selector) in enumerate(t.gold_actions))
         if corruption:
             # Wrong-world intervention permutes value destinations while keeping
             # symbolic and tensor worlds identical; labels remain clean.

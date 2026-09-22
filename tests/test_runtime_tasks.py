@@ -115,3 +115,41 @@ def test_output_style_is_not_fixed_by_family():
         for task in make_batch(6,depth=1,nodes=1,seed=seed)['tasks']:
             seen[task.family].add(task.style)
     assert all(styles=={0,1,2} for styles in seen.values())
+
+
+import pytest
+
+
+@pytest.mark.parametrize('depth', [16,32])
+@pytest.mark.parametrize('family', FAMILIES)
+def test_deep_runtime_matches_independent_generator_result(family,depth):
+    batch=make_batch(2,nodes=3,depth=depth,family=family,seed=129)
+    result=execute_batch(batch['tasks'],batch['gold']['ops'],batch['gold']['selectors'])
+    assert all(x.valid and x.complete and x.result==t.gold_result for x,t in zip(result,batch['tasks']))
+
+
+def test_generator_detects_executor_result_bug(monkeypatch):
+    import topoformer.runtime_execution as execution
+    original=execution.run_actions
+    def faulty(*args,**kwargs):
+        result=original(*args,**kwargs)
+        result.result+=1
+        return result
+    monkeypatch.setattr(execution,'run_actions',faulty)
+    for family in FAMILIES:
+        with pytest.raises(AssertionError):
+            make_batch(1,nodes=2,depth=16,family=family,seed=7)
+
+
+def test_surface_and_output_decoders_reflect_observed_templates():
+    from topoformer.runtime_tasks import decode_surface, render_output
+    for template in ('canonical','paraphrase','heldout'):
+        batch=make_batch(1,seed=2,template=template,invalid=True)
+        task=batch['tasks'][0]
+        for step,tokens in enumerate(batch['public']['surface'][0]):
+            assert task.surface[step].startswith(decode_surface(tokens))
+        assert ('read field' in task.surface[0]) if template!='paraphrase' else ('get property' in task.surface[0])
+    assert render_output(77,0)=='the value is 13'
+    assert render_output(1,1)=='yes'
+    assert render_output(0,2)=='negative'
+    assert render_output(4,1).startswith('[invalid')
