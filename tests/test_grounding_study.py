@@ -53,3 +53,24 @@ def test_resume_checks_config_and_source(tmp_path):
 def test_validation_rejects_incomplete_budget():
     with pytest.raises(ValueError, match='checkpoints'):
         tiny(checkpoints=[0])
+
+
+def test_correct_start_does_not_count_as_completed_path():
+    config = tiny()
+    class WrongDestination(torch.nn.Module):
+        def forward(self, batch, **kwargs):
+            count, nodes, _ = batch['entity_keys'].shape
+            start = (batch['start_keys'][:, None] * batch['entity_keys']).sum(-1).argmax(-1)
+            successor = batch['adjacency'][torch.arange(count), batch['relations'][:, 0], start].argmax(-1)
+            wrong = (successor + 1) % nodes
+            pq = torch.nn.functional.one_hot(start, nodes + 1).float()[:, None]
+            after = torch.nn.functional.one_hot(wrong, nodes + 1).float()[:, None]
+            identities = (batch['token_keys'] @ batch['entity_keys'].transpose(-1, -2)).argmax(-1)
+            pk = torch.nn.functional.one_hot(identities, nodes + 1).float()
+            attention = (identities == wrong[:, None]).float()
+            attention /= attention.sum(-1, keepdim=True)
+            return torch.zeros(count, config.classes), [dict(pq=pq, pq_after=after, pk=pk, attention=attention[:, None, None])]
+    result = evaluate(WrongDestination(), 'soft', config, conditions(config)[0], 100)
+    assert result['exact_pre_step_grounding'] == 1.
+    assert result['exact_path_completion'] == 0.
+    assert result['exact_attention_path_completion'] == 0.

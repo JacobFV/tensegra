@@ -172,7 +172,7 @@ def evaluate(model, mode, config, condition, seed):
             'pre_step_next_node_mass', 'structural_next_node_mass', 'relation_attention_mass', 'clean_next_attention_mass', 'exact_path_completion', 'exact_attention_path_completion', 'exact_pre_step_grounding', 'null_mass',
             'key_grounding_accuracy', 'distractor_null_accuracy', 'oracle_task_accuracy',
             'mean_distinct_path_nodes', 'oracle_exact_path_completion', 'attention_oracle_task_accuracy', 'attention_oracle_exact_path_completion')}
-    step_sums = [{key: 0. for key in ('grounding_accuracy', 'grounding_entropy', 'pre_step_next_node_mass',
+    step_sums = [{key: 0. for key in ('grounding_accuracy', 'grounding_entropy', 'pre_step_next_node_mass', 'structural_next_node_mass',
                                        'relation_attention_mass', 'clean_next_attention_mass', 'null_mass')} for _ in range(depth)]
     hashes, example = [], []
     started = time.perf_counter()
