@@ -56,16 +56,6 @@ class BindingTransformer(TraversalTransformer):
                            dtype=torch.bool, device=scores.device)), -1)
         return scores.masked_fill(~valid[:, None], -torch.inf).softmax(-1)
 
-    def _known(self, state, entities):
-        scores = F.normalize(state[..., :self.key_dim], dim=-1) @ F.normalize(entities, dim=-1).transpose(-1, -2)
-        # A fixed cosine threshold gives unknown identities a genuine null option.
-        null = torch.full_like(scores[..., :1], 0.65)
-        return torch.softmax(torch.cat((scores, null), -1) / self.known_temperature, -1)
-
-    def _heads(self, tensor):
-        return tensor.reshape(tensor.shape[0], tensor.shape[1], self.heads,
-                              self.width // self.heads).transpose(1, 2)
-
     def forward(self, batch, *, mode="soft", return_diagnostics=False):
         if mode not in self.MODES:
             raise ValueError(f"unknown traversal mode: {mode}")
