@@ -138,3 +138,38 @@
   initialization, and exact revision. Scoped review accepted all prior fixes,
   but found a new deadline-boundary issue: a completed mode could be followed by
   another after budget expiry. A focused regression/fix is in progress.
+
+### Full pilot launched
+
+- Task 3 approved after deadline-boundary regression fixes (acf9ce0); full remote
+  suite 65 passed in 1.20 s. A fresh clean-checkout CLI smoke also completed.
+- Launched unmodified configs/pilot.json from exact remote revision acf9ce0:
+  sparse/robot domains, seeds 0/1/2, 300 optimizer steps, five graph modes plus
+  tokenwise MLP and diagnostic references. All computation on remote CPU, two
+  threads, max_wall_seconds=1800 and an outer 1900-second process timeout.
+- Remote output: ~/topoformer-pilot/run/results/pilot-acf9ce0; progress log:
+  ~/topoformer-pilot/pilot-acf9ce0.log. Approximately 115 GiB system RAM was
+  available immediately before launch. No local model training performed.
+
+### Pilot results and artifact audit
+
+- All 54 rows completed; all 36 learned-model runs used 300 optimizer steps.
+  Verified identical graph-model initial hashes and schedule hashes/seeds for each
+  paired case; finite metrics; exact source revision acf9ce0. JSONL rows exactly
+  match summary rows, and normalized/raw metrics use consistent per-case scales.
+- Validation selected lambda=4 separately in both domains. Mean held-out normalized
+  MSE: sparse absent 0.583298, selected soft 0.551450; robot absent 0.504851,
+  selected soft 0.454132. All three seeds improved for each one-step comparison.
+  Correct lambda=1 graphs also beat same-strength permuted graphs.
+- Generalization is mixed: sparse normalized rollout 0.922631 -> 0.909979;
+  robot 0.808069 -> 0.812898. Transient normalized MSE is very large and does
+  not improve (sparse 218.258 -> 218.492; robot 266.374 -> 268.842).
+  This is evidence for the simple one-step structural prior, not the end thesis.
+- Peak process RSS: 366360 KiB (~357.8 MiB). Sum of measured learned-model run
+  times: 32.286 seconds; this excludes some orchestration/setup and is not an
+  independent end-to-end measurement. Torch 2.14.0+cpu; no GPU training.
+- Artifacts (175611 bytes total):
+  - pilot-summary.json SHA256 0eecd465e7201927feed10ab83997e79bd46d5ddee32cda1437bbfdca87fd30d
+  - pilot-metrics.jsonl SHA256 6d8008b089edbb8f11288fb7491d963fc12f6e84cebfc77b8f221b5990b9a089
+- A subagent is writing the scientific report from immutable artifacts; a final
+  whole-branch review follows. No hyperparameter/budget changes after results.

@@ -168,50 +168,50 @@ def run(config: dict, output_dir: str) -> dict:
     ...
 ```
 
-- [ ] Write failing tests for variable-count support, joint permutation
+- [x] Write failing tests for variable-count support, joint permutation
   equivariance, hard-mask receptive fields, zero-strength model equivalence,
   finite backward passes, invalid configurations, deterministic tiny training,
   and split/initialization pairing. Use a chain for locality: after one layer,
   changing node 3 cannot alter node 0; after two layers, node 3 still cannot
   alter node 0. Disable dropout; test with multiple inputs to avoid accidental
   equality hiding a communication path.
-- [ ] Run `python -m pytest tests/test_model.py tests/test_experiment.py -q` and
+- [x] Run `python -m pytest tests/test_model.py tests/test_experiment.py -q` and
   confirm expected failures.
-- [ ] Implement a shared history projection, tokenwise LayerNorm, residual
+- [x] Implement a shared history projection, tokenwise LayerNorm, residual
   attention/MLP blocks, and tokenwise scalar readout. No global pooling or learned
   fixed-count node embedding. Receptive field grows at most one graph edge per
   layer under hard masking. History channels include only that node's past.
-- [ ] Implement CLI `python -m topoformer.experiment --config configs/pilot.json
+- [x] Implement CLI `python -m topoformer.experiment --config configs/pilot.json
   --output results/pilot`. Validate unknown keys, positive sizes, nonnegative
   noise, width divisibility, and supported modes before allocating datasets.
   Bound CPU threads at 2 and use no DataLoader subprocesses. Support explicit
   CPU/CUDA choice and a maximum wall-time setting that writes partial results.
-- [ ] For each system and seed, generate separate train/validation/test
+- [x] For each system and seed, generate separate train/validation/test
   trajectories with recorded split seeds; compute a shared scalar mean/std from
   training observations only. Reuse the exact splits and batch index sequence
   across modes. Clone a single initialized model state for all modes. Initialize
   fresh optimizers. Train with AdamW and next-step MSE.
-- [ ] Initial config: kinds `sparse` and `robot`, 12 nodes, history 4, width 32,
+- [x] Initial config: kinds `sparse` and `robot`, 12 nodes, history 4, width 32,
   4 heads, 2 layers, batch size 32, 128/32/32 trajectories of 40 observed steps,
   300 optimizer steps, seeds 0/1/2, learning rate 0.001. Modes: none, true soft
   lambda 1, true soft lambda 4, permuted soft lambda 1, true hard mask. Check
   validation every 50 steps; pick soft lambda using mean validation performance,
   never test scores. Keep each mode's curves available. The primary comparison
   reports the selected soft setting against unbiased and hard-mask runs.
-- [ ] Include persistence and a tokenwise MLP with the same history input as
+- [x] Include persistence and a tokenwise MLP with the same history input as
   calibration baselines. Evaluate one-step MSE and recursive 10-step rollout MSE
   on fresh held-out trajectories, updating predicted history after each step.
   Also evaluate the same fixed generator on held-out initial states scaled by 2;
   label this initial-state shift, not new-graph transfer.
-- [ ] Record validation/test errors, parameter counts, wall time, process peak
+- [x] Record validation/test errors, parameter counts, wall time, process peak
   resident memory, CUDA peak allocation when supported, seed, configuration,
   git revision, and software/device versions. Report every seed and paired
   differences with mean and standard deviation. No scaling-law fitting yet.
-- [ ] Emit concise progress logs at validation intervals: domain, seed, mode,
+- [x] Emit concise progress logs at validation intervals: domain, seed, mode,
   step/total, train/validation loss, elapsed seconds, and artifact path at run end.
   Do not log every batch or dump tensors. Append journal notes at each verified
   milestone describing decisions, results, and unresolved questions.
-- [ ] Run the full suite and a tiny 2-step CPU integration configuration; review,
+- [x] Run the full suite and a tiny 2-step CPU integration configuration; review,
   fix findings, document runnable commands, commit, and push.
 
 ## Task 4: Remote pilot and honest report
@@ -250,4 +250,4 @@ Self-review: interfaces are consistent; every first-pilot task has ownership,
 validation, and a commit boundary. The broader design's unimplemented requirements
 are listed under deferred stages rather than silently claimed covered.
 User approved this plan and selected subagents. Task 1 is implemented and reviewed;
-Task 2 is complete; Task 3 is in progress. Controller rulings and evidence are recorded in journal.md.
+Tasks 2 and 3 are complete; Task 4 remote pilot is in progress. Controller rulings and evidence are recorded in journal.md.

@@ -1,8 +1,9 @@
 # Topoformer: programmable structure in attention
 
 Status: user approved the first implementation plan and subagent execution. The
-attention core is implemented and reviewed; sequence/robot generators and paired
-experiments are in progress. The broader research stages remain future work.
+attention core, generators, and runner are implemented and reviewed. The first
+three-seed pilot is complete; report/final review are in progress. Broader research
+stages remain future work.
 
 ## Objective and sequence
 
