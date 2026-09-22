@@ -80,6 +80,24 @@ class AnalysisTests(unittest.TestCase):
         self.assertEqual(cell['runtime_nodes']['max'],40)
         self.assertEqual(result['provenance'][0]['metric_semantics']['execution_counts'],'auxiliary audit')
 
+    def test_style_breakdown_and_undefined_outcomes(self):
+        data=list(rows())
+        for row in data:
+            cell=row['evaluations'][0]
+            cell['style_breakdown']={
+                'comparison':dict(examples=2,defined_examples=2,task_correct=1,task_accuracy=.5,oracle_lift_correct=2,oracle_lifting_accuracy=1.),
+                'sign':dict(examples=0,defined_examples=0,task_correct=0,task_accuracy=None,oracle_lift_correct=None,oracle_lifting_accuracy=None)}
+        out=a.summarize(data,CONFIG)
+        style=next(s for s in out['styles'] if s['style']=='comparison')
+        self.assertEqual(style['counts']['defined_examples'],6)
+        self.assertEqual(style['pooled_rates']['oracle_lifting_accuracy'],1.)
+        empty=next(s for s in out['styles'] if s['style']=='sign')
+        self.assertIsNone(empty['pooled_rates']['task_accuracy'])
+        self.assertIsNone(empty['pooled_rates']['oracle_lifting_accuracy'])
+        cell={'counts':dict(examples=2,defined_examples=0,all_lowering_correct=2,execution_given_lowering_correct=0,oracle_lift_correct=2)}
+        self.assertIsNone(a.rates(cell)['execution_given_lowering_correct'])
+        self.assertIsNone(a.rates(cell)['oracle_lifting_accuracy'])
+
     def test_mixed_source_rejected(self):
         broken=list(rows()); broken[-1]['source']['commit']='different'
         with self.assertRaisesRegex(ValueError,'source'):

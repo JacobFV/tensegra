@@ -60,6 +60,9 @@ def rates(cell):
     counts = cell['counts']
     out = {}
     for metric, (numerator, denominator) in RATE_COUNTS.items():
+        if counts.get('defined_examples') == 0 and metric not in ('binding_accuracy','primitive_accuracy','all_binding_accuracy','lowering_accuracy','type_validity_rate','lowering_audit_complete_trajectory_accuracy'):
+            out[metric] = None
+            continue
         if metric in cell and cell[metric] is None:
             out[metric] = None
             continue
@@ -98,7 +101,7 @@ def summarize(rows, config):
     """Consume one decoded run at a time; retain only compact cell statistics."""
     groups=defaultdict(list); curves=defaultdict(list); initial=defaultdict(list)
     confidence=defaultdict(list); identities={}; seen=set(); sources=set(); configs=set()
-    provenance=[]; resources=[]; family_groups=defaultdict(list)
+    provenance=[]; resources=[]; family_groups=defaultdict(list); style_groups=defaultdict(list)
     seeds=set(config['seeds']); variants=set(config['variants'])
     required={f'n{n}_d{d}' for n in config['eval_sizes'] for d in config['eval_depths']}
     if config.get('extra_evaluations'):
@@ -123,6 +126,10 @@ def summarize(rows, config):
                 counts['all_lowering_correct'] = counts.pop('lowering_correct', 0)
                 wrapped = {'counts': counts, 'execution_accuracy': None}
                 family_groups[(key[0],cell['condition'],family)].append((key[1],wrapped))
+            for style,part in cell.get('style_breakdown',{}).items():
+                wrapped={'counts':{k:v for k,v in part.items() if not k.endswith('_accuracy')}}
+                wrapped.update({k:v for k,v in part.items() if k.endswith('_accuracy')})
+                style_groups[(key[0],cell['condition'],style)].append((key[1],wrapped))
         for item in training.get('curve',[]):
             curves[(key[0],item['step'])].append((key[1],item['diagnostics']))
         for cell in row.get('initial_evaluations',[]): initial[(key[0],cell['condition'])].append((key[1],cell))
@@ -165,6 +172,7 @@ def summarize(rows, config):
                 curves=[dict(variant=v,step=s,warmup_boundary=config.get('warmup_steps'),**_aggregate(sorted(items))) for (v,s),items in sorted(curves.items())],
                 initial=[dict(variant=v,condition=c,**_aggregate(sorted(items))) for (v,c),items in sorted(initial.items())],
                 families=[dict(variant=v,condition=c,family=f,**_aggregate(sorted(items))) for (v,c,f),items in sorted(family_groups.items())],
+                styles=[dict(variant=v,condition=c,style=s,**_aggregate(sorted(items))) for (v,c,s),items in sorted(style_groups.items())],
                 caveats=['D counts operations after initial resolve; total schedule length is D+1.',
                          'Grid size denotes distractor objects, not total runtime nodes.',
                          'Exact execution is supplied semantics, not learned symbolic reasoning.',
