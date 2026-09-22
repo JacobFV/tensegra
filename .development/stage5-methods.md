@@ -2,7 +2,7 @@
 
 This stage tests a deliberately narrow neural/runtime boundary. A learned lowerer selects semantic operations and operands from noisy lexical features; a small immutable interpreter executes those selections through protected state; a learned output head interprets the resulting scalar. The experiment does not ask the network to discover the language semantics or invent a program schedule. The independent exact language has broader syntax than the learned benchmark. Those two deliverables must not be conflated.
 
-These methods describe the implementation and provisional main configuration before results. The final report and archived resolved configuration record any budget changes, source freeze and actual run coverage. Earlier stages are preserved.
+The main experiment freezes source at `2e95c9f` with 400 updates, 200 warm-start updates, three paired seeds and ten variants. Results remain pending at this methods revision. The final report and archived resolved configuration record actual coverage and provenance. Earlier stages are preserved.
 
 ## Exact language and runtime
 
@@ -24,7 +24,11 @@ Arithmetic clauses select a builtin operation and a scalar operand. `rsub` rever
 
 The six families are nested alternating record/array lookup, lexical shadowing followed by arithmetic, builtin composition, noncommutative argument ordering, immutable aliases, and mixed lookup/output interpretation. `depth=D` means D operations **after** initial resolution, hence D+1 clauses. `nodes=N` means N additional distractor bindings, **not N total runtime nodes**. Increasing depth also grows the runtime graph. Reports include actual candidate-node counts.
 
-Output styles are independently sampled: numeric result classification over integers −64…64, binary comparison with an observable comparison cue, or three-class sign interpretation. Generation keeps results within that benchmark range; the interpreter's arithmetic is not itself a 129-class operation. Learned lifting is a small MLP over scaled scalar result, style embedding and comparison cue. This tests a narrow latent-output round trip, not natural-language generation or unrestricted downstream reasoning.
+Nested lookup, alias and mixed worlds each include a matched decoy chain with identical depth, field names, index labels and shape but a different root binding and terminal scalar. Swapping only the initial name selector therefore changes the answer; the remaining references are unchanged. Both chains are checked by the exact executor. This prevents a unique terminal-field key from revealing the result without retaining object context. There is one such deep decoy per world, rather than one per distractor binding, to bound dense graph cost.
+
+Output styles are independently sampled: numeric result classification over integers −64…64, binary comparison with an observable comparison cue, or three-class sign interpretation. Generation keeps results within that benchmark range; the interpreter's arithmetic is not itself a 129-class operation. Learned lifting is a small MLP over scaled scalar result, style embedding, comparison cue and fixed Gaussian radial-basis features centered at all 129 integers from −64 through 64 (width 0.75). These continuous numerical features are an explicit bounded-vocabulary prior. They contain no sign/comparison/report rule, do not clip the scalar, and still require learned output weights. This tests a narrow latent-output round trip, not natural-language generation or unrestricted downstream reasoning.
+
+A paired pre-main shallow oracle pilot isolated a scalar-only lifting optimization failure. The same 400-update one-seed pilot with radial-basis features changed validation output accuracy from .375 to .6875; separate shallow evaluation after the change was .703125. Config and training schedule matched, with only the model source hash changed. Those pilots used the earlier generator without the matched decoy chain and are archived separately; they are not main results or OOD evidence. The representation change was selected using shallow diagnostics.
 
 ## Architecture and protections
 
@@ -57,7 +61,7 @@ Neural controls receive auxiliary lowering supervision at weight 1 and an extra 
 
 ## Curriculum and evaluation
 
-The provisional main configuration [`stage5.json`](../configs/stage5.json) specifies seeds 0/1/2, 400 updates, batch 16, width 32, learning rate 0.001 and a 200-update supervised warm start. Training cycles through depths 1–4 and distractor counts 8/16, alternating canonical/paraphrased templates. Checkpoints include step 0 and updates 25/50/100/200/300/400. Final evaluation crosses depths 4/8/16/32 with distractor counts 8/32/64, using 64 examples per condition and seed. A bounded pilot precedes the source/config freeze; no OOD checkpoint selection is intended.
+The frozen main configuration [`stage5.json`](../configs/stage5.json) specifies seeds 0/1/2, 400 updates, batch 16, width 32, learning rate 0.001 and a 200-update supervised warm start. Training cycles through depths 1–4 and distractor counts 8/16, alternating canonical/paraphrased templates. Checkpoints include step 0 and updates 25/50/100/200/300/400. Final evaluation crosses depths 4/8/16/32 with distractor counts 8/32/64, using 64 examples per condition and seed. The bounded pilot preceded the source/config freeze. Main evaluation uses the fixed final checkpoint, with no OOD checkpoint selection.
 
 Fresh lexical keys and candidate shuffles appear in every split. The extra renamed condition is another fresh sample, not evidence of a newly held-out textual vocabulary capability. Other tests cover held-out word order/templates, medium/high reference noise, missing-cue ambiguity, invalid schemas, permuted operand bindings, and a corrupted runtime world. Corruption changes observable scalar-value edges and the executor's world together while retaining clean targets. Permutation intentionally breaks the lowering-to-runtime correspondence and is an intervention rather than another trained model.
 
