@@ -1,0 +1,1570 @@
+{
+  "source": "2e95c9ff9403e9a2226a66bb0e875b762cb8736d",
+  "examples": [
+    {
+      "name": "object_lookup",
+      "program": "let car = {wheels: [{radius: 10}, {radius: 11}, {radius: 12}, {radius: 13}]}; car.wheels[3].radius",
+      "expected": 13,
+      "result": 13,
+      "node_types": {
+        "frame": 1,
+        "function": 4,
+        "binding": 5,
+        "scalar": 5,
+        "record": 5,
+        "field_slot": 5,
+        "array": 1,
+        "index_slot": 4
+      },
+      "edges": [
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n2"
+        },
+        {
+          "source": "n2",
+          "relation": "binds",
+          "target": "n1"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n4"
+        },
+        {
+          "source": "n4",
+          "relation": "binds",
+          "target": "n3"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n6"
+        },
+        {
+          "source": "n6",
+          "relation": "binds",
+          "target": "n5"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n8"
+        },
+        {
+          "source": "n8",
+          "relation": "binds",
+          "target": "n7"
+        },
+        {
+          "source": "n10",
+          "relation": "field",
+          "target": "n11"
+        },
+        {
+          "source": "n11",
+          "relation": "value_of",
+          "target": "n9"
+        },
+        {
+          "source": "n13",
+          "relation": "field",
+          "target": "n14"
+        },
+        {
+          "source": "n14",
+          "relation": "value_of",
+          "target": "n12"
+        },
+        {
+          "source": "n16",
+          "relation": "field",
+          "target": "n17"
+        },
+        {
+          "source": "n17",
+          "relation": "value_of",
+          "target": "n15"
+        },
+        {
+          "source": "n19",
+          "relation": "field",
+          "target": "n20"
+        },
+        {
+          "source": "n20",
+          "relation": "value_of",
+          "target": "n18"
+        },
+        {
+          "source": "n21",
+          "relation": "index",
+          "target": "n22"
+        },
+        {
+          "source": "n22",
+          "relation": "value_of",
+          "target": "n10"
+        },
+        {
+          "source": "n21",
+          "relation": "index",
+          "target": "n23"
+        },
+        {
+          "source": "n23",
+          "relation": "value_of",
+          "target": "n13"
+        },
+        {
+          "source": "n21",
+          "relation": "index",
+          "target": "n24"
+        },
+        {
+          "source": "n24",
+          "relation": "value_of",
+          "target": "n16"
+        },
+        {
+          "source": "n21",
+          "relation": "index",
+          "target": "n25"
+        },
+        {
+          "source": "n25",
+          "relation": "value_of",
+          "target": "n19"
+        },
+        {
+          "source": "n26",
+          "relation": "field",
+          "target": "n27"
+        },
+        {
+          "source": "n27",
+          "relation": "value_of",
+          "target": "n21"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n28"
+        },
+        {
+          "source": "n28",
+          "relation": "binds",
+          "target": "n26"
+        }
+      ],
+      "trace": [
+        {
+          "primitive": "resolve_name",
+          "scope": "n0",
+          "name": "car",
+          "result": "n28"
+        },
+        {
+          "primitive": "read_field",
+          "source": "n26",
+          "slot": "n27",
+          "result": "n21"
+        },
+        {
+          "primitive": "read_index",
+          "source": "n21",
+          "slot": "n25",
+          "result": "n19"
+        },
+        {
+          "primitive": "read_field",
+          "source": "n19",
+          "slot": "n20",
+          "result": "n18"
+        }
+      ]
+    },
+    {
+      "name": "arithmetic",
+      "program": "let x = 5; let y = add(x, 3); mul(y, 2)",
+      "expected": 16,
+      "result": 16,
+      "node_types": {
+        "frame": 3,
+        "function": 4,
+        "binding": 6,
+        "scalar": 5,
+        "call": 2,
+        "argument": 4,
+        "returned": 2
+      },
+      "edges": [
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n2"
+        },
+        {
+          "source": "n2",
+          "relation": "binds",
+          "target": "n1"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n4"
+        },
+        {
+          "source": "n4",
+          "relation": "binds",
+          "target": "n3"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n6"
+        },
+        {
+          "source": "n6",
+          "relation": "binds",
+          "target": "n5"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n8"
+        },
+        {
+          "source": "n8",
+          "relation": "binds",
+          "target": "n7"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n10"
+        },
+        {
+          "source": "n10",
+          "relation": "binds",
+          "target": "n9"
+        },
+        {
+          "source": "n12",
+          "relation": "callee",
+          "target": "n1"
+        },
+        {
+          "source": "n12",
+          "relation": "frame",
+          "target": "n13"
+        },
+        {
+          "source": "n12",
+          "relation": "argument[0]",
+          "target": "n14"
+        },
+        {
+          "source": "n14",
+          "relation": "value_of",
+          "target": "n9"
+        },
+        {
+          "source": "n12",
+          "relation": "argument[1]",
+          "target": "n15"
+        },
+        {
+          "source": "n15",
+          "relation": "value_of",
+          "target": "n11"
+        },
+        {
+          "source": "n17",
+          "relation": "value_of",
+          "target": "n16"
+        },
+        {
+          "source": "n13",
+          "relation": "returns",
+          "target": "n17"
+        },
+        {
+          "source": "n12",
+          "relation": "returns",
+          "target": "n17"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n18"
+        },
+        {
+          "source": "n18",
+          "relation": "binds",
+          "target": "n16"
+        },
+        {
+          "source": "n20",
+          "relation": "callee",
+          "target": "n5"
+        },
+        {
+          "source": "n20",
+          "relation": "frame",
+          "target": "n21"
+        },
+        {
+          "source": "n20",
+          "relation": "argument[0]",
+          "target": "n22"
+        },
+        {
+          "source": "n22",
+          "relation": "value_of",
+          "target": "n16"
+        },
+        {
+          "source": "n20",
+          "relation": "argument[1]",
+          "target": "n23"
+        },
+        {
+          "source": "n23",
+          "relation": "value_of",
+          "target": "n19"
+        },
+        {
+          "source": "n25",
+          "relation": "value_of",
+          "target": "n24"
+        },
+        {
+          "source": "n21",
+          "relation": "returns",
+          "target": "n25"
+        },
+        {
+          "source": "n20",
+          "relation": "returns",
+          "target": "n25"
+        }
+      ],
+      "trace": [
+        {
+          "primitive": "resolve_name",
+          "scope": "n0",
+          "name": "add",
+          "result": "n2"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n0",
+          "name": "x",
+          "result": "n10"
+        },
+        {
+          "primitive": "call",
+          "call": "n12",
+          "function": "n1",
+          "frame": "n13",
+          "args": [
+            "n9",
+            "n11"
+          ],
+          "node_count": 16
+        },
+        {
+          "primitive": "return",
+          "frame": "n13",
+          "result": "n17"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n0",
+          "name": "mul",
+          "result": "n6"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n0",
+          "name": "y",
+          "result": "n18"
+        },
+        {
+          "primitive": "call",
+          "call": "n20",
+          "function": "n5",
+          "frame": "n21",
+          "args": [
+            "n16",
+            "n19"
+          ],
+          "node_count": 24
+        },
+        {
+          "primitive": "return",
+          "frame": "n21",
+          "result": "n25"
+        }
+      ]
+    },
+    {
+      "name": "nested_calls",
+      "program": "fn g(x) { return add(x, 1); } fn f(x,y) { return mul(x,y); } let a = 5; let b = 2; f(g(a), b)",
+      "expected": 12,
+      "result": 12,
+      "node_types": {
+        "frame": 5,
+        "function": 6,
+        "binding": 23,
+        "scalar": 5,
+        "call": 4,
+        "argument": 7,
+        "returned": 4
+      },
+      "edges": [
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n2"
+        },
+        {
+          "source": "n2",
+          "relation": "binds",
+          "target": "n1"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n4"
+        },
+        {
+          "source": "n4",
+          "relation": "binds",
+          "target": "n3"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n6"
+        },
+        {
+          "source": "n6",
+          "relation": "binds",
+          "target": "n5"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n8"
+        },
+        {
+          "source": "n8",
+          "relation": "binds",
+          "target": "n7"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n10"
+        },
+        {
+          "source": "n10",
+          "relation": "binds",
+          "target": "n9"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n12"
+        },
+        {
+          "source": "n12",
+          "relation": "binds",
+          "target": "n11"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n14"
+        },
+        {
+          "source": "n14",
+          "relation": "binds",
+          "target": "n13"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n16"
+        },
+        {
+          "source": "n16",
+          "relation": "binds",
+          "target": "n15"
+        },
+        {
+          "source": "n17",
+          "relation": "callee",
+          "target": "n9"
+        },
+        {
+          "source": "n17",
+          "relation": "frame",
+          "target": "n18"
+        },
+        {
+          "source": "n17",
+          "relation": "argument[0]",
+          "target": "n19"
+        },
+        {
+          "source": "n19",
+          "relation": "value_of",
+          "target": "n13"
+        },
+        {
+          "source": "n18",
+          "relation": "binding",
+          "target": "n20"
+        },
+        {
+          "source": "n20",
+          "relation": "binds",
+          "target": "n13"
+        },
+        {
+          "source": "n18",
+          "relation": "binding",
+          "target": "n21"
+        },
+        {
+          "source": "n21",
+          "relation": "binds",
+          "target": "n1"
+        },
+        {
+          "source": "n18",
+          "relation": "binding",
+          "target": "n22"
+        },
+        {
+          "source": "n22",
+          "relation": "binds",
+          "target": "n3"
+        },
+        {
+          "source": "n18",
+          "relation": "binding",
+          "target": "n23"
+        },
+        {
+          "source": "n23",
+          "relation": "binds",
+          "target": "n5"
+        },
+        {
+          "source": "n18",
+          "relation": "binding",
+          "target": "n24"
+        },
+        {
+          "source": "n24",
+          "relation": "binds",
+          "target": "n7"
+        },
+        {
+          "source": "n18",
+          "relation": "binding",
+          "target": "n25"
+        },
+        {
+          "source": "n25",
+          "relation": "binds",
+          "target": "n9"
+        },
+        {
+          "source": "n18",
+          "relation": "binding",
+          "target": "n26"
+        },
+        {
+          "source": "n26",
+          "relation": "binds",
+          "target": "n11"
+        },
+        {
+          "source": "n28",
+          "relation": "callee",
+          "target": "n1"
+        },
+        {
+          "source": "n28",
+          "relation": "frame",
+          "target": "n29"
+        },
+        {
+          "source": "n28",
+          "relation": "argument[0]",
+          "target": "n30"
+        },
+        {
+          "source": "n30",
+          "relation": "value_of",
+          "target": "n13"
+        },
+        {
+          "source": "n28",
+          "relation": "argument[1]",
+          "target": "n31"
+        },
+        {
+          "source": "n31",
+          "relation": "value_of",
+          "target": "n27"
+        },
+        {
+          "source": "n33",
+          "relation": "value_of",
+          "target": "n32"
+        },
+        {
+          "source": "n29",
+          "relation": "returns",
+          "target": "n33"
+        },
+        {
+          "source": "n28",
+          "relation": "returns",
+          "target": "n33"
+        },
+        {
+          "source": "n34",
+          "relation": "value_of",
+          "target": "n32"
+        },
+        {
+          "source": "n18",
+          "relation": "returns",
+          "target": "n34"
+        },
+        {
+          "source": "n17",
+          "relation": "returns",
+          "target": "n34"
+        },
+        {
+          "source": "n35",
+          "relation": "callee",
+          "target": "n11"
+        },
+        {
+          "source": "n35",
+          "relation": "frame",
+          "target": "n36"
+        },
+        {
+          "source": "n35",
+          "relation": "argument[0]",
+          "target": "n37"
+        },
+        {
+          "source": "n37",
+          "relation": "value_of",
+          "target": "n32"
+        },
+        {
+          "source": "n35",
+          "relation": "argument[1]",
+          "target": "n38"
+        },
+        {
+          "source": "n38",
+          "relation": "value_of",
+          "target": "n15"
+        },
+        {
+          "source": "n36",
+          "relation": "binding",
+          "target": "n39"
+        },
+        {
+          "source": "n39",
+          "relation": "binds",
+          "target": "n32"
+        },
+        {
+          "source": "n36",
+          "relation": "binding",
+          "target": "n40"
+        },
+        {
+          "source": "n40",
+          "relation": "binds",
+          "target": "n15"
+        },
+        {
+          "source": "n36",
+          "relation": "binding",
+          "target": "n41"
+        },
+        {
+          "source": "n41",
+          "relation": "binds",
+          "target": "n1"
+        },
+        {
+          "source": "n36",
+          "relation": "binding",
+          "target": "n42"
+        },
+        {
+          "source": "n42",
+          "relation": "binds",
+          "target": "n3"
+        },
+        {
+          "source": "n36",
+          "relation": "binding",
+          "target": "n43"
+        },
+        {
+          "source": "n43",
+          "relation": "binds",
+          "target": "n5"
+        },
+        {
+          "source": "n36",
+          "relation": "binding",
+          "target": "n44"
+        },
+        {
+          "source": "n44",
+          "relation": "binds",
+          "target": "n7"
+        },
+        {
+          "source": "n36",
+          "relation": "binding",
+          "target": "n45"
+        },
+        {
+          "source": "n45",
+          "relation": "binds",
+          "target": "n9"
+        },
+        {
+          "source": "n36",
+          "relation": "binding",
+          "target": "n46"
+        },
+        {
+          "source": "n46",
+          "relation": "binds",
+          "target": "n11"
+        },
+        {
+          "source": "n47",
+          "relation": "callee",
+          "target": "n5"
+        },
+        {
+          "source": "n47",
+          "relation": "frame",
+          "target": "n48"
+        },
+        {
+          "source": "n47",
+          "relation": "argument[0]",
+          "target": "n49"
+        },
+        {
+          "source": "n49",
+          "relation": "value_of",
+          "target": "n32"
+        },
+        {
+          "source": "n47",
+          "relation": "argument[1]",
+          "target": "n50"
+        },
+        {
+          "source": "n50",
+          "relation": "value_of",
+          "target": "n15"
+        },
+        {
+          "source": "n52",
+          "relation": "value_of",
+          "target": "n51"
+        },
+        {
+          "source": "n48",
+          "relation": "returns",
+          "target": "n52"
+        },
+        {
+          "source": "n47",
+          "relation": "returns",
+          "target": "n52"
+        },
+        {
+          "source": "n53",
+          "relation": "value_of",
+          "target": "n51"
+        },
+        {
+          "source": "n36",
+          "relation": "returns",
+          "target": "n53"
+        },
+        {
+          "source": "n35",
+          "relation": "returns",
+          "target": "n53"
+        }
+      ],
+      "trace": [
+        {
+          "primitive": "resolve_name",
+          "scope": "n0",
+          "name": "f",
+          "result": "n12"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n0",
+          "name": "g",
+          "result": "n10"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n0",
+          "name": "a",
+          "result": "n14"
+        },
+        {
+          "primitive": "call",
+          "call": "n17",
+          "function": "n9",
+          "frame": "n18",
+          "args": [
+            "n13"
+          ],
+          "node_count": 20
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n18",
+          "name": "add",
+          "result": "n21"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n18",
+          "name": "x",
+          "result": "n20"
+        },
+        {
+          "primitive": "call",
+          "call": "n28",
+          "function": "n1",
+          "frame": "n29",
+          "args": [
+            "n13",
+            "n27"
+          ],
+          "node_count": 32
+        },
+        {
+          "primitive": "return",
+          "frame": "n29",
+          "result": "n33"
+        },
+        {
+          "primitive": "return",
+          "frame": "n18",
+          "result": "n34"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n0",
+          "name": "b",
+          "result": "n16"
+        },
+        {
+          "primitive": "call",
+          "call": "n35",
+          "function": "n11",
+          "frame": "n36",
+          "args": [
+            "n32",
+            "n15"
+          ],
+          "node_count": 39
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n36",
+          "name": "mul",
+          "result": "n43"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n36",
+          "name": "x",
+          "result": "n39"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n36",
+          "name": "y",
+          "result": "n40"
+        },
+        {
+          "primitive": "call",
+          "call": "n47",
+          "function": "n5",
+          "frame": "n48",
+          "args": [
+            "n32",
+            "n15"
+          ],
+          "node_count": 51
+        },
+        {
+          "primitive": "return",
+          "frame": "n48",
+          "result": "n52"
+        },
+        {
+          "primitive": "return",
+          "frame": "n36",
+          "result": "n53"
+        }
+      ]
+    },
+    {
+      "name": "lexical_scope",
+      "program": "fn f(x) { return mul(x, 2); } fn g(x) { return add(x, 1); } let x = 2; { let x = 5; f(x); } g(x)",
+      "expected": 3,
+      "result": 3,
+      "node_types": {
+        "frame": 6,
+        "function": 6,
+        "binding": 22,
+        "scalar": 6,
+        "call": 4,
+        "argument": 6,
+        "returned": 4
+      },
+      "edges": [
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n2"
+        },
+        {
+          "source": "n2",
+          "relation": "binds",
+          "target": "n1"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n4"
+        },
+        {
+          "source": "n4",
+          "relation": "binds",
+          "target": "n3"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n6"
+        },
+        {
+          "source": "n6",
+          "relation": "binds",
+          "target": "n5"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n8"
+        },
+        {
+          "source": "n8",
+          "relation": "binds",
+          "target": "n7"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n10"
+        },
+        {
+          "source": "n10",
+          "relation": "binds",
+          "target": "n9"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n12"
+        },
+        {
+          "source": "n12",
+          "relation": "binds",
+          "target": "n11"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n14"
+        },
+        {
+          "source": "n14",
+          "relation": "binds",
+          "target": "n13"
+        },
+        {
+          "source": "n15",
+          "relation": "parent_scope",
+          "target": "n0"
+        },
+        {
+          "source": "n15",
+          "relation": "binding",
+          "target": "n17"
+        },
+        {
+          "source": "n17",
+          "relation": "binds",
+          "target": "n16"
+        },
+        {
+          "source": "n18",
+          "relation": "callee",
+          "target": "n9"
+        },
+        {
+          "source": "n18",
+          "relation": "frame",
+          "target": "n19"
+        },
+        {
+          "source": "n18",
+          "relation": "argument[0]",
+          "target": "n20"
+        },
+        {
+          "source": "n20",
+          "relation": "value_of",
+          "target": "n16"
+        },
+        {
+          "source": "n19",
+          "relation": "binding",
+          "target": "n21"
+        },
+        {
+          "source": "n21",
+          "relation": "binds",
+          "target": "n16"
+        },
+        {
+          "source": "n19",
+          "relation": "binding",
+          "target": "n22"
+        },
+        {
+          "source": "n22",
+          "relation": "binds",
+          "target": "n1"
+        },
+        {
+          "source": "n19",
+          "relation": "binding",
+          "target": "n23"
+        },
+        {
+          "source": "n23",
+          "relation": "binds",
+          "target": "n3"
+        },
+        {
+          "source": "n19",
+          "relation": "binding",
+          "target": "n24"
+        },
+        {
+          "source": "n24",
+          "relation": "binds",
+          "target": "n5"
+        },
+        {
+          "source": "n19",
+          "relation": "binding",
+          "target": "n25"
+        },
+        {
+          "source": "n25",
+          "relation": "binds",
+          "target": "n7"
+        },
+        {
+          "source": "n19",
+          "relation": "binding",
+          "target": "n26"
+        },
+        {
+          "source": "n26",
+          "relation": "binds",
+          "target": "n9"
+        },
+        {
+          "source": "n19",
+          "relation": "binding",
+          "target": "n27"
+        },
+        {
+          "source": "n27",
+          "relation": "binds",
+          "target": "n11"
+        },
+        {
+          "source": "n29",
+          "relation": "callee",
+          "target": "n5"
+        },
+        {
+          "source": "n29",
+          "relation": "frame",
+          "target": "n30"
+        },
+        {
+          "source": "n29",
+          "relation": "argument[0]",
+          "target": "n31"
+        },
+        {
+          "source": "n31",
+          "relation": "value_of",
+          "target": "n16"
+        },
+        {
+          "source": "n29",
+          "relation": "argument[1]",
+          "target": "n32"
+        },
+        {
+          "source": "n32",
+          "relation": "value_of",
+          "target": "n28"
+        },
+        {
+          "source": "n34",
+          "relation": "value_of",
+          "target": "n33"
+        },
+        {
+          "source": "n30",
+          "relation": "returns",
+          "target": "n34"
+        },
+        {
+          "source": "n29",
+          "relation": "returns",
+          "target": "n34"
+        },
+        {
+          "source": "n35",
+          "relation": "value_of",
+          "target": "n33"
+        },
+        {
+          "source": "n19",
+          "relation": "returns",
+          "target": "n35"
+        },
+        {
+          "source": "n18",
+          "relation": "returns",
+          "target": "n35"
+        },
+        {
+          "source": "n36",
+          "relation": "callee",
+          "target": "n11"
+        },
+        {
+          "source": "n36",
+          "relation": "frame",
+          "target": "n37"
+        },
+        {
+          "source": "n36",
+          "relation": "argument[0]",
+          "target": "n38"
+        },
+        {
+          "source": "n38",
+          "relation": "value_of",
+          "target": "n13"
+        },
+        {
+          "source": "n37",
+          "relation": "binding",
+          "target": "n39"
+        },
+        {
+          "source": "n39",
+          "relation": "binds",
+          "target": "n13"
+        },
+        {
+          "source": "n37",
+          "relation": "binding",
+          "target": "n40"
+        },
+        {
+          "source": "n40",
+          "relation": "binds",
+          "target": "n1"
+        },
+        {
+          "source": "n37",
+          "relation": "binding",
+          "target": "n41"
+        },
+        {
+          "source": "n41",
+          "relation": "binds",
+          "target": "n3"
+        },
+        {
+          "source": "n37",
+          "relation": "binding",
+          "target": "n42"
+        },
+        {
+          "source": "n42",
+          "relation": "binds",
+          "target": "n5"
+        },
+        {
+          "source": "n37",
+          "relation": "binding",
+          "target": "n43"
+        },
+        {
+          "source": "n43",
+          "relation": "binds",
+          "target": "n7"
+        },
+        {
+          "source": "n37",
+          "relation": "binding",
+          "target": "n44"
+        },
+        {
+          "source": "n44",
+          "relation": "binds",
+          "target": "n9"
+        },
+        {
+          "source": "n37",
+          "relation": "binding",
+          "target": "n45"
+        },
+        {
+          "source": "n45",
+          "relation": "binds",
+          "target": "n11"
+        },
+        {
+          "source": "n47",
+          "relation": "callee",
+          "target": "n1"
+        },
+        {
+          "source": "n47",
+          "relation": "frame",
+          "target": "n48"
+        },
+        {
+          "source": "n47",
+          "relation": "argument[0]",
+          "target": "n49"
+        },
+        {
+          "source": "n49",
+          "relation": "value_of",
+          "target": "n13"
+        },
+        {
+          "source": "n47",
+          "relation": "argument[1]",
+          "target": "n50"
+        },
+        {
+          "source": "n50",
+          "relation": "value_of",
+          "target": "n46"
+        },
+        {
+          "source": "n52",
+          "relation": "value_of",
+          "target": "n51"
+        },
+        {
+          "source": "n48",
+          "relation": "returns",
+          "target": "n52"
+        },
+        {
+          "source": "n47",
+          "relation": "returns",
+          "target": "n52"
+        },
+        {
+          "source": "n53",
+          "relation": "value_of",
+          "target": "n51"
+        },
+        {
+          "source": "n37",
+          "relation": "returns",
+          "target": "n53"
+        },
+        {
+          "source": "n36",
+          "relation": "returns",
+          "target": "n53"
+        }
+      ],
+      "trace": [
+        {
+          "primitive": "resolve_name",
+          "scope": "n15",
+          "name": "f",
+          "result": "n10"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n15",
+          "name": "x",
+          "result": "n17"
+        },
+        {
+          "primitive": "call",
+          "call": "n18",
+          "function": "n9",
+          "frame": "n19",
+          "args": [
+            "n16"
+          ],
+          "node_count": 21
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n19",
+          "name": "mul",
+          "result": "n24"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n19",
+          "name": "x",
+          "result": "n21"
+        },
+        {
+          "primitive": "call",
+          "call": "n29",
+          "function": "n5",
+          "frame": "n30",
+          "args": [
+            "n16",
+            "n28"
+          ],
+          "node_count": 33
+        },
+        {
+          "primitive": "return",
+          "frame": "n30",
+          "result": "n34"
+        },
+        {
+          "primitive": "return",
+          "frame": "n19",
+          "result": "n35"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n0",
+          "name": "g",
+          "result": "n12"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n0",
+          "name": "x",
+          "result": "n14"
+        },
+        {
+          "primitive": "call",
+          "call": "n36",
+          "function": "n11",
+          "frame": "n37",
+          "args": [
+            "n13"
+          ],
+          "node_count": 39
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n37",
+          "name": "add",
+          "result": "n40"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n37",
+          "name": "x",
+          "result": "n39"
+        },
+        {
+          "primitive": "call",
+          "call": "n47",
+          "function": "n1",
+          "frame": "n48",
+          "args": [
+            "n13",
+            "n46"
+          ],
+          "node_count": 51
+        },
+        {
+          "primitive": "return",
+          "frame": "n48",
+          "result": "n52"
+        },
+        {
+          "primitive": "return",
+          "frame": "n37",
+          "result": "n53"
+        }
+      ]
+    },
+    {
+      "name": "immutable_alias",
+      "program": "let a = {radius: 13}; let b = a; b.radius",
+      "expected": 13,
+      "result": 13,
+      "node_types": {
+        "frame": 1,
+        "function": 4,
+        "binding": 6,
+        "scalar": 1,
+        "record": 1,
+        "field_slot": 1
+      },
+      "edges": [
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n2"
+        },
+        {
+          "source": "n2",
+          "relation": "binds",
+          "target": "n1"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n4"
+        },
+        {
+          "source": "n4",
+          "relation": "binds",
+          "target": "n3"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n6"
+        },
+        {
+          "source": "n6",
+          "relation": "binds",
+          "target": "n5"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n8"
+        },
+        {
+          "source": "n8",
+          "relation": "binds",
+          "target": "n7"
+        },
+        {
+          "source": "n10",
+          "relation": "field",
+          "target": "n11"
+        },
+        {
+          "source": "n11",
+          "relation": "value_of",
+          "target": "n9"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n12"
+        },
+        {
+          "source": "n12",
+          "relation": "binds",
+          "target": "n10"
+        },
+        {
+          "source": "n0",
+          "relation": "binding",
+          "target": "n13"
+        },
+        {
+          "source": "n13",
+          "relation": "binds",
+          "target": "n10"
+        }
+      ],
+      "trace": [
+        {
+          "primitive": "resolve_name",
+          "scope": "n0",
+          "name": "a",
+          "result": "n12"
+        },
+        {
+          "primitive": "resolve_name",
+          "scope": "n0",
+          "name": "b",
+          "result": "n13"
+        },
+        {
+          "primitive": "read_field",
+          "source": "n10",
+          "slot": "n11",
+          "result": "n9"
+        }
+      ]
+    }
+  ]
+}
