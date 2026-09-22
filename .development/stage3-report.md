@@ -172,9 +172,9 @@ Checkpoint validation reveals that initialization, rather than final accuracy al
 | Variant | Step 0 | Step 25 | Step 50 | Step 100 | Step 200 | Step 400 |
 |---|---|---|---|---|---|---|
 | soft 8 | .102 / 1.000 / 1.000 | .828 / .938 / .846 | .747 / .837 / .589 | .568 / .678 / .302 | .565 / .680 / .339 | .839 / .896 / .766 |
-| soft 4 | .104 / .383 / .000 | .297 / .574 / .104 | .662 / .830 / .544 | .596 / .742 / .401 | .688 / .789 / .497 | .951 / .970 / .927 |
+| soft 4 | .104 / .383 / .000 | .297 / .574 / .104 | .661 / .830 / .544 | .596 / .742 / .401 | .688 / .789 / .497 | .951 / .970 / .927 |
 | known | .102 / 1.000 / 1.000 | .841 / .962 / .878 | .729 / .773 / .414 | .865 / .891 / .693 | .979 / .982 / .927 | .997 / .997 / .987 |
-| hard | .102 / 1.000 / 1.000 | .802 / .915 / .802 | .456 / .577 / .188 | .318 / .449 / .078 | .315 / .437 / .068 | .300 / .395 / .042 |
+| hard | .102 / 1.000 / 1.000 | .802 / .915 / .802 | .456 / .577 / .188 | .318 / .449 / .078 | .315 / .437 / .068 | .299 / .395 / .042 |
 
 Soft 8 and known start with functional routing but random answer readouts. Soft 8 damages perfect paths, bottoms near step 100, and only partly recovers. Known also dips before nearly recovering its fixed-matcher path. Hard deteriorates monotonically after step 25 because the non-differentiable grounder cannot be repaired by answer loss. Soft 4 is different: its weaker initial route yields zero complete paths, and optimization acquires a 0.927 path rate by step 400. The 400-step endpoint was fixed in advance; no checkpoint was selected by final test performance, and the table does not define an early-stopping policy.
 

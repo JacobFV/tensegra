@@ -70,3 +70,5 @@ The final manifest independently verifies **all 50 artifact SHA-256 hashes**. It
 Both new primary/keyed training-curve figures were visually inspected and correctly show sample SD, optimizer checkpoints, fixed validation examples, separate task/path axes, initial routing, and optimization damage/recovery. Main depth and keyed joint-depth figures also passed visual inspection. All **20 final narrative links** resolve. Stage 1/2 source and raw results remain unchanged.
 
 **Recommendation: integrate Stage 3.** The evidence supports bounded routing feasibility and acquisition under declared priors, together with important failures of random initialization, optimization preservation, and joint size/depth transfer. It does not establish learned semantic binding, a scalable latent interpreter, an architecture-wide advantage of structural logits over graph-input methods, or an information-theoretic corruption ceiling.
+
+Coordinator closeout: both nonblocking validation-table rounding corrections were applied before integration (soft-4 step 50: .661; hard step 400: .299).
