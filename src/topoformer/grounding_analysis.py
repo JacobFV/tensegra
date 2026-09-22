@@ -225,6 +225,31 @@ def render_report(summary):
     return "\n".join(lines)
 
 
+def training_curve_summary(summary):
+    """Aggregate paired checkpoints without silently dropping missing seed curves."""
+    groups = defaultdict(list)
+    for run in summary["runs"]:
+        curve = run["training"].get("curve", [])
+        if not curve:
+            continue
+        steps = [point["step"] for point in curve]
+        if steps != sorted(set(steps)) or steps[0] != 0:
+            raise ValueError("training curves must have unique increasing checkpoints from zero")
+        for point in curve:
+            for metric in ("accuracy", "exact_path_completion"):
+                if not 0 <= point[metric] <= 1:
+                    raise ValueError("training curve accuracy must lie in [0, 1]")
+            groups[(run["variant"], point["step"])].append((run["seed"], point))
+    result = defaultdict(list)
+    for (variant, step), observations in sorted(groups.items()):
+        if sorted(seed for seed, _ in observations) != summary["seeds"]:
+            raise ValueError("training checkpoint missing expected seeds")
+        result[variant].append({"step": step, **{
+            metric: describe(point[metric] for _, point in observations)
+            for metric in ("accuracy", "exact_path_completion")}})
+    return dict(result)
+
+
 def write_plots(summary, directory):
     """Optional static scientific figures; no renderer required for analysis."""
     try:
@@ -288,6 +313,29 @@ def write_plots(summary, directory):
             path = directory / f"{stem}.{ext}"
             fig.savefig(path, dpi=160)
             files.append(str(path.name))
+        plt.close(fig)
+    curves = training_curve_summary(summary)
+    families = {"primary": {"soft", "soft_strength4", "known", "hard", "random_init", "none"},
+                "keyed": {"soft_keyed", "none_keyed", "graph_input_keyed"}}
+    for family, variants in families.items():
+        selected = sorted(variants & curves.keys())
+        if not selected:
+            continue
+        fig, axes = plt.subplots(1, 2, figsize=(11, 4), constrained_layout=True)
+        for variant in selected:
+            points = curves[variant]
+            for ax, metric, title in zip(axes, ("accuracy", "exact_path_completion"),
+                                          ("Validation task accuracy", "Validation complete grounding trajectory")):
+                ax.errorbar([p["step"] for p in points], [p[metric]["mean"] for p in points],
+                            yerr=[p[metric]["sd"] or 0 for p in points], marker="o", capsize=2, label=variant)
+                ax.set(xlabel="Optimizer step", ylabel=title, ylim=(-.02, 1.02))
+                ax.grid(alpha=.2)
+        axes[-1].legend(fontsize=7)
+        fig.suptitle(f"{family}: fixed validation examples; mean ± sample SD across seeds", fontsize=9)
+        for ext in ("png", "svg"):
+            path = directory / f"training-curves-{family}.{ext}"
+            fig.savefig(path, dpi=160)
+            files.append(path.name)
         plt.close(fig)
     return {"available": True, "files": files}
 

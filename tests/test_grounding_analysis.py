@@ -123,3 +123,28 @@ def test_keyed_graph_input_example_is_rendered():
                                                 next_attention_mass=.1)]
     report = render_report(summarize(rows))
     assert '### graph_input_keyed:' in report
+
+
+def test_training_curves_preserve_nonmonotonic_deterioration_and_seed_sd():
+    from topoformer.grounding_analysis import summarize, training_curve_summary
+    rows = fixture_rows()
+    for row in rows:
+        row['training']['curve'] = [dict(step=0, accuracy=.1 + .1*row['seed'], exact_path_completion=1.),
+                                    dict(step=25, accuracy=.8, exact_path_completion=.9),
+                                    dict(step=400, accuracy=.3, exact_path_completion=.2)]
+    result = training_curve_summary(summarize(rows))
+    assert result['soft'][0]['accuracy']['sd'] == pytest.approx(.1)
+    assert result['soft'][0]['exact_path_completion']['mean'] == 1
+    assert result['soft'][1]['accuracy']['mean'] > result['soft'][2]['accuracy']['mean']
+    rows[0]['training']['curve'].pop()
+    with pytest.raises(ValueError, match='missing expected seeds'):
+        training_curve_summary(summarize(rows))
+
+
+def test_training_curves_reject_duplicate_checkpoints():
+    from topoformer.grounding_analysis import summarize, training_curve_summary
+    rows = fixture_rows()
+    for row in rows:
+        row['training']['curve'] = [dict(step=0, accuracy=.1, exact_path_completion=1.)] * 2
+    with pytest.raises(ValueError, match='unique increasing'):
+        training_curve_summary(summarize(rows))
