@@ -45,3 +45,32 @@ mean oracle receives privileged generator weights and is explicitly diagnostic,
 not a fair learned baseline. Soft-bias strength is selected from validation error;
 test errors are not used for selection. A wall-time limit retains completed rows
 and marks the summary incomplete rather than implying a matched comparison.
+
+## Core attention API
+
+The public API is `topoformer.structural_attention` and
+`topoformer.graph_structure`:
+
+```python
+import torch
+from topoformer import graph_structure, structural_attention
+
+# read_graph[b, i, j] means query row i may read key column j.
+read_graph = torch.tensor([[[1, 1], [0, 1]]], dtype=torch.bool)
+q = k = v = torch.randn(1, 1, 2, 8)  # [batch, heads, tokens, features]
+bias, allowed = graph_structure(read_graph, mode="soft")
+output, weights = structural_attention(q, k, v, bias=bias, strength=1.0)
+
+# Strict local masking permits graph edges plus self reads.
+_, allowed = graph_structure(read_graph, mode="hard")
+output, weights = structural_attention(q, k, v, allowed=allowed)
+```
+
+Soft mode adds a finite bonus and still permits every otherwise legal read. Hard
+mode masks nonedges while preserving self reads. `attention.py` contains these
+primitives, `graphs.py` and `data.py` build synthetic systems, `model.py` defines
+the shared graph predictor and token MLP, and `training.py`, `evaluation.py`, and
+`experiment.py` provide the paired training, metrics, and CLI path.
+
+See the [pilot report](.development/pilot-report.md) for results, limitations, and
+the recommended next experiments.
