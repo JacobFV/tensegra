@@ -25,3 +25,7 @@ Confidence uses observable semantic equivalence groups, not gold masks. Missing-
 ## Matched-root shortcut control
 
 Before main training, inspection identified that a single object chain with globally unique field names allowed direct final-field retrieval. Lookup, alias and mixed families now include one matched decoy chain with the same shape and field/index labels but different scalar payloads. Swapping only the starting binding must change the result; remaining selector semantics are unchanged. Independent checks verify both leaf results at depths 4/16/32. This makes starting-object identity relevant without creating an unbounded number of deep distractor trees. The earlier lifting pilots remain a paired representation diagnostic on their explicitly archived earlier generator.
+
+## Main study launch
+
+Frozen main source: `2e95c9ff9403e9a2226a66bb0e875b762cb8736d`, clean remote checkout `~/topoformer-runtime-run`. The full suite passed 353 tests in 3.30 seconds; all ten variants passed the six-family smoke including every diagnostic intervention, and the artifact analyzer accepted those records. Main configuration is 400 updates, warm boundary 200, batch 16, three seeds, 64 examples per condition, 12 depth/distractor cells plus 8 stress conditions. It runs sequentially with two CPU threads. No model/data/training edits will alter this checkout while the study runs.
