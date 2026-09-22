@@ -1,0 +1,28 @@
+{
+  "kinds": ["sparse", "robot"],
+  "nodes": 12,
+  "history": 4,
+  "width": 32,
+  "heads": 4,
+  "layers": 2,
+  "batch_size": 32,
+  "train_count": 128,
+  "validation_count": 32,
+  "test_count": 32,
+  "steps": 40,
+  "optimizer_steps": 300,
+  "seeds": [0, 1, 2],
+  "learning_rate": 0.001,
+  "noise": 0.01,
+  "validation_interval": 50,
+  "rollout_horizon": 10,
+  "device": "cpu",
+  "max_wall_seconds": 1800,
+  "modes": [
+    {"name": "none", "mode": "none", "strength": 0.0},
+    {"name": "true_soft_1", "mode": "soft", "strength": 1.0},
+    {"name": "true_soft_4", "mode": "soft", "strength": 4.0},
+    {"name": "permuted_soft_1", "mode": "soft", "strength": 1.0, "graph": "permuted"},
+    {"name": "true_hard", "mode": "hard", "strength": 0.0}
+  ]
+}
