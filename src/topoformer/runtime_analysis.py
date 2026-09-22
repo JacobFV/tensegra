@@ -162,9 +162,14 @@ def summarize(rows, config):
     for (variant,condition,threshold),items in sorted(confidence.items()):
         counts={k:sum(r.get(k,0) for _,r in items) for k in set().union(*(r.keys() for _,r in items))-{'threshold'}}
         answered=counts['answered'];correct=counts['correct']
+        defined=counts.get('defined_examples',counts['examples'])
+        # Mixed defined/undefined batches lack an answered-defined cross-count.
+        answer_risk=ratio(answered-correct,answered) if defined==counts['examples'] else None
         risks.append(dict(variant=variant,condition=condition,threshold=threshold,counts=counts,
-                          coverage=ratio(answered,counts['examples']),risk=ratio(answered-correct,answered),
-                          unconditional_execution_accuracy=ratio(correct,counts['examples']),
+                          coverage=ratio(answered,counts['examples']),risk=answer_risk,
+                          unconditional_execution_accuracy=ratio(correct,defined) if defined else None,
+                          deferral_rate=ratio(counts.get('deferred',0),counts['examples']),
+                          rejection_rate=ratio(counts.get('rejected',0),counts['examples']),
                           false_positive_crystallization=ratio(counts.get('accepted_wrong',0),counts.get('accepted',0)),
                           false_negative_crystallization=ratio(counts.get('deferred_correct',0),counts.get('correct_lowerings',0))))
     return dict(schema_version=5,provenance=provenance,aggregates=aggregates,confidence=risks,
@@ -207,7 +212,19 @@ def plots(summary, output):
             if points: ax.plot([r['coverage'] for r in points],[r['risk'] for r in points],marker='o',label=variant)
         ax.set(xlim=(0,1),ylim=(0,1),xlabel='Answered fraction',ylabel='Wrong result | answered',title=condition)
         if ax.lines: ax.legend(fontsize=7)
-        fig.savefig(output/f'{condition}-risk-coverage.png',dpi=150);plt.close(fig)
+        if ax.lines:
+            fig.savefig(output/f'{condition}-risk-coverage.png',dpi=150)
+        plt.close(fig)
+        if not any(r['risk'] is not None for r in summary['confidence'] if r['condition']==condition):
+            fig,axes=plt.subplots(1,3,figsize=(12,3.5),constrained_layout=True)
+            for ax,metric in zip(axes,('coverage','deferral_rate','rejection_rate')):
+                for variant in sorted({r['variant'] for r in summary['confidence']}):
+                    points=[r for r in summary['confidence'] if r['variant']==variant and r['condition']==condition]
+                    if points: ax.plot([r['threshold'] for r in points],[r[metric] for r in points],marker='o',label=variant)
+                ax.set(xlabel='Confidence threshold',ylabel=metric,ylim=(0,1))
+            if axes[0].lines: axes[0].legend(fontsize=7)
+            fig.suptitle(condition+' — outcome undefined')
+            fig.savefig(output/f'{condition}-invocation-coverage.png',dpi=150);plt.close(fig)
     fig,axes=plt.subplots(1,2,figsize=(12,4),constrained_layout=True)
     for ax,metric in zip(axes,('task_accuracy','lowering_accuracy')):
         for variant in sorted({r['variant'] for r in summary['curves']}):
@@ -227,6 +244,7 @@ def main():
     config=json.loads(Path(args.config or path.parent/'config.json').read_text())
     summary=summarize(read_rows(path),config)
     summary['artifact']=dict(name=path.name,sha256=file_hash(path),bytes=path.stat().st_size)
+    summary['analysis_source']=dict(file=Path(__file__).name,sha256=file_hash(__file__))
     (out/'summary.json').write_text(json.dumps(summary,indent=2,allow_nan=False)+'\n')
     if not args.no_plots: plots(summary,out/'figures')
 

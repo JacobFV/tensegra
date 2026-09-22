@@ -98,6 +98,17 @@ class AnalysisTests(unittest.TestCase):
         self.assertIsNone(a.rates(cell)['execution_given_lowering_correct'])
         self.assertIsNone(a.rates(cell)['oracle_lifting_accuracy'])
 
+    def test_undefined_confidence_has_no_result_risk(self):
+        data=list(rows())
+        for row in data:
+            risk=row['evaluations'][0]['confidence'][0]
+            risk.update(defined_examples=0,answered=1,correct=0,deferred=1,rejected=0)
+        result=a.summarize(data,CONFIG)['confidence'][0]
+        self.assertIsNone(result['risk'])
+        self.assertIsNone(result['unconditional_execution_accuracy'])
+        self.assertEqual(result['coverage'],.5)
+        self.assertEqual(result['deferral_rate'],.5)
+
     def test_mixed_source_rejected(self):
         broken=list(rows()); broken[-1]['source']['commit']='different'
         with self.assertRaisesRegex(ValueError,'source'):
