@@ -134,3 +134,38 @@ including negative findings. [Methods](.development/stage2-methods.md),
 [raw metrics](.development/results/stage2/metrics.jsonl),
 [run configuration and provenance](.development/results/stage2/summary.json), and
 [artifact audit](.development/results/stage2/audit.json) are committed alongside it.
+
+## Latent grounding into runtime graphs
+
+Stage 3 decouples token positions from graph entities. `RuntimeGraph` stores
+batched stable IDs, identity embeddings, directed relation matrices and padding
+masks. `SoftGrounding` has independent query/key projections and an edge-free null
+binding. `induce_bias` computes `Pq @ A_r @ Pk.transpose(-1, -2)`; gradients flow
+through both grounding roles and relation strengths.
+
+The small traversal transformer recomputes grounding from an evolving query
+residual at every recurrent step over shuffled immutable entity memory. Relation
+instructions externally schedule those steps. Identity-aligned initialization is
+an explicit prior, compared against random initialization. This is a keyed-memory
+architectural experiment, not a programming-language interpreter or a language
+model experiment. The original explicit-graph predictors and studies are unchanged.
+
+```sh
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
+  .venv/bin/python -m topoformer.grounding_study \
+  --config configs/stage3-smoke.json --output results/grounding-smoke
+
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
+  .venv/bin/python -m topoformer.grounding_study \
+  --config configs/stage3.json --output results/grounding
+```
+
+`traversal_data.py` generates fresh graphs, opaque IDs, continuous identity keys,
+independent categorical values and token permutations. Gold paths are excluded
+from model inputs. `traversal_oracle.py` separately verifies exact one-hot bindings
+through the actual attention contraction and retrieval operation. Diagnostics
+separate answer accuracy, binding trajectories and attention trajectories.
+
+See the [Stage 3 design](.development/stage3-design.md),
+[model assumptions](.development/stage3-model-notes.md) and
+[leakage review](.development/stage3-leakage-review.md).

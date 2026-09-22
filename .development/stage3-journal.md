@@ -11,3 +11,9 @@ The first architecture uses raw random entity identity keys as a coordinate prio
 The graph-as-data baseline is intentionally strong: it uses fixed cosine matching of supplied identity keys and place graph-neighbor messages into token values, while retrieval uses ordinary attention. Its fixed identity matching is a disclosed alignment prior. We must not weaken this control to obtain metric-specific superiority.
 
 Raw metrics, diagnostic trajectories and resource measurements will be committed. No result has yet been observed for Stage 3.
+
+## Pilot and controlled-study launch
+
+Source 48d3ca3 passed 197 tests remotely. The end-to-end two-step smoke completed all 13 variants. An IID-only seed-0 pilot used 100 training steps, then stopped: validation answer accuracy was soft .53125, random initialization .1953125, none .203125, graph-input .296875, known .8203125, hard .3046875. These are feasibility observations, not final evidence. No OOD conditions were included in the pilot. The preregistered main budget remains 400 steps across three seeds and 13 variants; no hyperparameters were selected against OOD results.
+
+Remote GitHub DNS briefly failed; an exact Git bundle transferred over the authorized direct SSH link preserved committed source provenance. No local training was performed.
