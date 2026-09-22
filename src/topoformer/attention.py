@@ -47,7 +47,11 @@ def structural_attention(q, k, v, *, bias=None, strength=0.0, allowed=None):
     """Compute scaled dot-product attention with optional structural constraints."""
     _validate_attention_inputs(q, k, v)
     score_shape = (*q.shape[:-2], q.shape[-2], k.shape[-2])
-    score_dtype = torch.float64 if q.dtype == torch.float64 or k.dtype == torch.float64 else torch.float32
+    score_dtype = (
+        torch.float64
+        if torch.float64 in {q.dtype, k.dtype, v.dtype}
+        else torch.float32
+    )
 
     if isinstance(strength, torch.Tensor):
         if strength.numel() != 1:
@@ -64,6 +68,7 @@ def structural_attention(q, k, v, *, bias=None, strength=0.0, allowed=None):
         strength_is_finite = strength_value.numel() == 1 and torch.isfinite(strength_value).item()
     if not strength_is_finite:
         raise ValueError("strength must be a finite scalar")
+    strength_value = strength_value.reshape(())
 
     scores = q.to(score_dtype) @ k.to(score_dtype).transpose(-2, -1)
     scores = scores / math.sqrt(q.shape[-1])

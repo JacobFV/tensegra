@@ -117,7 +117,7 @@ def test_attention_is_differentiable_and_returns_value_dtype():
     output.sum().backward()
 
     assert output.dtype == v.dtype
-    assert weights.dtype == torch.float32
+    assert weights.dtype == torch.float64
     assert q.grad is not None and torch.isfinite(q.grad).all()
     assert k.grad is not None and torch.isfinite(k.grad).all()
     assert v.grad is not None and torch.isfinite(v.grad).all()
@@ -152,3 +152,30 @@ def test_low_precision_output_accumulates_before_casting_to_value_dtype():
     output, _ = structural_attention(q, k, v)
 
     assert output.item() == -6.984375
+
+
+def test_float64_values_are_not_downcast_during_output_contraction():
+    q = torch.zeros(1, 1, 1, 1)
+    k = torch.zeros(1, 1, 2, 1)
+    v = torch.tensor([[[[1e12], [-1e12 + 2.0]]]], dtype=torch.float64)
+
+    output, weights = structural_attention(q, k, v)
+
+    assert weights.dtype == torch.float64
+    torch.testing.assert_close(output, torch.ones_like(output))
+
+
+def test_single_element_tensor_strength_remains_scalar_and_differentiable():
+    q = torch.zeros(1, 1, 2, 1)
+    v = torch.tensor([[[[1.0], [3.0]]]])
+    bias = torch.tensor([[[[0.0, 1.0], [0.0, 1.0]]]])
+    strength = torch.ones(1, 1, 1, 1, 1, requires_grad=True)
+
+    output, weights = structural_attention(q, q, v, bias=bias, strength=strength)
+    output.sum().backward()
+
+    assert output.shape == (1, 1, 2, 1)
+    assert weights.shape == (1, 1, 2, 2)
+    assert strength.grad is not None
+    assert strength.grad.shape == strength.shape
+    assert strength.grad.abs().item() > 0
