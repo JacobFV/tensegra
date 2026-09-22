@@ -143,6 +143,18 @@ masks. `SoftGrounding` has independent query/key projections and an edge-free nu
 binding. `induce_bias` computes `Pq @ A_r @ Pk.transpose(-1, -2)`; gradients flow
 through both grounding roles and relation strengths.
 
+```python
+from topoformer.runtime_graph import RuntimeGraph
+from topoformer.grounding import SoftGrounding, induce_bias
+
+# IDs [B,N], entity embeddings [B,N,D], directed adjacency [B,R,N,N].
+graph = RuntimeGraph(node_ids, entity_embeddings, adjacency)
+grounder = SoftGrounding(latent_dim=32, entity_dim=16, temperature=0.05)
+pq, pk = grounder(query_residuals, key_residuals, graph)  # final slot is null
+bias = induce_bias(pq, graph.adjacency, pk)  # [B,R,T_query,T_key]
+# Call grounder again on the updated residuals at the next layer.
+```
+
 The small traversal transformer recomputes grounding from an evolving query
 residual at every recurrent step over shuffled immutable entity memory. Relation
 instructions externally schedule those steps. Identity-aligned initialization is
