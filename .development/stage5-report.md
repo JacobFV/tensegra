@@ -82,6 +82,8 @@ Cold answer-only acquires no complete joint trajectories. Its 39.06% output accu
 
 The held-out reordered-template condition is a strong negative result. Supervised selector accuracy remains 849/960, but operation accuracy falls to **396/960 = 41.25%**. Only 2/192 numeric results and 6/192 output labels are correct; 181 programs reject. This is a primitive-recognition failure, despite training on canonical and synonym templates. It rules out describing this stage as robust unstructured-language lowering.
 
+The nominal `renamed` condition is an exact duplicate of D4/N8: its flag is dropped and the same seed/settings regenerate the same batch. Its perfect execution adds no independent evidence for lexical-name generalization. Fresh names and random lexical keys across actual train/test batches support transfer across feature identities, not arbitrary new textual names or learned scope disambiguation.
+
 Medium reference noise reduces correct results to 120/192; high noise reduces them to 4/192. Confidence provides a risk/coverage tradeoff, not recovered reasoning. For the supervised model under medium noise:
 
 | Threshold | Answer coverage | Wrong-result risk among answers | Correct results / all examples | Wrong invoked lowerings |
