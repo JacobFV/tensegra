@@ -110,3 +110,29 @@ def test_null_initialization_is_independent_and_modes_are_finite():
     batch = make_batch(batch_size=2)
     for mode in model.MODES:
         assert torch.isfinite(model(batch, mode=mode)).all()
+
+
+@pytest.mark.parametrize('typed', [True, False])
+def test_pointer_rejects_unnormalized_branching_and_preserves_zero_rows(typed):
+    model = BindingTransformer(identity_update='pointer', typed=typed)
+    batch = make_batch(batch_size=2, depth=1)
+    branching = dict(batch, adjacency=torch.ones_like(batch['adjacency']))
+    with pytest.raises(ValueError, match='substochastic'):
+        model(branching)
+    zero = dict(batch, adjacency=torch.zeros_like(batch['adjacency']))
+    _, diagnostics = model(zero, return_diagnostics=True)
+    assert torch.count_nonzero(diagnostics[0]['pnext']) == 0
+    assert torch.count_nonzero(diagnostics[0]['identity_write']) == 0
+    # Fractional branching is legal when it does not manufacture mass.
+    fractional = dict(batch, adjacency=torch.ones_like(batch['adjacency']) / (2 * batch['entity_keys'].shape[1]))
+    _, diagnostics = model(fractional, return_diagnostics=True)
+    assert (diagnostics[0]['pnext'].sum(-1) <= .5 + 1e-6).all()
+
+
+def test_pointer_rejects_untyped_union_with_branching():
+    model = BindingTransformer(identity_update='pointer', typed=False)
+    batch = make_batch(batch_size=1, nodes=3, depth=1)
+    adjacency = torch.eye(3)[None, None].repeat(1, 3, 1, 1)
+    adjacency[:, 1] = adjacency[:, 1].roll(1, -1)
+    with pytest.raises(ValueError, match='substochastic'):
+        model(dict(batch, adjacency=adjacency))

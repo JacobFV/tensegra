@@ -68,6 +68,10 @@ class BindingTransformer(TraversalTransformer):
             raise ValueError("relation count differs from model")
         b, n, _ = entities.shape
         graph = RuntimeGraph(batch["node_ids"], entities, adjacency)
+        if self.identity_update == "pointer":
+            transitions = adjacency if self.typed else adjacency.amax(dim=1)
+            if (transitions < 0).any() or (transitions.sum(-1) > 1 + 1e-6).any():
+                raise ValueError("pointer writes require nonnegative substochastic transitions (row sums <= 1)")
         memory = F.pad(torch.cat((tokens, F.one_hot(values, self.classes).to(tokens)), -1),
                        (0, self.width - self.key_dim - self.classes))
         state = F.pad(batch["start_keys"], (0, self.width - self.key_dim)).unsqueeze(1)
@@ -149,6 +153,7 @@ class BindingTransformer(TraversalTransformer):
                                     "identity_write": identity_write,
                                     "identity_proposal": proposal[..., :self.key_dim],
                                     "mlp_identity_delta": mlp_delta[..., :self.key_dim],
+                                    "immutable_identity_retrieval": attention.mean(1) @ current_memory[..., :self.key_dim],
                                     "pnext": pnext,
                                     "projected_query_norm": self.grounders[slot].query_projection(
                                         self.grounding_input(state_before)).norm(dim=-1)})

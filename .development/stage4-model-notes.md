@@ -21,3 +21,7 @@ Each step returns differentiable `pq`, `pq_after` [B,1,N+1], `pk` [B,T,N+1], `at
 ## Verification
 
 On gb10-direct with two CPU threads and the existing environment: 12 focused tests passed (0.82 s initial run), covering exact Stage 3 compatibility, zero-strength equivalence, independent role gradients, cosine scale invariance, protected writes, null capacity, public-input-only execution and token/graph permutations. Local training and Torch installation were not used.
+
+Pointer transition validation requires every supplied typed relation (or the untyped max-union) to be nonnegative and substochastic, with row sum <=1 up to 1e-6 numerical tolerance. Zero rows are allowed and write null/zero identity; fractional branching is allowed without renormalization; unnormalized branching is rejected before recurrent execution. Attention/mixed routing retains the generic adjacency interface; probability/cycle interpretation of their transition diagnostic assumes the benchmark's functional graph.
+
+`immutable_identity_retrieval` records attention-weighted immutable current-memory identity keys in every mode, allowing comparison against mixed learned proposals. A proposal/write difference alone measures write override, not generic identity interference, and is identically zero for mixed writes by construction.
