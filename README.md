@@ -128,3 +128,9 @@ synthetic proxy, not a physics simulator or VLA.
 The preregistered design and implementation notes are in
 [stage2-design.md](.development/stage2-design.md) and
 [stage2-journal.md](.development/stage2-journal.md).
+
+The completed [Stage 2 report](.development/stage2-report.md) covers all 570 runs,
+including negative findings. [Methods](.development/stage2-methods.md),
+[raw metrics](.development/results/stage2/metrics.jsonl),
+[run configuration and provenance](.development/results/stage2/summary.json), and
+[artifact audit](.development/results/stage2/audit.json) are committed alongside it.
