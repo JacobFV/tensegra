@@ -173,3 +173,21 @@
   - pilot-metrics.jsonl SHA256 6d8008b089edbb8f11288fb7491d963fc12f6e84cebfc77b8f221b5990b9a089
 - A subagent is writing the scientific report from immutable artifacts; a final
   whole-branch review follows. No hyperparameter/budget changes after results.
+
+### Final review and delivery
+
+- Final whole-branch reviewer independently checked full code/docs plus artifact
+  arithmetic and hashes. Found and closed: missing/incomplete unbiased baseline
+  could prevent partial summaries; README environment commands; report topology,
+  optimizer, and transient-metric wording. Source robustness fix: 55eb3f5.
+- Final scoped review: Task 4 spec/quality pass, whole branch ready, no remaining
+  Critical/Important/Minor findings. Full clean remote suite at 55eb3f5: 67 passed.
+  README core API example also executed remotely, including a hard-mask assertion.
+- The measured pilot remains sourced from acf9ce0. Later changes only repair
+  missing-baseline aggregation and documentation; reviewer checked complete-pilot
+  selection and pairs remain unchanged. Raw artifacts were not modified.
+- All first-plan tasks are complete. Work is committed and pushed on
+  feat/structure-pilot; integration into main is a separate final decision.
+- Next research should remain easy and controlled: data-efficiency sweeps,
+  heterogeneous mechanisms with sufficient context, and held-out graph/size
+  tests with graph-as-input controls before interpreter-guided soft grounding.

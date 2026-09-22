@@ -221,17 +221,17 @@ def run(config: dict, output_dir: str) -> dict:
 **Owner:** Parent coordinates one remote experiment job at a time; analysis may
 be delegated after immutable result files are available.
 
-- [ ] Inspect remote load and available memory immediately before launch. Sync
+- [x] Inspect remote load and available memory immediately before launch. Sync
   the committed source into a dedicated remote working directory. Use an isolated
   environment and record its path; never modify unrelated user projects.
-- [ ] Run the 2-step smoke configuration, inspect finite losses and artifact
+- [x] Run the 2-step smoke configuration, inspect finite losses and artifact
   contents, then run `configs/pilot.json` with a 30-minute wall-time limit.
   If interrupted or time-limited, report incomplete runs and retain checkpoints/
   metrics; do not compare incomplete budgets as if they were matched.
-- [ ] Retrieve small result artifacts, verify mode/seed coverage, and compute
+- [x] Retrieve small result artifacts, verify mode/seed coverage, and compute
   paired differences. Do not claim improved generalization merely because training
   loss is lower. Identify what a three-seed pilot cannot establish.
-- [ ] Write a report describing the generator, controls, actual errors, resources,
+- [x] Write a report describing the generator, controls, actual errors, resources,
   limitations, and next experiment. Commit small summaries and report; leave raw
   large artifacts/checkpoints out of Git. Push and verify remote commit identity.
 
@@ -249,5 +249,6 @@ behavior, not the entire research hypothesis.
 Self-review: interfaces are consistent; every first-pilot task has ownership,
 validation, and a commit boundary. The broader design's unimplemented requirements
 are listed under deferred stages rather than silently claimed covered.
-User approved this plan and selected subagents. Task 1 is implemented and reviewed;
-Tasks 2 and 3 are complete; Task 4 remote pilot is in progress. Controller rulings and evidence are recorded in journal.md.
+User approved this plan and selected subagents. All four tasks are complete.
+Final independent review passed with no outstanding findings; see pilot-report.md
+and journal.md for results, validation, and the explicitly deferred next stages.

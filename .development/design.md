@@ -2,8 +2,8 @@
 
 Status: user approved the first implementation plan and subagent execution. The
 attention core, generators, and runner are implemented and reviewed. The first
-three-seed pilot is complete; report/final review are in progress. Broader research
-stages remain future work.
+three-seed pilot, report, and final independent review are complete. Broader
+research stages remain future work.
 
 ## Objective and sequence
 
