@@ -17,9 +17,9 @@ Identity-coordinate initialization, residual copying of retrieved key/value memo
 
 Query grounding in diagnostic item `t` is computed before updating the recurrent state, so its correct reference is `path_nodes[:, t]`. Attention at that item should retrieve `path_nodes[:, t+1]`. Key grounding refers to immutable memory identities, with distractors assigned to null slot N. Correct-next-node attention mass and supplied-graph relation-consistency are distinct, especially under graph corruption.
 
-## Pending runner inspection
+## Runner inspection
 
-The runner was incomplete at initial inspection. Final metric/data split audit will be recorded here when implementation stabilizes.
+The runner passes a strict model-input allowlist during both training and evaluation. Cross-entropy uses only final task labels; gold paths are read exclusively for evaluation. Training (1,000,000 + seed offsets), validation (20,000,000), and evaluation (40,000,000) have separate seed ranges under the committed study budgets. Every minibatch creates fresh graph/identity keys. All variants share deterministic training schedules and evaluation conditions.
 
 ## Runner findings communicated during implementation
 
@@ -32,3 +32,11 @@ Three metric-alignment issues were found in the initial evaluator and sent to th
 The initial evaluator also assigned different graph seeds to corruption conditions. Paired corruption comparisons should use the same base evaluation seed, since the data generator changes only adjacency under corruption.
 
 Additional interpretation limits: categorical answers admit chance collisions (1/classes); depth 32 on 16 nodes permits revisits rather than guaranteeing 32 distinct entities; and corruption may erase unrecoverable true edges rather than leave redundant inference cues.
+
+## Resolution and verdict
+
+At runner commit `373f584` and accompanying model updates, the three metric issues are corrected: diagnostics expose `pq_after`; exact-path completion requires all correct pre- and post-step bindings; attention-argmax path completion is separate; pre-step next-node overlap is explicitly named; structural-next-node mass uses `Pq A`; and clean-next attention differs from supplied-edge attention. Supplied-edge attention is anchored at the **clean gold current source**, not a possibly diverged inferred source. Post-step grounding in the frozen-routing control measures what the updated latent identifies with diagnostically, even though routing continues using its original cached grounding.
+
+All evaluation conditions now reuse the same base seed within a training seed, so clean/corrupted counterparts differ only in supplied adjacency. The exact-attention oracle also independently traverses shuffled token memory using exact key equality and graph-based hard attention; it does not consume intermediate gold states.
+
+**Leakage verdict: pass by code inspection.** No target or intermediate execution leakage found. **Metric-alignment verdict: pass after corrections**, subject to the runner's regression tests and integration suite. This review did not run training or infer experimental success.
