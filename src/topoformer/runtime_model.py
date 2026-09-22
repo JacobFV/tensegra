@@ -98,7 +98,9 @@ class RuntimeBindingModel(nn.Module):
         self.result = nn.Linear(width, result_classes)
         self.style = nn.Embedding(n_styles, width)
         self.comparison = nn.Linear(1, width)
-        self.lifter = nn.Sequential(nn.Linear(width + 2, width), nn.GELU(),
+        self.register_buffer("lift_centers", torch.arange(result_min, result_min + result_classes, dtype=torch.float32))
+        self.lift_rbf_width = .75
+        self.lifter = nn.Sequential(nn.Linear(width + 2 + result_classes, width), nn.GELU(),
                                     nn.Linear(width, output_classes))
 
     def lift(self, result, style, comparison=None):
@@ -106,7 +108,8 @@ class RuntimeBindingModel(nn.Module):
         if comparison is None:
             comparison = torch.zeros_like(result)
         numeric = torch.stack((result.float() / self.result_scale, comparison.float()), -1)
-        return self.lifter(torch.cat((numeric, self.style(style.long())), -1))
+        rbf = torch.exp(-.5 * ((result.float()[..., None] - self.lift_centers) / self.lift_rbf_width).square())
+        return self.lifter(torch.cat((numeric, rbf, self.style(style.long())), -1))
 
     def forward(self, public, *, mode='runtime'):
         if mode not in self.MODES:

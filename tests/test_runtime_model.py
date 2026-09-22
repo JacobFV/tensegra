@@ -147,3 +147,27 @@ def test_confidence_ignores_batch_padding():
     torch.testing.assert_close(
         binding_confidence(op, logits, torch.tensor([[0, 1]])),
         binding_confidence(op, padded, torch.tensor([[0, 1, -1, -1]])))
+
+
+def test_lifting_rbf_is_numeric_prior_not_output_rule():
+    m = model()
+    values = torch.tensor([3., 4.], requires_grad=True)
+    captured = []
+    handle = m.lifter[0].register_forward_pre_hook(lambda module, args: captured.append(args[0]))
+    logits = m.lift(values, torch.zeros(2, dtype=torch.long))
+    handle.remove()
+    features = captured[0]
+    assert features.shape[-1] == m.width + 2 + len(m.lift_centers)
+    rbf = features[:, 2:2 + len(m.lift_centers)]
+    assert rbf.argmax(-1).tolist() == [67, 68]
+    assert not torch.allclose(rbf[0], rbf[1])
+    logits.square().sum().backward()
+    assert values.grad.isfinite().all()
+    assert values.grad.abs().sum() > 0
+    # Output mapping remains learned: no fixed classification/threshold operation.
+    with torch.no_grad():
+        for parameter in m.lifter.parameters():
+            parameter.zero_()
+    assert m.lift(values.detach(), torch.zeros(2, dtype=torch.long)).eq(0).all()
+    assert 'lift_centers' in dict(m.named_buffers())
+    assert 'lift_centers' not in dict(m.named_parameters())

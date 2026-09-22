@@ -45,3 +45,16 @@ padding/null-only candidates; comparison-cue observability, and scope/index payl
 
 Follow-up tests cover directed/typed edge observability and gradients in ordinary
 attention, sparse edge padding, semantic-group confidence and padding invariance.
+
+## Pre-main lifting representation fix
+
+The shallow oracle pilot attained exact execution but its scalar-only learned
+lifter remained weak. Before the main run, lifting now augments the normalized
+raw scalar/comparison and style embedding with fixed Gaussian RBF features
+centered at every integer in the bounded result vocabulary (-64..64), width .75.
+This is an explicit numerical representation prior, shared in every model's
+parameter layout. It is differentiable, does not clip out-of-range values, and
+contains no output-class, sign, comparison or report rule. The final MLP must
+still learn output mapping. This evaluates bounded report labels, not free prose.
+A test verifies neighboring-value discrimination, finite scalar gradients,
+nontrainable centers and complete dependence on learned output parameters.
