@@ -28,3 +28,15 @@ All findings were sent to the model, task, and runner owners. Final resolution a
 ### Model follow-up
 
 The model owner has implemented graph edge-record tokens for all four neural controls, including the protected learned-register model. Inspection confirms source/destination projections retain direction, relation embeddings retain edge type, and graph-data/soft modes add their own interventions on top of the same edge-record interface. Semantic-group confidence now aggregates public equivalence groups and uses per-example valid support, with padding invariance covered by a focused test. These address findings 2 and the model-side part of 6; final integrated tests still need task-provided groups.
+
+### Integrated pre-freeze re-review
+
+Re-inspected the integrated task/model/runner changes through task commit `6bb92b6`, model commit `efbe539`, and runner commit `110cf1a`. Wrong-graph generation now supplies the same changed edges to tensor inputs and exact execution. Held-out surface order is distinct, missing-reference and invalid-schema conditions are real, and undefined queries no longer receive ordinary task-accuracy denominators. Neural control trajectory/lifting fields are marked not applicable, with exact-lowering audits separately labeled. Fixed confidence thresholds are declared in advance; they are not optimized on test performance.
+
+Task-generation labels now also have independent generator-side scalar/leaf checks against the interpreter, avoiding reliance on the evaluator alone as its own correctness oracle. Raw `n0`-style IDs remain deterministic host identifiers but never enter neural inputs; shuffling candidates and random lexical keys prevent a numerical-ID shortcut.
+
+The neural comparator is a small clause transformer with a recurrent GRU controller and ordinary content attention over node/edge records. It should not be called a pure decoder-only transformer. It receives the same lowering auxiliary supervision as the supervised runtime variant, plus direct numeric-result supervision; this extra target favors the comparator but means losses are not literally identical. Exact execution is the intended architectural privilege, not a learned reasoning achievement.
+
+Two final metric corrections were requested before freezing: actual confidence error counts under the permuted-binding intervention must score the **executed** selector instead of its pre-intervention prediction, and training-time neural accounting must not silently include gold diagnostic interpreter runs. These are metrics corrections, not an observed execution or model-input leak.
+
+A single scalar-lifting representation revision is being evaluated using shallow oracle pilots only, after the original shallow oracle exposed a learned-output bottleneck. Preserve both pilot artifacts and disclose the revision; no OOD measurements may be used to select that representation. Approval of the main freeze remains conditional on the pending metric corrections and focused integrated tests after that revision.
