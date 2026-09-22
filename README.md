@@ -1,4 +1,4 @@
-# Topoformer structure pilot
+# Topoformer: programmable attention geometry
 
 This repository contains a controlled pilot for testing graph-biased attention on
 synthetic sparse and robot-shaped dynamical systems. The first generators use a
@@ -81,3 +81,50 @@ the shared graph predictor and token MLP, and `training.py`, `evaluation.py`, an
 
 See the [pilot report](.development/pilot-report.md) for results, limitations, and
 the recommended next experiments.
+
+## Controlled follow-up studies
+
+Stage 2 tests sample and optimization efficiency, incomplete topology, unseen
+graphs and larger node counts, a graph-conditioned input baseline, signed edge
+weights, and zero-initialized learned layer/head biases. A supplementary efficiency
+suite gives every compared model the same learnable variable-identity table;
+this separates fixed-graph learning from the identity-free baseline's inability
+to directly memorize arbitrary adjacency. Transfer models remain identity-free.
+
+```sh
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
+  .venv/bin/python -m topoformer.study \
+  --config configs/study-smoke.json --output results/study-smoke
+
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
+  .venv/bin/python -m topoformer.study \
+  --config configs/study.json --output results/study
+
+PYTHONPATH=src .venv/bin/python -m topoformer.study_analysis \
+  results/study/metrics.jsonl results/study-analysis
+```
+
+Use `--suite efficiency`, `corruption`, `transfer`, `heterogeneous`, `learned`, or
+`efficiency_identity` to run one study. Outputs refuse overwriting. Full runs use
+two CPU threads, bounded evaluation batches and a configured wall-time limit.
+For optional exported scientific figures, install `matplotlib` in the environment
+and add `--plots` to the analysis command with a fresh output directory.
+
+`study_data.py` defines size-stable process families and reproducible graph
+corruptions; `study_model.py` composes fixed, learned and typed graph biases with
+the shared predictor; `study.py` owns paired datasets, training and provenance;
+`study_analysis.py` reads artifacts without importing Torch. Graph-input models
+receive neighbor-history aggregates through an input projection while attention
+stays unbiased. Typed models receive privileged signed coefficient information,
+which is disclosed separately from adjacency-only comparisons.
+
+Efficiency thresholds use validation oracle-to-zero gaps, with unreached targets
+reported as censored. Curves include initialization and all declared optimizer
+checkpoints. Deterministic rollouts iterate the known noise-free transition from
+observed histories; they are not exact multi-step conditional expectations of the
+stochastic nonlinear process. The robot generator remains a morphology-shaped
+synthetic proxy, not a physics simulator or VLA.
+
+The preregistered design and implementation notes are in
+[stage2-design.md](.development/stage2-design.md) and
+[stage2-journal.md](.development/stage2-journal.md).
