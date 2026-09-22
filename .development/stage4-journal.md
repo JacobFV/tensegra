@@ -4,7 +4,7 @@
 
 Stage3 baseline is main8243cba, clean. The user asks to promote identity binding into an architectural object and defer interpretation/execution. This stage keeps data and old experiments unchanged and isolates matching normalization, identity-write protection, read isolation, explicit pointer transitions, and labeled auxiliary supervision.
 
-The Stage3 comparison between .849 average pre-step correctness and .672 complete paths does suggest correlated outcomes. It is not a valid iid test: pre-step accuracy and full pre/post path correctness are different events; step difficulty, graph/sample heterogeneity, cycles and recovery all matter. New metrics retain per-example pre/post correctness sequences, first-error hazards and conditional persistence/recovery counts. Attractor language remains a hypothesis unless transition evidence supports it.
+The Stage3 comparison between .849 average pre-step correctness and .672 complete paths does suggest correlated outcomes. The large gap is strong descriptive evidence against independent homogeneous hop errors, but does not identify its cause: pre-step accuracy and full pre/post path correctness are different events, and graph/sample heterogeneity, cycles and recovery all matter. The stricter complete-path event does not weaken the qualitative dependence signal; it does require care when assigning a specific transition mechanism. New metrics retain per-example pre/post correctness sequences, first-error hazards and conditional persistence/recovery counts. Attractor language remains a hypothesis unless transition evidence supports it.
 
 Raw-query cosine normalization and protected identity are distinct interventions. Pointer propagation Pq A then expected-key write is a deliberately stronger graph-computation prior; attention-key write preserves attention as the information-flow mechanism. The report must not pool these into a claim about logit-space structure.
 
@@ -13,3 +13,9 @@ Random projection and null initialization will be controlled separately. Supervi
 ## Frozen main study launch
 
 Executable source 3b63b88 passes all 260 tests in 2.61 seconds remotely. The six-variant end-to-end smoke completes. Main configuration fixes 23 variants × three seeds × 400 steps, with 20 final matrix cells and two initialization anchors per run. Evaluation examples remain 128/cell, batch16. All main training is remote with two CPU threads. The single unpinned resource benchmark was used only for runtime planning; its metrics are not pooled with the main results. Model checkpoints are retained remotely for post-training audits.
+
+## Follow-up selection rule while main runs are incomplete
+
+The optional adaptive experiment will use protected attention writes with identity-only grounding if that family passes the all-seed gate; otherwise it may use the explicit pointer-write family if that family passes. This preference follows the weaker computational prior, rather than ranking mean OOD accuracy. The partial seed-zero results are already visible, so this is a disclosed follow-up rule, not a retroactive preregistration of the main study.
+
+A follow-up will compare fixed strength with an entropy-controlled coefficient using the same initialization, schedule and maximum strength. Confidence will be multiplied by real-entity probability mass so a confident null assignment cannot trigger graph crystallization. It will remain separate from the main69 runs, with its own source and resolved configuration. No implementation or training starts until all-seed stability is verified.
