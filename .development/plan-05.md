@@ -12,7 +12,7 @@
 - [x] Model worker: `runtime_model.py`, tests and notes. Implement small clause transformer, independent operation/binding probabilities with null, neural controls consuming identical observables, protected-register interface and learned output lifting. Test gradients, null/confidence behavior, name/order handling and disabled-structure equivalence where applicable.
 - [x] Coordinator/runner worker: `runtime_study.py`, configs/tests. Freeze API after data/model workers agree; supervised, cold task-only and supervised-to-weak curricula, explicit estimator for nondifferentiable execution; step-zero/curves, paired seeds, all failure channels and resource hashes. Pilot before fixed main budget.
 - [x] Analysis/review workers: artifact-only analysis, audit, report and standalone plots; exact-runtime oracle sweep; verify conditional denominators, fair inputs, no future leakage, independent source/data hashes and all requested controls.
-- [ ] Integrate, run old/new tests, commit raw artifacts/report, push main and clean only the task-owned worktree.
+- [x] Integrate, run old/new tests, commit raw artifacts/report, push main and clean only the task-owned worktree. Release: 359 tests; 39 runs and checkpoints independently audited; Stage 1–4 preserved.
 
 ## Review focus
 
