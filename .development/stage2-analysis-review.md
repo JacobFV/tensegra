@@ -90,3 +90,38 @@ Before approval, add runner-shaped end-to-end fixtures that establish all of the
 8. Plot/report labels distinguish domain, metric/unit, training configuration, train versus runtime corruption, transfer train sizes, selected lambda, and censoring.
 
 After those changes, rerun the focused analysis tests and a runner-schema smoke. The already reported unchanged full test run need not be repeated unless shared code or runner output changes.
+
+## Scoped re-review of `fcac02d`
+
+The fix wave resolves C1, C3, I2, I4, and I5, and resolves the graph/trajectory portion of C2. It retains all 18 runner evaluation fields with exact metric names, uses the configured optimizer budget, distinguishes validation-selected strengths, separates plots by domain/metric/training regime with censor marks, and gives retraining and runtime corruption separate estimands. I1 and I3 are materially improved: conflicting run duplicates are excluded, duplicate evaluation identities and nonfinite metric/coefficient values are counted, nested-count normalization/reference consistency is checked, and malformed curves do not receive AUCs. The supplied evidence was 13 focused passing tests plus a 104-row real-schema CLI smoke with plots and 18 retained metrics; those commands were not rerun.
+
+**Re-review verdict: one important integrity defect remains; no critical defect remains in the reviewed paths.**
+
+### Remaining important defect — paired modes are not verified to share the recorded schedule and initialization
+
+The design and methods require paired variants within a case to use identical sampled schedules and common parameter initialization, and the runner records `schedule_hash` and `shared_initialization_hash` specifically to audit those claims. `_evaluation_rows()` does not carry either hash into flattened rows, and `_matched_pair_summary()` matches only seed plus validation checkpoint or test graph hash/trajectory seed. Artifacts with different schedules or common initial tensors will therefore still be reported as paired effects.
+
+Minimal fix: carry `schedule_hash` and `shared_initialization_hash` from each run into every flattened row. For each exact seed/case contrast, require equality of both hashes across baseline and treatment before computing any validation or test effect. Exclude a mismatch with a distinct `pairing_provenance_mismatch` reason and retain the two hash values for diagnosis. Add one focused test in which graph/trajectory identities match but one hash differs, and assert `n_pairs == 0`; add the valid matching-hash case. `initialization_hash` itself is expected to differ for architecture-specific tensors, so the audit should use the explicitly shared hash rather than demand identical full states.
+
+### Remaining nonblocking hardening
+
+- Efficiency curve construction filters nonfinite points before validating the step sequence. A nonfinite intermediate value can disappear while endpoints still make the curve look valid. Treat any present nonfinite step/value as an invalid curve rather than filtering it away.
+- `thresholds_by_train_count` republishes runner `threshold_steps` even when that count's curve is invalid, and stored threshold steps are not cross-checked against the authoritative rederived crossings. Derive these per-count values from validated curves, or null/censor them whenever the curve is invalid; count discrepancies as artifact-integrity exclusions.
+- `_paired_contrasts()` omits a result whose only failure is `duplicate_references`, because its emission condition checks pairs, incomplete, and unmatched only. Upstream evaluation deduplication covers ordinary test duplicates, but duplicate validation checkpoints can be silently absent from the contrast report. Include `duplicate_references` in the condition.
+- Resource rows are grouped correctly in JSON but the Markdown table displays only suite/mode, so multiple conditions appear identical. Add domain/config/count or omit the ambiguous table rows from the human report.
+
+The documented CLI command remains compatible with runner output: absent `--config`, it reads the metrics file's sibling `summary.json` and extracts its `config` object. A standalone config JSON also works through `--config`.
+
+## Final scoped recheck of `6d448ce`
+
+**Approved for the reviewed Stage 2 analysis scope. No blocking defects remain from C1–C3 or I1–I5.**
+
+The final fix carries `schedule_hash` and `shared_initialization_hash` into flattened observations and rejects missing, internally inconsistent, or baseline/treatment-mismatched provenance per seed before computing an effect. The exclusion is explicit and provenance-only failures are emitted. It also rejects nonfinite efficiency points without allowing filtered endpoints to certify a curve, suppresses stored crossings for invalid curves, emits duplicate-reference-only contrasts, and makes Markdown resource conditions distinguishable.
+
+Evidence accepted without rerun: 15 focused remote tests passed, including parameterized missing/mismatched provenance regressions, and the real-schema CLI smoke produced paired results successfully. The remaining risks are ordinary report-scale/readability concerns rather than statistical correctness blockers; raw full-study outputs should still be checked for nonzero exclusion counts before narrative interpretation.
+
+## Plotting and evaluation-step follow-up for `7e202ca`
+
+**Approved. No analysis-math or pairing regression found.** Test evaluations now inherit the run's final `completed_steps`, while conflicting explicit evaluation checkpoints are excluded instead of entering the wrong stratum. This aligns terminal metrics with their actual trained checkpoint and leaves metric expansion, exact reference matching, provenance gating, and within-seed aggregation unchanged. Transfer figures now use numeric node-count axes with mode lines and training-regime panels; efficiency color consistency and seed jitter change presentation only.
+
+Evidence accepted without rerun: 17 focused tests passed, and a real-schema smoke completed with zero exclusions and 23 PNG/SVG figure pairs.

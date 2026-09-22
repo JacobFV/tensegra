@@ -1,9 +1,11 @@
 # Topoformer: programmable structure in attention
 
-Status: user approved the first implementation plan and subagent execution. The
-attention core, generators, and runner are implemented and reviewed. The first
-three-seed pilot, report, and final independent review are complete. Broader
-research stages remain future work.
+Status: the attention core and first three-seed pilot are complete. Stage 2 now
+adds six controlled suites covering efficiency, variable-identity controls,
+imperfect graphs, runtime graph/size transfer, signed edges and learned strengths.
+All 570 runs completed; see [the detailed report](stage2-report.md). Interpreter
+execution, latent entity grounding, pretrained adapters and broad model-scaling
+studies remain future work.
 
 ## Objective and sequence
 
