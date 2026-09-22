@@ -126,11 +126,15 @@ def summarize(rows, expected_seeds=None):
                                            for metric in METRICS}})
     comparisons = []
     # Every soft variant is explicit; do not combine random and identity initialization.
-    treatments = [v for v in variants if v not in {"none", "graph_input", "known", "hard", "frozen", "permuted"}]
-    controls = [v for v in variants if v in {"none", "graph_input", "known", "hard", "frozen", "permuted"}]
+    control_variants = {"none", "graph_input", "known", "hard", "frozen", "permuted",
+                        "none_keyed", "graph_input_keyed"}
+    treatments = [v for v in variants if v not in control_variants]
+    controls = [v for v in variants if v in control_variants]
     for key in conditions:
         for treatment in treatments:
             for control in controls:
+                if treatment.endswith("_keyed") != control.endswith("_keyed"):
+                    continue  # Supplementary content-key priors form a separate comparison family.
                 left, right = groups[(key, treatment)], groups[(key, control)]
                 common_hash_verified = True
                 for seed in seeds:
@@ -177,6 +181,8 @@ def render_report(summary):
         c, m = group["condition"], group["metrics"]
         lines.append(f'| {c["condition"]} | {c["depth"]} | {c["nodes"]} | {c["distractors"]} | {c["composition"]} | {c["corruption"]} | {group["variant"]} | ' +
                      " | ".join(fmt(m[k]) for k in ("task_accuracy", "grounding_accuracy", "exact_path_completion", "exact_attention_path_completion", "exact_pre_step_grounding", "clean_next_attention_mass")) + " |")
+    if any(variant.endswith("_keyed") for variant in summary["variants"]):
+        lines += ["", "The `_keyed` supplement gives all three variants a shared, graph-free cosine identity content bias (β=8). Its soft structural strength starts at 16 to compete with attraction to the current identity. This is a separate comparison family, not a matched comparison to the primary runs. Paired effects compare `soft_keyed` only with `none_keyed` and `graph_input_keyed`; source/configuration mixing remains prohibited. The graph-input attention diagnostic caveat also applies to `graph_input_keyed`."]
     lines += ["", "## Exact routing controls", "", "Direct graph traversal and exact one-hot induced attention route the supplied graph. Under corruption their clean-answer accuracy may fall. Distinct path nodes quantify revisiting; instruction depth is not the number of unique entities visited.", "", "| Condition | Depth | Nodes | Direct oracle accuracy | Attention oracle accuracy | Attention oracle exact path | Distinct path nodes |", "|---|---:|---:|---:|---:|---:|---:|"]
     first_variant = summary["variants"][0]
     for group in summary["aggregates"]:
@@ -200,7 +206,7 @@ def render_report(summary):
     for example in summary["examples"]:
         if example["seed"] != summary["seeds"][0] or example["condition"]["depth"] not in (4, 16, 32):
             continue
-        if example["variant"] not in ("soft", "random_init", "known", "frozen"):
+        if example["variant"] not in ("soft", "random_init", "known", "frozen", "soft_keyed"):
             continue
         lines += ["", f'### {example["variant"]}: {example["condition"]}', "",
                   "| Step | True pre-step node | Most likely grounded node | Actual next node | Grounding max probability | Entropy | Next-token attention |", "|---:|---|---|---|---:|---:|---:|"]
@@ -229,7 +235,8 @@ def write_plots(summary, directory):
         return {"available": False, "files": []}
     directory.mkdir(parents=True, exist_ok=True)
     files = []
-    core = {"soft", "random_init", "known", "hard", "none", "graph_input", "frozen", "permuted"}
+    core = {"soft", "random_init", "known", "hard", "none", "graph_input", "frozen", "permuted",
+            "soft_keyed", "none_keyed", "graph_input_keyed"}
     for axis in ("depth", "nodes", "corruption", "distractors"):
         panels = defaultdict(lambda: defaultdict(list))
         fixed = [key for key in CONDITION_FIELDS if key not in ("condition", axis)]

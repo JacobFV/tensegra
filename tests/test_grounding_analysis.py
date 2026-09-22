@@ -80,3 +80,19 @@ def test_report_keeps_task_and_attention_path_separate():
     assert 'Exact pre-step grounding' in report
     assert 'not a lexical-language test' in report
     assert 'sample SD' in report
+
+
+def test_keyed_supplement_pairs_only_with_keyed_controls():
+    import copy
+    from topoformer.grounding_analysis import summarize, render_report
+    primary = fixture_rows()
+    extra = copy.deepcopy(primary)
+    for row in extra:
+        row['variant'] += '_keyed'
+    graph_input = copy.deepcopy(extra[3:])
+    for row in graph_input:
+        row['variant'] = 'graph_input_keyed'
+    result = summarize(primary + extra + graph_input)
+    pairs = {(r['treatment'], r['control']) for r in result['paired_task_differences']}
+    assert pairs == {('soft', 'none'), ('soft_keyed', 'none_keyed'), ('soft_keyed', 'graph_input_keyed')}
+    assert 'separate comparison family' in render_report(result)
