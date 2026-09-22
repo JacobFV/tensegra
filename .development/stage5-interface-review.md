@@ -56,3 +56,11 @@ The final correction is committed as `c62c62f`. Inspection confirms undefined ta
 ### Matched-decoy correction before main launch
 
 Reviewed data-only change `bcea70f`. Nested, alias, and mixed tasks now contain a second object chain with identical field/index labels and a guaranteed different terminal value. Both chains are fully public and lexically equivalent slots share reference keys. Swapping only the initial root selector while retaining every later operation/selector produces the decoy value, so the final field cue no longer uniquely identifies the answer across the runtime. Added tests cover all three families at depths 4, 16, and 32; the task owner reports 34 task tests passing. Labels, neural observables, and exact execution remain separated. This strengthens the benchmark without changing the model or selecting on OOD performance. **Freeze approval remains valid after this correction.**
+
+## Independent artifact audit preparation
+
+Added `scripts/audit_runtime_results.py`, a streaming audit independent of the analysis implementation. It checks complete run/condition/learning-curve coverage; exact configuration, source, initialization, schedule, and paired-data provenance; per-example population/intersection counts; conditional denominators; undefined target exclusions; family/style totals; actual versus hypothetical gate populations; and saved checkpoint identities/state hashes using `weights_only=True`. A source-root option verifies each frozen source file against its recorded SHA-256. It retains one decoded run and compact audit records only.
+
+During the main run, the first two completed runs (58 cells) and both saved checkpoints passed the incremental audit. Three deliberately corrupted copies (task count, lowering intersection, execution rate) were rejected. This is preliminary validation of the auditing utility, not a completed experiment audit.
+
+Undefined-condition per-example task/result arrays contain unscored comparisons against placeholder zero; their official counts are zero and rates are null. The auditor intentionally verifies the defined population before comparing these arrays to scored counts. These raw booleans must never be interpreted as successful answers to undefined requests.
