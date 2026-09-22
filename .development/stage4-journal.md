@@ -9,3 +9,7 @@ The Stage3 comparison between .849 average pre-step correctness and .672 complet
 Raw-query cosine normalization and protected identity are distinct interventions. Pointer propagation Pq A then expected-key write is a deliberately stronger graph-computation prior; attention-key write preserves attention as the information-flow mechanism. The report must not pool these into a claim about logit-space structure.
 
 Random projection and null initialization will be controlled separately. Supervised query/key/null targets affect training losses only, never forward-pass state writes or evaluation routing. Internal transition/rebinding consistency is not an inverse-graph operation and will be labeled precisely.
+
+## Frozen main study launch
+
+Executable source 3b63b88 passes all 260 tests in 2.61 seconds remotely. The six-variant end-to-end smoke completes. Main configuration fixes 23 variants × three seeds × 400 steps, with 20 final matrix cells and two initialization anchors per run. Evaluation examples remain 128/cell, batch16. All main training is remote with two CPU threads. The single unpinned resource benchmark was used only for runtime planning; its metrics are not pooled with the main results. Model checkpoints are retained remotely for post-training audits.
