@@ -302,7 +302,8 @@ def evaluate(model, variant, config, condition, seed):
                              accepted=sum(e.invoked for e in gated),
                              hypothetical_gate_wrong=int((local_gate & ~local_right).sum()),
                              hypothetical_gate_count=int(local_gate.sum()),
-                             deferred_correct=int((~local_gate & local_right).sum()),
+                             deferred_correct=sum(entry['status']=='deferred' and bool(local_right[i, entry['step']]) for i,e in enumerate(gated) for entry in e.trace),
+                             hypothetical_deferred_correct=int((~local_gate & local_right).sum()),
                              correct_lowerings=int(local_right.sum())))
     counts.update(invoked=sum(e.invoked for e in executions), rejected=sum(e.rejected for e in executions),
                   deferred=sum(e.deferred for e in executions), recovery_steps=sum(e.recovering_steps for e in executions),
@@ -398,7 +399,7 @@ def train_run(config, variant, seed, source, checkpoint_dir=None):
         depth = 1 + step % config.max_train_depth
         nodes = config.train_sizes[(step // config.max_train_depth) % len(config.train_sizes)]
         batch = make_data(config, batch_seed, depth=depth, nodes=nodes, count=config.batch_size,
-                          template='canonical' if step % 2 == 0 else 'paraphrase')
+                          template='canonical' if (step // config.max_train_depth) % 2 == 0 else 'paraphrase')
         schedule.append(dict(seed=batch_seed, depth=depth, nodes=nodes, data_hash=data_hash(batch)))
         loss, baseline = train_update(model, optimizer, batch, variant, curriculum(variant, step, config), config, baseline)
         losses.append(dict(step=step+1, **loss))
@@ -410,7 +411,7 @@ def train_run(config, variant, seed, source, checkpoint_dir=None):
         torch.save(dict(state_dict=model.state_dict(), config=asdict(config), variant=variant, seed=seed, source=source),
                    Path(checkpoint_dir)/checkpoint)
     return dict(schema_version=5, variant=variant, seed=seed, config_hash=fingerprint(asdict(config)), source=source,
-                variant_options=VARIANTS[variant], model=dict(parameters=sum(p.numel() for p in model.parameters())),
+                variant_options=VARIANTS[variant], metric_semantics=dict(execution_counts='actual runtime' if VARIANTS[variant]['mode']=='exact' else 'numeric prediction; invocation counts are auxiliary-lowering audit'), model=dict(parameters=sum(p.numel() for p in model.parameters())),
                 training=dict(steps=config.steps, examples=config.steps*config.batch_size, curve=curve, losses=losses,
                               schedule_hash=fingerprint(schedule), initial_parameter_hashes=initial_hashes,
                               initial_state_hash=fingerprint(initial_hashes), final_state_hash=state_hash(model)),

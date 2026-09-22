@@ -17,3 +17,5 @@ Raw JSONL records contain source/config hashes, per-parameter initialization has
 ## Pilot checks
 
 A remote isolated overlay passed all ten variants at two updates and nine runner tests. A 25-update budget pilot took 2.88 seconds for supervised exact execution and 2.04 seconds for graph-data, including four small evaluation cells. It sets the 400-update CPU budget; it is not scientific evidence. A shallow-only oracle lifting pilot is run before main source/config freeze to inspect the output-boundary optimization independently of lowering.
+
+The shallow oracle lifting pilot at 400 updates reached 0.375 validation output accuracy while exact runtime result/trajectory accuracy remained 1.0. This identifies lifting optimization as a bottleneck before any main experiment. Root coordinates a pre-main lifting design decision; this pilot must not be treated as the final architecture's outcome. Template variants alternate in blocks of the training-depth cycle so that template choice is not deterministically coupled to depth.
