@@ -766,8 +766,12 @@ def write_plots(summary: Mapping[str, Any], output: Path) -> None:
             fig, axes = plt.subplots(len(regimes), 1, squeeze=False,
                                      figsize=(12, max(4, 3.2 * len(regimes))))
             for axis, (regime, regime_rows) in zip(axes[:, 0], sorted(regimes.items())):
-                labels = [f"{row.get('mode')}\n{row.get('corruption') or ''} {row.get('eval_size') or ''}"
-                          for row in regime_rows]
+                labels = []
+                for row in regime_rows:
+                    fraction = row.get("fraction")
+                    percentage = f" {100 * float(fraction):g}%" if _finite(fraction) and fraction else ""
+                    labels.append(f"{row.get('mode')} · {row.get('split')}\n"
+                                  f"{row.get('corruption') or 'clean'}{percentage} · n={row.get('eval_size')}")
                 positions = list(range(len(regime_rows)))
                 axis.errorbar(positions, [row["mean"] for row in regime_rows],
                               yerr=[row["population_sd"] for row in regime_rows], fmt="o", capsize=3)
