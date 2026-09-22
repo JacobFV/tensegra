@@ -96,3 +96,54 @@ def test_scope_and_index_payload_are_observable(mode):
     assert not torch.allclose(a['binding_logits'], b['binding_logits'])
     if mode != 'runtime':
         assert not torch.allclose(a['output_logits'], b['output_logits'])
+
+
+def test_ordinary_attention_reads_directed_typed_graph_tokens():
+    m, public = model(), sample()
+    public['adjacency'].zero_()
+    public['adjacency'][:, 0, 0, 1] = 1
+    a = m(public, mode='none')
+    assert a['attentions'].shape[-1] == 7  # six nodes and one public edge
+    public['adjacency'].zero_()
+    public['adjacency'][:, 0, 1, 0] = 1
+    b = m(public, mode='none')
+    assert not torch.allclose(a['output_logits'], b['output_logits'])
+    public['adjacency'].zero_()
+    public['adjacency'][:, 1, 0, 1] = 1
+    c = m(public, mode='none')
+    assert not torch.allclose(a['output_logits'], c['output_logits'])
+    c['output_logits'].square().mean().backward()
+    assert m.edge_source.weight.grad.abs().sum() > 0
+    assert m.edge_destination.weight.grad.abs().sum() > 0
+
+
+def test_graph_token_padding_and_empty_graph_are_finite():
+    m, public = model(), sample()
+    public['adjacency'].zero_()
+    public['adjacency'][0, 0, 0, 1] = 1
+    out = m(public, mode='none')
+    assert not out['memory_mask'][1, -1]
+    assert out['attentions'][1, :, -1].eq(0).all()
+    public['adjacency'].zero_()
+    assert torch.isfinite(m(public, mode='none')['output_logits']).all()
+
+
+def test_confidence_aggregates_public_semantic_aliases():
+    op = torch.tensor([[[20., -20.]]])
+    logits = torch.tensor([[[20., 20., -20.]]])
+    raw = binding_confidence(op, logits)
+    grouped = binding_confidence(op, logits, torch.tensor([[0, 0]]))
+    assert raw.item() < .01
+    assert grouped.item() > .999
+    distinct = binding_confidence(op, logits, torch.tensor([[0, 1]]))
+    torch.testing.assert_close(raw, distinct)
+
+
+def test_confidence_ignores_batch_padding():
+    op = torch.tensor([[[4., -1.]]])
+    logits = torch.tensor([[[3., 1., -2.]]])
+    padded = torch.tensor([[[3., 1., float('-inf'), float('-inf'), -2.]]])
+    torch.testing.assert_close(binding_confidence(op, logits), binding_confidence(op, padded))
+    torch.testing.assert_close(
+        binding_confidence(op, logits, torch.tensor([[0, 1]])),
+        binding_confidence(op, padded, torch.tensor([[0, 1, -1, -1]])))

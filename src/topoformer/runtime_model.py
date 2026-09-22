@@ -10,7 +10,7 @@ from torch import nn
 from torch.nn import functional as F
 
 
-def binding_confidence(op_logits, binding_logits):
+def binding_confidence(op_logits, binding_logits, candidate_groups=None):
     """Local confidence, never a global mode; null probability vetoes confidence.
 
     This deliberately conservative combination is an uncalibrated score. Execution
@@ -18,12 +18,32 @@ def binding_confidence(op_logits, binding_logits):
     """
     op = op_logits.softmax(-1)
     binding = binding_logits.softmax(-1)
-    def certainty(p):
+    support = torch.isfinite(binding_logits).sum(-1)
+    if candidate_groups is not None:
+        # Groups are public (kind,payload) equivalences, never gold target masks.
+        count = binding.shape[-1] - 1
+        if candidate_groups.shape != (binding.shape[0], count):
+            raise ValueError('candidate_groups must be [B,C]')
+        if ((candidate_groups < -1) | (candidate_groups >= count)).any():
+            raise ValueError('candidate group IDs must be -1 or below C')
+        group = candidate_groups.clamp_min(0).long()
+        valid = candidate_groups.ge(0)
+        expanded = group[:, None].expand(-1, binding.shape[1], -1)
+        grouped = torch.zeros_like(binding)
+        grouped.scatter_add_(-1, expanded, binding[..., :-1] * valid[:, None])
+        grouped[..., -1] = binding[..., -1]
+        present = torch.zeros_like(candidate_groups)
+        present.scatter_add_(-1, group, valid.long())
+        support = (present.gt(0).sum(-1) + 1)[:, None]
+        binding = grouped
+    def certainty(p, support_count=None):
         entropy = -(p * p.clamp_min(1e-12).log()).sum(-1)
         top = p.topk(min(2, p.shape[-1]), dim=-1).values
         margin = top[..., 0] - (top[..., 1] if top.shape[-1] > 1 else 0)
-        return (1 - entropy / math.log(max(2, p.shape[-1]))).clamp(0, 1) * margin
-    return (certainty(op) * certainty(binding)).sqrt() * (1 - binding[..., -1])
+        denominator = (math.log(max(2, p.shape[-1])) if support_count is None
+                       else support_count.clamp_min(2).to(p.dtype).log())
+        return (1 - entropy / denominator).clamp(0, 1) * margin
+    return (certainty(op) * certainty(binding, support)).sqrt() * (1 - binding[..., -1])
 
 
 class RuntimeBindingModel(nn.Module):
@@ -65,6 +85,9 @@ class RuntimeBindingModel(nn.Module):
         self.types = nn.Embedding(n_types, width)
         self.relation_messages = nn.ModuleList(nn.Linear(width, width, bias=False)
                                                for _ in range(n_relations))
+        self.edge_source = nn.Linear(width, width, bias=False)
+        self.edge_destination = nn.Linear(width, width, bias=False)
+        self.edge_relation = nn.Embedding(n_relations, width)
         self.neural_query = nn.Linear(width, width, bias=False)
         self.neural_key = nn.Linear(width, width, bias=False)
         self.recurrent = nn.GRUCell(2 * width, width)
@@ -114,7 +137,7 @@ class RuntimeBindingModel(nn.Module):
         scores = scores.masked_fill(~mask[:, None], float('-inf'))
         binding_logits = torch.cat((scores, self.null(clause)), -1)
         answer = {'op_logits': op_logits, 'binding_logits': binding_logits,
-                  'confidences': binding_confidence(op_logits, binding_logits),
+                  'confidences': binding_confidence(op_logits, binding_logits, public.get('candidate_groups')),
                   'clause_states': clause}
         if mode == 'runtime':
             return answer
@@ -131,6 +154,26 @@ class RuntimeBindingModel(nn.Module):
                 degree = adjacency[:, r].sum(-1, keepdim=True).clamp_min(1)
                 messages = messages + torch.bmm(adjacency[:, r], transform(memory)) / degree
             memory = memory + messages
+        # Ordinary content attention receives graph facts as edge-record tokens.
+        # Only existing edges are materialized; padding has no position identity.
+        # Source/destination projections preserve direction and relation embeddings
+        # preserve type without programming either into attention geometry.
+        edge_indices = [torch.nonzero(adjacency[b] != 0, as_tuple=False) for b in range(batch)]
+        max_edges = max((len(edges) for edges in edge_indices), default=0)
+        edge_memory = memory.new_zeros(batch, max_edges, self.width)
+        edge_mask = torch.zeros(batch, max_edges, dtype=torch.bool, device=memory.device)
+        for b, edges in enumerate(edge_indices):
+            if len(edges):
+                relation, source, destination = edges.unbind(-1)
+                edge_memory[b, :len(edges)] = (
+                    self.edge_source(memory[b, source])
+                    + self.edge_destination(memory[b, destination])
+                    + self.edge_relation(relation)
+                ) * adjacency[b, relation, source, destination, None]
+                edge_mask[b, :len(edges)] = mask[b, source] & mask[b, destination]
+        node_count = memory.shape[1]
+        memory = torch.cat((memory, edge_memory), 1)
+        memory_mask = torch.cat((mask, edge_mask), 1)
         state = torch.zeros(batch, self.width, device=memory.device, dtype=memory.dtype)
         register = torch.zeros(batch, self.key_dim, device=memory.device, dtype=memory.dtype)
         attentions = []
@@ -143,12 +186,14 @@ class RuntimeBindingModel(nn.Module):
                 relation = self.relation_selector(clause[:, t]).softmax(-1)
                 graph = torch.einsum('br,brij->bij', relation, adjacency)
                 ground = binding_logits[:, t].softmax(-1)[:, :-1]
-                logits = logits + self.strength * torch.bmm(ground[:, None], graph).squeeze(1)
-            logits = logits.masked_fill(~mask, float('-inf'))
+                node_bias = torch.bmm(ground[:, None], graph).squeeze(1)
+                bias = F.pad(node_bias, (0, max_edges))
+                logits = logits + self.strength * bias
+            logits = logits.masked_fill(~memory_mask, float('-inf'))
             # Null-only examples remain finite and retrieve zero observable memory.
-            valid = mask.any(-1)
+            valid = memory_mask.any(-1)
             logits = torch.where(valid[:, None], logits, torch.zeros_like(logits))
-            attention = logits.softmax(-1) * mask
+            attention = logits.softmax(-1) * memory_mask
             retrieved = torch.bmm(attention[:, None], memory).squeeze(1)
             inputs = torch.cat((clause[:, t], retrieved), -1)
             update = self.recurrent(inputs, state)
@@ -162,5 +207,6 @@ class RuntimeBindingModel(nn.Module):
         if 'comparison' in public:
             style = style + self.comparison(public['comparison'][..., None])
         answer.update(output_logits=self.output(state + style), result_logits=self.result(state),
-                      attentions=torch.stack(attentions, 1), register=register)
+                      attentions=torch.stack(attentions, 1), register=register,
+                      memory_mask=memory_mask, node_count=node_count)
         return answer
