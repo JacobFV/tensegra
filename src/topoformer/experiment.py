@@ -212,6 +212,9 @@ def _reference_rows(config, case, kind, seed, device, deadline):
     row["run_complete"] = True
     rows.append(row)
 
+    if time.monotonic() >= deadline:
+        return rows, False
+
     torch.manual_seed(seed + 4000)
     mlp = TokenMLP(config["history"], config["width"]).to(device)
     if device.type == "cuda":
@@ -230,7 +233,7 @@ def _reference_rows(config, case, kind, seed, device, deadline):
     row.update(_resource_fields(mlp, curve, started, device))
     row["run_complete"] = row["optimizer_steps_completed"] == config["optimizer_steps"]
     rows.append(row)
-    return rows
+    return rows, row["run_complete"]
 
 
 def _statistics(values):
@@ -297,6 +300,9 @@ def run(config: dict, output_dir: str) -> dict:
                 initial = {key: value.clone() for key, value in prototype.state_dict().items()}
                 initial_hash = _tensor_hash(initial)
                 for item in config["modes"]:
+                    if time.monotonic() >= deadline:
+                        complete = False
+                        break
                     row = _train_graph_mode(config, case, kind, seed, item, initial,
                                             initial_hash, device, deadline)
                     rows.append(row)
@@ -307,13 +313,19 @@ def run(config: dict, output_dir: str) -> dict:
                         break
                 if not complete:
                     break
-                for row in _reference_rows(config, case, kind, seed, device, deadline):
+                if time.monotonic() >= deadline:
+                    complete = False
+                    break
+                reference_rows, references_complete = _reference_rows(
+                    config, case, kind, seed, device, deadline
+                )
+                for row in reference_rows:
                     rows.append(row)
                     metrics_file.write(json.dumps(row) + "\n")
                     metrics_file.flush()
-                    if not row["run_complete"]:
-                        complete = False
-                        break
+                if not references_complete:
+                    complete = False
+                    break
                 if not complete:
                     break
             if not complete:

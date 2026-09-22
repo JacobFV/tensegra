@@ -3,6 +3,7 @@ import json
 import pytest
 import torch
 
+import topoformer.experiment as experiment
 from topoformer.experiment import run, validate_config
 from topoformer.evaluation import rollout
 from topoformer.training import train_model
@@ -106,6 +107,33 @@ def test_tiny_deadline_writes_coherent_partial_row(tmp_path):
     assert 0 < row["optimizer_steps_completed"] < config["optimizer_steps"]
     assert row["curve"][-1]["step"] == row["optimizer_steps_completed"]
     assert json.loads((tmp_path / "partial" / "summary.json").read_text())["complete"] is False
+
+
+def test_expired_boundary_does_not_start_second_graph_mode(tmp_path, monkeypatch):
+    config = tiny_config()
+    config["max_wall_seconds"] = 1
+    clock = iter([0.0, 0.0, 0.0, 2.0])
+    monkeypatch.setattr(experiment.time, "monotonic", lambda: next(clock))
+
+    def completed_mode(config, case, kind, seed, item, initial, initial_hash, device, deadline):
+        return {"kind": kind, "seed": seed, "model": "graph", "mode_name": item["name"],
+                "mode": item["mode"], "graph_source": "true", "run_complete": True}
+
+    monkeypatch.setattr(experiment, "_train_graph_mode", completed_mode)
+    summary = run(config, tmp_path / "boundary")
+    assert not summary["complete"]
+    assert [row["mode_name"] for row in summary["runs"]] == ["none"]
+
+
+def test_expired_reference_boundary_does_not_start_mlp():
+    config = tiny_config()
+    device = torch.device("cpu")
+    case = experiment._prepare_case(config, "sparse", 0, device)
+    rows, complete = experiment._reference_rows(
+        config, case, "sparse", 0, device, deadline=0
+    )
+    assert not complete
+    assert "token_mlp" not in {row["model"] for row in rows}
 
 
 def test_rollout_calls_predictor_once_per_horizon_step():
