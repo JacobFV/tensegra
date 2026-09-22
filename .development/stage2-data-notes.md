@@ -7,3 +7,7 @@
 - Deterministic rollout accepts the model's `[B,N,history]` layout, starts from its final observation, and returns `[B,horizon,N]`. It recursively applies the known transition with no innovation. It is not the exact nonlinear stochastic multistep conditional mean.
 - Generator tests verify reproducibility, local RNG isolation, sample graph identity differences, stable expected indegree at 32/128 nodes, exact corruption counts, nonmutation, signed support/contraction, robot equivalence, and reference rollout recurrence. Study-level split construction and collision checks belong to the runner.
 - Remote red test: missing `topoformer.study_data` import before implementation. Remote green: **42 tests passed in 0.73s** (15 new study-data tests plus 27 existing data tests), CPU venv on gb10-direct, OMP/OpenBLAS threads 2. No local training or Torch installation.
+
+## Core review follow-up
+
+Addressed findings 1/2: reject boolean expected degree; require floating tensor histories; adapt a local weights view/copy to the history dtype/device without mutating the process. Regression tests first failed for all five new cases, then remote covering tests passed: **47 passed in 0.77s**. Float64 recurrence is checked exactly against an independently iterated expression; original float32 weights remain unchanged. GPU execution remains untested in this CPU-only study.

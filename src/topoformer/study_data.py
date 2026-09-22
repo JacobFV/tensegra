@@ -15,7 +15,7 @@ def make_system(kind, n, seed, mechanism='uniform', degree=3):
     of 0.9 in the infinity norm. Edge weights remain in ``Dynamics.weights``.
     """
     _positive_integer(n, 'n')
-    if not isinstance(degree, (int, float)) or not math.isfinite(degree) or degree < 0:
+    if isinstance(degree, bool) or not isinstance(degree, (int, float)) or not math.isfinite(degree) or degree < 0:
         raise ValueError('degree must be finite and nonnegative')
     if mechanism not in ('uniform', 'signed'):
         raise ValueError('mechanism must be uniform or signed')
@@ -111,16 +111,23 @@ def deterministic_future(system, history, horizon):
 
     Returns [B,horizon,N]. This deterministic transition rollout is not the
     multistep conditional expectation of the nonlinear stochastic process.
+    Weights adapt locally to the floating history's dtype/device.
     """
     if isinstance(horizon, bool) or not isinstance(horizon, int) or horizon < 0:
         raise ValueError('horizon must be a nonnegative integer')
+    if not isinstance(history, torch.Tensor) or not history.is_floating_point():
+        raise ValueError('history must be a floating tensor')
     if history.ndim != 3 or history.shape[1] != system.weights.shape[0] or history.shape[2] < 1:
         raise ValueError('history must have shape [B,N,H] with H >= 1')
     if horizon == 0:
         return history.new_empty(history.shape[0], 0, history.shape[1])
+    local_system = Dynamics(
+        system.weights.to(device=history.device, dtype=history.dtype),
+        system.read_graph, system.labels,
+    )
     state = history[:, :, -1]
     future = []
     for _ in range(horizon):
-        state = dynamics_step(system, state)
+        state = dynamics_step(local_system, state)
         future.append(state)
     return torch.stack(future, dim=1)

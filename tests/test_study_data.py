@@ -79,3 +79,30 @@ def test_deterministic_future_uses_last_history_and_recurses_without_noise():
 def test_bad_corruption_fraction(fraction):
     with pytest.raises(ValueError, match='fraction'):
         supply_graph(torch.eye(2, dtype=torch.bool), 'drop', fraction)
+
+
+def test_boolean_degree_is_rejected():
+    with pytest.raises(ValueError, match='degree'):
+        make_system('sparse', 4, 0, degree=True)
+
+
+@pytest.mark.parametrize('history', [None, [[[1.0]]], torch.ones(1, 4, 2, dtype=torch.int64)])
+def test_deterministic_future_rejects_nonfloating_history(history):
+    with pytest.raises(ValueError, match='floating tensor'):
+        deterministic_future(make_system('sparse', 4, 0), history, 2)
+
+
+def test_deterministic_future_adapts_weights_without_mutating_system():
+    system = make_system('sparse', 4, 0)
+    original = system.weights.clone()
+    history = torch.arange(16, dtype=torch.float64).reshape(2, 4, 2) / 16
+    state = history[:, :, -1]
+    expected = []
+    for _ in range(3):
+        state = 0.5 * state + 0.5 * torch.tanh(state @ original.double().T)
+        expected.append(state)
+    result = deterministic_future(system, history, 3)
+    assert result.dtype == history.dtype and result.device == history.device
+    torch.testing.assert_close(result, torch.stack(expected, 1), rtol=0, atol=0)
+    assert torch.equal(system.weights, original)
+    assert system.weights.dtype == torch.float32
