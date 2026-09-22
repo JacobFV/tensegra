@@ -38,3 +38,34 @@
   clear logging, and ongoing notes. Added these constraints to design and plan;
   separated training/evaluation from thin experiment orchestration and kept both
   benchmark domains on a shared implementation path.
+
+### Implementation started after approval
+
+- User approved plan-01 and selected subagent implementation. Work is isolated on
+  `feat/structure-pilot` in `.worktrees/structure-pilot`; task agents own disjoint
+  modules, and fresh reviews precede integration.
+- Parent is creating `~/topoformer-pilot/.venv` on gb10-direct. No local Torch
+  installation or training. Tests and pilots use at most two CPU threads initially.
+- Ruling: retain early transient samples for the initial-state-shift evaluation.
+  Applying a doubled initial condition before 32 warmup steps in a contractive
+  system would nearly erase the shift. The shifted test must start with the
+  shifted state and no warmup, and be described as a transient shift.
+- Ruling: report a zero predictor and the known generator's conditional mean as
+  diagnostic references alongside persistence. These are trivial baselines, and
+  make noise-dominated stationary trajectories visible rather than mistaking a
+  small absolute MSE for learned dependency structure. The oracle is explicitly
+  privileged and is not part of the fair learned-model comparison.
+- Ruling: use a shared nonlinear neighbor-average mechanism in the first pilot.
+  A shared equivariant predictor with no per-node identity cannot in general
+  recover arbitrary hidden signed coefficients from a short context. Varying
+  topology first gives an identifiable easy experiment; heterogeneous generating
+  functions require richer system-identification context in a later stage.
+- Environment setup encountered a network read timeout downloading cuDNN after
+  the default aarch64 Torch wheel selected CUDA dependencies. Switched to the
+  official CPU wheel index for this small reference pilot; do not infer CUDA
+  incompatibility from a download timeout. Installation source:
+  https://docs.pytorch.org/get-started/previous-versions/ (CPU index instructions).
+- Remote environment verified by imports and matrix multiplication: Python 3.12.3,
+  Torch 2.14.0+cpu, NumPy 2.5.3, pytest 9.1.1. Package versions are captured in
+  environment-pilot.txt. This pilot will measure remote CPU performance honestly;
+  GPU adaptation and benchmarking remain separate.
