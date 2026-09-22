@@ -214,7 +214,7 @@ def train_update(model, optimizer, batch, variant, phase, config, baseline):
     return dict(task=float(task.detach()), binding=float(binding.detach()), policy=float(policy.detach()),
                 total=float(loss.detach()), reward=None if reward is None else float(reward.mean()),
                 reward_baseline=baseline, beta=phase['beta'], frozen=phase['frozen'],
-                symbolic_seconds=symbolic_seconds, neural_seconds=time.perf_counter()-tick-symbolic_seconds), baseline
+                symbolic_seconds=symbolic_seconds, neural_and_diagnostic_seconds=time.perf_counter()-tick-symbolic_seconds), baseline
 
 
 def make_data(config, seed, *, depth, nodes, count=None, **settings):
@@ -232,7 +232,7 @@ def make_data(config, seed, *, depth, nodes, count=None, **settings):
 
 @torch.no_grad()
 def evaluate(model, variant, config, condition, seed):
-    from .runtime_execution import execute_batch
+    from .runtime_execution import execute_batch, semantic_selector
     from .runtime_tasks import RESULT_MIN
     model.eval()
     batch = make_data(config, seed, **condition)
@@ -295,14 +295,19 @@ def evaluate(model, variant, config, condition, seed):
             right = numeric_results(gated, mask.device).eq(gold['result']) & answered
             local_gate = (torch.ones_like(prediction['confidences']) if VARIANTS[variant].get('oracle') else prediction['confidences']).ge(threshold) & mask
             local_right = selector_correct & op_correct & mask
+            def actual_lowering_correct(i, entry):
+                task = batch['tasks'][i]
+                gold_op, gold_selector = task.gold_actions[entry['step']]
+                selected = semantic_selector(task, entry['selector'])
+                return entry['op'] == gold_op and selected is not None and selected == semantic_selector(task, gold_selector)
             risk.append(dict(threshold=threshold, examples=len(gated), answered=int(answered.sum()), correct=int(right.sum()),
                              invoked=sum(e.invoked for e in gated), deferred=sum(e.deferred for e in gated),
                              rejected=sum(e.rejected for e in gated),
-                             accepted_wrong=sum(entry['status']=='executed' and not bool(local_right[i, entry['step']]) for i,e in enumerate(gated) for entry in e.trace),
+                             accepted_wrong=sum(entry['status']=='executed' and not actual_lowering_correct(i, entry) for i,e in enumerate(gated) for entry in e.trace),
                              accepted=sum(e.invoked for e in gated),
                              hypothetical_gate_wrong=int((local_gate & ~local_right).sum()),
                              hypothetical_gate_count=int(local_gate.sum()),
-                             deferred_correct=sum(entry['status']=='deferred' and bool(local_right[i, entry['step']]) for i,e in enumerate(gated) for entry in e.trace),
+                             deferred_correct=sum(entry['status']=='deferred' and actual_lowering_correct(i, entry) for i,e in enumerate(gated) for entry in e.trace),
                              hypothetical_deferred_correct=int((~local_gate & local_right).sum()),
                              correct_lowerings=int(local_right.sum())))
     counts.update(invoked=sum(e.invoked for e in executions), rejected=sum(e.rejected for e in executions),
@@ -353,7 +358,7 @@ def evaluate(model, variant, config, condition, seed):
                                  gold_ops=gold['ops'][i][mask[i]].tolist(),
                                  binding_correct=bool(all_binding[i]), primitive_correct=bool(all_primitive[i]),
                                  valid=bool(valid[i]), execution_correct=bool(result_correct[i]),
-                                 trace=executions[i].trace))
+                                 surface=list(batch['tasks'][i].surface), trace=executions[i].trace))
     family_breakdown = {}
     for family in sorted({task.family for task in batch['tasks']}):
         selected = torch.tensor([task.family == family for task in batch['tasks']])
@@ -362,10 +367,21 @@ def evaluate(model, variant, config, condition, seed):
             task_correct=int((task_correct & defined).sum()), result_correct=int((result_correct & defined).sum()),
             lowering_correct=int((all_lowering & selected).sum()),
             complete_trajectory=None if VARIANTS[variant]['mode'] != 'exact' else sum(e.complete for e,t in zip(executions,batch['tasks']) if t.family==family))
+    style_breakdown = {}
+    for style, name in enumerate(('numeric_report', 'comparison', 'sign')):
+        selected = public['style'].eq(style)
+        defined = selected & expected_valid
+        denominator = int(defined.sum())
+        task_count = int((task_correct & defined).sum())
+        lifted_count = int((oracle_lift & defined).sum()) if VARIANTS[variant]['mode'] == 'exact' else None
+        style_breakdown[name] = dict(examples=int(selected.sum()), defined_examples=denominator,
+            task_correct=task_count, task_accuracy=rate(task_count, denominator),
+            oracle_lift_correct=lifted_count,
+            oracle_lifting_accuracy=None if lifted_count is None else rate(lifted_count, denominator))
     runtime_sizes = public['candidate_mask'].sum(-1).tolist()
     clause_counts = mask.sum(-1).tolist()
     return dict(condition=condition['name'], settings=condition, data_hash=data_hash(batch), counts=counts,
-                **rates, confidence=risk, failures=failures, family_breakdown=family_breakdown,
+                **rates, confidence=risk, failures=failures, family_breakdown=family_breakdown, style_breakdown=style_breakdown,
                 runtime_nodes=dict(min=min(runtime_sizes), max=max(runtime_sizes), mean=sum(runtime_sizes)/len(runtime_sizes)),
                 neural_seconds=neural_seconds,
                 symbolic_seconds=symbolic_seconds,
@@ -416,7 +432,7 @@ def train_run(config, variant, seed, source, checkpoint_dir=None):
                               schedule_hash=fingerprint(schedule), initial_parameter_hashes=initial_hashes,
                               initial_state_hash=fingerprint(initial_hashes), final_state_hash=state_hash(model)),
                 resources=dict(seconds=time.perf_counter()-start, peak_rss_mib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024,
-                               neural_train_seconds=sum(x['neural_seconds'] for x in losses),
+                               neural_and_diagnostic_train_seconds=sum(x['neural_and_diagnostic_seconds'] for x in losses),
                                symbolic_train_seconds=sum(x['symbolic_seconds'] for x in losses),
                                threads=config.threads, torch_version=torch.__version__, device='cpu'),
                 checkpoint=checkpoint, initial_evaluations=initial, evaluations=evaluations)

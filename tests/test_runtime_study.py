@@ -89,3 +89,14 @@ def test_wrong_graph_changes_observable_data():
     assert data_hash(clean) != data_hash(wrong)
     assert torch.equal(clean['gold']['result'], wrong['gold']['result'])
     assert all(t.wrong_runtime is not None for t in wrong['tasks'])
+
+
+def test_style_counts_partition_only_defined_answers():
+    from topoformer.runtime_study import build_model, evaluate
+    config = RuntimeStudyConfig(steps=0, warmup_steps=0, checkpoints=[0], eval_examples=6)
+    model = build_model(config, 0)
+    row = evaluate(model, 'oracle', config, dict(name='test', nodes=8, depth=2), 12)
+    assert sum(x['defined_examples'] for x in row['style_breakdown'].values()) == 6
+    assert sum(x['task_correct'] for x in row['style_breakdown'].values()) == row['counts']['task_correct']
+    invalid = evaluate(model, 'oracle', config, dict(name='invalid', nodes=8, depth=2, invalid=True), 12)
+    assert all(x['task_accuracy'] is None and x['oracle_lifting_accuracy'] is None for x in invalid['style_breakdown'].values())
