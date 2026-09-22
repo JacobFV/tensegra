@@ -11,7 +11,8 @@ def sample():
                 candidate_values=torch.randn(2, 6, generator=generator),
                 candidate_types=torch.randint(0, 8, (2, 6), generator=generator),
                 candidate_mask=torch.ones(2, 6, dtype=torch.bool),
-                adjacency=torch.rand(2, 4, 6, 6, generator=generator),
+                adjacency=torch.rand(2, 6, 6, 6, generator=generator),
+                candidate_payload=torch.randn(2, 6, 3, generator=generator),
                 step_mask=torch.ones(2, 3, dtype=torch.bool), style=torch.tensor([0, 1]),
                 comparison=torch.tensor([.1, -.2]))
 
@@ -39,7 +40,7 @@ def test_candidate_permutation_equivariance(mode):
     m, public = model(), sample()
     perm = torch.tensor([3, 0, 5, 1, 4, 2])
     changed = dict(public)
-    for name in ('candidate_keys', 'candidate_values', 'candidate_types', 'candidate_mask'):
+    for name in ('candidate_keys', 'candidate_values', 'candidate_types', 'candidate_mask', 'candidate_payload'):
         changed[name] = public[name][:, perm]
     changed['adjacency'] = public['adjacency'][:, :, perm][:, :, :, perm]
     a, b = m(public, mode=mode), m(changed, mode=mode)
@@ -84,3 +85,14 @@ def test_neural_controls_receive_output_comparison():
     public['comparison'] = public['comparison'] + 1
     b = m(public, mode='none')['output_logits']
     assert not torch.allclose(a, b)
+
+
+@pytest.mark.parametrize('mode', ['runtime', 'none', 'graph_data', 'soft', 'protected_learned'])
+def test_scope_and_index_payload_are_observable(mode):
+    m, public = model(), sample()
+    a = m(public, mode=mode)
+    public['candidate_payload'] = public['candidate_payload'] + 1
+    b = m(public, mode=mode)
+    assert not torch.allclose(a['binding_logits'], b['binding_logits'])
+    if mode != 'runtime':
+        assert not torch.allclose(a['output_logits'], b['output_logits'])

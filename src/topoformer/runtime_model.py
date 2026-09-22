@@ -36,7 +36,7 @@ class RuntimeBindingModel(nn.Module):
     MODES = {'runtime', 'none', 'graph_data', 'soft', 'protected_learned'}
 
     def __init__(self, vocab_size, n_ops, *, key_dim=16, width=48, heads=2,
-                 n_types=8, n_relations=4, output_classes=129, result_classes=129,
+                 n_types=8, n_relations=6, output_classes=129, result_classes=129,
                  result_min=-64, result_scale=64., n_styles=3, temperature=.15,
                  strength=4., max_words=32):
         super().__init__()
@@ -54,10 +54,14 @@ class RuntimeBindingModel(nn.Module):
         self.reference = nn.Linear(key_dim, width)
         self.lower_query = nn.Linear(width, key_dim, bias=False)
         self.lower_key = nn.Linear(key_dim, key_dim, bias=False)
+        self.lower_metadata = nn.Linear(4, key_dim, bias=False)
+        self.lower_type = nn.Embedding(n_types, key_dim)
+        nn.init.normal_(self.lower_type.weight, std=.02)
         self.null = nn.Linear(width, 1)
         self.operation = nn.Linear(width, n_ops)
         self.memory_key = nn.Linear(key_dim, width)
         self.memory_value = nn.Linear(1, width)
+        self.memory_payload = nn.Linear(3, width)
         self.types = nn.Embedding(n_types, width)
         self.relation_messages = nn.ModuleList(nn.Linear(width, width, bias=False)
                                                for _ in range(n_relations))
@@ -101,7 +105,10 @@ class RuntimeBindingModel(nn.Module):
         clause = clause.reshape(batch, steps, self.width) + self.reference(public['reference'])
         op_logits = self.operation(clause)
         q = F.normalize(self.lower_query(clause), dim=-1)
-        k = F.normalize(self.lower_key(public['candidate_keys']), dim=-1)
+        metadata = torch.cat((public['candidate_payload'], public['candidate_values'][..., None]), -1)
+        k = F.normalize(self.lower_key(public['candidate_keys'])
+                        + self.lower_metadata(metadata)
+                        + self.lower_type(public['candidate_types'].long()), dim=-1)
         scores = torch.einsum('bdk,bck->bdc', q, k) / self.temperature
         mask = public['candidate_mask'].bool()
         scores = scores.masked_fill(~mask[:, None], float('-inf'))
@@ -113,6 +120,7 @@ class RuntimeBindingModel(nn.Module):
             return answer
         memory = (self.memory_key(public['candidate_keys'])
                   + self.memory_value(public['candidate_values'][..., None])
+                  + self.memory_payload(public['candidate_payload'])
                   + self.types(public['candidate_types'].long()))
         adjacency = public['adjacency'].to(memory.dtype)
         if adjacency.shape[1] != self.n_relations:

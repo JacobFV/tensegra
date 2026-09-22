@@ -1,12 +1,15 @@
 # Stage 5 neural boundary
 
 `RuntimeBindingModel` accepts only public surface clauses, noisy reference vectors,
-shuffled candidate descriptors (keys, values, types, mask), initial typed edges,
+shuffled candidate descriptors (keys, values, types, mask), initial typed edges, slot-index/current-frame/root-frame payloads,
 step masks and output style/comparison cues. Word position is encoded within a
 clause; candidate position is never encoded. A one-layer small transformer pools
 each clause, adds a learned reference projection, and predicts independent
 operation and cosine candidate scores. The two cosine projections start randomly;
-there is no fixed identity matcher. A learned final null candidate permits unbound
+there is no fixed identity matcher. Candidate key projections also consume learned
+type/value/payload projections; small random type embeddings avoid overwhelming
+unit lexical keys at initialization. Every neural control consumes the same
+payloads, so scope and index information is not privileged to the executor. A learned final null candidate permits unbound
 lowering. Runtime execution is external: this module cannot write protected IDs,
 frames or types. Argmax/exact execution creates no pathwise task gradient.
 
@@ -30,7 +33,7 @@ These are deliberately small matched recurrent controls, not claims of optimal
 neural architectures. Runtime mode returns no neural answer prediction until the
 caller supplies an executed scalar to `lift`.
 
-Validation: 10 remote CPU tests passed (0.81 s), covering independent lowering and
+Validation: 15 remote CPU tests passed (0.94 s), covering independent lowering and
 lifting gradients; permutation equivariance in all five modes; exact zero-strength
 soft/ordinary equivalence; confidence/null behavior; no gold dependence; empty
-padding/null-only candidates; and comparison-cue observability.
+padding/null-only candidates; comparison-cue observability, and scope/index payload sensitivity in all modes.
