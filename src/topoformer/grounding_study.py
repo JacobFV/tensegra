@@ -55,6 +55,7 @@ class GroundingStudyConfig:
     temperature: float = 0.05
     strength: float = 8.0
     threads: int = 2
+    include_extra_evaluations: bool = True
     wall_seconds: float = 7200
 
     def __post_init__(self):
@@ -103,8 +104,9 @@ def conditions(config):
         add(f'depth_{depth}', depth=depth)
     for nodes in config.eval_sizes:
         add(f'size_{nodes}', nodes=nodes)
-    add('heldout_composition', composition='heldout')
-    if max(config.eval_depths) >= 32 and max(config.eval_sizes) >= 64:
+    if config.include_extra_evaluations:
+        add('heldout_composition', composition='heldout')
+    if config.include_extra_evaluations and max(config.eval_depths) >= 32 and max(config.eval_sizes) >= 64:
         add('deep_large', depth=32, nodes=64)
     for corruption in config.corruptions:
         add(f'corruption_{corruption:g}', corruption=corruption)
