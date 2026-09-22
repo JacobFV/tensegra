@@ -51,3 +51,5 @@ Final derived artifacts regenerated on analyzer7e202ca;570/570 rows retained wit
 ## Final gate
 
 Final analyzer/plot revision6d404bc passes143 tests in1.98seconds. Numerical aggregates retain570 complete rows and zero exclusions. Final independent whole-study review approved integration:226 report mean/SD cells, transfer effect ranges, terminal threshold counts,54 artifact hashes,18 report links, source provenance and plot labels were checked. All reporting findings resolved; no blocking or moderate concern remains. Plan02 is complete. Full raw artifacts, generated tables and25 PNG/SVG figure pairs are committed; large pretrained/VLA experiments remain deferred.
+
+Integrated into local main by fast-forward at99e2bcd. The exact merged revision passed143 remote tests in1.96seconds; working tree was clean before this integration note. The temporary local implementation worktree can now be removed; experiment artifacts remain committed and the remote source/result checkout is retained for replay.
