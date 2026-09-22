@@ -60,7 +60,7 @@ All primary error fields are retained both as raw MSE and divided by the trainin
 
 Optimization-curve AUC is the trapezoidal integral of normalized validation MSE from step 0 through 600, divided by 600. It incorporates initialization and the whole observed learning curve; it is neither final validation error nor test error, and a high initial error can dominate it.
 
-When a single finite soft strength is needed for a primary comparison, it is selected within each training condition by the across-seed mean validation error at step 600. Test results never choose the strength. Both strength-1 and strength-4 sensitivity results remain in the tables. Runtime-corruption evaluation inherits the strength selected on the corresponding clean-trained validation condition rather than reselecting on corrupted test data. Strength 4 is selected for both clean domains and hence for both runtime-corruption series. Among retrained corruption conditions, strength 4 is selected everywhere except sparse drop-50% and sparse mixed-25%, where strength 1 is primary.
+When a single finite soft strength is needed for a primary comparison, it is selected within each training condition by the across-seed mean validation error at step 600. Test results never choose the strength. Both strength-1 and strength-4 sensitivity results remain in the tables. Runtime-corruption evaluation inherits the strength selected on the corresponding clean-trained validation condition rather than reselecting on corrupted test data. Strength 4 is selected for both clean-trained corruption conditions and hence for both runtime-corruption series. Among retrained corruption conditions, strength 4 is selected everywhere except sparse drop-50% and sparse mixed-25%, where strength 1 is primary.
 
 The three validation targets were fixed before the full study:
 
@@ -273,7 +273,7 @@ The final exact-code gate, including report commit `ba11375`, passed 143 tests i
 
 ## Artifacts
 
-The immutable raw artifacts are [summary.json](results/stage2/summary.json) and [metrics.jsonl](results/stage2/metrics.jsonl); [audit.json](results/stage2/audit.json) records the independent integrity checks. The source-bound derived analysis is [analysis/summary.json](results/stage2/analysis/summary.json) with a compact generated [analysis report](results/stage2/analysis/report.md). Training used source `ee49edc`; the final analyzer revision is `7e202ca`.
+The immutable raw artifacts are [summary.json](results/stage2/summary.json) and [metrics.jsonl](results/stage2/metrics.jsonl); [audit.json](results/stage2/audit.json) records the independent integrity checks. The source-bound derived analysis is [analysis/summary.json](results/stage2/analysis/summary.json) with a compact generated [analysis report](results/stage2/analysis/report.md). Training used source `ee49edc`; the final analyzer and reporting revision is `6d404bc`.
 
 Primary figures:
 
