@@ -69,3 +69,15 @@
   Torch 2.14.0+cpu, NumPy 2.5.3, pytest 9.1.1. Package versions are captured in
   environment-pilot.txt. This pilot will measure remote CPU performance honestly;
   GPU adaptation and benchmarking remain separate.
+
+### Attention core implemented
+
+- Added reusable directed attention and graph-mode conversion. Remote CPU suite:
+  20 tests passed in 0.71 s after review fixes (command: `PYTHONPATH=src
+  OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 .venv/bin/python -m pytest -q`).
+- Review caught mixed float64 value precision loss and rank expansion from a
+  singleton tensor strength. Both now have numerical/shape regression coverage.
+  Masking is applied after structural bonuses; zero strength recovers ordinary
+  attention. Rectangular query/key lengths and isolated-node hard masks are tested.
+- CUDA correctness remains untested in this CPU environment. No GPU performance
+  or compatibility conclusion is drawn from device-preserving code alone.
