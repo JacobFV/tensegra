@@ -21,3 +21,11 @@ Pre-implementation refinement: shared efficiency normalization is fitted on the 
 Before any stage-2 result, added the tighter 10% remaining oracle-to-zero gap threshold alongside 25% and 50%; the pilot suggests the looser targets could saturate early. Report every threshold without selecting one for the strongest result.
 
 Before full experiments: identified a scientific limitation of identity-free fixed-graph baselines. Added preregistered `efficiency_identity` supplementary suite with matched learned node embeddings for none/soft4/hard across all sample budgets and seeds. This permits fixed variable identities to help learn adjacency. It costs 108 additional runs; it is separate from node-count-agnostic transfer. No stage-2 result motivated this addition.
+
+## Full execution launch
+
+Source `ee49edc` pushed before execution. Exact-source remote project tests: **126 passed in 1.55 seconds**. Runner independent review: spec PASS, quality PASS; final/checkpoint state hashes and strict configuration checks added after review. The complete six-suite smoke produced 118 completed reduced runs.
+
+Full preset: 570 runs (216 efficiency, 108 identity-enabled efficiency, 150 corruption, 30 transfer, 42 heterogeneous, 24 learned), three seeds, 600 optimizer steps, checkpoint0/25/50/100/200/300/600. Remote output `~/topoformer-stage2-run/results/stage2-ee49edc`, log `~/topoformer-stage2-full.log`. One process, OMP/OpenBLAS2, cooperative7200-second deadline, external7500-second timeout. Output is incremental and preserved if interrupted.
+
+Review clarifications: mixed corruption is one25% simultaneous drop/add stress condition; separate drop and add each cover10/25/50%. Pairing of exact batch indices is within each count/case across variants, not across different sample budgets. These limits are explicit in the design.
