@@ -5,9 +5,9 @@
 - [x] Separate auxiliary losses from model inference; instrument canonical trajectories.
 - [x] Implement paired full depth × size runner and artifact-only heatmaps/analysis.
 - [x] Pass core review, 260 integrated tests and end-to-end smoke; freeze main source3b63b88.
-- [ ] Complete69 main runs and audit the predeclared all-seed D64/N128 gate.
-- [ ] If gate passes, run a separately disclosed adaptive-strength follow-up; otherwise defer it.
-- [ ] Commit raw metrics, heatmaps, detailed observations and independent report review.
+- [x] Complete69 main runs and audit the predeclared all-seed D64/N128 gate.
+- [x] If gate passes, run a separately disclosed adaptive-strength follow-up; otherwise defer it.
+- [x] Commit raw metrics, heatmaps, detailed observations and independent report review.
 - [ ] Integrate and push the verified stage to main.
 
 No interpreter or pretrained integration belongs to this stage. An operational

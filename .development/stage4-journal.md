@@ -25,3 +25,11 @@ A follow-up will compare fixed strength with an entropy-controlled coefficient u
 All69 runs completed and independently audited. Only `cosine_pointer_identity` passes: D64/N128 task scores 1,1,.9921875 and complete trajectories 1,1,1. The attention-write alternative fails (task .9921875,.8515625,.9296875; paths 1,.8046875,.921875). Per the disclosed weaker-prior-first rule, the follow-up uses the pointer family. This is a scope limitation: confidence changes payload attention, while explicit Pq A identity writes remain unchanged. The experiment cannot establish confidence-driven emergence of stable binding.
 
 Two fresh matched arms, `pointer_fixed4` and `pointer_adaptive4`, freeze all base relation strengths at4. Adaptive strength is4 times `(1-p_null)*(1-H(p)/log(N+1))`, clamped to[0,1]; no new learned parameters. Three seeds,400steps, identical schedules and the same20-cell evaluation matrix. This is a conditional follow-up on the established task, not an independent confirmatory test set. Main artifacts retain frozen source3b63b88.
+
+## Completed empirical findings
+
+The main audit covers69runs and the adaptive audit covers6, with all saved checkpoint states matching source/config/state hashes. AtD64/N128 aligned protected attention averages .92448task/.90885complete paths; aligned explicit pointers .99740/1. The latter preserves paths already perfect before training, rather than discovering routing from task loss. Cold ground-only supervised pointers reach .83854/.86198 versus answer-only .17708/0; acquisition improves but misses the all-seed gate.
+
+The matched frozen-strength follow-up yields .989583task/1path at the corner for both arms. All20pathcells match;19/20taskcells match, with one fewer answer out of384 in adaptiveN128/D4. Effective adaptive strength is3.989 versus4, so the experiment exposes little uncertainty and establishes no benefit. No interpreter work follows.
+
+Main69runs total1062.39recordedseconds, adaptive6total94.42; remote CPUonly withtwo threads. Raw losslessly compressed metrics, all matrix figures, paired comparisons, learning curves and independent audits are committed. The full integration test rerun and final push are the remaining operational steps.
