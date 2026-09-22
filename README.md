@@ -205,3 +205,38 @@ PYTHONPATH=src .venv/bin/python -m topoformer.grounding_analysis \
 Figures use optional `matplotlib`; add `--no-plots` for tables and JSON only.
 Without Torch installed, invoke `python3 src/topoformer/grounding_analysis.py`
 directly with the same arguments to avoid importing the Torch-backed package.
+
+## Stable binding substrate
+
+Stage 4 separates learned matching from identity-state updates. `BindingTransformer`
+adds cosine-normalized learned projections, identity-only grounding inputs,
+attention-weighted immutable-key writes, and a separately labeled explicit
+`Pq @ A` pointer write. Content computation remains neural. Pointer writes program
+more of the transition directly and retain graph dependence even at zero logit
+strength; they are not an ordinary-attention equivalence control.
+
+`binding_metrics.py` keeps auxiliary ground/null/transition-consistency losses
+outside model inference. The study distinguishes answer-only training from these
+supervised losses. Canonical state sequences record initial binding and one binding
+per transition, supporting first-error, persistence, recovery and reconvergence
+analysis without counting a state twice.
+
+```sh
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
+  .venv/bin/python -m topoformer.binding_study \
+  --config configs/stage4-smoke.json --output results/binding-smoke
+
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
+  .venv/bin/python -m topoformer.binding_study \
+  --config configs/stage4.json --output results/binding
+
+python3 src/topoformer/binding_analysis.py \
+  results/binding/metrics.jsonl results/binding-analysis
+```
+
+The full study evaluates all 20 combinations of 16–128 nodes and 4–64 transitions,
+with initialization anchors and three paired seeds. The analyzer also accepts
+losslessly compressed `.jsonl.gz` metrics. See the
+[Stage 4 design](.development/stage4-design.md) and
+[methods](.development/stage4-methods.md) for the architectural priors, supervision
+boundaries and preregistered stability gate before adaptive-strength experiments.
