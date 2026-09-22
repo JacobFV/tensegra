@@ -38,10 +38,16 @@ for update in ('attention', 'pointer'):
         VARIANTS[f'random_cosine_{update}_{name}'] = {
             **VARIANTS[f'random_cosine_{update}'], 'loss_weights': list(weights)}
 
+# Keep the original main sweep stable when adding gated follow-ups.
+MAIN_VARIANTS = tuple(VARIANTS)
+for name, adaptive in [('pointer_fixed4', False), ('pointer_adaptive4', True)]:
+    VARIANTS[name] = dict(matcher='cosine', identity_update='pointer', identity_only=True,
+                         strength=4., freeze_strength=True, adaptive_strength=adaptive)
+
 
 @dataclass
 class BindingStudyConfig(GroundingStudyConfig):
-    variants: list[str] = field(default_factory=lambda: list(VARIANTS))
+    variants: list[str] = field(default_factory=lambda: list(MAIN_VARIANTS))
     eval_depths: list[int] = field(default_factory=lambda: [4, 8, 16, 32, 64])
     eval_sizes: list[int] = field(default_factory=lambda: [16, 32, 64, 128])
     eval_batch_size: int = 16
@@ -80,10 +86,13 @@ def build_model(config, variant, seed):
     options.update(VARIANTS[variant])
     mode = options.pop('mode', 'soft')
     weights = options.pop('loss_weights', (0., 0., 0.))
+    freeze_strength = options.pop('freeze_strength', False)
     torch.manual_seed(seed)
     model = BindingTransformer(key_dim=config.key_dim, width=config.width, heads=config.heads,
         classes=config.classes, relations=config.relations, temperature=config.temperature,
         strength=options.pop('strength', config.strength), **options)
+    if freeze_strength:
+        model.strengths.requires_grad_(False)
     return model, mode, weights
 
 

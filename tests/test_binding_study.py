@@ -23,13 +23,24 @@ def test_no_gold_enters_model():
 
 
 def test_registry_supervision_is_separate_and_cold_prior_controlled():
-    assert len(VARIANTS) == 23
+    assert len(BindingStudyConfig().variants) == 23
     for update in ('attention', 'pointer'):
         for suffix in ('aux001', 'aux01', 'aux1', 'ground1', 'nullcycle'):
             options = VARIANTS[f'random_cosine_{update}_{suffix}']
             assert options['identity_init'] is False
             assert options['null_init'] == 0
     assert VARIANTS['random_cosine_attention_nullprior']['null_init'] == .65
+
+
+def test_adaptive_controls_have_identical_initial_parameters_and_frozen_strengths():
+    config = BindingStudyConfig()
+    fixed, _, _ = build_model(config, 'pointer_fixed4', 2)
+    adaptive, _, _ = build_model(config, 'pointer_adaptive4', 2)
+    assert not fixed.adaptive_strength and adaptive.adaptive_strength
+    assert not fixed.strengths.requires_grad and not adaptive.strengths.requires_grad
+    for name, value in fixed.state_dict().items():
+        torch.testing.assert_close(value, adaptive.state_dict()[name], atol=0, rtol=0)
+    torch.testing.assert_close(fixed.strengths, torch.full_like(fixed.strengths, 4.))
 
 
 @pytest.mark.parametrize('variant,strength,mode,content', [('stage3_soft4',4.,'soft',0.), ('stage3_soft8',8.,'soft',0.), ('known',8.,'known',0.), ('graph_input_keyed',16.,'graph_input',8.)])
