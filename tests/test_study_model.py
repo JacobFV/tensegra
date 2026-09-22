@@ -117,3 +117,45 @@ def test_fixed_variants_match_pilot_and_singleton_batch_graphs(variant):
     x, graph = inputs()
     torch.testing.assert_close(model(x, graph[None]),
                                pilot(x, graph, mode=variant, strength=4), rtol=0, atol=0)
+
+
+def test_node_identity_pairs_zero_alpha_and_receives_gradients():
+    torch.manual_seed(21)
+    base = StudyPredictor(3, 8, 2, 2, node_count=4)
+    model = StudyPredictor(3, 8, 2, 2, variant='learned', node_count=4)
+    model.load_state_dict(base.state_dict(), strict=False)
+    x, graph = inputs()
+    assert base.node_identity.shape == (4, 8)
+    assert torch.equal(base(x, graph), model(x, graph))
+    model(x, graph).square().sum().backward()
+    assert model.node_identity.grad is not None
+    assert torch.isfinite(model.node_identity.grad).all()
+    assert model.node_identity.grad.abs().sum() > 0
+    with pytest.raises(ValueError, match='node_count'):
+        model(x[:, :3], graph[:3, :3])
+
+
+def test_node_identity_is_opt_in_and_validated():
+    from topoformer.model import GraphPredictor
+
+    default = StudyPredictor(3, 8, 2, 2)
+    assert set(default.state_dict()) == set(GraphPredictor(3, 8, 2, 2).state_dict())
+    assert not hasattr(default, 'node_identity')
+    for invalid in [0, -1, 1.5, True]:
+        with pytest.raises(ValueError, match='node_count'):
+            StudyPredictor(3, 8, 2, 2, node_count=invalid)
+
+
+def test_node_identity_equivariance_requires_joint_table_permutation():
+    import copy
+
+    model = StudyPredictor(3, 8, 2, 2, variant='soft', node_count=4)
+    x, graph = inputs()
+    permutation = torch.tensor([2, 0, 3, 1])
+    permuted = copy.deepcopy(model)
+    with torch.no_grad():
+        permuted.node_identity.copy_(model.node_identity[permutation])
+    torch.testing.assert_close(
+        permuted(x[:, permutation], graph[permutation][:, permutation]),
+        model(x, graph)[:, permutation],
+    )

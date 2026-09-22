@@ -15,17 +15,25 @@ class StudyPredictor(GraphPredictor):
     projection; attention itself is unbiased. This is a graph-conditioned input /
     message-passing control, not a serialized graph baseline. ``typed`` exposes
     positive and negative edge-weight magnitudes, and therefore receives more
-    information than adjacency-only variants.
+    information than adjacency-only variants. Optional ``node_count`` adds learned
+    identities for fixed-graph controls; these do not support size transfer and
+    must be jointly permuted with nodes to preserve permutation equivariance.
     """
 
-    def __init__(self, history, width, heads, layers, variant="none", strength=4.0):
+    def __init__(self, history, width, heads, layers, variant="none", strength=4.0, *, node_count=None):
         if variant not in {"none", "soft", "hard", "graph_input", "learned", "typed"}:
             raise ValueError("unknown study predictor variant")
         if not math.isfinite(strength):
             raise ValueError("strength must be finite")
+        if node_count is not None and (type(node_count) is not int or node_count <= 0):
+            raise ValueError("node_count must be a positive integer or None")
         super().__init__(history, width, heads, layers)
         self.variant = variant
         self.strength = float(strength)
+        self.node_count = node_count
+        if node_count is not None:
+            self.node_identity = torch.nn.Parameter(torch.empty(node_count, width))
+            torch.nn.init.normal_(self.node_identity, std=0.02)
         if variant == "graph_input":
             self.graph_input = torch.nn.Linear(history, width, bias=False)
         elif variant == "learned":
@@ -49,10 +57,14 @@ class StudyPredictor(GraphPredictor):
     def forward(self, x, graph, weights=None):
         if x.ndim != 3 or x.shape[-1] != self.history:
             raise ValueError("x must have shape [B, N, history]")
+        if self.node_count is not None and x.shape[1] != self.node_count:
+            raise ValueError("input node count must match configured node_count")
         graph = self._batch_relation(graph, x, "graph")
         if graph.dtype != torch.bool:
             raise TypeError("graph must be boolean")
         hidden = self.input(x)
+        if self.node_count is not None:
+            hidden = hidden + self.node_identity
         bias, allowed = None, None
         if self.variant in {"soft", "hard"}:
             bias, allowed = graph_structure(graph, self.variant)

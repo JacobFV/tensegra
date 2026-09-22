@@ -31,3 +31,28 @@ threads 2. Tests cover exact zero-alpha equivalence and nonzero coefficient
 gradients, batched independence, permutation equivariance, actual graph-input
 influence with unbiased attention, typed signed magnitudes and graph masking,
 shape/type checks, and exact fixed-mode parity with pilot predictions.
+
+## Supplementary fixed-node identity control
+
+The original unbiased predictor is permutation equivariant and has no node
+identities. On a single fixed arbitrary graph, identical node histories cannot
+identify which named node is being queried, so the model cannot generally
+represent an arbitrary node-specific adjacency. This creates a representational
+limitation beyond simply requiring more training to discover topology.
+
+Optional `node_count=N` therefore introduces a learned `[N,width]` parameter named
+`node_identity`, initialized from Normal(0,0.02), added to each input hidden state.
+The same parameter name exists across all identity-enabled variants for exact
+paired copying. This gives the fixed-graph control an identity channel through
+which adjacency could be learned; it does not establish that optimization learns
+it or guarantee equal representational capacity. It increases parameter count by
+N*width. Input N must match configuration. With identities, permutation
+equivariance requires permuting the learned table together with input nodes and
+graph. No automatic table permutation is performed. Do not use this fixed-size
+control for graph/size transfer.
+
+Default `node_count=None` adds no parameters and preserves original behavior and
+state keys exactly. New tests first failed due to absent constructor support;
+after implementation all targeted model/attention tests pass remotely: **41
+passed in 0.83 s**, including table gradient flow, exact matched learned-zero
+predictions, joint-table permutation, validation, and unchanged default state.
