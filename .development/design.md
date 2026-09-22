@@ -1,8 +1,19 @@
 # Topoformer: programmable structure in attention
 
-Status: proposed design for review; implementation and experiments have not started.
+Status: user confirmed the staged direction and requested easy sequence/robot
+experiments first, using subagents to implement. Implementation plan review is next;
+implementation and experiments have not started.
 
 ## Objective and sequence
+
+The end goal is **programming the metric space**: make retrieval geometry a
+programmable interface, and test whether it can improve compositional
+generalization while preserving learned subsymbolic computation. State-dependent
+soft grounding is central to that eventual hypothesis. Intermediate experiments
+are independently important; do not skip them to start with interpreter execution.
+Potential biases, relation-specific compatibility, hard communication topology,
+and constraints on admissible representations are progressively stronger forms
+of this interface. The last is a research direction, not a first-stage deliverable.
 
 Test whether externally supplied symbolic topology improves learning efficiency,
 generalization, and compute efficiency by biasing differentiable attention.
@@ -113,6 +124,15 @@ evaluate language, vision, action prediction, and closed-loop performance.
 Physical contact can create dependencies beyond rigid-body adjacency; test added
 contact edges and missing edges rather than treating morphology as complete.
 
+For the first robot proxy, explicitly compare soft bias and strict local masking.
+A positive adjacency bonus does not prohibit a finger querying a toe. Strict masks
+permit only self and neighboring joints within one attention layer; distant
+information can travel through multiple layers. Keep feed-forward modules tokenwise
+and avoid global pooling or cross-token normalization that would bypass that
+constraint. Test perturbation locality through multiple layers. This is a controlled
+local-interaction abstraction: real rigid-body dynamics can exhibit global coupling
+through mechanical constraints, and graph hops are not physical propagation delays.
+
 Other useful tasks: electrical-network dynamics, traffic-flow forecasting,
 multi-agent communication, dependency-aware build scheduling, and spreadsheet
 formula evaluation. The latter connects naturally to interpreter execution.
@@ -195,6 +215,16 @@ broad sweep with multiple seeds, report uncertainty and fit residuals, and avoid
 claiming a new scaling law from a tiny pilot or extrapolating beyond observations.
 
 ## Implementation organization and validation
+
+User requirement: clean hierarchical design, reusable abstractions, minimal code,
+and clear logging and development notes. Organize by responsibility: attention
+kernel, graph construction, data generation, predictor, training/evaluation, and
+thin experiment orchestration. Both domains share the same predictor and training
+path. Prefer small functions and explicit tensor contracts over extensible base
+classes, plugin registries, or frameworks before a second real use requires them.
+Emit concise structured progress records with domain, seed, mode, step, loss, and
+elapsed time; keep scientific metrics machine-readable and decisions in this
+directory. Validate at public boundaries without repeating checks in every helper.
 
 Planned modules: attention core; graph/bias providers; synthetic datasets; prediction
 models; experiment runner and aggregation; then interpreter, runtime routing, and

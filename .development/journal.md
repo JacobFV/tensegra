@@ -22,3 +22,19 @@
 - Workflow status: architectural design review precedes implementation under the
   installed superpowers brainstorming skill. This design is prepared for review;
   it is not recorded as approved.
+
+### Scope clarification and execution preference
+
+- User supplied the broader 'programming the metric space' thesis, then emphasized
+  that easy intermediate sequence and robot experiments must come first. Preserve
+  both: the long-term hypothesis and the immediate, testable attention experiment.
+- User explicitly requested subagents for implementation. Preserve that choice.
+- Clarified that soft bias favors graph-local reads whereas hard masks enforce
+  them. The robot proxy must compare both and test multi-layer receptive fields.
+- Remote read-only inspection: Python 3.12.3, pip 24.0, NVIDIA driver 580.126.09,
+  reported CUDA support 13.0, zero GPU utilization and no GPU processes at inspection.
+  These are environment observations, not verified PyTorch/CUDA compatibility.
+- User requested clean hierarchical design, reusable abstractions, minimal code,
+  clear logging, and ongoing notes. Added these constraints to design and plan;
+  separated training/evaluation from thin experiment orchestration and kept both
+  benchmark domains on a shared implementation path.
