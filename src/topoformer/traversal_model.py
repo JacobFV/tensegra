@@ -4,6 +4,8 @@ The identity-coordinate initialization is an explicit architectural prior. The
 relation schedule controls computation length; neither intermediate entities nor
 answer labels enter this module.
 """
+import math
+
 import torch
 from torch import nn
 from torch.nn import functional as F
@@ -18,10 +20,14 @@ class TraversalTransformer(nn.Module):
 
     def __init__(self, key_dim=16, width=32, heads=2, classes=8, relations=3,
                  temperature=0.05, learned_temperature=False, projection_period=1,
-                 shared_strength=False, typed=True, strength=8.0, identity_init=True):
+                 shared_strength=False, typed=True, strength=8.0, identity_init=True,
+                 content_identity_bias=0.0):
         super().__init__()
         if min(key_dim, width, heads, classes, relations, projection_period) < 1 or width < key_dim + classes or width % heads:
             raise ValueError("width must fit keys/classes and divide into positive heads")
+        if not math.isfinite(content_identity_bias):
+            raise ValueError("content_identity_bias must be finite")
+        self.content_identity_bias = float(content_identity_bias)
         self.key_dim, self.width, self.heads = key_dim, width, heads
         self.classes, self.relations = classes, relations
         self.typed, self.projection_period = typed, projection_period
@@ -128,6 +134,11 @@ class TraversalTransformer(nn.Module):
                 bias = None
             elif mode == "none":
                 bias = None
+            content_bias = None
+            if self.content_identity_bias:
+                similarity = F.normalize(state[..., :self.key_dim], dim=-1) @ F.normalize(tokens, dim=-1).transpose(-1, -2)
+                content_bias = self.content_identity_bias * similarity[:, None]
+                bias = content_bias if bias is None else bias + content_bias
             attended, attention = structural_attention(
                 self._heads(self.query(self.norm(state + self.instruction(relation)[:, None]))), memory_keys,
                 self._heads(current_memory + self.value(current_memory)),
@@ -141,7 +152,8 @@ class TraversalTransformer(nn.Module):
                 if mode == "permuted":
                     pq_after = torch.cat((pq_after[..., :-1].roll(1, -1), pq_after[..., -1:]), -1)
                 diagnostics.append({"pq": pq, "pq_after": pq_after, "pk": pk, "attention": attention,
-                                    "bias": route, "strengths": strengths, "state": state})
+                                    "bias": route, "content_bias": content_bias,
+                                    "strengths": strengths, "state": state})
         logits = self.readout(state[:, 0])
         return (logits, diagnostics) if return_diagnostics else logits
 

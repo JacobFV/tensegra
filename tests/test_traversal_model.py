@@ -65,3 +65,40 @@ def test_graph_slot_permutation_preserves_learned_output():
     shuffled = dict(batch, entity_keys=batch["entity_keys"][:, perm], node_ids=batch["node_ids"][:, perm],
                     adjacency=batch["adjacency"][:, :, perm][:, :, :, perm])
     assert torch.allclose(model(batch), model(shuffled), atol=1e-6)
+
+
+def test_content_identity_prior_defaults_preserve_rng_parameters_and_outputs():
+    torch.manual_seed(81)
+    default = TraversalTransformer()
+    first_rng = torch.random.get_rng_state()
+    torch.manual_seed(81)
+    disabled = TraversalTransformer(content_identity_bias=0.)
+    assert torch.equal(first_rng, torch.random.get_rng_state())
+    for key, value in default.state_dict().items():
+        assert torch.equal(value, disabled.state_dict()[key])
+    batch = make_batch(batch_size=2)
+    for mode in default.MODES:
+        assert torch.equal(default(batch, mode=mode), disabled(batch, mode=mode))
+
+
+def test_keyed_content_prior_is_graph_independent_at_matching_state():
+    model = TraversalTransformer(content_identity_bias=8.)
+    batch = make_batch(batch_size=2, depth=1)
+    changed = dict(batch, adjacency=batch["adjacency"].roll(1, -1))
+    for mode in ("none", "graph_input", "soft"):
+        _, first = model(batch, mode=mode, return_diagnostics=True)
+        _, second = model(changed, mode=mode, return_diagnostics=True)
+        assert torch.equal(first[0]["content_bias"], second[0]["content_bias"])
+        expected = 8 * (torch.nn.functional.normalize(batch["start_keys"], dim=-1)[:, None]
+                        @ torch.nn.functional.normalize(batch["token_keys"], dim=-1).transpose(-1, -2))
+        assert torch.allclose(first[0]["content_bias"][:, 0], expected)
+
+
+def test_keyed_zero_structure_equivalence_gradients_and_public_inputs():
+    model = TraversalTransformer(content_identity_bias=8., strength=0.)
+    batch = make_batch(batch_size=3)
+    public = {key: batch[key] for key in ("entity_keys", "adjacency", "token_keys", "token_values", "start_keys", "relations", "node_ids")}
+    assert torch.equal(model(public, mode="soft"), model(batch, mode="none"))
+    torch.nn.functional.cross_entropy(model(public), batch["targets"]).backward()
+    assert model.query.weight.grad.abs().sum() > 0
+    assert torch.isfinite(model.query.weight.grad).all()
