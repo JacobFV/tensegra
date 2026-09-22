@@ -17,3 +17,5 @@ Decisions:
 - Preserve full paired seed effects; three seeds are exploratory evidence, not a significance claim.
 
 Pre-implementation refinement: shared efficiency normalization is fitted on the smallest (8-trajectory) training subset, so larger training pools do not leak distribution statistics into the smallest sample budget. The same statistics are reused at every count.
+
+Before any stage-2 result, added the tighter 10% remaining oracle-to-zero gap threshold alongside 25% and 50%; the pilot suggests the looser targets could saturate early. Report every threshold without selecting one for the strongest result.
