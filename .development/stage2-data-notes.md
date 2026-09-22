@@ -1,0 +1,9 @@
+# Stage 2 data implementation
+
+- Added `make_system`, `supply_graph`, `graph_quality`, and `deterministic_future` in `study_data.py`, preserving pilot modules.
+- Sparse graph sampling uses Bernoulli `min(degree/(n-1), 1)` for every off-diagonal directed edge; no forced connectivity or seed-dependent rescue edges distort expected degree. Robot topology reuses the existing morphology.
+- Uniform and signed mechanisms share topology. Signed nonuniform magnitudes are normalized by absolute row mass with a float32 rounding margin below 0.8, ensuring the nonlinear transition has infinity-norm Lipschitz bound at most 0.9. Weights are available through `Dynamics.weights`.
+- Corruption counts are Python `round(fraction * original_nonself_edges)` (ties to even). Additions cap at the number of original nonedges. Mixed corruption samples deletions and additions from disjoint original supports. Self support remains unchanged, and graph inputs are never modified. Metrics exclude self edges; empty precision/recall denominators are defined as 1.
+- Deterministic rollout accepts the model's `[B,N,history]` layout, starts from its final observation, and returns `[B,horizon,N]`. It recursively applies the known transition with no innovation. It is not the exact nonlinear stochastic multistep conditional mean.
+- Generator tests verify reproducibility, local RNG isolation, sample graph identity differences, stable expected indegree at 32/128 nodes, exact corruption counts, nonmutation, signed support/contraction, robot equivalence, and reference rollout recurrence. Study-level split construction and collision checks belong to the runner.
+- Remote red test: missing `topoformer.study_data` import before implementation. Remote green: **42 tests passed in 0.73s** (15 new study-data tests plus 27 existing data tests), CPU venv on gb10-direct, OMP/OpenBLAS threads 2. No local training or Torch installation.
