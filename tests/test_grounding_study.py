@@ -83,3 +83,18 @@ def test_periodic_grounders_preserve_common_parameter_initialization():
     for name, tensor in base.state_dict().items():
         if not name.startswith('grounders.') and name != 'strengths':
             torch.testing.assert_close(tensor, periodic.state_dict()[name], rtol=0, atol=0)
+
+
+def test_keyed_controls_have_matched_parameters_and_content_prior():
+    config = tiny()
+    reference, mode = build_model(config, 'soft_keyed', 2)
+    assert mode == 'soft'
+    assert reference.content_identity_bias == 8.
+    assert torch.all(reference.strengths == 16.)
+    for variant, expected_mode in [('none_keyed', 'none'), ('graph_input_keyed', 'graph_input')]:
+        model, actual_mode = build_model(config, variant, 2)
+        assert actual_mode == expected_mode
+        assert model.content_identity_bias == 8.
+        for name, tensor in reference.state_dict().items():
+            torch.testing.assert_close(tensor, model.state_dict()[name], rtol=0, atol=0)
+    assert not any(name.endswith('_keyed') for name in GroundingStudyConfig().variants)

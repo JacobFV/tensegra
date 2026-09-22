@@ -20,6 +20,9 @@ from torch.nn import functional as F
 
 
 VARIANTS = {
+    'soft_keyed': {'content_identity_bias': 8., 'strength': 16.},
+    'graph_input_keyed': {'mode': 'graph_input', 'content_identity_bias': 8., 'strength': 16.},
+    'none_keyed': {'mode': 'none', 'content_identity_bias': 8., 'strength': 16.},
     'soft': {}, 'soft_strength4': {'strength': 4.}, 'known': {'mode': 'known'}, 'frozen': {'mode': 'frozen'},
     'permuted': {'mode': 'permuted'}, 'none': {'mode': 'none'},
     'graph_input': {'mode': 'graph_input'}, 'hard': {'mode': 'hard'},
@@ -33,7 +36,7 @@ VARIANTS = {
 @dataclass
 class GroundingStudyConfig:
     seeds: list[int] = field(default_factory=lambda: [0, 1, 2])
-    variants: list[str] = field(default_factory=lambda: list(VARIANTS))
+    variants: list[str] = field(default_factory=lambda: [name for name in VARIANTS if not name.endswith('_keyed')])
     steps: int = 400
     checkpoints: list[int] = field(default_factory=lambda: [0, 25, 50, 100, 200, 400])
     batch_size: int = 32
