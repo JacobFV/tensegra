@@ -40,3 +40,13 @@ The neural comparator is a small clause transformer with a recurrent GRU control
 Two final metric corrections were requested before freezing: actual confidence error counts under the permuted-binding intervention must score the **executed** selector instead of its pre-intervention prediction, and training-time neural accounting must not silently include gold diagnostic interpreter runs. These are metrics corrections, not an observed execution or model-input leak.
 
 A single scalar-lifting representation revision is being evaluated using shallow oracle pilots only, after the original shallow oracle exposed a learned-output bottleneck. Preserve both pilot artifacts and disclose the revision; no OOD measurements may be used to select that representation. Approval of the main freeze remains conditional on the pending metric corrections and focused integrated tests after that revision.
+
+### Final source review and verification
+
+At `9965a15`, actual invocation correctness is computed from the executed trace's operation and semantic selector, including after permutation. Training timing is honestly labeled `neural_and_diagnostic_train_seconds`; actual predicted interpreter time remains separate. Undefined-query task and conditional execution/lifting rates are `None`, and neural-controller exact-runtime audit metrics remain distinct from neural numerical predictions.
+
+The RBF scalar-lifting revision is documented as an explicit bounded numerical representation prior, followed by a learned MLP. It contains no output rule, preserves scalar gradients, and does not discretely look up the target label. Both shallow pilot configurations, raw rows, and exact source archives are committed. This is representation selection on shallow development data, not OOD selection.
+
+An independently copied current source snapshot ran **67 focused tests successfully** on the remote machine with two CPU threads, covering runtime model, runner, generated tasks, exact runtime, and language. The complete diff from Stage 4 contains additions only. No Stage 1–4 file was modified.
+
+One final narrow metric correction was requested: risk–coverage `correct` counts must also mask undefined queries, because their stored numeric zero is a placeholder rather than a correct answer. With that correction and its focused regression verification, the interface is approved for the planned frozen experiment. Remaining limitations are scientific scope, explicitly documented above, rather than implementation blockers.
