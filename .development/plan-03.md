@@ -11,7 +11,7 @@
 - [x] Add and execute a separately labeled nine-run content-prior comparison after fairness review.
 - [x] Preserve raw metrics, source hashes, configurations and environment details.
 - [x] Generate seed-level summaries and exported scientific figures.
-- [ ] Complete independent report/artifact review, integrate and push.
+- [x] Complete independent report/artifact review; prepare the verified stage for main integration.
 
 The empirical target remains open: identity-initialized traversal partially succeeds,
 but cold grounding and simultaneous depth/size generalization fail, and the stronger
