@@ -79,6 +79,7 @@ def test_undefined_queries_are_not_successful_answers():
         assert row['counts']['defined_examples'] == 0
         assert row['task_accuracy'] is None
         assert row['counts']['appropriate_abstention'] == 2
+        assert all(r['correct'] == 0 and r['defined_examples'] == 0 for r in row['confidence'])
 
 
 def test_wrong_graph_changes_observable_data():
@@ -100,3 +101,20 @@ def test_style_counts_partition_only_defined_answers():
     assert sum(x['task_correct'] for x in row['style_breakdown'].values()) == row['counts']['task_correct']
     invalid = evaluate(model, 'oracle', config, dict(name='invalid', nodes=8, depth=2, invalid=True), 12)
     assert all(x['task_accuracy'] is None and x['oracle_lifting_accuracy'] is None for x in invalid['style_breakdown'].values())
+
+
+def test_undefined_confidence_never_rewards_placeholder_completion(monkeypatch):
+    from topoformer.runtime_study import build_model, evaluate
+    from topoformer import runtime_execution
+    original = runtime_execution.execute_batch
+    def accidental_zero_completion(*args, **kwargs):
+        rows = original(*args, **kwargs)
+        for row in rows:
+            row.valid, row.result, row.deferred = True, 0, 0
+        return rows
+    monkeypatch.setattr(runtime_execution, 'execute_batch', accidental_zero_completion)
+    config = RuntimeStudyConfig(steps=0, warmup_steps=0, checkpoints=[0], eval_examples=2)
+    row = evaluate(build_model(config, 0), 'oracle', config,
+                   dict(name='ambiguous', nodes=8, depth=2, ambiguous=True), 5)
+    assert all(r['answered'] == 2 and r['correct'] == 0 and r['defined_examples'] == 0
+               for r in row['confidence'])

@@ -292,7 +292,8 @@ def evaluate(model, variant, config, condition, seed):
             gated = execute_batch(batch['tasks'], ops, selectors, confidences=torch.ones_like(prediction['confidences']) if VARIANTS[variant].get('oracle') else prediction['confidences'], threshold=threshold,
                                   permuted=intervention == 'permuted', wrong_graph=intervention == 'wrong_graph')
             answered = torch.tensor([e.valid and not e.deferred for e in gated], dtype=torch.bool)
-            right = numeric_results(gated, mask.device).eq(gold['result']) & answered
+            defined = gold.get('expected_valid', torch.ones_like(answered)).bool()
+            right = numeric_results(gated, mask.device).eq(gold['result']) & answered & defined
             local_gate = (torch.ones_like(prediction['confidences']) if VARIANTS[variant].get('oracle') else prediction['confidences']).ge(threshold) & mask
             local_right = selector_correct & op_correct & mask
             def actual_lowering_correct(i, entry):
@@ -300,7 +301,7 @@ def evaluate(model, variant, config, condition, seed):
                 gold_op, gold_selector = task.gold_actions[entry['step']]
                 selected = semantic_selector(task, entry['selector'])
                 return entry['op'] == gold_op and selected is not None and selected == semantic_selector(task, gold_selector)
-            risk.append(dict(threshold=threshold, examples=len(gated), answered=int(answered.sum()), correct=int(right.sum()),
+            risk.append(dict(threshold=threshold, examples=len(gated), defined_examples=int(defined.sum()), answered=int(answered.sum()), correct=int(right.sum()),
                              invoked=sum(e.invoked for e in gated), deferred=sum(e.deferred for e in gated),
                              rejected=sum(e.rejected for e in gated),
                              accepted_wrong=sum(entry['status']=='executed' and not actual_lowering_correct(i, entry) for i,e in enumerate(gated) for entry in e.trace),
