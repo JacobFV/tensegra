@@ -191,3 +191,12 @@
 - Next research should remain easy and controlled: data-efficiency sweeps,
   heterogeneous mechanisms with sufficient context, and held-out graph/size
   tests with graph-as-input controls before interpreter-guided soft grounding.
+
+### Integrated into main
+
+- User selected local merge into main. Fast-forwarded main to the reviewed branch
+  tip 8bb96da and verified that exact merged revision on gb10-direct: 67 tests
+  passed in 1.27 s with two CPU threads.
+- Recorded this integration and pushed main under the standing commit/push
+  instruction. Removed the clean temporary worktree and merged local feature
+  branch; the published feature branch and all research artifacts remain available.
