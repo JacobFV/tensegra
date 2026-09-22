@@ -22,7 +22,7 @@ from .study_model import StudyPredictor
 
 @dataclass
 class StudyConfig:
-    suites: list[str] = field(default_factory=lambda: ['efficiency', 'corruption', 'transfer', 'heterogeneous', 'learned'])
+    suites: list[str] = field(default_factory=lambda: ['efficiency', 'efficiency_identity', 'corruption', 'transfer', 'heterogeneous', 'learned'])
     domains: list[str] = field(default_factory=lambda: ['sparse', 'robot'])
     seeds: list[int] = field(default_factory=lambda: [0, 1, 2])
     counts: list[int] = field(default_factory=lambda: [8, 16, 32, 64, 128, 256])
@@ -54,14 +54,16 @@ class StudyConfig:
     wall_seconds: float = 7200
 
     def __post_init__(self):
-        valid_suites = {'efficiency', 'corruption', 'transfer', 'heterogeneous', 'learned'}
+        valid_suites = {'efficiency', 'efficiency_identity', 'corruption', 'transfer', 'heterogeneous', 'learned'}
         valid_modes = {'none', 'soft1', 'soft4', 'hard', 'permuted1', 'permuted4', 'graph_input', 'learned', 'typed'}
-        if not self.suites or set(self.suites) - valid_suites:
+        if not self.suites or len(set(self.suites)) != len(self.suites) or set(self.suites) - valid_suites:
             raise ValueError('unknown or empty suites')
-        if not self.domains or set(self.domains) - {'sparse', 'robot'}:
+        if not self.domains or len(set(self.domains)) != len(self.domains) or set(self.domains) - {'sparse', 'robot'}:
             raise ValueError('unknown or empty domains')
-        if self.modes is not None and (not self.modes or set(self.modes) - valid_modes):
-            raise ValueError('unknown or empty modes')
+        if self.modes is not None and (not self.modes or len(set(self.modes)) != len(self.modes) or set(self.modes) - valid_modes):
+            raise ValueError('unknown, repeated or empty modes')
+        if self.modes and 'typed' in self.modes and set(self.suites) != {'heterogeneous'}:
+            raise ValueError('typed mode is restricted to the signed heterogeneous suite')
         for name in ('nodes', 'history', 'width', 'heads', 'layers', 'batch_size', 'train_count',
                      'validation_count', 'test_count', 'steps', 'horizon', 'degree',
                      'transfer_train_graphs', 'transfer_validation_graphs', 'transfer_test_graphs',
@@ -73,22 +75,25 @@ class StudyConfig:
             values = getattr(self, name)
             if not values or any(isinstance(v, bool) or not isinstance(v, int) or v <= 0 for v in values):
                 raise ValueError(f'{name} must contain positive integers')
-        if not self.seeds or len(set(self.seeds)) != len(self.seeds) or any(not isinstance(s, int) or s < 0 for s in self.seeds):
+            if values != sorted(set(values)):
+                raise ValueError(f'{name} must be distinct and increasing')
+        if not self.seeds or len(set(self.seeds)) != len(self.seeds) or any(isinstance(s, bool) or not isinstance(s, int) or s < 0 for s in self.seeds):
             raise ValueError('seeds must be distinct nonnegative integers')
-        if self.checkpoints != sorted(set(self.checkpoints)) or not self.checkpoints or self.checkpoints[0] != 0 or self.checkpoints[-1] <= 0:
-            raise ValueError('checkpoints must increase from zero to a positive training budget')
         if any(isinstance(s, bool) or not isinstance(s, int) for s in self.checkpoints):
             raise ValueError('checkpoints must be integers')
+        if self.checkpoints != sorted(set(self.checkpoints)) or not self.checkpoints or self.checkpoints[0] != 0 or self.checkpoints[-1] <= 0:
+            raise ValueError('checkpoints must increase from zero to a positive training budget')
         if self.width % self.heads or self.steps < self.history + self.horizon:
-            raise ValueError('width must divide heads and series must fit history plus horizon')
+            raise ValueError('width must be divisible by heads and series must fit history plus horizon')
         if self.eval_batch_size > 64 or self.threads > 2:
             raise ValueError('evaluation batch <=64 and threads <=2 are required')
-        if self.burn_in < 0 or not isinstance(self.burn_in, int):
+        if isinstance(self.burn_in, bool) or not isinstance(self.burn_in, int) or self.burn_in < 0:
             raise ValueError('burn_in must be a nonnegative integer')
         for name in ('learning_rate', 'wall_seconds'):
-            if not math.isfinite(getattr(self, name)) or getattr(self, name) <= 0:
+            value = getattr(self, name)
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
                 raise ValueError(f'{name} must be finite and positive')
-        if not math.isfinite(self.noise) or self.noise < 0:
+        if isinstance(self.noise, bool) or not isinstance(self.noise, (int, float)) or not math.isfinite(self.noise) or self.noise < 0:
             raise ValueError('noise must be finite and nonnegative')
 
 
@@ -181,12 +186,13 @@ def _graph(record, mode, corruption, fraction, seed):
     return graph
 
 
-def _model(config, mode, seed, common=None):
+def _model(config, mode, seed, common=None, node_identity=False):
     variant = 'soft' if mode.startswith(('soft', 'permuted')) else mode
     strength = 1.0 if mode.endswith('1') else 4.0
     torch.manual_seed(seed)
     model = StudyPredictor(config.history, config.width, config.heads, config.layers,
-                           variant=variant, strength=strength)
+                           variant=variant, strength=strength,
+                           node_count=config.nodes if node_identity else None)
     if common is not None:
         current = model.state_dict()
         current.update({key: value for key, value in common.items()
@@ -280,9 +286,10 @@ def _cases(config):
                 base = {'suite': suite, 'domain': domain, 'seed': seed, 'mechanism': 'uniform',
                         'train_sizes': None, 'corruption': 'clean', 'fraction': 0.0,
                         'train_count': config.train_count}
-                if suite == 'efficiency':
+                if suite in ('efficiency', 'efficiency_identity'):
+                    modes = core if suite == 'efficiency' else ['none', 'soft4', 'hard']
                     for count in config.counts:
-                        yield {**base, 'train_count': count, 'modes': config.modes or core}
+                        yield {**base, 'train_count': count, 'modes': config.modes or modes}
                 elif suite == 'corruption':
                     for corruption, fraction in _corruptions():
                         yield {**base, 'corruption': corruption, 'fraction': fraction,
@@ -305,7 +312,8 @@ def _split_provenance(train, validation, test):
 
 
 def _train(config, case, mode, train, validation, normalization, common, deadline):
-    model = _model(config, mode, _seed(case['seed'], 7), common)
+    model = _model(config, mode, _seed(case['seed'], 7), common,
+                   node_identity=case['suite'] == 'efficiency_identity')
     initial = state_hash(model.state_dict())
     shared = state_hash({key: model.state_dict()[key] for key in common})
     graph_indices, indices = _schedule(config, train, _seed(case['seed'], 8))
@@ -319,7 +327,7 @@ def _train(config, case, mode, train, validation, normalization, common, deadlin
         model.eval()
         point = _validation(model, validation, validation_graphs, normalization, config)
         point.update(step=step, train_loss=loss, elapsed_seconds=time.monotonic() - started,
-                     coefficients=model.structure_coefficients())
+                     coefficients=model.structure_coefficients(), model_state_hash=state_hash(model.state_dict()))
         curve.append(point)
         model.train()
 
@@ -345,7 +353,7 @@ def _train(config, case, mode, train, validation, normalization, common, deadlin
                   (first['zero_normalized_mse'] - first['oracle_normalized_mse']) for percent in (10, 25, 50)}
     if first['zero_normalized_mse'] <= first['oracle_normalized_mse']:
         thresholds = {key: None for key in thresholds}
-    metadata = {'initialization_hash': initial, 'shared_initialization_hash': shared,
+    metadata = {'final_state_hash': state_hash(model.state_dict()), 'initialization_hash': initial, 'shared_initialization_hash': shared,
                 'schedule_hash': tensor_hash(torch.cat((graph_indices[:, None], indices), dim=1)),
                 'schedule_seed': _seed(case['seed'], 8), 'completed_steps': last_step,
                 'optimizer_examples': last_step * config.batch_size,
@@ -400,7 +408,8 @@ def run_study(config, output):
         train = _prepared(raw_train, normalization, config.history, case['train_count'])
         validation = _prepared(raw_validation, normalization, config.history, eval_windows=config.eval_windows)
         test = _prepared(raw_test, normalization, config.history, eval_windows=config.eval_windows)
-        common = _model(config, 'none', _seed(case['seed'], 7)).state_dict()
+        common = _model(config, 'none', _seed(case['seed'], 7),
+                        node_identity=case['suite'] == 'efficiency_identity').state_dict()
         for mode in case['modes']:
             if time.monotonic() >= deadline:
                 break
@@ -421,7 +430,8 @@ def run_study(config, output):
                                         'split': split, 'corruption': corruption, 'fraction': fraction})
             complete = metadata['completed_steps'] == config.checkpoints[-1] and len(evaluations) == len(test) * len(conditions)
             row = {**{key: value for key, value in case.items() if key != 'modes'}, 'mode': mode,
-                   'status': 'complete' if complete else 'partial', **metadata,
+                   'status': 'complete' if complete else 'partial',
+                   'node_identity': case['suite'] == 'efficiency_identity', **metadata,
                    'normalization': normalization, 'normalization_trajectories_per_graph': min(config.counts) if case['train_sizes'] is None else config.train_count,
                    'information': 'signed_edge_weights' if mode == 'typed' else 'none' if mode == 'none' else 'adjacency',
                    'evaluations': evaluations,
@@ -454,7 +464,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', required=True)
     parser.add_argument('--output', required=True)
-    parser.add_argument('--suite', choices=['efficiency', 'corruption', 'transfer', 'heterogeneous', 'learned'])
+    parser.add_argument('--suite', choices=['efficiency', 'efficiency_identity', 'corruption', 'transfer', 'heterogeneous', 'learned'])
     args = parser.parse_args()
     values = json.loads(Path(args.config).read_text())
     if args.suite:

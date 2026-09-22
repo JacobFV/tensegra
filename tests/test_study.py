@@ -38,6 +38,8 @@ def test_smoke_artifacts_and_pairing(tmp_path):
     assert rows[0]['shared_initialization_hash'] == rows[1]['shared_initialization_hash']
     assert rows[0]['normalization'] == rows[2]['normalization']
     assert rows[0]['graph_splits'] == rows[2]['graph_splits']
+    assert rows[0]['final_state_hash'] == rows[0]['validation_curve'][-1]['model_state_hash']
+    assert rows[0]['final_state_hash'] != rows[0]['initialization_hash']
     assert rows[0]['evaluations'][0]['deterministic_rollout_mse'] >= 0
     assert rows[0]['evaluations'][0]['oracle_deterministic_rollout_mse'] == 0
     saved = [json.loads(line) for line in (tmp_path/'out'/'metrics.jsonl').read_text().splitlines()]
@@ -122,3 +124,28 @@ def test_schedule_indices_match_selected_graph_sizes():
     other_graphs, other_indices = _schedule(config, train, 43)
     assert torch.equal(graph_indices, other_graphs)
     assert torch.equal(indices, other_indices)
+
+
+def test_identity_suite_pairs_all_common_parameters(tmp_path):
+    config = StudyConfig(suites=['efficiency_identity'], domains=['sparse'], seeds=[0],
+                        counts=[2], train_count=2, validation_count=2, test_count=2,
+                        checkpoints=[0, 1], steps=8, horizon=2, width=8,
+                        heads=2, layers=1, batch_size=2)
+    rows = run_study(config, tmp_path/'identity')['runs']
+    assert len(rows) == 3
+    assert all(row['node_identity'] for row in rows)
+    assert len({row['shared_initialization_hash'] for row in rows}) == 1
+    assert len({row['schedule_hash'] for row in rows}) == 1
+    assert len({row['parameters'] for row in rows}) == 1
+
+
+@pytest.mark.parametrize('values', [
+    {'seeds': [True]}, {'burn_in': True}, {'noise': True}, {'wall_seconds': True},
+    {'noise': 'bad'}, {'wall_seconds': 'bad'}, {'counts': [8, 8]},
+    {'checkpoints': [0, 'bad']},
+    {'counts': [16, 8]}, {'suites': ['learned', 'learned']},
+    {'suites': ['corruption'], 'modes': ['typed']},
+])
+def test_config_rejects_ambiguous_values(values):
+    with pytest.raises(ValueError):
+        StudyConfig(**values)
