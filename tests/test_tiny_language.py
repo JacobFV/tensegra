@@ -22,3 +22,9 @@ def test_no_closures_recursion_or_host_execution():
 def test_return_stops_body_and_duplicate_bindings_rejected():
     assert execute('fn f(a) { return a; missing; } f(3)').value == 3
     with pytest.raises(RuntimeFault): execute('let a=1; let a=2; a')
+
+
+def test_return_from_nested_block_and_indirect_recursion():
+    assert execute('fn f(a) { { let b=2; return sub(a,b); } missing; } f(7)').value == 5
+    with pytest.raises(RuntimeFault,match='recursion'):
+        execute('fn f(a) { return g(a); } fn g(a) { return f(a); } f(1)')

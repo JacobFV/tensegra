@@ -43,7 +43,7 @@ PRIMITIVES = {
     'read_index': Primitive(('array','integer'),'value','read_index','0 <= index < length; bool excluded'),
     'call': Primitive(('function','values'),'value','call','arity and scalar builtin types; nonrecursive'),
     'return': Primitive(('frame','value'),'returned','return_value','frame and value exist'),
-    'value_of': Primitive(('binding|slot|returned',),'value','value_of','exactly one value_of or binds edge'),
+    'value_of': Primitive(('binding|slot|argument|returned',),'value','value_of','exactly one value_of or binds edge'),
 }
 
 
