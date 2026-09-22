@@ -29,3 +29,11 @@ Source `ee49edc` pushed before execution. Exact-source remote project tests: **1
 Full preset: 570 runs (216 efficiency, 108 identity-enabled efficiency, 150 corruption, 30 transfer, 42 heterogeneous, 24 learned), three seeds, 600 optimizer steps, checkpoint0/25/50/100/200/300/600. Remote output `~/topoformer-stage2-run/results/stage2-ee49edc`, log `~/topoformer-stage2-full.log`. One process, OMP/OpenBLAS2, cooperative7200-second deadline, external7500-second timeout. Output is incremental and preserved if interrupted.
 
 Review clarifications: mixed corruption is one25% simultaneous drop/add stress condition; separate drop and add each cover10/25/50%. Pairing of exact batch indices is within each count/case across variants, not across different sample budgets. These limits are explicit in the design.
+
+## Analysis review during execution
+
+Independent analysis review caught a schema mismatch: initial analyzer selected raw deterministic-rollout MSE while labeling terminal plots normalized, rather than preserving each explicit metric. The raw training rows were unaffected. Analysis is being repaired before publication to retain all metric dimensions, enforce exact graph/trajectory pairing, validate AUC against the requested budget, expose censoring and selection, and facet plots by domain/condition. No generated analysis from the defective version is treated as evidence.
+
+Completed efficiency subsets were independently read directly from explicit raw fields, bypassing the analyzer. At128 trajectories, identity-free sparse soft4 reaches the10% oracle-gap target at25/50/25 steps versus none300/200/100; identity-enabled soft4 also25/50/25 versus none300/200/50. Both robot sweeps have soft4 at25/50/25 versus none300/unreached/unreached. These are checkpoint-grid first-crossing comparisons within600 steps, not exact continuous speedups or guaranteed convergence. Final reports will retain all counts, seeds and thresholds.
+
+Final training/data/model audit found no blocking issue. Clarified that uniform robot replicates vary data and initialization on the same morphology and coefficients; sparse replicates also vary topology. The final analysis/artifact/report gate remains pending.

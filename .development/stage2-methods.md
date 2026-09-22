@@ -12,7 +12,7 @@ Signed mechanisms retain the adjacency while assigning nonuniform positive/negat
 
 ## Training and pairing
 
-Models use four observations per node, width 32, four heads, two attention blocks, shared tokenwise normalization/MLPs, and one scalar next-state output per node. AdamW trains for 600 steps, batch 32, learning rate 0.001. Checkpoints are 0, 25, 50, 100, 200, 300, 600. There are three independently seeded processes/training runs per reported condition.
+Models use four observations per node, width 32, four heads, two attention blocks, shared tokenwise normalization/MLPs, and one scalar next-state output per node. AdamW trains for 600 steps, batch 32, learning rate 0.001. Checkpoints are 0, 25, 50, 100, 200, 300, 600. There are three seeded training replicates per reported condition. Sparse seeds vary topology as well as trajectories and initialization. Uniform robot seeds vary trajectories and initialization on the same morphology and coefficients; they are not independent morphology draws.
 
 Variants within a case have identical common parameter tensors at initialization and identical sampled graph/window schedules. Hashes preserve this pairing. The graph-input model adds a bias-free history projection; learned variants add layer/head coefficient tensors; parameter counts disclose these differences. Node-identity supplementary models add the same learned 12-by-32 table across none/soft4/hard. All transfer variants remain identity-free.
 

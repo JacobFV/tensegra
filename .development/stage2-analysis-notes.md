@@ -8,10 +8,11 @@ figures are produced with a lazy Matplotlib import:
 python src/topoformer/study_analysis.py RESULTS/metrics.jsonl REPORT_DIR --plots
 ```
 
-The output directory must not already exist. The command writes `summary.json`
-and `report.md`; `--plots` additionally writes standalone SVG figures. The JSON
-summary is the lossless analysis product. Markdown tables are intended for
-review and the later narrative report, not as a replacement for raw JSONL.
+The CLI reads the requested counts/checkpoints from the input file's sibling
+`summary.json`; `--config PATH` supplies a separate config artifact. The output
+directory must not already exist. The command writes an aggregated
+`summary.json` and `report.md`; `--plots` additionally writes matching SVG and
+PNG figures. Raw JSONL remains the lossless product.
 
 ## Locked analysis rules
 
@@ -19,8 +20,14 @@ review and the later narrative report, not as a replacement for raw JSONL.
   incomplete rows, and duplicate run identities are counted in `exclusions`.
 - Seed comparisons require both modes in the same suite, domain, training
   configuration, trajectory count, corruption, evaluation size, split, and
-  checkpoint. Metrics from multiple evaluation graphs are averaged within a
-  seed before population SD or a paired effect is calculated.
+  checkpoint. Every pair additionally requires identical graph hash and
+  trajectory seed sets. Duplicate or unmatched references are excluded and
+  reported. Matched graph effects are averaged within seed before population
+  SD is calculated.
+- All 18 runner test fields are retained separately: raw and normalized
+  one-step, deterministic-rollout, and stochastic-rollout MSE for the model,
+  oracle, and zero references. Human-facing primary tables show the three
+  normalized model metrics; raw and reference aggregates remain in JSON.
 - Paired effects are baseline error minus treatment error. Because oracle
   metrics are matched within each exact case, this is also the reduction in
   oracle-excess error; no ratio is formed for censored observations.
@@ -34,8 +41,9 @@ review and the later narrative report, not as a replacement for raw JSONL.
   checkpoint at a given training count. `n_epsilon` is the smallest tested
   training count with any observed crossing. Unreached results remain null and
   carry `censored: true`.
-- Validation AUC is trapezoidal area divided by optimizer-step budget. It is
-  null unless the curve includes both step 0 and the complete requested budget.
+- Validation AUC is trapezoidal area divided by the configured optimizer-step
+  budget. It is null unless the curve includes both step 0 and that budget;
+  the observed maximum is never treated as the requested budget.
   Fixed-size efficiency normalization is recorded from the smallest nested
   training subset and is never refit for larger counts.
 - `efficiency_identity` follows the same efficiency rules but remains a
@@ -47,7 +55,8 @@ review and the later narrative report, not as a replacement for raw JSONL.
   checkpoint, indexed by layer, head, and relation channel when present. The
   analysis does not assume positivity or a trend with depth.
 
-The optional plots show population SD error bars and faint per-seed efficiency
-curves. Parameter count, optimizer examples, training seconds, and process peak
-RSS are retained as resource accounting. No statistics are synthesized for
-missing or partial cases.
+The optional plots are separated by suite, domain, metric, and training regime.
+They show population SD error bars, faint per-seed efficiency curves, and
+explicit censor marks. Parameter count, optimizer examples, training seconds,
+and process peak RSS are retained by experimental condition. No statistics are
+synthesized for missing or partial cases.
