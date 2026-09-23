@@ -329,13 +329,27 @@
     },
     {
       "id": "R07",
-      "status": "cpu_protocol_implementation",
+      "status": "profile_ready",
       "hypothesis": "Nonlinear readout capacity recovers remaining frozen-feature scalar tails",
       "comparison": "Linear decoder replay vs zero-initialized residual1024-GELU-33 MLP, sharedinitialfunction",
       "data": "Reused R06balanced fit/cal/DEV features; not untouchedconfirmation",
       "exposure": "900updates andidenticalbatches primary; no unmatchedextension",
       "invariants": "Frozenbackbone/features/normalization; noR05consumer swap",
-      "budget": "Profile beforeallocation"
+      "budget": "Profile beforeallocation",
+      "source": "844497b",
+      "mechanism_source": "8767225",
+      "cap_profile_seconds": 60,
+      "protocol": "returns/R07-protocol.md"
+    },
+    {
+      "id": "S08-alignment",
+      "status": "source_preflight",
+      "source": "dec2d7b",
+      "protocol": "semantics/S08-alignment-diagnostic-design.md",
+      "hypothesis": "Distinguish acquiring occurrence alignment from using it for semantic edges",
+      "scope": "FrozenS01/S07final checkpoints, pairedTRAIN128/DEV512, publiconlyforward, goldspans scoringonly",
+      "training_presentations": 0,
+      "cap_seconds": 60
     }
   ],
   "policy": {
