@@ -19,7 +19,7 @@
   },
   "experiments": {
     "archive": {
-      "status": "not_run",
+      "status": "diagnostic_only",
       "hypothesis": "Historical Stage8 numerical reconstruction and failure localization",
       "observables_and_targets": "Archived predictions, targets and frozen manifests",
       "supplied_vs_learned": "No fitting or new selection",
@@ -28,7 +28,8 @@
       "gpu_minutes_cap": 0,
       "source_config_freeze": null,
       "actual_gpu_seconds": 0,
-      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
+      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision",
+      "evidence": "research/stages/stage-09/stage9-review.md; independent historical reconstruction complete at33acfe1"
     },
     "belief_contract": {
       "status": "not_run",
@@ -38,7 +39,7 @@
       "comparison": "a1 frozen unchanged vs a2 exact empty-ledger prior",
       "selection_and_untouched_test": "Fresh validation/test incl initial and full-retraction frames; a3 blocked pending diagnosis",
       "gpu_minutes_cap": 15,
-      "source_config_freeze": null,
+      "source_config_freeze": "523ec15; configs/stage9-belief-frozen-*.json",
       "actual_gpu_seconds": 0,
       "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
     },
@@ -50,7 +51,7 @@
       "comparison": "Equal-capacity probes across field/memory/initial/1/4/16/32 states; paired once/persistent",
       "selection_and_untouched_test": "Disjoint probe training/calibration/test; no repair selected on historical tests",
       "gpu_minutes_cap": 25,
-      "source_config_freeze": null,
+      "source_config_freeze": "53f05b5; configs/stage9-return-frozen-probes.json; full-grid diagnostic479b217",
       "actual_gpu_seconds": 0,
       "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
     },
