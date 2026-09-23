@@ -29,3 +29,7 @@ S01 distinguishes nested corpus audits from completed scaling arms and proposes 
 A01 explicitly supplies reverse-path dynamic programming and all-node intermediate supervision to all arms. This tests propagation interfaces rather than learned planning. Strong message passing and keyed graph context are appropriate comparators. Requested explicit continuation decisions rather than an ambiguous 'losses improve' rule, clearly labeled zero-lambda ablation, and corruption normalization/serialization that preserves equivalent supplied information.
 
 These are protocol-level findings. Source preflight, resource profiling and coordinator release remain pending.
+
+### R01 source preflight
+
+Source `da66531` verifies the independently audited Stage11 wide-backbone checkpoint SHA, freezes the backbone and non-value heads, captures paired event features, and enforces split-hash disjointness. Ridge and CE consume identical TRAIN-standardized workspace features; CE warm-start equivalence is asserted. Only calibration scores choose regularization/checkpoints, with declared worst-cell then pooled tie-breaking. Development rejects delay32 outright. Mechanical profile seeds overlap subsequent fit/calibration only, not the untouched development validation seed. No source-level blocker to the bounded profile/development release; no confirmation or composition claim follows from this check.
