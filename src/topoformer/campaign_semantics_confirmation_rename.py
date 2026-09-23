@@ -17,6 +17,7 @@ def run(config):
     dataset=Dataset(rows,vocab);out=Path(config['output_dir']);out.mkdir(parents=True,exist_ok=False);records=[]
     for entry in config['runs']:
         root=Path(entry['directory']);manifest=json.load(gzip.open(root/'manifest.json.gz','rt'));endpoint=next(c for c in manifest['curves'] if c['update']==24576)
+        if digest(config['data_audit'])!=manifest['data_audit_sha256']:raise ValueError('inherited vocabulary/data audit changed')
         if manifest['config']['seed']!=entry['seed'] or manifest['config']['learning_rate']!={'constant':1e-4,'decay':1e-5}[entry['arm']]:raise ValueError('wrong paired endpoint')
         checkpoint=root/'model-u24576.pt';evaluation=root/endpoint['artifact']
         if digest(checkpoint)!=endpoint['checkpoint_sha256'] or digest(evaluation)!=endpoint['sha256']:raise ValueError('endpoint bytes changed')
