@@ -57,6 +57,7 @@ def evaluate(model, config, output, label, *, device):
             if order is not None: result=restore_node_order(result,order)
             # Path agreement and values remain relative to the original clean graph.
             scores = metrics(result, gold, batch)
+            scores['supplied_edge_mass'] = result['edge_mass'].mean((1,2))
             majority = F.one_hot(batch.values,16).sum(1).argmax(-1)
             target_start = gold[:,-1].gather(1,batch.starts[:,None]).squeeze(1)
             scores['public_payload_majority'] = majority == target_start
