@@ -82,3 +82,12 @@ def test_public_id_features_are_consumed_by_both_modes():
         assert torch.equal(first[...,:-16],second[...,:-16])
         assert not torch.equal(first[...,-16:],second[...,-16:])
         assert torch.equal(baseline[:,0],altered[:,0])
+
+
+def test_idmatched_arms_share_parameter_initialization():
+    torch.manual_seed(79)
+    a=BeliefModel('protected',width=32,inner=64,observation_id_features=True)
+    torch.manual_seed(79)
+    b=BeliefModel('recurrent',width=32,inner=64,observation_id_features=True)
+    assert a.state_dict().keys()==b.state_dict().keys()
+    assert all(torch.equal(value,b.state_dict()[name]) for name,value in a.state_dict().items())
