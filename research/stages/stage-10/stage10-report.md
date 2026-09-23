@@ -12,7 +12,13 @@ See [design](stage10-design.md), [registry](stage10-registry.json), and [indepen
 
 ## Belief invariance
 
-Main results pending. The development acquisition check passed for both repairs, but randomized-ID predictions still changed under renaming despite correct final proposals. The main gate therefore retains framewise posterior fidelity, impossible mass and intermediate retractions rather than substituting answer accuracy.
+Both repairs pass every registered validation cell across all three initialization seeds: 90 required N8/N16 cells and 45 separately reported N32 cells per arm. The correlated-ID control fails expanded ID stress conditions; its final replicate and the untouched-test summary are still being finalized.
+
+The content-only arm retains IDs as ledger addresses but zeros their neural feature coordinates. Its posterior is exactly unchanged under consistent observation-ID renaming. This invariance is architectural; content compatibility is learned. Independent randomized-ID training also acquires the mean posterior contract, but does not supply exact invariance.
+
+A concrete randomized-training tail illustrates the distinction. For seed20, test N8 renaming changes an individual posterior coordinate by as much as .66490. Twelve of512 episodes exceed .01 maximum change, three exceed .05, and two exceed .1. All final argmaxes remain correct. In the largest case all renamed IDs were seen in training; the error is an intermediate posterior that spreads mass onto two impossible ordinary candidates before later evidence resolves the answer. This descriptive tail analysis does not retrospectively alter the registered mean-metric gate.
+
+The supplied prior and exact insertion/removal ledger are common to all arms. No result here establishes learned retraction bookkeeping in the unrestricted recurrent comparator, open-world probability semantics, or language grounding. The observed role-separation advantage concerns opaque observation handles in this typed, noiseless interface.
 
 ## Returned scalar access across time
 
