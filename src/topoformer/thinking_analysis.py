@@ -117,7 +117,7 @@ def controlled_cell(row):
         if key in row and row[key] is not None and value is not None and not math.isclose(value,row[key],abs_tol=1e-7):raise ValueError('inconsistent stored metric '+key)
     return dict(seed=row['seed'],metrics=metrics,counts=dict(counts),calibration=calibration(row.get('readiness_calibration',[])),
         data_hash=digest([(e.get('input_hash'),e.get('data_hash')) for e in row['examples']]),initial_hash=row.get('initial_hash'),
-        compute_cap=row.get('compute_cap'),microstep_histogram=dict(histogram))
+        compute_cap=row.get('compute_cap'),microstep_histogram=dict(histogram),observation_protocol=row.get('observation_protocol'))
 
 
 def aggregate(items):
@@ -125,7 +125,7 @@ def aggregate(items):
     counts=Counter();histogram=Counter()
     for item in items:
         counts.update(item.get('counts',{}));histogram.update(item.get('microstep_histogram',{}))
-    return dict(seeds=sorted(x['seed'] for x in items),metrics={k:describe([x['metrics'].get(k) for x in items]) for k in sorted(metrics)},counts=dict(counts),microstep_histogram=dict(histogram))
+    return dict(observation_protocols=sorted({x['observation_protocol'] for x in items if x.get('observation_protocol')}),seeds=sorted(x['seed'] for x in items),metrics={k:describe([x['metrics'].get(k) for x in items]) for k in sorted(metrics)},counts=dict(counts),microstep_histogram=dict(histogram))
 
 
 def contrasts(groups, reference, fields):
@@ -136,21 +136,22 @@ def contrasts(groups, reference, fields):
         matched=sorted(left.keys()&right.keys())
         metrics=set().union(*(left[s]['metrics'].keys()&right[s]['metrics'].keys() for s in matched)) if matched else set()
         differences={m:describe([left[s]['metrics'][m]-right[s]['metrics'][m] for s in matched if left[s]['metrics'][m] is not None and right[s]['metrics'][m] is not None]) for m in sorted(metrics)}
-        output.append(dict(zip(fields,key),reference=reference,seeds=matched,unmatched_seeds=sorted(left.keys()^right.keys()),differences=differences))
+        output.append(dict(zip(fields,key),reference=reference,seeds=matched,unmatched_seeds=sorted(left.keys()^right.keys()),differences=differences,matched_observation_protocol=(all(left[s].get('observation_protocol')==right[s].get('observation_protocol') for s in matched) if matched and all(left[s].get('observation_protocol') and right[s].get('observation_protocol') for s in matched) else None)))
     return output
 
 
 def summarize_controlled(rows):
-    groups=defaultdict(list);training=defaultdict(list);seen=set();sources=set();initials={};data={};schedules={};training_seen=set()
+    groups=defaultdict(list);training=defaultdict(list);seen=set();sources=set();initials={};data={};schedules={};training_seen=set();objectives=set()
     for row in rows:
         if row['kind']=='training':
             train_id=(row['variant'],row['seed'],row['step'])
             if train_id in training_seen:raise ValueError('duplicate training row')
             training_seen.add(train_id)
+            if row.get('objective'):objectives.add(row['objective'])
             key=row['variant'],row['step'];identity=(row['seed'],row['step'])
             if identity in schedules and schedules[identity]!=row.get('data_hash'):raise ValueError('unpaired training data')
             schedules[identity]=row.get('data_hash')
-            training[key].append(dict(seed=row['seed'],metrics={**{'loss_'+k:v for k,v in row['losses'].items()},**{'weight_'+k:v for k,v in row.get('auxiliary_weights',{}).items()},**({'train_seconds':row['train_seconds']} if 'train_seconds' in row else {})}));continue
+            training[key].append(dict(seed=row['seed'],metrics={**{'loss_'+k:v for k,v in row['losses'].items()},**{'weight_'+k:v for k,v in row.get('auxiliary_weights',{}).items()},**({'train_seconds':row['train_seconds']} if 'train_seconds' in row else {}),**({'auxiliary_teacher_forcing_rate':float(row['auxiliary_teacher_forcing'])} if 'auxiliary_teacher_forcing' in row else {})}));continue
         if row['kind']!='evaluation':raise ValueError('unknown row kind')
         key=(row['variant'],row.get('condition','depth'),row['step'],row['depth'],row.get('intervention','none'))
         identity=(*key,row['seed'])
@@ -172,7 +173,7 @@ def summarize_controlled(rows):
         interventions.extend(contrasts(paired,'control',fields))
     return dict(track='controlled_execution',aggregates=[c for c in cells if c['condition']!='oracle_trace'],privileged_oracles=[c for c in cells if c['condition']=='oracle_trace'],paired_contrasts=contrasts(groups,'local',fields),frozen_intervention_contrasts=interventions,
         curves=[dict(variant=v,step=s,**aggregate(items)) for (v,s),items in sorted(training.items())],
-        provenance=dict(source_hashes=sorted(s for s in sources if s),initial_hashes=initials,evaluation_cells=len(seen),training_schedule_steps=len(schedules)),
+        provenance=dict(source_hashes=sorted(s for s in sources if s),initial_hashes=initials,evaluation_cells=len(seen),training_schedule_steps=len(schedules),training_objectives=sorted(objectives)),
         caveats=['Supplied progressively disclosed interface is not TCN language induction.',
                  'Exact runtime semantics are supplied; task outputs are learned.',
                  'Readiness risk is 1 minus posterior target among accepted proposals, not task error.',
@@ -185,29 +186,70 @@ def summarize_controlled(rows):
 
 
 def summarize_language(rows, losses=()):
-    groups=defaultdict(list);seen=set()
+    groups=defaultdict(list);seen=set();initials={};data_hashes=set();config_hashes=set();provenance_rows=0;total_rows=0
+    def record_identity(row):
+        if row.get('initial_hash'):
+            seed=row['seed']
+            if seed in initials and initials[seed]!=row['initial_hash']:raise ValueError('unpaired language initialization')
+            initials[seed]=row['initial_hash']
+        if row.get('data_hash'):data_hashes.add(row['data_hash'])
+        if row.get('config_hash'):config_hashes.add(row['config_hash'])
+        if len(data_hashes)>1 or len(config_hashes)>1:raise ValueError('mixed language data/config identity')
     for row in rows:
+        record_identity(row);total_rows+=1
+        provenance_rows+=int(all(row.get(k) for k in ('initial_hash','data_hash','config_hash')))
         for renderer,cell in row['evaluation'].items():
             key=(row['arm'],renderer,row['step']);identity=(*key,row['seed'])
             if identity in seen:raise ValueError('duplicate language evaluation')
             seen.add(identity)
-            metrics={k:v for k,v in cell.items() if isinstance(v,(int,float)) and not k.startswith('oracle_')}
+            metrics={k:v for k,v in cell.items() if (v is None or isinstance(v,(int,float))) and not k.startswith('oracle_')}
             metrics.update({'task_'+k:v for k,v in cell.get('per_task_accuracy',{}).items()})
-            groups[key].append(dict(seed=row['seed'],metrics=metrics,counts={'examples':sum(cell.get('task_counts',{}).values()),**cell.get('task_counts',{})},oracles={k:v for k,v in cell.items() if k.startswith('oracle_')}))
-    curves=defaultdict(list)
-    for row in losses:curves[(row['arm'],row['step'])].append(dict(seed=row['seed'],metrics={'loss':row['loss'],**row.get('parts',{})}))
+            counts={'examples':sum(cell.get('task_counts',{}).values()),**{'task_'+k:v for k,v in cell.get('task_counts',{}).items()}}
+            for kind,populations in cell.get('graph_counts',{}).items():
+                if any(not isinstance(v,int) or v<0 for v in populations.values()):raise ValueError('invalid graph counts')
+                if populations['true_positive']>min(populations['predicted_count'],populations['gold_count']):raise ValueError('invalid graph true positives')
+                counts.update({kind+'_'+k:v for k,v in populations.items()})
+            for kind,defined in cell.get('graph_defined_examples',{}).items():
+                counts.update({kind+'_'+metric+'_defined_examples':v for metric,v in defined.items()})
+            groups[key].append(dict(seed=row['seed'],metrics=metrics,counts=counts,oracles={k:v for k,v in cell.items() if k.startswith('oracle_')}))
+    curves=defaultdict(list);loss_seen=set()
+    for row in losses:
+        record_identity(row);key=(row['arm'],row['seed'],row['step'])
+        if key in loss_seen:raise ValueError('duplicate language loss row')
+        loss_seen.add(key)
+        curves[(row['arm'],row['step'])].append(dict(seed=row['seed'],metrics={'loss':row['loss'],**row.get('parts',{})}))
     fields=('variant','renderer','step');cells=[]
     for key,items in sorted(groups.items()):
-        oracles=set().union(*(x['oracles'] for x in items))
-        cells.append(dict(zip(fields,key),**aggregate(items),privileged_baselines={k:describe([x['oracles'].get(k) for x in items]) for k in sorted(oracles)}))
+        oracles=set().union(*(x['oracles'] for x in items));cell=aggregate(items);counts=cell['counts'];pooled={}
+        for kind in ('node','typed_edge'):
+            if all(kind+'_true_positive' in item['counts'] for item in items):
+                pooled[kind+'_precision']=ratio(counts[kind+'_true_positive'],counts[kind+'_predicted_count'])
+                pooled[kind+'_recall']=ratio(counts[kind+'_true_positive'],counts[kind+'_gold_count'])
+        cells.append(dict(zip(fields,key),**cell,pooled_graph_rates=pooled,privileged_baselines={k:describe([x['oracles'].get(k) for x in items]) for k in sorted(oracles)}))
     return dict(track='tcn_semantic_decoder',aggregates=cells,paired_contrasts=contrasts(groups,'single_pass',fields),
+        provenance=dict(initial_hashes=initials,data_hashes=sorted(data_hashes),config_hashes=sorted(config_hashes),evaluation_rows=total_rows,rows_with_complete_identity=provenance_rows),
         curves=[dict(variant=v,step=s,**aggregate(items)) for (v,s),items in sorted(curves.items())],
         caveats=['Graph decoder scores are separate from controlled runtime execution.',
                  'Canonical node alignment and lexical hash fidelity are supplied representation choices.',
                  'Spanish is exposed in the consistency arm; symbols are withheld.',
                  'No heldout lexical or motif claim without an explicitly evaluated split.',
-                 'Decoder precision/recall are example macro averages; raw edge/node denominators are not available.',
+                 'Decoder metrics are per-example macro averages; pooled_graph_rates are separately computed only when raw populations exist.',
+                 'Old pilots with no graph_counts use producer zero-denominator convention, which cannot be reconstructed.',
                  'Oracle position majority uses heldout labels and is privileged.'])
+
+
+def audit_language(data, manifest, root):
+    modern='config_hash' in data
+    expected_data=data.get('examples',[])+(data.get('renamed_examples',[]) if modern else [])
+    checkpoint_expected={r['checkpoint']:r['checkpoint_sha256'] for r in manifest.get('runs',[]) if r.get('checkpoint_sha256')}
+    return dict(data_hash_matches=data.get('data_hash')==digest(expected_data),
+        config_hash_matches=data.get('config_hash')==digest(data.get('config',{})) if modern else None,
+        manifest_data_hash_matches=manifest.get('data_hash')==data.get('data_hash') if manifest else None,
+        manifest_config_hash_matches=manifest.get('config_hash')==data.get('config_hash') if manifest else None,
+        semantic_split_disjoint=not(set(data.get('semantic_train',[]))&set(data.get('semantic_eval',[]))),
+        checkpoint_hashes=verify_files(checkpoint_expected,root) if checkpoint_expected else None,
+        producer_run_manifest_present=bool(manifest.get('runs')),
+        denominator_semantics='undefined_is_null_with_raw_counts' if modern else 'legacy_zero_undefined_no_raw_counts')
 
 
 def coverage_audit(summary, config):
@@ -282,14 +324,17 @@ def main():
         audit['manifest_source_hash_matches']=manifest.get('source_hash')==digest(manifest.get('sources',{}))
         audit['row_source_hash_matches']=summary['provenance']['source_hashes']==[manifest.get('source_hash')]
     else:
-        audit['data_hash_matches']=manifest.get('data_hash')==digest(manifest.get('examples',[]))
-        audit['semantic_split_disjoint']=not(set(manifest.get('semantic_train',[]))&set(manifest.get('semantic_eval',[])))
+        run_manifest_path=root/'manifest.json'
+        run_manifest=json.loads(run_manifest_path.read_text()) if run_manifest_path.exists() else {}
+        audit.update(audit_language(manifest,run_manifest,root))
+        audit['row_data_hash_matches']=summary['provenance']['data_hashes']==[manifest.get('data_hash')] if summary['provenance']['data_hashes'] else None
+        audit['row_config_hash_matches']=summary['provenance']['config_hashes']==[manifest.get('config_hash')] if summary['provenance']['config_hashes'] else None
         summary['caveats'].extend(manifest.get('limitations',[]))
     if args.source_root:
         source_root=args.source_root if args.track=='controlled' else args.source_root/'src'/'topoformer'
         audit['sources']=verify_files(manifest.get('sources',manifest.get('source_hashes',{})),source_root)
     audit['checkpoints']={p.name:dict(sha256=file_hash(p),bytes=p.stat().st_size) for p in sorted(root.glob('*.pt'))}
-    audit['checkpoint_note']='Recorded hashes identify artifacts; no expected checkpoint digest exists unless supplied by producer.'
+    audit['checkpoint_note']='Recorded hashes identify artifacts; independent producer checkpoint digests are checked when the run manifest supplies them.'
     summary.update(schema_version=6,audit=audit,artifact=dict(path=str(path),sha256=file_hash(path),bytes=path.stat().st_size),analysis_sha256=file_hash(__file__))
     args.output.mkdir(parents=True,exist_ok=True)
     (args.output/'summary.json').write_text(json.dumps(summary,indent=2,allow_nan=False)+'\n')

@@ -73,6 +73,43 @@ class AnalysisTests(unittest.TestCase):
         self.assertFalse(audit['complete'])
         self.assertEqual(len(audit['missing']),3)
 
+    def test_language_micro_counts_null_metrics_and_hash_mismatch(self):
+        row1=dict(seed=1,arm='single_pass',step=0,initial_hash='init1',data_hash='data',config_hash='config',
+            evaluation={'symbols':dict(node_precision=None,node_recall=0.,task_counts={'a':2},
+            graph_counts={'node':dict(true_positive=0,predicted_count=0,gold_count=5)},
+            graph_defined_examples={'node':dict(precision=0,recall=2)})})
+        result=a.summarize_language([row1])
+        cell=result['aggregates'][0]
+        self.assertIsNone(cell['metrics']['node_precision']['mean'])
+        self.assertIsNone(cell['pooled_graph_rates']['node_precision'])
+        self.assertEqual(cell['pooled_graph_rates']['node_recall'],0.)
+        self.assertEqual(cell['counts']['node_gold_count'],5)
+        self.assertEqual(cell['counts']['node_precision_defined_examples'],0)
+        bad=dict(row1,arm='recurrent',initial_hash='different')
+        with self.assertRaises(ValueError):a.summarize_language([row1,bad])
+
+    def test_language_manifest_checks_renamed_data_and_checkpoints(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);(root/'model.pt').write_bytes(b'checkpoint')
+            audit=dict(examples=[{'id':1}],renamed_examples=[{'id':2}],config={'seeds':[1]},
+                       semantic_train=['train'],semantic_eval=['eval'])
+            audit['data_hash']=a.digest(audit['examples']+audit['renamed_examples'])
+            audit['config_hash']=a.digest(audit['config'])
+            manifest=dict(data_hash=audit['data_hash'],config_hash=audit['config_hash'],
+                runs=[dict(seed=1,arm='single_pass',initial_hash='init',checkpoint='model.pt',checkpoint_sha256=a.file_hash(root/'model.pt'))])
+            result=a.audit_language(audit,manifest,root)
+            self.assertTrue(result['data_hash_matches'])
+            self.assertTrue(result['checkpoint_hashes']['ok'])
+            (root/'model.pt').write_bytes(b'changed')
+            self.assertFalse(a.audit_language(audit,manifest,root)['checkpoint_hashes']['ok'])
+
+    def test_controlled_protocol_difference_is_explicit(self):
+        left=row();left['observation_protocol']='progressive_exogenous_context'
+        right=row(1,'neural_recurrent');right['observation_protocol']='complete_from_start'
+        result=a.summarize_controlled([left,right])
+        self.assertFalse(result['paired_contrasts'][0]['matched_observation_protocol'])
+        self.assertEqual(result['aggregates'][0]['observation_protocols'],['progressive_exogenous_context'])
+
     def test_file_hash_audit_and_stream(self):
         with tempfile.TemporaryDirectory() as d:
             path=Path(d)/'x.jsonl';path.write_text('{"n":1}\n\n{"n":2}\n')
