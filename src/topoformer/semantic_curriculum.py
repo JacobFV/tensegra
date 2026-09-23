@@ -203,7 +203,7 @@ def run(config):
     (output/'manifest.json').write_text(json.dumps(manifest,indent=2))
     records=[]
     def record(model,arm,seed,seen,exposure,tokens,start):
-        row=dict(arm=arm,seed=seed,optimizer_presentations=exposure,actual_unique_graphs_seen=len(seen),
+        row=dict(arm=arm,seed=seed,optimizer_updates=exposure//batch_size,optimizer_presentations=exposure,actual_unique_graphs_seen=len(seen),
                  available_unique_graphs=train_count,public_tokens_seen=tokens,feature_tokens_consumed=exposure if arm=='no_input' else tokens,elapsed_seconds=time.monotonic()-start,
                  renderer_exposure={'english':(exposure+1)//2,'spanish':exposure//2},evaluation={})
         if arm=='frequency': row.update(fit_label_presentations=2*train_count,actual_unique_graphs_seen=train_count,renderer_exposure={'english':train_count,'spanish':train_count})
