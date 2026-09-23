@@ -9,9 +9,13 @@ for name,want in sources.items():assert hashlib.sha256(subprocess.check_output([
 cells=[]
 for f in sorted(a.root.glob('eval-*.npz')):
  raw=np.load(f);reported=json.loads(f.with_suffix('.json').read_text())
+ step=int(f.stem.split('-')[1]);curve=step<cfg['steps']and 'curve_seed'in cfg
+ assert reported['eval_seed']==cfg['curve_seed'if curve else'eval_seed']
+ assert reported['eval_examples']==cfg['curve_examples'if curve else'eval_examples']
+ if curve or 'conditions'in cfg:assert [r['condition']for r in reported['rows']]==cfg['curve_conditions'if curve else'conditions']
  for ci,row in enumerate(reported['rows']):
   get=lambda k:raw[f'c{ci}_{k}'];pred,gold=get('pred'),get('gold');route,start,rel,succ=get('route'),get('start'),get('relation'),get('successor');b,d,n=pred.shape;bi=np.arange(b)
-  assert b==row['examples']==cfg['eval_examples'];assert rel.shape==(b,d)and succ.shape==(b,3,n)
+  assert b==row['examples']==reported['eval_examples'];assert rel.shape==(b,d)and succ.shape==(b,3,n)
   correct=pred==gold;values=dict(task=correct[:,-1][bi,start],all_node=correct.mean((1,2)),suffix_value_trajectory=correct.all((1,2)))
   # Gold suffix state t must follow its current public relation from state t-1.
   for t in range(1,d):assert np.array_equal(gold[:,t],np.take_along_axis(gold[:,t-1],succ[bi,rel[:,d-1-t]],axis=1))
@@ -21,5 +25,7 @@ for f in sorted(a.root.glob('eval-*.npz')):
   values['exact_pointer_path']=path
   for key,v in values.items():np.testing.assert_allclose(v,get(key),atol=1e-7,rtol=1e-6);assert abs(float(v.mean())-row[key])<1e-6
   mass=get('edge_mass');assert np.all((mass>=-1e-6)&(mass<=1+1e-6));assert abs(float(mass.mean())-row['edge_mass'])<1e-6
+  if f'c{ci}_supplied_edge_mass'in raw:
+   supplied=get('supplied_edge_mass');assert np.all((supplied>=-1e-6)&(supplied<=1+1e-6));assert abs(float(supplied.mean())-row['supplied_edge_mass'])<1e-6
   cells.append(dict(artifact=f.name,condition=row['condition'],examples=b,task_correct=int(values['task'].sum()),pointer_correct=int(path.sum()),suffix_correct=int(values['suffix_value_trajectory'].sum())))
 out=dict(cpu_audit_wall_seconds=time.monotonic()-started,source_ref=a.source_ref,mode=cfg['mode'],cells=cells,scope='Task, all-node, suffix and mean-head-argmax path reconstructed. Edge-mass mean/bounds checked only; compact archive does not contain attention weights. No inference rerun.');a.output.write_text(json.dumps(out,indent=2)+'\n');print(dict(cells=len(cells),cpu_seconds=out['cpu_audit_wall_seconds']))
