@@ -37,3 +37,6 @@ S02 head-only continuation failed fixedset exactfit and declined aftermidpoint; 
 ## R05 pre-outcome contract correction
 
 Before any R05profile/training/outcomes, exact known query-onlyBayesprior was independently derived as4324/5445=79.4123049%. The original20ppdrop draft leaves only.5877ppbelowperfectperformance, inconsistent with>95%developmentacquisition. Versionedamendmentretainsdraftinhistory andrequires15ppdrop plus≥80%ofmatchedoracle-minus-querycleanbenefit, positiveoraclebenefit, andunchanged90%agreementwithsuppliedfactonchangedanswerinterventions. This is pre-outcomeanalyticalcontractrepair, notoutcome-tunedrelaxation. Furthercompositionentry≥98%x3unchanged.
+
+## S04 endpoint: stop exposure-only branch
+The fixed262,144-presentation endpoint retains0/512exactgraphs and regresses oncopy/calibratedorderedF1 fromthe196,608checkpoint. Preserveboth; do notreplace thedeclaredendpointwitha bestcheckpoint. Longerconstant-recipe exposure is no longer the most discriminating next run. CPU-reviewed S06 changesonly the public-text state path whilekeeping existingblocks/heads/objective; profileactualcostbeforemainallocation. R05three-seedconfirmationreleasednext; attention/P01profilesmaintainindependenttrackprogress.
