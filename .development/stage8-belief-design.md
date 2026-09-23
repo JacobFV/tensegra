@@ -54,3 +54,18 @@ Only timing configuration is currently supplied; it is **not a scientific main
 run**. Primary training budget awaits CUDA measurement and root approval. Tests
 use explicitly reduced dimensions solely for contract checks. No local Torch
 training is used. Initial four remote unit tests passed; full review pending.
+
+## Hardware timing (not acquisition)
+
+Six contract tests pass remotely. CUDA 2.14/cu130 on GB10 completed two optimizer
+updates for each arm sequentially at width1024 / inner2048 / batch4. Both arms
+have 16,851,011 total parameters. Peak allocated CUDA memory was 404,143,616 bytes
+(protected) and 404,162,048 bytes (recurrent). The second warm update plus eight
+probe examples took about 0.028 and 0.040 seconds, respectively; two updates plus
+initial/intermediate probes took about 0.73 seconds. These tiny timings are only
+hardware feasibility checks, not performance estimates for main batches/evaluation.
+
+Timing ran in isolated `/tmp/stage8-belief-tests`; its manifest git hash denotes
+that temporary snapshot, while per-file source SHA256 identifies actual code.
+Raw timing/config/metric JSON is committed under results/stage8/belief-timing.
+No acquisition conclusion or gate decision follows from two updates.
