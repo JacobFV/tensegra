@@ -1,0 +1,408 @@
+{
+  "source_commit": "4c36557",
+  "archive": "results/stage6/language",
+  "archive_hashes": {
+    "data-audit.json": "4a94bdd5cb574c2cb1c7c9ac468735decefdccdd25a4fb580ae94de24e3388d3",
+    "curves.jsonl.gz": "a9c18103a6cdde83d29141399832540f48767f29c627f41a6d65eca38a1e9740",
+    "manifest.json": "12152112ebd9de221f0752a5db23dedef6356177ce02a817bfc27e5e536d146f"
+  },
+  "procedure": "Regenerate constructions and public option shuffle; verify graph/surface/source hashes; join predictions from archived curves; no inference.",
+  "selection": "First logged final-step failure for each specified arm/lesson/renderer, ordered by model seed.",
+  "limitations": [
+    "Failure buffers contain at most the first five errors per evaluation cell; selected examples are not a random sample.",
+    "Repeated surfaces share constructions, so repeated failures are correlated.",
+    "Recorded failure counts are not full prediction histograms or estimates of label preference prevalence.",
+    "No training-frequency comparison or causal shortcut test was performed."
+  ],
+  "examples": [
+    {
+      "arm": "semantic_supervision",
+      "model_seed": 7,
+      "step": 256,
+      "lesson": "variable_binding",
+      "renderer": "english",
+      "actual_language": "english",
+      "generator_seed": 610240,
+      "evaluation_index": 0,
+      "choice_shuffle_seed": 100007,
+      "semantic_digest": "5117ede130ed8dae3e9510fc8a4555a4ba2dc583b1d8dc885d94fc967e6788a1",
+      "surface_sha256": "8a11ed2c117c7512315545d90ddf741a84746b1127099f712684c8c05cfcd4dc",
+      "identifier_renaming": {},
+      "text": "The substitution is: D bind alice; A bind carol; B bind erin; E bind bob.\nWhat is the value of D?",
+      "options": [
+        "erin",
+        "bob",
+        "dave",
+        "frank",
+        "carol",
+        "alice"
+      ],
+      "expected": "alice",
+      "recorded_prediction": "erin"
+    },
+    {
+      "arm": "semantic_supervision",
+      "model_seed": 7,
+      "step": 256,
+      "lesson": "unification",
+      "renderer": "spanish",
+      "actual_language": "spanish",
+      "generator_seed": 610241,
+      "evaluation_index": 1,
+      "choice_shuffle_seed": 100008,
+      "semantic_digest": "ef3e142717873945ac02d08454eb1fb5657f5c8592b67377a3203351c170246b",
+      "surface_sha256": "8c202098ba19055fcb9e71459ca0f8750439cac1f8280de94fc605be82a64e63",
+      "identifier_renaming": {},
+      "text": "Se conocen estos hechos: es padre de: carol, dave, erin y erin; es padre de: carol, dave, erin y frank; es padre de: carol, alice, bob y frank.\nEl patrón es es padre de: carol, A, erin y frank.\n¿Qué unifica: A?",
+      "options": [
+        "dave",
+        "alice",
+        "carol",
+        "frank",
+        "bob",
+        "erin"
+      ],
+      "expected": "dave",
+      "recorded_prediction": "erin"
+    },
+    {
+      "arm": "semantic_supervision",
+      "model_seed": 7,
+      "step": 256,
+      "lesson": "set_operations",
+      "renderer": "symbols",
+      "actual_language": "symbols",
+      "generator_seed": 610242,
+      "evaluation_index": 2,
+      "choice_shuffle_seed": 100009,
+      "semantic_digest": "d3a3d2b6a89b8a7d1e01337ec405771ac0c4188bc4a817c3f0affe017f576fe0",
+      "surface_sha256": "5c81c97968784089bda4f5a351d25a71451fcc3e30eb23326f80e9cd5818b276",
+      "identifier_renaming": {},
+      "text": "{query: (select (and (not (color blue)) (shape sphere))), scene: [(obj o1 green sphere) (obj o0 blue sphere) (obj o3 blue cube) (obj o2 green cube)]}",
+      "options": [
+        "o1",
+        "o0",
+        "o2",
+        "o3"
+      ],
+      "expected": "o1",
+      "recorded_prediction": "o3"
+    },
+    {
+      "arm": "multisurface_consistency",
+      "model_seed": 7,
+      "step": 256,
+      "lesson": "variable_binding",
+      "renderer": "spanish",
+      "actual_language": "spanish",
+      "generator_seed": 610240,
+      "evaluation_index": 0,
+      "choice_shuffle_seed": 100007,
+      "semantic_digest": "5117ede130ed8dae3e9510fc8a4555a4ba2dc583b1d8dc885d94fc967e6788a1",
+      "surface_sha256": "5b52720108d41418419a989c82f5ee911cb57594f6225fda295d78bc32e3c545",
+      "identifier_renaming": {},
+      "text": "La sustitución es: D está ligado a alice; A está ligado a carol; B está ligado a erin; E está ligado a bob.\n¿Qué valor: D?",
+      "options": [
+        "erin",
+        "bob",
+        "dave",
+        "frank",
+        "carol",
+        "alice"
+      ],
+      "expected": "alice",
+      "recorded_prediction": "dave"
+    },
+    {
+      "arm": "multisurface_consistency",
+      "model_seed": 7,
+      "step": 256,
+      "lesson": "unification",
+      "renderer": "symbols",
+      "actual_language": "symbols",
+      "generator_seed": 610244,
+      "evaluation_index": 4,
+      "choice_shuffle_seed": 100011,
+      "semantic_digest": "a9b14d14699adbb055e89cc4b0fb25d22723fe672b019c394e38ca372fdc4b9c",
+      "surface_sha256": "18809b4a8771eb782b88aa525111c83a5f125917ec22798eb3c3fdf6e020661e",
+      "identifier_renaming": {},
+      "text": "{facts: [(parent frank dave carol bob) (parent frank dave alice carol) (parent dave dave bob carol) (parent dave dave bob carol)], pattern: (parent frank dave B carol), query: (unify B)}",
+      "options": [
+        "bob",
+        "erin",
+        "dave",
+        "frank",
+        "alice",
+        "carol"
+      ],
+      "expected": "alice",
+      "recorded_prediction": "dave"
+    },
+    {
+      "arm": "multisurface_consistency",
+      "model_seed": 7,
+      "step": 256,
+      "lesson": "set_operations",
+      "renderer": "unseen_lexical",
+      "actual_language": "english",
+      "generator_seed": 610242,
+      "evaluation_index": 2,
+      "choice_shuffle_seed": 100009,
+      "semantic_digest": "e51917226fd3fc1212f9360ecbfceed8b5010938c4b6e809bd7bb5785649360c",
+      "surface_sha256": "44b7f3a7be36c46782660f784d2ee0765100802d6d9e2687437569cf4ab02c19",
+      "identifier_renaming": {
+        "o2": "novelentity0",
+        "o3": "novelentity1",
+        "o1": "novelentity2",
+        "o0": "novelentity3"
+      },
+      "text": "In the scene: novelentity2 is a green sphere; novelentity3 is a blue sphere; novelentity1 is a blue cube; novelentity0 is a green cube.\nWhat select does not colour blue and shape sphere?",
+      "options": [
+        "novelentity2",
+        "novelentity3",
+        "novelentity0",
+        "novelentity1"
+      ],
+      "expected": "novelentity2",
+      "recorded_prediction": "novelentity3"
+    }
+  ],
+  "logged_failure_prediction_counts": [
+    {
+      "arm": "semantic_supervision",
+      "seed": 7,
+      "renderer": "english",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "semantic_supervision",
+      "seed": 7,
+      "renderer": "spanish",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "semantic_supervision",
+      "seed": 7,
+      "renderer": "symbols",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "semantic_supervision",
+      "seed": 7,
+      "renderer": "unseen_lexical",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "novelentity3": 5
+      }
+    },
+    {
+      "arm": "multisurface_consistency",
+      "seed": 7,
+      "renderer": "english",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "dave": 3,
+        "o3": 2
+      }
+    },
+    {
+      "arm": "multisurface_consistency",
+      "seed": 7,
+      "renderer": "spanish",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "dave": 3,
+        "o3": 2
+      }
+    },
+    {
+      "arm": "multisurface_consistency",
+      "seed": 7,
+      "renderer": "symbols",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "dave": 3,
+        "o3": 2
+      }
+    },
+    {
+      "arm": "multisurface_consistency",
+      "seed": 7,
+      "renderer": "unseen_lexical",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "novelentity3": 5
+      }
+    },
+    {
+      "arm": "semantic_supervision",
+      "seed": 19,
+      "renderer": "english",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "semantic_supervision",
+      "seed": 19,
+      "renderer": "spanish",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "semantic_supervision",
+      "seed": 19,
+      "renderer": "symbols",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "semantic_supervision",
+      "seed": 19,
+      "renderer": "unseen_lexical",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "novelentity5": 4,
+        "novelentity2": 1
+      }
+    },
+    {
+      "arm": "multisurface_consistency",
+      "seed": 19,
+      "renderer": "english",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "multisurface_consistency",
+      "seed": 19,
+      "renderer": "spanish",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "multisurface_consistency",
+      "seed": 19,
+      "renderer": "symbols",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "multisurface_consistency",
+      "seed": 19,
+      "renderer": "unseen_lexical",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "novelentity5": 4,
+        "novelentity2": 1
+      }
+    },
+    {
+      "arm": "semantic_supervision",
+      "seed": 43,
+      "renderer": "english",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "semantic_supervision",
+      "seed": 43,
+      "renderer": "spanish",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "semantic_supervision",
+      "seed": 43,
+      "renderer": "symbols",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "semantic_supervision",
+      "seed": 43,
+      "renderer": "unseen_lexical",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "novelentity3": 5
+      }
+    },
+    {
+      "arm": "multisurface_consistency",
+      "seed": 43,
+      "renderer": "english",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "multisurface_consistency",
+      "seed": 43,
+      "renderer": "spanish",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "multisurface_consistency",
+      "seed": 43,
+      "renderer": "symbols",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "erin": 4,
+        "o3": 1
+      }
+    },
+    {
+      "arm": "multisurface_consistency",
+      "seed": 43,
+      "renderer": "unseen_lexical",
+      "recorded_failures": 5,
+      "predicted_counts": {
+        "novelentity0": 5
+      }
+    }
+  ]
+}
