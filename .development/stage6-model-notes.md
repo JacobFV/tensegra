@@ -1,0 +1,43 @@
+# Stage 6 recurrent model
+
+`thinking.py` supplies `ThinkingConfig` and `ThinkingModel`. Defaults are width 32,
+four heads (two free, two structural), eight distributed workspace rows, two
+candidate queries, and four distinct recurrent blocks reused on every call.
+There is no latent history, cache, or externally mutable recurrent state in the
+module. Caller passes current workspace, public context and current value memory.
+
+Each block performs content workspace attention, cross-attention to context plus
+current memory, and an MLP. Query and key groundings use independent normalized
+projections. Structural head bias is Pq A Pk transpose; free heads receive zero
+bias. A is predicted from current memory by default. Any explicit graph argument
+must be observable, never the hidden target. Zero strength gives ordinary
+attention. The supplied feature interface is a prior, not language induction.
+
+Candidates softly pool workspace rows; routes overlap. Heads predict operation,
+ordered argument pointers with null, local readiness, and clause identity pointers.
+Identity memory may contain all currently declared public clauses independently
+of currently available runtime values. This avoids assigning write IDs from an
+oracle execution schedule. Routes are also the additive event reinjection weights.
+
+Event tensors contain scalar values, type IDs (integer 0, float 1, boolean 2),
+operation IDs, ordered public argument features, and optional public provenance
+features. Type, operation and scalar roundtrip heads are auxiliary diagnostics.
+Zero event messages or a zero event mask preserve all workspace rows exactly.
+Final output only reads pooled workspace. The driver must enforce at least one
+recurrent update after a returned event; this stateless model does not track that
+external lifecycle. Emission has a learned probe, smooth progress bias, hard
+minimum/maximum bounds, and differentiable ponder cost. Token time is explicit and
+separate from microstep time. Initial output is an answer label, not a general
+language model.
+
+Verification: remote CPU only, gb10-direct, OMP/MKL two threads, dedicated scratch
+`~/topoformer-stage6-model`, interpreter `~/topoformer-pilot/.venv/bin/python`.
+The first missing-module test failed before implementation; the clause identity
+contract failed before that behavior was added. Nine model tests pass, covering
+state reuse/no history, zero-strength equivalence, free-head isolation, asymmetric
+grounding, overlap, gradient paths, additive/drop events, hard halting, public
+causality, null-only memory, identity pointers, and event roundtrip gradients.
+Full isolated baseline-plus-owned-files suite: **380 passed**. The first full run
+had two provenance test failures because a git archive has no `.git`; initializing
+and committing the disposable snapshot resolved that environment issue. No
+training experiment or changes to Stage 1–5 sources were performed.
