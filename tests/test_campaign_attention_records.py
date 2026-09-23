@@ -37,3 +37,13 @@ def test_dense_graph_record_routing_and_gradients():
     z=m(replace(b,adjacency=torch.zeros_like(b.adjacency)),records=r)
     assert torch.equal(z['logits'],out['logits'])
     assert (out['weights']>0).all()
+
+
+def test_consistent_key_reassignment_preserves_semantic_targets():
+    b,m=fixture();order=torch.rand(2,8).argsort(-1)
+    changed=replace(b,keys=b.keys.gather(1,order[...,None].expand(-1,-1,8)))
+    assert torch.equal(targets(b),targets(changed))
+    # Records reference reassigned endpoint keys, never numeric node positions.
+    edge=changed.adjacency.bool().nonzero().reshape(2,48,4)
+    bi,_,_,dest=edge.unbind(-1)
+    assert torch.equal(tokenize(changed).destination_keys,changed.keys[bi,dest])
