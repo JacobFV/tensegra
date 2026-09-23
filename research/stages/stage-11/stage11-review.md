@@ -57,3 +57,9 @@ Main source `0c2332f` restores every frozen checkpoint parameter into both arms,
 The separately frozen protocol requires >95% complete canonical recovery in every seed on 512 alpha-disjoint known-English constructions. The labels-only audit accepts the first 512 candidates without exclusions and finds no new lexical tokens, unknown finite values or capacity overflow. This is transfer from eight fitted examples, not an adequate-exposure scaling study; historical Stage8 overlap is not asserted absent.
 
 Fresh source `7936417` requires the exact three-seed final-4000 acquisition matrix, checks checkpoint and public-surface hashes, verifies actor dependencies against the training archive, retains the original vocabulary and per-seed TRAIN8 thresholds, and performs no optimization or recalibration. It does not call the calibration evaluator on fresh examples. Release remains conditional on the independent complete acquisition audit and the coordinator's compute queue.
+
+## Completed public-text acquisition audit
+
+The independent auditor reconstructs **288 raw/calibrated graph decisions**, **234 TRAIN threshold records**, and the eight English frequency-baseline outputs. It verifies first-occurrence copy-index normalization, predicted-presence edge masks, exact slots on actual edges, all component metrics, the source/configuration freeze, and the complete prescribed seed matrix. All 18 remote checkpoint byte hashes match.
+
+At the prespecified final update4000, every seed30/31/32 recovers all eight training graphs under both raw and calibrated decoding. The restricted fixed-text acquisition gate passes. This is exact fitting of eight supplied-renderer constructions; it is not yet semantic transfer or language understanding. The independently preregistered fresh-construction inference may proceed using these unchanged checkpoints and TRAIN thresholds. No return-interface result is a prerequisite for that separate evaluation.
