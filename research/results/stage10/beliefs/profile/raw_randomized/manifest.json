@@ -1,0 +1,89 @@
+{
+  "config": {
+    "arm": "raw_randomized",
+    "seed": 101,
+    "device": "cuda",
+    "threads": 2,
+    "steps": 2,
+    "batch": 32,
+    "train_namespace": 10010000,
+    "curve_namespace": 10090000,
+    "split_seeds": {
+      "profile": 10091000
+    },
+    "eval_candidates": [
+      16
+    ],
+    "conditions": [
+      "clean",
+      "long_duplicate",
+      "id_rename"
+    ],
+    "eval_count": 512,
+    "chunk": 32,
+    "log_every": 200,
+    "lr": 0.0003
+  },
+  "config_sha256": "ee2103a82b70e62e85ff813cdeaf6c5a49ed3cf7bde480e7f9edc6920f519e98",
+  "source_sha256": {
+    "belief_invariance_study.py": "4278890e059c09eedc17cdef66c97f00f7ab66ebcf50f82fff682b99116775f4",
+    "belief_invariance.py": "15d7a000686c28d87b2cf0feb2ff6c67caf1f46b7f19956bd761ea9b1e21a58a",
+    "belief_contracts.py": "5508451f141e1229601e04c5b2f15b5ed0ef1ad650ae5865965107d60ca21957",
+    "belief_contracts_study.py": "4dfc9b50f402f1cb6a33fec605c63b5c5f0b0e2c8331b282a210c678de67977d",
+    "belief_state.py": "04e28df53062bf4124687309389988eba09e82bbc3c8cbc0edc86fabe2b6acd1"
+  },
+  "initial_checkpoint_sha256": "57011439cccfe0db4be192d91840c1f5ac1c099dcbc38f87679452eea9ab8361",
+  "initial_tensor_sha256": "bd5fd34fa36ce72da1414a985b6c7c4bc68609a271716cccd4559ac964e5889c",
+  "parameters": 16867395,
+  "workspace_width": 1024,
+  "ff_width": 2048,
+  "inactive_id_weights": 0,
+  "composition_allowed": false,
+  "device_name": "NVIDIA GB10",
+  "training_and_curve_seconds": 1.2182000088505447,
+  "optimizer_presentations": 64,
+  "unique_training_generation_keys": 64,
+  "unique_public_constructions": 64,
+  "construction_identity": "Exact nonce-key and candidate-record content, candidate-order invariant; not alpha-equivalence",
+  "semantic_training_stream_sha256": "7b348f25e761fd965673c9d3f63db1aa2cc34f507d0893b2480010836816d5fe",
+  "public_training_stream_sha256": "3666384a983cd135a87bce5265084187854d7516aa63560f8b421b933d051f28",
+  "training_id_coverage": {
+    "unique": 191,
+    "assignments": 192,
+    "minimum": 136,
+    "maximum": 65322,
+    "bit_one_counts": [
+      95,
+      96,
+      90,
+      96,
+      104,
+      102,
+      96,
+      94,
+      103,
+      104,
+      107,
+      105,
+      98,
+      89,
+      98,
+      106
+    ],
+    "historical_handles_seen": {
+      "4": false,
+      "100": false
+    },
+    "historical_handle_primitive_values": {
+      "4": [],
+      "100": []
+    }
+  },
+  "training_id_inventory_sha256": "09b95ca7936e0840641fde30d4e50ac7234dec132ff40e68e3a2128d965a80ca",
+  "checkpoint_sha256": "ee468bc1d2cc30d48bfe0b8f82c92261e87c30179e571a5161e9c71411d118db",
+  "final_tensor_sha256": "68c414504e7eda9c70d2e9f4ab2642508db016d4a214aec9ad6d5a47e564625f",
+  "evaluation_seconds": 3.3764377338811755,
+  "total_seconds": 4.871396037749946,
+  "cuda_peak_bytes": 406458368,
+  "rss_peak_kib": 2051276
+}

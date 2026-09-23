@@ -1,0 +1,41 @@
+{
+  "arm": "raw_randomized",
+  "seed": 21,
+  "device": "cuda",
+  "threads": 2,
+  "steps": 1000,
+  "batch": 32,
+  "train_namespace": 10002000,
+  "curve_namespace": 10095000,
+  "split_seeds": {
+    "validation": 10100000,
+    "test": 10200000
+  },
+  "eval_candidates": [
+    8,
+    16,
+    32
+  ],
+  "conditions": [
+    "clean",
+    "reorder",
+    "duplicate",
+    "long_duplicate",
+    "contradiction",
+    "retract",
+    "partial",
+    "empty",
+    "full_retract",
+    "distinct_equal",
+    "candidate_permutation",
+    "id_rename",
+    "id_permute_seen",
+    "distinct_equal_seen_id",
+    "distinct_equal_unseen_id"
+  ],
+  "eval_count": 512,
+  "chunk": 32,
+  "log_every": 200,
+  "lr": 0.0003,
+  "study": "paired_main_fixed_budget_no_selection"
+}
