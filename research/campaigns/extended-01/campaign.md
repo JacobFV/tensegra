@@ -18,4 +18,4 @@ Belief research stays frozen. Each branch may advance independently. A narrow va
 
 ## Current state
 
-Read historical reports/audits and establish isolated workers/protocols. No campaign GPU job released yet. See registry, queue, budget, decisions and handoff.
+R01 one-backbone development CE scalar refit reaches at least1016/1024 across all tested fresh validation cells through16; independent raw/cache replay passes. Three-backbone fresh-event confirmation is running, with delay32 test-only. S01 audited9728 alpha-distinct constructions and profiled12.05s; matched128/1024/8192 corpus ladder is ready. A01 direct routing five-arm development is ready after2.54s profile. No composition yet. See queue/budget for live ownership.
