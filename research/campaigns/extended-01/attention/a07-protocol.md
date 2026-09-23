@@ -1,0 +1,29 @@
+# A07: all-edge record attention acquisition
+
+Exploratory follow-up after A06, not a revision of its confirmation. Root requested the missing unconstrained graph-input boundary. This supplies a strong **graph-record key/value attention** comparator with no query-dependent neighborhood mask. It is more structured than a generic language transformer; do not relabel it as arbitrary graph-text understanding.
+
+## Mechanism and priors
+
+Serialize every edge into a record containing source key, relation one-hot, destination key and destination public attribute. The target attribute is a duplicated static node feature joined by the input serializer, not a terminal payload or future state. All3NK records are presented in independently shuffled order, regardless of requested relation/source. Record construction reads public adjacency, but selection cannot access adjacency: no hard source/relation mask, top-k neighborhood gather, exact selected edge, or gold successor.
+
+At each supplied reverse path step, every node issues a query containing its public identity key, desired attribute code and relation. A dense multihead QK softmax attends over **all edge records** and reads a soft destination identity. A second dense learned-key softmax attends over all nodes and reads current recurrent payload state. The two-stage address decomposition is supplied; both reads remain soft. The standard A06 residual value update/readout and all-node suffix supervision remain. No route labels or intermediate gold-state resets enter inference.
+
+The edge Q/K matrices are trainable. Source identity and relation coordinates start aligned in separate feature blocks, consistent with the strong prior in keyed context; attribute projections start independently random and must learn content compatibility. All channels can subsequently mix through learned matrices. Node-address projections start at identity and are trainable. This is a favorable known-coordinate prior, not spontaneous representation induction. Workspace1024/8heads. All-edge memory has384 records at training N32/K4 and3072 at N128/K8, compared with node memories32/128. Extra projection parameters and attention cost are recorded, not hidden by nominal workspace equality.
+
+Primary methods consulted: Vaswani et al., [Attention Is All You Need](https://arxiv.org/html/1706.03762v7), sections3.2–3.3, for projected multihead dense cross-attention; Miller et al., [Key-Value Memory Networks](https://arxiv.org/html/1606.03126), section3, for separating addressing features from returned values. We borrow the general QK/weighted-value formulation and explicit key/value split, **not** their optional preselection/hash step. No external source code copied. The supplied reverse-step schedule and special initialization are task-specific experimental priors; no novelty claim.
+
+## Exploration and selection
+
+One development seed701, fresh train171M+step, monitoring173M, final development172M. Train1000updates,batch16,N32/K4,D1–4 cycling, same withheld relation-pair composition and AdamW .0003/wd.0001 as A06. Dense value-only suffix targets. Keep original A06 soft/gather/context as different trained-history reference results; do not present this single seed as matched confirmation.
+
+Monitoring at0/10/25/50/100/250/500/1000 on256fresh IID and N64/D8 events. Endpoints512events: IID, N64/D8, N128/D32/K8, paired first-instruction swap, zero attribute content, wrong regular topology, and frozen edge-score multiplier2 plus node-address scale16 on the joint shift. That last intervention is an explicitly named prior-informed diagnostic; it doubles all record logits (source/relation/content), not merely the A06 content term. No automatic comparability claim between these scale policies.
+
+Primary question: does value-only learning acquire IID and moderate OOD selection without supplied neighborhood access? Development competence threshold≥98% exact task IID and≥95% N64/D8. Record intermediate values/routes separately. If achieved, register fresh3seed confirmation with strongest A06 interfaces and matched events before any outcome inspection. If only a concentration change helps, retain raw result and name the engineered policy. If acquisition fails, inspect training loss, source/relation/address distributions and one-hop acquisition before increasing capacity.
+
+One optional exposure extension to2000updates is permitted only by a NEW registered decision after this run if mean final100training losses improve≥10% relative to updates701–800 and monitoring task at1000 improves≥5percentage points over500. Otherwise no blind doubling. A failed condition motivates an isolated probe or closes the branch. No confirmation scale search.
+
+## Budget and preflight
+
+Mechanical fixtures width128/2heads/key8 are explicitly not primary results. Test value/instruction-independent serialization, dense support, absence of adjacency influence after public tokenization, gradient flow, independent node/edge permutations and consistent key reassignment. Frozen source/receipt tracks every dependency.
+
+Profile seed709,12updates,64IID and largest-shape examples, cap60seconds (root release required). Measure startup, training, evaluation/export, allocated device memory and RSS. Use actual profile to set bounded1000-update development cap, initially600seconds and never above1200 without root campaign allocation. No automatic GPU launch from this registry. Existing A06 remains immutable. No autonomous composition or supervision withdrawal authorization follows.
