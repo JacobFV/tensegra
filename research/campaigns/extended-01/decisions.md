@@ -52,3 +52,6 @@ S07/S08 do not justify more exposure of the same actor: occurrence acquisition i
 
 ### 22:57 UTC — confirmation and composition
 A06 independently confirms concentration repairs for every strong routing interface; no unique graph-bias advantage. Close this branch rather than search for a preferred winner. C01 hybrid development passes every original-mixture joint lowering-and-answer cell and causal control; N1/N2 strong neural acquisition must finish before comparative claims or confirmation recipe. R08 optimizer screen completed unchanged; calibration selected .0001, detailed outcomes pending.
+
+### 23:05 UTC — acquisition and output contracts
+N1 clean answer accuracy is strong, while reversal errors survive fully correct argmax lowering and near-exact soft operand retrieval; do not blame proposal drift. Wait for N2 before freezing confirmation. S10 tests only public compiler bookkeeping/type constraints on archived predictions, independently of S09 training. S11 may change only restored optimizer LR from S03, because the fixed-LR extension regressed; restore semantics must explicitly override loaded param-group LR rather than only constructor configuration.
