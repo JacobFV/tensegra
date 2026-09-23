@@ -36,3 +36,5 @@ Metrics: start value accuracy, all-node accuracy, complete suffix-value trajecto
 - `zero_strength` is a frozen-model evaluation intervention. The separately trained `none` arm receives no graph, including no neighbor keys.
 - Fullpath attention argmax is a routing diagnostic, not proof that those argmax edges causally explain the neural answer. Value trajectories have collisions; identity routes do not.
 - Any exposure extension after500 is a separately registered exploration decision; the phrase “losses improve” above is not an automatic retrospective budget extension.
+- Reviewer correction before profile: multi-neighbor context now queries each supplied neighbor address separately and averages their read distributions. It never compresses several addresses into one mean key. This is equivalent to original single-neighbor context on clean graphs and preserves the address list under spurious-edge corruption.
+- Generated graph examples are counted; exact semantic graph deduplication is not performed. Distinct random presentations are not labeled empirically deduplicated canonical constructions.

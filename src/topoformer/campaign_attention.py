@@ -119,10 +119,12 @@ class RoutingModel(nn.Module):
                 weights = a / a.sum(-1, keepdim=True)
                 retrieved = weights @ h
             elif mode == 'context':
-                successor_key = (a / a.sum(-1, keepdim=True)) @ batch.keys
-                q = F.normalize(self.context_q(successor_key), dim=-1)
+                # Query every supplied address separately, then average address reads.
+                # This retains distinct neighbors even under spurious-edge corruption.
+                q = F.normalize(self.context_q(batch.keys), dim=-1)
                 k = F.normalize(self.context_k(batch.keys), dim=-1)
-                weights = torch.softmax(q @ k.transpose(-1, -2) * self.context_log_scale.exp().clamp(max=64), -1)
+                address_reads = torch.softmax(q @ k.transpose(-1, -2) * self.context_log_scale.exp().clamp(max=64), -1)
+                weights = (a / a.sum(-1, keepdim=True)) @ address_reads
                 retrieved = weights @ h
             else:
                 z = self.norm(h)
