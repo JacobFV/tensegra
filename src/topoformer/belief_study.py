@@ -73,9 +73,14 @@ def run(config,out):
     rows=[]
     for n in config.get('eval_candidates',[config['candidates'],config['candidates']*2]):
         for condition in ('clean','reorder','duplicate','contradiction','retract','partial','empty'):
-            for split,offset in (('validation',200000),('test',300000)):
+            for split in config.get('eval_splits',['validation','test']):
+                if split not in ('validation','test'): raise ValueError('unknown evaluation split')
+                offset={'validation':200000,'test':300000}[split]
                 row=evaluate(model,config.get('eval_count',128),offset+config['seed'],n,condition); row.update(seed=config['seed'],split=split,regime='iid' if n==config['candidates'] else 'moderate_ood'); rows.append(row)
-    (out/'metrics.json').write_text(json.dumps(rows)); torch.save(model.state_dict(),out/'model.pt')
+    (out/'metrics.json').write_text(json.dumps(rows))
+    oracle_rows=[evaluate(None,config.get('eval_count',128),200000+config['seed'],n,c) for n in config.get('eval_candidates',[config['candidates']]) for c in ('clean','reorder','duplicate','contradiction','retract','partial','empty')]
+    (out/'oracle.json').write_text(json.dumps(oracle_rows))
+    torch.save(model.state_dict(),out/'model.pt')
     return manifest
 
 
