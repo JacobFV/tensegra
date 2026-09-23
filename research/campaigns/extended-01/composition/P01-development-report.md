@@ -9,3 +9,5 @@ All five supplied-proposal controls reach4096/4096. Reversing binary roles chang
 Full external occupancy22.114064865s (exit0, cap120s), including2000updates and all exports. Internal time20.861844980s, fitting/checkpoint portion10.280452353s, peak104467968CUDAbytes. GPU released before analysis. Raw tensors/checkpoint/visitation remain at `~/topoformer-campaign-01/composition/p01-development/`. Adjacent summary and occupancy receipt preserve full hashes and counts. Independent replay is requested.
 
 Development warrants a prospectively frozen three-initialization confirmation on fresh populations, using the same recipe and calibration selection rule. No interface promotion or C01 implementation follows from this one seed.
+
+Compact per-example calibration/validation/control predictions and target records are committed under [P01 development raw exports](../../../results/campaign-01/composition/p01-development-raw/manifest.json). Full tensor logits remain in the immutable remote result directory.
