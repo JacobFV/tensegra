@@ -240,7 +240,7 @@
     },
     {
       "id": "C01",
-      "status": "protocol_and_cpu_implementation",
+      "status": "profile_ready",
       "protocol": "composition/C01-conditional-design.md",
       "entry_evidence": [
         "review/P01-runtime-audit.json",
@@ -248,11 +248,17 @@
       ],
       "scope": "Scheduled typed lowering, exact primitive, learned returned-fact decision; no autonomous planning",
       "comparators": "Strong N1/N2 neural-only; oracle boundaries; exactcopy; causalreturn interventions",
-      "budget": "Must profile before main allocation"
+      "budget": "Must profile before main allocation",
+      "source": "361a691",
+      "profile_caps": {
+        "hybrid": 60,
+        "n1": 60,
+        "n2": 120
+      }
     },
     {
       "id": "S07-occurrence",
-      "status": "main_budget_freezing",
+      "status": "main_ready",
       "hypothesis": "Occurrence-specific copy supervision improves ordered graph induction beyond identity-only first-mention supervision",
       "intervention": "Original S01 actor; only ident-node copy training targets change to audited visible occurrence",
       "comparator": "S01 n8192 sameinit/data/65536presentations",
@@ -264,7 +270,10 @@
       "estimated_seconds": [
         650,
         720
-      ]
+      ],
+      "config_source": "2c576db",
+      "source": "04b44e9",
+      "cap_seconds": 900
     },
     {
       "id": "A05b",
@@ -276,6 +285,26 @@
       "data": "Fresh development102M,512events; no training",
       "claim_boundary": "Address concentration changes retrieved attribute and payload features; not pure value mixing",
       "result": "116/271/403/512 of512 baseline/content16/address16/both16; no training, tensorhashesunchanged"
+    },
+    {
+      "id": "A06",
+      "status": "confirmation_ready",
+      "protocol": "attention/a06-protocol.md",
+      "source": "b993a44",
+      "mechanism_source": "6704bd8",
+      "seeds": [
+        601,
+        602,
+        603
+      ],
+      "cap_seconds_per_seed": 300,
+      "estimated_seconds_per_seed": [
+        150,
+        250
+      ],
+      "selection": "Fixed1000updates; prescribed learned/content16/address16+content16 policies; no confirmation tuning",
+      "examples_per_cell": 1024,
+      "claim": "Compare concentration repairs and strongest structured interfaces; no uniqueattention advantage presupposed"
     }
   ],
   "policy": {
