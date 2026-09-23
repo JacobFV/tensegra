@@ -31,7 +31,7 @@
     },
     {
       "id": "S01",
-      "status": "ladder_completed_extension_preparing",
+      "status": "completed_audited",
       "protocol": "semantics/S01-design.md",
       "source": "cf46c23",
       "comparison": "128/1024/8192 distinct training constructions,65536 presentations each",
@@ -105,7 +105,7 @@
     },
     {
       "id": "S03",
-      "status": "completed_pending_audit",
+      "status": "completed_audited",
       "protocol": "semantics/S03-exposure-design.md",
       "source": "d743464",
       "hypothesis": "Continued useful acquisition under same diverse corpus and actor",
@@ -117,7 +117,7 @@
     },
     {
       "id": "A04",
-      "status": "development_running",
+      "status": "completed_audited",
       "hypothesis": "Content matching plus supplied topology can learn fresh code-dependent traversal; compare strong alternative interfaces",
       "protocol": "attention/a04-protocol.md",
       "intervention": "Multi-neighbor typed graph with fresh repeated attribute codes; learnedQKselector",
@@ -133,7 +133,7 @@
     },
     {
       "id": "R05",
-      "status": "profiled_development_ready",
+      "status": "development_passed_audited",
       "protocol": "returns/R05-protocol.md",
       "hypothesis": "A frozen competent mixture scalar accessor can support a learned subsequent decision with causal return dependence",
       "intervention": "35to1024to2 comparator onfrozenreadoutsoftmaxandpublicquery",
@@ -149,7 +149,7 @@
     },
     {
       "id": "S04",
-      "status": "registered_review_pending",
+      "status": "completed_regression_audited",
       "source": "d743464",
       "config_commit": "b2b17c2",
       "hypothesis": "Still-improving acquiredgraphcomponents may approach completeacquisition with additional exposure",
@@ -168,7 +168,7 @@
     {
       "id": "A05-v2",
       "protocol": "attention/a05-v2-protocol.md",
-      "status": "completed_audit_pending",
+      "status": "completed_audited",
       "source": "53bf204",
       "cap_seconds": 300,
       "profile_seconds": 3.76,
@@ -241,7 +241,7 @@
     },
     {
       "id": "C01",
-      "status": "main_budget_freezing",
+      "status": "profiled_main_ready",
       "protocol": "composition/C01-conditional-design.md",
       "entry_evidence": [
         "review/P01-runtime-audit.json",
@@ -279,7 +279,7 @@
     },
     {
       "id": "S07-occurrence",
-      "status": "running",
+      "status": "completed_failed_pending_audit",
       "hypothesis": "Occurrence-specific copy supervision improves ordered graph induction beyond identity-only first-mention supervision",
       "intervention": "Original S01 actor; only ident-node copy training targets change to audited visible occurrence",
       "comparator": "S01 n8192 sameinit/data/65536presentations",
@@ -309,7 +309,7 @@
     },
     {
       "id": "A06",
-      "status": "confirmation_ready",
+      "status": "confirmation_running",
       "protocol": "attention/a06-protocol.md",
       "source": "b993a44",
       "mechanism_source": "6704bd8",
@@ -329,7 +329,7 @@
     },
     {
       "id": "R07",
-      "status": "profile_ready",
+      "status": "completed_failed_audited",
       "hypothesis": "Nonlinear readout capacity recovers remaining frozen-feature scalar tails",
       "comparison": "Linear decoder replay vs zero-initialized residual1024-GELU-33 MLP, sharedinitialfunction",
       "data": "Reused R06balanced fit/cal/DEV features; not untouchedconfirmation",
@@ -343,13 +343,31 @@
     },
     {
       "id": "S08-alignment",
-      "status": "source_preflight",
+      "status": "completed_diagnostic_pending_audit",
       "source": "dec2d7b",
       "protocol": "semantics/S08-alignment-diagnostic-design.md",
       "hypothesis": "Distinguish acquiring occurrence alignment from using it for semantic edges",
       "scope": "FrozenS01/S07final checkpoints, pairedTRAIN128/DEV512, publiconlyforward, goldspans scoringonly",
       "training_presentations": 0,
       "cap_seconds": 60
+    },
+    {
+      "id": "R08",
+      "status": "profile_ready",
+      "kind": "exploratory_optimizer_screen",
+      "hypothesis": "R07 nonlinear acquisition failure may reflect inherited step size rather than unavailable scalar information",
+      "intervention": "Same residual architecture/data/initial function/900 minibatches; LR .0003/.0001/.00003",
+      "comparators": [
+        "R07 linear",
+        "R07 residual LR .003"
+      ],
+      "observable_inputs": "Frozen balanced R06 workspace features and public delay distribution, width1024",
+      "privileged_targets": "33-class scalar labels",
+      "selection": "Minimum calibration-grid stratum accuracy, then minimum mixture calibration, fixed LR order",
+      "protocol": "returns/R08-protocol.md",
+      "source": "5a01b0c",
+      "budget": "profile60s; development120s subject to profile",
+      "next_branch": "Confirm useful acquisition repair with fresh populations, or reject capacity recipe"
     }
   ],
   "policy": {
