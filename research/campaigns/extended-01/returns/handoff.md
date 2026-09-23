@@ -19,3 +19,11 @@ Actual external process occupancy so far:3.96 + 26.19 + 95.90 + 72.14 + 17.38 = 
 A conditional consumption draft exists but is not frozen/released: learned scalar scores plus public threshold/polarity into a learned comparator, with query-only/oracle ceilings and dropped/wrong/swapped event controls. Promotion requires a prospective consumed-interface contract and fresh validation, not posthoc exclusion of failing conditions.
 
 R03 completed: external 17.38 seconds, exact 900 replay, calibration retained 900 despite improved training fit at 1800/3600. Detailed report and all endpoints committed. R04 protocol/config freezes 16k/900 on fresh three-backbone populations; awaits source review and GPU release. No job is active from this track.
+
+## R05 latest (supersedes preparation notes above)
+
+Development completed at frozen143db40:68.97s external, learned validation2041–2044/2048, query-only1634, oracle2043. Drop effect19.43–19.97pp; changed wrong867–868/871 and swap571–574/580. All development checks pass; report/raw9bd7c5c. No development32capture. Independent audit pending.
+
+Confirmation actor/config/protocol8b619f7 is staged at `~/topoformer-campaign-01/returns/source-r05-confirmation`;11CPUtests pass. Fresh3backbone fits, fixed endpoints learned/oracle2000 andquery1000;8192fit/1024cal/4096validation/test. Causal2048-event prefix preserves underlying validation identity. Test/balanced32 onlyafterfixedfits. Expected300–450s, requestedcap600. Reviewer preflight and coordinator release pending; NO ACTIVE GPU JOB. Do not launch without parent.
+
+Worker `/root/campaign_composition` received the frozen consumer API but no promotion: normalized workspace1024→R04 categorical accessor→softmax33+normalizedquery2→new1024hidden comparator. Planned finalconsumerfiles r05-confirmation/{seed}/learned.pt do not yet exist. This remains an oracle-first-operation learned scalar-consumer interface.
