@@ -23,12 +23,20 @@ bootstrap=rng.integers(0,1024,size=(2000,1024))
 rows=[]
 for ci in range(18):
     row={'condition':loaded['soft8',201][0]['rows'][ci]['condition'],'arms':{}}
+    z=loaded['soft8',201][2]
+    ptr=z[f'c{ci}_start'].astype(int);visited=[ptr.copy()]
+    rel=z[f'c{ci}_relation'].astype(int);succ=z[f'c{ci}_successor'].astype(int)
+    for t in range(rel.shape[1]):
+        ptr=succ[np.arange(len(ptr)),rel[:,t],ptr];visited.append(ptr.copy())
+    distinct=np.array([len(set(x)) for x in np.stack(visited,1)])
+    row['gold_unique_visited_nodes']={'mean':float(distinct.mean()),'min':int(distinct.min()),'max':int(distinct.max())}
     for arm in arms:
         vals=[loaded[arm,s][2][f'c{ci}_task'].astype(float) for s in seeds]
         summaries=[loaded[arm,s][0]['rows'][ci] for s in seeds]
         row['arms'][arm]={'seed_task':[float(v.mean()) for v in vals],
             'mean_task':float(np.mean(vals)),
             'seed_pointer_path':[x['exact_pointer_path'] for x in summaries],
+            'task_given_correct_argmax_path':[float(loaded[arm,s][2][f'c{ci}_task'][loaded[arm,s][2][f'c{ci}_exact_pointer_path'].astype(bool)].mean()) if loaded[arm,s][2][f'c{ci}_exact_pointer_path'].any() else None for s in seeds],
             'seed_forward_seconds':[x['forward_seconds'] for x in summaries],
             'seed_edge_mass':[x['edge_mass'] for x in summaries],
             'seed_supplied_edge_mass':[x['supplied_edge_mass'] for x in summaries]}
