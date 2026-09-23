@@ -24,11 +24,11 @@ not test structural attention or runtime composition.
 ## Contracts and cheap diagnostics
 
 `stage9-semantic-contract-audit.py` regenerates archived descriptors read-only.
-The 10,064 graph audit covers 30,192 public surfaces. It checks same text against
+The 10,128 graph audit covers 30,384 public surfaces. It checks same text against
 incompatible alpha-normalized targets; hashes; visible copies; declared vocabulary;
 capacities; multiedge slot collisions. It found none in this finite support.
 There is no actor token truncation. Maxima:37nodes,85edges,slot3,74tokens.
-The pool is4variable-binding,144set-operation,9916unification constructions.
+The pool is4variable-binding,144set-operation,9980unification constructions.
 The64heldout comprise24set and40unification; all4binding are training-only.
 This cannot establish unseen variable-binding structure generalization.
 

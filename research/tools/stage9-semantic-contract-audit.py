@@ -10,7 +10,7 @@ from topoformer.semantic_curriculum import partition_corpus
 from topoformer.thinking_language import lexical_bits
 
 
-def audit(database, exclusions, manifest, limit=10064):
+def audit(database, exclusions, manifest, limit=None):
     db=sqlite3.connect(f'file:{database}?mode=ro',uri=True)
     rows=db.execute('select lesson,seed from examples order by id').fetchall()[:limit]
     vocab=json.loads(Path(manifest).read_text())['value_vocabulary']
