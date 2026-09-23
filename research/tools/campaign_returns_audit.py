@@ -1,5 +1,5 @@
 """Independent R01 raw fields, grouped errors and calibration selection audit."""
-import argparse,gzip,hashlib,json,subprocess
+import argparse,gzip,hashlib,json,subprocess,time
 from pathlib import Path
 from audit_stage11_return_main import counts,FIELDS
 
@@ -15,7 +15,7 @@ def groups(row):
  return result
 
 def audit(root,ref):
- m=json.loads((root/'manifest.json').read_text());cfg=m['config'];assert 32 not in cfg['delays']
+ started=time.monotonic();m=json.loads((root/'manifest.json').read_text());cfg=m['config'];assert 32 not in cfg['delays']
  assert hashlib.sha256(json.dumps(cfg,sort_keys=True).encode()).hexdigest()==m['config_sha256']
  for name,want in m['source'].items():assert hashlib.sha256(subprocess.check_output(['git','show',f'{ref}:src/topoformer/{name}'])).hexdigest()==want
  p=root/'predictions.json.gz';assert sha(p)==m['predictions_sha256'];rows=json.load(gzip.open(p,'rt'));index={}
@@ -36,6 +36,6 @@ def audit(root,ref):
    r=index['calibration',c['distractors'],c['delay'],label];assert c['correct']==r['counts']['value']['correct']and c['total']==r['counts']['value']['total']
  assert m['fit_rows']==cfg['data']['train']['size']*len(cfg['delays']);assert sum(m['label_counts'])==cfg['data']['train']['size']
  if cfg['mode']!='profile':assert min(m['label_counts'])>0
- return dict(source_ref=ref,rows_verified=len(rows),selected_alpha=m['selected_alpha'],selected_ce_step=m['selected_ce_step'],mode=cfg['mode'],scope='Archived metric and selection reconstruction; feature/checkpoint byte replay is separate.',validation=[dict(arm=a,minimum_correct=min(r['counts']['value']['correct']for r in rows if r['split']=='validation'and r['head']==a),support=cfg['data']['validation']['size'])for a in ('unchanged','ridge','ce')])
+ return dict(cpu_audit_wall_seconds=time.monotonic()-started,source_ref=ref,rows_verified=len(rows),selected_alpha=m['selected_alpha'],selected_ce_step=m['selected_ce_step'],mode=cfg['mode'],scope='Archived metric and selection reconstruction; feature/checkpoint byte replay is separate.',validation=[dict(arm=a,minimum_correct=min(r['counts']['value']['correct']for r in rows if r['split']=='validation'and r['head']==a),support=cfg['data']['validation']['size'])for a in ('unchanged','ridge','ce')])
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--source-ref',required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();out=audit(a.root,a.source_ref);a.output.write_text(json.dumps(out,indent=2)+'\n');print(out)
