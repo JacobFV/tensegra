@@ -1,6 +1,6 @@
 # Stage 10: semantic invariance, cross-delay readout, and fixed-set acquisition
 
-Experiments complete; final independent verification in progress. Baseline `60ad5ee`; width 1024. Composition and supervision withdrawal remain blocked. This report separates three supporting-interface questions; none directly tests programmable attention.
+Completed and independently audited. Baseline `60ad5ee`; width 1024. Composition and supervision withdrawal remain blocked. This report separates three supporting-interface questions; none directly tests programmable attention.
 
 ## Experiment scope
 
@@ -66,4 +66,6 @@ These tracks do not modify QK geometry. They neither validate programmable atten
 
 ## Verification and resources
 
-The immutable source snapshot passed 562 tests and six subtests. No package or test source changed afterward. Final historical-byte and raw-metric review is in progress. All experiments used the existing GB10 environment. Recorded job timers total about 21.2 minutes; conservative accounting charges 25 minutes, below the 180-minute ceiling. No jobs remain. [Compute accounting](stage10-compute.json) and per-track manifests retain dimensions, parameters, feature/memory allocations, distinct examples, exposure, timing and hashes.
+The immutable source snapshot passed 562 tests and six subtests. No package or test source changed afterward. Independent review reconstructed all 810 belief cells, 1,029 return rows and 288 semantic graph decisions, verified checkpoint/cache/readout provenance, and confirmed all 2,844 baseline files unchanged. All experiments used the existing GB10 environment. Recorded job timers total about 21.2 minutes; conservative accounting charges 25 minutes, below the 180-minute ceiling. No jobs remain. [Compute accounting](stage10-compute.json) and per-track manifests retain dimensions, parameters, feature/memory allocations, distinct examples, exposure, timing and hashes.
+
+Detailed reports: [beliefs](stage10-belief-report.md), [returns](stage10-return-report.md), [semantic edge fitting](stage10-semantic-edge-report.md). The [gate registry](stage10-gates.json) keeps restricted interface passes separate from composition and untested transfer.

@@ -5,6 +5,7 @@ Baseline: `60ad5ee`. Workspace width: **1024**. No composition or supervision wi
 - [Consolidated results](stage10-report.md)
 - [Gate decisions](stage10-gates.json)
 - [Design, compute ceiling and claim-specific prerequisites](stage10-design.md)
+- [Compute ledger](stage10-compute.json)
 - [Experiment registry](stage10-registry.json)
 - [Belief invariance protocol](stage10-belief-design.md)
 - [Cross-delay scalar decoding protocol](stage10-return-design.md)
