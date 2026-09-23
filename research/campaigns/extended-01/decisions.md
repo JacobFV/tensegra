@@ -49,3 +49,6 @@ S06 finished65,536presentations in697.94processseconds, exact0/512; copy andedge
 
 ### 22:49 UTC — distinguish failed acquisition from missing information
 S07/S08 do not justify more exposure of the same actor: occurrence acquisition is partial and ordered edges remain wrong even at correctly aligned nodes. Request one stronger public token-to-node path before GPU scheduling. R07 nonlinear decoder damages training fit at unchanged LR; R08 changes only optimizer rate, retaining fixed900 updates and all failed endpoints. A06 confirmation runs unchanged; C01 remains next major release.
+
+### 22:57 UTC — confirmation and composition
+A06 independently confirms concentration repairs for every strong routing interface; no unique graph-bias advantage. Close this branch rather than search for a preferred winner. C01 hybrid development passes every original-mixture joint lowering-and-answer cell and causal control; N1/N2 strong neural acquisition must finish before comparative claims or confirmation recipe. R08 optimizer screen completed unchanged; calibration selected .0001, detailed outcomes pending.

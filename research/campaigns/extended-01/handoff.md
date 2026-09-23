@@ -29,3 +29,6 @@ S06final697.9380268s failedmatchedcomparison (copy.85169,orderedF1.76606,exact0)
 
 ### 22:49 UTC live state
 A06 three-seed confirmation sole GPU owner;601/602 finished,603 running. C01hybrid/N1/N2 frozen/profiled next. R08profile ready, CPU review passed. S07/S08/isomorphism integrated b2e2133; all exact semantic graphs remain zero. R07/R08 integrated651e673. Source main123299a unchanged. Root uncommittedqueue/budget now included in next milestone.
+
+### 22:57 UTC
+GPUowner C01-n1 cap900; hybrid117.9894s completed, primary all12cells >=4076/4096 and causal controls pass (not confirmation). R08profile37.61/main43.54 done; source5a01b0c, selectedLR.0001 via frozen calibration rule, outcomespending. A06 reports/raw/audits integrated, complete405cells/12checkpoints. S09semantic CPUimplementation in progress; semantic_contract explorer audits optional schema-constrained decoding read-only.
