@@ -13,7 +13,7 @@ def run(output):
         original=build_tcn_example('unification',seed,difficulty=.5)
         mapping={v:f'entityfresh{i}' for i,v in enumerate(original.public[0].options)};mapping.update({v:f'variablefresh{i}' for i,v in enumerate('ABCDE')})
         for renamed,e in [(False,original),(True,build_tcn_example('unification',seed,difficulty=.5,identifier_renaming=mapping))]:
-            graph=e.privileged.graph;vocab=['<unknown>']+sorted({json.dumps(n.value,sort_keys=True) for n in graph.nodes if n.kind not in ('ident','entity')})
+            graph=e.privileged.graph;vocab=['<unknown>','"parent"','"unify"','null']
             for lang in LANGUAGES:
                 public,_=surface_input(e,lang);tok=tokens(public);gold=targets(graph,public,128,vocab,language=lang);features,length=encode_text(public.text)
                 assert length==len(tok) and features.shape[1]==len(tok)
