@@ -1,0 +1,27 @@
+import pytest
+from topoformer.return_diagnostics import paired, analyze, FIELDS
+
+
+def row(values):
+    target={k:[0,1,2,3] for k in FIELDS}
+    pred={k:list(v) for k,v in target.items()}; pred['value']=values
+    return dict(split='test',seed=1,distractors=2,intervention='none',targets=target,predictions=pred)
+
+
+def test_paired_counts_are_not_marginal_difference():
+    a,b=row([0,0,2,0]),row([0,1,0,0])
+    assert paired(a,b)['value']==dict(correct_to_correct=1,wrong_to_correct=1,correct_to_wrong=1,wrong_to_wrong=1)
+    assert analyze(a)['counts']['joint']['correct']==2
+    assert analyze(b)['counts']['joint']['correct']==2
+
+
+def test_pairing_refuses_changed_identity_recipe():
+    a,b=row([0,1,2,3]),row([0,1,2,3]); b['seed']=2
+    with pytest.raises(ValueError): paired(a,b)
+
+
+def test_exact_value_distinct_from_half_unit():
+    stats=analyze(row([1,2,3,4]))
+    assert stats['counts']['value']['correct']==0
+    assert stats['within_half_unit']==4
+    assert stats['absolute_error']==.5
