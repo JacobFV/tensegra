@@ -69,3 +69,23 @@ Timing ran in isolated `/tmp/stage8-belief-tests`; its manifest git hash denotes
 that temporary snapshot, while per-file source SHA256 identifies actual code.
 Raw timing/config/metric JSON is committed under results/stage8/belief-timing.
 No acquisition conclusion or gate decision follows from two updates.
+
+## Acquisition probe and main freeze
+
+Seed0, 256 updates ×32 fresh episodes (8,192 presentations), validation128 only:
+protected clean/contradiction/retraction final accuracy was100% at N8/N16. Clean
+mean posterior L1 was .029/.0154. However empty-evidence posterior L1 was
+.1357/.0703: support membership is perfect but null calibration remains wrong.
+The recurrent comparator clean accuracy was89.1%/88.3%, retraction14.1%/19.5%.
+No gate passes from this acquisition probe. All exact oracle controls match.
+
+Training+probe elapsed9.73s protected /13.29s recurrent, peaks564MB/802MB.
+These are measured GPU runs, not estimates. Acquisition raw JSON and a trajectory
+plot are committed. No test split was inspected.
+
+Main configuration frozen after acquisition: same source/architecture and lr,
+1000 updates ×32 fresh episodes, paired seeds0/1/2, 512 validation and512 test per
+N8/N16 condition, all7 evidence controls. No further acquisition-driven tuning.
+All expected validation cells (42 per arm) must pass the root registry; every-frame
+calibration retained. Test cells cannot select settings. Runtime composition and
+readiness remain prohibited while any required belief gate fails.
