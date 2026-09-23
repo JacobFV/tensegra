@@ -43,3 +43,6 @@ The fixed262,144-presentation endpoint retains0/512exactgraphs and regresses onc
 
 ## C01 scoped entry satisfied
 Independent three-seed P01 ordered-dispatch and R05 returned-fact decision audits pass their named consumed interfaces. This authorizes CPU implementation and protocol review of a scheduled two-operation composition, not a historical gate rewrite or a declaration that composition works. A wrong P01 multiplication was actually executed and refused for range, with no gold repair. Retain finite-domain/typed-input/supplied-arity limits and strong public-information-matched neural baselines. Profile before GPU allocation.
+
+## Direct-token path did not improve matched-exposure acquisition
+S06 finished65,536presentations in697.94processseconds, exact0/512; copy andedges are worse thanS01 atsameexposure. This rejects a benefit under thisrecipe, not every possible contextualtextmodel. Retain originalactor for the independentlyregistered occurrence-supervision test. A05bfrozenaddress diagnostic and R06balancedfitprofile receive the nextshortslots; C01CPUimplementation continues independently.
