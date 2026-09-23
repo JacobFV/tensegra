@@ -1,0 +1,177 @@
+{
+  "config": {
+    "train_count": 8,
+    "eval_count": 8,
+    "max_attempts": 1000,
+    "data_seed": 700000,
+    "seeds": [
+      0
+    ],
+    "updates": 2000,
+    "eval_steps": [
+      0,
+      100,
+      500,
+      1000,
+      2000
+    ],
+    "batch_size": 2,
+    "width": 32,
+    "workspace_rows": 8,
+    "microsteps": 2,
+    "node_capacity": 128,
+    "learning_rate": 0.002,
+    "threads": 2,
+    "acquisition_count": 8,
+    "output_dir": "results/stage7-semantic-diagnostic2000"
+  },
+  "config_sha256": "d008d692c00ebce978e90f304efaa7064fafb430864f296f9e32154616c377ad",
+  "source_sha256": {
+    "semantic_scaling.py": "470da2b0dcd957072f16b9663cbc7657a20607ee5b59802bd380b0cf6393de4a",
+    "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64"
+  },
+  "corpus": {
+    "requested_unique_graphs": 16,
+    "actual_unique_graphs": 16,
+    "attempts": 18,
+    "duplicates": 2,
+    "candidate_budget_exhausted": false,
+    "finite_space_exhaustion_proven": false,
+    "dataset_sha256": "de1933df34a6fcbc61e00523895c5345538077cd82e4c64735a1e7efbff27a64",
+    "generation_seconds": 0.044934540055692196,
+    "difficulty": 0.5,
+    "dedup": "complete alpha-normalized typed ordered graph JSON; collision-free equality"
+  },
+  "value_vocabulary": [
+    "<unknown>",
+    "\"and\"",
+    "\"bind\"",
+    "\"color\"",
+    "\"not\"",
+    "\"obj\"",
+    "\"parent\"",
+    "\"select\"",
+    "\"shape\"",
+    "\"unify\"",
+    "\"value_of\"",
+    "null"
+  ],
+  "pinned_audit": {
+    "lesson": "variable_binding",
+    "seed": 700000,
+    "difficulty": 0.5,
+    "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+    "compiler_version": "topoformer-termgraph-v1",
+    "renderer_version": "tcn-fixed-construction-v2",
+    "semantic_digest": "49bac4ccd01b1fe04fbbfab3ee2efee4b50bdbd9e67dfc6ec475e863c34696d6",
+    "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+    "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "surface_sha256": {
+      "english": "a977fb0c244610184d609233c404daef199a333d7e612bd8c57499aa1450ebcc",
+      "spanish": "4e4285c55477eb5092096f0d09999633c02bfea0c56d72971804bac536b00146",
+      "symbols": "8fffa4889ae5815d8c148208bd6576c78511e6c3ed363b76ee4fe127417e91c0"
+    },
+    "distinct_surface_texts": 3,
+    "identifier_renaming": {},
+    "execution_scope": "semantic_compiler_only"
+  },
+  "runs": [
+    {
+      "seed": 0,
+      "arm": "semantic",
+      "initial_sha256": "6d1571b5da82183628e6f6debd8ca4bfedf3f039183ee5b243a287740b34d983",
+      "final_state_sha256": "56c2aead99c808183d15c6c5e2447efffb9f0d9458daace61d1daefd74ac22ca",
+      "checkpoint_sha256": "03e374ba11a7179f67e5c22f21025b4176af193978ccae04f8e5d4061137b4ed",
+      "parameters": 115928,
+      "seconds": 122.13460666220635
+    },
+    {
+      "seed": 0,
+      "arm": "no_input",
+      "initial_sha256": "6d1571b5da82183628e6f6debd8ca4bfedf3f039183ee5b243a287740b34d983",
+      "final_state_sha256": "c483868793368ce3fe626d81161a1498363ddef9227dc6e81cfeffd9c89dc9d8",
+      "checkpoint_sha256": "ebc7f6b92aa2848bd4c030f13de639ef82e458b73d1803cbe3a742b869c5d350",
+      "parameters": 115928,
+      "seconds": 116.84641812881455
+    }
+  ],
+  "matching": "fixed compiler traversal, exact values and identities and explicit ordered slots; no general isomorphism",
+  "gate_f": {
+    "passed": false,
+    "reason": "requires paired cross-budget heldout typed-edge and semantic trend above baselines; no automatic single-run pass"
+  },
+  "priors": [
+    "canonical decoder slot order",
+    "fixed node capacity and role/type ontology",
+    "first visible occurrence pointer supervision"
+  ],
+  "train_renderers": [
+    "english",
+    "spanish"
+  ],
+  "heldout_renderer": "symbols",
+  "limitations": [
+    "alpha-equivalent graphs counted once; not logical/denotational equivalence",
+    "heldout lexicon is consistent entity/variable renaming",
+    "no claim of exhaustive finite-family enumeration"
+  ],
+  "split_semantic_sha256": {
+    "eval": "5cb4bb904551c5a98c64b23ded7b3211159bb7601652c9b715c6fc04ddf41cca",
+    "train": "3d761ce1fb23d1818a6f5bfe90e5582a9c749ea57f0a8f517fc3ef43a5a425c0"
+  },
+  "split_policy": "fixed eval prefix reserved before nested train prefixes; canonical disjoint by SQLite uniqueness",
+  "loss_recipe": "v2: balance ordered/nonordered active pairs; edge negatives on gold-present pairs only",
+  "different_graph_similar_wording_controls": [
+    {
+      "gold": "49bac4ccd01b1fe04fbbfab3ee2efee4b50bdbd9e67dfc6ec475e863c34696d6",
+      "wrong": "82775f8122b2f06e23edc1017e405df3ef427eca29aa4b3d1c65064c1921045b",
+      "token_jaccard": 0.8181818181818182,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "wrong": "4cdb4b8c08166ca705ef968ada72eac426de7d3a126054997f5baae2f73e117c",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "wrong": "b442f2ef800a4fb1290d4b9acae901b2cbc2a50910027bdce4e9f57355302aca",
+      "token_jaccard": 0.6896551724137931,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "4cdb4b8c08166ca705ef968ada72eac426de7d3a126054997f5baae2f73e117c",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "b442f2ef800a4fb1290d4b9acae901b2cbc2a50910027bdce4e9f57355302aca",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.6896551724137931,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "82775f8122b2f06e23edc1017e405df3ef427eca29aa4b3d1c65064c1921045b",
+      "wrong": "49bac4ccd01b1fe04fbbfab3ee2efee4b50bdbd9e67dfc6ec475e863c34696d6",
+      "token_jaccard": 0.8181818181818182,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "748c497671f46e24d7b2c334025941367865c10084128f0c93fc76613cf15101",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "3941c947405773a8c8f4cd3f049eaee8b589f802a29f628215017a737461c84e",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.6896551724137931,
+      "semantic_equivalence": 0.0
+    }
+  ]
+}

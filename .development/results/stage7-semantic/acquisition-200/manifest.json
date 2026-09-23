@@ -1,0 +1,171 @@
+{
+  "config": {
+    "train_count": 8,
+    "eval_count": 8,
+    "max_attempts": 1000,
+    "data_seed": 700000,
+    "seeds": [
+      0
+    ],
+    "updates": 200,
+    "eval_steps": [
+      0,
+      10,
+      50,
+      100,
+      200
+    ],
+    "batch_size": 2,
+    "width": 32,
+    "workspace_rows": 8,
+    "microsteps": 2,
+    "node_capacity": 128,
+    "learning_rate": 0.002,
+    "threads": 2,
+    "acquisition_count": 8,
+    "output_dir": "results/acquisition-v2"
+  },
+  "config_sha256": "8ab4693da247e55b59dffd0321df8b40f53ea4f5fbba12b52638cd43391de0a8",
+  "source_sha256": {
+    "semantic_scaling.py": "0dcda56781cb243f891892f8b784056229388db0e87b4a17f5d4944c078e1f98",
+    "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64"
+  },
+  "corpus": {
+    "requested_unique_graphs": 16,
+    "actual_unique_graphs": 16,
+    "attempts": 18,
+    "duplicates": 2,
+    "candidate_budget_exhausted": false,
+    "finite_space_exhaustion_proven": false,
+    "dataset_sha256": "de1933df34a6fcbc61e00523895c5345538077cd82e4c64735a1e7efbff27a64",
+    "generation_seconds": 0.042551844380795956,
+    "difficulty": 0.5,
+    "dedup": "complete alpha-normalized typed ordered graph JSON; collision-free equality"
+  },
+  "value_vocabulary": [
+    "<unknown>",
+    "\"and\"",
+    "\"bind\"",
+    "\"color\"",
+    "\"not\"",
+    "\"obj\"",
+    "\"parent\"",
+    "\"select\"",
+    "\"shape\"",
+    "\"unify\"",
+    "\"value_of\"",
+    "null"
+  ],
+  "pinned_audit": {
+    "lesson": "variable_binding",
+    "seed": 700000,
+    "difficulty": 0.5,
+    "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+    "compiler_version": "topoformer-termgraph-v1",
+    "renderer_version": "tcn-fixed-construction-v2",
+    "semantic_digest": "49bac4ccd01b1fe04fbbfab3ee2efee4b50bdbd9e67dfc6ec475e863c34696d6",
+    "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+    "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "surface_sha256": {
+      "english": "a977fb0c244610184d609233c404daef199a333d7e612bd8c57499aa1450ebcc",
+      "spanish": "4e4285c55477eb5092096f0d09999633c02bfea0c56d72971804bac536b00146",
+      "symbols": "8fffa4889ae5815d8c148208bd6576c78511e6c3ed363b76ee4fe127417e91c0"
+    },
+    "distinct_surface_texts": 3,
+    "identifier_renaming": {},
+    "execution_scope": "semantic_compiler_only"
+  },
+  "runs": [
+    {
+      "seed": 0,
+      "arm": "semantic",
+      "initial_sha256": "6d1571b5da82183628e6f6debd8ca4bfedf3f039183ee5b243a287740b34d983",
+      "final_state_sha256": "f3b13baa53ee1a2cd7aa497b0c34f56d7e13a7fef5272a52c726b8aab030c260",
+      "checkpoint_sha256": "21379a4e26d1e1a774e1b63f9717f51cbe47d0cfe8af55577f4517d87ad4a42b",
+      "parameters": 115928,
+      "seconds": 33.380559970624745
+    },
+    {
+      "seed": 0,
+      "arm": "no_input",
+      "initial_sha256": "6d1571b5da82183628e6f6debd8ca4bfedf3f039183ee5b243a287740b34d983",
+      "final_state_sha256": "99c613d665425e93c5c6abd26758aad71e16afa90f8ea612b2373cb3bcbe03f1",
+      "checkpoint_sha256": "fa5758fa65bb54469f8356c4579c5666cb334e3f72e61340ccd5dd49a4118472",
+      "parameters": 115928,
+      "seconds": 35.48896750435233
+    }
+  ],
+  "matching": "fixed compiler traversal, exact values and identities and explicit ordered slots; no general isomorphism",
+  "gate_f": {
+    "passed": false,
+    "reason": "requires paired cross-budget heldout typed-edge and semantic trend above baselines; no automatic single-run pass"
+  },
+  "priors": [
+    "canonical decoder slot order",
+    "fixed node capacity and role/type ontology",
+    "first visible occurrence pointer supervision"
+  ],
+  "train_renderers": [
+    "english",
+    "spanish"
+  ],
+  "heldout_renderer": "symbols",
+  "limitations": [
+    "alpha-equivalent graphs counted once; not logical/denotational equivalence",
+    "heldout lexicon is consistent entity/variable renaming",
+    "no claim of exhaustive finite-family enumeration"
+  ],
+  "different_graph_similar_wording_controls": [
+    {
+      "gold": "feb372b683d4f50a119f223ea65cc3feb7d42f6cdb4650cd9f230480757c9bcd",
+      "wrong": "26ec185d0506b77fb2dd7135bd4f9a63a1e22d10b728422896de2b324dcfeacc",
+      "token_jaccard": 0.9047619047619048,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "02d5002e046301f0ac35235a40974a7619c5b21815704be0547a90978c4bdeda",
+      "wrong": "5ba05ac4e5ed701d77ee0b4b0a369dd329a12ac85d666c31280c35da44b7173c",
+      "token_jaccard": 0.84,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "5173e6b08e9f51784bc9e6ba880107699067cf78d051faa39458ab669b119e2a",
+      "wrong": "17772e762ef0cbe31a87f318a610ac95b84c9a6f86181beac3fa1875dff82575",
+      "token_jaccard": 0.6785714285714286,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "26ec185d0506b77fb2dd7135bd4f9a63a1e22d10b728422896de2b324dcfeacc",
+      "wrong": "feb372b683d4f50a119f223ea65cc3feb7d42f6cdb4650cd9f230480757c9bcd",
+      "token_jaccard": 0.9047619047619048,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "5ba05ac4e5ed701d77ee0b4b0a369dd329a12ac85d666c31280c35da44b7173c",
+      "wrong": "02d5002e046301f0ac35235a40974a7619c5b21815704be0547a90978c4bdeda",
+      "token_jaccard": 0.84,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "17772e762ef0cbe31a87f318a610ac95b84c9a6f86181beac3fa1875dff82575",
+      "wrong": "5173e6b08e9f51784bc9e6ba880107699067cf78d051faa39458ab669b119e2a",
+      "token_jaccard": 0.6785714285714286,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "67aa4f207a269152baee2e664557efc114fe54c6d45dde92bc22309d9b8f876e",
+      "wrong": "02d5002e046301f0ac35235a40974a7619c5b21815704be0547a90978c4bdeda",
+      "token_jaccard": 0.9583333333333334,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "1e3a0cbbc5922a36c2704b7a19c6d61e621a537bba48506deaef7d9dedcd340b",
+      "wrong": "5173e6b08e9f51784bc9e6ba880107699067cf78d051faa39458ab669b119e2a",
+      "token_jaccard": 0.8461538461538461,
+      "semantic_equivalence": 0.0
+    }
+  ]
+}
