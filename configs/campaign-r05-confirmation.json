@@ -1,0 +1,163 @@
+{
+  "device": "cuda",
+  "delays": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "intervention_delays": [
+    0,
+    1,
+    16
+  ],
+  "eval_distractors": [
+    2,
+    8
+  ],
+  "batch_size": 64,
+  "lr": 0.001,
+  "updates": 2000,
+  "checkpoints": [
+    0,
+    250,
+    500,
+    1000,
+    1500,
+    2000
+  ],
+  "consumer_batch_size": 256,
+  "fixed_steps": {
+    "learned": 2000,
+    "query_only": 1000,
+    "oracle": 2000
+  },
+  "test_delays": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "causal_size": 2048,
+  "runs": [
+    {
+      "backbone_seed": 10,
+      "consumer_seed": 32000010,
+      "checkpoint": "/home/brandonin/topoformer-stage11/returns/main/10-wide_continue.pt",
+      "checkpoint_sha256": "487a0b632c398256ffd543b59138ef6b2b0648a38948b945e36262cc9f94051b",
+      "readout": "/home/brandonin/topoformer-campaign-01/returns/r04-confirmation/10/ce-16384.pt",
+      "readout_sha256": "84ace0a689f8bb1c54e35579cf72b976db43799010d1fe7dd69f429121e44feb",
+      "swap_seed": 32500101,
+      "balanced": {
+        "seed": 32600101,
+        "pool_size": 16384,
+        "per_cell": 64,
+        "delays": [
+          0,
+          1,
+          16,
+          32
+        ]
+      },
+      "data": {
+        "train": {
+          "seed": 32100101,
+          "size": 8192
+        },
+        "calibration": {
+          "seed": 32200101,
+          "size": 1024
+        },
+        "validation": {
+          "seed": 32300101,
+          "size": 4096
+        },
+        "test": {
+          "seed": 32400101,
+          "size": 4096
+        }
+      }
+    },
+    {
+      "backbone_seed": 11,
+      "consumer_seed": 32000011,
+      "checkpoint": "/home/brandonin/topoformer-stage11/returns/main/11-wide_continue.pt",
+      "checkpoint_sha256": "00e122c8cfe655dc9a8f801b48c5b5092db6caf8909479f2c3ac3910f0b7a077",
+      "readout": "/home/brandonin/topoformer-campaign-01/returns/r04-confirmation/11/ce-16384.pt",
+      "readout_sha256": "8543047e604b80df4313d85ead8cf4ed6ff16fbcf1894a24789b4a35cfc04be5",
+      "swap_seed": 32510101,
+      "balanced": {
+        "seed": 32610101,
+        "pool_size": 16384,
+        "per_cell": 64,
+        "delays": [
+          0,
+          1,
+          16,
+          32
+        ]
+      },
+      "data": {
+        "train": {
+          "seed": 32110101,
+          "size": 8192
+        },
+        "calibration": {
+          "seed": 32210101,
+          "size": 1024
+        },
+        "validation": {
+          "seed": 32310101,
+          "size": 4096
+        },
+        "test": {
+          "seed": 32410101,
+          "size": 4096
+        }
+      }
+    },
+    {
+      "backbone_seed": 12,
+      "consumer_seed": 32000012,
+      "checkpoint": "/home/brandonin/topoformer-stage11/returns/main/12-wide_continue.pt",
+      "checkpoint_sha256": "80f209e48d95efd18637658c8250dbd4d47870b36c05b358db554442127c0dc0",
+      "readout": "/home/brandonin/topoformer-campaign-01/returns/r04-confirmation/12/ce-16384.pt",
+      "readout_sha256": "fff51123913cf1a76d1eab8b40d2b29061b328068d857c8938745e6f70db89b7",
+      "swap_seed": 32520101,
+      "balanced": {
+        "seed": 32620101,
+        "pool_size": 16384,
+        "per_cell": 64,
+        "delays": [
+          0,
+          1,
+          16,
+          32
+        ]
+      },
+      "data": {
+        "train": {
+          "seed": 32120101,
+          "size": 8192
+        },
+        "calibration": {
+          "seed": 32220101,
+          "size": 1024
+        },
+        "validation": {
+          "seed": 32320101,
+          "size": 4096
+        },
+        "test": {
+          "seed": 32420101,
+          "size": 4096
+        }
+      }
+    }
+  ]
+}

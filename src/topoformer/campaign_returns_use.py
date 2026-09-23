@@ -99,35 +99,47 @@ def run(cfg,out):
     def accessor(x):return head((x-saved['mean'])/saved['scale'])
     cache={};batches={}
     for split,spec in cfg['data'].items():
+        if split=='test':continue
         for distractors in ([2] if split=='train' else cfg['eval_distractors']):
             batch=make_batch(spec['seed'],spec['size'],distractors=distractors);batches[f'{split}/{distractors}']=batch
             cache[f'{split}/{distractors}']=capture_batch(model,accessor,batch,cfg['delays'],device,cfg['batch_size'])
-    populations=[set(cache[f'{split}/2']['original_event_hashes']) for split in cfg['data']]
+    populations=[set(cache[f'{split}/2']['original_event_hashes']) for split in cfg['data'] if split!='test']
     assert all(not(a&b) for i,a in enumerate(populations) for b in populations[i+1:])
     initial=nn.Sequential(nn.Linear(35,1024),nn.GELU(),nn.Linear(1024,2)).to(device)
     fitted={};fits=[];train=cache['train/2'];labels=train['original_targets'].repeat(len(cfg['delays'])).to(device)
     for arm in ('learned','query_only','oracle'):
         consumer=copy.deepcopy(initial);optimizer=torch.optim.AdamW(consumer.parameters(),lr=cfg['lr']);generator=torch.Generator(device=device).manual_seed(cfg['consumer_seed'])
         x=torch.cat([consumer_input(train,d,arm,device) for d in cfg['delays']]);best=None;curve=[];losses=[];visited=torch.zeros(len(x),dtype=torch.bool,device=device)
-        for step in range(cfg['updates']+1):
-            if step in cfg['checkpoints']:
+        arm_updates=cfg.get('fixed_steps',{}).get(arm,cfg['updates'])
+        for step in range(arm_updates+1):
+            if step in cfg['checkpoints'] or step==arm_updates:
                 cells=evaluate(consumer,arm,cache,device);score=selection_score(cells);curve.append(dict(step=step,cells=cells,selection_score=score))
-                if best is None or score>best[0]:best=(score,step,copy.deepcopy(consumer.state_dict()))
-            if step==cfg['updates']:break
+                if ('fixed_steps' in cfg and step==arm_updates) or ('fixed_steps' not in cfg and (best is None or score>best[0])):best=(score,step,copy.deepcopy(consumer.state_dict()))
+            if step==arm_updates:break
             ids=torch.randint(len(x),(cfg['consumer_batch_size'],),device=device,generator=generator)
             visited[ids]=True
             loss=F.cross_entropy(consumer(x[ids]),labels[ids]);optimizer.zero_grad(set_to_none=True);loss.backward();optimizer.step();losses.append(float(loss.detach()))
         consumer.load_state_dict(best[2]);consumer.eval();fitted[arm]=consumer
         path=out/f'{arm}.pt';torch.save({k:v.cpu() for k,v in best[2].items()},path)
-        fits.append(dict(arm=arm,selected_step=best[1],curve=curve,losses=losses,checkpoint_sha256=sha(path),parameters=sum(p.numel() for p in consumer.parameters()),optimizer_presentations=cfg['updates']*cfg['consumer_batch_size'],fit_rows=len(x),fit_events=len(train['original_targets']),visited_row_bits_little_endian=np.packbits(visited.cpu().numpy(),bitorder='little').tobytes().hex(),unique_rows_sampled=int(visited.sum()),unique_events_sampled=int(visited.reshape(len(cfg['delays']),-1).any(0).sum())))
+        fits.append(dict(arm=arm,selected_step=best[1],curve=curve,losses=losses,checkpoint_sha256=sha(path),parameters=sum(p.numel() for p in consumer.parameters()),optimizer_presentations=arm_updates*cfg['consumer_batch_size'],fit_rows=len(x),fit_events=len(train['original_targets']),visited_row_bits_little_endian=np.packbits(visited.cpu().numpy(),bitorder='little').tobytes().hex(),unique_rows_sampled=int(visited.sum()),unique_events_sampled=int(visited.reshape(len(cfg['delays']),-1).any(0).sum())))
     # All further captures are post-selection and cannot affect any fit.
+    if 'test' in cfg['data']:
+        spec=cfg['data']['test']
+        for distractors in cfg['eval_distractors']:
+            batch=make_batch(spec['seed'],spec['size'],distractors=distractors)
+            cache[f'test/{distractors}']=capture_batch(model,accessor,batch,cfg['test_delays'],device,cfg['batch_size'])
+        test_ids=set(cache['test/2']['original_event_hashes']);assert all(not(test_ids & ids) for ids in populations);populations.append(test_ids)
     if not cfg.get('profile_only',False):
-        original=batches['validation/8'];swap=make_batch(cfg['swap_seed'],len(original['targets']['value']),distractors=8)['public']
+        original=batches['validation/8']
+        if 'causal_size' in cfg:
+            def prefix(tree):return {k:prefix(v) if isinstance(v,dict) else v[:cfg['causal_size']] for k,v in tree.items()}
+            original=prefix(original)
+        swap=make_batch(cfg['swap_seed'],len(original['targets']['value']),distractors=8)['public']
         for kind in ('wrong','drop','swap'):
             cache[f'intervention_{kind}/8']=capture_batch(model,accessor,original,cfg['intervention_delays'],device,cfg['batch_size'],kind,swap)
         spec=cfg['balanced'];pool=make_batch(spec['seed'],spec['pool_size'],distractors=8);ids=balanced_indices(pool,spec['per_cell'])
         def subset(tree):return {k:subset(v) if isinstance(v,dict) else v[ids] for k,v in tree.items()}
-        cache['balanced/8']=capture_batch(model,accessor,subset(pool),cfg['intervention_delays'],device,cfg['batch_size'])
+        cache['balanced/8']=capture_batch(model,accessor,subset(pool),spec.get('delays',cfg['intervention_delays']),device,cfg['batch_size'])
         cache['balanced/8']['pool_indices']=ids
         fresh_sets=[set(cache['intervention_swap/8']['supplied_event_hashes']),set(cache['balanced/8']['original_event_hashes'])]
         assert not(fresh_sets[0]&fresh_sets[1])
@@ -152,4 +164,8 @@ def run(cfg,out):
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--config',required=True);p.add_argument('--output',required=True);a=p.parse_args();run(json.loads(Path(a.config).read_text()),a.output)
+    p=argparse.ArgumentParser();p.add_argument('--config',required=True);p.add_argument('--output',required=True);a=p.parse_args();cfg=json.loads(Path(a.config).read_text())
+    if 'runs' in cfg:
+        for entry in cfg['runs']:
+            merged={k:v for k,v in cfg.items() if k!='runs'};merged.update(entry);run(merged,Path(a.output)/str(entry['backbone_seed']))
+    else:run(cfg,a.output)

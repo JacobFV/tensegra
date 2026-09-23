@@ -122,3 +122,15 @@ def test_r05_capture_matches_frozen_forward_and_drop_ignores_value():
             torch.testing.assert_close(captured[d],model.norm(actual)[:,0])
         a=workspace(model,public,[0,1],True);b=workspace(model,alter_public(public,'wrong'),[0,1],True)
         for d in (0,1):torch.testing.assert_close(a[d],b[d])
+
+
+def test_r05_confirmation_has_fixed_endpoints_and_postfit_extrapolation():
+    import json
+    from pathlib import Path
+    cfg=json.loads((Path(__file__).parents[1]/'configs/campaign-r05-confirmation.json').read_text())
+    assert cfg['fixed_steps']=={'learned':2000,'query_only':1000,'oracle':2000}
+    assert 32 not in cfg['delays'] and 32 in cfg['test_delays']
+    assert cfg['causal_size']==2048
+    seeds=[spec['seed'] for r in cfg['runs'] for spec in r['data'].values()]
+    assert len(seeds)==len(set(seeds))==12
+    assert all(r['data']['validation']['size']==r['data']['test']['size']==4096 for r in cfg['runs'])
