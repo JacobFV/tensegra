@@ -8,6 +8,7 @@ from pathlib import Path
 import resource
 import time
 
+import numpy as np
 import torch
 from torch.nn import functional as F
 
@@ -38,7 +39,8 @@ def fit_consumer(model, cache, count, cfg, device):
         loss=F.cross_entropy(head(z[index]),y[index]);optimizer.zero_grad(set_to_none=True);loss.backward();optimizer.step()
         losses.append(float(loss.detach()))
     return head.eval(),mean,scale,dict(unique_rows_sampled=int(visited.sum()),unique_events_sampled=int(visited.reshape(len(delays),count).any(0).sum()),
-        training_event_hashes=train['event_row_hashes'][:count],label_counts=torch.bincount(train['labels'][:count],minlength=33).tolist(),
+        visited_row_bits_little_endian=np.packbits(visited.cpu().numpy(),bitorder='little').tobytes().hex(),
+        training_event_hashes=train['event_row_hashes'][:count],support_by_field={field:torch.bincount(values[:count]).tolist() for field,values in train['targets'].items()},label_counts=torch.bincount(train['labels'][:count],minlength=33).tolist(),
         rows=len(x),events=count,optimizer_presentations=cfg['ce_updates']*cfg['ce_batch_size'],curve=curve,losses=losses)
 
 
