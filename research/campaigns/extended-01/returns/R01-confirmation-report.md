@@ -31,4 +31,9 @@ Do not promote a returned-fact-use task yet. A later narrowed consumed interface
 
 Process occupancy was95.90 seconds including initialization/export; inner per-backbone runs took31.995/31.218/31.120 seconds. Raw predictions preserve all fields, exact group counts, logits, class support and fitted coefficients. Local artifacts are under research/results/campaign-01/returns/r01-confirmation; immutable large caches/weights remain at gb10-direct:~/topoformer-campaign-01/returns/r01-confirmation/{10,11,12}.
 
-Independent raw audit verified all396 cells and the fixed recipe, reproducing the failing seed11 gate. CPU coefficient/cache/provenance replay remains pending. These experiments concern a supporting learned scalar interface, not programmable attention or autonomous reasoning.
+Independent raw audit verified all396 cells and the fixed recipe, reproducing the failing seed11 gate. Independent CPU replay verified all396 logit cells with zero argmax differences, train-only normalization, split separation, and every checkpoint/readout/cache hash. Cross-run audit found no overlap among18 profile/development/confirmation populations totaling27,840 distinct event identities. These experiments concern a supporting learned scalar interface, not programmable attention or autonomous reasoning.
+
+
+![All-seed scalar, non-value and full-joint test curves](../../../results/campaign-01/returns/r01-confirmation/r01-confirmation-curves.png)
+
+![Per-value support and integer/float error tails](../../../results/campaign-01/returns/r01-confirmation/r01-value-tails.png)
