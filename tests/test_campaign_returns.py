@@ -46,3 +46,18 @@ def test_exposure_preserves_original_nine_hundred_prefix():
     assert cfg['head_seed']==22000011 and cfg['batch_size']==256 and cfg['lr']==.003
     assert 'ce-16384.pt' in cfg['reference_path']
     assert 32 not in cfg['delays']
+
+
+def test_r04_pairs_nested_diversity_without_delayed_test_selection():
+    import json
+    from pathlib import Path
+    cfg=json.loads((Path(__file__).parents[1]/'configs/campaign-r04-confirmation.json').read_text())
+    assert cfg['pool_sizes']==[4096,16384]
+    assert cfg['ce_updates']==900 and cfg['ce_batch_size']==256
+    assert 32 not in cfg['delays'] and 32 in cfg['test_delays']
+    seeds=[spec['seed'] for run in cfg['runs'] for spec in run['data'].values()]
+    assert len(set(seeds))==12
+    for run in cfg['runs']:
+        assert run['data']['train']['size']==max(cfg['pool_sizes'])
+        assert run['data']['calibration']['size']==1024
+        assert run['data']['validation']['size']==run['data']['test']['size']==4096
