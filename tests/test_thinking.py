@@ -123,3 +123,39 @@ def test_event_roundtrip_has_independent_value_type_and_operation_heads():
     assert heads['op_logits'].shape == (2,2,5)
     sum(v.square().mean() for v in heads.values()).backward()
     assert model.event_value.weight.grad.abs().sum() > 0
+
+
+def test_predicted_typed_graph_depends_on_public_context():
+    model,context,memory = model_fixture()
+    state = model.initialize({'context':context})
+    original = model.step(state,context,memory)
+    changed = model.step(state,context+3,memory)
+    assert original['predicted_adjacency'].shape == (2,2,5,5)
+    assert not torch.allclose(original['predicted_adjacency'],changed['predicted_adjacency'])
+
+
+def test_grounding_has_explicit_null_even_without_observable_nodes():
+    model,context,memory = model_fixture()
+    state = model.initialize({'context':context})
+    out = model.step(state,context,memory,memory_mask=torch.zeros(2,5,dtype=torch.bool))
+    for key in ('grounding_q','grounding_k'):
+        assert out[key].shape == (2,2,8,6)
+        assert (out[key][...,-1] == 1).all()
+        assert (out[key][...,:-1] == 0).all()
+    empty = model.step(state,context,memory[:,:0])
+    assert (empty['grounding_q'] == 1).all()
+    assert torch.isfinite(empty['workspace']).all()
+
+
+def test_structural_geometry_preserves_relation_identity():
+    model,context,memory = model_fixture()
+    state = model.initialize({'context':context})
+    graph = torch.zeros(2,2,5,5)
+    graph[:,0,0,1] = 1
+    with torch.no_grad():
+        model.relation_strength[:,0] = 1
+        model.relation_strength[:,1] = 4
+    first = model.step(state,context,memory,adjacency=graph)
+    swapped = model.step(state,context,memory,adjacency=graph.flip(1))
+    assert not torch.allclose(first['attentions'][0][:,2:],swapped['attentions'][0][:,2:])
+    torch.testing.assert_close(first['attentions'][0][:,:2],swapped['attentions'][0][:,:2])

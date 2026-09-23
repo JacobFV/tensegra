@@ -41,3 +41,16 @@ Full isolated baseline-plus-owned-files suite: **380 passed**. The first full ru
 had two provenance test failures because a git archive has no `.git`; initializing
 and committing the disposable snapshot resolved that environment issue. No
 training experiment or changes to Stage 1–5 sources were performed.
+
+Pre-freeze hardening: topology now uses a learned memory cross-attention refresh
+from public context and current workspace before edge prediction. Changing only
+public context changes the predicted graph. The predictor returns typed adjacency
+`[B,R,N,N]` with `n_relations=2` by default (ordered argument slots). Structural
+geometry retains each relation and learns independent head-by-relation strengths;
+its weighted mean preserves scale for the backward-compatible 3D graph input,
+which is explicitly broadcast to all relation channels. Query and key grounding
+now each include a learned final null column, excluded from induced graph edges.
+All-masked and truly empty node memories ground entirely to null. Three new
+regressions failed before these changes; all twelve model tests now pass, and the
+full isolated baseline-plus-owned-files remote suite reports **383 passed**.
+Runner notified of both changed graph and grounding tensor shapes before pilots.

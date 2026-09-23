@@ -22,6 +22,7 @@ class ThinkingConfig:
     n_ops: int = 5
     max_arguments: int = 2
     n_types: int = 3
+    n_relations: int = 2
     output_classes: int = 129
     min_microsteps: int = 2
     max_microsteps: int = 8
@@ -32,7 +33,7 @@ class ThinkingConfig:
     def __post_init__(self):
         if self.width % self.heads or not 0 <= self.structural_heads <= self.heads:
             raise ValueError('invalid attention dimensions')
-        if min(self.feature_dim, self.workspace_rows, self.candidates, self.max_arguments) < 1:
+        if min(self.feature_dim, self.workspace_rows, self.candidates, self.max_arguments, self.n_relations) < 1:
             raise ValueError('dimensions must be positive')
         if self.temperature <= 0 or not 0 <= self.min_microsteps <= self.max_microsteps:
             raise ValueError('invalid temperature or microstep limits')
@@ -82,8 +83,12 @@ class ThinkingModel(nn.Module):
         self.ground_key = nn.Linear(w,max(1,c.structural_heads)*w,bias=False)
         self.ground_nodes_q = nn.Linear(w,w,bias=False)
         self.ground_nodes_k = nn.Linear(w,w,bias=False)
-        self.graph_source = nn.Linear(w,w,bias=False)
-        self.graph_destination = nn.Linear(w,w,bias=False)
+        self.memory_refresh = nn.MultiheadAttention(w,c.heads,dropout=0,batch_first=True)
+        self.graph_source = nn.Linear(w,c.n_relations*w,bias=False)
+        self.graph_destination = nn.Linear(w,c.n_relations*w,bias=False)
+        self.ground_null_q = nn.Linear(w,max(1,c.structural_heads))
+        self.ground_null_k = nn.Linear(w,max(1,c.structural_heads))
+        self.relation_strength = nn.Parameter(torch.ones(c.structural_heads,c.n_relations))
         self.candidate_queries = nn.Parameter(torch.randn(c.candidates,w)*.1)
         self.operation = nn.Linear(w,c.n_ops)
         self.argument_queries = nn.Linear(w,c.max_arguments*w)
@@ -128,27 +133,45 @@ class ThinkingModel(nn.Module):
         if memory_mask is None:
             memory_mask = torch.ones(mem.shape[:2],device=mem.device,dtype=torch.bool)
         context_mask,memory_mask = context_mask.bool(),memory_mask.bool()
-        predicted = (self.graph_source(mem) @ self.graph_destination(mem).transpose(-1,-2)/math.sqrt(w)).sigmoid()
+        # Memory identities acquire public textual/current-workspace context before
+        # predicting edges; no historical state or hidden target enters this read.
+        source = torch.cat((ctx,workspace),1)
+        source_mask = torch.cat((context_mask,torch.ones(workspace.shape[:2],device=mem.device,dtype=torch.bool)),1)
+        refresh,_ = self.memory_refresh(mem,source,source,key_padding_mask=~source_mask,need_weights=False)
+        mem = mem + refresh
+        gs = self.graph_source(mem).reshape(b,m,c.n_relations,w).transpose(1,2)
+        gd = self.graph_destination(mem).reshape(b,m,c.n_relations,w).transpose(1,2)
+        predicted = (gs @ gd.transpose(-1,-2)/math.sqrt(w)).sigmoid()
         graph = predicted if adjacency is None else adjacency.to(mem.dtype)
-        if graph.ndim == 4:
-            graph = graph.mean(1)
-        if graph.shape != (b,m,m):
-            raise ValueError('adjacency must match current memory')
-        graph = graph * memory_mask[:,:,None] * memory_mask[:,None,:]
+        if graph.ndim == 3:
+            # Untyped public graph applies equally to each relation channel;
+            # mean aggregation below preserves its scale at unit strengths.
+            graph = graph[:,None].expand(-1,c.n_relations,-1,-1)
+        if graph.shape != (b,c.n_relations,m,m):
+            raise ValueError('adjacency must match relation count and current memory')
+        graph = graph * memory_mask[:,None,:,None] * memory_mask[:,None,None,:]
         strength = c.structural_strength if structural_strength is None else structural_strength
         clock = workspace.new_tensor([math.sin(float(token_time)),math.cos(float(token_time))])
         state = workspace + self.token_clock(clock)[None,None]
         attentions = []
-        pq = pk = state.new_zeros(b,c.structural_heads,state.shape[1],m)
+        pq = pk = state.new_zeros(b,c.structural_heads,state.shape[1],m+1)
         for block in self.blocks:
             bias = state.new_zeros(b,c.heads,state.shape[1],state.shape[1])
             if c.structural_heads:
                 q = F.normalize(self.ground_query(state).reshape(b,-1,c.structural_heads,w).transpose(1,2),dim=-1)
                 k = F.normalize(self.ground_key(state).reshape(b,-1,c.structural_heads,w).transpose(1,2),dim=-1)
                 nq,nk = F.normalize(self.ground_nodes_q(mem),dim=-1),F.normalize(self.ground_nodes_k(mem),dim=-1)
-                pq = _masked_softmax(q @ nq[:,None].transpose(-1,-2)/c.temperature,memory_mask[:,None,None,:])
-                pk = _masked_softmax(k @ nk[:,None].transpose(-1,-2)/c.temperature,memory_mask[:,None,None,:])
-                induced = pq @ graph[:,None] @ pk.transpose(-1,-2)
+                q_logits = torch.cat((q @ nq[:,None].transpose(-1,-2)/c.temperature,
+                                      self.ground_null_q(state).transpose(1,2)[...,None]),-1)
+                k_logits = torch.cat((k @ nk[:,None].transpose(-1,-2)/c.temperature,
+                                      self.ground_null_k(state).transpose(1,2)[...,None]),-1)
+                node_mask = torch.cat((memory_mask,torch.ones(b,1,device=mem.device,dtype=torch.bool)),-1)
+                pq = _masked_softmax(q_logits,node_mask[:,None,None,:])
+                pk = _masked_softmax(k_logits,node_mask[:,None,None,:])
+                # Null is a grounding destination, never a structural graph node.
+                per_relation = (pq[...,:-1][:,:,None] @ graph[:,None]
+                                @ pk[...,:-1][:,:,None].transpose(-1,-2))
+                induced = (per_relation*self.relation_strength[None,:,:,None,None]).mean(2)
                 bias = torch.cat((bias[:,:c.heads-c.structural_heads], strength*induced),1)
             state,attention = block(state,torch.cat((ctx,mem),1),torch.cat((context_mask,memory_mask),1),bias)
             attentions.append(attention)
