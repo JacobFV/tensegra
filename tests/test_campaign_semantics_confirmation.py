@@ -31,3 +31,11 @@ def test_binding_is_same_parent_and_byte_hash_only(tmp_path):
     assert bound[0]['learning_rate']==1e-4 and bound[1]['learning_rate']==1e-5
     checkpoint.write_bytes(b'changed')
     with pytest.raises(ValueError):bind_parent(CONFIG/'campaign-s12-decay-701-template.json',parent,tmp_path/'corrupt.json')
+
+def test_shared_event_interval_preserves_seed_correlation():
+    import numpy as np
+    from topoformer.campaign_semantics_confirmation_analysis import paired_interval
+    delta=np.tile(np.r_[np.ones(512),np.zeros(512)],(3,1))
+    result=paired_interval(delta,repetitions=128)
+    assert result['per_seed_mean']==[.5,.5,.5]
+    assert result['shared_event_mean_interval']==result['per_seed_interval'][0]
