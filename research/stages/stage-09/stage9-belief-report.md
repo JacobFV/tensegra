@@ -24,7 +24,7 @@ The supplied prior is an engineered closed-world guarantee. A pass cannot establ
 
 ## Evaluation status
 
-Frozen-checkpoint matrix complete: 864 cells / 442,368 paired-policy episode evaluations. Independent raw reconstruction is pending. These counts repeat the same events across model/prior comparisons; they are not independent unique constructions. Original and expanded contract gates are separate. Every official gate includes the initial frame and full-retraction frames; supplied probabilities do not relax thresholds. No A3 calibration intervention or new training is currently justified or authorized. Composition and supervision withdrawal remain blocked.
+Frozen-checkpoint matrix complete: 864 cells / 442,368 paired-policy episode evaluations. Independent raw reconstruction verified all864 cells, source/checkpoint hashes, every gate and every paired prior intervention. Across1,787,904 paired frames, all nonempty posteriors are bitwise unchanged and all239,616 empty frames receive the exact supplied prior. These counts repeat the same events across model/prior comparisons; they are not independent unique constructions. Original and expanded contract gates are separate. Every official gate includes the initial frame and full-retraction frames; supplied probabilities do not relax thresholds. No A3 calibration intervention or new training is currently justified or authorized. Composition and supervision withdrawal remain blocked.
 
 ## Coverage and confounds
 
