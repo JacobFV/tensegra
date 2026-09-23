@@ -271,6 +271,103 @@ def coverage_audit(summary, config):
                 scope='Core depth or renderer grid; optional OOD/intervention coverage reported in aggregates.')
 
 
+def merge_shards(canonical_config, shard_dirs, output):
+    """Merge completed disjoint controlled seed shards without loading model state.
+
+    Resolved shard configs must differ only in seeds. Canonical config can omit
+    default-valued fields, but every supplied value must match the resolved config.
+    Output is committed by directory rename only after all validation succeeds.
+    """
+    import shutil
+    import tempfile
+    output=Path(output)
+    if output.exists():raise ValueError('merge output must not exist')
+    if not shard_dirs:raise ValueError('no shards')
+    expected_seeds=canonical_config.get('seeds',[])
+    if not expected_seeds or len(set(expected_seeds))!=len(expected_seeds):raise ValueError('canonical seeds must be unique and nonempty')
+    entries=[];all_seeds=set();shared=None;common_manifest=None
+    for directory in shard_dirs:
+        directory=Path(directory);manifest_path=directory/'manifest.json'
+        manifest=json.loads(manifest_path.read_text());config=manifest['config'];seeds=config['seeds']
+        if not seeds or len(set(seeds))!=len(seeds) or all_seeds.intersection(seeds):raise ValueError('overlapping/duplicate shard seeds')
+        all_seeds.update(seeds)
+        comparable={k:v for k,v in config.items() if k!='seeds'}
+        common={k:v for k,v in manifest.items() if k!='config'}
+        if manifest.get('source_hash')!=digest(manifest.get('sources',{})):raise ValueError('invalid shard source manifest hash')
+        if shared is None:shared=comparable;common_manifest=common
+        elif comparable!=shared:raise ValueError('shard configs differ beyond seeds')
+        elif common!=common_manifest:raise ValueError('shard source/manifest identities differ')
+        for key,value in canonical_config.items():
+            if key!='seeds' and (key not in comparable or comparable[key]!=value):raise ValueError('canonical config mismatch: '+key)
+        metrics=directory/'metrics.jsonl'
+        if not metrics.exists():metrics=directory/'metrics.jsonl.gz'
+        if not metrics.is_file():raise ValueError('missing shard metrics')
+        entries.append((directory,manifest_path,manifest,metrics))
+    if all_seeds!=set(expected_seeds):raise ValueError('missing or unexpected shard seeds')
+    merged_config={**shared,'seeds':list(expected_seeds)}
+    output.parent.mkdir(parents=True,exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='.stage6-merge-',dir=output.parent) as temporary:
+        staging=Path(temporary)/'combined';staging.mkdir();provenance=[];checkpoint_names=set()
+        merged_path=staging/'metrics.jsonl.gz'
+        with merged_path.open('wb') as merged_raw,gzip.GzipFile(filename='',mode='wb',fileobj=merged_raw,mtime=0,compresslevel=1) as merged_stream:
+            for index,(directory,manifest_path,manifest,metrics) in enumerate(entries):
+                config=manifest['config'];seeds=set(config['seeds']);variants=set(config['variants'])
+                shard_archive=staging/'shards'/f'{index:03d}';shard_archive.mkdir(parents=True)
+                shutil.copyfile(manifest_path,shard_archive/'manifest.json')
+                (shard_archive/'config.json').write_text(json.dumps(config,indent=2,allow_nan=False)+'\n')
+                pairs=set();seen=set();training=Counter();grid=set();row_count=0;uncompressed=hashlib.sha256()
+                archived_metrics=shard_archive/'metrics.jsonl.gz'
+                opener=gzip.open if metrics.suffix=='.gz' else open
+                with opener(metrics,'rb') as source,archived_metrics.open('wb') as archive_raw,gzip.GzipFile(filename='',mode='wb',fileobj=archive_raw,mtime=0,compresslevel=1) as archive_stream:
+                    for line in source:
+                        uncompressed.update(line);archive_stream.write(line)
+                        if not line.strip():continue
+                        row=json.loads(line);variant=row['variant'];seed=row['seed'];kind=row['kind'];step=row['step']
+                        if variant not in variants or seed not in seeds:raise ValueError('row outside declared shard seed/variant')
+                        pairs.add((variant,seed));row_count+=1
+                        identity=(variant,seed,kind,step,row.get('condition'),row.get('depth'),row.get('intervention'))
+                        if identity in seen:raise ValueError('duplicate shard row')
+                        seen.add(identity)
+                        if kind=='evaluation':
+                            if row.get('source_hash')!=manifest['source_hash']:raise ValueError('row source hash differs from shard manifest')
+                            if row.get('condition','depth')=='depth':grid.add((variant,seed,step,row['depth']))
+                        elif kind=='training':
+                            if not 1<=step<=config['steps']:raise ValueError('training step outside configured range')
+                            training[(variant,seed)]+=1
+                        else:raise ValueError('unknown shard row kind')
+                        merged_stream.write(line if line.endswith(b'\n') else line+b'\n')
+                expected_pairs={(v,seed) for v in variants for seed in seeds}
+                if pairs!=expected_pairs:raise ValueError('missing variant/seed run')
+                if any(training[pair]!=config['steps'] for pair in expected_pairs):raise ValueError('missing training updates')
+                steps=set(config.get('checkpoints',[]))|{0,config['steps']}
+                expected_grid={(v,seed,step,depth) for v,seed in expected_pairs for step in steps for depth in config['eval_depths']}
+                if not expected_grid<=grid:raise ValueError('missing core evaluation cells')
+                checkpoints={}
+                for checkpoint in sorted(directory.glob('*.pt')):
+                    name=checkpoint.name
+                    expected_names={f'{v}-seed{seed}-step{step}.pt' for v,seed in expected_pairs for step in steps}
+                    if name not in expected_names or name in checkpoint_names:raise ValueError('checkpoint outside shard identity or duplicate name')
+                    checkpoint_names.add(name);wanted=file_hash(checkpoint);shutil.copyfile(checkpoint,staging/name)
+                    if file_hash(staging/name)!=wanted:raise ValueError('checkpoint changed while copying')
+                    checkpoints[name]=dict(sha256=wanted,bytes=checkpoint.stat().st_size)
+                required_final={f'{v}-seed{seed}-step{config["steps"]}.pt' for v,seed in expected_pairs}
+                if config.get('save_checkpoints',False) and not required_final<=checkpoints.keys():raise ValueError('missing final checkpoint')
+                provenance.append(dict(shard_index=index,input_directory=str(directory),manifest_sha256=file_hash(manifest_path),
+                    config_hash=digest(config),source_hash=manifest['source_hash'],seeds=config['seeds'],variants=config['variants'],
+                    metrics_input_sha256=file_hash(metrics),metrics_uncompressed_sha256=uncompressed.hexdigest(),
+                    archived_metrics_sha256=file_hash(archived_metrics),metrics_rows=row_count,checkpoints=checkpoints,
+                    archived_manifest=f'shards/{index:03d}/manifest.json',archived_metrics=f'shards/{index:03d}/metrics.jsonl.gz'))
+        combined={**common_manifest,'config':merged_config,'combined_from':provenance,'merge':dict(
+            kind='disjoint_seed_shards_of_one_study',canonical_input_config_hash=digest(canonical_config),resolved_config_hash=digest(merged_config),
+            metrics_sha256=file_hash(merged_path),analysis_source_sha256=file_hash(__file__),
+            checkpoint_note='Copied bytes checked against measured shard file hashes; no model state loaded.')}
+        (staging/'config.json').write_text(json.dumps(merged_config,indent=2,allow_nan=False)+'\n')
+        (staging/'canonical-input.json').write_text(json.dumps(canonical_config,indent=2,allow_nan=False)+'\n')
+        (staging/'manifest.json').write_text(json.dumps(combined,indent=2,allow_nan=False)+'\n')
+        staging.rename(output)
+    return combined
+
+
 def plots(summary, output):
     import matplotlib
     matplotlib.use('Agg')
@@ -311,9 +408,15 @@ def plots(summary, output):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('input',type=Path);parser.add_argument('output',type=Path)
+    parser.add_argument('--merge-shards',nargs='+',type=Path,help='Merge completed controlled seed shard directories; input is canonical config JSON')
     parser.add_argument('--track',choices=['controlled','language'],default='controlled');parser.add_argument('--source-root',type=Path);parser.add_argument('--no-plots',action='store_true')
-    args=parser.parse_args();root=args.input if args.input.is_dir() else args.input.parent
+    args=parser.parse_args()
+    if args.merge_shards:
+        merge_shards(json.loads(args.input.read_text()),args.merge_shards,args.output)
+        return
+    root=args.input if args.input.is_dir() else args.input.parent
     path=(root/('metrics.jsonl' if args.track=='controlled' else 'curves.jsonl')) if args.input.is_dir() else args.input
+    if not path.exists() and path.suffix=='.jsonl':path=path.with_suffix('.jsonl.gz')
     rows=read_rows(path)
     if args.track=='controlled':summary=summarize_controlled(rows);manifest_path=root/'manifest.json'
     else:
@@ -323,6 +426,9 @@ def main():
     if args.track=='controlled':
         audit['manifest_source_hash_matches']=manifest.get('source_hash')==digest(manifest.get('sources',{}))
         audit['row_source_hash_matches']=summary['provenance']['source_hashes']==[manifest.get('source_hash')]
+        if manifest.get('combined_from'):
+            audit['combined_from']=manifest['combined_from']
+            audit['merged_metrics_hash_matches']=manifest.get('merge',{}).get('metrics_sha256')==file_hash(path)
     else:
         run_manifest_path=root/'manifest.json'
         run_manifest=json.loads(run_manifest_path.read_text()) if run_manifest_path.exists() else {}

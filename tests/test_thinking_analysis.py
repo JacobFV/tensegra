@@ -110,6 +110,46 @@ class AnalysisTests(unittest.TestCase):
         self.assertFalse(result['paired_contrasts'][0]['matched_observation_protocol'])
         self.assertEqual(result['aggregates'][0]['observation_protocols'],['progressive_exogenous_context'])
 
+    def make_shard(self, root, name, seed, config=None):
+        shard=root/name;shard.mkdir()
+        config=config or dict(seeds=[seed],variants=['local'],steps=0,checkpoints=[0],eval_depths=[8],save_checkpoints=True)
+        sources={'source.py':'sourcehash'}
+        manifest=dict(config=config,sources=sources,source_hash=a.digest(sources))
+        (shard/'manifest.json').write_text(json.dumps(manifest))
+        record=row(seed);record.update(step=0,source_hash=manifest['source_hash'])
+        (shard/'metrics.jsonl').write_text(json.dumps(record)+'\n')
+        (shard/f'local-seed{seed}-step0.pt').write_bytes(f'checkpoint {seed}'.encode())
+        return shard
+
+    def test_merge_disjoint_shards_preserves_raw_identity_and_checkpoints(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);left=self.make_shard(root,'left',1);right=self.make_shard(root,'right',2)
+            output=root/'merged'
+            manifest=a.merge_shards({'seeds':[1,2],'variants':['local'],'steps':0},[left,right],output)
+            self.assertEqual(manifest['config']['seeds'],[1,2])
+            self.assertEqual(len(manifest['combined_from']),2)
+            self.assertEqual([r['seed'] for r in a.read_rows(output/'metrics.jsonl.gz')],[1,2])
+            self.assertEqual((output/'local-seed2-step0.pt').read_bytes(),b'checkpoint 2')
+            self.assertEqual((output/'shards/000/manifest.json').read_bytes(),(left/'manifest.json').read_bytes())
+            self.assertEqual(manifest['combined_from'][0]['metrics_uncompressed_sha256'],a.file_hash(left/'metrics.jsonl'))
+            summary=a.summarize_controlled(a.read_rows(output/'metrics.jsonl.gz'))
+            self.assertTrue(a.coverage_audit(summary,manifest['config'])['complete'])
+
+    def test_merge_rejects_overlap_missing_seed_config_mismatch_and_gap(self):
+        for problem in ('overlap','missing_seed','config_mismatch','source_mismatch','gap','checkpoint_gap'):
+            with self.subTest(problem=problem),tempfile.TemporaryDirectory() as directory:
+                root=Path(directory);left=self.make_shard(root,'left',1)
+                right=self.make_shard(root,'right',1 if problem=='overlap' else 2)
+                if problem=='config_mismatch':
+                    path=right/'manifest.json';manifest=json.loads(path.read_text());manifest['config']['steps']=1;path.write_text(json.dumps(manifest))
+                if problem=='source_mismatch':
+                    path=right/'manifest.json';manifest=json.loads(path.read_text());manifest['sources']['source.py']='different';manifest['source_hash']=a.digest(manifest['sources']);path.write_text(json.dumps(manifest))
+                if problem=='gap':(right/'metrics.jsonl').write_text('')
+                if problem=='checkpoint_gap':(right/'local-seed2-step0.pt').unlink()
+                shards=[left] if problem=='missing_seed' else [left,right]
+                with self.assertRaises(ValueError):a.merge_shards({'seeds':[1,2],'variants':['local'],'steps':0},shards,root/'merged')
+                self.assertFalse((root/'merged').exists())
+
     def test_file_hash_audit_and_stream(self):
         with tempfile.TemporaryDirectory() as d:
             path=Path(d)/'x.jsonl';path.write_text('{"n":1}\n\n{"n":2}\n')

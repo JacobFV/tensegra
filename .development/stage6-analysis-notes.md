@@ -22,3 +22,17 @@ Validation: six standard-library fixture tests pass via `python3 tests/test_thin
 The analyzer now retains explicit null decoder metrics, raw node/typed-edge populations, defined-example counts, and separately named pooled graph rates. It validates TCN per-seed initial states and data/config identity across evaluation/loss rows, rejects duplicate loss rows and impossible graph counts, includes renamed examples in modern data-hash verification, and checks checkpoint bytes against producer manifest hashes. Old pilots remain readable with explicit legacy denominator/provenance labels. Controlled aggregates retain observation protocols, paired contrasts flag protocol differences, and training curves retain teacher-forcing rates and objective names.
 
 Validation expanded to nine passing standard-library tests including modern decoder null/count handling, initial-state mismatch rejection, renamed-data hash checks, checkpoint corruption detection and protocol mismatch labeling. Remote plotting was validated on the completed language pilot without modifying its frozen checkout. Main-study changes do not retroactively rewrite the archived pilot summary.
+
+## Disjoint seed shard merge
+
+```sh
+python src/topoformer/thinking_analysis.py configs/stage6-controlled.json COMBINED_DIR \
+  --merge-shards SEED0_DIR SEED1_DIR SEED2_DIR
+python src/topoformer/thinking_analysis.py COMBINED_DIR ANALYSIS_DIR --source-root FROZEN_REPO
+```
+
+The canonical input must declare the full seed list. Resolved shard configs must differ **only** in seeds; supplied canonical fields must match them, and omitted defaults are inherited from the shared resolved config. Source manifests and hashes must match, evaluation row source hashes must agree, variant/seed populations must be complete/nonoverlapping, training updates must cover every configured step, and the core depth/checkpoint grid must be present. Duplicate rows, out-of-shard rows/checkpoints, and missing final checkpoints (when checkpoint saving is enabled) are errors. Evaluation-economy grid filtering must match the runner's final schema before merging main artifacts.
+
+Merging streams one decoded JSONL line at a time and retains only identity/count sets. It archives each shard's exact original manifest, resolved config, and compressed original log under `shards/NNN/`. `combined_from` records original manifest/source/config/log hashes, rows, seeds, variants and checkpoint hashes. Checkpoint bytes are copied and rehashed; no model state is deserialized. The merged manifest preserves shared fields and substitutes the canonical seed union. Combined metrics are gzip JSONL, automatically recognized by normal analysis. Outputs are staged and renamed only on success; an existing output directory is rejected. This records partitions of one paired study, not additional independent studies.
+
+Validation: 11 standard-library tests pass, including disjoint merge and rejection of overlap, missing seeds/runs, config/source mismatch and missing final checkpoints. A real CLI merge followed by gzip-input analysis verified complete coverage and merged-log hash agreement. No experimental training runs were launched.
