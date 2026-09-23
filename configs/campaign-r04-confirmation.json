@@ -14,14 +14,10 @@
     8
   ],
   "batch_size": 64,
-  "ridge_grid": [
-    0.01
-  ],
   "ce_updates": 900,
   "ce_batch_size": 256,
   "ce_lr": 0.003,
   "ce_check_every": 100,
-  "fixed_ce_step": 900,
   "test_delays": [
     0,
     1,
@@ -48,11 +44,11 @@
         },
         "validation": {
           "seed": 26100101,
-          "size": 1024
+          "size": 4096
         },
         "test": {
           "seed": 27100101,
-          "size": 1024
+          "size": 4096
         }
       }
     },
@@ -72,11 +68,11 @@
         },
         "validation": {
           "seed": 26110101,
-          "size": 1024
+          "size": 4096
         },
         "test": {
           "seed": 27110101,
-          "size": 1024
+          "size": 4096
         }
       }
     },
@@ -96,13 +92,17 @@
         },
         "validation": {
           "seed": 26120101,
-          "size": 1024
+          "size": 4096
         },
         "test": {
           "seed": 27120101,
-          "size": 1024
+          "size": 4096
         }
       }
     }
+  ],
+  "pool_sizes": [
+    4096,
+    16384
   ]
 }
