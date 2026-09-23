@@ -80,3 +80,16 @@ inference outputs to CPU for that decoder, as the historical evaluation path
 does. Actor computation and training objective are unchanged. The failure log
 is retained; the retry uses a fresh output directory and the same20-update
 profile recipe. This is a device-contract repair, not model selection.
+
+## Measured main resource freeze
+
+The corrected profile completed20updates in1.57068training seconds and3.77982wall
+seconds including two evaluations/checkpoint exports. Parameters57,853,781;
+actual width1024, eight workspace rows and4×2block applications. Peak allocated
+GPU memory1,225,673,216bytes; process RSS2,412,264KiB is a separate quantity.
+Full3×4000updates project942training seconds, approximately16–18minutes with
+all18evaluations and exports. Prespecified hard main limit20minutes; total track
+ceiling75minutes. No optimizer/head/budget choices use profile learning outcomes.
+Periodic progress logging is added before the main source freeze; it does not
+change model inputs, objective or random draws. Main waits for explicit root
+GPU queue release after the return profile.

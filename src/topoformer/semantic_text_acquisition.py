@@ -99,6 +99,7 @@ def run(config):
                 result=evaluate(model,items);curves.append(dict(update=update,**result))
                 path=out/f'model-seed{seed}-u{update}.pt';torch.save(model.state_dict(),path)
                 curves[-1]['checkpoint_sha256']=hashlib.sha256(path.read_bytes()).hexdigest()
+                print(json.dumps(dict(event='evaluation',seed=seed,update=update,raw_exact=result['raw_exact'],calibrated_exact=result['calibrated_exact'])),flush=True)
             if update==config['updates']:break
             if config['device']=='cuda':torch.cuda.synchronize()
             tick=time.monotonic();optimizer.zero_grad()
@@ -113,6 +114,7 @@ def run(config):
             train_time+=time.monotonic()-tick
             component=torch.stack([torch.stack([row[k].detach() for k in parts[0]]) for row in parts]).mean(0).cpu().tolist()
             losses.append(dict(update=update+1,parts=dict(zip(parts[0],component)),weights=weights))
+            if (update+1)%250==0:print(json.dumps(dict(event='progress',seed=seed,update=update+1,presentations=(update+1)*len(items),training_seconds=train_time)),flush=True)
         runs.append(dict(seed=seed,parameters=sum(p.numel() for p in model.parameters()),width=model.width,workspace_rows=8,context_tokens=[len(base.tokens(p)) for p,_,_ in items],optimizer_presentations=config['updates']*len(items),actual_unique_graphs=len(items),training_seconds=train_time,wall_seconds=time.monotonic()-start,peak_cuda_allocated=torch.cuda.max_memory_allocated() if config['device']=='cuda' else None,process_maxrss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,initial_state_sha256=initial,final_state_sha256=state_hash(model),curves=curves,losses=losses))
         with gzip.GzipFile(filename=str(out/'results.json.gz'),mode='wb',mtime=0) as stream:stream.write(json.dumps(manifest,separators=(',',':')).encode())
     return manifest

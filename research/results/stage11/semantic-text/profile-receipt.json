@@ -1,0 +1,58 @@
+{
+  "profile_config": {
+    "graphs": 8,
+    "lesson": "unification",
+    "language": "english",
+    "data_seed": 11000000,
+    "width": 1024,
+    "node_capacity": 128,
+    "seeds": [
+      301
+    ],
+    "updates": 20,
+    "checkpoints": [
+      0,
+      20
+    ],
+    "learning_rate": 0.0001,
+    "negative_pairs": 128,
+    "node_presentations": 1000,
+    "identity_presentations": 2000,
+    "autocast_dtype": "bfloat16",
+    "device": "cuda",
+    "output_dir": "results/stage11-semantic-text-profile-v2"
+  },
+  "profile_source_sha256": {
+    "semantic_text_acquisition.py": "e209dbb04367e08c04991920a62062b256a68a69467ff84697653cde3fd2f0ca",
+    "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+    "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+    "semantic_contracts.py": "914a12a24a14434918412f2ad71368f51085bd248c7398164b0c2b1c9a0e215f",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+    "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+    "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670"
+  },
+  "environment": {
+    "torch_version": "2.14.0+cu130",
+    "cuda_version": "13.0",
+    "device_name": "NVIDIA GB10",
+    "threads": 2,
+    "parameter_dtype": "float32",
+    "dense_autocast": "bfloat16"
+  },
+  "parameters": 57853781,
+  "width": 1024,
+  "workspace_rows": 8,
+  "training_seconds": 1.5706800590269268,
+  "wall_seconds": 3.779815221671015,
+  "peak_cuda_allocated": 1225673216,
+  "process_maxrss_kib": 2412264,
+  "projected_main_training_seconds": 942.408035416156,
+  "estimated_main_total_minutes": [
+    16,
+    18
+  ],
+  "hard_main_minutes": 20,
+  "track_ceiling_minutes": 75,
+  "first_profile_failure": "CPU public-copy decoder received CUDA outputs; no optimizer update; versioned device-wrapper fix"
+}
