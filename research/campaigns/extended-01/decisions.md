@@ -27,3 +27,9 @@ S01 N8192 finalcopy95.77%,orderedF1.854 versus midpoint82.76%/.715 meets registe
 A03 three-seed clean results reproduce finite-bias dilution and its stronger-bias repair; strong context/message/hard remain equally accurate. Promote A04 CPU implementation of content-dependent multi-neighbor selection, where learned QK matching has a nontrivial role. Competitive dynamic neighbor attention and exact-address-gather ceiling retained. GPU profiling requires separate release.
 
 R04 runs frozen selected readout recipe with fresh3backbone data and separate balanced typed-value cells. No composition or further tuning until audit.
+
+## Restricted return pass and continued semantic acquisition
+
+Independent R04 raw/cache replay verifies the newmixture scalar contract across3backbones, while balanced floatzero/negative-tail failures rule outuniformscalarreliability. Advance only oracle-first-operation/learnedreturned-fact-use R05, withquery-only/exactvaluecontrols andwrong/drop/swapcausaltests. A >95%development screen is not the >=98%three-seedentryrequirement forfurthercomposition. Historicalsixfieldgatesremainunchanged; fresh16stepfieldwiseoutcomesreportedseparately.
+
+S02 head-only continuation failed fixedset exactfit and declined aftermidpoint; no bestcheckpointsubstitution. This doesnotinvalidate S03jointactorcontinuation selected independentlyfromdiversitylearningcurves. Parentprediction andfirstbatchRNGreplay passedbeforeupdates.
