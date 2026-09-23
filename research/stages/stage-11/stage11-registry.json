@@ -1,0 +1,38 @@
+{
+  "baseline": "e10b80a",
+  "width": 1024,
+  "gpu_seconds_ceiling": 10800,
+  "allocation_minutes": {
+    "returns": 75,
+    "semantics": 75,
+    "reserve": 30
+  },
+  "composition_allowed": false,
+  "supervision_withdrawal_allowed": false,
+  "tracks": {
+    "belief_reference": {
+      "status": "not_run",
+      "training_allowed": false
+    },
+    "returns": {
+      "status": "not_run",
+      "scope": "Paired short/wide horizon training; unchanged architecture and loss"
+    },
+    "semantic_fixed_text": {
+      "status": "not_run",
+      "scope": "Small public-text complete fixed-set acquisition"
+    },
+    "semantic_fresh_known": {
+      "status": "blocked",
+      "requires": "Public-text fixed-set acquisition"
+    },
+    "semantic_transfer": {
+      "status": "blocked",
+      "requires": "Fresh known-renderer competence"
+    },
+    "programmable_attention": {
+      "status": "not_run",
+      "scope": "Separate future matched QK intervention; no universal return gate"
+    }
+  }
+}
