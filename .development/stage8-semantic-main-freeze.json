@@ -1,0 +1,39 @@
+{
+  "source_sha256": {
+    "src/topoformer/semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f"
+  },
+  "config_sha256": {
+    "configs/stage8-semantic-main-n1000.json": "2b9541538bdba8c6657216094d22cdd3f6840c01c32e6190f929615dca95e1f0",
+    "configs/stage8-semantic-main-n10000.json": "bed0f53cd74b903165ec3da2b9b304988cb07c39bbaa597ef85c996443da82f7"
+  },
+  "heldout_exclusion_sha256": "aa2c4c2110c4b6675991f44f743c992d0efc8d0798726939442b666d3548afe1",
+  "code_commit": "26c8b5fd5b3310c9ca1b50234672949f753e33f1",
+  "width": 1024,
+  "autocast_dtype": "bfloat16",
+  "paired_seeds": [
+    0,
+    1,
+    2
+  ],
+  "corpus_sizes": [
+    1000,
+    10000
+  ],
+  "presentations_per_run": 100000,
+  "checkpoints": [
+    0,
+    10016,
+    100000
+  ],
+  "neural_runs": 12,
+  "total_presentations": 1200000,
+  "sampling": "equal lesson mixture; English and Spanish paired per construction",
+  "fresh_data_seed": 800000,
+  "composition_allowed": false,
+  "recipe_tuning_on_main": false,
+  "estimated_serial_gpu_minutes": [
+    95,
+    110
+  ],
+  "prior_evaluation_semantic_overlap_after_exclusion": 0
+}
