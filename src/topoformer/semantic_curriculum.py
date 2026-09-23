@@ -300,6 +300,9 @@ def run(config):
     train_lessons=[corpus[i].audit['lesson'] for i in train_indices]
     lesson_groups={}
     for index,lesson in enumerate(train_lessons): lesson_groups.setdefault(lesson,[]).append(index)
+    expected_lessons=config.get('expected_lessons')
+    if expected_lessons is not None and sorted(lesson_groups)!=sorted(expected_lessons):
+        raise ValueError('training lesson set differs from frozen mixture')
     sampling=config.get('sampling','sequential')
     if sampling not in ('sequential','balanced_lessons'): raise ValueError('unknown semantic sampling policy')
     groups=lesson_groups if sampling=='balanced_lessons' else None
@@ -308,7 +311,7 @@ def run(config):
     manifest=dict(config=config,environment=dict(torch_version=torch.__version__,cuda_version=torch.version.cuda,device=config.get('device','cpu'),device_name=torch.cuda.get_device_name() if config.get('device','cpu').startswith('cuda') else 'cpu',threads=torch.get_num_threads()),config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),corpus=corpus.audit,source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in files},
                   value_vocabulary=vocab,vocabulary_pool_unique_graphs=vocab_pool_count,vocabulary_sha256=hashlib.sha256(json.dumps(vocab).encode()).hexdigest(),pinned_generator=corpus[0].audit,runs=[],
                   split_policy='same fresh semantic heldout selection, nested unique training prefixes',split_audit=split_audit,sampling_policy=sampling,lesson_counts={k:len(v) for k,v in lesson_groups.items()},frequency_fit_weighting='inverse lesson size' if groups else 'uniform corpus',
-                  training_digest=train_summary['sha256'],heldout_digest=heldout_summary['sha256'],training_distribution=train_summary,heldout_distribution=heldout_summary,
+                  training_digest=train_summary['sha256'],heldout_digest=heldout_summary['sha256'],training_distribution=train_summary,heldout_distribution=heldout_summary,missing_heldout_lessons=sorted(set(train_summary['lessons'])-set(heldout_summary['lessons'])),
                   priors=['canonical compiler node order','privileged visible-copy and typed-edge labels','fixed ontology and node capacity','gold-edge training loss sampling only; no effect on hidden state','no_input control retains public pointer candidate count and token normalization'],
                   limitations=['exact decoder-slot equivalence is not general graph isomorphism','value ontology is fitted on declared shared training-only vocabulary pool, including unoptimized examples in smaller corpus arms','curriculum, width, edge sampling and actor differ from stage7; not a single-variable comparison'],
                   composition_allowed=False,raw_prediction_layout='lossless bit-packed edge tensors; gzip shard per arm/seed/exposure')

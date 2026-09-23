@@ -119,3 +119,11 @@ def test_balanced_lessons_keep_mixture_fixed_across_cardinalities():
         assert small==60
         assert sum(language=='english' for _,language in schedule)==60
         assert len({index for index,_ in schedule})==1+min(extra,30)
+
+
+def test_weighted_frequency_matches_uniform_weights(tmp_path):
+    corpus=m.base.CorpusIndex(tmp_path/'corpus.db',requested=2,seed=13,max_attempts=20)
+    vocab=m.base.value_vocabulary(corpus[i] for i in range(2))
+    a=m.frequency_fit(corpus,range(2),vocab,128)
+    b=m.frequency_fit(corpus,range(2),vocab,128,weights={0:1.,1:1.})
+    assert all(torch.equal(a[k],b[k]) for k in a)
