@@ -35,3 +35,7 @@ Belief frozen-checkpoint profiling (source `857a57c`) used 64 N16 episodes with 
 ## Post-freeze attribution followup: observation IDs
 
 The first completed frozen checkpoint fixes the original matrix with the supplied prior but fails new large-ID conditions. Preserve the full original run. A separately named development-only followup will compare clean IDs0–3 plus a repeated-content observation at ID4 (seen training range) against an otherwise equivalent new ID100, and within-range ID permutation against out-of-range renaming. This is attribution of ID shift versus content redundancy, not main-recipe selection or a replacement test. Use fresh development data and log every checkpoint outcome. No null-head repair is authorized from this observation alone.
+
+## Profiled semantic oracle development release
+
+The four three-update head profiles took 0.458/0.065/0.284/0.264 seconds (first includes cold startup). Peak CUDA allocation: 170 MB additive / 392 MB interaction; head parameters 1.90M / 6.36M with width-1024 privileged node codes and interaction rank128. Authorize the frozen four-arm × two-development-seed × 300-update fixed-node comparison, estimated2–3minutes, hard cap5minutes. It runs after frozen return probes. This is closed-set privileged decoder acquisition, not public-text or fresh-structure success. Stop at the declared budget; C3 remains gated.

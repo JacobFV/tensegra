@@ -1,0 +1,36 @@
+{
+  "gpu_seconds_ceiling": 10800,
+  "accounting": "Conservative serialized job walltime, including CPU export, charged against GPU ceiling. Brief fixtures logged too. No concurrent GPU jobs.",
+  "jobs": [
+    {
+      "name": "belief_profile_and_gradients",
+      "seconds": 1.1,
+      "kind": "frozen_checkpoint_diagnostic",
+      "source": "857a57c"
+    },
+    {
+      "name": "belief_frozen_contract_matrix",
+      "seconds": 501.477,
+      "kind": "frozen_checkpoint_inference",
+      "source": "523ec15"
+    },
+    {
+      "name": "return_scalar_grid",
+      "seconds": 8.55,
+      "gpu_seconds": 0,
+      "kind": "two_thread_CPU_frozen_diagnostic"
+    },
+    {
+      "name": "semantic_oracle_profile",
+      "seconds": 1.071,
+      "kind": "mechanical_head_training_profile",
+      "source": "c379744"
+    }
+  ],
+  "pending_caps_seconds": {
+    "return_frozen_probes": 600,
+    "semantic_oracle_development": 300,
+    "belief_id_localization": 60
+  },
+  "no_new_backbone_training_yet": true
+}
