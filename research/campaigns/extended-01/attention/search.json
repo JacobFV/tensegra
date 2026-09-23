@@ -1,4 +1,67 @@
 {
-  "A01-profile": {"status":"completed","seed":101,"source":"53aa9f6","steps":12,"process_seconds":2.54,"purpose":"mechanical resource profile; not a main result"},
-  "A01-development": {"status":"ready","source":"53aa9f6","seed":101,"modes":["soft","context","message","hard","none"],"steps":500,"selection":"fixed final endpoint; curves diagnose acquisition; no confirmation outcomes inspected","budget_cap_seconds":300,"expected_seconds":120,"next":"select strongest soft setting and informative equal-information comparisons, or register a focused failure diagnosis"}
+  "A01-profile": {
+    "status": "completed",
+    "seed": 101,
+    "source": "53aa9f6",
+    "steps": 12,
+    "process_seconds": 2.54,
+    "purpose": "mechanical resource profile; not a main result"
+  },
+  "A01-development": {
+    "status": "completed",
+    "source": "53aa9f6",
+    "seed": 101,
+    "modes": [
+      "soft",
+      "context",
+      "message",
+      "hard",
+      "none"
+    ],
+    "steps": 500,
+    "selection": "fixed final endpoint; curves diagnose acquisition; no confirmation outcomes inspected",
+    "budget_cap_seconds": 300,
+    "expected_seconds": 120,
+    "next": "select strongest soft setting and informative equal-information comparisons, or register a focused failure diagnosis",
+    "process_seconds": 36.3
+  },
+  "A02": {
+    "status": "completed",
+    "source": "83b4a6a",
+    "seed": 102,
+    "frozen_backbone_seed": 101,
+    "process_seconds": 31.26,
+    "selected": "strength initialized8, learned during training, no size correction",
+    "alternatives_retained": [
+      "soft4",
+      "soft4 + log(N/16)",
+      "frozen override8",
+      "frozen size adjustment"
+    ]
+  },
+  "A03": {
+    "status": "ready",
+    "seeds": [
+      201,
+      202,
+      203
+    ],
+    "modes": [
+      "soft4",
+      "soft8",
+      "context",
+      "message",
+      "hard"
+    ],
+    "steps": 500,
+    "examples_per_final_cell": 1024,
+    "final_cells": {
+      "soft4": 20,
+      "others": 18
+    },
+    "cap_seconds_per_seed": 300,
+    "total_cap_seconds": 900,
+    "prospective_amendment": "two paired frozen override8 cells on soft4 before first confirmation",
+    "selection": "no selection on confirmation; all prescribed outcomes retained"
+  }
 }

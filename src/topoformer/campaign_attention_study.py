@@ -50,7 +50,7 @@ def evaluate(model, config, output, label, *, device):
                 t0=torch.cuda.Event(enable_timing=True);t1=torch.cuda.Event(enable_timing=True);t0.record()
             else: t0=time.monotonic()
             result = model(given, config['mode'], zero_strength=condition.get('zero_strength', False),
-                           strength_override=config.get('strength_override'), size_adjust=config.get('size_adjust',False))
+                           strength_override=condition.get('strength_override',config.get('strength_override')), size_adjust=config.get('size_adjust',False))
             if str(device).startswith('cuda'):
                 t1.record();forward_timers.append((t0,t1))
             else: forward_timers.append(time.monotonic()-t0)
