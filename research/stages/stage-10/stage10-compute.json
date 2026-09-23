@@ -1,0 +1,27 @@
+{
+  "ceiling_seconds": 10800,
+  "policy": "Serialized GPU jobs; charge complete job walltime, including export. CPU audits/regression separate. Existing environment unchanged. No pending experiments.",
+  "jobs": {
+    "belief_profile_and_development": 61.63,
+    "belief_main": 1099.01,
+    "return_profile": 1.768,
+    "return_main": 55.7,
+    "semantic_cold_profile": 1.07,
+    "semantic_warm_profile": 1.311,
+    "semantic_main": 49.83
+  },
+  "conservative_charged_seconds": 1500,
+  "allocated_minutes": {
+    "belief": 45,
+    "returns": 35,
+    "semantics": 30,
+    "reserve": 70
+  },
+  "notes": [
+    "Recorded times are job/model wall timers, not device utilization integrals.",
+    "1500seconds conservatively covers recorded profiles, training/inference, and export; below180minute ceiling.",
+    "CUDA allocated bytes, process RSS, total device capacity and parameters are distinct and retained in per-run manifests.",
+    "No local heavy training; GB10 host promaxgb10-4dfb."
+  ],
+  "recorded_seconds_total": 1270.319
+}
