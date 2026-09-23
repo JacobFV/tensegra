@@ -33,3 +33,5 @@ Each run fits8,192fresh events across six delay states. Historical backbone11 in
 External process occupancy was352.54seconds, including all capture, fitting and export. All513raw cells, cached accessor/consumer inputs, scalar scores, logits, coefficients and source/config/checkpoint hashes are retained. Independent audit completion is pending. Any further composition decision belongs to the coordinator and must preserve this narrow contract; historical failed scalar/interface gates remain unchanged.
 
 [Gate decisions](../../../results/campaign-01/returns/r05-confirmation/gates.json), [process receipt](../../../results/campaign-01/returns/r05-confirmation/process.json), and per-run predictions, paired summaries and signed-margin groups are under the same result directory. Immutable trained comparators are at `~/topoformer-campaign-01/returns/r05-confirmation/{10,11,12}/learned.pt`; their byte hashes are recorded in the gate file and manifests.
+
+![Three-run learned-use and causal results](../../../results/campaign-01/returns/r05-confirmation/confirmation-use.png)
