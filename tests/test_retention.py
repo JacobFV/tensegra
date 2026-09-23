@@ -107,3 +107,23 @@ def test_runner_zero_step_artifact_and_acquisition_cannot_compose(tmp_path):
     assert result['runs'][0]['optimizer_steps']==0
     assert result['runs'][0]['dependent_experiments']=='blocked_acquisition_only'
     assert result['runs'][0]['late_use_status']=='untrained_diagnostic_C1'
+
+
+def test_every_perfect_event_matches_existing_exact_runtime():
+    from topoformer.thinking_runtime import ProtectedSession, ValueRegister, Candidate, PRIMITIVE_NAMES, VALUE_TYPES
+    batch=make_batch(73,256)
+    events=batch['public']['event']
+    seen=set()
+    for i in range(256):
+        op=PRIMITIVE_NAMES[int(events['operations'][i,0])]
+        target_type=VALUE_TYPES[int(events['types'][i,0])]
+        operand_type='integer' if target_type=='integer' else 'float'
+        cast=int if operand_type=='integer' else float
+        values=events['operand_values'][i,0].tolist()
+        operands=[ValueRegister(str(j),cast(values[j]),operand_type) for j in range(1 if op=='neg' else 2)]
+        result=ProtectedSession(operands).execute([Candidate('c',op,tuple(x.id for x in operands))])[0]
+        assert result.status=='executed'
+        assert result.value==float(events['values'][i,0])
+        assert result.type==target_type
+        seen.add(op)
+    assert seen==set(PRIMITIVE_NAMES)

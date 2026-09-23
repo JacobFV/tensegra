@@ -24,7 +24,7 @@ def make_batch(seed, batch_size, feature_dim=32, distractors=2, value_limit=8):
     y[op==1]=x[op==1]-value[op==1]
     x[op==2]=value[op==2]; y[op==2]=1
     x[op==3]=-value[op==3]; y[op==3]=0
-    x[op==4]=value[op==4]; y[op==4]=.5
+    x[op==4]=1-value[op==4]; y[op==4]=.5
     rows=torch.arange(b)
     args=keys[rows[:,None],ids].clone()
     args[op==3,1]=0
