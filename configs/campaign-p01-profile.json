@@ -1,0 +1,20 @@
+{
+  "version": "p01-v1-profile-only",
+  "seed": 399,
+  "hidden": 1024,
+  "key_dim": 32,
+  "cpu_threads": 4,
+  "learning_rate": 0.001,
+  "weight_decay": 0.01,
+  "batch_size": 256,
+  "updates": 64,
+  "checkpoints": [0, 16, 64],
+  "data": {
+    "train": {"seed": 47900001, "count": 512},
+    "calibration": {"seed": 47900002, "count": 128},
+    "validation": {"seed": 47900003, "count": 128}
+  },
+  "control_seed": 47900100,
+  "controls": ["record_order", "inventory_order", "fresh_names", "reverse_roles", "unrelated_instructions"],
+  "requested_process_cap_seconds": 60
+}

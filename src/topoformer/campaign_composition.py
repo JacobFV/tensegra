@@ -1,6 +1,6 @@
 """P01 v1: complete public typed dispatch, preserving retention_data witnesses.
 
-No training or C01 composition runner. Gold is confined to acquisition labels
+Standalone acquisition runner is separate; no C01 composition runner. Gold is confined to acquisition labels
 and a private fidelity reference, neither accepted by execute_proposal.
 """
 import random
