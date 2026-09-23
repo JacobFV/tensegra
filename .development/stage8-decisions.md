@@ -15,3 +15,11 @@ Remote NVIDIA GB10, isolated PyTorch `2.14.0+cu130`, Python3.12. A1024-wide CUDA
 CUDA timing validated width1024: belief arms16,851,011parameters (~404MB peak); returnfacet model55,854,360parameters (~1.18GB); semanticmodel57,861,981parameters (~1.22GB). These are timing probes, not competence evidence.
 
 Authorize sequential independent acquisitions: belief two learned arms,256updates×batch32 fresh episodes,128validation only; return six encoder/access arms,300updates×32fixed examples,128validation only; semantic8distinctgraphs,1000presentations with node/identity/edge curriculum boundaries100/300, semantic/no-input arms. All use1024-wide computation. Fixed-set success does not authorize composition; no final test outcomes are used for recipe selection. Main budgets will be frozen after these timings/acquisition diagnostics.
+
+## Belief main budget
+
+Acquisition (256updates, one seed,128validation cases/cell) showed near-perfect protected final answers on clean/retraction/contradiction but incorrect empty-prior posterior; generic recurrence struggled with retraction. These are acquisition observations, not competence. Freeze the same architectures at1000updates×batch32, three paired seeds,512validation/test per condition, including empty/partial, duplicate/reordered, contradiction and retraction checks. Do not repair the empty-prior failure inside the main recipe. All-frame posterior fidelity and impossible-mass gates remain mandatory alongside final answers.
+
+## Return main budget
+
+Authorize fresh-data1000updates×batch32, three paired initializations, six encoder/access arms, genuine width1024. Train delays0/1/2/4; evaluate clean0/1/2/4/8/16/32, interventions16only,512examples/cell. Required second-operand identity excludes unary null cases. Use bounded evaluation minibatches and freeze config/source before final test. Exactstorage and neuralreadout remain separate.
