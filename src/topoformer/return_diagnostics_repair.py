@@ -67,23 +67,28 @@ def run(cfg,out):
             fits.append((int((predict_ridge(vx,fit).argmax(-1)==vy).sum()),alpha,fit))
         _,alpha,ridge=max(fits,key=lambda z:z[0]);ridgepath=out/f'{seed}-ridge.pt';torch.save(tuple(v.cpu() for v in ridge),ridgepath)
         head=copy.deepcopy(model.scalar_heads[0]);head.requires_grad_(True)
+        mean,scale,_=ridge
+        zx,zvx=(x-mean)/scale,(vx-mean)/scale
+        with torch.no_grad():
+            weight=head.weight.clone();head.weight.mul_(scale);head.bias.add_(weight@mean)
+            torch.testing.assert_close(head(zvx),model.scalar_heads[0](vx),atol=1e-4,rtol=1e-4)
         ceopt=torch.optim.AdamW(head.parameters(),lr=cfg['head_lr']);best=-1;cecurve=[];beststep=0;beststate=None
         generator=torch.Generator(device=device).manual_seed(seed+9000000)
         for step in range(cfg['head_updates']+1):
             if step%cfg['head_validate_every']==0 or step==cfg['head_updates']:
-                with torch.no_grad():correct=int((head(vx).argmax(-1)==vy).sum())
+                with torch.no_grad():correct=int((head(zvx).argmax(-1)==vy).sum())
                 cecurve.append(dict(step=step,correct=correct,total=len(vy)))
                 if correct>best:best=correct;beststep=step;beststate=copy.deepcopy(head.state_dict())
             if step==cfg['head_updates']:break
             idx=torch.randint(len(x),(cfg['head_batch_size'],),generator=generator,device=device)
-            loss=F.cross_entropy(head(x[idx]),y[idx]);ceopt.zero_grad();loss.backward();ceopt.step()
-        head.load_state_dict(beststate);head.eval();cepath=out/f'{seed}-ce.pt';torch.save(head.state_dict(),cepath)
+            loss=F.cross_entropy(head(zx[idx]),y[idx]);ceopt.zero_grad();loss.backward();ceopt.step()
+        head.load_state_dict(beststate);head.eval();cepath=out/f'{seed}-ce.pt';torch.save(dict(head=head.state_dict(),mean=mean.cpu(),scale=scale.cpu()),cepath)
         rows=[]
         for split,ds in [('validation',cfg['validation_seed']),('test',cfg['test_seed'])]:
             evaluated=collect(ds,cfg['eval_size'],cfg['eval_delays'],cfg['eval_distractors'])
             for intervention in cfg.get('interventions',[]): evaluated+=collect(ds,cfg['eval_size'],[16],cfg['eval_distractors'],intervention)
             for r in evaluated:
-                predictions={'unchanged':r['logits']['value'],'ridge':predict_ridge(r['x'],ridge),'ce_refit':head(r['x'])}
+                predictions={'unchanged':r['logits']['value'],'ridge':predict_ridge(r['x'],ridge),'ce_refit':head((r['x']-mean)/scale)}
                 for arm,value in predictions.items():
                     logits=dict(r['logits'],value=value);target=r['targets']
                     row=dict(seed=seed,split=split,arm=arm,distractors=r['distractors'],steps=r['steps'],intervention=r['intervention'],event_sha256=r['event_sha256'],counts=counts(dict(logits=logits),target),predictions={k:v.argmax(-1).tolist() for k,v in logits.items()},targets={k:target[k].tolist() for k in FIELDS})
