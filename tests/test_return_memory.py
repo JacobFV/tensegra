@@ -59,3 +59,15 @@ def test_mixed_encoder_and_no_recurrence_at_zero():
     handles=[block.register_forward_hook(lambda *args: (_ for _ in ()).throw(AssertionError('zero step recurrence'))) for block in m.blocks]
     m(b['public'],0,encoding='mixed')
     for handle in handles: handle.remove()
+
+
+def test_paired_common_backbone_identical_across_encodings():
+    states=[]
+    for encoding in ('mixed','compressed','factorized'):
+        torch.manual_seed(123)
+        states.append(ReturnMemoryModel(width=24,heads=4,feature_dim=8,encoding=encoding).state_dict())
+    for key in states[0]:
+        if not key.startswith('encoders.'):
+            assert torch.equal(states[0][key],states[1][key])
+            assert torch.equal(states[0][key],states[2][key])
+    assert all(torch.equal(states[1][key],states[2][key]) for key in states[1])

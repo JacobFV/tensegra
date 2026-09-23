@@ -22,10 +22,6 @@ class ReturnMemoryModel(nn.Module):
         self.width, self.feature_dim, self.value_limit = width, feature_dim, value_limit
         self.encoding = encoding
         self.sizes = [width]*6 if encoding == "mixed" else [width // 6 + (i < width % 6) for i in range(6)]
-        self.encoders = nn.ModuleList([
-            nn.Linear(1, self.sizes[0]), nn.Embedding(3, self.sizes[1]),
-            nn.Embedding(5, self.sizes[2]), nn.Linear(feature_dim, self.sizes[3]),
-            nn.Linear(feature_dim, self.sizes[4]), nn.Linear(feature_dim, self.sizes[5])])
         self.mixer = nn.Sequential(nn.LayerNorm(width), nn.Linear(width, width), nn.GELU())
         self.initial = nn.Parameter(torch.randn(6, width) * .02)
         self.initial_read = nn.MultiheadAttention(width, heads, batch_first=True)
@@ -37,6 +33,13 @@ class ReturnMemoryModel(nn.Module):
         self.scalar_heads = nn.ModuleList([nn.Linear(width, 4*value_limit+1), nn.Linear(width,3), nn.Linear(width,5)])
         self.identity_heads = nn.ModuleList(nn.Linear(width, feature_dim) for _ in range(3))
         self.null_heads = nn.ModuleList(nn.Linear(width,1) for _ in range(2))
+
+        # Construct variable-capacity encoders last: paired seeds initialize
+        # every shared workspace/readout tensor identically across all arms.
+        self.encoders = nn.ModuleList([
+            nn.Linear(1, self.sizes[0]), nn.Embedding(3, self.sizes[1]),
+            nn.Embedding(5, self.sizes[2]), nn.Linear(feature_dim, self.sizes[3]),
+            nn.Linear(feature_dim, self.sizes[4]), nn.Linear(feature_dim, self.sizes[5])])
 
     def encode(self, event, encoding):
         if encoding not in ('compressed', 'factorized', 'mixed'):
