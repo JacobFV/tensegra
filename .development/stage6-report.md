@@ -9,7 +9,7 @@
 | [TCN wiring pilot](results/stage6/pilots/language/README.md) | 3 seeds × 4 arms, 8 updates, 18 train/9 evaluation constructions | Pipeline/resource validation only |
 | [Controlled timing configuration](../configs/stage6-timing.json) | 1 seed × 2 arms, 8 updates | Resource/wiring check only |
 | [TCN main configuration](../configs/stage6-language.json) | Frozen source `4c36557`; 3 seeds × 4 arms, 256 updates, 240 train/48 evaluation constructions | Completed; [audited summary](results/stage6/language/summary.json) |
-| [Controlled main configuration](../configs/stage6.json) | Config `462a5e3`; 15 arms × 3 seed shards, 256 updates, batch 2, training depths 1–4; final evaluation at 4/8/16/32 | Final source freeze and completed artifacts pending |
+| [Controlled main configuration](../configs/stage6.json) | Config `462a5e3`; 15 arms × 3 seed shards, 256 updates, batch 2, training depths 1–4; final evaluation at 4/8/16/32 | Source `c258785`; three seed shards running, completed artifacts pending |
 
 Pilot artifacts remain labeled pilots. They are not pooled with main experiments. No partial main-run metrics are used for conclusions.
 
@@ -80,7 +80,9 @@ Compute analysis will retain microstep distributions, forced caps, expected trai
 | Multi-token autoregressive language output | Unsupported | One bounded answer/choice; token clock is an architectural interface |
 | Autonomous cognition or unrestricted reasoning | Unsupported | Neither architecture nor these bounded benchmarks establishes such claims |
 
-## Interpretation and outstanding evidence
+## Verification and outstanding evidence
+
+The coordinator reports full remote regression at controlled source `c258785`: **452 tests passed plus 6 subtests in 5.60 seconds**. The [independent review](stage6-review.md) records the final inference/training emission-boundary correction and protected learned-value checks. This is implementation evidence, not learned-performance evidence; the report author did not rerun the remote suite.
 
 Final conclusions must distinguish what was constructed, what survived architectural tests, what was learned under teacher forcing, what the free policy executed, and what the workspace correctly emitted. Exact protected semantics do not transfer exactness to learned readout. Failure to acquire useful autonomous proposals, generalize, preserve returned values or stop appropriately will be reported as a result.
 
