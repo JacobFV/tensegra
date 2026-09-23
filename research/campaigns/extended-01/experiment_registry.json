@@ -372,7 +372,7 @@
     },
     {
       "id": "S09",
-      "status": "profiled_main_frozen",
+      "status": "profiled_deferred_unrun",
       "kind": "exploratory_interface",
       "hypothesis": "Predicted text pointer should supply the same contextual evidence used by node and relation decoding",
       "intervention": "Retain originalworkspace; learnedcopyprobabilities read shared-weight contextualtokenstates into node residual",
@@ -385,11 +385,12 @@
       "protocol": "semantics/S09-grounded-node-design.md",
       "source": "d4f04b3",
       "budget": "1500s cap; measured20steps2.0033s, fullprofile11.3356s",
-      "next_branch": "Acquisition check, comparefreshcomponents/exact and computecontrol if useful"
+      "next_branch": "Acquisition check, comparefreshcomponents/exact and computecontrol if useful",
+      "reason": "MinimalLRrepair acquiresfreshgraphs; confirm it beforeaddedarchitecture"
     },
     {
       "id": "S10",
-      "status": "completed_exploratory_repair_audit_finishing",
+      "status": "completed_audited_secondary_reuse",
       "kind": "frozen_engineered_decoder_diagnostic",
       "hypothesis": "Independentbinarygraph decisions violate known compiler bookkeeping/schema contracts unnecessarily",
       "intervention": "Predicted-attribute schema mask and deterministic contains/declares/reference bookkeeping",
@@ -402,7 +403,8 @@
       "budget": "CPUinitial5min, noGPU",
       "next_branch": "Reportrepair/regression; fullstructuralassignment requires separatelyregisteredscoreexport",
       "evidence": "semantics/S10-report.md",
-      "result": "S03 calibrated100/512, raw39/512 exact versus0; suppliedschema/learnedattributes, no confirmation"
+      "result": "S03 calibrated100/512, raw39/512 exact versus0; suppliedschema/learnedattributes, no confirmation",
+      "new_evidence": "S11combined372/512cal,381/512raw; primary122/13 separate"
     },
     {
       "id": "R09",
@@ -418,7 +420,7 @@
     },
     {
       "id": "S11",
-      "status": "running",
+      "status": "completed_positive_audited",
       "hypothesis": "Fixed-LR late regression is sensitive to optimizer step size",
       "intervention": "S03exactcontinuation with restoredLR1e-5 instead1e-4; moments/sampler preserved",
       "comparators": [
@@ -430,7 +432,8 @@
       "protocol": "semantics/S11-lr-design.md",
       "source": "14f0293",
       "budget": "900s cap",
-      "next_branch": "Compareacquisition and unchangedS10secondarydecoding; noautoextension"
+      "next_branch": "Compareacquisition and unchangedS10secondarydecoding; noautoextension",
+      "result": "FreshDEV raw13/512,cal122/512,copy.996019; matchedconstant0/512"
     },
     {
       "id": "C02",
@@ -452,6 +455,25 @@
       },
       "budget": "Profile before main allocation",
       "next_branch": "Ifinvariancehelps, strongbaselineforfresh3seedcompositionconfirmation; otherwisecharacterizefailure"
+    },
+    {
+      "id": "S12",
+      "status": "frozen_review_pending",
+      "kind": "confirmation",
+      "hypothesis": "LRreduction improvesfreshcanonicalgraphrecovery underunchangedarchitecture",
+      "intervention": "Threeindependent131072-presentationparents, eachforkconstant1e-4/decay1e-5 to196608",
+      "observable_inputs": "Same publictext/copyinventory",
+      "privileged_targets": "TRAINgraphlabels only; reserved1024confirmation finalscoring only",
+      "selection": "Fixedendpoint, unchangedTRAIN128calibration; no confirmationselection",
+      "source": "dbd3575",
+      "initialization_seeds": [
+        701,
+        702,
+        703
+      ],
+      "budget": "Expected7500\u20138100s, cap9000 total (3\u00d71400parents+6\u00d7800forks)",
+      "secondary": "FrozenS10suppliedschema raw/cal separate; frequencycontrol",
+      "next_branch": "Retainall3pairedoutcomes, assessreplication andlaternewrenderer acquisition"
     }
   ],
   "policy": {
