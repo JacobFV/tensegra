@@ -64,3 +64,9 @@ The independent raw reconstruction is reproducible with `scripts/audit_stage8_be
 ## Lossless semantic artifact repacking
 
 The oversized semantic acquisition COO export was replaced by bit-packed boolean edge tensors without changing metrics. The converter asserts equality of every decoded tensor in all 2304 records. An independent standard-library decoder additionally compared the first 32 complete packed records against the durable original: every edge coordinate, other graph field and metadata field matched exactly. Local packed SHA256 `662bea01015df615c9748927cf1d48ce6402e7ee673b3fe8c03ce9952387a67d` matches the conversion manifest; size is 22,366,167 bytes versus 500,243,173. The original remains archived remotely with its SHA256. Final integration must omit the oversized unpublished blob from pushed history while retaining source provenance manifests.
+
+## Return main: complete independent audit
+
+All 1008 raw evaluation rows (516,096 example evaluations) independently reproduce every field, scalar/identity/full joint, and required-second-argument count. All 18 prespecified gates fail independently. The config hash and five source hashes match frozen `dc2f9b1`. A further 864 supplied-fact readback rows exactly reproduce field counts after independently applying the documented value/type/provenance corruptions. No missing or tiny cells pass.
+
+For persistent memory with eight distractors, mean joint accuracy at 1/16/32 updates is 64.84/62.17/61.26% for mixed encoding, 70.25/67.51/67.90% for disjoint concatenation, and 89.19/75.59/61.98% for factorized tokens. Exact value accuracy and numerical error are distinct: factorized values reach 89.45% exact and MAE0.055 at one update, versus 79.04%/MAE0.243 at16 and 68.82%/MAE0.586 at32. Thus the short-delay improvement is real, while recurrent deterioration and the exact-retention gate failure remain. These data do not demonstrate downstream learned use or authorize composition.
