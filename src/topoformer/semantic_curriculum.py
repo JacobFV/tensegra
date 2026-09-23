@@ -247,7 +247,7 @@ def run(config):
     vocab=base.value_vocabulary(corpus[i] for i in range(eval_count,eval_count+vocab_pool_count))
     capacity=config.get('node_capacity',128)
     files=[Path(__file__),Path(base.__file__),Path(__file__).with_name('thinking.py'),Path(__file__).with_name('thinking_language.py'),Path(__file__).with_name('tcn_data.py'),Path(__file__).with_name('semantic_graph.py')]
-    manifest=dict(config=config,config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),corpus=corpus.audit,source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in files},
+    manifest=dict(config=config,environment=dict(torch_version=torch.__version__,cuda_version=torch.version.cuda,device=config.get('device','cpu'),device_name=torch.cuda.get_device_name() if config.get('device','cpu').startswith('cuda') else 'cpu',threads=torch.get_num_threads()),config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),corpus=corpus.audit,source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in files},
                   value_vocabulary=vocab,vocabulary_pool_unique_graphs=vocab_pool_count,vocabulary_sha256=hashlib.sha256(json.dumps(vocab).encode()).hexdigest(),pinned_generator=corpus[0].audit,runs=[],
                   split_policy='same heldout prefix, nested unique training prefixes',
                   training_digest=hashlib.sha256(''.join(base.semantic_key(corpus[i].privileged.graph) for i in train_indices).encode()).hexdigest(),
