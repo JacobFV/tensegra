@@ -60,9 +60,9 @@ def evaluate(model,items):
     model.eval();cache=[];scores=[];labels=[];calibration_data=[]
     with torch.no_grad():
         for public,gold,example in items:
-            output=model(public);pred=base.decode(output,public)
+            output=model(public);pred=base.decode({k:v.cpu() for k,v in output.items()},public)
             active=pred['presence'][:,None]&pred['presence'][None,:]
-            scores.append(output['edges'][active]);labels.append(gold['edges'].to(active.device)[active])
+            scores.append(output['edges'][active.to(output['edges'].device)]);labels.append(gold['edges'][active].to(output['edges'].device))
             calibration_data.append(dict(graph_seed=example.audit['seed'],pairs=active.nonzero().cpu().tolist(),scores=scores[-1].cpu().tolist(),targets=labels[-1].cpu().tolist()))
             cache.append((public,gold,example,output,pred))
         joined=torch.cat(scores);truth=torch.cat(labels)

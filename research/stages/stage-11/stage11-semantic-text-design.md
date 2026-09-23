@@ -72,3 +72,11 @@ study (at least512unique heldout examples where available). Alpha renaming and
 unseen surfaces come only after that competence, with identifiable mappings.
 No large scaling sweep, generator extension, runtime composition or supervision
 withdrawal is part of this acquisition protocol.
+
+The first mechanical profile stopped at initialization before any optimizer
+update: the inherited public copy decoder builds CPU token indices while the
+new wrapper passed CUDA outputs. The versioned wrapper now explicitly transfers
+inference outputs to CPU for that decoder, as the historical evaluation path
+does. Actor computation and training objective are unchanged. The failure log
+is retained; the retry uses a fresh output directory and the same20-update
+profile recipe. This is a device-contract repair, not model selection.

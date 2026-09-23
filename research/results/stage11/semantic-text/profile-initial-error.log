@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/brandonin/topoformer-stage11-semantic/src/topoformer/semantic_text_acquisition.py", line 121, in <module>
+    p=argparse.ArgumentParser();p.add_argument('config');a=p.parse_args();run(json.loads(Path(a.config).read_text()))
+                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/brandonin/topoformer-stage11-semantic/src/topoformer/semantic_text_acquisition.py", line 99, in run
+    result=evaluate(model,items);curves.append(dict(update=update,**result))
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/brandonin/topoformer-stage11-semantic/src/topoformer/semantic_text_acquisition.py", line 63, in evaluate
+    output=model(public);pred=base.decode(output,public)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/brandonin/topoformer-stage11-semantic/src/topoformer/semantic_scaling.py", line 170, in decode
+    result['copy']=first[result['copy']]
+                   ~~~~~^^^^^^^^^^^^^^^^
+RuntimeError: indices should be either on cpu or on the same device as the indexed tensor (cpu)
