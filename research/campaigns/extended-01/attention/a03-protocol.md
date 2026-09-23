@@ -33,3 +33,5 @@ Naming: `soft4` and `soft8` denote initial trainable strengths, not permanently 
 ## Prospective amendment before the first confirmation run
 
 Add two secondary, evaluation-only interventions to the soft4 arm: override every structural strength to8 at N16/D8 and N64/D16, using the identical base events. This tests the A02 frozen-weight repair across all three confirmation seeds. No weight update, checkpoint selection, or extra fitting occurs. Soft4 now has20 final cells; the other arms retain18. Primary comparisons are unchanged. Estimated additional process occupancy is30seconds total, inside the existing900second cap. This amendment was approved and committed before any confirmation outcome existed.
+
+Before launch, the reviewer requested a separate `supplied_edge_mass` diagnostic. This is exported alongside clean-reference `edge_mass`, so wrong-topology adherence is not confused with correct routing. Multi-neighbor supplied graphs do not define a unique supplied path; no such path metric is asserted. This is a logging addition and does not change computation, targets, or selection.
