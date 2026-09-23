@@ -27,3 +27,7 @@ Verified host at 2026-09-23 08:56 UTC: `promaxgb10-4dfb` via `gb10-direct`; NVID
 ## Deliverables
 
 Versioned modules/configs, diagnostic package and contract tests; three subsystem reports; independent raw/provenance audit; frozen registry and explicit gate decisions; final report answering the six user questions. Commit progress locally; final merge/push follows verification under existing authorization. All new records use `research/stages/stage-09`, `research/results/stage9`, and `research/tools`.
+
+## First profiled release
+
+Belief frozen-checkpoint profiling (source `857a57c`) used 64 N16 episodes with 33 frames: 0.374 seconds for paired prior-output evaluation; 1.10 seconds including gradient diagnostics, 928 MB peak CUDA allocation and 1.52 GB RSS. Checkpoint SHA matched. Authorized the frozen 3-seed × 2-model × 3-size × 12-condition × 2-split matrix at 512 episodes/cell, estimated 2–4 minutes including export. This is an architectural inference intervention on existing checkpoints, not newly trained calibration. No training is required merely to rename the historical initialization seeds.
