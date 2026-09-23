@@ -1,6 +1,6 @@
 # Stage 8 independent review
 
-Status: implementation review in progress. No scientific result or competence pass is established by this document yet.
+Status: source, provenance and raw-metric review completed for the frozen Stage8 studies. All interface competence gates remain failed; no composition or supervision withdrawal is authorized. Chronological findings below retain the pre-outcome review record.
 
 ## Prespecified review boundary
 
@@ -102,3 +102,13 @@ The user-authorized research-layout migration was independently checked:1449 map
 N10k seed0 immutable subset audit:3072 raw/calibrated rows across both arms and all exposure checkpoints reproduce every metric without error. Later seeds and the final cross-corpus comparison remain pending.
 
 N10k seed1 immutable subset audit likewise verifies all3072 raw/calibrated rows across both arms and exposure checkpoints. Final seed2 and cross-corpus provenance/completeness remain pending.
+
+## Final semantic main audit and gate interpretation
+
+All12 frozen neural runs completed. Both corpus conditions use identical heldout semantic graphs, categorical vocabulary, source hashes and paired initial weights. All36 per-relation calibration vectors reconstruct exactly from their training-only grid counts. The larger corpus arm visits1793 unique graphs by10,016 presentations and all10,000 by100,000; the smaller arm visits all1000. Available data and realized exposure are therefore reported distinctly.
+
+Every9472 N10k raw prediction row passes independent reconstruction across all fields and exact graph metrics; together with N1k this covers18,944 main rows. Mean calibrated English typed-edge F1 increases with exposure from0.377→0.531 at N1k and0.313→0.549 at N10k. This is genuine partial edge acquisition, unlike Stage7's flat finite-exposure diagnostic. However, final raw-zero English F1 is0.333/0.320 versus frequency0.441; decoder calibration is essential to the reported English advantage. Heldout symbolic-renderer means0.400/0.436 do not surpass frequency0.441, renamed-lexicon conditions remain below that baseline, and exact canonical graph recovery stays zero. GateF remains failed for robust semantic transfer/runtime integration. No scaling-law, general language-understanding or complete graph-induction claim follows.
+
+The final review distinguishes supplied ledger/pointer semantics, learned compatibility and readout, privileged trajectory/graph labels, decoder calibration and measured generalization. Width1024 is used throughout primary studies; historical32 is explicitly an ablation. Strong clean proposal updates and improved short-delay return decoding are positive findings, but they do not override the frozen posterior/retention/semantic gates.
+
+All296 final curve groups independently match sums/means of their raw row metrics, including raw/calibrated surfaces and frequency baselines. No discrepancies were found in final count aggregation, calibration selection or source pairing.
