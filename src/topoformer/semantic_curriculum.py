@@ -42,9 +42,15 @@ def construction_summary(examples):
     return dict(graphs=len(nodes),lessons=dict(lessons),nodes=sizes(nodes),edges=sizes(edges),sha256=digest.hexdigest())
 
 
-def exposure_schedule(presentation, train_count):
-    """Both languages per construction, independently of corpus size."""
-    return (presentation // 2) % train_count, ('english', 'spanish')[presentation % 2]
+def exposure_schedule(presentation, train_count, lesson_groups=None):
+    """Both languages per construction; optionally fixed balanced lesson mixture."""
+    pair=presentation//2
+    if lesson_groups:
+        names=sorted(lesson_groups)
+        group=lesson_groups[names[pair%len(names)]]
+        index=group[(pair//len(names))%len(group)]
+    else: index=pair%train_count
+    return index, ('english','spanish')[presentation%2]
 
 
 def curriculum_weights(presentation, node_only=1000, identity_only=2000):
@@ -154,7 +160,7 @@ def sampled_losses(out,gold,pairs):
     return parts
 
 
-def frequency_fit(corpus,indices,vocab,capacity):
+def frequency_fit(corpus,indices,vocab,capacity,weights=None):
     """Vectorized categorical counts; pair tables have small fixed vocabularies."""
     counters = {}; shapes = {}
     for index in indices:
@@ -168,8 +174,9 @@ def frequency_fit(corpus,indices,vocab,capacity):
                       'copy':2049,'edges':2,'slots':base.MAX_SLOT+1}[key]
                 labels=value.long()+(1 if key in ('value','copy','slots') else 0)
                 if labels.max()>=size: raise ValueError('frequency pointer exceeds fixed token capacity')
-                if key not in counters: counters[key]=torch.zeros((*value.shape,size),dtype=torch.int32)
-                counters[key].scatter_add_(-1,labels[...,None],torch.ones_like(labels[...,None],dtype=torch.int32))
+                if key not in counters: counters[key]=torch.zeros((*value.shape,size),dtype=torch.float64 if weights else torch.int32)
+                weight=weights[index] if weights else 1
+                counters[key].scatter_add_(-1,labels[...,None],torch.ones_like(labels[...,None],dtype=counters[key].dtype)*weight)
     return {key:(counts.argmax(-1)-(1 if key in ('value','copy','slots') else 0)).to(shapes[key][1])
             for key,counts in counters.items()}
 
@@ -197,7 +204,7 @@ def unpack_graph(graph):
 
 def evaluate(model,examples,language,vocab,capacity,renamed=False,raw_path=None,context=None):
     """Same Stage7 metrics, lossless bit-packed raw edge tensors."""
-    rows=[]
+    rows=[]; groups={}
     if raw_path is not None and context is not None:
         raw_path=Path(raw_path)
         name=raw_path.name.removesuffix('.jsonl.gz')
@@ -208,10 +215,17 @@ def evaluate(model,examples,language,vocab,capacity,renamed=False,raw_path=None,
             gold=base.targets(graph,public,capacity,vocab,language=language)
             pred=model if isinstance(model,dict) else base.decode(model(public),public)
             rows.append(base.metrics(pred,gold))
+            groups.setdefault(example.audit['lesson'],[]).append(rows[-1])
             if raw_path is not None:
                 with gzip.open(raw_path,'at',compresslevel=6) as stream:
                     stream.write(json.dumps(dict(context=context,language=language,renamed=renamed,public_text=public.text,
-                      graph_sha256=graph.digest(),prediction=pack_graph(pred),target=pack_graph(gold),metrics=rows[-1]))+'\n')
+                      graph_sha256=graph.digest(),lesson=example.audit['lesson'],prediction=pack_graph(pred),target=pack_graph(gold),metrics=rows[-1]))+'\n')
+    result=aggregate_metrics(rows)
+    result['by_lesson']={lesson:aggregate_metrics(group) for lesson,group in groups.items()}
+    return result
+
+
+def aggregate_metrics(rows):
     result={k:sum(r[k] for r in rows)/len(rows) for k in ('node_type_accuracy','identity_copy_accuracy','entity_equivalence','semantic_equivalence')}
     for key in ('node','typed_edge','ordered_edge'):
         counts={field:sum(r[key][field] for r in rows) for field in ('true_positive','predicted_count','gold_count')}
@@ -283,11 +297,17 @@ def run(config):
     vocab=base.value_vocabulary(corpus[i] for i in vocab_indices)
     capacity=config.get('node_capacity',128)
     files=[Path(__file__),Path(base.__file__),Path(__file__).with_name('thinking.py'),Path(__file__).with_name('thinking_language.py'),Path(__file__).with_name('tcn_data.py'),Path(__file__).with_name('semantic_graph.py')]
+    train_lessons=[corpus[i].audit['lesson'] for i in train_indices]
+    lesson_groups={}
+    for index,lesson in enumerate(train_lessons): lesson_groups.setdefault(lesson,[]).append(index)
+    sampling=config.get('sampling','sequential')
+    if sampling not in ('sequential','balanced_lessons'): raise ValueError('unknown semantic sampling policy')
+    groups=lesson_groups if sampling=='balanced_lessons' else None
     train_summary=construction_summary(corpus[i] for i in train_indices)
     heldout_summary=construction_summary(heldout)
     manifest=dict(config=config,environment=dict(torch_version=torch.__version__,cuda_version=torch.version.cuda,device=config.get('device','cpu'),device_name=torch.cuda.get_device_name() if config.get('device','cpu').startswith('cuda') else 'cpu',threads=torch.get_num_threads()),config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),corpus=corpus.audit,source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in files},
                   value_vocabulary=vocab,vocabulary_pool_unique_graphs=vocab_pool_count,vocabulary_sha256=hashlib.sha256(json.dumps(vocab).encode()).hexdigest(),pinned_generator=corpus[0].audit,runs=[],
-                  split_policy='same fresh semantic heldout selection, nested unique training prefixes',split_audit=split_audit,
+                  split_policy='same fresh semantic heldout selection, nested unique training prefixes',split_audit=split_audit,sampling_policy=sampling,lesson_counts={k:len(v) for k,v in lesson_groups.items()},frequency_fit_weighting='inverse lesson size' if groups else 'uniform corpus',
                   training_digest=train_summary['sha256'],heldout_digest=heldout_summary['sha256'],training_distribution=train_summary,heldout_distribution=heldout_summary,
                   priors=['canonical compiler node order','privileged visible-copy and typed-edge labels','fixed ontology and node capacity','gold-edge training loss sampling only; no effect on hidden state','no_input control retains public pointer candidate count and token normalization'],
                   limitations=['exact decoder-slot equivalence is not general graph isomorphism','value ontology is fitted on declared shared training-only vocabulary pool, including unoptimized examples in smaller corpus arms','curriculum, width, edge sampling and actor differ from stage7; not a single-variable comparison'],
@@ -301,8 +321,8 @@ def run(config):
     def record(model,arm,seed,seen,exposure,tokens,start):
         row=dict(arm=arm,seed=seed,optimizer_updates=exposure//batch_size,optimizer_presentations=exposure,actual_unique_graphs_seen=len(seen),
                  available_unique_graphs=train_count,public_tokens_seen=tokens,feature_tokens_consumed=exposure if arm=='no_input' else tokens,elapsed_seconds=time.monotonic()-start,
-                 renderer_exposure={'english':(exposure+1)//2,'spanish':exposure//2},evaluation={})
-        if arm=='frequency': row.update(fit_label_presentations=2*train_count,actual_unique_graphs_seen=train_count,renderer_exposure={'english':train_count,'spanish':train_count})
+                 renderer_exposure={'english':(exposure+1)//2,'spanish':exposure//2},distinct_graphs_seen_by_lesson=dict(Counter(train_lessons[i] for i in seen)),lesson_exposure=dict(lesson_exposure),evaluation={})
+        if arm=='frequency': row.update(fit_label_presentations=2*train_count,actual_unique_graphs_seen=train_count,renderer_exposure={'english':train_count,'spanish':train_count},distinct_graphs_seen_by_lesson={k:len(v) for k,v in lesson_groups.items()},fit_label_lesson_exposure={k:2*len(v) for k,v in lesson_groups.items()})
         evaluation_start=time.monotonic()
         cache={}
         def cached_scores(public):
@@ -325,8 +345,11 @@ def run(config):
         row['evaluation_seconds']=time.monotonic()-evaluation_start
         records.append(row)
         with (output/'curves.jsonl').open('a') as f: f.write(json.dumps(row)+'\n')
+        print(json.dumps(dict(event='evaluation_complete',arm=arm,seed=seed,presentations=exposure,unique_graphs=len(seen))),flush=True)
+    lesson_exposure=Counter()
     if config.get('frequency_control',True):
-        start=time.monotonic(); frequency=frequency_fit(corpus,train_indices,vocab,capacity)
+        start=time.monotonic(); weights={train_indices[i]:1/len(lesson_groups[lesson]) for i,lesson in enumerate(train_lessons)} if groups else None
+        frequency=frequency_fit(corpus,train_indices,vocab,capacity,weights)
         record(frequency,'frequency',None,set(),0,0,start)
     for seed in config.get('seeds',[0,1,2]):
         for arm in config.get('arms',['semantic','no_input']):
@@ -336,7 +359,7 @@ def run(config):
                         workspace_rows=config.get('workspace_rows',8),microsteps=config.get('microsteps',2),no_input=arm=='no_input',autocast_dtype=config.get('autocast_dtype')).to(config.get('device','cpu'))
             optimizer=torch.optim.AdamW(model.parameters(),lr=config.get('learning_rate',.0001))
             generator=torch.Generator().manual_seed(seed+1729)
-            seen=set(); tokens=0; start=time.monotonic(); initial_hash=state_hash(model); training_seconds=0.
+            seen=set(); tokens=0; lesson_exposure=Counter(); start=time.monotonic(); initial_hash=state_hash(model); training_seconds=0.
             cuda=model.initial.is_cuda
             if cuda: torch.cuda.reset_peak_memory_stats(model.initial.device)
             requested_checkpoints=set(config.get('eval_presentations',[0,presentations]))|{0,presentations}
@@ -348,11 +371,11 @@ def run(config):
                 train_start=time.monotonic()
                 optimizer.zero_grad(); logs=[]; publics=[]; golds=[]; pair_queries=[]
                 for offset in range(batch_size):
-                    index,language=exposure_schedule(exposure+offset,train_count)
+                    index,language=exposure_schedule(exposure+offset,train_count,groups)
                     public,gold=training_item(index,language)
                     publics.append(public); golds.append(gold)
                     pair_queries.append(sampled_pairs(gold,generator,config.get('negative_pairs',128)))
-                    seen.add(index); tokens+=len(base.tokens(public))
+                    seen.add(index); tokens+=len(base.tokens(public)); lesson_exposure[train_lessons[index]]+=1
                 outputs=model.forward_batch(publics,pairs=pair_queries)
                 objectives=[]
                 for offset,(prediction,gold,pairs) in enumerate(zip(outputs,golds,pair_queries)):
@@ -370,6 +393,8 @@ def run(config):
                 component_keys=list(logs[0])
                 component_values=torch.stack([torch.stack([row[k] for k in component_keys]) for row in logs]).mean(0).cpu().tolist()
                 with (output/'losses.jsonl').open('a') as f: f.write(json.dumps(dict(arm=arm,seed=seed,presentations=exposure+batch_size,training_step_seconds=step_seconds,parts=dict(zip(component_keys,component_values)),weights=weights))+'\n')
+                if ((exposure+batch_size)//batch_size)%config.get('progress_every_updates',100)==0:
+                    print(json.dumps(dict(event='training_progress',arm=arm,seed=seed,presentations=exposure+batch_size,unique_graphs=len(seen),training_seconds=training_seconds)),flush=True)
             path=output/f'{arm}-{seed}.pt'; torch.save(model.state_dict(),path)
             manifest['runs'].append(dict(arm=arm,seed=seed,parameters=sum(p.numel() for p in model.parameters()),width=model.width,autocast_dtype=model.autocast_dtype,parameter_dtype='float32',training_cache=training_item.cache_info()._asdict(),public_feature_cache=encode_text.cache_info()._asdict(),
                            initial_state_sha256=initial_hash,final_state_sha256=state_hash(model),checkpoint_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),seconds=time.monotonic()-start,training_seconds=training_seconds,peak_cuda_allocated_bytes=torch.cuda.max_memory_allocated(model.initial.device) if cuda else 0))

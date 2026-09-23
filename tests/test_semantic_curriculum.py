@@ -109,3 +109,13 @@ def test_fresh_holdout_exclusion_does_not_discard_training_candidates(tmp_path):
     assert audit['inspected_prefix_overlap']==2
     assert audit['selected_heldout_overlap']==0
     assert not set(heldout)&set(training)
+
+
+def test_balanced_lessons_keep_mixture_fixed_across_cardinalities():
+    for extra in (3,30):
+        groups={'small':[0],'large':list(range(1,extra+1))}
+        schedule=[m.exposure_schedule(i,extra+1,groups) for i in range(120)]
+        small=sum(index==0 for index,_ in schedule)
+        assert small==60
+        assert sum(language=='english' for _,language in schedule)==60
+        assert len({index for index,_ in schedule})==1+min(extra,30)
