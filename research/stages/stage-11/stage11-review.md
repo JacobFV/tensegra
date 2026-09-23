@@ -35,3 +35,13 @@ The reference-only package independently verifies 41 local source/configuration/
 Source `0365be6` uses the existing width-1024 public-text actor. Sampled gold pair indices select edge/slot loss outputs only after the latent node representations have been computed; they do not alter input context or recurrence. Deployment uses predicted node presence and edges. Training-only calibration evaluates predicted-present pairs and cannot restore a missed node with a gold mask. The edge-conditional slot objective is a separately documented correction inherited from the decoder diagnostics.
 
 The proposed eight-construction unification corpus and final-update fitting gate are explicitly narrow. Three initialization seeds, fixed 4,000-update cap, no early-success checkpoint selection, and a stopped dependent generalization track on failure are appropriate. Public observability and resource profiling still need completion before the main launch. Requested lossless calibration pair scores/targets to permit independent threshold reconstruction without rerunning the full neural actor.
+
+## Return acquisition preflight
+
+Source `1b2860b` checks the archived input checkpoint hash before loading. Both arms restore identical complete parameters and reset AdamW; no historical optimizer continuation is implied. Fixed-set training and evaluation regenerate the same 32 events with the same two distractors. The inherited capture/decode path is unchanged, and the gate checks all six fields jointly at the final update across every covered delay. Fresh 512-event reconstruction is reported separately. No delay32 enters acquisition or selection.
+
+The short `[0,1,2,4,2,4]` and wide `[0,1,2,4,8,16]` schedules match update/event counts while redistributing repeated2/4 exposure to8/16. They do not match recurrent compute or per-delay weighting. A failed fixed-set gate stops the dependent main comparison; no fresh-generalization conclusion may substitute for this acquisition decision.
+
+## Calibration export and profile audit
+
+The semantic exporter now saves exact active pair indices, edge scores and labels at each checkpoint. Independent stdlib reconstruction verifies the profile's 32 raw/calibrated graph decisions, 26 relation threshold records, predicted-presence masks, actual-edge slot checks, and eight matched-English frequency-baseline graph records. This verifies instrumentation only; a 20-update profile cannot pass or fail the main acquisition hypothesis.
