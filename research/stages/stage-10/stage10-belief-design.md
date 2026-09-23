@@ -6,7 +6,7 @@ Stage 9 located a real coverage hole: IDs entered the learned compatibility inpu
 
 ## Prespecified arms
 
-1. `ledger_only`: observation IDs still address the exact ledger, but the sixteen ID coordinates entering the content encoder are zeroed. All allocated parameters match the raw-ID arms; the unused ID weights are disclosed. Content compatibility, nonempty null inference and candidate posterior remain learned. Consistent bijective ID renaming is an architectural guarantee, not an acquired behavior.
+1. `ledger_only`: observation IDs still address the exact ledger, but the sixteen ID coordinates entering the content encoder are zeroed. All allocated parameters match the raw-ID arms; the unused ID weights are disclosed. Content compatibility, nonempty null inference and candidate posterior remain learned. Consistent bijective ID renaming within the public unsigned16-bit handle domain is an architectural guarantee, not an acquired behavior.
 2. `raw_randomized`: the content encoder receives raw16-bit IDs, while every training episode receives a fresh independent random bijection over its observation handles. Duplicate and retraction references reuse the same mapped handle. The ID allocator uses an independent RNG; it does not use a winner, target support, primitive value, role or arrival position.
 3. `raw_correlated`: the unchanged Stage8 ID/content pairing is retained as a fresh-training reference. This is not a reused historical checkpoint.
 
@@ -39,3 +39,8 @@ The inherited full validation gate is unchanged: all prescribed seeds/cells, min
 Architectural invariance requires identical outputs under a bijection (up to explicitly reported floating arithmetic tolerance); this is distinct from learned posterior calibration. A learned-ID repair must pass the expanded gate, and its remaining renaming sensitivity is reported without assuming concentration is correctness. Raw confidence calibration uses expected correctness under the privileged joint posterior; it is never coupled to execution.
 
 Preserve all seeds, training exposures and curves, per-example construction keys, compressed predicted/gold posteriors, source/config/checkpoint hashes and independent raw audits. Report programmed guarantees, learned compatibility, calibration and generalization separately. No composition or supervision withdrawal is authorized by any result.
+
+
+### Development continuation rule frozen before outcomes
+
+The three arms each receive300 updates at development seed101. Continue to the fixed main recipe only if both repair arms have clean accuracy at least.90 on64 fresh development events, all losses are finite, and ledger-only renaming changes probabilities by at most1e-6. Randomized-ID renaming quality at300 is recorded but is not required to reach its final competence gate before the planned1000-update exposure. The correlated reference has the same development budget and is never dropped because it is weak. If either repair misses the clean acquisition condition, stop and report; do not extend exposure or select a new recipe. Development evaluation namespace10,092,000 is separate from profile/curve namespaces. Root authorized profile plus this development run within a three-minute serialized allocation after the semantic track releases the GPU.

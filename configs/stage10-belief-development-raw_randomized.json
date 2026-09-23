@@ -1,0 +1,27 @@
+{
+  "arm": "raw_randomized",
+  "seed": 101,
+  "device": "cuda",
+  "threads": 2,
+  "steps": 300,
+  "batch": 32,
+  "train_namespace": 10010000,
+  "curve_namespace": 10090000,
+  "split_seeds": {
+    "development": 10092000
+  },
+  "eval_candidates": [
+    8
+  ],
+  "conditions": [
+    "clean",
+    "id_rename",
+    "full_retract",
+    "distinct_equal_seen_id"
+  ],
+  "eval_count": 64,
+  "chunk": 32,
+  "log_every": 100,
+  "lr": 0.0003,
+  "study": "bounded_development_not_main"
+}
