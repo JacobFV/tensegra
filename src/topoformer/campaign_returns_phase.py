@@ -61,6 +61,7 @@ def run(cfg, out):
     started = time.monotonic(); torch.cuda.reset_peak_memory_stats()
     cache = load_verified(cfg['feature_path'], cfg['feature_sha256'])
     assert all(32 not in b['features'] for b in cache.values())
+    assert cfg['delays'][0] == 0 and all(d > 0 for d in cfg['delays'][1:])
     assert sha(cfg['checkpoint']) == cfg['checkpoint_sha256']
     original = torch.load(cfg['checkpoint'], map_location='cpu', weights_only=True)
     linear = nn.Linear(1024, 33).to(device)
