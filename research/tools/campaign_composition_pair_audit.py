@@ -1,0 +1,7 @@
+"""Matched development answer comparison, distinct from hybrid lowering gate."""
+import argparse,json,time,torch,numpy as np
+from pathlib import Path
+p=argparse.ArgumentParser();p.add_argument('hybrid',type=Path);p.add_argument('neural',type=Path);p.add_argument('--output',type=Path,required=True);a=p.parse_args();t=time.monotonic();torch.set_num_threads(2);h=torch.load(a.hybrid/'hybrid-8.pt',map_location='cpu',weights_only=False);n=torch.load(a.neural/'validation.pt',map_location='cpu',weights_only=False);assert torch.equal(h['original'],n['labels']['task']);y=h['original'].numpy();nc=n['logits']['answer'].argmax(-1).numpy()==y;rng=np.random.default_rng(483);indices=rng.integers(0,len(y),(4000,len(y)));rows=[]
+for d in(0,16):
+ hc=h['result']['cells'][d]['predictions'].numpy()==y;diff=hc.astype(float)-nc;boot=diff[indices].mean(1);rows.append(dict(delay=d,hybrid_correct=int(hc.sum()),neural_correct=int(nc.sum()),both_correct=int((hc&nc).sum()),hybrid_only=int((hc&~nc).sum()),neural_only=int((~hc&nc).sum()),both_wrong=int((~hc&~nc).sum()),difference=float(diff.mean()),paired_event_bootstrap_95=np.quantile(boot,[.025,.975]).tolist()))
+out=dict(examples=len(y),rows=rows,cpu_audit_wall_seconds=time.monotonic()-t,scope='One inspected development population, answer-only paired comparison. Not three-seed confirmation, not training-compute matched, and not a comparison against the hybrid joint-lowering gate.');a.output.write_text(json.dumps(out,indent=2)+'\n');print(out)
