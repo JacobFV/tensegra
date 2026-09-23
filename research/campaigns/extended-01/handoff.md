@@ -35,3 +35,6 @@ GPUowner C01-n1 cap900; hybrid117.9894s completed, primary all12cells >=4076/409
 
 ### 23:01 UTC
 C01N1 completed75.1416s, selected .0003step4000 cal2031/2048; freshanswer4056/4096, reversedroles3775/4096, noextensiontrigger. C01N2 runningcap1800 frozen361a691. S09 publicpredictedpointerread source5377318 profilecleared. S10newisolatedCPUworker audits suppliedoutputschema masking/bookkeeping overfrozenpredictions, noGPU. R08 selected .0001 smalltailgain; no nonlinearconfirmation. R09binaryingestionphasereadout CPUdesign next.
+
+### 23:15 UTC campaign checkpoint
+S11 soleGPUowner source14f0293 cap900, exactrestoreguards passed. S09main frozen d4f04b3 cap1500 next. C01N2done466.8583s; selected.0003step2000 fresh2940/4096 vsN14056/4096, butfixedTRAIN256 N2value256/256/answer255. Opaque-keymemorization/generalization diagnostic C02 beingdesigned, noGPU; no blindN2extension despitechancearmformaltrigger. R09done23.57s failedcalgate, no more returnsGPU; synthesispending. S10publicschema decoder100/512freshDEV S03, original0, independentlyreplaypassed15,360rows; unchangedpolicyreuseprospectivelyregistered forS11/S09secondary. Noconfirmationdatausedsemantic. A06branchcompleteaudited. Rootprogresspush latestdd8fccb; newercommitsneedpush.

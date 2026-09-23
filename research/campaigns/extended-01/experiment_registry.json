@@ -354,7 +354,7 @@
     },
     {
       "id": "R08",
-      "status": "completed_analysis_pending",
+      "status": "completed_small_gain_audited",
       "kind": "exploratory_optimizer_screen",
       "hypothesis": "R07 nonlinear acquisition failure may reflect inherited step size rather than unavailable scalar information",
       "intervention": "Same residual architecture/data/initial function/900 minibatches; LR .0003/.0001/.00003",
@@ -372,7 +372,7 @@
     },
     {
       "id": "S09",
-      "status": "profile_ready",
+      "status": "profiled_main_frozen",
       "kind": "exploratory_interface",
       "hypothesis": "Predicted text pointer should supply the same contextual evidence used by node and relation decoding",
       "intervention": "Retain originalworkspace; learnedcopyprobabilities read shared-weight contextualtokenstates into node residual",
@@ -383,13 +383,13 @@
       "observable_inputs": "Same publictext and copyinventory; no gold spans/graph forward",
       "privileged_targets": "Originalfirst-identity copy and graphlabels",
       "protocol": "semantics/S09-grounded-node-design.md",
-      "source": "5377318",
-      "budget": "profile before finalmain allocation; provisional1000\u20131350s",
+      "source": "d4f04b3",
+      "budget": "1500s cap; measured20steps2.0033s, fullprofile11.3356s",
       "next_branch": "Acquisition check, comparefreshcomponents/exact and computecontrol if useful"
     },
     {
       "id": "S10",
-      "status": "cpu_design_running",
+      "status": "completed_exploratory_repair_audit_finishing",
       "kind": "frozen_engineered_decoder_diagnostic",
       "hypothesis": "Independentbinarygraph decisions violate known compiler bookkeeping/schema contracts unnecessarily",
       "intervention": "Predicted-attribute schema mask and deterministic contains/declares/reference bookkeeping",
@@ -400,7 +400,37 @@
       "privileged_targets": "Goldgraphs scoring only",
       "selection": "No thresholds/weights fitting, all3predeclaredarms retained",
       "budget": "CPUinitial5min, noGPU",
-      "next_branch": "Reportrepair/regression; fullstructuralassignment requires separatelyregisteredscoreexport"
+      "next_branch": "Reportrepair/regression; fullstructuralassignment requires separatelyregisteredscoreexport",
+      "evidence": "semantics/S10-report.md",
+      "result": "S03 calibrated100/512, raw39/512 exact versus0; suppliedschema/learnedattributes, no confirmation"
+    },
+    {
+      "id": "R09",
+      "status": "completed_failed_advancement",
+      "hypothesis": "Public ingestion/recurrent phase selects more compatible linear consumer functions",
+      "intervention": "Two phase-selected linearheads vs sharedlinear, same900batches/frozenfeatures",
+      "observable_inputs": "Sameworkspacefeatures plus public t=0 vs t>0 phase",
+      "privileged_targets": "33-class labels",
+      "selection": "Fixedendpoint, mincalgrid thenmixture; reuseddevelopment",
+      "protocol": "returns/R09-protocol.md",
+      "source": "cc388a4",
+      "result": "Worstcalgrid59\u219257/64; modestmixture/validationgains; no promotion"
+    },
+    {
+      "id": "S11",
+      "status": "running",
+      "hypothesis": "Fixed-LR late regression is sensitive to optimizer step size",
+      "intervention": "S03exactcontinuation with restoredLR1e-5 instead1e-4; moments/sampler preserved",
+      "comparators": [
+        "S04 u24576 at196608presentations"
+      ],
+      "observable_inputs": "Same publictext/copyinventory",
+      "privileged_targets": "Same graphtrainingtargets only",
+      "selection": "Fixed196608endpoint, TRAINcalibration; DEVexploratory",
+      "protocol": "semantics/S11-lr-design.md",
+      "source": "14f0293",
+      "budget": "900s cap",
+      "next_branch": "Compareacquisition and unchangedS10secondarydecoding; noautoextension"
     }
   ],
   "policy": {

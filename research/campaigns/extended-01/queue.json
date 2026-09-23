@@ -2,23 +2,23 @@
   "owner": "/root",
   "machine": "gb10-direct / promaxgb10-4dfb",
   "running": {
-    "id": "C01-n2",
+    "id": "S11-lr",
     "kind": "exploration",
-    "source": "361a691",
-    "cap_seconds": 1800.0,
-    "released_utc": "2026-09-23T22:58:49.094349+00:00"
+    "source": "14f0293",
+    "cap_seconds": 900.0,
+    "released_utc": "2026-09-23T23:12:49.949716+00:00"
   },
   "ready": [
     {
-      "id": "S09-profile",
-      "source": "5377318",
-      "cap_seconds": 60
+      "id": "S09-main",
+      "source": "d4f04b3",
+      "cap_seconds": 1500
     }
   ],
   "planning": [
-    "R09 public ingestion-phase readout source/profile preparation",
-    "S10 CPU frozen schema decoder diagnostic",
-    "C01 confirmation only after completed baselines/audit"
+    "C02 N2 public opaque-key resampling diagnostic CPUdesign",
+    "C01 confirmation after baseline acquisition checks",
+    "S10 fixeddecoder reuse on matched S11/S09 endpoints"
   ],
   "blocked": [],
   "completed": [
@@ -540,6 +540,50 @@
       "seconds": 75.1415869561024,
       "receipt": "research/results/campaign-01/composition/c01-development/n1/occupancy.json",
       "recorded_utc": "2026-09-23T22:58:49.075275+00:00"
+    },
+    {
+      "id": "C01-n2",
+      "kind": "exploration",
+      "source": "361a691",
+      "cap_seconds": 1800.0,
+      "released_utc": "2026-09-23T22:58:49.094349+00:00",
+      "status": "completed",
+      "seconds": 466.85828314814717,
+      "receipt": "research/results/campaign-01/composition/c01-development/n2/occupancy.json",
+      "recorded_utc": "2026-09-23T23:07:41.822460+00:00"
+    },
+    {
+      "id": "R09-profile",
+      "kind": "exploration",
+      "source": "cc388a4",
+      "cap_seconds": 60.0,
+      "released_utc": "2026-09-23T23:07:41.842073+00:00",
+      "status": "completed",
+      "seconds": 21.56,
+      "receipt": "research/results/campaign-01/returns/r09-profile/process.json",
+      "recorded_utc": "2026-09-23T23:08:38.118925+00:00"
+    },
+    {
+      "id": "S09-profile",
+      "kind": "exploration",
+      "source": "5377318",
+      "cap_seconds": 60.0,
+      "released_utc": "2026-09-23T23:08:38.137905+00:00",
+      "status": "completed",
+      "seconds": 11.335610808,
+      "receipt": "research/results/campaign-01/semantics/s09-grounded-profile/s09-grounded-profile.occupancy.json",
+      "recorded_utc": "2026-09-23T23:10:47.380736+00:00"
+    },
+    {
+      "id": "R09-development",
+      "kind": "exploration",
+      "source": "cc388a4",
+      "cap_seconds": 120.0,
+      "released_utc": "2026-09-23T23:10:47.416591+00:00",
+      "status": "completed",
+      "seconds": 23.57,
+      "receipt": "research/results/campaign-01/returns/r09-development/process.json",
+      "recorded_utc": "2026-09-23T23:12:04.861940+00:00"
     }
   ],
   "rejected": [
