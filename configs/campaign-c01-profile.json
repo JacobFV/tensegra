@@ -1,0 +1,80 @@
+{
+  "version": "c01-v1-profile",
+  "hidden": 1024,
+  "key_dim": 32,
+  "seed": 599,
+  "sample_seed": 509000100,
+  "control_seed": 509000200,
+  "swap_seed": 509000004,
+  "data": {
+    "train": {
+      "seed": 509000001,
+      "count": 512
+    },
+    "calibration": {
+      "seed": 509000002,
+      "count": 64
+    },
+    "validation": {
+      "seed": 509000003,
+      "count": 64
+    }
+  },
+  "updates": 16,
+  "checkpoints": [
+    0,
+    8,
+    16
+  ],
+  "learning_rates": [
+    0.001
+  ],
+  "batch_size": 256,
+  "capture_batch_size": 64,
+  "delays": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "intervention_delays": [
+    0,
+    1,
+    16
+  ],
+  "eval_distractors": [
+    2,
+    8
+  ],
+  "causal_size": 64,
+  "public_controls": [
+    "record_order",
+    "inventory_order",
+    "fresh_names",
+    "reverse_roles",
+    "unrelated_instructions"
+  ],
+  "interfaces": {
+    "lowerer": "/home/brandonin/topoformer-campaign-01/composition/p01-confirmation-303/selected.pt",
+    "lowerer_sha256": "1f4e141180ec60ddadab10b079fb3595f6aed610b16e57a1ab7d6b82839dcb9e",
+    "backbone": "/home/brandonin/topoformer-stage11/returns/main/11-wide_continue.pt",
+    "backbone_sha256": "00e122c8cfe655dc9a8f801b48c5b5092db6caf8909479f2c3ac3910f0b7a077",
+    "accessor": "/home/brandonin/topoformer-campaign-01/returns/r04-confirmation/11/ce-16384.pt",
+    "accessor_sha256": "8543047e604b80df4313d85ead8cf4ed6ff16fbcf1894a24789b4a35cfc04be5",
+    "consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/11/learned.pt",
+    "consumer_sha256": "9d35ee64eeadac0a663a4389d860cfe69ae410da993b6f1668d3e98313681281",
+    "oracle_consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/11/oracle.pt",
+    "oracle_consumer_sha256": "736bf270831da6f95a7056eb1022a752a116a72b81b09eaf250dd04a5b5edb32",
+    "query_consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/11/query_only.pt",
+    "query_consumer_sha256": "02dd304c938e1d97ae4fb67e95b83cbef70c9f93b85a6f447a0f0ef3ac2c246f"
+  },
+  "requested_phase_caps_seconds": {
+    "hybrid": 60,
+    "n1": 60,
+    "n1_frozen": 60,
+    "n2": 120
+  },
+  "status": "profile separately by phase; root release required"
+}
