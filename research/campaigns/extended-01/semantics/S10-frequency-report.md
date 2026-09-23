@@ -19,4 +19,4 @@ This control receives no per-event text, token features, copy inventory, current
 
 The result rules out the narrow explanation that this particular inherited frequency prior plus these same rules reproduces the learned-actor diagnostic recovery. It does not establish broad semantic competence, a unique architecture benefit, or successful unseen-renderer transfer. All learned S10 results and historical gates remain unchanged.
 
-CPU wall33.17seconds, RSS760812KiB, zeroGPU. Protocol/source were frozen and independently preflighted before outcomes. Baseline prediction and source hashes, transformed target archive, all5120 per-graph records, exact output hashes, and receipts are retained. Independent raw reconstruction pending.
+CPU wall33.17seconds, RSS760812KiB, zeroGPU. Protocol/source were frozen and independently preflighted before outcomes. Baseline prediction and source hashes, transformed target archive, all5120 per-graph records, exact output hashes, and receipts are retained. Independent raw reconstruction passed (`5bf2a6b`): all 5,120 decisions, 640 constant predictions, target alignment, and wrapper/TRAIN/baseline hashes verified.

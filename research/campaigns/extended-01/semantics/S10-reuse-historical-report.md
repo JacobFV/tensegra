@@ -13,4 +13,4 @@ Prospective protocol `8042d2f`, unchanged audited decoder `2085053`. S11/S09 new
 | S01 | development | raw | 0/512 | 0 | 0 | 0 | 0.84455 | 0.70675 |
 | S01 | development | calibrated | 0/512 | 0 | 2 | 33 | 0.92264 | 0.88152 |
 
-Every one of the 5,120 S01 per-graph records exactly reproduces the earlier S10 diagnostic, including metrics, prerequisites and complete tensor hashes. CPU wall 48.16 seconds, RSS 897,816 KiB, zero GPU. Independent raw reconstruction pending. Learned node attributes and structural associations remain frozen; bookkeeping/type rules are supplied. Cross-checkpoint paired outcomes await the registered new archives. No best-checkpoint substitution.
+Every one of the 5,120 S01 per-graph records exactly reproduces the earlier S10 diagnostic, including metrics, prerequisites and complete tensor hashes. CPU wall 48.16 seconds, RSS 897,816 KiB, zero GPU. Independent raw reconstruction passed for all 10,240 decisions and tensor hashes. Learned node attributes and structural associations remain frozen; bookkeeping/type rules are supplied. Cross-checkpoint paired outcomes await the registered new archives. No best-checkpoint substitution.
