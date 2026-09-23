@@ -124,7 +124,8 @@ class ThinkingModel(nn.Module):
 
     def step(self, workspace, context, current_memory, *, adjacency=None,
              context_mask=None, memory_mask=None, microstep=1, token_time=0,
-             structural_strength=None, identity_memory=None, identity_mask=None):
+             structural_strength=None, identity_memory=None, identity_mask=None,
+             graph_permutation=None, graph_keep=None):
         """Advance one shared four-block microstep from current observations only.
 
         adjacency must be observable; omitted adjacency is predicted from current
@@ -156,6 +157,29 @@ class ThinkingModel(nn.Module):
         if graph.shape != (b,c.n_relations,m,m):
             raise ValueError('adjacency must match relation count and current memory')
         graph = graph * memory_mask[:,None,:,None] * memory_mask[:,None,None,:]
+        # Interventions affect only geometry actually used for attention. The
+        # unmodified prediction remains available for losses and diagnostics.
+        if graph_permutation is not None:
+            permutation = graph_permutation
+            if permutation.shape != (b,m) or permutation.dtype not in (torch.int32,torch.int64):
+                raise ValueError('graph_permutation must be integer [batch,nodes]')
+            permutation = permutation.to(device=mem.device,dtype=torch.long)
+            expected = torch.arange(m,device=mem.device).expand(b,-1)
+            if not torch.equal(permutation.sort(-1).values,expected):
+                raise ValueError('graph_permutation must contain each node exactly once')
+            if not torch.equal(memory_mask.gather(1,permutation),memory_mask):
+                raise ValueError('graph_permutation must preserve padding support')
+            graph = graph.gather(2,permutation[:,None,:,None].expand(b,c.n_relations,m,m))
+            graph = graph.gather(3,permutation[:,None,None,:].expand(b,c.n_relations,m,m))
+        if graph_keep is not None:
+            keep = graph_keep.to(device=mem.device,dtype=mem.dtype)
+            if keep.shape == (b,m,m):
+                keep = keep[:,None].expand(-1,c.n_relations,-1,-1)
+            if keep.shape != (b,c.n_relations,m,m):
+                raise ValueError('graph_keep must match batch, relations and nodes')
+            if not torch.isfinite(keep).all() or (keep < 0).any() or (keep > 1).any():
+                raise ValueError('graph_keep must contain finite values in [0,1]')
+            graph = graph*keep
         strength = c.structural_strength if structural_strength is None else structural_strength
         clock = workspace.new_tensor([math.sin(float(token_time)),math.cos(float(token_time))])
         state = workspace + self.token_clock(clock)[None,None]
@@ -211,7 +235,7 @@ class ThinkingModel(nn.Module):
                     overlap=routes @ routes.transpose(-1,-2),output_logits=self.output(pooled),
                     emit_logits=emit_logits,emit_probability=probability,emit=probability.ge(.5),
                     ponder=c.ponder_cost*(1-probability),grounding_q=pq,grounding_k=pk,
-                    predicted_adjacency=predicted,attentions=tuple(attentions))
+                    predicted_adjacency=predicted,used_adjacency=graph,attentions=tuple(attentions))
 
     def encode_events(self, events):
         """Encode typed events; ordered arguments are public feature rows.

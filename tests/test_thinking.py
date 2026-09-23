@@ -183,3 +183,50 @@ def test_soft_emission_bias_matches_independent_threshold_formula():
     bias = (-cfg.emit_alpha*torch.nn.functional.softplus(torch.tensor(cfg.soft_min_microsteps-3.))
             +cfg.emit_beta*torch.nn.functional.softplus(torch.tensor(3.-cfg.soft_max_microsteps)))
     torch.testing.assert_close(out['emit_probability'],torch.sigmoid(out['emit_logits']+bias))
+
+
+def test_graph_interventions_reorder_both_axes_without_changing_prediction():
+    model,context,memory = model_fixture()
+    state = model.initialize({'context':context})
+    graph = torch.arange(100.).reshape(2,2,5,5)
+    permutation = torch.tensor([[4,2,0,3,1],[1,0,4,2,3]])
+    out = model.step(state,context,memory,adjacency=graph,graph_permutation=permutation)
+    expected = torch.stack([graph[b][:,permutation[b]][:,:,permutation[b]] for b in range(2)])
+    torch.testing.assert_close(out['used_adjacency'],expected)
+    plain = model.step(state,context,memory,adjacency=graph)
+    torch.testing.assert_close(out['predicted_adjacency'],plain['predicted_adjacency'])
+
+
+def test_graph_drop_zero_and_zero_strength_controls():
+    model,context,memory = model_fixture()
+    state = model.initialize({'context':context})
+    graph = torch.rand(2,2,5,5)
+    dropped = model.step(state,context,memory,adjacency=graph,graph_keep=torch.zeros(2,5,5))
+    zero = model.step(state,context,memory,adjacency=torch.zeros_like(graph))
+    torch.testing.assert_close(dropped['workspace'],zero['workspace'])
+    plain = model.step(state,context,memory,adjacency=graph,structural_strength=0)
+    permuted = model.step(state,context,memory,adjacency=graph,structural_strength=0,graph_permutation=torch.arange(4,-1,-1).expand(2,-1))
+    torch.testing.assert_close(plain['workspace'],permuted['workspace'])
+
+
+@pytest.mark.parametrize('intervention',[
+    {'graph_permutation':torch.zeros(2,5,dtype=torch.long)},
+    {'graph_permutation':torch.arange(5).expand(1,-1)},
+    {'graph_permutation':torch.arange(5.).expand(2,-1)},
+    {'graph_keep':torch.ones(2,2,5,5)*2},
+    {'graph_keep':torch.full((2,2,5,5),float('nan'))},
+    {'graph_keep':torch.ones(2,1,5,5)},
+])
+def test_invalid_graph_interventions_rejected(intervention):
+    model,context,memory = model_fixture()
+    state = model.initialize({'context':context})
+    with pytest.raises(ValueError):
+        model.step(state,context,memory,**intervention)
+
+
+def test_graph_permutation_cannot_exchange_padded_and_real_nodes():
+    model,context,memory = model_fixture()
+    state = model.initialize({'context':context})
+    mask = torch.ones(2,5,dtype=torch.bool); mask[:,-1] = False
+    with pytest.raises(ValueError,match='padding'):
+        model.step(state,context,memory,memory_mask=mask,graph_permutation=torch.arange(4,-1,-1).expand(2,-1))

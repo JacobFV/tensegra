@@ -66,3 +66,16 @@ microstep 3. This fixes a train/evaluation budget confound before the controlled
 main experiment, without adding weights or changing workspace/language outputs.
 Both new regression tests failed against the previous implementation; fourteen
 model tests and the full isolated remote baseline suite now pass: **385 passed**.
+
+Final pre-freeze graph intervention API: `step` accepts `graph_permutation[B,N]`
+(a complete integer permutation preserving real/padded support) and
+`graph_keep[B,R,N,N]` or `[B,N,N]` (finite values in [0,1]). Interventions modify
+only the graph used for structural geometry, after the observable graph choice
+and padding mask. Permutation reorders both directed endpoint axes while leaving
+relation channels intact; keep is applied afterward. `used_adjacency` exposes the
+intervened graph. `predicted_adjacency` remains untouched for auxiliary losses.
+No parameters or default actor behavior change. Nine intervention regressions
+failed before implementation and then passed, including typed directed reordering,
+zero-keep equivalence to zero graph, zero-strength invariance, invalid masks and
+padding validation. Full isolated remote baseline suite: **394 passed**, including
+23 model tests. Runner received API for same-checkpoint corruption probes.
