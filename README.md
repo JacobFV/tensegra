@@ -1,5 +1,8 @@
 # Topoformer: programmable attention geometry
 
+
+Research reports, audits, and raw experiment artifacts are indexed in [research/](research/README.md).
+
 This repository contains a controlled pilot for testing graph-biased attention on
 synthetic sparse and robot-shaped dynamical systems. The first generators use a
 shared, nonnegative, uniform-neighbor mechanism. That makes topology identifiable
@@ -79,7 +82,7 @@ primitives, `graphs.py` and `data.py` build synthetic systems, `model.py` define
 the shared graph predictor and token MLP, and `training.py`, `evaluation.py`, and
 `experiment.py` provide the paired training, metrics, and CLI path.
 
-See the [pilot report](.development/pilot-report.md) for results, limitations, and
+See the [pilot report](research/stages/stage-01/pilot-report.md) for results, limitations, and
 the recommended next experiments.
 
 ## Controlled follow-up studies
@@ -126,14 +129,14 @@ stochastic nonlinear process. The robot generator remains a morphology-shaped
 synthetic proxy, not a physics simulator or VLA.
 
 The preregistered design and implementation notes are in
-[stage2-design.md](.development/stage2-design.md) and
-[stage2-journal.md](.development/stage2-journal.md).
+[stage2-design.md](research/stages/stage-02/stage2-design.md) and
+[stage2-journal.md](research/stages/stage-02/stage2-journal.md).
 
-The completed [Stage 2 report](.development/stage2-report.md) covers all 570 runs,
-including negative findings. [Methods](.development/stage2-methods.md),
-[raw metrics](.development/results/stage2/metrics.jsonl),
-[run configuration and provenance](.development/results/stage2/summary.json), and
-[artifact audit](.development/results/stage2/audit.json) are committed alongside it.
+The completed [Stage 2 report](research/stages/stage-02/stage2-report.md) covers all 570 runs,
+including negative findings. [Methods](research/stages/stage-02/stage2-methods.md),
+[raw metrics](research/results/stage2/metrics.jsonl),
+[run configuration and provenance](research/results/stage2/summary.json), and
+[artifact audit](research/results/stage2/audit.json) are committed alongside it.
 
 ## Latent grounding into runtime graphs
 
@@ -178,15 +181,15 @@ from model inputs. `traversal_oracle.py` separately verifies exact one-hot bindi
 through the actual attention contraction and retrieval operation. Diagnostics
 separate answer accuracy, binding trajectories and attention trajectories.
 
-See the [Stage 3 design](.development/stage3-design.md),
-[model assumptions](.development/stage3-model-notes.md) and
-[leakage review](.development/stage3-leakage-review.md).
+See the [Stage 3 design](research/stages/stage-03/stage3-design.md),
+[model assumptions](research/stages/stage-03/stage3-model-notes.md) and
+[leakage review](research/stages/stage-03/stage3-leakage-review.md).
 
-The [Stage 3 report](.development/stage3-report.md) separates the main 39-run study
-from a nine-run stronger content-prior control. [Methods](.development/stage3-methods.md),
-[main raw metrics](.development/results/stage3/main/metrics.jsonl),
-[supplement raw metrics](.development/results/stage3/keyed/metrics.jsonl), and
-[figures and diagnostic trajectories](.development/results/stage3/main/analysis/report.md)
+The [Stage 3 report](research/stages/stage-03/stage3-report.md) separates the main 39-run study
+from a nine-run stronger content-prior control. [Methods](research/stages/stage-03/stage3-methods.md),
+[main raw metrics](research/results/stage3/main/metrics.jsonl),
+[supplement raw metrics](research/results/stage3/keyed/metrics.jsonl), and
+[figures and diagnostic trajectories](research/results/stage3/main/analysis/report.md)
 are included. Identity-initialized grounding supports some depth transfer;
 random initialization and joint depth/size transfer remain weak. A stronger
 graph-as-data control removes the evidence for metric-specific superiority.
@@ -237,11 +240,11 @@ python3 src/topoformer/binding_analysis.py \
 The full study evaluates all 20 combinations of 16–128 nodes and 4–64 transitions,
 with initialization anchors and three paired seeds. The analyzer also accepts
 losslessly compressed `.jsonl.gz` metrics. See the
-[Stage 4 design](.development/stage4-design.md) and
-[methods](.development/stage4-methods.md) for the architectural priors, supervision
+[Stage 4 design](research/stages/stage-04/stage4-design.md) and
+[methods](research/stages/stage-04/stage4-methods.md) for the architectural priors, supervision
 boundaries and preregistered stability gate before adaptive-strength experiments.
 
-The [Stage 4 report](.development/stage4-report.md) includes the completed 69-run
+The [Stage 4 report](research/stages/stage-04/stage4-report.md) includes the completed 69-run
 matrix, raw metrics, heatmaps, and independent audits. At depth 64 on 128 nodes,
 identity-initialized explicit pointer writes achieve 99.74% task accuracy and 100%
 complete paths; protected attention writes achieve 92.45% and 90.89%. The pointer
@@ -285,9 +288,9 @@ python3 src/topoformer/runtime_analysis.py \
   --config results/runtime/config.json
 ```
 
-See the [Stage 5 methods](.development/stage5-methods.md),
-[implementation plan](.development/plan-05.md), and
-[report](.development/stage5-report.md) for supervision boundaries, controls,
+See the [Stage 5 methods](research/stages/stage-05/stage5-methods.md),
+[implementation plan](research/stages/stage-05/plan-05.md), and
+[report](research/stages/stage-05/stage5-report.md) for supervision boundaries, controls,
 confidence accounting and the distinction between interpreter support and
 what the neural benchmark measures.
 
@@ -314,8 +317,8 @@ OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
 ```
 
 The full paired budgets are in `configs/stage6.json` and
-`configs/stage6-language.json`. Read the [Stage 6 report](.development/stage6-report.md)
-and [methods](.development/stage6-methods.md) for experiment status, supervision
+`configs/stage6-language.json`. Read the [Stage 6 report](research/stages/stage-06/stage6-report.md)
+and [methods](research/stages/stage-06/stage6-methods.md) for experiment status, supervision
 boundaries, negative findings, and the distinction between learned behavior and
 supplied exact semantics. Earlier stages remain independently reproducible.
 
