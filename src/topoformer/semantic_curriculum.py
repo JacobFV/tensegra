@@ -185,6 +185,10 @@ def unpack_graph(graph):
 def evaluate(model,examples,language,vocab,capacity,renamed=False,raw_path=None,context=None):
     """Same Stage7 metrics, lossless bit-packed raw edge tensors."""
     rows=[]
+    if raw_path is not None and context is not None:
+        raw_path=Path(raw_path)
+        name=raw_path.name.removesuffix('.jsonl.gz')
+        raw_path=raw_path.with_name(f"{name}-{context['arm']}-seed{context['seed']}-p{context['presentations']}.jsonl.gz")
     with torch.no_grad():
         for example in examples:
             public,graph=base.surface_input(example,language,renamed)
@@ -250,7 +254,7 @@ def run(config):
                   heldout_digest=hashlib.sha256(''.join(base.semantic_key(e.privileged.graph) for e in heldout).encode()).hexdigest(),
                   priors=['canonical compiler node order','privileged visible-copy and typed-edge labels','fixed ontology and node capacity','gold-edge training loss sampling only; no effect on hidden state','no_input control retains public pointer candidate count and token normalization'],
                   limitations=['exact decoder-slot equivalence is not general graph isomorphism','value ontology is fitted on declared shared training-only vocabulary pool, including unoptimized examples in smaller corpus arms','curriculum, width, edge sampling and actor differ from stage7; not a single-variable comparison'],
-                  composition_allowed=False)
+                  composition_allowed=False,raw_prediction_layout='lossless bit-packed edge tensors; gzip shard per arm/seed/exposure')
     (output/'manifest.json').write_text(json.dumps(manifest,indent=2))
     @lru_cache(maxsize=config.get('cache_surfaces',20000))
     def training_item(index,language):
