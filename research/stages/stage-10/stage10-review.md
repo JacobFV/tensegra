@@ -41,3 +41,13 @@ Any new fitting recipe must freeze budget, calibration policy, selection and see
 ## Independent audit deliverables
 
 Reconstruct raw counts, calibration selections and complete matrices independently from model metric code. Check paired events, checkpoint/source/config/data hashes and coefficient identity. Preserve every failed recipe. Verify old baseline bytes again after final changes. Final report must distinguish programmed guarantees, learned interfaces, calibration, generalization and composed competence, and must attribute conclusions only to the claim each experiment actually tests.
+
+## Prelaunch implementation review
+
+A `InvariantBeliefModel` masks only the appended16neural ID coordinates in the ledger-only arm; inherited integer IDs still control exact first-write/removal. All three arms retain equal initial tensors and allocated capacity. Independent handle randomization preserves duplicates/retractions without consulting payload/targets. The public prior uses finite−1e9 logits, avoiding the inherited cross-entropy `0 × −inf` failure while yielding exact floating-point zero null probability. Finite-backward and masked-gradient tests are present. Initial-frame inclusion and programmed-versus-learned invariance remain explicit.
+
+B protocol fits source-delay normalization and regularization only from training/calibration data at that source delay. The shared comparison matches2,048events and8,192rows while varying delay coverage, with no delay32selection for pooled heads. A source32diagonal fit remains diagnostic. Request retained original non-value/joint counts so scalar improvement cannot masquerade as complete retention. No architecture or backbone update is planned.
+
+C frozen exposure protocol changes only the fixed update cap300→1200 on one additive/edge-conditional affine decoder, with three fresh seeds and one eight-graph fitting set. Fixed final1200gate, raw/calibrated parallel scoring and full FP32 score/target exports permit independent trajectory checks. No interim outcome selects a checkpoint or further budget. The1024dimension here is privileged node input, not an unmeasured recurrent workspace.
+
+The five historical false-positive argument edges independently match Stage9's calibrated raw error set and checkpoint SHA. Their signed margins, closed-form weighted logit gradients and all saved raw binary trajectories reconstruct exactly. Earlier logits/optimizer states were not saved and cannot be inferred from those trajectories. Parameter-gradient descent direction still requires separate CPU replay before being independently endorsed.
