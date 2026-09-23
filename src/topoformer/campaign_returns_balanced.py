@@ -28,6 +28,11 @@ def capture_balanced(model, seed, pool_size, per_cell, distractors, delays, batc
     size = len(indices)
     assert torch.equal(batch['targets']['value'], (2*batch['public']['event']['values'][:,0]+16).long())
     assert torch.equal(batch['targets']['type'], batch['public']['event']['types'][:,0])
+    return capture_selected(model,batch,seed,indices,distractors,delays,batch_size,device)
+
+
+def capture_selected(model,batch,seed,indices,distractors,delays,batch_size,device):
+    size=len(indices)
     chunks = {delay: [] for delay in delays}
     predictions = {delay: {field: [] for field in FIELDS} for delay in delays}
     with torch.no_grad():
