@@ -13,8 +13,8 @@ for path in root.glob('*-predictions.json.gz'):rows.extend(json.load(gzip.open(p
 delays=[0,1,2,4,8,16,32]
 styles={'frozen_original':('Frozen original','#777777'),
         'frozen_shared_readout':('Frozen + historical shared ridge','#bc8f00'),
-        'short_continue':('Short joint continuation','#3679ba'),
-        'wide_continue':('Wide joint continuation','#db6237')}
+        'short_continue':('Short continuation (trained through 4)','#3679ba'),
+        'wide_continue':('Wide continuation (trained through 16)','#db6237')}
 fig,axes=plt.subplots(2,2,figsize=(12,8),sharex=True,sharey=True)
 for col,d in enumerate((2,8)):
  for row,field in enumerate(('value','joint')):
