@@ -15,3 +15,7 @@ This is a nonmonotonic optimization curve under the fixed current-actor recipe, 
 Source d743464 and frozen S04config b2b17c2 continued exactly from S03: initial raw/calibrated prediction/threshold replay matched, inherited AdamWsteps16,384, first resumed public instance indices and sampled-pair hashes matched cloned checkpoint state. Same8192TRAIN graphs,512DEV, current actor width1024,8workspace rows,57,853,781parameters, losses and calibration policy. No confirmation predictions.
 
 This tranche added131,072presentations and989.09583optimizer seconds; full occupancy1242.52490seconds. Cumulative presentations262,144, visits32each, unique8192, optimizer tokens15,488,576. PeakCUDA1,224,941,568bytes; processRSS3,774,196KiB. Immutable checkpoint hashes and full raw/calibration/curves are under `research/results/campaign-01/semantics/s04-current-n8192-262k-dev201`. Independent reconstruction requested.
+
+![Same-optimizer current-actor exposure curve](semantic-exposure.svg)
+
+The plot preserves raw/calibrated decoding separately, plots the fixed final endpoint, and labels the TRAIN128diagnostic subset versus DEV512. Dotted vertical boundaries mark separately authorized continuation tranches; they do not represent optimizer restarts or independent seeds.
