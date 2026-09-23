@@ -24,7 +24,7 @@ All six fresh validation and all six fresh test sixteen-step cells in the 16k ar
 
 The three backbone initializations are historical 10/11/12; 10 and 11 informed development. Readout fitting and evaluation populations are fresh and independent between runs. Each run reuses the same underlying evaluation events across delays, distractors and heads; these are paired observations, not independent expanded sample counts. The balanced diagnostic is a different prevalence distribution and is never substituted for the primary population.
 
-External process occupancy was **398.23 seconds** including capture, fitting and lossless export; peak CUDA allocation was 1,499,566,592 bytes. All 432 raw cells, paired correct/wrong outcomes, per-value/type/operator groups and full-precision logits are retained. Independent audit is pending. This experiment concerns learned access to persistent return semantics; it does not test programmable attention.
+External process occupancy was **398.23 seconds** including capture, fitting and lossless export; peak CUDA allocation was 1,499,566,592 bytes. All 432 raw cells, paired correct/wrong outcomes, per-value/type/operator groups and full-precision logits are retained. Independent audit passed all 432 raw/cache/weight/logit cells, all 9,984 regenerated balanced event witnesses, and 36-population disjointness. This experiment concerns learned access to persistent return semantics; it does not test programmable attention.
 
 Next is a separately frozen, narrow returned-fact-use study on the unchanged registered mixture, contingent on independent audit. It must retain the stratified failure report and causal wrong/drop/swap controls. No general composition or autonomous policy is established here.
 
