@@ -71,3 +71,17 @@ The independent audit reconstructs **3,072 raw/calibrated graph decisions** on t
 A separate CPU-only regeneration loads no model and verifies all eight training and512 fresh graph identities, alpha-disjointness, semantic/public-text hashes, and the absence of novel lexical tokens. Calibrated typed-edge F1 is .5284/.5703/.5738, ordered-edge F1 .3376/.4259/.4258, and mean visible-copy accuracy .2909/.2991/.3153 for seeds30/31/32. Component recovery does not pass the exact graph gate. The heldout-renderer stage is blocked. This is limited transfer after fitting eight constructions; it is not a test of adequate broad semantic-data exposure or a reason to reopen model selection.
 
 Independent component substitution reconstruction also verifies all **21,504** privileged replacement outcomes (seven replacements × 512 graphs × three seeds × two policies). Every single-component and all-node-attributes replacement has zero complete graphs. Multiple output components remain wrong; these are diagnostic ceilings, not deployable graph recovery or proof of learnability.
+
+## Completed paired return audit
+
+Independent reconstruction verifies all **336 final cells and 180 validation-curve cells**, including scalar signed/absolute errors, six semantic fields, required-argument denominators, joint correctness, and paired short-to-wide outcome counts. The losslessly compressed manifest matches its original-byte receipt. Each paired arm receives the same 32,000 unique training events, identical complete initial tensors, reset AdamW and RNG, with disjoint training/validation/test identities. Source/configuration freezes and all twelve remote checkpoint/coefficient byte hashes match.
+
+Both continuations use the unchanged width1024 architecture. Short versus wide recurrent example-microsteps are **69,280 versus 164,896** per seed: matched optimizer presentations, not matched compute or individual delay exposure. Delay16 is covered training for the wide arm; delay32 remains extrapolation. Curves never use32, and the final update1000 endpoint is not selected on outcomes. The frozen shared-ridge reference is contextual, not an equally trained primary intervention.
+
+All **48** split/distractor/arm/seed retention cells fail. Wide continuation clears all non-value field thresholds at16 in all prescribed validation/test cells, but exact scalar accuracy remains below98%. For test eight-distractor events, wide scalar counts at16 are426/458/468 out of512, versus short308/424/387; at32 they are399/430/449 versus222/332/277. This supports a benefit from broader-horizon continuation under this paired recipe, not exact semantic reconstruction or composition readiness. The same512 unique test events are reused across seeds and conditions; aggregate counts are seed/event replicates, not independent new examples.
+
+The independent audit preserves the failed reconstruction gate. No symbolic returned-fact use, runtime composition, or supervision withdrawal is authorized. These supporting interface results do not test structural attention itself and are not universal prerequisites for separately scoped programmable-attention experiments.
+
+## Final verification
+
+The baseline-byte audit verifies all **3,866** tracked files from `e10b80a` unchanged. The coordinator reports the immutable `d8b6811` tree passed **567 tests plus six subtests** in9.99seconds on the existing CPU environment. Later reviewer additions are archived-data audit tools and reports; no experiment source was changed after the frozen runs.

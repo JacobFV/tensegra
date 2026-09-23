@@ -20,13 +20,24 @@ def audit(root,require_complete=True):
  assert cfg['backbone_seeds']==[10,11,12]
  assert [r['backbone_seed']for r in x['runs']]==cfg['backbone_seeds'][:len(x['runs'])]
  if require_complete:assert len(x['runs'])==3
- totals=curvecount=0;gates=[];paired=[];training=[]
+ totals=curvecount=0;gates=[];paired=[];training=[];condition_gates=[]
+ receipt=root/'manifest-receipt.json'
+ if receipt.exists():
+  receipt=load(receipt);packed=root/'manifest.json.gz';raw=gzip.decompress(packed.read_bytes())
+  assert sha(packed)==receipt['compressed_sha256']and hashlib.sha256(raw).hexdigest()==receipt['raw_sha256']and len(raw)==receipt['raw_bytes']
  for run in x['runs']:
   seed=run['backbone_seed'];p=root/f'{seed}-predictions.json.gz';c=root/f'{seed}-curves.json.gz';assert sha(p)==run['predictions_sha256']and sha(c)==run['curves_sha256'];rows=load(p);curves=load(c)
   ix={};expected={(arm,s,d,k)for arm in ['frozen_original','frozen_shared_readout',*cfg['schedules']]for s in ('validation','test')for d in cfg['eval_delays']for k in cfg['eval_distractors']}
   for r in rows:
    key=(r['head'],r['split'],r['target_delay'],r['distractors']);assert key not in ix;ix[key]=r;assert counts(r)==r['counts'];totals+=1
   assert set(ix)==expected
+  for r in rows:
+   if r['target_delay']==16:
+    failed=[]
+    for f in FIELDS:
+     v=r['counts']['argument1_required' if f=='argument1' else f]
+     if not v['total'] or v['correct']/v['total']<=(.99 if f in ('type','operation') else .98):failed.append('argument1_required' if f=='argument1' else f)
+    condition_gates.append(dict(seed=seed,head=r['head'],split=r['split'],distractors=r['distractors'],passed=not failed,failed_fields=failed))
   for r in rows:
    ref=ix[('frozen_original',r['split'],0,2)];assert r['targets']==ref['targets']and r['event_sha256']==ref['event_sha256']
    if r['head']=='frozen_shared_readout':assert all(r['predictions'][f]==ix[('frozen_original',r['split'],r['target_delay'],r['distractors'])]['predictions'][f]for f in FIELDS[1:])
@@ -58,6 +69,10 @@ def audit(root,require_complete=True):
      for field in ('value','joint'):
       a=matches(ix[('short_continue',split,delay,k)],field);b=matches(ix[('wide_continue',split,delay,k)],field)
       paired.append(dict(seed=seed,split=split,delay=delay,distractors=k,field=field,correct_correct=sum(v and w for v,w in zip(a,b)),correct_wrong=sum(v and not w for v,w in zip(a,b)),wrong_correct=sum(not v and w for v,w in zip(a,b)),wrong_wrong=sum(not v and not w for v,w in zip(a,b))))
- return dict(rows_verified=totals,curve_rows_verified=curvecount,complete_matrix=len(x['runs'])==3,observed_seeds=[r['backbone_seed']for r in x['runs']],training=training,retention_gates=gates,paired_short_to_wide=paired)
+ if require_complete:
+  reported=load(root/'summary.json')
+  for g in reported['gates']+condition_gates:g['failed_fields'].sort()
+  assert sorted(reported['gates'],key=lambda r:(r['seed'],r['head'],r['split'],r['distractors']))==sorted(condition_gates,key=lambda r:(r['seed'],r['head'],r['split'],r['distractors']))
+ return dict(condition_gates=condition_gates,rows_verified=totals,curve_rows_verified=curvecount,complete_matrix=len(x['runs'])==3,observed_seeds=[r['backbone_seed']for r in x['runs']],training=training,retention_gates=gates,paired_short_to_wide=paired)
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--output',required=True,type=Path);p.add_argument('--partial',action='store_true');a=p.parse_args();out=audit(a.root,not a.partial);a.output.write_text(json.dumps(out,indent=2)+'\n');print({k:v for k,v in out.items()if k not in ('training','retention_gates','paired_short_to_wide')})
+ p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--output',required=True,type=Path);p.add_argument('--partial',action='store_true');a=p.parse_args();out=audit(a.root,not a.partial);a.output.write_text(json.dumps(out,indent=2)+'\n');print({k:v for k,v in out.items()if k not in ('training','retention_gates','paired_short_to_wide','condition_gates')})
