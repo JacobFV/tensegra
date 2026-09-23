@@ -29,6 +29,7 @@ def return_probes(root):
 def belief(root):
     errors=[];cells=[]
     for metrics in sorted(root.rglob('metrics.json')):
+      if metrics.parent.name=='profile':continue
       for r in read(metrics):
         path=metrics.parent/r['raw'];raw=read(path);p,q=raw['posterior'],raw['target'];n=len(p);T=len(p[0]);l1=mass=correct=0.;frame_errors=[]
         if hashlib.sha256(path.read_bytes()).hexdigest()!=r['raw_sha256']:errors.append([str(path),'sha'])
@@ -50,7 +51,9 @@ def belief(root):
         passed=n>=512 and correct/n>(.98 if r['candidates']==8 else .95) and l1/(n*T)<.05 and mass/(n*T)<.01
         if passed!=r['passed']:errors.append([str(path),'gate'])
         cells.append(dict(mode=r['mode'],seed=r['seed'],arm=r['arm'],split=r['split'],candidates=r['candidates'],condition=r['condition'],count=n,passed=passed,mean_l1=l1/(n*T),mean_impossible=mass/(n*T)))
-    return dict(cells=cells,count=len(cells),errors=errors,passed=bool(cells) and not errors)
+    expected={(m,s,a,sp,n,c) for m in ('protected','recurrent') for s in (0,1,2) for a in ('learned_prior','supplied_empty_prior') for sp in ('validation','test') for n in (8,16,32) for c in ('clean','reorder','duplicate','long_duplicate','contradiction','retract','partial','empty','full_retract','distinct_equal','candidate_permutation','id_rename')}
+    actual={(r['mode'],r['seed'],r['arm'],r['split'],r['candidates'],r['condition']) for r in cells}
+    return dict(cells=cells,count=len(cells),complete_matrix=actual==expected,missing_cells=sorted(expected-actual),errors=errors,passed=bool(cells) and not errors)
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('kind',choices=['belief','returns']);p.add_argument('root',type=Path);p.add_argument('--output',type=Path,required=True);a=p.parse_args();r=belief(a.root) if a.kind=='belief' else return_probes(a.root);a.output.write_text(json.dumps(r,indent=2)+'\n');print(json.dumps({k:v for k,v in r.items() if k!='cells'}));raise SystemExit(0 if r['passed'] else 1)
