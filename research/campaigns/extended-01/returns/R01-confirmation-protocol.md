@@ -1,0 +1,15 @@
+# R01 confirmation: fixed scalar recipe on three wide backbones
+
+R01 development selected CE step 900, learning rate .003, batch 256 and ridge regularization .01. These choices are now fixed. No checkpoint or regularization is reselected using confirmation calibration, validation or test outcomes. All three wide Stage 11 backbones (10/11/12) and their non-value heads remain frozen. Refit the two scalar consumers using identical paired feature rows within each seed, preserving the CE warm-start transformation and train-only standardization.
+
+Each backbone receives 4,096 fresh fitting events, 1,024 calibration events, 1,024 untouched validation events and 1,024 untouched test events. Distinct 21-million seed namespaces also make the three confirmation validation populations independent. Exact seeds and all archived checkpoint hashes are frozen in configs/campaign-r01-confirmation.json. All partitions are disjoint from the development/profile namespaces and checked by event identity.
+
+Fitting/calibration/validation use 0/1/2/4/8/16 updates. Only the final test additionally includes 32; its features are captured after readout weights are finalized. No 32-step outcome selects the recipe. Two/eight distractors preserve the same events within a split.
+
+Primary narrow interface contract: >=98% exact scalar accuracy in **every** covered validation delay/distractor cell, across all three confirmation seeds. This concerns the existing bounded half-unit vocabulary and workspace readout. Also report the same contract on untouched covered test conditions and a separately labeled 32-step extrapolation assessment. Preserve original full-field retention thresholds and counts; a narrow scalar pass cannot substitute for a failed non-value field or historical contract.
+
+This confirmation permits no automatic composition. If the consumed scalar contract passes, next propose a bounded returned-fact-use task with dropped, wrong-value and swapped-return causal interventions. Such a task must use learned access, not exact-copy bypass. If confirmation fails, record the failure and select a new development experiment without silently reopening this test.
+
+Capture and save full-precision scalar logits, all field predictions, values/types/operations/ordered identities, per-value support and signed errors. There are four development ridge candidates and eleven inspected CE checkpoints in the search history; confirmation adds zero selection candidates. CE consumes 900×256 optimizer examples from 24,576 fitted rows and 4,096 unique events per backbone. Ridge uses one closed-form solve. This remains a readout-recipe comparison, not equal optimizer exposure.
+
+Based on the 26.19-second development run, estimate 35–45 seconds per confirmation backbone including new test capture, or 105–135 seconds total. Request a conservative 300-second process ceiling. No GPU launch without coordinator release. Code and configuration freeze before generating confirmation data; independent audit checks raw metrics, fixed selection, coefficients and provenance.
