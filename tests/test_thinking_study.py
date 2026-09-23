@@ -135,3 +135,48 @@ def test_privileged_trace_audit_and_post_return_workspace_roundtrip():
     assert example['post_event_pass']
     stages = {r['stage'] for entry in example['trace'] for r in entry['event_roundtrips']}
     assert stages == {'encoder','post_recurrent_workspace'}
+
+
+def test_hazard_weights_conserve_survival_and_mask_post_event():
+    import torch
+    from topoformer.thinking_study import halting_weights
+    probabilities = torch.tensor([.8,.4,.7,.3],requires_grad=True)
+    weights = halting_weights(probabilities,torch.tensor([False,True,False,True]))
+    assert torch.allclose(weights,torch.tensor([0.,.4,0.,.6]))
+    assert torch.allclose(weights.sum(),torch.tensor(1.))
+
+
+def test_neural_recurrent_task_loss_trains_emit_without_oracle_execution():
+    import torch
+    from topoformer.thinking_tasks import generate_episode
+    from topoformer.thinking_study import build_model, rollout
+    cfg = ThinkingStudyConfig(steps=0,max_microsteps=6)
+    model = build_model(cfg,0)
+    episode = generate_episode(seed=7,depth=1)
+    result = rollout(model,episode.public,cfg,'neural_recurrent',gold=episode.gold,training_unroll=True)
+    assert result['microsteps']==cfg.max_microsteps
+    assert not any(entry['events'] for entry in result['trace'])
+    assert result['losses']['emit'].item()==0
+    assert abs(sum(result['halting_weights'])-1)<1e-6
+    gradient, = torch.autograd.grad(result['losses']['task'],model.emit_probe.weight)
+    assert bool(gradient.abs().sum()>0)
+    assert set(auxiliary_weights('neural_recurrent',0,cfg).values())=={0.}
+    fixed = rollout(model,episode.public,cfg,'neural_fixed',gold=episode.gold,training_unroll=True)
+    assert fixed['microsteps']==1 and fixed['halting_weights']==[1.]
+
+
+def test_context_arrival_is_exogenous_and_neural_pair_observables_match():
+    import torch
+    from topoformer.thinking_tasks import generate_episode
+    from topoformer.thinking_runtime import ProtectedSession
+    from topoformer.thinking_study import actor_inputs
+    cfg = ThinkingStudyConfig(steps=0)
+    episode = generate_episode(seed=7,depth=1)
+    session = ProtectedSession(episode.public.initial_values)
+    early = actor_inputs(episode.public,session,1,cfg)[0]
+    final = actor_inputs(episode.public,session,3,cfg)[0]
+    assert final.shape[1] == len(episode.public.frames[-1].tokens)+len(episode.public.context_tokens)
+    assert early.shape[1] == len(episode.public.frames[0].tokens)
+    fixed = actor_inputs(episode.public,session,1,cfg,complete_evidence=True)
+    recurrent = actor_inputs(episode.public,session,6,cfg,complete_evidence=True)
+    assert torch.equal(fixed[0],recurrent[0]) and torch.equal(fixed[1],recurrent[1])

@@ -16,7 +16,7 @@ from torch.nn import functional as F
 
 AUXILIARIES = ('grounding', 'topology', 'transition', 'readiness')
 VARIANTS = {name: {} for name in ('local', 'global', 'fixed', 'fixed_compute', 'runtime_off',
-    'event_drop', 'event_shuffle', 'event_wrong_value', 'public_graph',
+    'event_drop', 'event_shuffle', 'event_wrong_value', 'public_graph', 'neural_fixed', 'neural_recurrent',
     'task_only_cold', 'task_only_warm', 'anneal_all',
     *(f'anneal_{name}' for name in AUXILIARIES))}
 
@@ -64,12 +64,26 @@ class ThinkingStudyConfig:
 
 def auxiliary_weights(variant, step, config):
     weights = dict.fromkeys(AUXILIARIES, 1.)
-    if variant == 'task_only_cold' or (variant == 'task_only_warm' and step >= config.warmup_steps):
+    if variant in ('neural_fixed','neural_recurrent','task_only_cold') or (variant == 'task_only_warm' and step >= config.warmup_steps):
         return dict.fromkeys(AUXILIARIES, 0.)
     for name in weights:
         if variant in ('anneal_all', 'anneal_' + name):
             weights[name] = min(1.,max(0.,1. - (step-.25*config.steps)/max(1.,.5*config.steps)))
     return weights
+
+
+def halting_weights(probabilities, allowed):
+    """Differentiable hazard mass; the final pass absorbs all survival mass."""
+    survival = probabilities.new_ones(())
+    weights = []
+    for index, probability in enumerate(probabilities):
+        hazard = probability * allowed[index].to(probability.dtype)
+        if index == len(probabilities)-1:
+            weights.append(survival)
+        else:
+            weights.append(survival*hazard)
+            survival = survival*(1-hazard)
+    return torch.stack(weights)
 
 
 def rate(numerator, denominator):
@@ -103,11 +117,11 @@ def build_model(config, seed):
         output_classes=131,min_microsteps=config.min_microsteps,max_microsteps=config.max_microsteps))
 
 
-def actor_inputs(public, session, microstep, config):
+def actor_inputs(public, session, microstep, config, *, complete_evidence=False):
     """Only physically public observations cross this boundary."""
-    frame_index = min(microstep - 1, len(public.frames)-1)
+    frame_index = len(public.frames)-1 if complete_evidence else min(microstep - 1, len(public.frames)-1)
     tokens = list(public.frames[frame_index].tokens)
-    if all(key in session.registers for key in public.output_ids):
+    if frame_index == len(public.frames)-1:
         tokens += list(public.context_tokens)
     context = torch.stack([features(str(i) + ':' + t,config.feature_dim) + features(t,config.feature_dim) for i,t in enumerate(tokens or ['empty'])])[None]
     ids = list(public.register_ids)
@@ -223,21 +237,24 @@ def auxiliary_losses(prediction, targets, ids, config):
     return losses
 
 
-def rollout(model, public, config, variant='local', *, gold=None, teacher_forcing=False, sample=False):
+def rollout(model, public, config, variant='local', *, gold=None, teacher_forcing=False, sample=False, training_unroll=False):
     """Free evaluation accepts public records only; labels are optional train targets."""
     from .thinking_runtime import ProtectedSession
     if variant == 'public_graph':
         raise ValueError('public_graph requires an explicitly supplied public graph; controlled episodes do not supply one')
     session = ProtectedSession(public.initial_values)
-    context, memory, ids, _ = actor_inputs(public,session,1,config)
+    complete_evidence = variant in ('neural_fixed','neural_recurrent','fixed')
+    context, memory, ids, _ = actor_inputs(public,session,1,config,complete_evidence=complete_evidence)
     workspace = model.initialize({'context':context})
     sums = {key:workspace.sum()*0 for key in (*AUXILIARIES,'graph','task','emit','ponder','event','policy')}
-    trace = []; log_probs = []; injected = 0; last_event_step = -1; pending_events = None
-    limit = 1 if variant == 'fixed' else config.max_microsteps
+    neural_only = variant in ('neural_fixed','neural_recurrent')
+    runtime_enabled = variant not in ('runtime_off','fixed','neural_fixed','neural_recurrent')
+    trace = []; task_losses = []; hazards = []; emit_allowed = []; log_probs = []; injected = 0; last_event_step = -1; pending_events = None
+    limit = 1 if variant in ('fixed','neural_fixed') else config.max_microsteps
     halted = False
     for step in range(1,limit+1):
-        context,memory,ids,frame = actor_inputs(public,session,step,config)
-        prediction = model.step(workspace,context,memory,microstep=step)
+        context,memory,ids,frame = actor_inputs(public,session,step,config,complete_evidence=complete_evidence)
+        prediction = model.step(workspace,context,memory,microstep=step,structural_strength=0. if neural_only else None)
         workspace = prediction['workspace']
         melted_audit = []
         if pending_events is not None:
@@ -255,7 +272,7 @@ def rollout(model, public, config, variant='local', *, gold=None, teacher_forcin
         if gold is not None:
             # Posterior supervision is training-only and is never an action mask.
             from .thinking_tasks import Episode, readiness_targets
-            all_targets = readiness_targets(Episode(public,gold),frame,tuple(session.registers),context_visible=all(key in session.registers for key in public.output_ids))
+            all_targets = readiness_targets(Episode(public,gold),frame,tuple(session.registers),context_visible=frame==len(public.frames)-1)
             target_step = min(max(0,step-len(public.frames)),len(gold.trace)-1)
             from .thinking_tasks import CandidateTarget
             targets = tuple(next((target for target in all_targets if target.candidate.id == candidate.id and target.candidate.primitive == candidate.primitive and target.candidate.arguments == candidate.arguments), CandidateTarget(candidate,0.)) for candidate in gold.trace[target_step])
@@ -269,13 +286,13 @@ def rollout(model, public, config, variant='local', *, gold=None, teacher_forcin
             sums['graph'] = sums['graph'] + F.binary_cross_entropy(prediction['predicted_adjacency'].clamp(1e-6,1-1e-6),full_graph)
         proposals, scores = predicted_proposals(prediction,ids,public.operation_ids,config,variant,sample=sample)
         log_probs.extend(scores)
-        if teacher_forcing and gold is not None:
+        if teacher_forcing and gold is not None and runtime_enabled:
             trace_index = step - len(public.frames)
             proposals = gold.trace[trace_index] if 0 <= trace_index < len(gold.trace) else ()
         events = (); event_audit = []
         available_before = tuple(session.registers)
         # Reserve the last pass for mandatory recurrent processing of the latest event.
-        if variant not in ('runtime_off','fixed') and step < limit:
+        if runtime_enabled and step < limit:
             events = session.execute(proposals,threshold=config.readiness_threshold)
             workspace,event_loss,n,event_audit = inject_runtime_events(model,workspace,prediction,events,ids,config,variant)
             sums['event'] = sums['event'] + event_loss
@@ -284,29 +301,34 @@ def rollout(model, public, config, variant='local', *, gold=None, teacher_forcin
                 pending_events = (prediction['routes'],events)
             injected += n
         ready_to_emit = step >= config.min_microsteps and step > last_event_step
-        if gold is not None:
+        if gold is not None and runtime_enabled:
             emit_target = float('result:' + gold.trace[-1][0].id in session.registers and ready_to_emit)
             sums['emit'] = sums['emit'] + F.binary_cross_entropy_with_logits(prediction['emit_logits'].reshape(-1),torch.tensor([emit_target]))
-        sums['ponder'] = sums['ponder'] + prediction['ponder'].mean()
+        hazards.append(prediction['emit_probability'].mean())
+        emit_allowed.append(ready_to_emit and variant != 'fixed_compute')
+        if gold is not None:
+            task_losses.append(F.cross_entropy(prediction['output_logits'][:,:129],torch.tensor([int(gold.result)+64])) + F.cross_entropy(prediction['output_logits'][:,129:],torch.tensor([int(gold.answer)])))
         trace.append(dict(microstep=step,frame=frame,available_before=available_before,proposals=[asdict(p) for p in proposals],event_roundtrips=event_audit+melted_audit,events=[asdict(e) for e in events],
                           readiness=prediction['readiness_logits'].sigmoid().detach().tolist(),
                           emit_probability=float(prediction['emit_probability'].detach().mean()),
                           projection_overlap=float(prediction['overlap'].detach().mean()),grounding_entropy=float(-(prediction['grounding_q'].clamp_min(1e-9)*prediction['grounding_q'].clamp_min(1e-9).log()).sum(-1).detach().mean()),structural_null_mass=float(prediction['grounding_q'][...,-1].detach().mean()) if prediction['grounding_q'].shape[-1]>len(ids) else None,null_binding_mass=float(prediction['binding_logits'].softmax(-1)[...,-1].detach().mean())))
-        if not teacher_forcing and variant not in ('fixed','fixed_compute') and ready_to_emit and bool(prediction['emit'].reshape(-1)[0]):
+        if not training_unroll and not teacher_forcing and variant not in ('fixed','neural_fixed','fixed_compute') and ready_to_emit and bool(prediction['emit'].reshape(-1)[0]):
             halted = step < limit
             break
     logits = prediction['output_logits']
     numeric_prediction = int(logits[:,:129].argmax(-1))-64
     answer_prediction = int(logits[:,129:].argmax(-1))
+    halt_weights = halting_weights(torch.stack(hazards),torch.tensor(emit_allowed))
+    sums['ponder'] = (halt_weights * torch.arange(1,step+1,dtype=halt_weights.dtype)).sum()
     if gold is not None:
-        sums['task'] = F.cross_entropy(logits[:,:129],torch.tensor([int(gold.result)+64])) + F.cross_entropy(logits[:,129:],torch.tensor([int(gold.answer)]))
-    for key in (*AUXILIARIES,'graph','emit','ponder','event'): sums[key] = sums[key] / step
+        sums['task'] = (halt_weights * torch.stack(task_losses)).sum()
+    for key in (*AUXILIARIES,'graph','emit','event'): sums[key] = sums[key] / step
     output_register = session.registers.get(public.output_ids[0])
     semantic_result = None if output_register is None else output_register.value
     return dict(losses=sums,log_probs=log_probs,numeric_prediction=numeric_prediction,
         answer_prediction=answer_prediction,semantic_result=semantic_result,trace=trace,
         microsteps=step,injected_events=injected,halted=halted,
-        max_forced=not halted and variant != 'fixed',post_event_pass=step>last_event_step,
+        halting_weights=halt_weights.detach().tolist(),expected_microsteps=float(sums['ponder'].detach()),max_forced=not halted and variant not in ('fixed','neural_fixed'),post_event_pass=step>last_event_step,
         workspace=workspace)
 
 
@@ -317,7 +339,7 @@ def train_update(model,optimizer,episodes,config,variant,step,baseline):
     totals = {}; rewards = []
     for episode in episodes:
         result = rollout(model,episode.public,config,variant,gold=episode.gold,
-                         teacher_forcing=not task_only,sample=task_only)
+                         teacher_forcing=not task_only,sample=task_only and not variant.startswith('neural_'),training_unroll=True)
         losses = result['losses']
         reward = float(result['semantic_result'] == episode.gold.result and result['answer_prediction'] == episode.gold.answer)
         rewards.append(reward)
@@ -344,7 +366,7 @@ def evaluate(model,episodes,config,variant,*,oracle_trace=False):
         trajectory_gold = [(c.id,c.primitive,c.arguments) for group in episode.gold.trace for c in group]
         executed = [(e['candidate_id'],e['primitive'],tuple(e['arguments'])) for entry in result['trace'] for e in entry['events'] if e['status']=='executed']
         for entry in result['trace']:
-            posterior = readiness_targets(episode,entry['frame'],entry['available_before'],context_visible=all(key in entry['available_before'] for key in episode.public.output_ids))
+            posterior = readiness_targets(episode,entry['frame'],entry['available_before'],context_visible=entry['frame']==len(episode.public.frames)-1)
             for proposal in entry['proposals']:
                 match = next((t for t in posterior if t.candidate.id==proposal['id'] and t.candidate.primitive==proposal['primitive'] and t.candidate.arguments==tuple(proposal['arguments'])),None)
                 calibration.append(dict(probability=proposal['readiness'],target=0. if match is None else match.readiness))
@@ -358,7 +380,7 @@ def evaluate(model,episodes,config,variant,*,oracle_trace=False):
         examples.append(row)
         for status in statuses: failures[status] = failures.get(status,0)+1
     n = len(examples)
-    return dict(evaluation_seconds=time.perf_counter()-started,examples=examples,counts=failures,n=n,readiness_calibration=calibration,readiness_brier=rate(sum((r['probability']-r['target'])**2 for r in calibration),len(calibration)),trajectory_exact_accuracy=rate(sum(e['trajectory_exact'] for e in examples),n),
+    return dict(observation_protocol='complete_from_start' if variant in ('neural_fixed','neural_recurrent','fixed') else 'progressive_exogenous_context',evaluation_seconds=time.perf_counter()-started,examples=examples,counts=failures,n=n,readiness_calibration=calibration,readiness_brier=rate(sum((r['probability']-r['target'])**2 for r in calibration),len(calibration)),trajectory_exact_accuracy=rate(sum(e['trajectory_exact'] for e in examples),n),
         task_accuracy=rate(sum(e['task_correct'] for e in examples),n),
         exact_semantic_accuracy=rate(sum(e['exact_semantic_correct'] for e in examples),n),
         numeric_accuracy=rate(sum(e['numeric_correct'] for e in examples),n),
@@ -374,9 +396,12 @@ def run(config,output):
     manifest = source_manifest()
     (output/'manifest.json').write_text(json.dumps(dict(config=asdict(config),sources=manifest,source_hash=digest(manifest)),indent=2))
     started = time.monotonic()
+    def progress(kind,**fields):
+        print(json.dumps(dict(kind=kind,elapsed_seconds=time.monotonic()-started,**fields)),flush=True)
     with (output/'metrics.jsonl').open('w') as stream:
         for seed in config.seeds:
             for variant in config.variants:
+                progress('variant_start',seed=seed,variant=variant)
                 model = build_model(config,seed)
                 initial_hash = digest({k:v.detach().tolist() for k,v in model.state_dict().items()})
                 optimizer = torch.optim.Adam(model.parameters(),lr=config.learning_rate)
@@ -384,6 +409,7 @@ def run(config,output):
                 for step in range(config.steps+1):
                     if time.monotonic()-started > config.wall_seconds: raise TimeoutError('study wall budget exhausted')
                     if step in config.checkpoints:
+                        progress('checkpoint_start',seed=seed,variant=variant,step=step)
                         eval_conditions = [dict(depth=d,condition='depth',kwargs={}) for d in config.eval_depths]
                         if config.extra_evaluations:
                             eval_conditions += [dict(depth=max(2,config.train_depth),condition=name,kwargs=kwargs) for name,kwargs in [('heldout_surface',dict(template='lexical')),('cross_motif',dict(motif='cross')),('heldout_composition',dict(operator_composition='heldout'))]]
@@ -405,11 +431,14 @@ def run(config,output):
                             model.config = previous_model_config
                         if config.save_checkpoints:
                             torch.save(model.state_dict(),output/f'{variant}-seed{seed}-step{step}.pt')
-                    if step == config.steps: break
+                        progress('checkpoint_complete',seed=seed,variant=variant,step=step)
+                    if step == config.steps:
+                        progress('variant_complete',seed=seed,variant=variant,step=step)
+                        break
                     episodes = [generate_episode(seed=seed*100000+step*config.batch_size+i,depth=1+step%config.train_depth,distractors=config.distractors,context=i%2,operator_composition='train') for i in range(config.batch_size)]
                     train_started = time.perf_counter()
                     losses,baseline = train_update(model,optimizer,episodes,config,variant,step,baseline)
-                    row = dict(kind='training',seed=seed,variant=variant,step=step+1,losses=losses,train_seconds=time.perf_counter()-train_started,auxiliary_weights=auxiliary_weights(variant,step,config),data_hash=digest([asdict(e) for e in episodes]),policy_baseline=baseline)
+                    row = dict(kind='training',seed=seed,variant=variant,step=step+1,losses=losses,objective='survival_weighted_task_ce',observation_protocol='complete_from_start' if variant in ('neural_fixed','neural_recurrent','fixed') else 'progressive_exogenous_context',auxiliary_teacher_forcing=any(auxiliary_weights(variant,step,config).values()),train_seconds=time.perf_counter()-train_started,auxiliary_weights=auxiliary_weights(variant,step,config),data_hash=digest([asdict(e) for e in episodes]),policy_baseline=baseline)
                     stream.write(json.dumps(row)+'\n'); stream.flush()
 
 
