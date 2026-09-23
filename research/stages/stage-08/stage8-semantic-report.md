@@ -1,7 +1,7 @@
 # Stage 8 semantic acquisition: preliminary measurements
 
 Status: implementation and acquisition probes, **not yet a scaling result**.
-The paired scaling study is frozen and queued; see the main-study section below. No semantic-runtime coupling
+The paired scaling study is running under its frozen recipe; see the main-study section below. No semantic-runtime coupling
 or supervision withdrawal is enabled.
 
 ## Standard width and resource evidence
@@ -56,7 +56,7 @@ or decoding calibration is the remaining limitation.
 The subsequent runner adds true padded minibatches and optional BF16 autocast
 without reducing workspace width. CPU contract tests check batching equivalence,
 public padding masks, finite mixed-precision gradients and approximate agreement
-with FP32. GPU timing will select resources before freezing the main study.
+with FP32. GPU timing subsequently selected resources for the frozen main study.
 
 Because the edge loss balances rare positives against negatives, zero logits are
 not necessarily calibrated edge-presence decisions. A separate diagnostic fits
@@ -76,7 +76,7 @@ unchanged.
 ## Frozen main study
 
 The resource freeze is now committed in `stage8-semantic-main-freeze.json`; the
-study is queued, not yet a reported learning result. It uses 1k/10k available
+study is running; the N=1k arm is complete and N=10k is in progress. It uses 1k/10k available
 training graphs, three paired seeds, semantic/no-text-feature arms, and one
 100,000-presentation trajectory per arm with measurements at 0/10,016/100,000.
 The 10k-scale measurement is explicitly **10,016**, aligned with batch32.
