@@ -23,3 +23,5 @@ External process occupancy was 68.97 seconds; peak CUDA allocation 446,848,000 b
 [Raw predictions](../../../results/campaign-01/returns/r05-development/predictions.json.gz), [manifest](../../../results/campaign-01/returns/r05-development/manifest.json.gz), [paired summary](../../../results/campaign-01/returns/r05-development/summary.json), and [process receipt](../../../results/campaign-01/returns/r05-development/process.json).
 
 ![Clean use and interventions](../../../results/campaign-01/returns/r05-development/use-and-interventions.png)
+
+A posthoc, cached-query margin breakdown further limits interpretation: at sixteen steps with eight distractors, cases where the true value exceeds the threshold by exactly 0.5 score 59 /63, and equality cases score 63 /66. In the balanced grid these counts are 102 /116 and 101 /105. Far-from-boundary decisions dominate the aggregate. These small-support descriptive groups neither replace the prespecified gate nor establish precise numerical decision reliability. [Complete signed-margin counts](../../../results/campaign-01/returns/r05-development/decision-margin-groups.json) are retained without further training.
