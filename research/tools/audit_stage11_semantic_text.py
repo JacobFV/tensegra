@@ -5,7 +5,13 @@ from collections import Counter
 
 def edge_set(graph):
  code=graph['edges'];a,b,r=code['shape'];payload=base64.b64decode(code['packed_b64']);assert code['bitorder']=='little'
- return {(k//(b*r),(k//r)%b,k%r) for k in range(a*b*r) if payload[k//8]&(1<<(k%8))}
+ result=set()
+ for index,byte in enumerate(payload):
+  while byte:
+   bit=byte&-byte;k=index*8+bit.bit_length()-1
+   if k<a*b*r:result.add((k//(b*r),(k//r)%b,k%r))
+   byte-=bit
+ return result
 def components(pred,gold):
  p=pred['presence'];q=gold['presence'];ge=edge_set(gold);pe={e for e in edge_set(pred) if p[e[0]] and p[e[1]]}
  def counts(a,b):
