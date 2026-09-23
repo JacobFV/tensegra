@@ -1,6 +1,7 @@
 """Render standalone proposal/calibration figures from immutable raw results."""
 import argparse
 import hashlib
+import gzip
 import json
 from pathlib import Path
 import matplotlib
@@ -8,13 +9,17 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
+def read_json(path):
+    return json.loads(gzip.decompress(path.read_bytes()) if path.suffix == ".gz" else path.read_bytes())
+
+
 def render(directory):
     directory = Path(directory)
-    paths = sorted(directory.glob('seed*-raw.json'))
+    paths = sorted(list(directory.glob('seed*-raw.json'))+list(directory.glob('seed*-raw.json.gz')))
     fig, axes = plt.subplots(1, 3, figsize=(15,4))
     derived = {}
     for path in paths:
-        raw = json.loads(path.read_text())
+        raw = read_json(path)
         name = path.stem
         for split,style in [('iid_validation','-'),('ood_validation','--')]:
             axes[0].plot([r['step'] for r in raw['curves']], [r['validation'][split]['full'] for r in raw['curves']],style,label=f'{name} {split[:3]}')
@@ -59,6 +64,35 @@ def render(directory):
               'results':derived}
     (directory/'derived-report.json').write_text(json.dumps(result,indent=2))
 
+def render_actual(directory):
+    directory = Path(directory)
+    paths = sorted(list(directory.glob('seed*-actual-confidence.json'))+list(directory.glob('seed*-actual-confidence.json.gz')))
+    fig,axes = plt.subplots(1,3,figsize=(15,4))
+    rows = {}
+    for path in paths:
+        raw = read_json(path); name = path.stem.split('-')[0]
+        axes[0].plot([c['step'] for c in raw['curves']],[c['calibration_bce'] for c in raw['curves']],label=name)
+        bins = [b for b in raw['test']['local']['reliability'] if b['count']]
+        axes[1].plot([b['confidence'] for b in bins],[b['accuracy'] for b in bins],'o-',label=name)
+        records = sorted(raw['test']['records'],key=lambda r:r['calibrated'],reverse=True)
+        tp = 0;precision=[];recall=[];total=sum(r['correct'] for r in records)
+        for i,r in enumerate(records,1):
+            tp += r['correct'];precision.append(tp/i);recall.append(tp/total)
+        axes[2].plot(recall,precision,label=name)
+        rows[name] = {'threshold':raw['threshold'],'local':raw['test']['local'],'global':raw['test']['global'],
+                      'per_condition':raw['test']['per_condition'],
+                      'confident_failures':sorted([r for r in raw['test']['records'] if not r['correct']],key=lambda r:r['calibrated'],reverse=True)[:10]}
+    axes[0].set(xlabel='calibrator optimizer steps',ylabel='calibration BCE')
+    axes[1].plot([0,1],[0,1],'k:');axes[1].set(xlabel='confidence',ylabel='empirical correctness',xlim=(0,1),ylim=(0,1))
+    axes[2].axhline(.99,color='k',linestyle=':');axes[2].set(xlabel='executable recall',ylabel='precision',xlim=(0,1),ylim=(0,1.02))
+    for ax in axes:ax.legend()
+    fig.tight_layout();fig.savefig(directory/'actual-confidence.svg');fig.savefig(directory/'actual-confidence.png',dpi=160);plt.close(fig)
+    report = {'raw_sha256':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
+              'renderer_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'results':rows}
+    (directory/'derived-report.json').write_text(json.dumps(report,indent=2))
+
+
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(); parser.add_argument('directory')
-    render(parser.parse_args().directory)
+    parser = argparse.ArgumentParser();parser.add_argument('directory');args=parser.parse_args()
+    if (Path(args.directory)/'actual-confidence-summary.json').exists():render_actual(args.directory)
+    else:render(args.directory)

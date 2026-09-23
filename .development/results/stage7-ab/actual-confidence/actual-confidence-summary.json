@@ -1,0 +1,492 @@
+{
+  "config": {
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "steps": 1000,
+    "examples": 1024,
+    "lr": 0.03,
+    "frozen_base_commit": "e68d50d",
+    "conditions": [
+      "complete",
+      "missing",
+      "permuted"
+    ],
+    "splits": [
+      "iid",
+      "ood"
+    ]
+  },
+  "config_hash": "81d3bc882bacb14a4ae75c38a9580d415d291c7e2591aceb1db30a5492ddde13",
+  "base_manifest_hash": "029d5ccf3da2b9547ffadd215bc3497c4774b404131e6b0a2ebc3b07035beadf",
+  "factor_order": [
+    "primitive",
+    "destination",
+    "operand1",
+    "operand2",
+    "schema",
+    "stability"
+  ],
+  "stability_history": "Past missing operation/argument evidence; current condition public evidence. No future observations.",
+  "executable_definition": "Full correct ordered proposal and exact schema valid",
+  "public_type_prior": "Exact immutable register type table supplied in every evidence frame; schema uses only this public table.",
+  "scope_limitation": "Calibration on prespecified missing/permuted mixture; independent examples grouped4, not competing hypotheses in one world.",
+  "source_hashes": {
+    "interface_study.py": "8baab74a846824d4da6340897532f4f1a1341c9a0f8f0648b37a3a062facc138",
+    "interface_readiness.py": "e42e88813cf20b62761973169a95c42d4930dda603c6753544ceaf8898e108f2",
+    "interface_proposals.py": "acc9db10f30d83618d0ef6733a8f9e9d1140ecf695214e128ea8247e9e7eb5f8"
+  },
+  "seeds": {
+    "0": {
+      "validation": {
+        "count": 6144,
+        "selected": 1103,
+        "executable": 2064,
+        "true_positive": 1092,
+        "precision": 0.9900271985494107,
+        "recall": 0.5290697674418605,
+        "coverage": 0.17952473958333334,
+        "brier": 0.02408445824710335,
+        "reliability": [
+          {
+            "lower": 0.0,
+            "count": 3735,
+            "confidence": 0.0025284282228712077,
+            "accuracy": 0.0024096385542168677
+          },
+          {
+            "lower": 0.1,
+            "count": 71,
+            "confidence": 0.14900976944137628,
+            "accuracy": 0.028169014084507043
+          },
+          {
+            "lower": 0.2,
+            "count": 38,
+            "confidence": 0.2538768229515929,
+            "accuracy": 0.02631578947368421
+          },
+          {
+            "lower": 0.3,
+            "count": 33,
+            "confidence": 0.34101832003304455,
+            "accuracy": 0.030303030303030304
+          },
+          {
+            "lower": 0.4,
+            "count": 40,
+            "confidence": 0.452743574231863,
+            "accuracy": 0.05
+          },
+          {
+            "lower": 0.5,
+            "count": 35,
+            "confidence": 0.550039553642273,
+            "accuracy": 0.0
+          },
+          {
+            "lower": 0.6,
+            "count": 26,
+            "confidence": 0.6509892367399656,
+            "accuracy": 0.07692307692307693
+          },
+          {
+            "lower": 0.7,
+            "count": 47,
+            "confidence": 0.7542519683533526,
+            "accuracy": 0.19148936170212766
+          },
+          {
+            "lower": 0.8,
+            "count": 934,
+            "confidence": 0.8916051634118695,
+            "accuracy": 0.9379014989293362
+          },
+          {
+            "lower": 0.9,
+            "count": 1185,
+            "confidence": 0.935982712914672,
+            "accuracy": 0.980590717299578
+          }
+        ],
+        "local_advantage": 0.5281124497991968
+      },
+      "test": {
+        "count": 6144,
+        "selected": 1082,
+        "executable": 2057,
+        "true_positive": 1076,
+        "precision": 0.9944547134935305,
+        "recall": 0.5230918813806514,
+        "coverage": 0.17610677083333334,
+        "brier": 0.021730649168533525,
+        "reliability": [
+          {
+            "lower": 0.0,
+            "count": 3784,
+            "confidence": 0.002002177246772333,
+            "accuracy": 0.0018498942917547568
+          },
+          {
+            "lower": 0.1,
+            "count": 63,
+            "confidence": 0.14501939122639004,
+            "accuracy": 0.0
+          },
+          {
+            "lower": 0.2,
+            "count": 28,
+            "confidence": 0.25713365205696653,
+            "accuracy": 0.0
+          },
+          {
+            "lower": 0.3,
+            "count": 29,
+            "confidence": 0.3410934939466674,
+            "accuracy": 0.034482758620689655
+          },
+          {
+            "lower": 0.4,
+            "count": 24,
+            "confidence": 0.4524380105237166,
+            "accuracy": 0.041666666666666664
+          },
+          {
+            "lower": 0.5,
+            "count": 25,
+            "confidence": 0.5530297255516052,
+            "accuracy": 0.04
+          },
+          {
+            "lower": 0.6,
+            "count": 31,
+            "confidence": 0.6536514259153797,
+            "accuracy": 0.03225806451612903
+          },
+          {
+            "lower": 0.7,
+            "count": 44,
+            "confidence": 0.7408503754572435,
+            "accuracy": 0.09090909090909091
+          },
+          {
+            "lower": 0.8,
+            "count": 958,
+            "confidence": 0.8910296584220918,
+            "accuracy": 0.9446764091858038
+          },
+          {
+            "lower": 0.9,
+            "count": 1158,
+            "confidence": 0.9366993942717814,
+            "accuracy": 0.9818652849740933
+          }
+        ],
+        "local_advantage": 0.52250885179565
+      },
+      "gate_b_test": true
+    },
+    "1": {
+      "validation": {
+        "count": 6144,
+        "selected": 1735,
+        "executable": 2105,
+        "true_positive": 1718,
+        "precision": 0.9902017291066283,
+        "recall": 0.8161520190023753,
+        "coverage": 0.2823893229166667,
+        "brier": 0.02963737333428834,
+        "reliability": [
+          {
+            "lower": 0.0,
+            "count": 3725,
+            "confidence": 0.006252368919300709,
+            "accuracy": 0.013691275167785235
+          },
+          {
+            "lower": 0.1,
+            "count": 90,
+            "confidence": 0.14564886714021366,
+            "accuracy": 0.011111111111111112
+          },
+          {
+            "lower": 0.2,
+            "count": 42,
+            "confidence": 0.24611098141897292,
+            "accuracy": 0.047619047619047616
+          },
+          {
+            "lower": 0.3,
+            "count": 33,
+            "confidence": 0.3464336133364475,
+            "accuracy": 0.0
+          },
+          {
+            "lower": 0.4,
+            "count": 25,
+            "confidence": 0.43998905301094055,
+            "accuracy": 0.04
+          },
+          {
+            "lower": 0.5,
+            "count": 39,
+            "confidence": 0.5532600268339499,
+            "accuracy": 0.07692307692307693
+          },
+          {
+            "lower": 0.6,
+            "count": 33,
+            "confidence": 0.6467863772854661,
+            "accuracy": 0.09090909090909091
+          },
+          {
+            "lower": 0.7,
+            "count": 54,
+            "confidence": 0.7598642817250004,
+            "accuracy": 0.24074074074074073
+          },
+          {
+            "lower": 0.8,
+            "count": 409,
+            "confidence": 0.8689061557751122,
+            "accuracy": 0.8508557457212714
+          },
+          {
+            "lower": 0.9,
+            "count": 1694,
+            "confidence": 0.9286707619638341,
+            "accuracy": 0.9935064935064936
+          }
+        ],
+        "local_advantage": 0.8158287705326033
+      },
+      "test": {
+        "count": 6144,
+        "selected": 1727,
+        "executable": 2091,
+        "true_positive": 1710,
+        "precision": 0.9901563404748118,
+        "recall": 0.8177905308464849,
+        "coverage": 0.2810872395833333,
+        "brier": 0.02816614063053249,
+        "reliability": [
+          {
+            "lower": 0.0,
+            "count": 3775,
+            "confidence": 0.0060751430529975385,
+            "accuracy": 0.011125827814569536
+          },
+          {
+            "lower": 0.1,
+            "count": 52,
+            "confidence": 0.15380428487864825,
+            "accuracy": 0.0
+          },
+          {
+            "lower": 0.2,
+            "count": 44,
+            "confidence": 0.24701777676289732,
+            "accuracy": 0.022727272727272728
+          },
+          {
+            "lower": 0.3,
+            "count": 22,
+            "confidence": 0.3460745445706628,
+            "accuracy": 0.045454545454545456
+          },
+          {
+            "lower": 0.4,
+            "count": 27,
+            "confidence": 0.448496550321579,
+            "accuracy": 0.0
+          },
+          {
+            "lower": 0.5,
+            "count": 27,
+            "confidence": 0.5491746840653596,
+            "accuracy": 0.1111111111111111
+          },
+          {
+            "lower": 0.6,
+            "count": 42,
+            "confidence": 0.6539325245789119,
+            "accuracy": 0.14285714285714285
+          },
+          {
+            "lower": 0.7,
+            "count": 55,
+            "confidence": 0.7562375740571455,
+            "accuracy": 0.2545454545454545
+          },
+          {
+            "lower": 0.8,
+            "count": 417,
+            "confidence": 0.8683327680869068,
+            "accuracy": 0.8513189448441247
+          },
+          {
+            "lower": 0.9,
+            "count": 1683,
+            "confidence": 0.9276549330936326,
+            "accuracy": 0.9916815210932858
+          }
+        ],
+        "local_advantage": 0.8161146811665843
+      },
+      "gate_b_test": true
+    },
+    "2": {
+      "validation": {
+        "count": 6144,
+        "selected": 854,
+        "executable": 2056,
+        "true_positive": 846,
+        "precision": 0.990632318501171,
+        "recall": 0.41147859922178986,
+        "coverage": 0.13899739583333334,
+        "brier": 0.01935842274214226,
+        "reliability": [
+          {
+            "lower": 0.0,
+            "count": 3794,
+            "confidence": 0.002156876898564275,
+            "accuracy": 0.0007907221929362151
+          },
+          {
+            "lower": 0.1,
+            "count": 60,
+            "confidence": 0.14815620842079322,
+            "accuracy": 0.016666666666666666
+          },
+          {
+            "lower": 0.2,
+            "count": 40,
+            "confidence": 0.2454255424439907,
+            "accuracy": 0.025
+          },
+          {
+            "lower": 0.3,
+            "count": 28,
+            "confidence": 0.3426257148385048,
+            "accuracy": 0.0
+          },
+          {
+            "lower": 0.4,
+            "count": 23,
+            "confidence": 0.45170198057008826,
+            "accuracy": 0.0
+          },
+          {
+            "lower": 0.5,
+            "count": 25,
+            "confidence": 0.5474330925941467,
+            "accuracy": 0.16
+          },
+          {
+            "lower": 0.6,
+            "count": 32,
+            "confidence": 0.6472329366952181,
+            "accuracy": 0.15625
+          },
+          {
+            "lower": 0.7,
+            "count": 32,
+            "confidence": 0.7604996114969254,
+            "accuracy": 0.15625
+          },
+          {
+            "lower": 0.8,
+            "count": 83,
+            "confidence": 0.8600310209285782,
+            "accuracy": 0.5662650602409639
+          },
+          {
+            "lower": 0.9,
+            "count": 2027,
+            "confidence": 0.9318178278445962,
+            "accuracy": 0.9817464232856438
+          }
+        ],
+        "local_advantage": 0.41125760649087223
+      },
+      "test": {
+        "count": 6144,
+        "selected": 798,
+        "executable": 2060,
+        "true_positive": 791,
+        "precision": 0.9912280701754386,
+        "recall": 0.38398058252427186,
+        "coverage": 0.1298828125,
+        "brier": 0.020307281433590833,
+        "reliability": [
+          {
+            "lower": 0.0,
+            "count": 3800,
+            "confidence": 0.0021934830698020734,
+            "accuracy": 0.0015789473684210526
+          },
+          {
+            "lower": 0.1,
+            "count": 63,
+            "confidence": 0.1416193132126142,
+            "accuracy": 0.047619047619047616
+          },
+          {
+            "lower": 0.2,
+            "count": 30,
+            "confidence": 0.2386157249410947,
+            "accuracy": 0.03333333333333333
+          },
+          {
+            "lower": 0.3,
+            "count": 34,
+            "confidence": 0.3521472233183244,
+            "accuracy": 0.11764705882352941
+          },
+          {
+            "lower": 0.4,
+            "count": 28,
+            "confidence": 0.44013648480176926,
+            "accuracy": 0.07142857142857142
+          },
+          {
+            "lower": 0.5,
+            "count": 24,
+            "confidence": 0.5540124600132307,
+            "accuracy": 0.16666666666666666
+          },
+          {
+            "lower": 0.6,
+            "count": 23,
+            "confidence": 0.6575784242671469,
+            "accuracy": 0.13043478260869565
+          },
+          {
+            "lower": 0.7,
+            "count": 36,
+            "confidence": 0.7550716234578027,
+            "accuracy": 0.08333333333333333
+          },
+          {
+            "lower": 0.8,
+            "count": 85,
+            "confidence": 0.8641990542411804,
+            "accuracy": 0.5176470588235295
+          },
+          {
+            "lower": 0.9,
+            "count": 2021,
+            "confidence": 0.9312681515637983,
+            "accuracy": 0.9846610588817417
+          }
+        ],
+        "local_advantage": 0.38181818181818183
+      },
+      "gate_b_test": false
+    }
+  },
+  "all_seed_gate_b": false,
+  "runtime_composition_authorized": false
+}
