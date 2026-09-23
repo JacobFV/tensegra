@@ -25,3 +25,5 @@ External process occupancy was 68.97 seconds; peak CUDA allocation 446,848,000 b
 ![Clean use and interventions](../../../results/campaign-01/returns/r05-development/use-and-interventions.png)
 
 A posthoc, cached-query margin breakdown further limits interpretation: at sixteen steps with eight distractors, cases where the true value exceeds the threshold by exactly 0.5 score 59 /63, and equality cases score 63 /66. In the balanced grid these counts are 102 /116 and 101 /105. Far-from-boundary decisions dominate the aggregate. These small-support descriptive groups neither replace the prespecified gate nor establish precise numerical decision reliability. [Complete signed-margin counts](../../../results/campaign-01/returns/r05-development/decision-margin-groups.json) are retained without further training.
+
+The decision domain is also finite: 33 scalar labels ×33 threshold values ×two polarities. Fresh nonce identities and contexts do not make this numerical-range or algorithmic extrapolation. A learned finite decision table is compatible with these observations; the positive evidence is causal use of the learned return interface on that declared task.
