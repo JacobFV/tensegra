@@ -30,7 +30,7 @@
       "restriction": "Learned local instruction retrieval and ordered binding; not surface parsing or execution."
     },
     "B_readiness": {
-      "status": "supplied_score_control_failed_learned_proposal_calibration_pending",
+      "status": "failed_all_seed_coverage_requirement",
       "precision_gt": 0.99,
       "executable_recall_gte": 0.5,
       "requires": [
@@ -39,7 +39,18 @@
         "local advantage on mixed-readiness groups",
         "overlapping correct/incorrect score distributions"
       ],
-      "note": "Supplied-score calibration cannot certify actual proposal readiness; all supplied-score seeds fail coverage."
+      "note": "Seed 2 validation/test recall below 50%; synthetic supplied-score control also failed. Local grouping is independent examples, not competing interpretations in one world.",
+      "evidence": "results/stage7-ab/actual-confidence/actual-confidence-summary.json",
+      "test_precision": [
+        0.9944547134935305,
+        0.9901563404748118,
+        0.9912280701754386
+      ],
+      "test_executable_recall": [
+        0.5230918813806514,
+        0.8177905308464849,
+        0.38398058252427186
+      ]
     },
     "C_retention": {
       "status": "pending",
@@ -58,11 +69,36 @@
       "required_return_intervention_drop_gte": 0.2
     },
     "E_halting": {
-      "status": "pending",
+      "status": "failed_all_seed_joint_timing_task_requirement",
       "stop_or_reject_accuracy_gt": 0.95,
       "premature_rate_lt": 0.01,
       "distinct_arrival_steps_gte": 3,
-      "task_advantage_over_minimum_gte": 0.2
+      "task_advantage_over_minimum_gte": 0.2,
+      "evidence": "stage7-halt-main-report.json",
+      "validation_seed_checks": [
+        {
+          "stop_reject": true,
+          "premature": true,
+          "rejection": true,
+          "variable_arrivals": true,
+          "task_advantage": true
+        },
+        {
+          "stop_reject": false,
+          "premature": true,
+          "rejection": true,
+          "variable_arrivals": false,
+          "task_advantage": true
+        },
+        {
+          "stop_reject": true,
+          "premature": true,
+          "rejection": true,
+          "variable_arrivals": true,
+          "task_advantage": true
+        }
+      ],
+      "note": "Seed1 validation pure timing100% but task/joint92.97%; test also has premature stops/rejection failures. No runtime halting composition."
     },
     "F_semantic_scaling": {
       "status": "pending",
