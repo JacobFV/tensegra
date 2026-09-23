@@ -1,0 +1,13 @@
+# R08: optimizer acquisition diagnostic for the fixed residual readout
+
+R07's residual readout worsened fitting accuracy and produced fluctuating calibration/loss curves. Before interpreting additional capacity as unhelpful, test whether the unchanged residual head acquires scalar distinctions at a smaller learning rate.
+
+The only new intervention is learning rate. Retain the R07 zero-output residual GELU architecture, its initialization seed, original-wide-head warm start, train-only normalization, immutable R06 balanced features, and exact same sampled900 batches. Compare AdamW learning rates.0003/.0001/.00003, respectively the original.003 divided by10/30/100. Each arm has1,117,250 trainable parameters,16,384 fitting events at six delays, and230,400 optimizer presentations. No residual scaling, loss, data, or backbone change is included.
+
+Keep the frozen R07.003 residual head and strong linear head as reference outputs on the same populations. They incur no new fitting exposure. Record all final endpoints and their fitting/fresh-context accuracies, fieldwise/joint correctness, type/value/operation strata, logits, losses, and calibration curves. The frozen reference states, cache and original backbone have byte-hash checks. All sampled-row visit bitsets must match across the three new arms.
+
+Select among the three new fixed900 endpoints using, in order: highest minimum accuracy across calibration-grid legal type/value cells and delays0/1/16; highest minimum original-mixture calibration accuracy; earliest declared learning-rate order. Do not select from validation or intermediate checkpoints. Calibration curves every100 steps include both mixture and grid, but are diagnostic only. Advancement still requires strict calibration-grid improvement over the strong linear reference and at least98% in every mixture calibration cell. Preserve failures and report validation whether advancement passes or fails. No automatic longer run is authorized.
+
+R06 fitting/calibration/validation populations are reused development data, not fresh confirmation. Delay32 is absent. The R05 consumer and composition dependencies remain frozen. Failure of these probes cannot establish that scalar information is absent from the representation.
+
+A mechanical10-update-per-arm profile has a60-second cap, including immutable cache load and full export. Based on R07's24.02-second900-update paired process, the main three-arm screen is estimated below90seconds with a proposed120-second cap, subject to measured profile and coordinator release. No GPU run starts without explicit authorization. Save compressed raw predictions/logits, model coefficients, train support, visited-row bitsets, source/config/cache/state hashes, and external process occupancy.

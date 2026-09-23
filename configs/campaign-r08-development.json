@@ -1,0 +1,36 @@
+{
+  "device": "cuda",
+  "backbone_seed": 12,
+  "head_seed": 33000012,
+  "checkpoint": "/home/brandonin/topoformer-stage11/returns/main/12-wide_continue.pt",
+  "checkpoint_sha256": "80f209e48d95efd18637658c8250dbd4d47870b36c05b358db554442127c0dc0",
+  "delays": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "initialization_seed": 34000012,
+  "feature_path": "/home/brandonin/topoformer-campaign-01/returns/r06-development/cache.pt.gz",
+  "feature_sha256": "5510e58a0efb46f2eaebdfe9e51586535d8e324803e722fa671c23ad05b799a1",
+  "updates": 900,
+  "batch_size": 256,
+  "check_every": 100,
+  "learning_rates": [
+    0.0003,
+    0.0001,
+    3e-05
+  ],
+  "frozen_references": {
+    "linear_reference": {
+      "path": "/home/brandonin/topoformer-campaign-01/returns/r07-development/linear.pt",
+      "sha256": "bb2d8bcd371fd287056b14d7cf69b218f4af4a58ce3e6f140de4459d906a82d9"
+    },
+    "residual_original_lr": {
+      "path": "/home/brandonin/topoformer-campaign-01/returns/r07-development/residual_mlp.pt",
+      "sha256": "6289ac7ffa2ee48aa45d22ed6c18a1ca6772735bee488875c05b85a3cb3cedc2"
+    }
+  }
+}

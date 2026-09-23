@@ -188,3 +188,14 @@ def test_r07_protocol_has_no_extrapolation_or_endpoint_selection():
     assert cfg['delays'] == [0, 1, 2, 4, 8, 16]
     assert cfg['updates'] == 900 and cfg['require_replay']
     assert cfg['head_seed'] == 33000012
+
+
+def test_r08_optimizer_screen_preserves_fixed_capacity_and_exposure():
+    import json
+    from pathlib import Path
+    cfg = json.loads(Path('configs/campaign-r08-development.json').read_text())
+    old = json.loads(Path('configs/campaign-r07-development.json').read_text())
+    assert cfg['learning_rates'] == [.0003, .0001, .00003]
+    for key in ['feature_sha256', 'head_seed', 'initialization_seed', 'updates', 'delays', 'batch_size']:
+        assert cfg[key] == old[key]
+    assert set(cfg['frozen_references']) == {'linear_reference', 'residual_original_lr'}
