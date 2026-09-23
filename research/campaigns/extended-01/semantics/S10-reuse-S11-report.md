@@ -1,6 +1,6 @@
 # S10 frozen policies on S11: prospective secondary analysis
 
-Unchanged decoder `2085053`, prospectively registered reuse `8042d2f`, fixed S11 final and original S04 midpoint at **196,608 presentations**. Independent raw audit pending. No model/threshold selection or new policy fitting.
+Unchanged decoder `2085053`, prospectively registered reuse `8042d2f`, fixed S11 final and original S04 midpoint at **196,608 presentations**. Independent raw audit passed (`1cd6d22`): all5,120 decisions/tensor hashes and matched-target paired outcomes reconstructed. No model/threshold selection or new policy fitting.
 
 ## Findings
 
@@ -50,4 +50,4 @@ This supports complementary effects from improved learned acquisition (the separ
 
 No gold attributes/counts/roots enter the decoder. Exactly one predicted scope is required for supplied contains/declares; S05 all-matching copied-identity references remain unchanged. Raw tensor conflict/change counts include padded nodes, while metric errors use active-node conventions. Every output is reconstructible from immutable archive hashes and frozen policy, verified by complete edge/slot hashes.
 
-CPU wall21.41seconds, maximumRSS612080KiB, zeroGPU. Target-paired analysis is a separate stdlib CPU step. No new training or architecture. Independent reconstruction requested; no confirmation authorized by this report alone.
+CPU wall21.41seconds, maximumRSS612080KiB, zeroGPU. Target-paired analysis is a separate stdlib CPU step. No new training or architecture. Independent reconstruction passed; this report alone does not authorize confirmation.
