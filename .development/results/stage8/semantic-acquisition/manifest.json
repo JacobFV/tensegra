@@ -1,0 +1,127 @@
+{
+  "config": {
+    "train_count": 8,
+    "eval_count": 64,
+    "presentations": 1000,
+    "batch_size": 2,
+    "width": 1024,
+    "workspace_rows": 8,
+    "microsteps": 2,
+    "node_capacity": 128,
+    "negative_pairs": 128,
+    "seeds": [
+      0
+    ],
+    "learning_rate": 0.0001,
+    "node_presentations": 100,
+    "identity_presentations": 300,
+    "eval_presentations": [
+      0,
+      100,
+      300,
+      1000
+    ],
+    "device": "cuda",
+    "threads": 2,
+    "max_attempts": 2000,
+    "output_dir": "results/stage8-semantic-acquisition",
+    "frequency_control": true
+  },
+  "config_sha256": "08c52a32d4d7bb45d3018ec749572d77645da8916d02d8f2df3ecc5cc06bca70",
+  "corpus": {
+    "requested_unique_graphs": 72,
+    "actual_unique_graphs": 72,
+    "attempts": 107,
+    "duplicates": 35,
+    "candidate_budget_exhausted": false,
+    "finite_space_exhaustion_proven": false,
+    "dataset_sha256": "c81ad91d974a0636b415042f4ad133bcfff6156ee0e1c23c1b65dc878090e599",
+    "generation_seconds": 0.12800948321819305,
+    "difficulty": 0.5,
+    "dedup": "complete alpha-normalized typed ordered graph JSON; collision-free equality"
+  },
+  "source_sha256": {
+    "semantic_curriculum.py": "69a9eb76bfa62be795f6f07913acb7f4454121ab2b4035d8db71fe87d8d75650",
+    "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+    "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+    "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb"
+  },
+  "value_vocabulary": [
+    "<unknown>",
+    "\"and\"",
+    "\"color\"",
+    "\"not\"",
+    "\"obj\"",
+    "\"parent\"",
+    "\"select\"",
+    "\"shape\"",
+    "\"unify\"",
+    "null"
+  ],
+  "vocabulary_pool_unique_graphs": 8,
+  "vocabulary_sha256": "a32b7df0cde7ee4a8f5a5b62ec8b586f607b38749e062cb9aa1897644929f8f9",
+  "pinned_generator": {
+    "lesson": "variable_binding",
+    "seed": 700000,
+    "difficulty": 0.5,
+    "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+    "compiler_version": "topoformer-termgraph-v1",
+    "renderer_version": "tcn-fixed-construction-v2",
+    "semantic_digest": "49bac4ccd01b1fe04fbbfab3ee2efee4b50bdbd9e67dfc6ec475e863c34696d6",
+    "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+    "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "surface_sha256": {
+      "english": "a977fb0c244610184d609233c404daef199a333d7e612bd8c57499aa1450ebcc",
+      "spanish": "4e4285c55477eb5092096f0d09999633c02bfea0c56d72971804bac536b00146",
+      "symbols": "8fffa4889ae5815d8c148208bd6576c78511e6c3ed363b76ee4fe127417e91c0"
+    },
+    "distinct_surface_texts": 3,
+    "identifier_renaming": {},
+    "execution_scope": "semantic_compiler_only"
+  },
+  "runs": [
+    {
+      "arm": "semantic",
+      "seed": 0,
+      "parameters": 57859931,
+      "width": 1024,
+      "initial_state_sha256": "53ec1c6aa453ac8bcc144f119ebefc6cbd03f97fb90f329ef337bfaccd49c4bf",
+      "final_state_sha256": "a4d0716c6cddd3c6e703cf857a005971324ecc698e346280c25150914906ccc4",
+      "checkpoint_sha256": "16a9b497778ee58ca58eeac494163134b6c0e152997378ae759058635e63f193",
+      "seconds": 81.0182557599619,
+      "training_seconds": 35.38532043993473,
+      "peak_cuda_allocated_bytes": 1224322048
+    },
+    {
+      "arm": "no_input",
+      "seed": 0,
+      "parameters": 57859931,
+      "width": 1024,
+      "initial_state_sha256": "53ec1c6aa453ac8bcc144f119ebefc6cbd03f97fb90f329ef337bfaccd49c4bf",
+      "final_state_sha256": "5f1fe97871f40e9b31564dd4cf65db721928178b26fb9e31665780a711c17fe3",
+      "checkpoint_sha256": "76ca6510f0fd718954924a77ccf7958d986fc9eb70ba3f114bcf44e7b4719e87",
+      "seconds": 75.5146982758306,
+      "training_seconds": 34.255275482311845,
+      "peak_cuda_allocated_bytes": 1224322048
+    }
+  ],
+  "split_policy": "same heldout prefix, nested unique training prefixes",
+  "training_digest": "2bff87318b2cb4abce2075f339b87b3466ec4e288cc40848ad7abfdb372b0c23",
+  "heldout_digest": "66cdc5fadd22b63ae6de2e2b7b2d5cbda315d179dd60e58620af54516adf9f87",
+  "priors": [
+    "canonical compiler node order",
+    "privileged visible-copy and typed-edge labels",
+    "fixed ontology and node capacity",
+    "gold-edge training loss sampling only; no effect on hidden state",
+    "no_input control retains public pointer candidate count and token normalization"
+  ],
+  "limitations": [
+    "exact decoder-slot equivalence is not general graph isomorphism",
+    "value ontology is fitted on declared shared training-only vocabulary pool, including unoptimized examples in smaller corpus arms",
+    "curriculum, width, edge sampling and actor differ from stage7; not a single-variable comparison"
+  ],
+  "composition_allowed": false
+}
