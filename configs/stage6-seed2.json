@@ -1,0 +1,54 @@
+{
+  "seeds": [
+    2
+  ],
+  "variants": [
+    "neural_fixed",
+    "neural_recurrent",
+    "runtime_off",
+    "no_structure",
+    "protected_learned",
+    "local",
+    "global",
+    "fixed_compute",
+    "anneal_grounding",
+    "anneal_topology",
+    "anneal_transition",
+    "anneal_readiness",
+    "anneal_all",
+    "task_only_cold",
+    "task_only_warm"
+  ],
+  "steps": 256,
+  "warmup_steps": 128,
+  "checkpoints": [
+    0,
+    64,
+    128,
+    192,
+    256
+  ],
+  "batch_size": 2,
+  "width": 32,
+  "feature_dim": 32,
+  "train_depth": 4,
+  "eval_depths": [
+    4,
+    8,
+    16,
+    32
+  ],
+  "eval_examples": 12,
+  "distractors": 2,
+  "threads": 2,
+  "learning_rate": 0.001,
+  "min_microsteps": 2,
+  "max_microsteps": 12,
+  "eval_max_microsteps": 80,
+  "readiness_threshold": 0.8,
+  "ponder_weight": 0.001,
+  "emit_weight": 0.1,
+  "wall_seconds": 7200,
+  "save_checkpoints": true,
+  "extra_evaluations": true
+}
