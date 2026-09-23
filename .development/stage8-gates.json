@@ -1,29 +1,52 @@
 {
-  "status": "implementation_and_hardware_validation",
+  "status": "main_studies_and_independent_audits",
   "default_latent_width": 1024,
   "composition_allowed": false,
   "supervision_withdrawal_allowed": false,
   "belief": {
-    "status": "pending",
+    "status": "failed_primary_idmatched_independently_audited",
     "required": "Every paired initialization and expected validation condition; complete matrix and minimum512 examples per cell",
     "final_unique_proposal_iid_gt": 0.98,
     "final_unique_proposal_moderate_ood_gt": 0.95,
     "mean_framewise_posterior_l1_lt": 0.05,
     "mean_impossible_mass_lt": 0.01,
     "calibration": "Compare confidence with expected correctness under privileged joint posterior; support membership is a separate metric",
-    "stress_controls": ["candidate permutation", "independent evidence order", "duplicate observation ids", "explicit retraction", "contradiction/no valid candidate"]
+    "stress_controls": [
+      "candidate permutation",
+      "independent evidence order",
+      "duplicate observation ids",
+      "explicit retraction",
+      "contradiction/no valid candidate"
+    ],
+    "audit": "192 cells / 98304 episode evaluations; 14/48 protected and 24/48 recurrent validation cells fail"
   },
   "return": {
-    "status": "pending",
+    "status": "failed_all_18_runs_independently_audited",
     "required": "Report short-delay acquisition before16step retention; every pairedseed and expectedvalidation condition; minimum512 percell",
     "type_and_primitive_gt": 0.99,
     "value_and_required_identity_gt": 0.98,
     "delay": 16,
-    "controls": ["mixed additive encoding", "disjoint concatenation", "factorized KV", "once vs persistent", "dropped/corrupted event", "release/overwrite"]
+    "controls": [
+      "mixed additive encoding",
+      "disjoint concatenation",
+      "factorized KV",
+      "once vs persistent",
+      "dropped/corrupted event",
+      "release/overwrite"
+    ],
+    "audit": "1008 rows / 516096 example evaluations; all field and joint counts independently reconstructed"
   },
   "semantics": {
     "status": "pending",
-    "required": ["separate corpuscardinality and presentations", "matched renderer schedule and initialization", "same heldout graphs", "actual distinct graphs seen", "node/type/identity/orderededge metrics", "fullgraph accuracy", "paired noinput control"],
+    "required": [
+      "separate corpuscardinality and presentations",
+      "matched renderer schedule and initialization",
+      "same heldout graphs",
+      "actual distinct graphs seen",
+      "node/type/identity/orderededge metrics",
+      "fullgraph accuracy",
+      "paired noinput control"
+    ],
     "note": "No scalinglaw or convergence claim from available corpus size alone; failed acquisition must be reported independently."
   },
   "readiness": "blocked_until_belief_competence",

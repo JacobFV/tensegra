@@ -112,3 +112,20 @@ affect earlier output. No hidden evidence or exact compatibility is introduced.
 The protected observation ledger remains an architectural algorithm, even when
 observable information is matched. This study learns evidence compatibility; it
 does not claim the model learned duplicate suppression/retraction semantics.
+
+## Prespecified historical-width ablation
+
+Before ID-matched1024 outcomes, a separately named historical-width32 control is
+frozen: identical task, direct supervision, optimizer,1000updates×32, paired
+seeds0/1/2, full512validation/test matrix, ID features enabled, but width32 and
+FF64. Width1024 remains the standard and primary study. This contrast isolates
+width within Stage8; it does not establish a causal explanation of Stage7's
+failure, which also used different data/training/interfaces. The smaller control
+will run only after the primary1024 study, on at most2CPUthreads if resource
+checks are acceptable, without taking the shared GPU queue.
+
+Historical32 resource probe:19,267parameters; second warm update plus8-example
+probe .0306s on2CPUthreads. Six full trainings plus all raw/oracle evaluation are
+estimated5–7minutes. Root authorized this bounded CPU run after the primary1024
+study, concurrently with later semantic GPU work; such shared-host timing is not
+an uncontended throughput benchmark. No historical result selects primary settings.

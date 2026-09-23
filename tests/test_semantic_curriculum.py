@@ -98,3 +98,32 @@ def test_compact_graph_edges_roundtrip_losslessly():
     recovered=m.unpack_graph(m.pack_graph(gold))
     assert all(torch.equal(gold[k],recovered[k]) for k in gold)
     assert m.base.metrics(recovered,gold)['semantic_equivalence']==1
+
+
+def test_fresh_holdout_exclusion_does_not_discard_training_candidates(tmp_path):
+    corpus=m.base.CorpusIndex(tmp_path/'corpus.db',requested=8,seed=7,max_attempts=40)
+    excluded=[m.base.semantic_key(corpus[i].privileged.graph) for i in (0,1)]
+    heldout,training,audit=m.partition_corpus(corpus,2,3,excluded)
+    assert heldout==[2,3]
+    assert training==[0,1,4]
+    assert audit['inspected_prefix_overlap']==2
+    assert audit['selected_heldout_overlap']==0
+    assert not set(heldout)&set(training)
+
+
+def test_balanced_lessons_keep_mixture_fixed_across_cardinalities():
+    for extra in (3,30):
+        groups={'small':[0],'large':list(range(1,extra+1))}
+        schedule=[m.exposure_schedule(i,extra+1,groups) for i in range(120)]
+        small=sum(index==0 for index,_ in schedule)
+        assert small==60
+        assert sum(language=='english' for _,language in schedule)==60
+        assert len({index for index,_ in schedule})==1+min(extra,30)
+
+
+def test_weighted_frequency_matches_uniform_weights(tmp_path):
+    corpus=m.base.CorpusIndex(tmp_path/'corpus.db',requested=2,seed=13,max_attempts=20)
+    vocab=m.base.value_vocabulary(corpus[i] for i in range(2))
+    a=m.frequency_fit(corpus,range(2),vocab,128)
+    b=m.frequency_fit(corpus,range(2),vocab,128,weights={0:1.,1:1.})
+    assert all(torch.equal(a[k],b[k]) for k in a)

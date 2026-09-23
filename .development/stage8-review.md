@@ -60,3 +60,25 @@ Semantic `49ede10` train-only threshold calibration was reviewed: first eight tr
 Independently reconstructed all 192 heldout cells (98,304 episode evaluations) from saved full posteriors: support accuracy, impossible mass, posterior L1, entropy, and every reliability bin match aggregate metrics within 3e-6. Source hashes match canonical `9745438` and every run manifest. Gate failure reasons independently match all 14 protected and 25 recurrent failed validation cells. Both gates fail; the protected arm's perfect final selections do not erase its prior/null posterior error. The original duplicate/retraction comparison remains metadata-asymmetric. The separately frozen `bac2950` follow-up supplies identical 16-bit observation-ID features to both encoders and retains equal capacities.
 
 The independent raw reconstruction is reproducible with `scripts/audit_stage8_beliefs.py`; its output is recorded alongside diagnostic artifacts. Semantic acquisition's original 2304 raw prediction rows were also streamed independently: all typed-edge true-positive, prediction and gold counts match saved metrics exactly. This validates those counts, not semantic competence.
+
+## Lossless semantic artifact repacking
+
+The oversized semantic acquisition COO export was replaced by bit-packed boolean edge tensors without changing metrics. The converter asserts equality of every decoded tensor in all 2304 records. An independent standard-library decoder additionally compared the first 32 complete packed records against the durable original: every edge coordinate, other graph field and metadata field matched exactly. Local packed SHA256 `662bea01015df615c9748927cf1d48ce6402e7ee673b3fe8c03ce9952387a67d` matches the conversion manifest; size is 22,366,167 bytes versus 500,243,173. The original remains archived remotely with its SHA256. Final integration must omit the oversized unpublished blob from pushed history while retaining source provenance manifests.
+
+## Return main: complete independent audit
+
+All 1008 raw evaluation rows (516,096 example evaluations) independently reproduce every field, scalar/identity/full joint, and required-second-argument count. All 18 prespecified gates fail independently. The config hash and five source hashes match frozen `dc2f9b1`. A further 864 supplied-fact readback rows exactly reproduce field counts after independently applying the documented value/type/provenance corruptions. No missing or tiny cells pass.
+
+For persistent memory with eight distractors, mean joint accuracy at 1/16/32 updates is 64.84/62.17/61.26% for mixed encoding, 70.25/67.51/67.90% for disjoint concatenation, and 89.19/75.59/61.98% for factorized tokens. Exact value accuracy and numerical error are distinct: factorized values reach 89.45% exact and MAE0.055 at one update, versus 79.04%/MAE0.243 at16 and 68.82%/MAE0.586 at32. Thus the short-delay improvement is real, while recurrent deterioration and the exact-retention gate failure remain. These data do not demonstrate downstream learned use or authorize composition.
+
+## Semantic main freeze audit
+
+Frozen `f81f33f`/source `26c8b5f` separates 1k/10k available constructions from 10,016/100k presentation checkpoints, three paired seeds and matched no-text-feature controls (1.2 million total optimizer presentations). Equal lesson sampling is fixed before outcomes, its lesson set is asserted across corpus sizes, and frequency controls use inverse lesson size. Lesson labels affect sampling only, not actor inputs. Actual distinct constructions and per-lesson exposures remain separately logged.
+
+Fresh evaluation partitioning skips only previously inspected semantic keys when reserving heldout examples; these keys remain eligible for training. Fourteen prior-key collisions are excluded from the heldout prefix. No fresh variable-binding example remains in this reserved evaluation set, explicitly recorded as missing heldout coverage; that family's generalization cannot be claimed from these results. This is a known coverage limitation, not hidden outcome-based selection.
+
+## Primary observation-ID-matched belief audit
+
+All 192 cells and 98,304 episode evaluations independently reconstruct from full exported posteriors, including calibration, entropy, impossible mass and L1. Every run enables neural observation-ID features, and source hashes match frozen `bac2950`. Independent validation checks find 14/48 protected cells and 24/48 recurrent cells fail the unchanged gate. Both remain blocked.
+
+The primary results materially narrow the claim: at 16 candidates, both arms achieve 100% final clean test selection. Under long duplicate evidence, protected final selection is 100% with mean impossible mass0.00126; recurrent selection is99.09% with mass0.05923. Empty-evidence null mass remains approximately0.0246/0.0251, preventing full posterior competence. Wide fresh-data recurrence therefore acquires ordinary updates; the measured protection advantage concerns posterior stability under repeated evidence, with exact deduplication supplied by architecture. It is not evidence that generic recurrence inherently cannot accumulate evidence.

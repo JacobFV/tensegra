@@ -19,7 +19,11 @@ def summarize(directory):
                 row=json.loads(line)
                 if row['phase']!='eval': continue
                 compact={k:row[k] for k in ('split','seed','distractors','steps','intervention','counts')}
+                if 'supplied_fact_counts' in row: compact['supplied_fact_counts']=row['supplied_fact_counts']
                 compact.update(model_seed=run['seed'],encoding=run['encoding'],availability=run['availability'])
+                errors=[abs(a-b)/2 for a,b in zip(row['predictions']['value'],row['targets']['value'])]
+                compact['value_mae']=sum(errors)/len(errors)
+                compact['value_within_half']=sum(e<=.5 for e in errors)/len(errors)
                 rows.append(compact)
                 if row['split']=='test' and row['steps'] in (1,16) and row['intervention']=='none':
                     wrong=[i for i in range(len(row['targets']['value'])) if any(row['predictions'][field][i]!=row['targets'][field][i] for field in row['targets'])]
