@@ -73,3 +73,18 @@ class ThinkingTaskTests(unittest.TestCase):
                 self.assertTrue(audit_episode(heldout)['valid'])
         for args in ({'motif':'bad'},{'operator_composition':'bad'},{'depth':1,'motif':'cross'}, {'depth':1,'operator_composition':'heldout'}):
             with self.assertRaises(ValueError): generate_episode(**args)
+
+    def test_completed_candidate_has_zero_readiness(self):
+        from topoformer.thinking_tasks import readiness_targets
+        e = generate_episode(4,depth=2)
+        available = {v.id for v in e.public.initial_values}
+        chosen = e.gold.trace[0][0]
+        before = readiness_targets(e,0,available)
+        matching = [x for x in before if x.candidate.id == chosen.id]
+        self.assertTrue(matching)
+        self.assertTrue(all(x.readiness > 0 for x in matching))
+        available.add('result:'+chosen.id)
+        after = readiness_targets(e,0,available,context_visible=True)
+        self.assertTrue(all(x.readiness == 0 for x in after if x.candidate.id == chosen.id))
+        self.assertEqual(after[-1].readiness,0.0)
+        self.assertTrue(all(x.readiness == 0 for x in after if 'unbound' in x.candidate.arguments))

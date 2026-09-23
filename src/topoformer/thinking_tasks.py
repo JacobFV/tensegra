@@ -95,7 +95,10 @@ def _posterior_targets(sets, available):
             # validation and from the hidden answer. Null references have zero.
             mass = sum(c.primitive == candidate.primitive and c.arguments == candidate.arguments
                        for c in options.candidates) / len(options.candidates)
-            ready = mass if all(a in available for a in candidate.arguments) else 0.0
+            # A destination already materialized cannot create a new state
+            # transition, regardless of the remaining semantic uncertainty.
+            pending = 'result:'+candidate.id not in available
+            ready = mass if pending and all(a in available for a in candidate.arguments) else 0.0
             targets.append(CandidateTarget(candidate, ready))
     return tuple(targets)
 
