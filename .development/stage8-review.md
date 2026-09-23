@@ -82,3 +82,11 @@ Fresh evaluation partitioning skips only previously inspected semantic keys when
 All 192 cells and 98,304 episode evaluations independently reconstruct from full exported posteriors, including calibration, entropy, impossible mass and L1. Every run enables neural observation-ID features, and source hashes match frozen `bac2950`. Independent validation checks find 14/48 protected cells and 24/48 recurrent cells fail the unchanged gate. Both remain blocked.
 
 The primary results materially narrow the claim: at 16 candidates, both arms achieve 100% final clean test selection. Under long duplicate evidence, protected final selection is 100% with mean impossible mass0.00126; recurrent selection is99.09% with mass0.05923. Empty-evidence null mass remains approximately0.0246/0.0251, preventing full posterior competence. Wide fresh-data recurrence therefore acquires ordinary updates; the measured protection advantage concerns posterior stability under repeated evidence, with exact deduplication supplied by architecture. It is not evidence that generic recurrence inherently cannot accumulate evidence.
+
+## Historical-width and semantic-head audits
+
+The width32 historical control independently passes raw reconstruction for all192 cells/98,304 episode evaluations. Source hashes match `bac2950`; unchanged gate checks reproduce25 protected and46 recurrent failed validation cells. This is a CPU control versus CUDA width1024 and does not establish matched hardware throughput.
+
+The additive slot-head expressivity finding is mathematically valid: for two competing classes, the logit difference has form `u_i+v_j`; positive diagonal and negative cross-pair differences in a2×2 matrix are impossible because the diagonal and cross sums are identical. Gold witnesses demonstrate conflicting no-slot/ordered-slot targets in the supervised population. The separate edge mask can suppress the cross-pairs, so this is **not** a proof that exact masked graph decoding is impossible. No frozen main recipe changed.
+
+A new independent standard-library bitmap auditor reconstructs node counts, typed/ordered edge counts, type accuracy, identity copying/equivalence and exact canonical semantic equivalence. All2304 acquisition rows pass every reconstructed metric, extending the earlier typed-edge-only audit.
