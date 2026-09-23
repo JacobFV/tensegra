@@ -1,0 +1,24 @@
+{
+  "output_dir": "results/s11-lr-decay-n8192-196k-dev201",
+  "data_dir": "data/s01",
+  "seed": 201,
+  "device": "cuda",
+  "batch_size": 8,
+  "updates": 24576,
+  "learning_rate": 1e-05,
+  "negative_pairs": 128,
+  "checkpoints": [
+    16384,
+    20480,
+    24576
+  ],
+  "calibration_count": 128,
+  "evaluation_count": 512,
+  "train_limit": 8192,
+  "parent_checkpoint": "results/s03-current-n8192-131k-dev201/model-u16384.pt",
+  "parent_checkpoint_sha256": "e54b23dc8362dd4d00381b6fd3115e48eef3942c519d8179e4c4e7b0610732af",
+  "parent_evaluation": "results/s03-current-n8192-131k-dev201/evaluation-u16384.json.gz",
+  "parent_evaluation_sha256": "857f7d19193d59359cc717c37e81c13aa0bb2ae7049191a6e10a13142bd2b0ae",
+  "budget_status": "protocol_only_pending_versioned_source",
+  "intervention": "override_restored_optimizer_lr_only"
+}
