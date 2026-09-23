@@ -31,6 +31,12 @@ Setting `context_read=False` dispatches exactly to the historical actor, with bi
 
 The recurrent reuse follows the current implementation, not a claim that recurrence learns an algorithm. [Universal Transformers](https://arxiv.org/html/1807.03819v3) provide related per-position recurrent refinement, but no adaptive halting or theoretical universality claim is tested here.
 
+## Considered representation contract
+
+One candidate per public word/occurrence is a legitimate alternative parsing interface when tokenization and order are explicitly supplied. It provides candidate segmentation/alignment, not gold relation edges; non-token entities and scope/record nodes would still need a declared treatment. It would substantially simplify canonical node allocation compared with the current free query slots, so it cannot be presented as the same inference problem with only a better neural matcher. Using gold spans to create those candidates at inference would violate the public-input contract.
+
+S09 deliberately retains the current canonical-query interface to isolate a predicted retrieval path. A future public occurrence-candidate study would be separately versioned, with its supplied segmentation/order and canonicalization algorithm disclosed. It is not silently folded into this experiment.
+
 ## Bounded acquisition and development plan
 
 Use the existing 8,192 alpha-distinct English unification TRAIN constructions, seed201, width1,024, batch8, AdamW1e-4, same curriculum and pair sampling, and 65,536 presentations. No additional eight-example memorization run. The fixed first128 TRAIN constructions form the acquisition diagnostic panel throughout this real-diversity training, not a separately optimized or exhaustively fit corpus. Its exact full-graph outcomes are reported alongside fresh DEV512; this distinguishes observed fit on a fixed training panel from generalization without diverting another run to tiny-set memorization.
