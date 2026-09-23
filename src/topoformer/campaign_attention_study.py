@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 import torch
 from torch.nn import functional as F
-from .campaign_attention import RoutingModel, generate, targets, corrupt, metrics
+from .campaign_attention import RoutingModel, generate, targets, corrupt, metrics, permute_nodes, restore_node_order
 
 
 def write(path, value):
@@ -31,6 +31,8 @@ def evaluate(model, config, output, label, *, device):
     started = time.monotonic()
     for ci, condition in enumerate(conditions):
         values = {}
+        forward_timers=[]
+        condition_start=time.monotonic()
         preds, golds, routes, starts, relations, successors = [], [], [], [], [], []
         for offset in range(0, config['eval_examples'], config['eval_batch']):
             count = min(config['eval_batch'], config['eval_examples'] - offset)
@@ -39,8 +41,20 @@ def evaluate(model, config, output, label, *, device):
                 heldout_composition=condition.get('composition', False))
             gold = targets(batch)
             given = corrupt(batch, condition.get('corruption','clean'), config['eval_seed']+ci*100000+offset+50000)
+            order=None
+            if condition.get('node_permutation'):
+                pg=torch.Generator(device=device).manual_seed(config['eval_seed']+offset+900000)
+                order=torch.rand(count,condition['nodes'],generator=pg,device=device).argsort(-1)
+                given=permute_nodes(given,order)
+            if str(device).startswith('cuda'):
+                t0=torch.cuda.Event(enable_timing=True);t1=torch.cuda.Event(enable_timing=True);t0.record()
+            else: t0=time.monotonic()
             result = model(given, config['mode'], zero_strength=condition.get('zero_strength', False),
                            strength_override=config.get('strength_override'), size_adjust=config.get('size_adjust',False))
+            if str(device).startswith('cuda'):
+                t1.record();forward_timers.append((t0,t1))
+            else: forward_timers.append(time.monotonic()-t0)
+            if order is not None: result=restore_node_order(result,order)
             # Path agreement and values remain relative to the original clean graph.
             scores = metrics(result, gold, batch)
             majority = F.one_hot(batch.values,16).sum(1).argmax(-1)
@@ -55,7 +69,11 @@ def evaluate(model, config, output, label, *, device):
             relations.append(batch.relations.cpu().numpy().astype('uint8'))
             successors.append(batch.adjacency.argmax(-1).cpu().numpy().astype('uint8'))
         values = {k: np.concatenate(v) for k,v in values.items()}
+        sync(device)
+        forward_seconds=sum(a.elapsed_time(b)/1000 for a,b in forward_timers) if str(device).startswith('cuda') else sum(forward_timers)
         rows.append({'condition':condition, 'examples':config['eval_examples'],
+                     'forward_seconds':forward_seconds,'condition_wall_seconds':time.monotonic()-condition_start,
+                     'forward_seconds_per_correct':forward_seconds/int(values['task'].sum()) if values['task'].sum() else None,
                      **{k:float(v.mean()) for k,v in values.items()}})
         for key,value in values.items(): arrays[f'c{ci}_{key}'] = value
         for key,value in [('pred',preds),('gold',golds),('route',routes),('start',starts),('relation',relations),('successor',successors)]:
