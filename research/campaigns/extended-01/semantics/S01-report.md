@@ -30,3 +30,18 @@ All128 constructions were visited exactly512 times, totalling3,892,224 optimizer
 Complete the prespecified1024/8192 matched-exposure arms before choosing an extension or frontend comparison. The last N128 interval improves ordered-edge F1 but not complete graphs; it is not evidence that more128-example repetitions are preferable to diversity. Initial data support and field-specific localization justify continuing the ladder. No architecture change, confidence policy, runtime composition or confirmation claim follows from this arm.
 
 CPU residual-edge localization on the final N128 TRAIN archive finds most calibrated errors in `argument` (595 false positives,718 false negatives) and `refers_to` (347 false positives,426 false negatives). Raw decoding instead overpredicts heavily:3,925 argument and3,180 refers-to false positives. Threshold calibration substantially reduces false positives but leaves both ranking/association errors. Counts by predicted/gold endpoint kind are retained in `edge-errors-u8192.json`; no inference schema mask is introduced. This supports the separately registered S02 frozen learned-node readout diagnostic, not a claim that calibration alone fixes graph acquisition.
+
+
+## Second matched-exposure arm:1,024 constructions
+
+The second arm completed65,536 presentations (64visits per construction), same initialization hash and first128 TRAIN calibration examples. Full external occupancy646.974s; training489.891s; peakCUDA1,225,695,232bytes; processRSS3,526,128KiB. Width1024 and57,853,781parameters unchanged. Corpus diversity differs; epochs deliberately differ under the matched-presentation design.
+
+| Presentations | N128 DEVcopy | N1024 DEVcopy | N128 DEVcalibrated orderedF1 | N1024 DEVcalibrated orderedF1 |
+|---:|---:|---:|---:|---:|
+|8,192|.44585|.46729|.36761|.35098|
+|32,768|.45473|.68934|.45800|.62365|
+|65,536|.46973|.72444|.50009|.66262|
+
+All cells remain0/512 complete development graphs. At the final N1024 checkpoint, calibrated typed-edgeF1=.72231 versus N128=.62806. TRAIN128 diagnostic copy=.97485 and calibrated typed/orderedF1=.81246/.75439; complete graphs0/128. This TRAIN sample is a shared diagnostic subset, not all1,024 training graphs.
+
+Final development node presence is exact506/512, with17,341 predicted versus17,337 gold nodes; kind15,207/17,337, copy9,345/12,972, values4,363/4,365. Only2/512 have every copied identity correct. Thus stronger average edge/copy performance has not produced complete canonical recovery. This is encouraging evidence for data diversity under fixed exposure, not semantic-transfer competence. The prespecified8,192-construction arm remains pending; no frontend change or confirmation-set inference follows from this intermediate comparison.
