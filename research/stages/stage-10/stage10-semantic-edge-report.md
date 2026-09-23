@@ -79,7 +79,10 @@ historical seed 10's missing Adam state, so it does not claim that those exact
 five historical errors were repaired by continuation.
 
 Gate: **passed_restricted** for complete fixed-set fitting at 1200 across every
-prescribed new seed. Only eight distinct TRAIN graphs are used; repeated
+prescribed new seed. The fixture has two binding, three set-operation and three unification graphs.
+Twelve relation types have positive examples; `field:fact` has none, so rejecting
+that relation is not positive-edge competence. Only eight distinct TRAIN graphs
+are used; repeated
 presentations and repeated checkpoints are not independent graph samples.
 The inherited language/transfer gates remain untested and unchanged. Public-text
 scaling, runtime composition and supervision withdrawal were not attempted.
