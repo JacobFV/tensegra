@@ -1,0 +1,59 @@
+{
+  "narrow_scalar_gates": [
+    {
+      "arm": "unchanged",
+      "split": "validation",
+      "minimum_correct": 1815,
+      "support": 2048,
+      "passed": false
+    },
+    {
+      "arm": "ce_4096",
+      "split": "validation",
+      "minimum_correct": 2004,
+      "support": 2048,
+      "passed": false
+    },
+    {
+      "arm": "ce_8192",
+      "split": "validation",
+      "minimum_correct": 2014,
+      "support": 2048,
+      "passed": true
+    },
+    {
+      "arm": "ce_16384",
+      "split": "validation",
+      "minimum_correct": 2019,
+      "support": 2048,
+      "passed": true
+    }
+  ],
+  "rows_verified": 120,
+  "source_ref": "ce26bce",
+  "exposure": [
+    {
+      "events": 4096,
+      "rows": 24576,
+      "visited_rows": 24574,
+      "visited_events": 4096,
+      "validation_minimum": 2004
+    },
+    {
+      "events": 8192,
+      "rows": 49152,
+      "visited_rows": 48700,
+      "visited_events": 8192,
+      "validation_minimum": 2014
+    },
+    {
+      "events": 16384,
+      "rows": 98304,
+      "visited_rows": 88839,
+      "visited_events": 16384,
+      "validation_minimum": 2019
+    }
+  ],
+  "cpu_audit_wall_seconds": 3.23137867503101,
+  "scope": "Raw metrics, nested populations, visitation bitsets and source hashes. Frozen feature/weight replay remains separate; development only."
+}
