@@ -1,6 +1,6 @@
 # A03: frozen confirmation of routing interfaces
 
-Registered after exploratory A01/A02 and before confirmation outcomes. The selected soft intervention is fixed λ=8. Architecture and optimizer are unchanged. Training remains N16, depths1–4, excluding adjacent relation pair(2,2), with500updates and batch16. The public reverse schedule and explicit node correspondence remain programmed priors.
+Registered after exploratory A01/A02 and before confirmation outcomes. The selected soft intervention initializes the trainable per-relation/head strength at8, with no explicit size correction. Strength learns during training and is frozen during evaluation; it is not constrained to remain exactly8. Architecture and optimizer are unchanged. Training remains N16, depths1–4, excluding adjacent relation pair(2,2), with500updates and batch16. The public reverse schedule and explicit node correspondence remain programmed priors.
 
 ## Primary comparisons
 
@@ -27,3 +27,5 @@ The largest-shape random-initialization profile used N64/D16, three128-example c
 The confirmation can establish or reject a finite-bias repair and characterize competitive alternatives. It does not presume an attention advantage. A useful explicit-routing result does not establish learned grounding, learned planning or autonomous composition. Any extension to predicted grounding requires a new protocol. No broad historical gate is overridden.
 
 Report seed variability separately from event-sampling uncertainty. For paired bootstrap intervals, resample shared event indices within a condition and preserve the same sampled indices across all seeds/arms. Do not count repeated seeds or corruption views as new independent examples.
+
+Naming: `soft4` and `soft8` denote initial trainable strengths, not permanently fixed learned parameters. The frozen-checkpoint `strength_override=8` intervention is exactly fixed at8. Zero-strength evaluation is meaningful only for soft attention; other arms ignore that flag, so their duplicate zero-strength cells are no-op consistency checks rather than graph-removal ablations.
