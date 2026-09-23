@@ -53,3 +53,13 @@ FP32 edge scores, labels and calibrated/raw outputs are losslessly compressed at
 every checkpoint to support per-error trajectories and independent replay.
 Source/config/data/checkpoint hashes, optimizer losses, parameter count, CUDA
 allocated memory, process RSS and training/wall time are retained separately.
+
+## Measured resource freeze
+
+On the configured GB10 CUDA environment, three cold updates took0.197training
+seconds and1.070wall seconds. A separately labeled30-update mechanical profile
+(seed201, outcomes not used for model selection) took0.566training seconds and
+1.311wall seconds. This projects approximately68training seconds for the3600
+main updates, plus checkpoint/export overhead. Main budget remains hard5minutes,
+expected under2minutes. CUDA allocation173MB; process RSS1.72millionKiB is
+recorded separately. No further profiling or recipe selection follows.
