@@ -1,0 +1,35 @@
+{
+  "scope": "Public-text semantic acquisition; no runtime composition or structural-attention claim",
+  "fixed_set_acquisition": {
+    "status": "passed_restricted",
+    "criterion": "Final update4000: all8 complete canonical graphs in each prescribed seed",
+    "seeds": [30, 31, 32],
+    "raw_correct": [8, 8, 8],
+    "calibrated_correct": [8, 8, 8],
+    "examples_per_seed": 8,
+    "generalization_claim": false,
+    "source_commit": "5a80a4a"
+  },
+  "fresh_known_renderer": {
+    "status": "failed",
+    "criterion": "Exact canonical graph accuracy strictly greater than0.95 in every seed over512 alpha-distinct constructions",
+    "seeds": [30, 31, 32],
+    "raw_correct": [0, 0, 0],
+    "calibrated_correct": [0, 0, 0],
+    "examples_per_seed": 512,
+    "calibration": "Frozen final TRAIN8 relation thresholds; never refit on fresh labels",
+    "source_commit": "7936417"
+  },
+  "heldout_renderer_or_renaming": {
+    "status": "blocked",
+    "reason": "Fresh known-renderer complete recovery fails all seeds"
+  },
+  "broader_exposure_training": {
+    "status": "not_run",
+    "reason": "No additional training authorized after frozen transfer failure"
+  },
+  "composition_and_supervision_withdrawal": {
+    "status": "blocked",
+    "reason": "Outside stage scope regardless of diagnostic acquisition success"
+  }
+}
