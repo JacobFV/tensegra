@@ -104,4 +104,7 @@ The repository includes exact FP32 score arrays, targets, predictions, threshold
 loss curves, source snapshots and configuration/data/checkpoint hashes. Gzip
 preserves the full score data; no score quantization or selected-error-only export
 substitutes for the raw record. One focused mathematical gradient test passed.
-Independent raw-metric/checkpoint verification is pending at this report revision.
+Independent review reconstructed all 288 graph decisions, 234 TRAIN thresholds,
+edge/slot errors and final gates. All 18 compressed score hashes and remote
+checkpoint byte hashes match; no discrepancy was found. The restricted raw and
+calibrated acquisition passes are independently verified.
