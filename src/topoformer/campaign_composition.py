@@ -4,6 +4,7 @@ No training or C01 composition runner. Gold is confined to acquisition labels
 and a private fidelity reference, neither accepted by execute_proposal.
 """
 import random
+import math
 import torch
 from .retention_data import make_batch
 from .interface_proposals import ProposalModel, PRIMITIVES
@@ -55,8 +56,54 @@ def make_lowering_batch(seed, count, distractors=2):
     return dict(public=public_rows, labels=labels, reference=source)
 
 
+def public_schema_error(row):
+    """Public completeness/uniqueness checks; no correct binding is consulted."""
+    try:
+        keys = row['keys']
+        if keys.shape != (11, 32) or not torch.isfinite(keys).all():
+            return 'key schema'
+        if len({tuple(k.tolist()) for k in keys}) != 11:
+            return 'ambiguous keys'
+        if len(row['names']) != 11 or len(set(row['names'])) != 11:
+            return 'ambiguous names'
+        if len(row['values']) != 11 or sorted(row['roles']) != sorted(['operand'] * 6 + ['null'] + ['destination'] * 4):
+            return 'table schema'
+        lookup = {tuple(k.tolist()): i for i, k in enumerate(keys)}
+        for i, (value, role) in enumerate(zip(row['values'], row['roles'])):
+            if role == 'operand' and (type(value) not in (int, float) or not math.isfinite(value) or abs(value) > 16):
+                return 'numeric literal schema'
+            if role != 'operand' and value is not None:
+                return 'nonoperand literal'
+            if role == 'null' and keys[i].count_nonzero():
+                return 'absent key schema'
+        destinations, arguments, cues = (row[k] for k in ('instruction_destinations', 'instruction_arguments', 'instruction_cues'))
+        if destinations.shape != (4, 32) or arguments.shape != (4, 2, 32) or cues.shape != (4, 5):
+            return 'incomplete instructions'
+        destination_ids = [lookup[tuple(k.tolist())] for k in destinations]
+        if len(set(destination_ids)) != 4 or any(row['roles'][i] != 'destination' for i in destination_ids):
+            return 'ambiguous destinations'
+        if tuple(row['query_destination'].tolist()) not in {tuple(k.tolist()) for k in destinations}:
+            return 'missing requested instruction'
+        for args, cue in zip(arguments, cues):
+            if not (((cue == 0) | (cue == 1)).all() and cue.sum() == 1):
+                return 'operation cue schema'
+            ids = [lookup[tuple(k.tolist())] for k in args]
+            if row['roles'][ids[0]] != 'operand' or row['roles'][ids[1]] != ('null' if int(cue.argmax()) == 3 else 'operand'):
+                return 'instruction role schema'
+        query = row['query']
+        if query.shape != (2,) or not torch.isfinite(query).all() or abs(float(query[0])) > 8 or float(query[1]) not in (0., 1.):
+            return 'query schema'
+    except (KeyError, TypeError, ValueError, IndexError, AttributeError):
+        return 'public schema'
+    return None
+
+
 def model_inputs(rows):
     """Only public fields; numeric table is available but this actor ignores it."""
+    for row in rows:
+        error = public_schema_error(row)
+        if error:
+            raise ValueError(error)
     names = ('keys', 'instruction_destinations', 'instruction_arguments', 'instruction_cues', 'query_destination', 'query')
     result = {name: torch.stack([r[name] for r in rows]) for name in names}
     result['valid'] = torch.ones(len(rows), 11, dtype=torch.bool)
@@ -80,6 +127,8 @@ def execute_proposal(public, primitive, pointers, *, accepted=True):
     then the public return-interface contract checks result range/grid.
     """
     def refuse(reason): return dict(status='refused', reason=reason, event=None)
+    error = public_schema_error(public)
+    if error: return refuse(error)
     if not accepted:
         return refuse('public uncertainty policy')
     if type(primitive) is not int or primitive not in range(5) or len(pointers) != 3:
@@ -90,7 +139,11 @@ def execute_proposal(public, primitive, pointers, *, accepted=True):
     if public['roles'][dest] != 'destination': return refuse('destination schema')
     indices = [left] if primitive == 3 else [left, right]
     if any(public['roles'][i] != 'operand' for i in indices): return refuse('operand schema')
-    if primitive == 3 and public['roles'][right] != 'null': return refuse('unary absent role')
+    # Arity is supplied by the ACTUAL predicted primitive, never the target.
+    # A zero-key query has tied logits in the historical bias-free pointer head;
+    # canonical absence is a schema guarantee, not a learned pointer success.
+    if primitive == 3:
+        right = public['roles'].index('null')
     registers = [ValueRegister(public['names'][i], value, 'float' if type(value) is float else 'integer')
                  for i, value in enumerate(public['values']) if value is not None]
     session = ProtectedSession(registers, max_abs_value=16)
