@@ -1,6 +1,6 @@
 # R05 development: use a frozen returned scalar in a subsequent learned decision
 
-This protocol is conditional on R04 independent audit. It is an oracle-first-operation interface study: the exact return is supplied, the unchanged Stage 11 wide workspace and R04 16k/900 scalar consumer access it, and only a downstream neural comparator learns. It does not learn the first operation, schedule symbolic execution, or establish two-operation autonomy.
+R04 raw/cache replay passed independent audit; balanced-generator reconstruction is separately tracked. This protocol tests a learned closed-vocabulary scalar-consumer interface, not ongoing orchestration by the original recurrent workspace. It is an oracle-first-operation interface study: the exact return is supplied, the unchanged Stage 11 wide workspace and R04 16k/900 scalar consumer access it, and only a downstream neural comparator learns. It does not learn the first operation, schedule symbolic execution, or establish two-operation autonomy.
 
 ## Task and observable inputs
 
@@ -8,7 +8,7 @@ Keep the actual registered generator mixture and bounded 33 half-unit values. Re
 
 Compare three paired comparators: learned-access scores plus query; query only (zeroed 33-value channel); and exact-value one-hot plus query. Each is a 35→1024→2 GELU MLP with identical initialization and optimizer exposure. Freeze all backbone, return memory and scalar-accessor weights. No new primitive, recurrent cell, encoder or exact-copy path is introduced.
 
-Start development on historical backbone 11, already used in failure-directed development; do not call it a held-out initialization. Fresh populations: 8,192 fitting events, 1,024 calibration events, 2,048 development-validation events. Capture covered delays 0/1/2/4/8/16; train with two distractors, evaluate with two/eight. Labels and query distribution remain unchanged. Delay 32 is excluded from development and any endpoint selection. Development data namespaces start at 31 million, disjoint from all readout fitting and confirmation data.
+Start development on historical backbone 11, already used in failure-directed development; do not call it a held-out initialization. Fresh populations: 8,192 fitting events, 1,024 calibration events, 2,048 development-validation events. Capture covered delays 0/1/2/4/8/16; train with two distractors, evaluate with two/eight. Labels and query distribution remain unchanged. Delay 32 is excluded from fitting and any endpoint selection. After selection, capture the same validation events at 32 as a separately labeled recurrent-length diagnostic; this reused population is not a fresh main test. Development data namespaces start at 31 million, disjoint from all readout fitting and confirmation data.
 
 ## Frozen development exposure and selection
 
@@ -34,3 +34,5 @@ The exact-value comparator receives the actually supplied value under wrong/swap
 Evaluate a separate fresh full typed-value grid with 64 events per legal type/value at delays 0/1/16. Its query draws remain independent of value. Report each type/value and the float-zero ingestion stratum prominently. Do not replace the registered mixture, retrain on the grid, or infer uniform-value competence from aggregate use accuracy. R04's whole-class float-zero error remains part of the evidence even if the binary decision is sometimes insensitive to it.
 
 Persist raw scalar scores, consumer logits, original/supplied targets, event hashes, all selected endpoints and causal subset masks. Audit actor inputs, exact witness validity, frozen-weight hashes and paired outcomes independently. Profile before launch; initial estimate 2–4 minutes capture plus fitting, requested development cap 360 seconds, subject to coordinator approval. No GPU work is authorized by this document alone.
+
+Further composition still requires at least 98% accuracy of the actual consumed interface across three fresh confirmation populations. The 95% development threshold only decides whether to attempt that confirmation. A restricted pass must preserve all stratified failures and cannot authorize a broader claim.
