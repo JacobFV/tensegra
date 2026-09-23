@@ -27,3 +27,11 @@ Development completed at frozen143db40:68.97s external, learned validation2041�
 Confirmation actor/config/protocol8b619f7 is staged at `~/topoformer-campaign-01/returns/source-r05-confirmation`;11CPUtests pass. Fresh3backbone fits, fixed endpoints learned/oracle2000 andquery1000;8192fit/1024cal/4096validation/test. Causal2048-event prefix preserves underlying validation identity. Test/balanced32 onlyafterfixedfits. Expected300–450s, requestedcap600. Reviewer preflight and coordinator release pending; NO ACTIVE GPU JOB. Do not launch without parent.
 
 Worker `/root/campaign_composition` received the frozen consumer API but no promotion: normalized workspace1024→R04 categorical accessor→softmax33+normalizedquery2→new1024hidden comparator. Planned finalconsumerfiles r05-confirmation/{seed}/learned.pt do not yet exist. This remains an oracle-first-operation learned scalar-consumer interface.
+
+## Latest audited frontier and next profile
+
+R05 confirmation completed352.54seconds, frozen8b619f7. All36covered validation cells exceed98% (worst4080/4081/4076of4096); causal checks pass. Report/raw/gatesdeedda1, plot8ff1cce, independent audit9cc33af, auditedstatus4fdbf8e. Audit verified513raw+513cached predictions and23disjoint populations. Boundary counts remain weak; at test16 most accessor errors do not change binary answers. Composition worker has API/checkpoint locations but coordinator alone promotes any next execution study.
+
+R06 actor7e77c3d and config are staged immutably at `~/topoformer-campaign-01/returns/source-r06`. Reviewer preflight passed;13CPUtests pass. Registrye14c06e. It compares original16k prefix against balanced315/316-per52-strata selection from onefresh65536-event pool, samebackbone12/head/900updates. No phaseconditioning or architecture change. Fresh original and grid cal/val, no32. Profile uses separate seeds and1024fits; requested60seconds. Main estimate150–240seconds, requested300pendingprofile. NO ACTIVE GPU JOB; await explicit root release.
+
+External return process occupancy cumulatively:613.80(R01–R04)+4.18(R05profile)+68.97(R05development)+352.54(R05confirmation)=1039.49seconds. No additional GPU experiments have run.
