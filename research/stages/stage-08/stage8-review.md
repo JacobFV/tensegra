@@ -100,3 +100,5 @@ All9472 immutable N1k main prediction rows (three seeds, both neural arms, three
 The user-authorized research-layout migration was independently checked:1449 mapped files,1421 byte-identical; all1337 immutable records preserved, including1331 checked directly against prior Git blob hashes. The compatibility alias resolves correctly and all relative Markdown file links resolve. Reports moved under `research/stages`, helper scripts under `research/tools`, and result bytes remain unchanged.
 
 N10k seed0 immutable subset audit:3072 raw/calibrated rows across both arms and all exposure checkpoints reproduce every metric without error. Later seeds and the final cross-corpus comparison remain pending.
+
+N10k seed1 immutable subset audit likewise verifies all3072 raw/calibrated rows across both arms and exposure checkpoints. Final seed2 and cross-corpus provenance/completeness remain pending.
