@@ -1,6 +1,6 @@
 {
   "S01": {
-    "status": "n128_complete_n1024_pending",
+    "status": "n1024_running",
     "actor": "historical_semantic_curriculum_width1024",
     "development_seeds": [
       201
@@ -35,11 +35,29 @@
         "launcher": "fef09e9"
       },
       "1024": {
-        "status": "not_run"
+        "status": "running",
+        "source": "2c7e987",
+        "launcher": "fef09e9",
+        "cap_seconds": 900
       },
       "8192": {
         "status": "not_run"
       }
     }
+  },
+  "S02": {
+    "status": "preflight_profile_pending",
+    "source": "8970eae",
+    "intervention": "existing_edge_head_warm_continuation_frozen_public_node_states",
+    "train_examples": 128,
+    "development_examples": 512,
+    "updates": [
+      0,
+      1200,
+      4800
+    ],
+    "gpu_release": false,
+    "mechanical_parity_test": "passed_dense_sampled_bf16_width16_cpu",
+    "confirmation_predictions": false
   }
 }
