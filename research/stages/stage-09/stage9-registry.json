@@ -1,0 +1,94 @@
+{
+  "baseline": "0f44e13",
+  "workspace_width": 1024,
+  "allowed_statuses": [
+    "not_run",
+    "diagnostic_only",
+    "passed_restricted",
+    "failed",
+    "blocked"
+  ],
+  "composition_allowed": false,
+  "supervision_withdrawal_allowed": false,
+  "gpu_minutes_ceiling": 180,
+  "allocation_minutes": {
+    "belief": 15,
+    "returns": 75,
+    "semantics": 75,
+    "reserve": 15
+  },
+  "experiments": {
+    "archive": {
+      "status": "not_run",
+      "hypothesis": "Historical Stage8 numerical reconstruction and failure localization",
+      "observables_and_targets": "Archived predictions, targets and frozen manifests",
+      "supplied_vs_learned": "No fitting or new selection",
+      "comparison": "Existing audited aggregates",
+      "selection_and_untouched_test": "Historical test diagnosis only",
+      "gpu_minutes_cap": 0,
+      "source_config_freeze": null,
+      "actual_gpu_seconds": 0,
+      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
+    },
+    "belief_contract": {
+      "status": "not_run",
+      "hypothesis": "Does a public empty-ledger prior remove the prior defect without concealing learned post-evidence null errors?",
+      "observables_and_targets": "Public candidate/event/ID/action data; posterior targets evaluation only",
+      "supplied_vs_learned": "Ledger/prior supplied, compatibility and nonempty null learned",
+      "comparison": "a1 frozen unchanged vs a2 exact empty-ledger prior",
+      "selection_and_untouched_test": "Fresh validation/test incl initial and full-retraction frames; a3 blocked pending diagnosis",
+      "gpu_minutes_cap": 15,
+      "source_config_freeze": null,
+      "actual_gpu_seconds": 0,
+      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
+    },
+    "return_localization": {
+      "status": "not_run",
+      "hypothesis": "Where does exact scalar readout first fail?",
+      "observables_and_targets": "Public perfect events and nuisance context; semantic labels for probes only",
+      "supplied_vs_learned": "Frozen encoder/backbone; new diagnostic readout learned",
+      "comparison": "Equal-capacity probes across field/memory/initial/1/4/16/32 states; paired once/persistent",
+      "selection_and_untouched_test": "Disjoint probe training/calibration/test; no repair selected on historical tests",
+      "gpu_minutes_cap": 25,
+      "source_config_freeze": null,
+      "actual_gpu_seconds": 0,
+      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
+    },
+    "return_repair": {
+      "status": "blocked",
+      "hypothesis": "At most two minimal evidence-supported repairs",
+      "observables_and_targets": "Same public Stage8 return interface",
+      "supplied_vs_learned": "Workspace-only learned reconstruction remains primary",
+      "comparison": "Unchanged reference vs selected repairs, paired seeds",
+      "selection_and_untouched_test": "Blocked until localization and frozen recipe; fresh512/cell",
+      "gpu_minutes_cap": 50,
+      "source_config_freeze": null,
+      "actual_gpu_seconds": 0,
+      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
+    },
+    "semantic_realizability": {
+      "status": "not_run",
+      "hypothesis": "Can head/objective represent and acquire ordered-edge targets?",
+      "observables_and_targets": "Synthetic pair features and privileged node features",
+      "supplied_vs_learned": "Explicitly privileged diagnostics, not surface understanding",
+      "comparison": "2x2 additive/interaction x all-pair/edge-conditional",
+      "selection_and_untouched_test": "Fixed-set complete acquisition required; public identifiability audit first",
+      "gpu_minutes_cap": 15,
+      "source_config_freeze": null,
+      "actual_gpu_seconds": 0,
+      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
+    },
+    "semantic_acquisition": {
+      "status": "blocked",
+      "hypothesis": "Does selected decoder/objective improve complete graph acquisition and fresh transfer?",
+      "observables_and_targets": "Public text/copy inventory only; graph labels privileged training targets",
+      "supplied_vs_learned": "Neural graph components learned, training-only calibration supplied",
+      "comparison": "One selected configuration vs original paired main",
+      "selection_and_untouched_test": "Blocked until c1/c2 pass and public contract audit; no automatic large sweep",
+      "gpu_minutes_cap": 60,
+      "source_config_freeze": null,
+      "actual_gpu_seconds": 0,
+      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
+    }
+  }
+}
