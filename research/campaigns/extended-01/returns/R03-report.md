@@ -17,3 +17,5 @@ The single shared 1,024-input categorical head has 33,825 parameters. Its pool c
 Next: freeze the development-selected **16,384-event, 900-update** recipe for fresh three-backbone confirmation (R04). Neither the failed R01 confirmation nor this reused development validation is promoted into an execution authorization. Independent audit is pending.
 
 [Manifest](../../../results/campaign-01/returns/r03-development/manifest.json.gz), [raw predictions](../../../results/campaign-01/returns/r03-development/predictions.json.gz), and [process receipt](../../../results/campaign-01/returns/r03-development/process.json) retain all endpoints. Remote coefficients and lossless logits remain under `~/topoformer-campaign-01/returns/r03-development/`; immutable feature provenance points to R02.
+
+![Exposure curve](../../../results/campaign-01/returns/r03-development/exposure-curve.png)
