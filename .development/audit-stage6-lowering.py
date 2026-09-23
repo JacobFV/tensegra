@@ -147,7 +147,7 @@ def main():
                 counts['task_given_complete_numerator']+=complete and example['task_correct']
                 counts['complete_correct_trajectory_values']+=complete and all_values_correct
                 counts['task_given_complete_values_numerator']+=complete and all_values_correct and example['task_correct']
-                if not example['task_correct'] and len(failures)<6 and row.get('intervention') is None and row['variant'] not in {f['variant'] for f in failures}:
+                if not example['task_correct'] and len(failures)<6 and row.get('intervention') is None and row['variant'] in {'neural_fixed','neural_recurrent','fixed_compute','task_only_warm','protected_learned','local'} and row['variant'] not in {f['variant'] for f in failures}:
                     failures.append(dict(seed=row['seed'],variant=row['variant'],condition=row['condition'],depth=row['depth'],index=index,public=dataclasses.asdict(episode.public),gold_trace=dataclasses.asdict(episode.gold)['trace'],observed=example))
     assert observed==expected,('incomplete evaluation grid',len(expected-observed),len(observed-expected))
     assert train==expected_train,('incomplete training',len(expected_train-train),len(train-expected_train))
@@ -170,7 +170,7 @@ def main():
         'binding':'Exact ordered argument IDs against the recognized destination; independent of primitive correctness.',
         'actual_math':'Replayed from public literals plus actual executed event values, using snapshot isolation. Refusals and duplicates are status counts, never silently treated as binding errors.',
         'complete':'Executed transition SET equals gold task set, independent of order and learned numeric value correctness. Task readout correctness conditional on this set is reported separately. The trajectory-values conditional additionally requires every executed value and type to equal the gold expected value.',
-        'failure_examples':'First final failing example from up to six distinct nonintervention arms; illustrative, not random sampling.'},results=results,failure_examples=failures)
+        'failure_examples':'First final failing example from six designated nonintervention arms: neural fixed/recurrent, fixed compute, task-only warm, protected learned and local. Illustrative, not random sampling.'},results=results,failure_examples=failures)
     args.output.parent.mkdir(parents=True,exist_ok=True); args.output.write_text(json.dumps(output,indent=2)+'\n')
     print(json.dumps(dict(status='passed',evaluation_cells=len(observed),training_rows=len(train),example_hash_checks=input_checks,groups=len(results))))
 
