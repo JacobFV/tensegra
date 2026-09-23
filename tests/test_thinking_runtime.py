@@ -1,0 +1,120 @@
+"""Protected-session tests have no tensor or training dependency."""
+from dataclasses import FrozenInstanceError
+import math
+import unittest
+
+from topoformer.thinking_runtime import Candidate, ProtectedSession, ValueRegister, PRIMITIVES
+
+
+class ProtectedSessionTests(unittest.TestCase):
+    def session(self):
+        return ProtectedSession((ValueRegister('a', 7, 'integer', ('literal:a',)),
+                                 ValueRegister('b', 3, 'integer', ('literal:b',))))
+
+    def test_order_types_and_persistence(self):
+        s = self.session()
+        e = s.execute((Candidate('x', 'sub', ('a', 'b')),))[0]
+        self.assertEqual((e.value, e.type, e.status), (4, 'integer', 'executed'))
+        self.assertEqual(e.arguments, ('a', 'b'))
+        self.assertEqual(e.provenance, ('literal:a', 'literal:b', 'candidate:x'))
+        reverse = s.execute((Candidate('y', 'sub', ('b', 'a')),))[0]
+        self.assertEqual(reverse.value, -4)
+        after = s.execute((Candidate('z', 'mul', (e.register_id, 'b')),))[0]
+        self.assertEqual(after.value, 12)
+        self.assertEqual(s.registers[e.register_id].value, 4)
+        self.assertEqual(s.execute((Candidate('c', 'compare', ('b', 'a')),))[0].value, True)
+
+    def test_rejected_and_deferred_do_not_mutate(self):
+        s = self.session()
+        before = dict(s.registers)
+        for c in (Candidate('x', 'unknown', ('a', 'b')), Candidate('x', 'add', ('future', 'b')),
+                  Candidate('x', 'add', ('a',)), Candidate('x', 'add', ('a', 'b'), .1),
+                  Candidate('x', 'add', ('a', 'b'), math.nan)):
+            e = s.execute((c,))[0]
+            self.assertIn(e.status, ('rejected', 'deferred'))
+            self.assertEqual(dict(s.registers), before)
+        self.assertEqual(s.events, ())
+
+    def test_independent_and_shared_read_operations_execute(self):
+        s = self.session()
+        es = s.execute((Candidate('x', 'add', ('a', 'b')), Candidate('y', 'mul', ('a', 'b'))))
+        self.assertEqual([e.status for e in es], ['executed', 'executed'])
+        self.assertEqual([e.value for e in es], [10, 21])
+
+    def test_snapshot_disallows_same_step_dependency(self):
+        s = self.session()
+        es = s.execute((Candidate('x', 'add', ('a', 'b')), Candidate('y', 'neg', ('result:x',))))
+        self.assertEqual([e.status for e in es], ['executed', 'rejected'])
+        self.assertEqual(s.execute((Candidate('y', 'neg', ('result:x',)),))[0].value, -10)
+
+    def test_duplicate_idempotence_and_symmetric_conflict(self):
+        s = self.session()
+        c = Candidate('x', 'add', ('a', 'b'))
+        es = s.execute((c, c))
+        self.assertEqual([e.status for e in es], ['executed', 'duplicate'])
+        before = dict(s.registers)
+        self.assertEqual(s.execute((c,))[0].status, 'duplicate')
+        self.assertEqual(s.execute((Candidate('x', 'sub', ('a', 'b')),))[0].status, 'conflict')
+        self.assertEqual(dict(s.registers), before)
+        self.assertEqual(len(s.events), 1)
+        for proposals in ((c, Candidate('x', 'mul', ('a', 'b'))), (Candidate('x', 'mul', ('a', 'b')), c)):
+            fresh = self.session()
+            self.assertEqual([e.status for e in fresh.execute(proposals)], ['conflict', 'conflict'])
+            self.assertEqual(len(fresh.registers), 2)
+
+    def test_readiness_is_candidate_local(self):
+        s = self.session()
+        es = s.execute((Candidate('x', 'add', ('a', 'b'), .1), Candidate('y', 'mul', ('a', 'b'), .9)))
+        self.assertEqual([e.status for e in es], ['deferred', 'executed'])
+
+    def test_no_hidden_fields_or_mutable_values(self):
+        with self.assertRaises(TypeError):
+            ProtectedSession({'gold_actions': ()})
+        with self.assertRaises(TypeError):
+            Candidate('x', 'add', ('a', 'b'), gold=True)
+        s = self.session()
+        with self.assertRaises(TypeError):
+            s.registers['x'] = ValueRegister('x', 1, 'integer')
+        with self.assertRaises(FrozenInstanceError):
+            s.registers['a'].value = 9
+        with self.assertRaises(ValueError):
+            ProtectedSession((ValueRegister('x', True, 'integer'),))
+
+    def test_bounds_and_boolean_arithmetic_reject_atomically(self):
+        s = ProtectedSession((ValueRegister('x', 100, 'integer'), ValueRegister('b', True, 'boolean')), max_abs_value=100)
+        self.assertEqual(s.execute((Candidate('overflow', 'mul', ('x', 'x')),))[0].status, 'rejected')
+        self.assertEqual(s.execute((Candidate('bool', 'add', ('x', 'b')),))[0].status, 'rejected')
+        self.assertEqual(len(s.registers), 2)
+        self.assertIn('compare', PRIMITIVES)
+
+    def test_output_namespace_cannot_overwrite_initial(self):
+        s = ProtectedSession((ValueRegister('a', 1, 'integer'), ValueRegister('result:x', 9, 'integer')))
+        e = s.execute((Candidate('x', 'neg', ('a',)),))[0]
+        self.assertEqual(e.status, 'conflict')
+        self.assertEqual(s.registers['result:x'].value, 9)
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+class BoundaryTests(unittest.TestCase):
+    def test_malformed_batch_is_atomic(self):
+        s = ProtectedSession((ValueRegister('a', 2, 'integer'),))
+        with self.assertRaises(TypeError):
+            s.execute((Candidate('x', 'neg', ('a',)), {'future_trace': 'hidden'}))
+        self.assertEqual(tuple(s.registers), ('a',))
+        self.assertEqual(s.events, ())
+
+    def test_mixed_numeric_types_and_schema_adapters(self):
+        s = ProtectedSession((ValueRegister('a', 2, 'integer'), ValueRegister('b', .5, 'float')))
+        e = s.execute((Candidate('x', 'add', ('a', 'b')),))[0]
+        self.assertEqual((e.value, e.type, e.affected), (2.5, 'float', ('result:x',)))
+        self.assertEqual(PRIMITIVES['add'].lower('latent', lambda x, schema: (x, schema.name)), ('latent', 'add'))
+        self.assertEqual(PRIMITIVES['add'].lift(e, lambda event, schema: event.value), 2.5)
+        with self.assertRaises(TypeError):
+            PRIMITIVES['new'] = PRIMITIVES['add']
+
+    def test_invalid_input_values_rejected(self):
+        for value, kind in ((float('nan'), 'float'), (float('inf'), 'float'), ([], 'integer'), (10**1000, 'integer')):
+            with self.assertRaises(ValueError):
+                ProtectedSession((ValueRegister('a', value, kind),))
