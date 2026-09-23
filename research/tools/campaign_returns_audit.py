@@ -38,6 +38,15 @@ def audit(root,ref):
    r=index['calibration',c['distractors'],c['delay'],label];assert c['correct']==r['counts']['value']['correct']and c['total']==r['counts']['value']['total']
  assert m['fit_rows']==cfg['data']['train']['size']*len(cfg['delays']);assert sum(m['label_counts'])==cfg['data']['train']['size']
  if cfg['mode']!='profile':assert min(m['label_counts'])>0
- return dict(cpu_audit_wall_seconds=time.monotonic()-started,source_ref=ref,rows_verified=len(rows),selected_alpha=m['selected_alpha'],selected_ce_step=m['selected_ce_step'],mode=cfg['mode'],scope='Archived metric and selection reconstruction; feature/checkpoint byte replay is separate.',validation=[dict(arm=a,minimum_correct=min(r['counts']['value']['correct']for r in rows if r['split']=='validation'and r['head']==a),support=cfg['data']['validation']['size'])for a in ('unchanged','ridge','ce')])
+ historical=[]
+ for r in rows:
+  if r['split']not in ('validation','test')or r['target_delay']!=16:continue
+  failed=[]
+  for field in FIELDS:
+   name='argument1_required'if field=='argument1'else field;c=r['counts'][name]
+   if not c['total']or c['correct']/c['total']<=(.99 if field in ('type','operation')else.98):failed.append(name)
+  historical.append(dict(arm=r['head'],split=r['split'],distractors=r['distractors'],passed=not failed,failed_fields=failed))
+ scalar=[dict(arm=a,split=s,minimum_correct=min(r['counts']['value']['correct']for r in rows if r['split']==s and r['head']==a and r['target_delay']in cfg['delays']),support=cfg['data'][s]['size'],passed=all(r['counts']['value']['correct']/r['counts']['value']['total']>=.98 for r in rows if r['split']==s and r['head']==a and r['target_delay']in cfg['delays']))for a in ('unchanged','ridge','ce')for s in ('validation','test')if s in cfg['data']]
+ return dict(historical_retention16=historical,narrow_covered_scalar=scalar,cpu_audit_wall_seconds=time.monotonic()-started,source_ref=ref,rows_verified=len(rows),selected_alpha=m['selected_alpha'],selected_ce_step=m['selected_ce_step'],mode=cfg['mode'],scope='Archived metric and selection reconstruction; feature/checkpoint byte replay is separate.',validation=[dict(arm=a,minimum_correct=min(r['counts']['value']['correct']for r in rows if r['split']=='validation'and r['head']==a),support=cfg['data']['validation']['size'])for a in ('unchanged','ridge','ce')])
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--source-ref',required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();out=audit(a.root,a.source_ref);a.output.write_text(json.dumps(out,indent=2)+'\n');print(out)
+ p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--source-ref',required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();out=audit(a.root,a.source_ref);a.output.write_text(json.dumps(out,indent=2)+'\n');print({k:v for k,v in out.items()if k!='historical_retention16'})

@@ -19,9 +19,18 @@ def audit(root,ref,data):
   p=root/point['artifact'];assert sha(p)==point['sha256'];x=load(p);npz=root/x['calibration_data_artifact'];assert sha(npz)==x['calibration_data_sha256'];cal=np.load(npz)
   for r,record in enumerate(x['calibration']):
    truth=cal['targets'][:,r].astype(bool);cut,error=cutoff(cal['scores'][:,r],truth);assert abs(cut-record['threshold'])<1e-6 and error==record['train_errors'];assert int(truth.sum())==record['positive']and int((~truth).sum())==record['negative'];nthresholds+=1
+  train_rows={r['seed']:r for r in x.get('train_rows',[])}
   for j,record in enumerate(x['calibration_records']):
-   a,b=record['start'],record['stop'];assert [a,b]==cal['offsets'][j:j+2].tolist();g=train[record['seed']];edges={(i,k,roles.index(role))for i,k,role,slot in g['edges']}
+   a,b=record['start'],record['stop'];assert [a,b]==cal['offsets'][j:j+2].tolist();g=train[record['seed']]
+   if record['seed']in train_rows:
+    presence=np.asarray(train_rows[record['seed']]['raw']['presence']);assert np.array_equal(cal['pairs'][a:b],np.argwhere(presence[:,None]&presence[None,:]))
+   edges={(i,k,roles.index(role))for i,k,role,slot in g['edges']}
    labels=np.array([[(int(i),int(k),r)in edges for r in range(len(roles))]for i,k in cal['pairs'][a:b]],dtype=bool).reshape(b-a,len(roles));assert np.array_equal(labels,cal['targets'][a:b])
+  if train_rows:
+   assert len(train_rows)==len(x['train_metrics'])
+   for row,metrics in zip(x['train_rows'],x['train_metrics']):
+    for policy,pred in [('raw',row['raw']),('calibrated',dict(row['raw'],edges=row['calibrated_edges']))]:same(components(pred,row['target']),metrics[policy])
+   for policy in ('raw','calibrated'):assert sum(r[policy]['semantic_equivalence']for r in x['train_metrics'])==point['train_'+policy]['exact']
   for row in x['rows']:
    gold=row['target'];calgraph=dict(row['raw'],edges=row['calibrated_edges'])
    for policy,pred in [('raw',row['raw']),('calibrated',calgraph)]:same(components(pred,gold),row[policy+'_metrics'])
