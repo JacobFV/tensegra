@@ -47,3 +47,7 @@ Independent reconstruction verifies90 profile and90 development cells, every fie
 R01 frozen-cache CPU replay completes in1.78seconds: compressed/uncompressed cache hashes, checkpoint/readout bytes, TRAIN normalization and split disjointness pass. All90 scalar logit cells replay with zero argmax disagreement, without backbone inference or refitting.
 
 A01 profile archive independently reconstructs four task/suffix/mean-head-path cells in.036seconds. Edge-mass aggregate consistency and bounds are checked, but the compact archive lacks full attention weights; independent edge-mass reconstruction is not claimed. The profile remains a mechanical test.
+
+### R01 prospective confirmation
+
+Source `0df707b` freezes CE900/ridge.01 and asserts the endpoint rather than selecting among confirmation checkpoints. Delay32 is captured only after readout weights are finalized; fitting/calibration/validation remain through16. All three historical wide backbones are retained; backbone10 was already used in development, so this is fresh-event/readout confirmation, not three unseen backbone initializations. The prospective narrow scalar threshold is >=98% in every covered validation condition and seed. Causal returned-fact use requires a separate intervention study; neither a scalar pass nor exact copying passes historical six-field reconstruction.

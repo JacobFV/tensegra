@@ -22,7 +22,7 @@ def audit(root,ref):
  for r in rows:
   key=r['split'],r['distractors'],r['target_delay'],r['head'];assert key not in index;index[key]=r
   assert counts(r)==r['counts']and groups(r)==r['groups'];assert r['counts']['value']['total']==cfg['data'][r['split']]['size']
- expected={(s,k,d,a)for s in cfg['data']for k in ([2]if s=='train'else cfg['eval_distractors'])for d in cfg['delays']for a in ('unchanged','ridge','ce')};assert set(index)==expected
+ expected={(s,k,d,a)for s in cfg['data']for k in ([2]if s=='train'else cfg['eval_distractors'])for d in (cfg['test_delays']if s=='test'else cfg['delays'])for a in ('unchanged','ridge','ce')};assert set(index)==expected
  for key,r in index.items():
   s,k,d,a=key;reference=index[s,k,d,'unchanged'];assert r['targets']==reference['targets']and r['event_sha256']==reference['event_sha256']
   assert all(r['predictions'][f]==reference['predictions'][f]for f in FIELDS[1:])
@@ -31,7 +31,9 @@ def audit(root,ref):
  for name,label,key in [('fit_candidates','ridge','alpha'),('ce_curve','ce','step')]:
   candidates=m[name]
   for c in candidates:assert list(score(c))==c['score']
-  winner=max(candidates,key=score);assert winner[key]==m['selected_alpha'if label=='ridge'else'selected_ce_step']
+  winner=next(c for c in candidates if c['step']==cfg['fixed_ce_step']) if label=='ce'and 'fixed_ce_step'in cfg else max(candidates,key=score)
+  if 'fixed_ce_step'in cfg:assert cfg['fixed_ce_step']==cfg['ce_updates'] and len(cfg['ridge_grid'])==1
+  assert winner[key]==m['selected_alpha'if label=='ridge'else'selected_ce_step']
   for c in winner['cells']:
    r=index['calibration',c['distractors'],c['delay'],label];assert c['correct']==r['counts']['value']['correct']and c['total']==r['counts']['value']['total']
  assert m['fit_rows']==cfg['data']['train']['size']*len(cfg['delays']);assert sum(m['label_counts'])==cfg['data']['train']['size']
