@@ -1,6 +1,6 @@
 # Stage 6 independent implementation review
 
-Status: preliminary; pilot freeze is not yet approved. Review covers the new Stage 6 implementation and does not launch runtime or training jobs. The coordinator must attach remote test evidence before final approval.
+Status: approved for a bounded wiring pilot after coordinator verification of the reported remote tests; this is not approval of full-study scientific completeness. Review covers the new Stage 6 implementation and does not launch runtime or training jobs. The coordinator must attach remote test evidence before final approval.
 
 ## Reviewed boundaries
 
@@ -28,3 +28,20 @@ At preliminary review, tracked changes since the Stage 5 completion commit `1082
 The runner now withholds nonliteral register contents from actor memory and includes token-position features, closing the two initial bypass/operand-order source findings. Data now supplies final comparison readiness when context is visible and uses a symmetric real/decoy operand distribution. Privileged trace-selected training targets replace arbitrary flattened hypothesis truncation.
 
 Further issues sent directly to the runner implementer: task-only updates still include emit supervision; zero auxiliary weights under anneal-all retain teacher forcing; the emit target originally marks root availability rather than downstream comparison completion; event-drop initially bypasses the post-return-step guard because only injections update its clock; a fixed 12-step budget makes exact depth-16/32 trajectories infeasible. Hidden/future mutation canaries, actual TCN learned evaluation, complete intervention controls and telemetry remain to be checked. These are not an approval to freeze experiments.
+
+
+## Pilot re-review
+
+Latest source closes the initial blockers: result payloads enter only through typed events; public token features preserve order; training targets select trace candidates explicitly; task-only/all-zero auxiliary updates disable teacher forcing and emit supervision; emit targets require the final comparison; post-return recurrence tracks actual returns even when messages are dropped; the common evaluation cap is 80 steps. Event roundtrip heads now contribute to transition-supervised training and emit metrics. Readiness scoring compares each predicted proposal with the current evidence posterior after inference. Free evaluation receives only the public record.
+
+The runner implementer reports seven focused remote tests passing. Inspected tests include all-hidden-field mutation invariance of free actor traces/workspace, future-frame prefix invariance, context-order feature sensitivity, exact-result memory isolation, and finite separated losses. The compiler implementer reports four wheel-installed remote tests passing, including resource availability. This reviewer did not launch any runtime or training job; coordinator verification remains the release gate.
+
+Remaining scientific limitations to resolve or report before final study claims:
+
+- Linear auxiliary decay reaches zero at `step == config.steps`, but training ends before that update; the current schedule establishes decay toward zero, not a measured zero-support training phase.
+- Separately trained event variants do not isolate causal use by one frozen policy. Same-checkpoint interventions are needed; holding exact execution fixed is a separate diagnostic from allowing actions to respond to corrupted events.
+- `public_graph` rejects these controlled episodes because they do not contain a supplied observable graph. It is not yet a measured graph-as-data baseline.
+- The TCN compiler/renderer is measured as data infrastructure, not yet as learned surface-to-semantic generalization. The separate learned TCN benchmark remains outstanding.
+- `trajectory_exact` currently requires the exact flattened reference action order, so swapping independent same-step actions is counted as a trajectory mismatch. Interpret it as exact reference scheduling, not general semantic trace equivalence.
+
+The final tracked preservation check against `1082074` contains only new Stage 6 modules/docs/tests/vendor files, plus additive `pyproject.toml` package-data declarations for the vendor license, manifest and grammar JSON resources. Existing Stage 1–5 runtime/model/data sources, configs, tests and results are unchanged. In-progress runner files still need inclusion in the coordinator's final diff/test audit.
