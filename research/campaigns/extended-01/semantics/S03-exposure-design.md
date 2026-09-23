@@ -12,6 +12,4 @@ Measured baseN8192 training cost496.955s for8,192updates; external665.953s inclu
 
 Before deleting the loaded checkpoint, independently replay the next batch from cloned saved shuffle/pair generators and save its TRAIN indices, public instance seeds and sampled-pair hashes. The first actual continuation batch must match that prediction exactly. Curriculum weights use cumulative update count, not a restarted schedule. Initial evaluation is deterministic and does not consume the two explicit generators. A mechanical CPU fixture verifies continuation across a shuffle boundary.
 
-## Second tranche, selected after131,072presentations
-
-The final first-tranche interval improves DEVorderedF1 by.03685, meeting the predeclared.02extension rule. Freeze `campaign-s03-exposure-262k.json` with exactly16,384additional updates, endpoints16,384/24,576/32,768updates and cumulative262,144presentations. Same source d743464, no altered learning rate/objective/actor/inputs; new parent checkpoint/evaluation hashes pinned. Replay and firstbatch checks repeat. No early stopping/selection; no extension beyond262,144is automatic. Measured495.141s per8,192updates projects~990soptimizer and~20minfull occupancy; request1,500s cap. Root release and reviewer acknowledgement required before launch. Reserved confirmation remains untouched.
+The selected second exposure tranche is separately registered as S04; see `S04-exposure-design.md`.
