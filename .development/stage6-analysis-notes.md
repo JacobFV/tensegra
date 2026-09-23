@@ -1,0 +1,18 @@
+# Stage 6 artifact analysis
+
+Run the analyzer directly to avoid package `__init__` importing Torch:
+
+```sh
+python src/topoformer/thinking_analysis.py RESULTS OUTPUT --source-root .
+python src/topoformer/thinking_analysis.py LANGUAGE_RESULTS LANGUAGE_OUTPUT --track language --source-root .
+```
+
+`--no-plots` needs only the standard library. Plotting lazily imports matplotlib, uses Agg, and saves standalone PNG heatmaps, per-loss/annealing curves, and readiness calibration/risk coverage. No training or checkpoint loading occurs. The input is streamed one JSONL row at a time; only compact cells persist. Summary JSON does not duplicate raw examples, traces, calibration rows, or language failure examples.
+
+Controlled execution and TCN semantic decoding remain separate tracks. Controlled aggregates include sample mean/SD across seeds, explicit count/denominator populations, paired-seed contrasts against local control, separately paired frozen event interventions, runtime status and refusal-reason populations, task/exact semantic/trajectory/transition-set accuracy, conditional task given exact result, microstep histograms, forced exits, incomplete learned halts, projection overlap, grounding/null diagnostics, and encoder versus post-recurrent workspace event round trips. Oracle-trace aggregates live separately under `privileged_oracles`. Readiness calibration preserves fractional posterior targets: risk is posterior unready mass among proposals above threshold, not task-error risk.
+
+Actual language renderer/split names are retained (including controlled entity renaming when present). Decoder node/typed-edge/type/lexical/exact-canonical metrics stay distinct from execution metrics. Label-derived majority-position baselines are separate privileged baselines. TCN node/edge precision/recall are producer macro averages; raw decoder denominators were not originally emitted, so the analyzer does not invent them. No unsupported heldout motif or full language induction claim follows from these artifacts. Runtime refusal combines unavailable and nonnumeric operands, so a pure type-validity or independent lowering score cannot be reconstructed.
+
+Duplicate evaluation/training rows, mixed source hashes, unequal controlled initialization hashes, unequal same-seed training data, and unequal same-condition evaluation data raise errors. Manifest/source/data digests and semantic split disjointness are audited where available. Source checks compare against `--source-root` and report mismatches instead of hiding them. Configuration, input artifact, analysis source and checkpoint files receive SHA256 identities; checkpoint hashes cannot prove agreement with an independently expected digest that the producer did not emit. Core declared seed/variant/step/depth or renderer coverage reports missing cells; optional OOD/intervention coverage is visible in aggregates. One seed has null SD, zero conditional population has null rate, and missing diagnostics remain unsupported.
+
+Validation: six standard-library fixture tests pass via `python3 tests/test_thinking_analysis.py`, covering paired mean/SD and conditional nulls, identity failures, runtime populations, event-stage separation, microstep distribution, duplicate training rows, partial grid detection, file integrity, and privileged language baseline separation. Local `python3 -m pytest` is unavailable (pytest is not installed); matplotlib is also not installed locally. Root runs Torch/full-suite and figure smoke validation remotely. No experiment has been launched by this worker.
