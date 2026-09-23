@@ -33,3 +33,13 @@ def test_edge_conditional_unordered_real_edge_and_nonedge():
 def test_conflicting_multiedges_rejected_not_overwritten():
     graph=SemanticGraph((),(SemanticEdge('a','b','argument',0),SemanticEdge('a','b','contains',None)),())
     with pytest.raises(ValueError,match='multiple slot'):single_slot_labels(graph)
+
+
+def test_training_relation_thresholds_ties_and_absent_class():
+    from topoformer.semantic_contracts import train_relation_thresholds
+    scores=torch.tensor([[0.,3.],[0.,2.],[2.,1.],[3.,0.]])
+    labels=torch.tensor([[False,False],[True,False],[True,False],[True,False]])
+    threshold,records=train_relation_thresholds(scores,labels)
+    assert threshold.tolist()==[-1.,3.]  # tie at ambiguous zero: lowest threshold
+    assert [r['train_errors'] for r in records]==[1,0]
+    assert not scores[:,1].gt(threshold[1]).any()

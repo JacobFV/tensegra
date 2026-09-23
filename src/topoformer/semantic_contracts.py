@@ -64,3 +64,25 @@ def single_slot_labels(graph):
         if len(slots)>1:raise ValueError(f'multiple slot labels at {pair}; use relation-conditioned multi-label targets')
         result[pair]=next(iter(slots))
     return result
+
+
+def train_relation_thresholds(scores, labels):
+    """Fit one threshold per relation on a declared TRAIN/calibration partition.
+
+    Minimize unweighted entry errors over all score boundaries; lowest-threshold
+    tie break. This is a learned decoder parameter, never a correctness oracle.
+    No-positive relations use the largest observed score and claim no recall.
+    """
+    if scores.ndim!=2 or scores.shape!=labels.shape or not torch.isfinite(scores).all():
+        raise ValueError('finite paired score/label matrices required')
+    thresholds=[];records=[]
+    for relation in range(scores.shape[1]):
+        values,order=scores[:,relation].sort();truth=labels[:,relation].bool();ordered=truth[order].long()
+        cumulative=ordered.cumsum(0)
+        ends=torch.cat((torch.nonzero(values[1:].ne(values[:-1])).flatten(),torch.tensor([len(values)-1],device=values.device)))
+        boundaries=torch.cat((values[:1]-1,values[ends]));indices=torch.cat((torch.tensor([-1],device=values.device),ends))
+        false_negative=torch.cat((torch.tensor([0],device=values.device),cumulative[ends]))
+        false_positive=len(values)-indices-1-(truth.sum()-false_negative)
+        errors=false_negative+false_positive;choice=int(errors.argmin())
+        thresholds.append(boundaries[choice]);records.append(dict(positive=int(truth.sum()),negative=int((~truth).sum()),train_errors=int(errors[choice]),threshold=float(boundaries[choice])))
+    return torch.stack(thresholds),records

@@ -83,3 +83,30 @@ all other data,300updates,2development seeds and4arms remain fixed. The failed
 bias-free result remains reported. Root approved≤2GPUminutes; no extra exposure
 or tuned threshold. This is removal of a diagnostic confound, not a new runtime
 or architecture. Public acquisition remains blocked until reviewed results.
+
+## Prospective calibrated-contract confirmation
+
+The final posthoc TRAIN diagnostic found strict per-relation score separation,
+so the historical raw decoder's failure does not establish absent edge
+information. A **separate prospective contract**, approved before its outcomes,
+uses the same8-graph/300-update affine oracle diagnostic with all4head/objective
+arms and three new initializations10/11/12. Data seed9001000constructs a new fixed
+fixture, but small finite families may overlap historical canonical structures;
+this remains fixed-set acquisition, not fresh structural generalization.
+
+At the final update300 only, each relation's threshold minimizes unweighted
+classification errors on all eight TRAIN graphs and every node pair. Candidate
+thresholds are one below the minimum score and every distinct observed score;
+strict `score > threshold` predicts an edge. Ties choose the lowest threshold.
+No-positive relations choose their maximal score and establish no positive
+recall. No test-renderer labels, intermediate-checkpoint selection or fitted
+per-example thresholds enter the policy. Raw zero-threshold results remain
+parallel. Every arm receives exactly the same decoder-fitting rule.
+
+The new **restricted calibrated acquisition** criterion requires all8graphs
+exact in every one of12runs; minimum512does not apply to this deliberately tiny
+fixed-set diagnostic and no generalization claim is allowed. Original raw gate
+remains unchanged. The four-way result must be reported regardless of outcome.
+Estimated≤2minutes, hard3GPUminutes, existing environment. No C3 run is authorized
+until the root reviews this result and freezes any further bounded acquisition.
+Independent reviewer approved the boundary/tie/absent-class policy before launch.
