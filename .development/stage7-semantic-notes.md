@@ -33,3 +33,24 @@ First scaling attempt stopped on an explicit target-alignment error: the unchang
 Frozen rerun also labels frequency-baseline exposure explicitly: its fitted labels/unique graphs equal full training cardinality although it has zero optimizer updates. Earlier acquisition frequency rows' `actual_unique_graphs_seen=0` referred only to optimizer exposure; their actual fit cardinality is the configured8graphs. Neural optimizer exposure remains separate. All earlier full raw/checkpoints now have durable copies under `~/topoformer-stage7-artifacts/semantic/` and committed remote artifact manifests point there.
 
 The completed first paired scaling comparison is explicitly **renderer-confounded**: its epoch-based renderer schedule gave N1000 one English and one Spanish pass, but N10000 only English under the fixed2000-example exposure. Source/eval hashes match and train sets are nested/disjoint, but this extra difference prevents clean attribution to N. Full graph scores stayed zero. Root authorized a corrected same-budget rerun. The corrected source selects English/Spanish solely by optimizer-step parity, logs renderer exposure, and gives1000public examples of each renderer per neural arm at both N. Repeated graphs may retain the same renderer under this schedule; it is aggregate multilingual supervision, not per-graph paired consistency training.12remote tests passed before refreezing. Previous confounded artifacts remain distinct in durable `scaling-{1000,10000}` directories.
+
+Final verification after all other tracks' changes: full remote isolated snapshot passed511tests and6subtests in6.91s. All192compact final failure records from the confounded sweep were independently reconstructed into tensors and every saved metric field exactly recomputed. Each confounded N sweep has96records (8per seed×surface); aggregate conclusions remain marked confounded regardless of this artifact integrity check.
+
+## Corrected final scaling result
+
+Both corrected sweeps completed all3seeds×2neural arms×1000updates. Source hash `d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9` and64-graph eval hash `66cdc5fadd22b63ae6de2e2b7b2d5cbda315d179dd60e58620af54516adf9f87` match. Direct SQLite checks verify identical evaluation prefixes, nested training prefixes and zero evaluation/training intersections. Each paired neural arm has115862parameters and identical initial state perseed. At every checkpoint renderer exposure matches acrossN; final counts are1000English+1000Spanish public examples,2000optimizer examples total. N1000 actually visits1000unique graphs; N10000 visits2000. Fullavailable corpora contain1000/10000training graphs plus64eval, generated using2753/30491candidates respectively; no exhaustion is claimed.
+
+Final means across3seeds (each evaluated on64graphs):
+
+| Available N | Arm | English typed-edge F1 | English ordered-edge F1 | Symbols typed-edge F1 | Full graph |
+|---|---|---:|---:|---:|---:|
+|1000|semantic|.15130|.08132|.16075|0/64 eachseed|
+|1000|no-input|.15565|.08581|.15565|0/64 eachseed|
+|1000|frequency|.51055|.26465|.51055|0/64|
+|10000|semantic|.15121|.07823|.14961|0/64 eachseed|
+|10000|no-input|.14002|.07414|.14002|0/64 eachseed|
+|10000|frequency|.51532|.28883|.51532|0/64|
+
+Spanish and heldout-lexicon full recovery are likewise zero at all checkpoints. Full0/100/500/1000curves, allsurfaces, component losses, copy/equivalence metrics and denominators appear in `results/stage7-semantic/scaling-summary.json` and per-N curves. N10000 has a small final typed-edge advantage over no-input, but no semantic recovery and no improvement overN1000. Frequency baselines fit allNlabels, so their exposure differs from neural; they remain useful simple controls, not optimizer-matched learners. GateF **fails**, with no runtime coupling permitted. These are bounded exposure diagnostics and do not establish fullN10000convergence;100000/1M remain unrun.
+
+Total measured neural-arm time was557.38s atN1000 and552.04s atN10000, including evaluation/raw output; generation and frequency fitting are additional. Corrected artifacts are `results/stage7-semantic/scaling-corrected-{1000,10000}`; the prior renderer-confounded sweeps remain explicitly named `scaling-confounded-*`. Each corrected directory includes96deterministic final failure records (8per seed×4surface conditions). Every saved metric field was recomputed from all192compact raw records and matched exactly. Fullraw/checkpoints/SQLite/source snapshots are durably copied under `~/topoformer-stage7-artifacts/semantic/scaling-corrected-{1000,10000}/`; committed location/size/SHA256 manifests attest copy verification. Dense fullraw stays outsidegit. `gate-f.json` records the negative gate decision and verified pairing conditions.

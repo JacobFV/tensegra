@@ -1,0 +1,549 @@
+{
+  "config": {
+    "train_count": 10000,
+    "eval_count": 64,
+    "max_attempts": 100000,
+    "data_seed": 700000,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "updates": 1000,
+    "eval_steps": [
+      0,
+      100,
+      500,
+      1000
+    ],
+    "batch_size": 2,
+    "width": 32,
+    "workspace_rows": 8,
+    "microsteps": 2,
+    "node_capacity": 128,
+    "learning_rate": 0.002,
+    "threads": 2,
+    "acquisition_count": 8,
+    "output_dir": "results/stage7-semantic-10000"
+  },
+  "config_sha256": "0fb24d3f4489c420dd86fd23b3c0438af046830b2106f70a64e6514509d738bc",
+  "source_sha256": {
+    "semantic_scaling.py": "f4ed7010ae02d2d45c75c4a1a14a86f81007e5007e5244e1e8362466751dfc13",
+    "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+    "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf"
+  },
+  "corpus": {
+    "requested_unique_graphs": 10064,
+    "actual_unique_graphs": 10064,
+    "attempts": 30491,
+    "duplicates": 20427,
+    "candidate_budget_exhausted": false,
+    "finite_space_exhaustion_proven": false,
+    "dataset_sha256": "d8bcf61d8e86b485f90f77bf29d50b40d68544cd2efe1dce62319a3855c5a4ff",
+    "generation_seconds": 27.08015557890758,
+    "difficulty": 0.5,
+    "dedup": "complete alpha-normalized typed ordered graph JSON; collision-free equality"
+  },
+  "value_vocabulary": [
+    "<unknown>",
+    "\"and\"",
+    "\"color\"",
+    "\"not\"",
+    "\"obj\"",
+    "\"parent\"",
+    "\"select\"",
+    "\"shape\"",
+    "\"unify\"",
+    "null"
+  ],
+  "pinned_audit": {
+    "lesson": "variable_binding",
+    "seed": 700000,
+    "difficulty": 0.5,
+    "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+    "compiler_version": "topoformer-termgraph-v1",
+    "renderer_version": "tcn-fixed-construction-v2",
+    "semantic_digest": "49bac4ccd01b1fe04fbbfab3ee2efee4b50bdbd9e67dfc6ec475e863c34696d6",
+    "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+    "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "surface_sha256": {
+      "english": "a977fb0c244610184d609233c404daef199a333d7e612bd8c57499aa1450ebcc",
+      "spanish": "4e4285c55477eb5092096f0d09999633c02bfea0c56d72971804bac536b00146",
+      "symbols": "8fffa4889ae5815d8c148208bd6576c78511e6c3ed363b76ee4fe127417e91c0"
+    },
+    "distinct_surface_texts": 3,
+    "identifier_renaming": {},
+    "execution_scope": "semantic_compiler_only"
+  },
+  "runs": [
+    {
+      "seed": 0,
+      "arm": "semantic",
+      "initial_sha256": "0598786562ac5c9904f8b11f9be856983aa509ce7ca955ba301301e5aa0cc6b0",
+      "final_state_sha256": "7637e674819b2fab1b0a17f2ad1336badba3ada71090116f308dab6bf75fdd9f",
+      "checkpoint_sha256": "58ef7ccab7fb78ece7c696eb46a9a0a6819bd1d1acdff4ccb508aabd259452cb",
+      "parameters": 115862,
+      "seconds": 91.62090422213078
+    },
+    {
+      "seed": 0,
+      "arm": "no_input",
+      "initial_sha256": "0598786562ac5c9904f8b11f9be856983aa509ce7ca955ba301301e5aa0cc6b0",
+      "final_state_sha256": "4031ee8e24e696721a9978cf0c6881348a361d70fbbddd99c756f049e0e53ed0",
+      "checkpoint_sha256": "8c577eddaf064919e161a2342bcbd816f3095a20f160b706739e6bdf90fad22e",
+      "parameters": 115862,
+      "seconds": 83.60011829901487
+    },
+    {
+      "seed": 1,
+      "arm": "semantic",
+      "initial_sha256": "20f6f602146cc3ab37238e69420b7e632fcb03f3c8d35225f6131b0da1e4018d",
+      "final_state_sha256": "22376f3f13b42342e8ce85481df7c1d7a00504e9af20518a16aa90b52d0ee4d5",
+      "checkpoint_sha256": "5533ad51776faca788afdc418e3ebf11db6457e2d1359d17bd9b9b0c33a8e23b",
+      "parameters": 115862,
+      "seconds": 88.28644436690956
+    },
+    {
+      "seed": 1,
+      "arm": "no_input",
+      "initial_sha256": "20f6f602146cc3ab37238e69420b7e632fcb03f3c8d35225f6131b0da1e4018d",
+      "final_state_sha256": "174e1151c021fcffc11fe668ccd3e97d6a61667e7b12489517b31472bf954f81",
+      "checkpoint_sha256": "5396531fc6cb62b7980bda97c16ebd4ebdac4659753fb651ea52789aa6931090",
+      "parameters": 115862,
+      "seconds": 126.41486881067976
+    },
+    {
+      "seed": 2,
+      "arm": "semantic",
+      "initial_sha256": "77254032bd56e21af8f2ecf0b02a1abaac679e91749549a8c4eb2ad269d7b4e5",
+      "final_state_sha256": "13805f647d307c2a36a4c4f99c0a53dcfe0ab059ba2e4bd072d16a3947bf4085",
+      "checkpoint_sha256": "5aebf8fe3233564b1073a91e0c181dd31f973555861291d91f2869c1a1f355d9",
+      "parameters": 115862,
+      "seconds": 100.67117577325553
+    },
+    {
+      "seed": 2,
+      "arm": "no_input",
+      "initial_sha256": "77254032bd56e21af8f2ecf0b02a1abaac679e91749549a8c4eb2ad269d7b4e5",
+      "final_state_sha256": "dc5a1bfb03025c8e2613d4237e1b12753dc91ea08f666763c9cece4a0e571545",
+      "checkpoint_sha256": "c2f35bf4cce2a9c8f0451e1ed9a07840e33ea957eac054c5dbe4988eb60e39d5",
+      "parameters": 115862,
+      "seconds": 122.20076631009579
+    }
+  ],
+  "matching": "fixed compiler traversal, exact values and identities and explicit ordered slots; no general isomorphism",
+  "gate_f": {
+    "passed": false,
+    "reason": "requires paired cross-budget heldout typed-edge and semantic trend above baselines; no automatic single-run pass"
+  },
+  "priors": [
+    "canonical decoder slot order",
+    "fixed node capacity and role/type ontology",
+    "first visible occurrence pointer supervision"
+  ],
+  "train_renderers": [
+    "english",
+    "spanish"
+  ],
+  "heldout_renderer": "symbols",
+  "limitations": [
+    "alpha-equivalent graphs counted once; not logical/denotational equivalence",
+    "heldout lexicon is consistent entity/variable renaming",
+    "no claim of exhaustive finite-family enumeration"
+  ],
+  "split_semantic_sha256": {
+    "eval": "66cdc5fadd22b63ae6de2e2b7b2d5cbda315d179dd60e58620af54516adf9f87",
+    "train": "e18a48386fef6b59b9b02593843207d72c20b2d770f62502e113a46b206e751b"
+  },
+  "split_policy": "fixed eval prefix reserved before nested train prefixes; canonical disjoint by SQLite uniqueness",
+  "loss_recipe": "v2: balance ordered/nonordered active pairs; edge negatives on gold-present pairs only",
+  "different_graph_similar_wording_controls": [
+    {
+      "gold": "49bac4ccd01b1fe04fbbfab3ee2efee4b50bdbd9e67dfc6ec475e863c34696d6",
+      "wrong": "82775f8122b2f06e23edc1017e405df3ef427eca29aa4b3d1c65064c1921045b",
+      "token_jaccard": 0.8181818181818182,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "wrong": "4cdb4b8c08166ca705ef968ada72eac426de7d3a126054997f5baae2f73e117c",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "wrong": "b442f2ef800a4fb1290d4b9acae901b2cbc2a50910027bdce4e9f57355302aca",
+      "token_jaccard": 0.6896551724137931,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "4cdb4b8c08166ca705ef968ada72eac426de7d3a126054997f5baae2f73e117c",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "b442f2ef800a4fb1290d4b9acae901b2cbc2a50910027bdce4e9f57355302aca",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.6896551724137931,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "82775f8122b2f06e23edc1017e405df3ef427eca29aa4b3d1c65064c1921045b",
+      "wrong": "49bac4ccd01b1fe04fbbfab3ee2efee4b50bdbd9e67dfc6ec475e863c34696d6",
+      "token_jaccard": 0.8181818181818182,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "748c497671f46e24d7b2c334025941367865c10084128f0c93fc76613cf15101",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "3941c947405773a8c8f4cd3f049eaee8b589f802a29f628215017a737461c84e",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.6896551724137931,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "feb372b683d4f50a119f223ea65cc3feb7d42f6cdb4650cd9f230480757c9bcd",
+      "wrong": "49bac4ccd01b1fe04fbbfab3ee2efee4b50bdbd9e67dfc6ec475e863c34696d6",
+      "token_jaccard": 0.7391304347826086,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "02d5002e046301f0ac35235a40974a7619c5b21815704be0547a90978c4bdeda",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "5173e6b08e9f51784bc9e6ba880107699067cf78d051faa39458ab669b119e2a",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.7857142857142857,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "26ec185d0506b77fb2dd7135bd4f9a63a1e22d10b728422896de2b324dcfeacc",
+      "wrong": "49bac4ccd01b1fe04fbbfab3ee2efee4b50bdbd9e67dfc6ec475e863c34696d6",
+      "token_jaccard": 0.7391304347826086,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "5ba05ac4e5ed701d77ee0b4b0a369dd329a12ac85d666c31280c35da44b7173c",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.84,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "17772e762ef0cbe31a87f318a610ac95b84c9a6f86181beac3fa1875dff82575",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.6785714285714286,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "67aa4f207a269152baee2e664557efc114fe54c6d45dde92bc22309d9b8f876e",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "1e3a0cbbc5922a36c2704b7a19c6d61e621a537bba48506deaef7d9dedcd340b",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.7777777777777778,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "69e854a51c318f2d5312a2da4235c345a0a5c7e8b179d4fb407a53e9b824cff3",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "a358a26ded8fd67ed99d58b6de1ee409520abda6336d88afa9cdf2fe7bd0abe1",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.8518518518518519,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "959fdd3e424bfc45285c63f2fae6724cd21cdf7308967a975092981d7f408757",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "2806f74641f499046235e22e326ea66d51651a1d16a3b1dc97c3b7da97f525f1",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.75,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "9d82f16ded908b1e96ac2249f4eb75f2d3b876e7b37cb52dbd2a764a2a4f7f7f",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.9583333333333334,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "b98ba5d226253ec00477f86698d7145efde9304ac5804efcaae4fdd324be7901",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.6785714285714286,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "ed2e3bc53135e76bce06d3350ca60e135620dc24eeb8af12c9a9be5da126584a",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "476097834dbbecdefd200b4f5ceaddca64231855c5767b2496bb677ef052fa62",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.8518518518518519,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "009066a329f5fe914c30ff3a8abbdb0d244d81eeb9e3c2a89965049c149fbcc7",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "ffe6c1b16f23ecaf68585772310607c5e143444eb176476042de810d5502cc4d",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.8518518518518519,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "d92f8d1408762bf26171d3aa9d871f85709267a2642f82b598837b80cc84244d",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.9583333333333334,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "2d36b4ecdabfd39fa88f76ed51ed1ef10e52c4903924b59e999fd119c37ce640",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.75,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "5de13eb0c0b85f43f814cac275735c242d7b920b40795ea91283249f33ae6e6d",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "670ea1ad63672e70987a9462851e79c696bad054a69e8704abd7cb0c453750a0",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "b27c70b954e90ebf64205022c68bb926e45beb14ff552b4790a9fb7030e82c46",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.7407407407407407,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "190866a28a47a18d3f72f16840ad5c26c5100383e8d8e5b68348950e712cbc0a",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "3c53fc0e0484220ac9b9b3a05eca6fc7b48af60cc4d1beafbb964ada673b4f78",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.6896551724137931,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "9cf617f2b23412a88a2e3ca4049363cd2b912782fb35437a0d9488cc7619ff59",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "ff49dde0f5c8820e9f27fed5eba4fad6e84531205c7840a8388a211b924984a7",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.75,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "db7dcb0781a406838aa5c6f61db0dbe5a32d1cd429ae5bce007d4763737d0bbb",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.9583333333333334,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "4df16703ffca7fca13a8529091350be67f29da58a1cee2a2c8486f77839c3b40",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.9583333333333334,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "089a7b61a72d997abbc1ce87f7d8ea36b59d1262b356fcd3fd7fb8558276b8cc",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.8148148148148148,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "3411df2bb33c7c1bab5198df3b4aa15835996e2771b09f8865af89443aaed6f7",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "3155069685bf6126fafe84bb5e25710ee142b1da2fb0da4ee20706c972da953e",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.8148148148148148,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "777d172157e70f51071d6040d1a53211ea7e939a7d108a8d32568c98af5d1ac0",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "023f3d9c93321f87ce2b49f238fae199690c1fd84c179044d517df871dbdd401",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.8846153846153846,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "1d0418ab0685f104fbfb5f0dfce15726ea06a96e9fe5ddc6f955980d2b5ea3d2",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "c4b941e8905a7c18587456177ae436acb4c1c50f266d982ef74be885aeddd004",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.8461538461538461,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "832d30137595f29d1ed53b22ee856fe3ed8dbb180b41c36b307fdb9c737f9b53",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "dcc6afed6e698f6a326f0fa2424c2a19808b7f22b865415583bb64cf2880d5c0",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.7777777777777778,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "b9da0d314828d1db52b2332219be725112d510feffa1aaac4e7754d1d93fe878",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "e6587965ebc78fbf884f43edc342764671804dfdc0dac9720f7b6f1136c9f7ca",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.8148148148148148,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "1adc0740318a9c71461d1060b7737a97b61e8d2c1cb161a0a119d9f9c78cd3f9",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "ae97169a3849ad57e19a8c1fc842f5d200cc3c41b1ccd7dc03ff378ac21f0af6",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.8518518518518519,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "94d04ffd6d1a387d6d24ba7d5d092df864da20b4f86994c0009b44757de41559",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "641ad6941043adbe643ac4913861745810b5837e81ad35d6a9b1f9b5de20601a",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.7777777777777778,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "50c7ee6e838b4c533a9958c275b22e3ba64d62fa6847036d8f883f6450e3eee9",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "64a07bbedd49fe51c3eee554dac0f80447da14be4faea4d481b04c63968b78aa",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.75,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "9f340981016b77429087e443df60c7a3fc9e63f6c4c060075251a24519b1ce7a",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.9583333333333334,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "4e086a85c7ffb57534f865524104274f8f701c4bed1d22b8eb4c236f92fe989b",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.8518518518518519,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "0930af7c03e2bc49feda5bd4ca70108ec43d4bb761a8328df5989122d73b88bb",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "7a8b2f8c6536552648d7b0f7cc74b2d9b79b6e2dc40b4af4aba4c8f5372eb500",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.6785714285714286,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "5450266b772dfe9b94cf46e21bd6134584f99ab05782f1c0efa2b08df14fe0b3",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.88,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "8ffe66108cf8af015859ce5700a800e22e11c2d435a123bc9f5556c788797483",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.75,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "49e75a8d3446eea56f258d9909491ed31adeab3baf3d5e0dbfd01f042930669b",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "4bc69e4cb2a00afc43026c9545c8e41e7d4902f883d72245e9b97c16d40ccfa0",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.8846153846153846,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "69376ae25202873d4644697b357af597178e33b839c758680dd950a6e41c1111",
+      "wrong": "954d93799d362cb1e057b815201bdfc4aaa0655aad402415a2dadb8af242ff8a",
+      "token_jaccard": 0.92,
+      "semantic_equivalence": 0.0
+    },
+    {
+      "gold": "0d2c260f1d3887e6165b3837f9490f5a32f38cb7d40a26719bb24613a55120ee",
+      "wrong": "68e8ec3b5a16a6ba1ddeff96ffda32a7019025a6c97eed3cebee15057f1dc6dd",
+      "token_jaccard": 0.6896551724137931,
+      "semantic_equivalence": 0.0
+    }
+  ]
+}
