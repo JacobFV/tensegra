@@ -63,8 +63,12 @@ def run(config, arm, output, device):
                     parity.append(dict(step=step, historical_sha256=file_hash(old), labels_equal=all(torch.equal(v, prior['labels'][k]) for k,v in datasets['calibration'][1].items()),
                         logits_equal={k:torch.equal(v,prior['logits'][k]) for k,v in logits.items()},
                         max_abs_logit_difference={k:float((v-prior['logits'][k]).abs().max()) for k,v in logits.items()}))
+                    if not parity[-1]['labels_equal']:
+                        (output/'historical-parity-failure.json').write_text(json.dumps(parity[-1],indent=2)+'\n')
+                        raise RuntimeError('historical calibration labels changed')
                 else:
-                    parity.append(dict(step=step, missing_historical_file=str(old)))
+                    (output/'historical-parity-failure.json').write_text(json.dumps(dict(step=step,missing_historical_file=str(old)),indent=2)+'\n')
+                    raise FileNotFoundError(f'required historical calibration file: {old}')
             (output/'curve.json').write_text(json.dumps(curves, indent=2)+'\n')
         if step == config['updates']: break
         model.train()
@@ -114,6 +118,7 @@ def run(config, arm, output, device):
     summary = dict(arm=arm, config=config, data=manifests, initial_state_sha256=initial_hash,
         parameter_count=sum(p.numel() for p in model.parameters()), selected_step=best_step,
         primary_endpoint_step=config['updates'], curves=curves, historical_calibration_parity=parity,
+        replay_numerical_deviation_requires_coordinator_review=any(not all(x['logits_equal'].values()) for x in parity),
         optimizer_presentations=int(visits.sum()), unique_base_events=int((visits>0).sum()),
         rekeyed_presentations=int(visits.sum()) if arm == 'rekey' else 0,
         semantic_pool_size=config['data']['train']['count'], unique_code_views_measured=False,
@@ -129,6 +134,8 @@ def run(config, arm, output, device):
         prior = torch.load(old, map_location='cpu', weights_only=True)
         selected = torch.load(output/'selected.pt', map_location='cpu', weights_only=True)
         summary['historical_selected_state_parity'] = dict(historical_sha256=file_hash(old), tensor_equal=all(torch.equal(v,prior[k]) for k,v in selected.items()))
+        if not summary['historical_selected_state_parity']['tensor_equal']:
+            summary['replay_numerical_deviation_requires_coordinator_review'] = True
     (output/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
     return summary
 
