@@ -56,7 +56,7 @@ def run(config,out):
     torch.set_num_threads(config.get('threads',2)); torch.manual_seed(config['seed'])
     out=Path(out); out.mkdir(parents=True,exist_ok=True)
     device=torch.device(config.get('device','cpu'))
-    model=BeliefModel(config['mode'],width=config.get('width',1024),inner=config.get('inner',2048)).to(device)
+    model=BeliefModel(config['mode'],width=config.get('width',1024),inner=config.get('inner',2048),observation_id_features=config.get('observation_id_features',False)).to(device)
     opt=torch.optim.AdamW(model.parameters(),lr=config.get('lr',.0003))
     source={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (Path(__file__),Path(__file__).with_name('belief_state.py'))}
     manifest={'config':config,'config_sha256':hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),'source_sha256':source,'git':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'parameters':sum(p.numel() for p in model.parameters()),'architecture_supplied':['typed roles','candidate records','observation identity','protected ledger for protected arm'],'composition_allowed':False,'device':str(device),'cuda_name':torch.cuda.get_device_name(device) if device.type=='cuda' else None}

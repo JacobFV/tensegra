@@ -89,3 +89,26 @@ N8/N16 condition, all8 evidence controls (including heldout 8-fold duplicate IDs
 All expected validation cells (48 per arm) must pass the root registry; every-frame
 calibration retained. Test cells cannot select settings. Runtime composition and
 readiness remain prohibited while any required belief gate fails.
+
+## Consumed-information audit and ID-matched primary follow-up
+
+During the frozen first main run, self-audit found that the recurrent encoder
+consumed role/action/payload features but not observation-ID features. The
+protected ledger consumed those IDs as keys. Therefore that run is retained as
+an explicitly metadata-asymmetric diagnostic; its ID-dependent stress comparisons
+cannot establish a matched-input architectural advantage. Clean payload comparisons
+remain interpretable within their narrower scope. No results are discarded.
+
+Before the follow-up, both encoders receive identical stable16-bit public ID codes,
+with zero reserved for no-op and out-of-range IDs rejected. IDs are not targets.
+The same four-phase1024/2048 architecture, objective, fresh episodes, optimizer,
+1000updates, seeds0/1/2, and512 validation/test cells remain. Both models gain the
+same16,384 input-projection parameters. The optional flag defaults false only to
+preserve the exact earlier comparator; all `stage8-belief-idmatched-*` primary
+configs explicitly enable it. Tests verify both encoders consume ID changes with
+payload held fixed, repeated IDs have identical codes, and future changes cannot
+affect earlier output. No hidden evidence or exact compatibility is introduced.
+
+The protected observation ledger remains an architectural algorithm, even when
+observable information is matched. This study learns evidence compatibility; it
+does not claim the model learned duplicate suppression/retraction semantics.

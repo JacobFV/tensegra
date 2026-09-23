@@ -84,6 +84,14 @@ def collate(episodes):
             'targets':dict(posterior=target,compatible=compatible)}
 
 
+def observation_features(ids):
+    """Stable public binary IDs; zero vector reserved for no-op ID -1."""
+    if bool(((ids < -1) | (ids >= 65536)).any()):
+        raise ValueError('observation IDs must be -1 or unsigned 16 bit')
+    bits=((ids.clamp_min(0)[...,None] >> torch.arange(16,device=ids.device)) & 1).float()*2-1
+    return bits * (ids>=0)[...,None]
+
+
 class Phase(nn.Module):
     def __init__(self,width,inner):
         super().__init__(); self.net=nn.Sequential(nn.LayerNorm(width),nn.Linear(width,inner),nn.GELU(),nn.Linear(inner,width))
@@ -91,12 +99,12 @@ class Phase(nn.Module):
 
 
 class BeliefModel(nn.Module):
-    def __init__(self,mode='protected',width=1024,key_dim=16,inner=2048):
+    def __init__(self,mode='protected',width=1024,key_dim=16,inner=2048,observation_id_features=False):
         super().__init__()
         if mode not in ('protected','recurrent'): raise ValueError(mode)
-        self.mode=mode; self.width=width
+        self.mode=mode; self.width=width; self.observation_id_features=observation_id_features
         f=5+key_dim
-        self.encode=nn.Linear(f*2+ROLES+3,width)
+        self.encode=nn.Linear(f*2+ROLES+3+(16 if observation_id_features else 0),width)
         self.phases=nn.ModuleList([Phase(width,inner) for _ in range(4)])
         self.compatibility=nn.Linear(width,1); self.readout=nn.Linear(width,1)
         self.null=nn.Sequential(nn.Linear(2,16),nn.GELU(),nn.Linear(16,1))
@@ -106,11 +114,13 @@ class BeliefModel(nn.Module):
         state=records.new_zeros(b,n,self.width); ledgers=[{} for _ in range(b)]
         scores=records.new_zeros(b,n); all_scores=[]; compat=[]
         ids=p['ids'].tolist(); actions=p['actions'].tolist(); frames=p['frames'].tolist()
+        id_features=observation_features(p['ids']).to(records.dtype) if self.observation_id_features else None
         for t in range(p['event'].shape[1]):
             selected=records[torch.arange(b,device=records.device)[:,None],torch.arange(n,device=records.device)[None,:],p['roles'][:,t,None]]
             role=F.one_hot(p['roles'][:,t],ROLES).to(records.dtype)
             action=F.one_hot(p['actions'][:,t]+1,3).to(records.dtype)
             x=torch.cat((selected,p['event'][:,t,None].expand(-1,n,-1),role[:,None].expand(-1,n,-1),action[:,None].expand(-1,n,-1)),dim=-1)
+            if id_features is not None: x=torch.cat((x,id_features[:,t,None].expand(-1,n,-1)),dim=-1)
             evidence=self.encode(x)
             local=evidence
             for phase in self.phases: local=phase(local)

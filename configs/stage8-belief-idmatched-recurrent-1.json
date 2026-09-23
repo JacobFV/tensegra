@@ -1,0 +1,26 @@
+{
+  "mode": "recurrent",
+  "device": "cuda",
+  "width": 1024,
+  "inner": 2048,
+  "seed": 1,
+  "threads": 2,
+  "steps": 1000,
+  "batch": 32,
+  "candidates": 8,
+  "probe_count": 64,
+  "eval_count": 512,
+  "eval_candidates": [
+    8,
+    16
+  ],
+  "eval_splits": [
+    "validation",
+    "test"
+  ],
+  "log_every": 200,
+  "lr": 0.0003,
+  "compatibility_weight": 1.0,
+  "observation_id_features": true,
+  "study": "id_matched_followup"
+}
