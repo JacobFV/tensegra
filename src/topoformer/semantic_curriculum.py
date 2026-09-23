@@ -320,10 +320,11 @@ def run(config):
                 loss.backward()
                 nn.utils.clip_grad_norm_(model.parameters(),1.); optimizer.step()
                 if cuda: torch.cuda.synchronize(model.initial.device)
-                training_seconds+=time.monotonic()-train_start
+                step_seconds=time.monotonic()-train_start
+                training_seconds+=step_seconds
                 component_keys=list(logs[0])
                 component_values=torch.stack([torch.stack([row[k] for k in component_keys]) for row in logs]).mean(0).cpu().tolist()
-                with (output/'losses.jsonl').open('a') as f: f.write(json.dumps(dict(arm=arm,seed=seed,presentations=exposure+batch_size,parts=dict(zip(component_keys,component_values)),weights=weights))+'\n')
+                with (output/'losses.jsonl').open('a') as f: f.write(json.dumps(dict(arm=arm,seed=seed,presentations=exposure+batch_size,training_step_seconds=step_seconds,parts=dict(zip(component_keys,component_values)),weights=weights))+'\n')
             path=output/f'{arm}-{seed}.pt'; torch.save(model.state_dict(),path)
             manifest['runs'].append(dict(arm=arm,seed=seed,parameters=sum(p.numel() for p in model.parameters()),width=model.width,autocast_dtype=model.autocast_dtype,parameter_dtype='float32',training_cache=training_item.cache_info()._asdict(),public_feature_cache=encode_text.cache_info()._asdict(),
                            initial_state_sha256=initial_hash,final_state_sha256=state_hash(model),checkpoint_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),seconds=time.monotonic()-start,training_seconds=training_seconds,peak_cuda_allocated_bytes=torch.cuda.max_memory_allocated(model.initial.device) if cuda else 0))
