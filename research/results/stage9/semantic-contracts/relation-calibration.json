@@ -1,0 +1,557 @@
+{
+  "kind": "posthoc TRAIN-only diagnostic on eight frozen development graphs; not fresh inference generalization or retroactive gate pass",
+  "policy": "One threshold per relation minimizes total TRAIN pair classification errors; all score boundaries considered, ties choose lowest threshold. Same threshold used across eight graphs. No test labels exist in this diagnostic.",
+  "derivation": "For weighted binary CE, optimal logit q = logit p + log(w_positive/w_negative). Here each graph uses w_positive=1/(2*N_positive), w_negative=1/(2*N_negative), over all node pairs and all relation entries. Thus logit p = q + log(N_positive/N_negative). Graphs are averaged equally. This population-risk identity is not a finite-trained-model calibration guarantee. Counts are privileged gold graph prevalence and unavailable at deployment; analytical correction is explicitly an oracle diagnostic. Stage8 sampled-pair weighting differs and cannot inherit this constant.",
+  "runs": [
+    {
+      "seed": 101,
+      "relations": [
+        {
+          "relation": "contains",
+          "positive": 184,
+          "negative": 7897,
+          "minimum_positive": 5.203249931335449,
+          "maximum_negative": 4.561842918395996,
+          "strictly_separable": true,
+          "threshold": 4.561842918395996,
+          "train_errors": 0
+        },
+        {
+          "relation": "declares",
+          "positive": 59,
+          "negative": 8022,
+          "minimum_positive": 5.753057956695557,
+          "maximum_negative": 0.5287132859230042,
+          "strictly_separable": true,
+          "threshold": 0.5287132859230042,
+          "train_errors": 0
+        },
+        {
+          "relation": "refers_to",
+          "positive": 118,
+          "negative": 7963,
+          "minimum_positive": 4.894083023071289,
+          "maximum_negative": 0.5110148787498474,
+          "strictly_separable": true,
+          "threshold": 0.5110148787498474,
+          "train_errors": 0
+        },
+        {
+          "relation": "argument",
+          "positive": 125,
+          "negative": 7956,
+          "minimum_positive": 3.81233549118042,
+          "maximum_negative": 3.5474750995635986,
+          "strictly_separable": true,
+          "threshold": 3.5474750995635986,
+          "train_errors": 0
+        },
+        {
+          "relation": "item",
+          "positive": 32,
+          "negative": 8049,
+          "minimum_positive": 5.675167560577393,
+          "maximum_negative": -0.017860738560557365,
+          "strictly_separable": true,
+          "threshold": -0.017860738560557365,
+          "train_errors": 0
+        },
+        {
+          "relation": "binds",
+          "positive": 12,
+          "negative": 8069,
+          "minimum_positive": 4.5942559242248535,
+          "maximum_negative": 1.1936402320861816,
+          "strictly_separable": true,
+          "threshold": 1.1936402320861816,
+          "train_errors": 0
+        },
+        {
+          "relation": "binding_scope",
+          "positive": 12,
+          "negative": 8069,
+          "minimum_positive": 6.701875686645508,
+          "maximum_negative": -3.465327024459839,
+          "strictly_separable": true,
+          "threshold": -3.465327024459839,
+          "train_errors": 0
+        },
+        {
+          "relation": "field:query",
+          "positive": 8,
+          "negative": 8073,
+          "minimum_positive": 5.209399223327637,
+          "maximum_negative": -1.2681570053100586,
+          "strictly_separable": true,
+          "threshold": -1.2681570053100586,
+          "train_errors": 0
+        },
+        {
+          "relation": "field:substitution",
+          "positive": 3,
+          "negative": 8078,
+          "minimum_positive": 5.017341136932373,
+          "maximum_negative": -1.7320607900619507,
+          "strictly_separable": true,
+          "threshold": -1.7320607900619507,
+          "train_errors": 0
+        },
+        {
+          "relation": "field:pattern",
+          "positive": 3,
+          "negative": 8078,
+          "minimum_positive": 4.866593837738037,
+          "maximum_negative": -1.1043277978897095,
+          "strictly_separable": true,
+          "threshold": -1.1043277978897095,
+          "train_errors": 0
+        },
+        {
+          "relation": "field:fact",
+          "positive": 0,
+          "negative": 8081,
+          "minimum_positive": null,
+          "maximum_negative": -6.76615047454834,
+          "strictly_separable": true,
+          "threshold": -6.76615047454834,
+          "train_errors": 0
+        },
+        {
+          "relation": "field:facts",
+          "positive": 3,
+          "negative": 8078,
+          "minimum_positive": 4.963191986083984,
+          "maximum_negative": -1.1112703084945679,
+          "strictly_separable": true,
+          "threshold": -1.1112703084945679,
+          "train_errors": 0
+        },
+        {
+          "relation": "field:scene",
+          "positive": 2,
+          "negative": 8079,
+          "minimum_positive": 4.824162006378174,
+          "maximum_negative": -0.9651865363121033,
+          "strictly_separable": true,
+          "threshold": -0.9651865363121033,
+          "train_errors": 0
+        }
+      ],
+      "graph_weighting": [
+        {
+          "graph_seed": 9000000,
+          "positive": 56,
+          "negative": 8069,
+          "positive_weight": 0.008928571428571428,
+          "negative_weight": 6.196554715578138e-05,
+          "natural_logit_correction": -4.970433147113357
+        },
+        {
+          "graph_seed": 9000001,
+          "positive": 84,
+          "negative": 16764,
+          "positive_weight": 0.005952380952380952,
+          "negative_weight": 2.982581722739203e-05,
+          "natural_logit_correction": -5.296172210201648
+        },
+        {
+          "graph_seed": 9000002,
+          "positive": 71,
+          "negative": 14957,
+          "positive_weight": 0.007042253521126761,
+          "negative_weight": 3.342916360232667e-05,
+          "natural_logit_correction": -5.350254819618011
+        },
+        {
+          "graph_seed": 9000003,
+          "positive": 56,
+          "negative": 8069,
+          "positive_weight": 0.008928571428571428,
+          "negative_weight": 6.196554715578138e-05,
+          "natural_logit_correction": -4.970433147113357
+        },
+        {
+          "graph_seed": 9000004,
+          "positive": 85,
+          "negative": 17712,
+          "positive_weight": 0.0058823529411764705,
+          "negative_weight": 2.8229448961156277e-05,
+          "natural_logit_correction": -5.339346398458102
+        },
+        {
+          "graph_seed": 9000005,
+          "positive": 69,
+          "negative": 14088,
+          "positive_weight": 0.007246376811594203,
+          "negative_weight": 3.5491198182850654e-05,
+          "natural_logit_correction": -5.318972145578782
+        },
+        {
+          "graph_seed": 9000006,
+          "positive": 56,
+          "negative": 8069,
+          "positive_weight": 0.008928571428571428,
+          "negative_weight": 6.196554715578138e-05,
+          "natural_logit_correction": -4.970433147113357
+        },
+        {
+          "graph_seed": 9000007,
+          "positive": 84,
+          "negative": 16764,
+          "positive_weight": 0.005952380952380952,
+          "negative_weight": 2.982581722739203e-05,
+          "natural_logit_correction": -5.296172210201648
+        }
+      ],
+      "graphs": [
+        {
+          "graph_seed": 9000000,
+          "raw_errors": 13,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 8,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000001,
+          "raw_errors": 93,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 24,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000002,
+          "raw_errors": 77,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 32,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000003,
+          "raw_errors": 16,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 9,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000004,
+          "raw_errors": 95,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 23,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000005,
+          "raw_errors": 46,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 23,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000006,
+          "raw_errors": 11,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 8,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000007,
+          "raw_errors": 94,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 29,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        }
+      ]
+    },
+    {
+      "seed": 102,
+      "relations": [
+        {
+          "relation": "contains",
+          "positive": 184,
+          "negative": 7897,
+          "minimum_positive": 5.131381034851074,
+          "maximum_negative": 3.770225763320923,
+          "strictly_separable": true,
+          "threshold": 3.770225763320923,
+          "train_errors": 0
+        },
+        {
+          "relation": "declares",
+          "positive": 59,
+          "negative": 8022,
+          "minimum_positive": 5.611502170562744,
+          "maximum_negative": -0.061869844794273376,
+          "strictly_separable": true,
+          "threshold": -0.061869844794273376,
+          "train_errors": 0
+        },
+        {
+          "relation": "refers_to",
+          "positive": 118,
+          "negative": 7963,
+          "minimum_positive": 4.827816963195801,
+          "maximum_negative": 0.8351886868476868,
+          "strictly_separable": true,
+          "threshold": 0.8351886868476868,
+          "train_errors": 0
+        },
+        {
+          "relation": "argument",
+          "positive": 125,
+          "negative": 7956,
+          "minimum_positive": 4.148498058319092,
+          "maximum_negative": 3.8031556606292725,
+          "strictly_separable": true,
+          "threshold": 3.8031556606292725,
+          "train_errors": 0
+        },
+        {
+          "relation": "item",
+          "positive": 32,
+          "negative": 8049,
+          "minimum_positive": 5.960336685180664,
+          "maximum_negative": -0.09708964824676514,
+          "strictly_separable": true,
+          "threshold": -0.09708964824676514,
+          "train_errors": 0
+        },
+        {
+          "relation": "binds",
+          "positive": 12,
+          "negative": 8069,
+          "minimum_positive": 4.449577331542969,
+          "maximum_negative": 1.453652024269104,
+          "strictly_separable": true,
+          "threshold": 1.453652024269104,
+          "train_errors": 0
+        },
+        {
+          "relation": "binding_scope",
+          "positive": 12,
+          "negative": 8069,
+          "minimum_positive": 6.610151290893555,
+          "maximum_negative": -3.529853582382202,
+          "strictly_separable": true,
+          "threshold": -3.529853582382202,
+          "train_errors": 0
+        },
+        {
+          "relation": "field:query",
+          "positive": 8,
+          "negative": 8073,
+          "minimum_positive": 5.148616790771484,
+          "maximum_negative": -0.7768561244010925,
+          "strictly_separable": true,
+          "threshold": -0.7768561244010925,
+          "train_errors": 0
+        },
+        {
+          "relation": "field:substitution",
+          "positive": 3,
+          "negative": 8078,
+          "minimum_positive": 4.924868583679199,
+          "maximum_negative": -0.7921217083930969,
+          "strictly_separable": true,
+          "threshold": -0.7921217083930969,
+          "train_errors": 0
+        },
+        {
+          "relation": "field:pattern",
+          "positive": 3,
+          "negative": 8078,
+          "minimum_positive": 4.998849868774414,
+          "maximum_negative": -0.5687087774276733,
+          "strictly_separable": true,
+          "threshold": -0.5687087774276733,
+          "train_errors": 0
+        },
+        {
+          "relation": "field:fact",
+          "positive": 0,
+          "negative": 8081,
+          "minimum_positive": null,
+          "maximum_negative": -6.979282379150391,
+          "strictly_separable": true,
+          "threshold": -6.979282379150391,
+          "train_errors": 0
+        },
+        {
+          "relation": "field:facts",
+          "positive": 3,
+          "negative": 8078,
+          "minimum_positive": 4.922269821166992,
+          "maximum_negative": -0.8523844480514526,
+          "strictly_separable": true,
+          "threshold": -0.8523844480514526,
+          "train_errors": 0
+        },
+        {
+          "relation": "field:scene",
+          "positive": 2,
+          "negative": 8079,
+          "minimum_positive": 5.1467437744140625,
+          "maximum_negative": -0.9734756350517273,
+          "strictly_separable": true,
+          "threshold": -0.9734756350517273,
+          "train_errors": 0
+        }
+      ],
+      "graph_weighting": [
+        {
+          "graph_seed": 9000000,
+          "positive": 56,
+          "negative": 8069,
+          "positive_weight": 0.008928571428571428,
+          "negative_weight": 6.196554715578138e-05,
+          "natural_logit_correction": -4.970433147113357
+        },
+        {
+          "graph_seed": 9000001,
+          "positive": 84,
+          "negative": 16764,
+          "positive_weight": 0.005952380952380952,
+          "negative_weight": 2.982581722739203e-05,
+          "natural_logit_correction": -5.296172210201648
+        },
+        {
+          "graph_seed": 9000002,
+          "positive": 71,
+          "negative": 14957,
+          "positive_weight": 0.007042253521126761,
+          "negative_weight": 3.342916360232667e-05,
+          "natural_logit_correction": -5.350254819618011
+        },
+        {
+          "graph_seed": 9000003,
+          "positive": 56,
+          "negative": 8069,
+          "positive_weight": 0.008928571428571428,
+          "negative_weight": 6.196554715578138e-05,
+          "natural_logit_correction": -4.970433147113357
+        },
+        {
+          "graph_seed": 9000004,
+          "positive": 85,
+          "negative": 17712,
+          "positive_weight": 0.0058823529411764705,
+          "negative_weight": 2.8229448961156277e-05,
+          "natural_logit_correction": -5.339346398458102
+        },
+        {
+          "graph_seed": 9000005,
+          "positive": 69,
+          "negative": 14088,
+          "positive_weight": 0.007246376811594203,
+          "negative_weight": 3.5491198182850654e-05,
+          "natural_logit_correction": -5.318972145578782
+        },
+        {
+          "graph_seed": 9000006,
+          "positive": 56,
+          "negative": 8069,
+          "positive_weight": 0.008928571428571428,
+          "negative_weight": 6.196554715578138e-05,
+          "natural_logit_correction": -4.970433147113357
+        },
+        {
+          "graph_seed": 9000007,
+          "positive": 84,
+          "negative": 16764,
+          "positive_weight": 0.005952380952380952,
+          "negative_weight": 2.982581722739203e-05,
+          "natural_logit_correction": -5.296172210201648
+        }
+      ],
+      "graphs": [
+        {
+          "graph_seed": 9000000,
+          "raw_errors": 15,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 10,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000001,
+          "raw_errors": 70,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 27,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000002,
+          "raw_errors": 55,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 31,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000003,
+          "raw_errors": 13,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 9,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000004,
+          "raw_errors": 72,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 27,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000005,
+          "raw_errors": 45,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 24,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000006,
+          "raw_errors": 14,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 9,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        },
+        {
+          "graph_seed": 9000007,
+          "raw_errors": 70,
+          "calibrated_errors": 0,
+          "analytical_oracle_errors": 31,
+          "raw_exact": false,
+          "calibrated_exact": true,
+          "analytical_oracle_exact": false
+        }
+      ]
+    }
+  ]
+}
