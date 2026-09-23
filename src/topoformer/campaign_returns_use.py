@@ -62,6 +62,7 @@ def capture_batch(model,accessor,batch,delays,device,chunk,kind='correct',swap=N
     return dict(features=features,scores=scores,query=query,original_targets=answer(original['event']['values'][:,0],query),
                 supplied_targets=None if kind=='drop' else answer(values,query),supplied_value_labels=None if kind=='drop' else (2*values+16).long(),
                 original_value_labels=batch['targets']['value'],types=batch['targets']['type'],operations=batch['targets']['operation'],
+                supplied_types=None if kind=='drop' else public['event']['types'][:,0],supplied_operations=None if kind=='drop' else public['event']['operations'][:,0],
                 original_event_hashes=[tensor_hash({k:v[i] for k,v in original['event'].items()}) for i in range(len(values))],
                 supplied_event_hashes=None if kind=='drop' else [tensor_hash({k:v[i] for k,v in public['event'].items()}) for i in range(len(values))],
                 public_sha256=tensor_hash(public),kind=kind)
@@ -128,6 +129,9 @@ def run(cfg,out):
         def subset(tree):return {k:subset(v) if isinstance(v,dict) else v[ids] for k,v in tree.items()}
         cache['balanced/8']=capture_batch(model,accessor,subset(pool),cfg['intervention_delays'],device,cfg['batch_size'])
         cache['balanced/8']['pool_indices']=ids
+        fresh_sets=[set(cache['intervention_swap/8']['supplied_event_hashes']),set(cache['balanced/8']['original_event_hashes'])]
+        assert not(fresh_sets[0]&fresh_sets[1])
+        assert all(not(a&b) for a in fresh_sets for b in populations)
     rows=[];logits={}
     with torch.no_grad():
         for key,batch in cache.items():
@@ -135,13 +139,13 @@ def run(cfg,out):
                 for arm,consumer in fitted.items():
                     scores=consumer(consumer_input(batch,d,arm,device));pred=scores.argmax(-1).cpu();target=batch['original_targets'];supplied=batch['supplied_targets']
                     row=dict(arm=arm,key=key,delay=d,predictions=pred.tolist(),original_targets=target.tolist(),supplied_targets=None if supplied is None else supplied.tolist(),
-                             original_correct=int((pred==target).sum()),total=len(pred),positive_labels=int(target.sum()),types=batch['types'].tolist(),values=batch['original_value_labels'].tolist(),operations=batch['operations'].tolist())
+                             original_correct=int((pred==target).sum()),total=len(pred),positive_labels=int(target.sum()),types=batch['types'].tolist(),values=batch['original_value_labels'].tolist(),operations=batch['operations'].tolist(),supplied_types=None if batch['supplied_types'] is None else batch['supplied_types'].tolist(),supplied_operations=None if batch['supplied_operations'] is None else batch['supplied_operations'].tolist())
                     if supplied is not None:
                         changed=supplied!=target;row.update(supplied_correct=int((pred==supplied).sum()),changed_total=int(changed.sum()),changed_supplied_correct=int(((pred==supplied)&changed).sum()),changed_original_correct=int(((pred==target)&changed).sum()))
                     rows.append(row);logits[f'{key}/{d}/{arm}']=scores.cpu()
     assert tensor_hash(model.state_dict())==state_hash
     raw=out/'predictions.json.gz';raw.write_bytes(gzip.compress(json.dumps(rows,separators=(',',':')).encode(),mtime=0))
-    manifest=dict(config=cfg,config_sha256=hashlib.sha256(json.dumps(cfg,sort_keys=True).encode()).hexdigest(),source={n:sha(Path(__file__).with_name(n)) for n in ('campaign_returns_use.py','retention_data.py','return_memory.py','campaign_returns_balanced.py')},
+    manifest=dict(config=cfg,config_sha256=hashlib.sha256(json.dumps(cfg,sort_keys=True).encode()).hexdigest(),source={n:sha(Path(__file__).with_name(n)) for n in ('campaign_returns_use.py','retention_data.py','return_memory.py','campaign_returns_balanced.py','campaign_returns.py','return_crossdelay.py','return_memory_study.py','thinking.py')},
                   environment=dict(torch=torch.__version__,cuda=torch.version.cuda,device=torch.cuda.get_device_name()),width=1024,backbone_parameters=sum(p.numel() for p in model.parameters()),memory_tokens=6,backbone_state_sha256=state_hash,consumer_initial_sha256=tensor_hash(initial.state_dict()),fits=fits,cache=save_cache(out/'cache.pt.gz',cache),logits=save_cache(out/'logits.pt.gz',logits),predictions_sha256=sha(raw),
                   seconds=time.monotonic()-start,peak_cuda_allocated=torch.cuda.max_memory_allocated(),process_peak_rss=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024)
     (out/'manifest.json.gz').write_bytes(gzip.compress(json.dumps(manifest,indent=2).encode(),mtime=0));print(json.dumps(dict(seconds=manifest['seconds'],steps={r['arm']:r['selected_step'] for r in fits})),flush=True)
