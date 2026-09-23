@@ -1,0 +1,152 @@
+{
+  "config": {
+    "device": "cuda",
+    "backbone_seeds": [
+      10
+    ],
+    "checkpoint_dir": "/home/brandonin/topoformer-stage9/returns/readout-main",
+    "data": {
+      "train": {
+        "seed": 10100000,
+        "size": 64
+      },
+      "calibration": {
+        "seed": 10200000,
+        "size": 64
+      },
+      "test": {
+        "seed": 10300000,
+        "size": 64
+      }
+    },
+    "delays": [
+      0,
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "source_delays": [
+      1
+    ],
+    "eval_distractors": [
+      2
+    ],
+    "batch_size": 64,
+    "ridge_grid": [
+      0.1
+    ],
+    "pooled_rows": 8192,
+    "pools": {}
+  },
+  "source": {
+    "return_crossdelay.py": "561a1ed7ad1e5ea3f26af8e7400aefc91c16c0f1b625b18bfb47c2c37b5164b0",
+    "return_diagnostics_probe.py": "d89799f7812b39c67670eb57009d058602633a880a67440a84e60aa8a4e0ded7",
+    "return_memory.py": "cbf4d732520673039e5db403dfb57979b2d3492063a82bbd1376793d9103e037",
+    "return_memory_study.py": "ad92e75945c0eff5e0157c71286070e4f181cd38eef63813d3bad4aa1fbc89a9",
+    "retention_data.py": "1e980177c4e9344c8824ef3b13e2afdca4499778f9efe027d122695a847585b5",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64"
+  },
+  "config_sha256": "be9a0b5b9d04bd0072191c2f041d11c4fc950a84aad8de45ed10e3f7a62ad586",
+  "environment": {
+    "torch": "2.14.0+cu130",
+    "cuda": "13.0",
+    "device": "NVIDIA GB10",
+    "total_device_bytes": 128453668864
+  },
+  "runs": [
+    {
+      "seed": 10,
+      "checkpoint_sha256": "21b51a65806b698badb70abf0d045e9b24e190a6a163b0cbf82fe0aa1be763d4",
+      "width": 1024,
+      "backbone_parameters": 55854360,
+      "memory_tokens": 6,
+      "memory_coordinates": 6144,
+      "backbone_optimizer_presentations": 0,
+      "ridge_fit_records": [
+        {
+          "head": "delay_1",
+          "fit_delays": [
+            1
+          ],
+          "rows": 64,
+          "unique_events": 64,
+          "per_delay_rows": {
+            "1": 64
+          },
+          "selection_sha256": "7d95e65e11f073d13b34211a28d2084a20fa005255ea2f3051488fb96e62881e",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            6,
+            7,
+            8,
+            9,
+            10,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            20,
+            22,
+            24,
+            26,
+            27,
+            28,
+            29,
+            30,
+            32
+          ],
+          "chosen_alpha": 0.1,
+          "validation_grid": [
+            {
+              "alpha": 0.1,
+              "correct": 54,
+              "total": 64,
+              "cells": [
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 54,
+                  "total": 64
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "7cb8868d06c5ea164ad0ce467231aed5faf56ae34ddb59542583694cdd3a1957"
+        }
+      ],
+      "feature_cache": {
+        "path": "10-features.pt.gz",
+        "sha256": "e0e026375126131f6f14e8422a42de6ef2f977235633df4a1df1431111c3e682",
+        "uncompressed_sha256": "558fa6aaded4761ebc0faad5a7841e294e87ec68bef0cb30a3282abbd416ff5f",
+        "bytes": 5147444,
+        "uncompressed_bytes": 5637563
+      },
+      "event_hashes": {
+        "train/2": "743bd1d2548ec2cbdde588b43a7cc9e6270723057f36beea952baf9c4008a125",
+        "calibration/2": "213e672daa767536c02f4f9fb9d67a87ec7d7c9e97b6ce3216b9f40d89a119ca",
+        "test/2": "b86354980da3ee2e0fe795b68074f404169afa88bd8d79b54c96b59f09adcc25"
+      },
+      "public_hashes": {
+        "train/2": "06c64fc7d0f5a0251226e3dcc5f4ffb9b43274409a627164cbe77de847ac5acb",
+        "calibration/2": "a69e40d4f3928af8fa480e03b8f856e087e29f97ea75ae328487e363f1864fdf",
+        "test/2": "8ee0e2d945902cbf7ccb9366cd8d3ae97ca888cf57544f3d6c8236a270a8f2c4"
+      },
+      "prediction_sha256": "5da11742c65bb885c3a630741a26e965460c8369f0d9f8f29e764b023944b87b",
+      "seconds": 1.7676071310415864,
+      "peak_cuda_allocated_bytes": 446848000,
+      "peak_process_rss_bytes": 1599848448
+    }
+  ]
+}

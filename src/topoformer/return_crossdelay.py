@@ -232,7 +232,11 @@ def run(config, output):
                             stream.write(json.dumps(record) + '\n')
         meta = dict(seed=seed, checkpoint_sha256=checkpoint_hash, width=1024,
                     backbone_parameters=parameters, memory_tokens=6, memory_coordinates=6144,
-                    backbone_optimizer_presentations=0, ridge_fit_records=fit_records, feature_cache=cache_meta,
+                    backbone_optimizer_presentations=0, head_optimizer_presentations=0,
+                    closed_form_solves=len(fit_records) * len(config['ridge_grid']),
+                    supervised_fit_row_uses=sum(row['rows'] for row in fit_records) * len(config['ridge_grid']),
+                    unique_training_events=len(cache['train/2']['labels']), feature_dtype='float32',
+                    ridge_fit_records=fit_records, feature_cache=cache_meta,
                     event_hashes={key: value['event_sha256'] for key, value in cache.items()},
                     public_hashes={key: value['public_sha256'] for key, value in cache.items()},
                     prediction_sha256=hashlib.sha256(prediction_path.read_bytes()).hexdigest(),
