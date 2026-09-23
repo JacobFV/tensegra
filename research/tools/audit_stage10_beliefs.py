@@ -55,13 +55,16 @@ def audit(root,require_complete=True):
    assert passed==row['passed'];cells+=1
    gate.append(dict(split=key[0],candidates=key[1],condition=key[2],passed=passed,mean_l1=a,mean_impossible=b,final_correct=final))
   assert seen==expected
-  deltas=[]
+  deltas=[];tails=[]
   for (split,n,condition),raw in raws.items():
    if condition!='clean':continue
    renamed=raws[(split,n,'id_rename')];assert raw['target']==renamed['target']
-   delta=max(abs(a-b) for ep,eq in zip(raw['posterior'],renamed['posterior']) for p,q in zip(ep,eq) for a,b in zip(p,q));deltas.append(delta)
+   largest=max((abs(a-b),i,t,j) for i,(ep,eq) in enumerate(zip(raw['posterior'],renamed['posterior'])) for t,(p,q) in enumerate(zip(ep,eq)) for j,(a,b) in enumerate(zip(p,q)))
+   delta,i,t,j=largest;deltas.append(delta)
+   q=raw['target'][i][t];a=raw['posterior'][i][t];b=renamed['posterior'][i][t]
+   tails.append(dict(split=split,candidates=n,delta=delta,event_index=i,frame=t,coordinate=j,clean=a,renamed=b,target=q,clean_impossible=sum(v for v,y in zip(a,q) if not y),renamed_impossible=sum(v for v,y in zip(b,q) if not y)))
   if arm=='ledger_only':assert max(deltas)==0
-  runs.append(dict(seed=seed,arm=arm,cells=len(rows),max_renaming_delta=max(deltas),cells_detail=gate))
+  runs.append(dict(seed=seed,arm=arm,cells=len(rows),max_renaming_delta=max(deltas),renaming_tail_cells=tails,cells_detail=gate))
  if require_complete:assert len(runs)==9 and cells==810
  assert all((len(v)==3 or not require_complete) and len(set(v))==1 for v in pairing.values())
  return dict(runs=runs,cells_verified=cells,frames_verified=frames,calibration_bins_verified=calibration_checked,paired_initial_tensors_and_semantic_streams=True,complete_matrix=len(runs)==9 and cells==810)
