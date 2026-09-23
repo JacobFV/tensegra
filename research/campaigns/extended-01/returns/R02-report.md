@@ -21,3 +21,5 @@ R03 will reuse exactly the16,384-event cache and reproduce the900-update traject
 ## Resources and provenance
 
 Frozen source ce26bce; full process occupancy72.14s, inner runner70.781s including feature capture and exports. Peak allocated CUDA memory1.500GB. All old result bytes remain untouched. Local compact artifacts are in research/results/campaign-01/returns/r02-development; immutable large cache/logits/weights are at gb10-direct:~/topoformer-campaign-01/returns/r02-development. Independent audit is pending.
+
+![Fixed-update diversity and subtype curves](../../../results/campaign-01/returns/r02-development/diversity-curve.png)
