@@ -54,3 +54,21 @@ The primary1024workspace standard remains unchanged. Decoder rank is an output
 head hyperparameter, separately reported. No new generator semantics or runtime
 primitives are introduced. Public acquisition and transfer gates remain blocked
 pending c1/c2 and root budget/queue approval.
+
+## c2 resource freeze
+
+Profile completed on GB10, existing CUDA environment, source `c379744`, config
+`stage9-semantic-oracle-profile.json`. Three updates per arm took0.458s cold
+additive/all-pairs,0.065s additive/conditional,0.284s interaction/all-pairs,
+0.264s interaction/conditional. Peak allocated GPU memory170MB/392MB; process RSS
+is separately recorded. Head parameters1,902,658 versus6,359,106. Node feature
+width1024; no neural recurrent workspace or memory tokens are used in this
+privileged decoder-isolation task. Every graph/node has a supplied distinct
+one-hot code; matching this code is not learned semantic grounding.
+
+The fixed development budget is4arms ×2development seeds ×300updates ×8graphs
+=19,200graph presentations. Expected2–3minutes, hard resource cap5GPUminutes.
+Selection uses fixed-set development fitting only. No test surfaces, no learned
+thresholds, no exposure extension after inspecting outcomes. Advancement needs
+exact graph fitting under predicted edge existence in both development seeds;
+otherwise public acquisition stays blocked and this bounded failure is reported.
