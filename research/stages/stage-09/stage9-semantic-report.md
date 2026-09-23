@@ -1,10 +1,11 @@
 # Stage 9 semantic contracts: complete acquisition remains blocked
 
 **Outcome:** the slot objective mismatch is real and repairable in a mathematical
-fixture, but no tested learned decoder reaches complete fixed-set acquisition
-with the prespecified zero-logit edge decoder. A later TRAIN-only diagnostic
-recovers every graph using relation-specific thresholds; this separates score
-acquisition from the original decoding failure. Public-text training and fresh/renderer transfer
+fixture, but every learned run fails the prespecified zero-logit edge decoder. A later
+TRAIN-only diagnostic recovers every development graph using relation-specific
+thresholds. A separately frozen three-seed confirmation then fits8/8graphs in
+two seeds and6/8in one, failing the calibrated all-seed criterion. This separates
+score acquisition, decoder calibration and residual seed robustness. Public-text training and fresh/renderer transfer
 therefore remain **blocked**. No larger semantic sweep ran.
 
 ## What was reproduced before new learning
@@ -190,3 +191,39 @@ Full per-relation min-positive/max-negative scores, thresholds, class support,
 per-graph signed-count corrections and exact outcomes are retained in
 [calibration records](../../results/stage9/semantic-contracts/relation-calibration.json).
 No new training, public c3 run or composition was authorized by this diagnosis.
+
+
+## Prospective calibrated-contract confirmation
+
+The posthoc result motivated one separately preregistered contract, source
+`30e36ed`, before any new outcomes: four head/objective arms, three new paired
+initializations10/11/12,8fixed graphs generated from seed9001000, the same
+width1024/rank128/300updates, and the identical final-TRAIN threshold rule.
+No threshold fitting at intermediate checkpoints, per-graph thresholds or
+additional exposure was allowed. Independent review approved the policy before
+launch. The new restricted gate required8/8exact graphs in every one of12runs.
+
+| Initialization | Raw complete graphs, every arm | TRAIN-calibrated complete graphs, every arm | Remaining edge errors |
+|---|---:|---:|---:|
+|10|0/8|6/8|5|
+|11|0/8|8/8|0|
+|12|0/8|8/8|0|
+
+All12runs again have perfect slots on real edges. Seed10's remaining errors are
+all `argument` relation entries, four on construction9001004and one on9001007.
+The complete-graph result is identical across the four arms within each seed;
+changing the slot head/objective does not resolve that independent edge-score
+error. **The prospective calibrated gate fails.** Public c3 remains blocked;
+there is no subsequent optimizer or corpus expansion.
+
+This confirms that calibrated readout can turn much of the raw failure into
+complete fixed-set reconstruction, but it does not establish robust acquisition
+across every prescribed seed. The8graphs are a new fixed fixture, not a heldout
+semantic test: one overlaps the prior c2fixture and five overlap the Stage8pool
+under alpha-normalized graph equality. They comprise2binding,3set and3unification
+constructions. No512-example generalization claim is made from tiny fixed support.
+
+The confirmation adds28,800graph presentations,3,600updates and68.37seconds of
+recorded model time. [Per-seed results and source/config/checkpoint hashes](../../results/stage9/semantic-contracts/calibrated-confirmation-summary.json)
+retain every arm. Raw predictions, threshold records and targets are compressed
+losslessly. The historical raw gate and earlier failures remain unchanged.
