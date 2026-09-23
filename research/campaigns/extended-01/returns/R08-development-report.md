@@ -23,3 +23,7 @@ R06 populations are reused development data. The screen adds three recipes to th
 External process occupancy was43.54seconds, peak CUDA allocation1,208,889,856bytes. No extension was run. Independent audit is pending.
 
 [All rates and every type/value cell](../../../results/campaign-01/returns/r08-development/summary.json), [raw predictions](../../../results/campaign-01/returns/r08-development/predictions.json.gz), [manifest and complete curves](../../../results/campaign-01/returns/r08-development/manifest.json.gz), [process receipt](../../../results/campaign-01/returns/r08-development/process.json), and [prospective protocol](R08-protocol.md).
+
+![All registered learning-rate curves](../../../results/campaign-01/returns/r08-development/optimizer-curves.png)
+
+![Every fixed endpoint and worst grid stratum](../../../results/campaign-01/returns/r08-development/optimizer-grid-minima.png)

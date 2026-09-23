@@ -16,7 +16,7 @@ for f in m['fits']:
  for ax,key in zip(axes[1:],['grid','cells']):ax.plot(steps,[min(c['correct']/c['total'] for c in cp[key]) for cp in f['curve']],marker='.',label=label)
 for f in m['fits']:
  if f['trained_here']:continue
- for ax,key in zip(axes[1:],['grid','cells']):ax.axhline(min(c['correct']/c['total'] for c in f['curve'][0][key]),ls='--',label=f['arm'].replace('_',' '))
+ for ax,key in zip(axes[1:],['grid','cells']):ax.axhline(min(c['correct']/c['total'] for c in f['curve'][0][key]),ls='--' if f['arm']=='linear_reference' else ':',color='black' if f['arm']=='linear_reference' else 'gray',label=f['arm'].replace('_',' '))
 axes[0].set(yscale='log',ylabel='Cross-entropy (25-update mean)',title='Fitting loss, all screened rates')
 axes[1].set(ylabel='Minimum exact accuracy',title='Calibration type/value grid')
 axes[2].set(ylabel='Minimum exact accuracy',title='Original-mixture calibration')
