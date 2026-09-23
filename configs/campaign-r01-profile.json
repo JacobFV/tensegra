@@ -1,0 +1,42 @@
+{
+  "mode": "profile",
+  "device": "cuda",
+  "checkpoint": "/home/brandonin/topoformer-stage11/returns/main/10-wide_continue.pt",
+  "checkpoint_sha256": "487a0b632c398256ffd543b59138ef6b2b0648a38948b945e36262cc9f94051b",
+  "backbone_seed": 10,
+  "head_seed": 20000010,
+  "delays": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "eval_distractors": [
+    2,
+    8
+  ],
+  "batch_size": 64,
+  "data": {
+    "train": {
+      "seed": 20000101,
+      "size": 64
+    },
+    "calibration": {
+      "seed": 20100101,
+      "size": 64
+    },
+    "validation": {
+      "seed": 20200101,
+      "size": 64
+    }
+  },
+  "ridge_grid": [
+    0.1
+  ],
+  "ce_updates": 10,
+  "ce_batch_size": 256,
+  "ce_lr": 0.003,
+  "ce_check_every": 10
+}
