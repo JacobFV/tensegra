@@ -48,13 +48,14 @@ def calibrated_evaluation(model,train,dev,out,update,calibration_count=128,eval_
         if len(s):thresholds,calibration=train_relation_thresholds(s,y)
         else:thresholds=torch.zeros(len(ROLES));calibration=[dict(threshold=0.,empty_support=True,positive=0,negative=0,train_errors=0) for _ in ROLES]
         train_metrics=[dict(raw=base.metrics(pred,gold),calibrated=base.metrics({**pred,'edges':edge.gt(thresholds)},gold)) for pred,edge,gold,row in train_cache]
+        train_rows=[dict(seed=row['seed'],graph_sha256=row['graph_sha256'],raw=pack_graph(pred),calibrated_edges=pack_graph({**pred,'edges':edge.gt(thresholds)})['edges'],target=pack_graph(gold)) for pred,edge,gold,row in train_cache]
         rows=[]
         for index in range(min(len(dev),eval_count or len(dev))):
             public,gold,row=dev[index];output=model(public);raw,cal=decode(output,public,thresholds)
             rows.append(dict(seed=row['seed'],semantic_sha256=row['semantic_sha256'],graph_sha256=row['graph_sha256'],raw=pack_graph(raw),calibrated_edges=pack_graph(cal)['edges'],target=pack_graph(gold),raw_metrics=base.metrics(raw,gold),calibrated_metrics=base.metrics(cal,gold)))
     cal_path=out/f'calibration-u{update}.npz'
     np.savez_compressed(cal_path,scores=s.numpy(),targets=y.numpy(),pairs=torch.cat(calibration_pairs).numpy(),offsets=np.asarray(offsets,dtype=np.int64))
-    result=dict(update=update,thresholds=thresholds.tolist(),calibration=calibration,calibration_records=calibration_rows,calibration_data_artifact=cal_path.name,calibration_data_sha256=digest(cal_path),train_metrics=train_metrics,rows=rows,evaluation_seconds=time.monotonic()-tick)
+    result=dict(update=update,thresholds=thresholds.tolist(),calibration=calibration,calibration_records=calibration_rows,calibration_data_artifact=cal_path.name,calibration_data_sha256=digest(cal_path),train_metrics=train_metrics,train_rows=train_rows,rows=rows,evaluation_seconds=time.monotonic()-tick)
     path=out/f'evaluation-u{update}.json.gz';write_gzip(path,result)
     def summary(rows,key):
         def micro(kind):
