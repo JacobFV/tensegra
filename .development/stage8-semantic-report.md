@@ -127,3 +127,21 @@ reduced approximately 478 MB to 22 MB and verified every decoded field exactly.
 Original compressed SHA256, converted SHA256 and record counts are committed;
 the original is also retained in the remote durable artifact directory. Exact
 historical source snapshots are committed independently of branch ancestry.
+
+### Slot-objective capacity audit
+
+A separate gold-only audit found a two-by-two XOR witness in each of the first
+1,000 main training graphs. The ordered-slot head adds a source-specific and a
+target-specific class logit. Its current loss labels sampled non-edge pairs as
+“no slot,” alongside ordered slots on actual edges. Two independent ordered edges
+and their cross pairs can therefore require an XOR classification that this
+additive head cannot satisfy with strict class margins. This is an irreducible
+component of the slot training objective, not evidence that more data cannot help
+other semantic outputs.
+
+The independent edge head can suppress cross pairs during decoding, so the audit
+does **not** prove that final graph recovery is impossible. The frozen main study
+continues unchanged; any later edge-conditional slot objective would be a separate
+experiment. The audit source and per-lesson counts are committed with the timing
+artifacts. This limitation must accompany interpretations of ordered-edge and
+whole-graph failures.
