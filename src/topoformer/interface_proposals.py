@@ -213,3 +213,82 @@ class JointPosteriorModel(nn.Module):
             state = self.cell(frames[:,step].reshape(b*h,1),state)
             beliefs.append(self.readout(state).reshape(b,h).softmax(-1))
         return torch.stack(beliefs,1)
+
+
+def progressive_instruction_episode(*, seed, operation_override=None, swap_override=None, no_executable=None, records=4):
+    """Public partial instruction records with a supplied finite hypothesis set.
+
+The unordered operand pair is supplied as a prior. Operation and ordered roles
+are revealed later. The null hypothesis means no instruction matches the query
+key. Private posterior is uniform over candidates consistent with visible fields.
+"""
+    rng = random.Random(seed)
+    key_dim,feature_dim = 8,32
+    keys = []
+    while len(keys) < 3+records*3:
+        key = tuple(rng.choice((-1.,1.)) for _ in range(key_dim))
+        if key not in keys: keys.append(key)
+    dest,a,b = keys[:3]
+    op_sample,swap_sample = rng.randrange(5),rng.randrange(2)
+    operation = op_sample if operation_override is None else operation_override
+    swap = swap_sample if swap_override is None else swap_override
+    null_sample = rng.random() < .2
+    null = null_sample if no_executable is None else no_executable
+    op_arrival,order_arrival = rng.choice((1,2)),rng.choice((3,4))
+    hypotheses = torch.zeros(11,feature_dim)
+    for op in range(5):
+        for ordering in range(2):
+            h = hypotheses[2*op+ordering]
+            h[op] = 1;h[5:13] = torch.tensor(dest)
+            h[13:21] = torch.tensor(b if ordering else a)
+            if op != 3: h[21:29] = torch.tensor(a if ordering else b)
+            h[29:31] = 1
+    hypotheses[-1,-1] = 1
+    raw_records = [(keys[3] if null else dest,operation,b if swap else a,a if swap else b)]
+    for i in range(1,records):
+        raw_records.append((keys[3+3*i],rng.randrange(5),keys[4+3*i],keys[5+3*i]))
+    rng.shuffle(raw_records)
+    frames = torch.zeros(5,records,feature_dim)
+    targets = torch.zeros(5,11)
+    for t in range(5):
+        for j,(destination,op,left,right) in enumerate(raw_records):
+            frames[t,j,5:13] = torch.tensor(destination)
+            if t >= op_arrival: frames[t,j,op] = 1;frames[t,j,29] = 1
+            if t >= order_arrival:
+                frames[t,j,13:21] = torch.tensor(left)
+                if op != 3: frames[t,j,21:29] = torch.tensor(right)
+                frames[t,j,30] = 1
+        if null:
+            targets[t,-1] = 1
+        elif t < op_arrival:
+            targets[t,:10] = .1
+        elif t < order_arrival:
+            targets[t,2*operation:2*operation+2] = .5
+        else:
+            targets[t,2*operation+swap] = 1
+    return {'frames':frames,'hypotheses':hypotheses,'private_posterior':targets,
+            'operation_arrival':op_arrival,'order_arrival':order_arrival,'no_executable':null}
+
+
+class ProgressiveInstructionModel(nn.Module):
+    """Persistent candidate workspace using the existing four workspace blocks."""
+    def __init__(self,width=24):
+        super().__init__()
+        from .thinking import ThinkingConfig, _WorkspaceBlock
+        config = ThinkingConfig(feature_dim=32,width=width,heads=2,structural_heads=0,workspace_rows=11)
+        self.encode = nn.Linear(32,width)
+        self.blocks = nn.ModuleList(_WorkspaceBlock(config) for _ in range(4))
+        self.score = nn.Linear(width,1)
+
+    def forward(self,frames,hypotheses):
+        state = self.encode(hypotheses)
+        b,steps,n,_ = frames.shape
+        mask = torch.ones(b,n,dtype=torch.bool,device=frames.device)
+        bias = frames.new_zeros(b,2,11,11)
+        beliefs = []
+        for t in range(steps):
+            memory = self.encode(frames[:,t])
+            for block in self.blocks:
+                state,_ = block(state,memory,mask,bias)
+            beliefs.append(self.score(state).squeeze(-1).softmax(-1))
+        return torch.stack(beliefs,dim=1)

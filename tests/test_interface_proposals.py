@@ -96,3 +96,36 @@ def test_progressive_joint_support_has_no_crossed_impossible_pairs_or_future_inp
     assert torch.allclose(full[:,:2],prefix)
     assert torch.allclose(full.sum(-1),torch.ones(1,4))
     assert full.shape[-1] == 2
+
+
+def test_progressive_instruction_frames_keep_hidden_operation_and_order_private():
+    from topoformer.interface_proposals import progressive_instruction_episode, ProgressiveInstructionModel
+    a = progressive_instruction_episode(seed=8, operation_override=0, swap_override=0)
+    b = progressive_instruction_episode(seed=8, operation_override=1, swap_override=1)
+    assert torch.equal(a['frames'][0],b['frames'][0])
+    assert torch.equal(a['hypotheses'],b['hypotheses'])
+    assert torch.equal(a['private_posterior'][0],b['private_posterior'][0])
+    model = ProgressiveInstructionModel(width=16)
+    model.eval()
+    frames,hyp = a['frames'][None],a['hypotheses'][None]
+    with torch.no_grad():
+        full = model(frames,hyp)
+        prefix = model(frames[:,:2],hyp)
+    assert torch.allclose(full[:,:2],prefix,atol=1e-6)
+    assert full.shape == (1,5,11)
+
+
+def test_progressive_no_matching_instruction_has_only_reject_support():
+    from topoformer.interface_proposals import progressive_instruction_episode
+    episode = progressive_instruction_episode(seed=2,no_executable=True)
+    assert episode['private_posterior'][:,-1].tolist() == [1.]*5
+
+
+def test_progressive_unary_hypotheses_and_records_mask_second_operand():
+    from topoformer.interface_proposals import progressive_instruction_episode
+    episode = progressive_instruction_episode(seed=3,operation_override=3,no_executable=False)
+    assert episode['hypotheses'][6:8,21:29].count_nonzero() == 0
+    for frame in episode['frames']:
+        for row in frame:
+            if row[3] == 1:
+                assert row[21:29].count_nonzero() == 0

@@ -369,3 +369,78 @@ A group comprises independent examples in deterministic shuffled groups of four.
     result['runtime_composition_authorized'] = False
     (output/'actual-confidence-summary.json').write_text(json.dumps(result,indent=2))
     return result
+
+
+def run_instruction_progressive(checkpoint_directory, output, config):
+    """Gate-A-dependent public-record posterior acquisition; no runtime coupling."""
+    from .interface_proposals import ProgressiveInstructionModel, progressive_instruction_episode
+    checkpoint_directory,output = Path(checkpoint_directory),Path(output)
+    base = json.loads((checkpoint_directory/'manifest.json').read_text())
+    if config['seeds'] != base['config']['seeds'] or not base['config'].get('main_budget_frozen'):
+        raise ValueError('Gate A requires the complete frozen main seed matrix')
+    matrix = {}
+    for seed in config['seeds']:
+        raw = json.loads((checkpoint_directory/f'seed{seed}-raw.json').read_text())
+        matrix[seed] = {k:raw['evaluations'][k]['complete']['metrics'] for k in ('iid_validation','ood_validation')}
+    if not gate_a_matrix(matrix,config['seeds']):
+        raise ValueError('Gate A failed')
+    torch.set_num_threads(2)
+    output.mkdir(parents=True,exist_ok=True)
+    manifest = {'config':config,'config_hash':digest(config),'gate_matrix':matrix,
+                'gate_matrix_hash':digest(matrix),'base_manifest_hash':digest(base),
+                'scope':'Supplied finite joint hypothesis set with unordered operand pair; public typed instruction op/order fields revealed over5frames. Existing4workspace blocks update persistent candidate states. No execution or composition.',
+                'source_hashes':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (Path(__file__),Path(__file__).with_name('interface_proposals.py'),Path(__file__).with_name('thinking.py'))}}
+    (output/'manifest.json').write_text(json.dumps(manifest,indent=2))
+    summaries = []
+    started = time.monotonic()
+    for seed in config['seeds']:
+        torch.manual_seed(seed+910000)
+        rng = random.Random(seed)
+        datasets = {name:[progressive_instruction_episode(seed=910000+seed*10000+offset+i,records=records) for i in range(count)]
+                    for name,offset,records,count in [('train',0,4,config['train_size']),('iid_validation',2000,4,config['eval_size']),
+                    ('ood_validation',3000,6,config['eval_size']),('iid_test',4000,4,config['eval_size']),('ood_test',5000,6,config['eval_size'])]}
+        def tensorize(rows):
+            return tuple(torch.stack([r[k] for r in rows]) for k in ('frames','hypotheses','private_posterior'))
+        batches = {k:tensorize(v) for k,v in datasets.items()}
+        def evaluate(model,name):
+            frames,hypotheses,target = batches[name]
+            with torch.no_grad(): belief = model(frames,hypotheses)
+            valid = target[:,-1,-1] == 0
+            final = belief[:,-1].argmax(-1) == target[:,-1].argmax(-1)
+            support = (target > 0).float()
+            impossible = (belief*(1-support)).sum(-1)
+            return {'count':len(target),'final_joint_accuracy':float(final.float().mean()),
+                    'executable_count':int(valid.sum()),'no_executable_count':int((~valid).sum()),
+                    'executable_joint_accuracy':float(final[valid].float().mean()) if valid.any() else None,
+                    'reject_accuracy':float(final[~valid].float().mean()) if (~valid).any() else None,
+                    'mean_absolute_posterior_error':float((belief-target).abs().mean()),
+                    'impossible_mass_by_frame':impossible.mean(0).tolist(),
+                    'posterior_entropy_by_frame':(-(belief*belief.clamp_min(1e-8).log()).sum(-1)).mean(0).tolist()},belief.tolist(),target.tolist()
+        model = ProgressiveInstructionModel(width=config['width'])
+        initial = state_hash(model)
+        optimizer = torch.optim.Adam(model.parameters(),lr=config['lr'])
+        curves = []
+        for step in range(config['steps']+1):
+            if step % config['eval_every'] == 0 or step == config['steps']:
+                curves.append({'step':step,'train':evaluate(model,'train')[0],
+                               'validation':{k:evaluate(model,k)[0] for k in ('iid_validation','ood_validation')}})
+            if step < config['steps']:
+                indices = rng.choices(range(config['train_size']),k=config['batch_size'])
+                frames,hypotheses,target = (x[indices] for x in batches['train'])
+                belief = model(frames,hypotheses)
+                loss = -(target*belief.clamp_min(1e-8).log()).sum(-1).mean()
+                optimizer.zero_grad();loss.backward();torch.nn.utils.clip_grad_norm_(model.parameters(),1.);optimizer.step()
+                if step % config['eval_every'] == 0: curves[-1]['joint_cross_entropy'] = float(loss.detach())
+        final = {}
+        for name in ('iid_validation','ood_validation','iid_test','ood_test'):
+            metrics,belief,target = evaluate(model,name)
+            final[name] = {'metrics':metrics,'beliefs':belief,'private_posterior':target}
+        raw = {'curves':curves,'final':final,'initial_hash':initial,'checkpoint_hash':state_hash(model),
+               'data_hashes':{name:digest({'frames':b[0].tolist(),'hypotheses':b[1].tolist(),'targets':b[2].tolist()}) for name,b in batches.items()},
+               'optimizer_examples':config['steps']*config['batch_size'],'train_cardinality':config['train_size']}
+        torch.save(model.state_dict(),output/f'seed{seed}-progressive.pt')
+        (output/f'seed{seed}-progressive.json').write_text(json.dumps(raw,indent=2))
+        summaries.append({'seed':seed,'final':{k:v['metrics'] for k,v in final.items()}})
+    result = {'seeds':summaries,'runtime_composition_authorized':False,'elapsed_seconds':time.monotonic()-started}
+    (output/'summary.json').write_text(json.dumps(result,indent=2))
+    return result
