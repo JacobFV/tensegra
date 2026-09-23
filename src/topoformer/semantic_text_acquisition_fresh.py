@@ -9,7 +9,8 @@ from .semantic_curriculum import SemanticCurriculumActor,pack_graph
 def run(config):
     torch.set_num_threads(2)
     archive=json.load(gzip.open(config['training_archive'],'rt'));audit=json.loads(Path(config['audit']).read_text())
-    assert audit['accepted']==512
+    assert audit['accepted']==config['examples']==512
+    assert [r['seed'] for r in archive['runs']]==config['fixed_seeds']==[30,31,32]
     assert all(r['curves'][-1]['update']==4000 and r['curves'][-1]['calibrated_exact']==8 for r in archive['runs'])
     vocab=archive['value_vocabulary'];items=[]
     for row in audit['rows']:
