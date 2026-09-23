@@ -53,7 +53,10 @@ def calibrated_evaluation(model,train,dev,out,update,calibration_count=128,eval_
     result=dict(update=update,thresholds=thresholds.tolist(),calibration=calibration,calibration_data=calibration_rows,train_metrics=train_metrics,rows=rows,evaluation_seconds=time.monotonic()-tick)
     path=out/f'evaluation-u{update}.json.gz';write_gzip(path,result)
     def summary(rows,key):
-        return dict(exact=sum(r[key]['semantic_equivalence'] for r in rows),examples=len(rows),copy=sum(r[key]['identity_copy_accuracy'] for r in rows)/len(rows),typed_edge_f1=sum(r[key]['typed_edge']['f1'] for r in rows)/len(rows),ordered_edge_f1=sum(r[key]['ordered_edge']['f1'] for r in rows)/len(rows))
+        def micro(kind):
+            counts={k:sum(r[key][kind][k] for r in rows) for k in ('true_positive','predicted_count','gold_count')}
+            return 2*counts['true_positive']/max(1,counts['predicted_count']+counts['gold_count'])
+        return dict(exact=sum(r[key]['semantic_equivalence'] for r in rows),examples=len(rows),copy=sum(r[key]['identity_copy_accuracy'] for r in rows)/len(rows),typed_edge_f1=micro('typed_edge'),ordered_edge_f1=micro('ordered_edge'))
     metadata=dict(update=update,train_raw=summary(train_metrics,'raw'),train_calibrated=summary(train_metrics,'calibrated'),dev_raw=summary(rows,'raw_metrics'),dev_calibrated=summary(rows,'calibrated_metrics'),seconds=result['evaluation_seconds'],artifact=path.name,sha256=digest(path))
     model.train();return metadata
 
