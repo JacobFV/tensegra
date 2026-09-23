@@ -21,3 +21,5 @@ All three comparator architectures have 38,914 parameters and a 1,024-wide hidde
 External process occupancy was 68.97 seconds; peak CUDA allocation 446,848,000 bytes. This is one development backbone with fresh nuisance contexts, not a main three-seed result. Independent audit is pending. Next: freeze these endpoints for three-backbone fresh confirmation, preserve the actual mixture, evaluate causal and balanced conditions separately, and include delay 32 only after fitting as extrapolation.
 
 [Raw predictions](../../../results/campaign-01/returns/r05-development/predictions.json.gz), [manifest](../../../results/campaign-01/returns/r05-development/manifest.json.gz), [paired summary](../../../results/campaign-01/returns/r05-development/summary.json), and [process receipt](../../../results/campaign-01/returns/r05-development/process.json).
+
+![Clean use and interventions](../../../results/campaign-01/returns/r05-development/use-and-interventions.png)
