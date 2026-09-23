@@ -1,5 +1,5 @@
 """Independent public-text graph count and calibration reconstruction (stdlib)."""
-import argparse,base64,gzip,hashlib,itertools,json
+import argparse,base64,gzip,hashlib,itertools,json,re,subprocess
 from pathlib import Path
 from collections import Counter
 
@@ -25,9 +25,11 @@ def threshold(pairs):
   if err<best[0]:best=(err,score)
  return best
 
-def audit(path):
+def audit(path,source_ref=None):
  with gzip.open(path,'rt')as f:x=json.load(f)
  assert hashlib.sha256(json.dumps(x['config'],sort_keys=True).encode()).hexdigest()==x['config_sha256']
+ if source_ref:
+  for name,h in x['source_sha256'].items():assert hashlib.sha256(subprocess.check_output(['git','show',source_ref+':src/topoformer/'+name],cwd=Path(__file__).resolve().parents[2])).hexdigest()==h
  total=thresholds=0;final=[]
  target_graphs=[row['target'] for row in x['runs'][0]['curves'][0]['rows']]
  def mode(values):
@@ -46,6 +48,9 @@ def audit(path):
    assert len(curve['rows'])==x['config']['graphs'];raw=cal=0
    for row,data in zip(curve['rows'],curve['calibration_data']):
     assert row['graph_seed']==data['graph_seed'];gold=row['target'];p=row['raw']['presence'];n=len(p);ge=edge_set(gold)
+    tokens=re.findall(r'\w+|[^\w\s]',row['public_text'],re.UNICODE)or['']
+    assert all(0<=i<len(tokens)and tokens.index(tokens[i])==i for i in row['raw']['copy'])
+    assert all(i<0 or (i<len(tokens)and tokens.index(tokens[i])==i)for i in gold['copy'])
     assert data['pairs']==[[i,j]for i in range(n)for j in range(n)if p[i]and p[j]]
     for (i,j),ys in zip(data['pairs'],data['targets']):assert ys==[(i,j,r)in ge for r in range(len(ys))]
     for policy in ('raw','calibrated'):
@@ -63,6 +68,6 @@ def audit(path):
      assert sum(y for _,y in pairs)==record['positive']and sum(not y for _,y in pairs)==record['negative']
     thresholds+=1
    if curve['update']==x['config']['updates']:final.append(dict(seed=run['seed'],raw=int(raw),calibrated=int(cal),graphs=len(curve['rows'])))
- return dict(frequency_graphs_verified=len(target_graphs),graph_decisions_verified=total,threshold_records_verified=thresholds,final=final,all_prescribed_seeds_present=sorted(r['seed']for r in x['runs'])==sorted(x['config']['seeds']),restricted_final_fit=all(r['calibrated']==r['graphs']for r in final)and len(final)==len(x['config']['seeds']),scope='Fixed public-text acquisition only; independent archived prediction/score reconstruction, not inference.')
+ return dict(source_ref_verified=source_ref,frequency_graphs_verified=len(target_graphs),graph_decisions_verified=total,threshold_records_verified=thresholds,final=final,all_prescribed_seeds_present=sorted(r['seed']for r in x['runs'])==sorted(x['config']['seeds']),restricted_final_fit=all(r['calibrated']==r['graphs']for r in final)and len(final)==len(x['config']['seeds']),scope='Fixed public-text acquisition only; independent archived prediction/score reconstruction, not inference.')
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('path',type=Path);p.add_argument('--output',required=True,type=Path);a=p.parse_args();out=audit(a.path);a.output.write_text(json.dumps(out,indent=2)+'\n');print(out)
+ p=argparse.ArgumentParser();p.add_argument('path',type=Path);p.add_argument('--output',required=True,type=Path);p.add_argument('--source-ref');a=p.parse_args();out=audit(a.path,a.source_ref);a.output.write_text(json.dumps(out,indent=2)+'\n');print(out)
