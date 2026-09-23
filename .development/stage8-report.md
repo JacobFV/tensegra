@@ -12,7 +12,7 @@ Stage8 tests learned evidence updates and return readout independently. It also 
 
 ## Acquisition observations (not competence)
 
-Protected belief acquisition has strong final answers on clean/retraction/contradiction but fails the empty-prior posterior check. Generic recurrence struggles especially with retraction. Initial main ID-dependent controls are confounded because the generic encoder does not consume IDs; preserve them and use the separately frozen ID-matched followup for strict comparisons.
+Protected belief acquisition has strong final answers on clean/retraction/contradiction but fails the empty-prior posterior check. Generic recurrence struggled with retraction in the short acquisition probe; the longer frozen diagnostic subsequently acquired ordinary clean/retraction updates. Initial main ID-dependent controls are confounded because the generic encoder does not consume IDs; preserve them and use the separately frozen ID-matched followup for strict comparisons.
 
 All six return arms memorize32fixed events atzero/one step. Fresh128-example joint reconstruction remains0–3/128, so this only establishes fitting capacity. Fresh-data main studies are required.
 
@@ -23,3 +23,7 @@ The width1024 semantic model improves node/type/identity recovery on eight train
 See [plan](stage8-plan.md), [decisions](stage8-decisions.md), [gate registry](stage8-gates.json), and [independent review](stage8-review.md). Every experiment freezes config/source before final evaluation. Timing/acquisition and main outcomes remain distinct. CUDAdependency freeze is under `results/stage8/cuda-requirements.txt`; GPU is remote NVIDIA GB10, PyTorch2.14.0+cu130. No local training or mutation of previous environments.
 
 Final paired results, raw metric audits and integration status will be appended after the queued studies finish.
+
+## Initial full-width diagnostic (ID-access caveat)
+
+After1000updates, both protected and generic recurrent models reach roughly99.6–100% clean/retraction final answers. Long repeated evidence is less stable in generic recurrence, but ID-access differs in this diagnostic, so strict stress-test attribution awaits the matched followup. Both models still fail broad posterior/prior/null gates. This does not support a general claim that generic latent recurrence cannot acquire evidence updates. It also does not isolate width as the sole cause of improvement relative Stage7, because the task/interface and training recipe differ.
