@@ -16,7 +16,7 @@ def audit(root,ref,data):
  roles=next(ast.literal_eval(n.value)for n in ast.parse((Path(__file__).resolve().parents[2]/'src/topoformer/thinking_language.py').read_text()).body if isinstance(n,ast.Assign)and any(isinstance(t,ast.Name)and t.id=='ROLES'for t in n.targets))
  train={r['seed']:r for r in (json.loads(line)for line in gzip.open(data/'train.jsonl.gz','rt'))};cells=[];nthresholds=0
  for point in m['curves']:
-  p=root/point['artifact'];assert sha(p)==point['sha256'];x=load(p);npz=root/x['calibration_data_artifact'];assert sha(npz)==x['calibration_data_sha256'];cal=np.load(npz)
+  p=root/point['artifact'];assert sha(p)==point['sha256'];x=load(p);npz=root/x['calibration_data_artifact'];assert sha(npz)==x['calibration_data_sha256'];cal={key:value for key,value in np.load(npz).items()}  # Materialize each compressed array once.
   for r,record in enumerate(x['calibration']):
    truth=cal['targets'][:,r].astype(bool);cut,error=cutoff(cal['scores'][:,r],truth);assert abs(cut-record['threshold'])<1e-6 and error==record['train_errors'];assert int(truth.sum())==record['positive']and int((~truth).sum())==record['negative'];nthresholds+=1
   train_rows={r['seed']:r for r in x.get('train_rows',[])}

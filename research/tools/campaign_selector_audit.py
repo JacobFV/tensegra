@@ -6,9 +6,10 @@ p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--s
 for name,want in json.loads((a.root/'source.json').read_text()).items():assert hashlib.sha256(subprocess.check_output(['git','show',f'{a.source_ref}:src/topoformer/{name}'])).hexdigest()==want
 cells=[]
 for f in sorted(a.root.glob('eval-*.npz')):
- raw=np.load(f);report=json.loads(f.with_suffix('.json').read_text());assert report['eval_seed']==cfg['eval_seed'];rows=report['rows'];assert [r['condition']for r in rows]==cfg['conditions']
+ step=int(f.stem.split('-')[1]);curve=step!=cfg['steps'] and 'curve_eval_seed' in cfg
+ raw=np.load(f);report=json.loads(f.with_suffix('.json').read_text());assert report['eval_seed']==cfg['curve_eval_seed' if curve else 'eval_seed'];rows=report['rows'];assert [r['condition']for r in rows]==cfg['curve_conditions' if curve else 'conditions']
  for ci,row in enumerate(rows):
-  get=lambda k:raw[f'c{ci}_{k}'];pred,gold,route,succ,startnode=get('pred'),get('gold'),get('route'),get('successor'),get('start');b,d,n=pred.shape;assert b==cfg['eval_examples'];bi=np.arange(b);ok=pred==gold
+  get=lambda k:raw[f'c{ci}_{k}'];pred,gold,route,succ,startnode=get('pred'),get('gold'),get('route'),get('successor'),get('start');b,d,n=pred.shape;assert b==cfg['curve_examples' if curve else 'eval_examples'];bi=np.arange(b);ok=pred==gold
   actual=startnode.copy();proposed=actual.copy();path=np.ones(b,dtype=bool)
   for t in range(d):actual=succ[bi,t,actual];proposed=route[bi,d-1-t,proposed];path&=actual==proposed
   assert np.array_equal(actual,get('oracle_terminal'))
@@ -24,5 +25,5 @@ for f in sorted(a.root.glob('eval-*.npz')):
   if condition.get('wrong_instruction'):
    swap=next(j for j,r in enumerate(rows)if r['condition'].get('instruction_swap')and r['condition']['data_group']==condition['data_group']);assert np.array_equal(get('supplied_final_target'),raw[f'c{swap}_gold'][:,-1][bi,raw[f'c{swap}_start']])
   cells.append(dict(step=int(f.stem.split('-')[1]),condition=condition,examples=b,task_correct=int(values['task'].sum()),path_correct=int(path.sum()),supplied_correct=int(values['agreement_supplied_task'].sum()),changed_answer_count=int(values['changed_answer'].sum()),changed_terminal_count=int(values['changed_terminal'].sum())))
-out=dict(mode=cfg['mode'],source_ref=a.source_ref,cells=cells,cpu_audit_wall_seconds=time.monotonic()-start,scope='Task/path/gold-transition/supplied-target and changed-outcome metrics independently reconstructed. Selected/edge mass means and bounds only; no saved full attention weights. Development acquisition, not confirmation.')
+out=dict(mode=cfg['mode'],source_ref=a.source_ref,cells=cells,cpu_audit_wall_seconds=time.monotonic()-start,scope='Task/path/gold-transition/supplied-target and changed-outcome metrics independently reconstructed. Selected/edge mass means and bounds only; no saved full attention weights. Per-cell archived metrics; curve and final populations verified separately when configured.')
 a.output.write_text(json.dumps(out,indent=2)+'\n');print(dict(mode=cfg['mode'],cells=len(cells),seconds=out['cpu_audit_wall_seconds']))

@@ -111,3 +111,11 @@ R05 confirmation passes the original-mixture learned binary-consumer contract in
 P01 confirmation independently passes typed dispatch across three fresh seeds:4096/4096,4096/4096,4095/4096, with all five supplied-control cells meeting the same contract. Required binary operands are learned; unary null is canonicalized by the predicted primitive's supplied arity rule. Fresh-name replacement is an actor-input no-op. Regenerated public populations and selected-model CPU replay match all12288 validation records. Actual exact execution reproduces every field of the original return event for all12287 correct proposals. The remaining wrong multiplication is refused at the numeric bound, retained as failure, and never replaced with the gold operation.
 
 These measured interfaces justify reviewing a narrow fixed-schedule composition under the campaign's new authority. They do not change historical Stage8–11 gates, establish language lowering, or authorize a claim that scheduling, primitive discovery or autonomous planning was learned. The composed experiment still needs strong public-information-matched neural comparators and causal runtime/return interventions.
+
+### R07, S07/S08, and A06 raw reconstruction
+
+R07 independently passes 84 archived-cell and 84 frozen-feature CPU replay checks. The residual decoder fails its fixed-budget acquisition criterion; the linear control exactly reproduces R06. This does not establish information absence or that every optimizer recipe fails.
+
+S07 independently passes 5,120 raw/calibrated graph-decision checks and 52 training-only threshold reconstructions; complete recovery remains zero. S08 independently reconstructs 1,280 records and 32,472 node outcomes. DEV occurrence alignment increases from 3,118/9,780 to 8,698/9,780, while only 6,848 of those 8,698 correctly aligned identifiers have their required incoming ordered edge correct. This association localizes a remaining boundary without proving causality.
+
+A06 all 405 curve/final cells independently reproduce task, path, supplied-target, and changed-outcome counts. Curve and final seed namespaces are checked separately. Full attention tensors are not archived, so attention-mass audit remains restricted to saved means/bounds. Paired confirmation uncertainty and checkpoint-byte checks are separate pending receipts.
