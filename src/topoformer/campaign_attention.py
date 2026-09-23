@@ -169,6 +169,10 @@ def metrics(output, gold, batch):
         a = batch.adjacency[bi, batch.relations[:, d-1-t]]
         actual = a.argmax(-1)[bi, actual]
         path &= proposed == actual
-    return {'task': task, 'all_node': correct.float().mean((1,2)),
+    clean_a = batch.adjacency[bi[:, None], batch.relations.flip(1)].bool()
+    weight = output['weights'].clamp_min(1e-30)
+    correct_log = weight.log().masked_fill(~clean_a,-torch.inf).amax(-1)
+    wrong_log = weight.log().masked_fill(clean_a,-torch.inf).amax(-1)
+    return {'task': task, 'log_read_margin': (correct_log-wrong_log).mean((1,2)), 'all_node': correct.float().mean((1,2)),
             'suffix_value_trajectory': correct.all((1,2)), 'exact_pointer_path': path,
             'edge_mass': (output['weights'] * batch.adjacency[bi[:, None], batch.relations.flip(1)]).sum(-1).mean((1,2))}

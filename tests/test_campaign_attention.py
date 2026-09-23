@@ -72,3 +72,14 @@ def test_size_strength_is_public_and_zero_still_exact():
     m=RoutingModel(width=32,heads=2)
     assert torch.equal(m(b,'soft',zero_strength=True,size_adjust=True)['logits'],m(b,'none')['logits'])
     assert m(b,'soft',strength_override=8.)['logits'].shape==(2,2,32,16)
+
+
+def test_equal_content_mass_fixture():
+    import math
+    b=generate(2,16,1,seed=100)
+    m=RoutingModel(width=32,heads=2,strength=4.)
+    with torch.no_grad():
+        m.q.weight.zero_();m.k.weight.zero_()
+    out=m(b,'soft')
+    expected=math.exp(4)/(math.exp(4)+15)
+    assert torch.allclose(out['edge_mass'],torch.full_like(out['edge_mass'],expected),atol=1e-6)
