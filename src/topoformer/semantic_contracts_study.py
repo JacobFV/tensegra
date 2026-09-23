@@ -50,7 +50,7 @@ def evaluate(model,examples):
             correct_slots=bool(slot[active].eq(gold['slots'][active]).all())
             rows.append(dict(seed=audit['seed'],lesson=audit['lesson'],nodes=len(nodes),exact_graph=correct_edges and correct_slots,
                edge_errors=int(pred.ne(truth).sum()),slot_errors_on_gold_edges=int(slot[active].ne(gold['slots'][active]).sum()),
-               predicted_edges=pred.nonzero().tolist(),predicted_slots=slot[active].tolist(),gold_edges=truth.nonzero().tolist(),gold_slots=gold['slots'][active].tolist()))
+               predicted_edges=pred.nonzero().tolist(),predicted_slots=slot[active].tolist(),gold_edges=truth.nonzero().tolist(),gold_slots=gold['slots'][active].tolist(),union_pairs=(active|pred.any(-1)).nonzero().tolist(),predicted_slots_on_union=slot[active|pred.any(-1)].tolist()))
     return rows
 
 
