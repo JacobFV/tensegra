@@ -1,6 +1,26 @@
 {
   "baseline": "123299a7c5312e1f75019fa491618943f54d0de2",
-  "experiments": [],
+  "experiments": [
+    {
+      "id": "R01",
+      "status": "profiling",
+      "kind": "development",
+      "hypothesis": "A stronger scalar consumer and the wider-trained frozen backbone combine usefully",
+      "intervention": "Same-capacity ridge or CE scalar refit, non-value heads fixed",
+      "comparators": [
+        "unchanged wide scalar head",
+        "categorical ridge",
+        "CE refit"
+      ],
+      "observable_inputs": "Public perfect typed return event;1024 scalar workspace features",
+      "privileged_targets": "Exact33-class scalar labels",
+      "protocol": "returns/R01-protocol.md",
+      "config": "../../../configs/campaign-r01-development.json",
+      "selection": "Minimax calibration exact count then total; no delay32",
+      "validation_examples": 1024,
+      "next_branch": "Phase/fit/decoder diagnosis or fresh3seed confirmation"
+    }
+  ],
   "policy": {
     "exploration": "Development seeds and validation only; register follow-ups before outcomes",
     "confirmation": ">=3 paired seeds; >=512 fresh examples/cell, prefer1024; fresh confirmation constructions; frozen source/selection",
