@@ -45,13 +45,28 @@ Final per-example macro graph means (%; seed SDs, defined populations and separa
 
 Unsupervised decoder precision is undefined for some seeds that predict no nodes/edges. The summary retains nulls and defined-example counts; it does not replace them with zero or silently use three seeds for those means. Node-type and lexical metrics are scored at gold positions. These output-decoder measurements say nothing about protected execution because this language track has no runtime integration.
 
+The [reproduced failure appendix](stage6-language-failures.md) gives six exact public prompts/options and archived wrong predictions across both graph-supervised arms, all three lessons and all four renderer conditions. For example, the English binding prompt explicitly binds D to alice, but the graph-supervised seed-7 checkpoint predicts erin. These examples are drawn from censored first-five-error buffers; repeated answers cannot establish a frequency shortcut or a full prediction distribution.
+
+## Bounded frozen-checkpoint diagnostic
+
+A separate [cost and return-use profile](results/stage6/profile/notes.md) contains 24 rollouts from final local checkpoints: three seeds × depths 4/32 × two examples × free/oracle-minimal modes, against source `c258785`. This completed small sample is not a replacement for the main controlled grid. All 12 free rollouts halted at two microsteps, with no correct exact numeric result or complete task output. All 12 oracle-minimal rollouts obtained the correct exact numeric result, while complete learned task output was wrong in all 12. This separates exact execution from successful output reconstruction in the sampled cases.
+
+Mean category wall times for the privileged minimal trace (milliseconds per rollout, six examples per depth):
+
+| Depth | Recurrent cell | Exact session | Event adapter | Other |
+|---|---:|---:|---:|---:|
+| 4 | 26.864 | 0.157 | 2.941 | 31.377 |
+| 32 | 181.253 | 1.470 | 32.638 | 823.459 |
+
+“Other” includes public input construction, initialization, output adapters, instrumentation and privileged auxiliary losses/audits. Concurrent training shared the host, no warmup was excluded, and free/oracle modes do different work. These measurements are not production throughput or a general neural-versus-symbolic efficiency result. Low free-policy cost reflects early failure, not efficient successful computation. The main runner records overall time, microsteps and event counts; only this bounded diagnostic instruments separate categories. Its [raw profile](results/stage6/profile/profile.json) retains source/checkpoint/input hashes and category-sum checks.
+
 ## Controlled main results pending
 
 The controlled table will report learned numeric/decision/joint task accuracy, exact runtime result/comparison, reference-order trajectory and transition-set equality, task conditional on exact result, and complete/incomplete halts at each depth. Runtime validity does not establish task correctness. Reference-order trajectory equality penalizes alternate ordering of independent operations; transition-set equality is a separate metric.
 
 Readiness analysis will show fractional-posterior calibration/Brier score, threshold risk/coverage, premature attempts and executed/deferred/rejected/conflict/duplicate populations. Risk here is local posterior unready mass, not downstream task-error risk. Returned-value use will compare the same frozen checkpoint under drop/shuffle/wrong-value interventions and report encoder versus post-recurrent workspace reconstruction with their support counts. If no correct executions occur, a null conditional is not a failed zero-percent conditional estimate.
 
-Compute analysis will retain microstep distributions, forced caps, expected training compute, wall time and observation protocol. Complete-evidence fixed/recurrent contrasts will be separated from progressive-evidence runtime contrasts. Auxiliary curves will show the actual zero-support training interval and cold-versus-warm task-only behavior. Final artifact links, source/config/data/checkpoint digests and missing-cell audits remain pending.
+Compute analysis will retain microstep distributions, forced caps, expected training compute, wall time and observation protocol. Complete-evidence fixed/recurrent contrasts will be separated from progressive-evidence runtime contrasts. Auxiliary curves will show the actual zero-support training interval and cold-versus-warm task-only behavior. At 256 updates, annealing supplies 64 full-weight, 128 decay and 64 zero-weight updates; the warm task-only arm instead uses 128 supervised then 128 task-only updates. Loss removal cannot establish forgetting or failure to maintain an acquired interface unless a useful free policy was demonstrated before removal. Final artifact links, source/config/data/checkpoint digests and missing-cell audits remain pending.
 
 ## Requested capability and metric coverage
 
@@ -70,6 +85,7 @@ Compute analysis will retain microstep distributions, forced caps, expected trai
 | Non-destructive event injection and post-return recurrence | Architectural/tests; roundtrips measured, pending | Learned output need not preserve exact symbolic values |
 | Causal return-channel contribution | Frozen interventions measured, pending | Later actions may change; no fixed-future-execution estimand |
 | Adaptive halt and task-to-emit gradient | Architectural/tests; halt distributions measured, pending | Hard bounds and soft priors remain supplied; training uses hazard surrogate |
+| Neural/symbolic cost decomposition | Bounded diagnostic measured | 24 rollouts only; privileged audit overhead and concurrent-host timing prevent throughput claims |
 | Discrete primitive acquisition from task reward | Task-only controls measured, pending | REINFORCE surrogate does not imply successful acquisition |
 | Independent grounding/topology/transition/readiness annealing | Implemented; main arm coverage pending | Zero support is distinct from merely decayed support; cold/warm separated |
 | Structure-off and protected learned-return controls | Implemented; main results pending | Learned values retain protected typing/writes, with no exact arithmetic fallback |
@@ -82,8 +98,10 @@ Compute analysis will retain microstep distributions, forced caps, expected trai
 
 ## Verification and outstanding evidence
 
-The coordinator reports full remote regression at controlled source `c258785`: **452 tests passed plus 6 subtests in 5.60 seconds**. The [independent review](stage6-review.md) records the final inference/training emission-boundary correction and protected learned-value checks. This is implementation evidence, not learned-performance evidence; the report author did not rerun the remote suite.
+The coordinator reports full remote regression at controlled source `c258785`: **452 tests passed plus 6 subtests in 5.60 seconds**. A later isolated full run at `955fc8f`, including analyzer `3434f17`, passed **454 tests plus 6 subtests in 4.89 seconds**, also reported by the coordinator. The [independent review](stage6-review.md) records the final inference/training emission-boundary correction and protected learned-value checks. This is implementation evidence, not learned-performance evidence; the report author did not rerun the remote suite.
 
 Final conclusions must distinguish what was constructed, what survived architectural tests, what was learned under teacher forcing, what the free policy executed, and what the workspace correctly emitted. Exact protected semantics do not transfer exactness to learned readout. Failure to acquire useful autonomous proposals, generalize, preserve returned values or stop appropriately will be reported as a result.
 
-Remaining work is to archive complete controlled main manifests and rows, run artifact-only audits against its frozen source, fill the controlled quantitative tables and plots, attach representative failures, and record final regression/preservation evidence. Existing Stage 1–5 behavior and artifacts are outside this study's modification scope. The completed language study does not establish the proposed learned capabilities within its budget.
+The [preservation audit](stage6-preservation.json), recorded in `955fc8f` against checked commit `0abc5a5`, verifies identical Git blobs for 352 baseline files, including 30 source files, 25 tests, 16 configurations and 219 result artifacts. The only modified pre-existing files are README (Stage 6 usage) and pyproject (vendor package data). New Stage 6 files are outside that comparison.
+
+Remaining work is to archive complete controlled main manifests and rows, run artifact-only audits against its frozen source, and fill the controlled quantitative tables and plots with representative failures. The completed language study does not establish the proposed learned capabilities within its budget.
