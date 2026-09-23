@@ -72,6 +72,8 @@ def run(config, output):
     torch.set_num_threads(2)
     torch.manual_seed(config['seed'])
     model = RoutingModel(width=config.get('width',1024), strength=config.get('strength',4.)).to(device)
+    initial_hash = hashlib.sha256(b''.join(t.detach().cpu().numpy().tobytes() for t in model.state_dict().values())).hexdigest()
+    config_hash = hashlib.sha256(json.dumps(config, sort_keys=True).encode()).hexdigest()
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.get('lr',3e-4), weight_decay=1e-4)
     start = time.monotonic()
     curves, losses = [], []
@@ -106,7 +108,9 @@ def run(config, output):
     manifest = {'mode':config['mode'],'seed':config['seed'],'width':model.width,
                 'parameters_allocated':sum(p.numel() for p in model.parameters()),
                 'parameters_with_gradient':sum(p.numel() for p in model.parameters() if p.grad is not None),
-                'presentations':steps*config['batch'],'unique_graph_examples':steps*config['batch'],
+                'presentations':steps*config['batch'],'generated_graph_examples':steps*config['batch'],
+                'unique_canonical_graphs':None, 'deduplication':'not performed; independent procedural draws',
+                'initial_tensor_sha256':initial_hash,'config_sha256':config_hash,
                 'node_microsteps':microsteps*config.get('nodes',16), 'graph_microsteps':microsteps,
                 'wall_seconds_including_eval_export':time.monotonic()-start,
                 'cuda_peak_allocated_bytes':torch.cuda.max_memory_allocated() if device.startswith('cuda') else 0,
