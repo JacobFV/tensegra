@@ -1,0 +1,64 @@
+{
+  "config": {
+    "device": "cuda",
+    "seeds": [
+      0
+    ],
+    "encodings": [
+      "factorized"
+    ],
+    "availability": [
+      "persistent"
+    ],
+    "checkpoint_dir": "/home/brandonin/topoformer-stage8-return/results/main",
+    "splits": {
+      "train": [
+        9100001,
+        64
+      ],
+      "validation": [
+        9200001,
+        64
+      ],
+      "test": [
+        9300001,
+        64
+      ]
+    },
+    "delays": [
+      0,
+      1,
+      4,
+      16,
+      32
+    ],
+    "batch_size": 64,
+    "distractors": 8,
+    "ridge_grid": [
+      0.01
+    ],
+    "profile_only": true
+  },
+  "source": {
+    "return_diagnostics_probe.py": "437b2bbf73a12d650302c91b5684a27ad596cc2fa3e305d32b7d8802103b1e3d",
+    "return_memory.py": "cbf4d732520673039e5db403dfb57979b2d3492063a82bbd1376793d9103e037",
+    "retention_data.py": "1e980177c4e9344c8824ef3b13e2afdca4499778f9efe027d122695a847585b5",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64"
+  },
+  "runs": [
+    {
+      "run": "0-factorized-persistent",
+      "checkpoint_sha256": "2102c2438a615973b09c28864d379158ebd3194bdd35b022218299bec48e53da",
+      "event_hashes": {
+        "train": "3729a23a77ac6f47cbe663019501471a83c3c36870cab195572c06f38f9c386e",
+        "validation": "3b606ca5df339b2f06cfed568ef9f31b2708b5b9b826b313148193529716d0cd",
+        "test": "b441e30e2c4adafc37fbb9918a9ac013dc90d730f56e2aa68a6189f4854841a9"
+      },
+      "seconds": 1.0256474148482084,
+      "peak_cuda_allocated": 321354240,
+      "parameters": 55854360,
+      "width": 1024
+    }
+  ],
+  "seconds": 1.7604947919026017
+}
