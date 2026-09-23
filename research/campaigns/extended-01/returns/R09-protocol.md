@@ -1,0 +1,13 @@
+# R09: public ingestion phase as a consumer contract
+
+Stage10's cross-delay matrix distinguishes ingestion from recurrent states; R07/R08 exposed readout optimization and remaining value-specific errors. Test the simplest phase-conditioned consumer: one linear classifier for public t=0 and another shared classifier for every t>0. This is supplied binary phase information, not an inferred semantic property or a per-delay oracle.
+
+Both classifiers start from the same original-wide linear head transformed into the same train-standardized feature coordinates. Thus initial predictions equal the shared linear reference for every example. The shared head has33,825 parameters; the two-head consumer has67,650. The backbone, encoding, persistent memory, width1024, labels, normalization, R06 balanced fitting population and batch stream remain unchanged. Both arms receive900 updates at AdamW learning rate.003 and230,400 total presentations. Report actual per-phase presentations: equal total rows do not imply equal rows per independently trained head, parameter count, or FLOPs.
+
+Replay the shared linear endpoint against R06 balanced weights within1e-6 and identical visited-row bitset. Fit phases0/1/2/4/8/16; public phase selection uses only whether the step is zero. There are no separate heads for specific positive delays. The comparison is a two-consumer architectural prior and additional decoder capacity, not an equal-capacity causal isolation of phase metadata alone.
+
+The sole endpoint is900. Advancement requires strict improvement over shared linear in the worst calibration-grid type/value cell across0/1/16 while every original-mixture calibration cell remains≥98%. No checkpoint, threshold, or delay is selected from validation. Log every100-update calibration curve, fitting accuracy, original-mixture and balanced-grid validation, each delay and value/type/operation stratum, non-value fields and full joint correctness. Reused R06 populations remain exploratory development. Report all outcomes regardless of advancement.
+
+No delay32 capture, longer training, R05 consumer replacement, or composition promotion is authorized. A successful development contrast would require fresh confirmation; a failed phase consumer would not establish information absence.
+
+Mechanical profile10 updates/arm: cap60seconds. Based on R07, main900 paired replay/phase fit is expected below60seconds with a proposed120-second cap, pending coordinator release. Preserve state/cache/source/config hashes, exact replay guard, lossless logits and raw outcomes, visit bitsets, and external process occupancy.
