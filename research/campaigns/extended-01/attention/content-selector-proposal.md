@@ -31,3 +31,11 @@ First test acquisition and fresh graphs/codes under N32,K4,D≤4. Then separate 
 Wrong or missing graph edges can remove the information required to distinguish several nodes with the same code. Such corruption measures reliance and uncertainty, not guaranteed recovery from absent information. Do not use corruption as an automatic argument for soft topology. A later recovery task would require legitimate redundant public information and its own protocol.
 
 Before promotion: freeze a numerical development budget and learning-curve decision rule after profiling; predeclare the strongest baselines; then use fresh three-seed confirmation only for an informative acquired mechanism. A03 may already be sufficient to settle the narrower supplied-functional-routing question.
+
+## Primary-method check
+
+[GAT §2.1](https://arxiv.org/html/1710.10903v3) defines learned neighbor scores, neighbor-restricted softmax, and weighted feature aggregation. We borrow that competitive neighbor-attention interface, not its exact original additive score.
+
+The distinction matters here: [GATv2 §3.2–3.3](https://arxiv.org/html/2105.14491v3) shows that the original single-layer monotone additive source/target score gives a query-independent ranking for fixed keys, and changes the operation order to permit dynamic rankings. Our task explicitly needs query-dependent choice among the same neighbors. A shared learned dot-product scorer or a joint nonlinear pair scorer is therefore the appropriate comparator. Deliberately using an underexpressive additive score would produce a weak baseline. This is a limitation of that scoring form under fixed representations, not a blanket claim about every multilayer GAT system.
+
+No external code is copied. The proposed benchmark is not claimed novel; it is a controlled test of joint content and topology use with an expressive graph baseline.
