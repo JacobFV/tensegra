@@ -9,13 +9,13 @@
 | [TCN wiring pilot](results/stage6/pilots/language/README.md) | 3 seeds × 4 arms, 8 updates, 18 train/9 evaluation constructions | Pipeline/resource validation only |
 | [Controlled timing configuration](../configs/stage6-timing.json) | 1 seed × 2 arms, 8 updates | Resource/wiring check only |
 | [TCN main configuration](../configs/stage6-language.json) | Frozen source `4c36557`; 3 seeds × 4 arms, 256 updates, 240 train/48 evaluation constructions | Completed; [audited summary](results/stage6/language/summary.json) |
-| [Controlled main configuration](../configs/stage6.json) | Config `462a5e3`; 15 arms × 3 seed shards, 256 updates, batch 2, depth-4 training; evaluation at 4/8/16/32 | Final source freeze and completed artifacts pending |
+| [Controlled main configuration](../configs/stage6.json) | Config `462a5e3`; 15 arms × 3 seed shards, 256 updates, batch 2, training depths 1–4; final evaluation at 4/8/16/32 | Final source freeze and completed artifacts pending |
 
 Pilot artifacts remain labeled pilots. They are not pooled with main experiments. No partial main-run metrics are used for conclusions.
 
 ## Completed TCN main result: no recurrent or semantic advantage at this budget
 
-All 12 runs completed 256 updates. The [audited summary](results/stage6/language/summary.json) contains all 48 checkpoint rows and 192 seed/arm/checkpoint/renderer cells, including renaming. The source, data, configuration, row identity and producer checkpoint digest checks passed against the frozen source; semantic train/evaluation identities were disjoint and initial states matched across arms within seed. Each cell evaluates 48 heldout constructions. Means ± sample SD below are percentages across three seeds, not uncertainty intervals over independent corpora.
+All 12 runs completed 256 updates. The [archived study](results/stage6/language/README.md) and [audited summary](results/stage6/language/summary.json) contains all 48 checkpoint rows and 192 seed/arm/checkpoint/renderer cells, including renaming. The source, data, configuration, row identity and producer checkpoint digest checks passed against the frozen source; semantic train/evaluation identities were disjoint and initial states matched across arms within seed. Each cell evaluates 48 heldout constructions. Means ± sample SD below are percentages across three seeds, not uncertainty intervals over independent corpora.
 
 | Arm | English | Spanish | Symbols | Renamed English |
 |---|---:|---:|---:|---:|
@@ -72,7 +72,7 @@ Compute analysis will retain microstep distributions, forced caps, expected trai
 | Adaptive halt and task-to-emit gradient | Architectural/tests; halt distributions measured, pending | Hard bounds and soft priors remain supplied; training uses hazard surrogate |
 | Discrete primitive acquisition from task reward | Task-only controls measured, pending | REINFORCE surrogate does not imply successful acquisition |
 | Independent grounding/topology/transition/readiness annealing | Implemented; main arm coverage pending | Zero support is distinct from merely decayed support; cold/warm separated |
-| Structure-off and protected learned-return controls | Pending implementation/freeze | No claims until exact retained guarantees and measured arms are recorded |
+| Structure-off and protected learned-return controls | Implemented; main results pending | Learned values retain protected typing/writes, with no exact arithmetic fallback |
 | Depth 8/16/32, controlled motif/composition transfer | Instrumented; completed grid pending | Bounded synthetic arithmetic, not arbitrary program generalization |
 | Actual TCN surface-to-graph/choice performance | Measured; bounded negative result | Canonical decoder; no graph isomorphism or lexical string generation |
 | TCN multilingual/renaming generalization | Measured; no broad generalization established | Spanish exposure is arm-dependent; reused bounded renamed vocabulary |
