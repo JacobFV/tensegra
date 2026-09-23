@@ -72,8 +72,11 @@ def summarize(config):
     tick=time.monotonic();root=Path(config['output_dir']);datasets={};hashes={}
     for seed in (701,702,703):
         for arm in ('constant','decay'):
-            p=root/f'{seed}-{arm}.json.gz';datasets[(seed,arm)]=load(p);hashes[p.name]=digest(p)
+            p=root/f'{seed}-{arm}.json.gz';data=load(p)
+            if data['seed']!=seed or data['arm']!=arm or data['decoder_sha256']!=config['decoder_source_sha256']:raise ValueError('endpoint metadata/decoder mismatch')
+            datasets[(seed,arm)]=data;hashes[p.name]=digest(p)
     p=root/'frequency.json.gz';frequency=load(p);hashes[p.name]=digest(p)
+    if frequency['arm']!='frequency' or frequency['decoder_sha256']!=config['decoder_source_sha256'] or frequency['provenance']['frequency_sha256']!=config['frequency_sha256']:raise ValueError('frequency metadata mismatch')
     aggregates=[]
     for (seed,arm),data in list(datasets.items())+[((None,'frequency'),frequency)]:
         for split in ('train','confirmation'):

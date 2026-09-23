@@ -28,3 +28,15 @@ class ContractTests(unittest.TestCase):
         pp={k:(v[perm][:,perm] if k in ('edges','slots') else v[perm]) for k,v in p.items()};pp['copy'][pp['copy']>=0]+=99
         qq,_=decode(pp,mask=True,bookkeeping=True)
         self.assertTrue(torch.equal(qq['edges'],q['edges'][perm][:,perm]));self.assertTrue(torch.equal(qq['slots'],q['slots'][perm][:,perm]))
+
+class ConfirmationAnalysisFixtures(unittest.TestCase):
+    def test_shared_event_bootstrap_and_complete_seed_contract(self):
+        import importlib.util
+        from pathlib import Path
+        path=Path(__file__).parents[1]/'research/campaigns/extended-01/semantics/S10-S12-analysis.py'
+        spec=importlib.util.spec_from_file_location('s10_s12_analysis',path);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        result=module.paired_interval([[1]*1024,[0]*1024,[-1]*1024],100,12012)
+        self.assertEqual(result['mean_gain'],0.)
+        self.assertEqual(result['shared_event_interval'],[0.,0.])
+        self.assertEqual(result['per_seed_interval'],[[1.,1.],[0.,0.],[-1.,-1.]])
+        with self.assertRaises(ValueError):module.paired_interval([[0]*1024]*2,100,12012)
