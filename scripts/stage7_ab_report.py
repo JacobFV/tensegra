@@ -92,7 +92,26 @@ def render_actual(directory):
     (directory/'derived-report.json').write_text(json.dumps(report,indent=2))
 
 
+def render_progressive(directory):
+    directory = Path(directory)
+    paths = sorted(list(directory.glob('seed*-progressive.json'))+list(directory.glob('seed*-progressive.json.gz')))
+    fig,axes = plt.subplots(1,3,figsize=(15,4))
+    for path in paths:
+        raw = read_json(path); name = path.name.split('-')[0]
+        axes[0].plot([r['step'] for r in raw['curves']],[r['train']['final_joint_accuracy'] for r in raw['curves']],label=name+' train')
+        axes[0].plot([r['step'] for r in raw['curves']],[r['validation']['iid_validation']['final_joint_accuracy'] for r in raw['curves']],'--',label=name+' IID val')
+        m=raw['final']['ood_test']['metrics']
+        axes[1].plot(range(5),m['impossible_mass_by_frame'],'o-',label=name)
+        axes[2].plot(range(5),m['posterior_entropy_by_frame'],'o-',label=name)
+    axes[0].set(xlabel='optimizer steps',ylabel='final joint accuracy',ylim=(0,1))
+    axes[1].set(xlabel='public evidence frame',ylabel='OOD test impossible posterior mass',ylim=(0,1))
+    axes[2].set(xlabel='public evidence frame',ylabel='OOD test posterior entropy')
+    for ax in axes:ax.legend(fontsize=7)
+    fig.tight_layout();fig.savefig(directory/'progressive.png',dpi=160);fig.savefig(directory/'progressive.svg');plt.close(fig)
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser();parser.add_argument('directory');args=parser.parse_args()
-    if (Path(args.directory)/'actual-confidence-summary.json').exists():render_actual(args.directory)
+    if list(Path(args.directory).glob('seed*-progressive.json*')):render_progressive(args.directory)
+    elif (Path(args.directory)/'actual-confidence-summary.json').exists():render_actual(args.directory)
     else:render(args.directory)
