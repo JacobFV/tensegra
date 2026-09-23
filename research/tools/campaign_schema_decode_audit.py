@@ -13,7 +13,7 @@ def packed(edges,shape):
  for i,j,k in edges:
   t=(i*m+j)*r+k;bits[t//8]|=1<<(t%8)
  return dict(shape=shape,bitorder='little',packed_b64=base64.b64encode(bits).decode())
-p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--output',type=Path,required=True);a=p.parse_args();t=time.monotonic();x=json.load(gzip.open(a.root/'s10-schema-decode-compact/predictions.json.gz'));assert hashlib.sha256(subprocess.check_output(['git','show','2085053:src/topoformer/campaign_semantics_contract_decode.py'])).hexdigest()==x['source_sha256'];indexed={(r['checkpoint'],r['split'],r['policy'],r['variant'],r['seed']):r for r in x['rows']};sums=collections.defaultdict(collections.Counter);verified=0
+p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--output',type=Path,required=True);p.add_argument('--result-name',default='s10-schema-decode-compact');a=p.parse_args();t=time.monotonic();x=json.load(gzip.open(a.root/a.result_name/'predictions.json.gz'));assert hashlib.sha256(subprocess.check_output(['git','show','2085053:src/topoformer/campaign_semantics_contract_decode.py'])).hexdigest()==x['source_sha256'];indexed={(r['checkpoint'],r['split'],r['policy'],r['variant'],r['seed']):r for r in x['rows']};sums=collections.defaultdict(collections.Counter);verified=0
 for arm in x['config']['arms']:
  path=a.root/Path(arm['archive']).parent.name/Path(arm['archive']).name;assert hashlib.sha256(path.read_bytes()).hexdigest()==x['archive_sha256'][arm['name']];archive=json.load(gzip.open(path))
  for split,key in [('train','train_rows'),('development','rows')]:
