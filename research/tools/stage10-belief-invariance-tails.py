@@ -76,8 +76,13 @@ def analyze(root):
                                      final_max=max(final_deltas), final_argmax_changes=final_changes,
                                      final_outcomes=outcomes, coverage=coverage, episodes=per_episode))
     failures.sort(key=lambda x: x['probability_delta'], reverse=True)
+    by_run = {}
+    for example in failures:
+        group = by_run.setdefault(example['run'], [])
+        if len(group) < 3:
+            group.append(example)
     return dict(kind='archived_counterfactual_probability_diagnosis_not_new_inference', rows=rows,
-                above_1_examples_total=len(failures), largest_examples=failures[:24])
+                above_1_examples_total=len(failures), largest_examples=failures[:24], largest_examples_per_run=by_run)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
