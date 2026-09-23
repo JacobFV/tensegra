@@ -21,6 +21,7 @@ def evaluate(model,cfg,out,step,device):
         for offset in range(0,cfg['eval_examples'],cfg['eval_batch']):
             count=min(cfg['eval_batch'],cfg['eval_examples']-offset)
             batch=generate(count,c['nodes'],c['depth'],groups=c.get('groups',4),seed=cfg['eval_seed']+c.get('data_group',ci)*100000+offset,device=device,heldout_composition=c.get('composition',False))
+            original=batch
             if c.get('instruction_swap'):batch=swap_instruction(batch)
             gold=targets(batch);given=batch;order=None
             if c.get('node_permutation'):
@@ -39,8 +40,21 @@ def evaluate(model,cfg,out,step,device):
             if order is not None:
                 supplied_gold=supplied_gold.gather(2,order.argsort(-1)[:,None,:].expand(-1,c['depth'],-1))
             scores['agreement_supplied_task']=(result['logits'].argmax(-1)[:,-1].gather(1,batch.starts[:,None]).squeeze(1)==supplied_gold[:,-1].gather(1,batch.starts[:,None]).squeeze(1))
+            successor=oracle_successors(batch)
+            def terminal(source,successors):
+                pointer=source.starts.clone();bi=torch.arange(len(pointer),device=pointer.device)
+                for t in range(successors.shape[1]):pointer=successors[bi,t,pointer]
+                return pointer
+            current_terminal=terminal(batch,successor)
+            original_terminal=terminal(original,oracle_successors(original)) if c.get('instruction_swap') else current_terminal
+            bi=torch.arange(count,device=device)
+            scores['changed_terminal']=current_terminal!=original_terminal
+            scores['changed_answer']=batch.values[bi,current_terminal]!=original.values[bi,original_terminal]
+            metric_names=set(scores)
             for name,value in scores.items():collected.setdefault(name,[]).append(value.cpu().numpy())
-            for name,value in dict(pred=result['logits'].argmax(-1),gold=gold,route=result['routes'],start=batch.starts,relation=batch.relations,successor=oracle_successors(batch)).items():
+            for name,value in dict(supplied_final_target=supplied_gold[:,-1].gather(1,batch.starts[:,None]).squeeze(1),oracle_terminal=current_terminal,original_terminal=original_terminal).items():
+                collected.setdefault(name,[]).append(value.cpu().numpy().astype('uint8'))
+            for name,value in dict(pred=result['logits'].argmax(-1),gold=gold,route=result['routes'],start=batch.starts,relation=batch.relations,successor=successor).items():
                 collected.setdefault(name,[]).append(value.cpu().numpy().astype('uint8'))
         sync(device)
         if timers:elapsed=sum(t0.elapsed_time(t1)/1000 for t0,t1 in timers)
@@ -48,7 +62,12 @@ def evaluate(model,cfg,out,step,device):
         row=dict(condition=c,examples=cfg['eval_examples'],forward_seconds=elapsed)
         for k,v in collected.items():
             raw[f'c{ci}_{k}']=v
-            if v.ndim==1:row[k]=float(v.mean())
+            if k in metric_names:row[k]=float(v.mean())
+        for kind in ['terminal','answer']:
+            mask=collected['changed_'+kind].astype(bool)
+            row['changed_'+kind+'_count']=int(mask.sum())
+            row['task_given_changed_'+kind]=float(collected['task'][mask].mean()) if mask.any() else None
+        row['forward_seconds_per_correct']=elapsed/int(collected['task'].sum()) if collected['task'].sum() else None
         rows.append(row)
     np.savez_compressed(out/f'eval-{step:05d}.npz',**raw);write(out/f'eval-{step:05d}.json',dict(rows=rows,eval_seed=cfg['eval_seed']))
     model.train();return dict(step=step,rows=rows)
@@ -61,7 +80,7 @@ def run(cfg,out):
     device=cfg.get('device','cuda');torch.set_num_threads(2);torch.manual_seed(cfg['seed'])
     model=SelectorModel(width=cfg.get('width',1024),strength=cfg.get('strength',8)).to(device)
     initial=hashlib.sha256(b''.join(t.detach().cpu().numpy().tobytes() for t in model.state_dict().values())).hexdigest()
-    optimizer=torch.optim.AdamW(model.parameters(),lr=cfg.get('lr',.0003),weight_decay=.01)
+    optimizer=torch.optim.AdamW(model.parameters(),lr=cfg.get('lr',.0003),weight_decay=1e-4)
     start=time.monotonic();curves=[];losses=[];draws=0;node_steps=0
     for step in range(cfg['steps']+1):
         if step in cfg['checkpoints']:curves.append(evaluate(model,cfg,out,step,device))
@@ -79,7 +98,9 @@ def run(cfg,out):
         curves=curves,losses=torch.stack(losses).cpu().tolist(),wall_seconds_including_eval_export=time.monotonic()-start,
         cuda_peak_allocated_bytes=torch.cuda.max_memory_allocated() if str(device).startswith('cuda') else 0,process_peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
         learned_strength=model.strength.detach().cpu().tolist(),selector_scale=float(model.selector_log_scale.exp().detach()),
-        parameters_with_gradient=sum(p.numel() for p in model.parameters() if p.grad is not None))
+        parameters_with_gradient=sum(p.numel() for p in model.parameters() if p.grad is not None),
+        parameters_nonzero_gradient_last_update=sum(p.numel() for p in model.parameters() if p.grad is not None and p.grad.abs().any().item()),
+        gradient_count_note='Autograd participation and last-update nonzero tensors, not functional capacity or acquired learning')
     write(out/'manifest.json',manifest);print(json.dumps(dict(completed=str(out),seconds=manifest['wall_seconds_including_eval_export'])),flush=True)
 
 if __name__=='__main__':
