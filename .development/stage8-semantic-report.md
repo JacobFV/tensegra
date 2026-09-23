@@ -35,14 +35,14 @@ used to authorize semantic competence.
 |---|---:|---:|---:|
 | Node-type accuracy |95.54%|96.68%|76.65%|
 | Identity-copy accuracy |90.72%|89.80%|0%|
-| Node-presence F 1 |98.68%|98.11%|96.38%|
-| Typed-edge F 1 |18.89%|19.42%|24.72%|
-| Ordered-edge F 1 |15.11%|15.93%|20.34%|
+| Node-presence F1 |98.68%|98.11%|96.38%|
+| Typed-edge F1 |18.89%|19.42%|24.72%|
+| Ordered-edge F1 |15.11%|15.93%|20.34%|
 | Exact graph recovery |0%|0%|0%|
 
 The semantic model's English training edge count was 568 true positives among 5421
 predictions, against 593 true edges. Thus high recall coexists with severe
-false-positive decoding. On English validation, semantic typed-edge F 1 was 15.48%
+false-positive decoding. On English validation, semantic typed-edge F1 was 15.48%
 versus 20.88% for no-input. Exact graph recovery remained zero in all evaluated
 surfaces. This probe therefore **does not establish graph acquisition**.
 
@@ -53,15 +53,15 @@ or decoding calibration is the remaining limitation.
 
 ## Prespecified next diagnostics
 
-The subsequent runner adds true padded minibatches and optional BF 16 autocast
+The subsequent runner adds true padded minibatches and optional BF16 autocast
 without reducing workspace width. CPU contract tests check batching equivalence,
 public padding masks, finite mixed-precision gradients and approximate agreement
-with FP 32. GPU timing will select resources before freezing the main study.
+with FP32. GPU timing will select resources before freezing the main study.
 
 Because the edge loss balances rare positives against negatives, zero logits are
 not necessarily calibrated edge-presence decisions. A separate diagnostic fits
 one threshold per relation using only the first 8 **training** graphs, both
-languages, on the fixed grid[-6,-4,-2,0,2,4,6,8,12]. It maximizes micro-F 1 per
+languages, on the fixed grid [-6,-4,-2,0,2,4,6,8,12]. It maximizes micro-F1 per
 relation over dense edge predictions with **predicted**, never gold, node presence.
 The same threshold vector is applied to every heldout renderer. Raw zero-threshold
 metrics and calibrated metrics are both retained. Full threshold-grid counts are
