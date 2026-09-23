@@ -141,6 +141,8 @@ def run(config, output):
     manifest = {'mode':config['mode'],'seed':config['seed'],'width':model.width,
                 'parameters_allocated':sum(p.numel() for p in model.parameters()),
                 'parameters_with_gradient':sum(p.numel() for p in model.parameters() if p.grad is not None),
+                'parameters_nonzero_gradient_last_update':sum(p.numel() for p in model.parameters() if p.grad is not None and bool((p.grad!=0).any())),
+                'gradient_count_note':'Tensor participation and last-update nonzero gradients, not a measure of functional capacity or acquired learning',
                 'presentations':steps*config['batch'],'generated_graph_examples':steps*config['batch'],
                 'unique_canonical_graphs':None, 'deduplication':'not performed; independent procedural draws',
                 'initial_tensor_sha256':initial_hash,'initial_shared_tensor_sha256':shared_hash,'config_sha256':config_hash,

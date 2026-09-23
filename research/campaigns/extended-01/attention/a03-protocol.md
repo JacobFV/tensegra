@@ -16,11 +16,11 @@ Zero λ is a frozen evaluation intervention on soft models, not a separately tra
 
 ## Compute and capacity
 
-Width1024 throughout. All models allocate4,241,449 parameters, but active parameter counts differ. Report both. Context uses a known-key cosine prior and a lossless list of successor addresses; it is more structured than a transformer parsing adjacency text. Message passing uses supplied adjacency and the common learned update, and avoids contentQK computation.
+Width1024 throughout. All models allocate4,241,449 parameters, but gradient participation differs. Report allocated parameters, tensors participating in autograd, and tensors with nonzero gradients at the final update separately. These counts are not a proof of functional capacity or acquired learning; hard single-successor attention gives Q/K zero gradients. Context uses a known-key cosine prior and a lossless list of successor addresses; it is more structured than a transformer parsing adjacency text. Message passing uses supplied adjacency and the common learned update, and avoids contentQK computation.
 
 CUDA events bracket model forward calls; report isolated forward seconds, throughput, and forward time per correctly solved example separately from process occupancy and condition wall time. The dense implementations do not establish sparse-compute advantages. Node count and depth are separate compute axes.
 
-The largest-shape random-initialization profile used N64/D16, three128-example cells:2.90 seconds process occupancy,0.89seconds within the runner including export. Steady large-cell model forward cost was approximately0.137seconds per128examples; initial CUDA warmup was slower. Projected full confirmation occupancy is300–450seconds. Hard cap600seconds for the serial15-run controller, including startup/training/inference/export. If the cap interrupts a run, retain it and register completion without changing protocol or results; do not drop incomplete seeds.
+The largest-shape random-initialization profile used N64/D16, three128-example cells:2.90 seconds process occupancy,0.89seconds within the runner including export. Steady large-cell model forward cost was approximately0.137seconds per128examples; initial CUDA warmup was slower. Projected full confirmation occupancy is300–450seconds. The root scheduler may release one paired seed (five arms) at a time, with a hard cap of300seconds per seed and900seconds total. This replaces the preliminary600second aggregate estimate before any confirmation outcome, and includes startup/training/inference/export. If the cap interrupts a run, retain it and register completion without changing protocol or results; do not drop incomplete seeds.
 
 ## Interpretation and advancement
 
