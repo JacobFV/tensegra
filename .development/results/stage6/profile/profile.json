@@ -1,0 +1,1058 @@
+{
+  "schema_version": 1,
+  "source_manifests": {
+    "0": {
+      "source_hash": "8e0b4c809268754cfa6f72f2d4cca616fe7720bff50d73dcc3885c4a0ebdfadc",
+      "git_commit": "c258785ee6b76f2d492f722e93a1b1539ac6de76",
+      "config_hash": "ec142b6767b61c06f98b6622c4b96eba287e0db9f736d4fe7485ddfd6442963c"
+    },
+    "1": {
+      "source_hash": "8e0b4c809268754cfa6f72f2d4cca616fe7720bff50d73dcc3885c4a0ebdfadc",
+      "git_commit": "c258785ee6b76f2d492f722e93a1b1539ac6de76",
+      "config_hash": "605eceb473b7d328ef741c0c20c2b693384ef7f58cab600ce715062b0e75544a"
+    },
+    "2": {
+      "source_hash": "8e0b4c809268754cfa6f72f2d4cca616fe7720bff50d73dcc3885c4a0ebdfadc",
+      "git_commit": "c258785ee6b76f2d492f722e93a1b1539ac6de76",
+      "config_hash": "55d10b467f1ad96723aa1ab3adb6512bb01d5ded2508bb562cd70d5c9b795552"
+    }
+  },
+  "script_sha256": "e9dc7622154f6033daa246b5648a3f17bd3cb750d6b72eaa4dded576c65fa3cc",
+  "frozen_source_sha256": {
+    "src/topoformer/thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+    "src/topoformer/thinking_analysis.py": "b7c5954bf31643dab6b23a34ccf8fa15d4867b02a7794fa2dca5f721e6a92604",
+    "src/topoformer/thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+    "src/topoformer/thinking_runtime.py": "42058f3bc523d43d169bd8520f7a4411c4849ee2f571621fc6e313683e59dad8",
+    "src/topoformer/thinking_study.py": "27f236e4a18ce8497b247fa35c4345c8054bef4f0398c408b3e860bdc5eaa634",
+    "src/topoformer/thinking_tasks.py": "149fbf48a5f73c2b3bf2f26affd980428f7b5e0f23298a9f2ff1aa934c85bae0"
+  },
+  "platform": "Linux-6.17.0-1008-nvidia-aarch64-with-glibc2.39",
+  "python": "3.12.3",
+  "torch": "2.14.0+cpu",
+  "threads": 2,
+  "examples_per_seed_depth_mode": 2,
+  "elapsed_wall_seconds": 7.364645130932331,
+  "timer_calibration": {
+    "iterations": 10000,
+    "wall_seconds": 0.00523528503254056,
+    "process_cpu_seconds": 0.005234160000000543
+  },
+  "caveats": [
+    "Concurrent training on the host; this is cost decomposition, not a throughput benchmark.",
+    "Process CPU time includes CPU consumed by Torch worker threads; wall time includes scheduling delays.",
+    "Three timed categories are disjoint; other includes initialization, tensor adapters, audit/loss computation and timer overhead.",
+    "Neural cell excludes event encoding; event reintegration adapter includes learned encoding, injection and encoder reconstruction diagnostics.",
+    "Oracle rows execute privileged actions and compute auxiliary audits, so their other time is not comparable to free policy overhead.",
+    "One measurement per example, no warmup exclusion; module/kernel cold starts remain included."
+  ],
+  "rows": [
+    {
+      "seed": 0,
+      "depth": 4,
+      "example": 0,
+      "mode": "free",
+      "compute_cap": 80,
+      "checkpoint": "local-seed0-step256.pt",
+      "checkpoint_sha256": "986e71a9cb0ba27739a5b310a68fc5acf6d4bde5d4c64564328096a97acc1ac3",
+      "public_hash": "e89586b961e616a6f1f379b97c2f46a9d5b787ce21848890e24a46c6a1cd44ae",
+      "data_hash": "be3a533af13ff6090a12df1f40dcaf86cef5bf2b830401b102e324bc5a1f8e73",
+      "microsteps": 2,
+      "executed_events": 0,
+      "duplicate_events": 0,
+      "proposed_execution_events": 2,
+      "task_correct": false,
+      "exact_result_correct": false,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.16224076598882675,
+      "total_process_cpu_seconds": 0.1714581759999999,
+      "categories": {
+        "neural_cell": {
+          "calls": 2,
+          "wall_seconds": 0.15252152178436518,
+          "process_cpu_seconds": 0.16098091199999998
+        },
+        "symbolic_session": {
+          "calls": 1,
+          "wall_seconds": 3.727991133928299e-05,
+          "process_cpu_seconds": 3.567999999998239e-05
+        },
+        "event_reintegration_adapter": {
+          "calls": 1,
+          "wall_seconds": 1.3120006769895554e-05,
+          "process_cpu_seconds": 1.2671999999991357e-05
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.009668844286352396,
+          "process_cpu_seconds": 0.010428911999999957
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "depth": 4,
+      "example": 0,
+      "mode": "oracle_minimal",
+      "compute_cap": 8,
+      "checkpoint": "local-seed0-step256.pt",
+      "checkpoint_sha256": "986e71a9cb0ba27739a5b310a68fc5acf6d4bde5d4c64564328096a97acc1ac3",
+      "public_hash": "e89586b961e616a6f1f379b97c2f46a9d5b787ce21848890e24a46c6a1cd44ae",
+      "data_hash": "be3a533af13ff6090a12df1f40dcaf86cef5bf2b830401b102e324bc5a1f8e73",
+      "microsteps": 8,
+      "executed_events": 9,
+      "duplicate_events": 0,
+      "proposed_execution_events": 9,
+      "task_correct": false,
+      "exact_result_correct": true,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.06177026918157935,
+      "total_process_cpu_seconds": 0.09076478399999999,
+      "categories": {
+        "neural_cell": {
+          "calls": 8,
+          "wall_seconds": 0.026691924780607224,
+          "process_cpu_seconds": 0.05157248000000014
+        },
+        "symbolic_session": {
+          "calls": 7,
+          "wall_seconds": 0.00018334342166781425,
+          "process_cpu_seconds": 0.00017083200000012067
+        },
+        "event_reintegration_adapter": {
+          "calls": 7,
+          "wall_seconds": 0.0035303980112075806,
+          "process_cpu_seconds": 0.004020064000000101
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.03136460296809673,
+          "process_cpu_seconds": 0.03500140799999962
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "depth": 4,
+      "example": 1,
+      "mode": "free",
+      "compute_cap": 80,
+      "checkpoint": "local-seed0-step256.pt",
+      "checkpoint_sha256": "986e71a9cb0ba27739a5b310a68fc5acf6d4bde5d4c64564328096a97acc1ac3",
+      "public_hash": "00d2a8a106956695fc9ca3ced1e30ff2e73e7dcc9370e03b0c929262698bda26",
+      "data_hash": "aebd184c8546af43e4f89c43e160e7ee84b256c442e646b9a853ff975c2473b1",
+      "microsteps": 2,
+      "executed_events": 0,
+      "duplicate_events": 0,
+      "proposed_execution_events": 2,
+      "task_correct": false,
+      "exact_result_correct": false,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.015588703099638224,
+      "total_process_cpu_seconds": 0.02249668799999993,
+      "categories": {
+        "neural_cell": {
+          "calls": 2,
+          "wall_seconds": 0.006710860878229141,
+          "process_cpu_seconds": 0.012221247999999907
+        },
+        "symbolic_session": {
+          "calls": 1,
+          "wall_seconds": 2.3968052119016647e-05,
+          "process_cpu_seconds": 2.288000000005841e-05
+        },
+        "event_reintegration_adapter": {
+          "calls": 1,
+          "wall_seconds": 7.6000578701496124e-06,
+          "process_cpu_seconds": 7.248000000070753e-06
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.008846274111419916,
+          "process_cpu_seconds": 0.010245311999999895
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "depth": 4,
+      "example": 1,
+      "mode": "oracle_minimal",
+      "compute_cap": 8,
+      "checkpoint": "local-seed0-step256.pt",
+      "checkpoint_sha256": "986e71a9cb0ba27739a5b310a68fc5acf6d4bde5d4c64564328096a97acc1ac3",
+      "public_hash": "00d2a8a106956695fc9ca3ced1e30ff2e73e7dcc9370e03b0c929262698bda26",
+      "data_hash": "aebd184c8546af43e4f89c43e160e7ee84b256c442e646b9a853ff975c2473b1",
+      "microsteps": 8,
+      "executed_events": 9,
+      "duplicate_events": 0,
+      "proposed_execution_events": 9,
+      "task_correct": false,
+      "exact_result_correct": true,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.06092003406956792,
+      "total_process_cpu_seconds": 0.08881086399999993,
+      "categories": {
+        "neural_cell": {
+          "calls": 8,
+          "wall_seconds": 0.026848274748772383,
+          "process_cpu_seconds": 0.048296879999999986
+        },
+        "symbolic_session": {
+          "calls": 7,
+          "wall_seconds": 0.0001588626764714718,
+          "process_cpu_seconds": 0.00014892800000021467
+        },
+        "event_reintegration_adapter": {
+          "calls": 7,
+          "wall_seconds": 0.0028554885648190975,
+          "process_cpu_seconds": 0.003125007999999929
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.031057408079504967,
+          "process_cpu_seconds": 0.037240047999999804
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "depth": 32,
+      "example": 0,
+      "mode": "free",
+      "compute_cap": 80,
+      "checkpoint": "local-seed0-step256.pt",
+      "checkpoint_sha256": "986e71a9cb0ba27739a5b310a68fc5acf6d4bde5d4c64564328096a97acc1ac3",
+      "public_hash": "c9305a6aaae05292aea482542ea5614190d1f448878bdcd9d1fd0e225f277980",
+      "data_hash": "7523691b0abb9d1262ca1abb7d81de314bd734de4839403b842bdc3fe649d1a0",
+      "microsteps": 2,
+      "executed_events": 0,
+      "duplicate_events": 0,
+      "proposed_execution_events": 2,
+      "task_correct": false,
+      "exact_result_correct": false,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.07126881228759885,
+      "total_process_cpu_seconds": 0.0830370720000001,
+      "categories": {
+        "neural_cell": {
+          "calls": 2,
+          "wall_seconds": 0.01239472022280097,
+          "process_cpu_seconds": 0.02345675199999997
+        },
+        "symbolic_session": {
+          "calls": 1,
+          "wall_seconds": 2.8224196285009384e-05,
+          "process_cpu_seconds": 2.69600000000203e-05
+        },
+        "event_reintegration_adapter": {
+          "calls": 1,
+          "wall_seconds": 1.0304152965545654e-05,
+          "process_cpu_seconds": 9.871999999910841e-06
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.05883556371554732,
+          "process_cpu_seconds": 0.0595434880000002
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "depth": 32,
+      "example": 0,
+      "mode": "oracle_minimal",
+      "compute_cap": 36,
+      "checkpoint": "local-seed0-step256.pt",
+      "checkpoint_sha256": "986e71a9cb0ba27739a5b310a68fc5acf6d4bde5d4c64564328096a97acc1ac3",
+      "public_hash": "c9305a6aaae05292aea482542ea5614190d1f448878bdcd9d1fd0e225f277980",
+      "data_hash": "7523691b0abb9d1262ca1abb7d81de314bd734de4839403b842bdc3fe649d1a0",
+      "microsteps": 36,
+      "executed_events": 65,
+      "duplicate_events": 0,
+      "proposed_execution_events": 65,
+      "task_correct": false,
+      "exact_result_correct": true,
+      "post_event_pass": true,
+      "total_wall_seconds": 1.1320446720346808,
+      "total_process_cpu_seconds": 1.3823383200000001,
+      "categories": {
+        "neural_cell": {
+          "calls": 36,
+          "wall_seconds": 0.23503293516114354,
+          "process_cpu_seconds": 0.41715951999999934
+        },
+        "symbolic_session": {
+          "calls": 35,
+          "wall_seconds": 0.001753699965775013,
+          "process_cpu_seconds": 0.0016744640000001532
+        },
+        "event_reintegration_adapter": {
+          "calls": 35,
+          "wall_seconds": 0.03717122972011566,
+          "process_cpu_seconds": 0.04244159999999986
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.8580868071876466,
+          "process_cpu_seconds": 0.9210627360000008
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "depth": 32,
+      "example": 1,
+      "mode": "free",
+      "compute_cap": 80,
+      "checkpoint": "local-seed0-step256.pt",
+      "checkpoint_sha256": "986e71a9cb0ba27739a5b310a68fc5acf6d4bde5d4c64564328096a97acc1ac3",
+      "public_hash": "cdee0436a0853e0ecae092dba46010db4482fb90ebfe0e549af4ed623eaa41d6",
+      "data_hash": "867ab847b1fdda293e3a8116d5a24c179f1f4ebad3caece8f071088101b2cee6",
+      "microsteps": 2,
+      "executed_events": 0,
+      "duplicate_events": 0,
+      "proposed_execution_events": 2,
+      "task_correct": false,
+      "exact_result_correct": false,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.071163275744766,
+      "total_process_cpu_seconds": 0.08201896000000009,
+      "categories": {
+        "neural_cell": {
+          "calls": 2,
+          "wall_seconds": 0.011954210232943296,
+          "process_cpu_seconds": 0.022055376000000404
+        },
+        "symbolic_session": {
+          "calls": 1,
+          "wall_seconds": 2.694409340620041e-05,
+          "process_cpu_seconds": 2.5968000000098357e-05
+        },
+        "event_reintegration_adapter": {
+          "calls": 1,
+          "wall_seconds": 1.0096002370119095e-05,
+          "process_cpu_seconds": 9.695999999781435e-06
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.05917202541604638,
+          "process_cpu_seconds": 0.0599279199999998
+        }
+      }
+    },
+    {
+      "seed": 0,
+      "depth": 32,
+      "example": 1,
+      "mode": "oracle_minimal",
+      "compute_cap": 36,
+      "checkpoint": "local-seed0-step256.pt",
+      "checkpoint_sha256": "986e71a9cb0ba27739a5b310a68fc5acf6d4bde5d4c64564328096a97acc1ac3",
+      "public_hash": "cdee0436a0853e0ecae092dba46010db4482fb90ebfe0e549af4ed623eaa41d6",
+      "data_hash": "867ab847b1fdda293e3a8116d5a24c179f1f4ebad3caece8f071088101b2cee6",
+      "microsteps": 36,
+      "executed_events": 65,
+      "duplicate_events": 0,
+      "proposed_execution_events": 65,
+      "task_correct": false,
+      "exact_result_correct": true,
+      "post_event_pass": true,
+      "total_wall_seconds": 1.093636848963797,
+      "total_process_cpu_seconds": 1.3234786240000003,
+      "categories": {
+        "neural_cell": {
+          "calls": 36,
+          "wall_seconds": 0.21183538949117064,
+          "process_cpu_seconds": 0.38155331200000075
+        },
+        "symbolic_session": {
+          "calls": 35,
+          "wall_seconds": 0.001658436842262745,
+          "process_cpu_seconds": 0.001583567999999591
+        },
+        "event_reintegration_adapter": {
+          "calls": 35,
+          "wall_seconds": 0.036219395231455564,
+          "process_cpu_seconds": 0.042228848000001484
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.8439236273989081,
+          "process_cpu_seconds": 0.8981128959999984
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "depth": 4,
+      "example": 0,
+      "mode": "free",
+      "compute_cap": 80,
+      "checkpoint": "local-seed1-step256.pt",
+      "checkpoint_sha256": "bd99b558c9ca1a3824e259c45700aeac3deab82e5fa8c5fc4163a769651816ce",
+      "public_hash": "0240cecaa990d60b3513a05f70eca1b2ebb80e31ed37959cfb5ee04878933f52",
+      "data_hash": "5c9827769393c45a29062f132ffb8f6eaab4c93a3cdd29adb52a2d3940739795",
+      "microsteps": 2,
+      "executed_events": 0,
+      "duplicate_events": 0,
+      "proposed_execution_events": 2,
+      "task_correct": false,
+      "exact_result_correct": false,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.016835256945341825,
+      "total_process_cpu_seconds": 0.023384128000000004,
+      "categories": {
+        "neural_cell": {
+          "calls": 2,
+          "wall_seconds": 0.007566951680928469,
+          "process_cpu_seconds": 0.013634623999999818
+        },
+        "symbolic_session": {
+          "calls": 1,
+          "wall_seconds": 2.3344065994024277e-05,
+          "process_cpu_seconds": 2.2223999999848587e-05
+        },
+        "event_reintegration_adapter": {
+          "calls": 1,
+          "wall_seconds": 9.263865649700165e-06,
+          "process_cpu_seconds": 8.832000000236206e-06
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.009235697332769632,
+          "process_cpu_seconds": 0.009718448000000102
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "depth": 4,
+      "example": 0,
+      "mode": "oracle_minimal",
+      "compute_cap": 8,
+      "checkpoint": "local-seed1-step256.pt",
+      "checkpoint_sha256": "bd99b558c9ca1a3824e259c45700aeac3deab82e5fa8c5fc4163a769651816ce",
+      "public_hash": "0240cecaa990d60b3513a05f70eca1b2ebb80e31ed37959cfb5ee04878933f52",
+      "data_hash": "5c9827769393c45a29062f132ffb8f6eaab4c93a3cdd29adb52a2d3940739795",
+      "microsteps": 8,
+      "executed_events": 9,
+      "duplicate_events": 0,
+      "proposed_execution_events": 9,
+      "task_correct": false,
+      "exact_result_correct": true,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.06211521243676543,
+      "total_process_cpu_seconds": 0.08857913599999989,
+      "categories": {
+        "neural_cell": {
+          "calls": 8,
+          "wall_seconds": 0.0273876185528934,
+          "process_cpu_seconds": 0.05100027199999957
+        },
+        "symbolic_session": {
+          "calls": 7,
+          "wall_seconds": 0.0001679845154285431,
+          "process_cpu_seconds": 0.00015697600000041945
+        },
+        "event_reintegration_adapter": {
+          "calls": 7,
+          "wall_seconds": 0.0028561605140566826,
+          "process_cpu_seconds": 0.0035108479999994557
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.031703448854386806,
+          "process_cpu_seconds": 0.03391104000000045
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "depth": 4,
+      "example": 1,
+      "mode": "free",
+      "compute_cap": 80,
+      "checkpoint": "local-seed1-step256.pt",
+      "checkpoint_sha256": "bd99b558c9ca1a3824e259c45700aeac3deab82e5fa8c5fc4163a769651816ce",
+      "public_hash": "a69768085db5e7d007a42c1e2072b60c10226091f1e73994c86bc166528124aa",
+      "data_hash": "2c1b20386715284c8a900db146f07a355dcfc394252655b9e59fa1fbe13c1f27",
+      "microsteps": 2,
+      "executed_events": 0,
+      "duplicate_events": 0,
+      "proposed_execution_events": 2,
+      "task_correct": false,
+      "exact_result_correct": false,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.01620780397206545,
+      "total_process_cpu_seconds": 0.022396527999999805,
+      "categories": {
+        "neural_cell": {
+          "calls": 2,
+          "wall_seconds": 0.007058283779770136,
+          "process_cpu_seconds": 0.01287715200000017
+        },
+        "symbolic_session": {
+          "calls": 1,
+          "wall_seconds": 2.227211371064186e-05,
+          "process_cpu_seconds": 2.143999999981716e-05
+        },
+        "event_reintegration_adapter": {
+          "calls": 1,
+          "wall_seconds": 7.343944162130356e-06,
+          "process_cpu_seconds": 6.880000000375475e-06
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.00911990413442254,
+          "process_cpu_seconds": 0.009491055999999443
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "depth": 4,
+      "example": 1,
+      "mode": "oracle_minimal",
+      "compute_cap": 8,
+      "checkpoint": "local-seed1-step256.pt",
+      "checkpoint_sha256": "bd99b558c9ca1a3824e259c45700aeac3deab82e5fa8c5fc4163a769651816ce",
+      "public_hash": "a69768085db5e7d007a42c1e2072b60c10226091f1e73994c86bc166528124aa",
+      "data_hash": "2c1b20386715284c8a900db146f07a355dcfc394252655b9e59fa1fbe13c1f27",
+      "microsteps": 8,
+      "executed_events": 9,
+      "duplicate_events": 0,
+      "proposed_execution_events": 9,
+      "task_correct": false,
+      "exact_result_correct": true,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.06183697376400232,
+      "total_process_cpu_seconds": 0.08804899200000005,
+      "categories": {
+        "neural_cell": {
+          "calls": 8,
+          "wall_seconds": 0.027051635552197695,
+          "process_cpu_seconds": 0.050423488000002514
+        },
+        "symbolic_session": {
+          "calls": 7,
+          "wall_seconds": 0.00016761478036642075,
+          "process_cpu_seconds": 0.00015673600000187804
+        },
+        "event_reintegration_adapter": {
+          "calls": 7,
+          "wall_seconds": 0.0029772003181278706,
+          "process_cpu_seconds": 0.003603567999999946
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.03164052311331034,
+          "process_cpu_seconds": 0.03386519999999571
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "depth": 32,
+      "example": 0,
+      "mode": "free",
+      "compute_cap": 80,
+      "checkpoint": "local-seed1-step256.pt",
+      "checkpoint_sha256": "bd99b558c9ca1a3824e259c45700aeac3deab82e5fa8c5fc4163a769651816ce",
+      "public_hash": "19cdbca0f5a19d7fe4aecdf897d807f91b99d5f1b0a780816717865fcf51bf4b",
+      "data_hash": "b7d62abbe6c00b3f7eae50013ccb9de2ee6ffd4d8e3900b5f09c3d22596df846",
+      "microsteps": 2,
+      "executed_events": 0,
+      "duplicate_events": 0,
+      "proposed_execution_events": 2,
+      "task_correct": false,
+      "exact_result_correct": false,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.06910877488553524,
+      "total_process_cpu_seconds": 0.07866654400000073,
+      "categories": {
+        "neural_cell": {
+          "calls": 2,
+          "wall_seconds": 0.010077563114464283,
+          "process_cpu_seconds": 0.019103712000000606
+        },
+        "symbolic_session": {
+          "calls": 1,
+          "wall_seconds": 2.9102899134159088e-05,
+          "process_cpu_seconds": 2.8143999999841185e-05
+        },
+        "event_reintegration_adapter": {
+          "calls": 1,
+          "wall_seconds": 9.91998240351677e-06,
+          "process_cpu_seconds": 9.536000000309741e-06
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.05899218888953328,
+          "process_cpu_seconds": 0.05952515199999997
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "depth": 32,
+      "example": 0,
+      "mode": "oracle_minimal",
+      "compute_cap": 36,
+      "checkpoint": "local-seed1-step256.pt",
+      "checkpoint_sha256": "bd99b558c9ca1a3824e259c45700aeac3deab82e5fa8c5fc4163a769651816ce",
+      "public_hash": "19cdbca0f5a19d7fe4aecdf897d807f91b99d5f1b0a780816717865fcf51bf4b",
+      "data_hash": "b7d62abbe6c00b3f7eae50013ccb9de2ee6ffd4d8e3900b5f09c3d22596df846",
+      "microsteps": 36,
+      "executed_events": 65,
+      "duplicate_events": 0,
+      "proposed_execution_events": 65,
+      "task_correct": false,
+      "exact_result_correct": true,
+      "post_event_pass": true,
+      "total_wall_seconds": 1.0205822950229049,
+      "total_process_cpu_seconds": 1.2139447199999998,
+      "categories": {
+        "neural_cell": {
+          "calls": 36,
+          "wall_seconds": 0.16989146685227752,
+          "process_cpu_seconds": 0.32121407999999896
+        },
+        "symbolic_session": {
+          "calls": 35,
+          "wall_seconds": 0.0015173996798694134,
+          "process_cpu_seconds": 0.001451488000003387
+        },
+        "event_reintegration_adapter": {
+          "calls": 35,
+          "wall_seconds": 0.03205396141856909,
+          "process_cpu_seconds": 0.03719915199999768
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.8171194670721889,
+          "process_cpu_seconds": 0.8540799999999997
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "depth": 32,
+      "example": 1,
+      "mode": "free",
+      "compute_cap": 80,
+      "checkpoint": "local-seed1-step256.pt",
+      "checkpoint_sha256": "bd99b558c9ca1a3824e259c45700aeac3deab82e5fa8c5fc4163a769651816ce",
+      "public_hash": "abcecd592623bc82b0d94ab25315c5fd5ba68ba912decad738af4a87cc10ef3f",
+      "data_hash": "f1024f69014e388ef21a23383ed0f33edab13c40c48e7f5747065a9596d30557",
+      "microsteps": 2,
+      "executed_events": 0,
+      "duplicate_events": 0,
+      "proposed_execution_events": 2,
+      "task_correct": false,
+      "exact_result_correct": false,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.06987504381686449,
+      "total_process_cpu_seconds": 0.07962793599999962,
+      "categories": {
+        "neural_cell": {
+          "calls": 2,
+          "wall_seconds": 0.01050972193479538,
+          "process_cpu_seconds": 0.0197332320000001
+        },
+        "symbolic_session": {
+          "calls": 1,
+          "wall_seconds": 3.092782571911812e-05,
+          "process_cpu_seconds": 2.9647999999937724e-05
+        },
+        "event_reintegration_adapter": {
+          "calls": 1,
+          "wall_seconds": 1.1183787137269974e-05,
+          "process_cpu_seconds": 1.0800000000088517e-05
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.05932321026921272,
+          "process_cpu_seconds": 0.059854255999999495
+        }
+      }
+    },
+    {
+      "seed": 1,
+      "depth": 32,
+      "example": 1,
+      "mode": "oracle_minimal",
+      "compute_cap": 36,
+      "checkpoint": "local-seed1-step256.pt",
+      "checkpoint_sha256": "bd99b558c9ca1a3824e259c45700aeac3deab82e5fa8c5fc4163a769651816ce",
+      "public_hash": "abcecd592623bc82b0d94ab25315c5fd5ba68ba912decad738af4a87cc10ef3f",
+      "data_hash": "f1024f69014e388ef21a23383ed0f33edab13c40c48e7f5747065a9596d30557",
+      "microsteps": 36,
+      "executed_events": 65,
+      "duplicate_events": 0,
+      "proposed_execution_events": 65,
+      "task_correct": false,
+      "exact_result_correct": true,
+      "post_event_pass": true,
+      "total_wall_seconds": 1.0196095379069448,
+      "total_process_cpu_seconds": 1.2131454880000003,
+      "categories": {
+        "neural_cell": {
+          "calls": 36,
+          "wall_seconds": 0.17042607255280018,
+          "process_cpu_seconds": 0.3223326559999977
+        },
+        "symbolic_session": {
+          "calls": 35,
+          "wall_seconds": 0.001538516953587532,
+          "process_cpu_seconds": 0.0014834079999967997
+        },
+        "event_reintegration_adapter": {
+          "calls": 35,
+          "wall_seconds": 0.03182174079120159,
+          "process_cpu_seconds": 0.03720905599999913
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.8158232076093554,
+          "process_cpu_seconds": 0.8521203680000067
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "depth": 4,
+      "example": 0,
+      "mode": "free",
+      "compute_cap": 80,
+      "checkpoint": "local-seed2-step256.pt",
+      "checkpoint_sha256": "804a85103f912774b8f157283314d414cc6b66d9f0a866d8f83d2db9ec069267",
+      "public_hash": "bbd3b7652ffc856fc0e64064fade4a1790042d13dad79c047230442add9d2321",
+      "data_hash": "b961d14be26a4c6f1e7d7c157ce6839bfe481decd4ef1126b9b2f3c5a08e9c39",
+      "microsteps": 2,
+      "executed_events": 0,
+      "duplicate_events": 0,
+      "proposed_execution_events": 2,
+      "task_correct": false,
+      "exact_result_correct": false,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.016678920947015285,
+      "total_process_cpu_seconds": 0.02300175999999965,
+      "categories": {
+        "neural_cell": {
+          "calls": 2,
+          "wall_seconds": 0.00731744896620512,
+          "process_cpu_seconds": 0.01337960000000038
+        },
+        "symbolic_session": {
+          "calls": 1,
+          "wall_seconds": 2.3456290364265442e-05,
+          "process_cpu_seconds": 2.2336000000677814e-05
+        },
+        "event_reintegration_adapter": {
+          "calls": 1,
+          "wall_seconds": 8.239876478910446e-06,
+          "process_cpu_seconds": 7.807999999442927e-06
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.00932977581396699,
+          "process_cpu_seconds": 0.009592015999999148
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "depth": 4,
+      "example": 0,
+      "mode": "oracle_minimal",
+      "compute_cap": 8,
+      "checkpoint": "local-seed2-step256.pt",
+      "checkpoint_sha256": "804a85103f912774b8f157283314d414cc6b66d9f0a866d8f83d2db9ec069267",
+      "public_hash": "bbd3b7652ffc856fc0e64064fade4a1790042d13dad79c047230442add9d2321",
+      "data_hash": "b961d14be26a4c6f1e7d7c157ce6839bfe481decd4ef1126b9b2f3c5a08e9c39",
+      "microsteps": 8,
+      "executed_events": 9,
+      "duplicate_events": 0,
+      "proposed_execution_events": 9,
+      "task_correct": false,
+      "exact_result_correct": true,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.06114123295992613,
+      "total_process_cpu_seconds": 0.08708571200000037,
+      "categories": {
+        "neural_cell": {
+          "calls": 8,
+          "wall_seconds": 0.026581511367112398,
+          "process_cpu_seconds": 0.04982609600000032
+        },
+        "symbolic_session": {
+          "calls": 7,
+          "wall_seconds": 0.00013907114043831825,
+          "process_cpu_seconds": 0.00012766399999986078
+        },
+        "event_reintegration_adapter": {
+          "calls": 7,
+          "wall_seconds": 0.002785264980047941,
+          "process_cpu_seconds": 0.0031836320000007134
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.03163538547232747,
+          "process_cpu_seconds": 0.03394831999999948
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "depth": 4,
+      "example": 1,
+      "mode": "free",
+      "compute_cap": 80,
+      "checkpoint": "local-seed2-step256.pt",
+      "checkpoint_sha256": "804a85103f912774b8f157283314d414cc6b66d9f0a866d8f83d2db9ec069267",
+      "public_hash": "31e1e1331619cb093fbabb8801e13aecb25193137a6a5d56b06a28f9bb475c92",
+      "data_hash": "9ed998c295e9bb9223788d9bd48ea3a55f0eac492e6892b15899d720f1a563d9",
+      "microsteps": 2,
+      "executed_events": 0,
+      "duplicate_events": 0,
+      "proposed_execution_events": 2,
+      "task_correct": false,
+      "exact_result_correct": false,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.015836461912840605,
+      "total_process_cpu_seconds": 0.021843471999999586,
+      "categories": {
+        "neural_cell": {
+          "calls": 2,
+          "wall_seconds": 0.006823756266385317,
+          "process_cpu_seconds": 0.012500847999999287
+        },
+        "symbolic_session": {
+          "calls": 1,
+          "wall_seconds": 1.63358636200428e-05,
+          "process_cpu_seconds": 1.516800000000984e-05
+        },
+        "event_reintegration_adapter": {
+          "calls": 1,
+          "wall_seconds": 7.056165486574173e-06,
+          "process_cpu_seconds": 6.576000000535487e-06
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.008989313617348671,
+          "process_cpu_seconds": 0.009320879999999754
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "depth": 4,
+      "example": 1,
+      "mode": "oracle_minimal",
+      "compute_cap": 8,
+      "checkpoint": "local-seed2-step256.pt",
+      "checkpoint_sha256": "804a85103f912774b8f157283314d414cc6b66d9f0a866d8f83d2db9ec069267",
+      "public_hash": "31e1e1331619cb093fbabb8801e13aecb25193137a6a5d56b06a28f9bb475c92",
+      "data_hash": "9ed998c295e9bb9223788d9bd48ea3a55f0eac492e6892b15899d720f1a563d9",
+      "microsteps": 8,
+      "executed_events": 9,
+      "duplicate_events": 0,
+      "proposed_execution_events": 9,
+      "task_correct": false,
+      "exact_result_correct": true,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.06024909391999245,
+      "total_process_cpu_seconds": 0.08602892800000017,
+      "categories": {
+        "neural_cell": {
+          "calls": 8,
+          "wall_seconds": 0.026621445547789335,
+          "process_cpu_seconds": 0.04961606400000207
+        },
+        "symbolic_session": {
+          "calls": 7,
+          "wall_seconds": 0.00012496020644903183,
+          "process_cpu_seconds": 0.0001158239999989874
+        },
+        "event_reintegration_adapter": {
+          "calls": 7,
+          "wall_seconds": 0.0026416489854454994,
+          "process_cpu_seconds": 0.0031847040000023696
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.03086103918030858,
+          "process_cpu_seconds": 0.033112335999996745
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "depth": 32,
+      "example": 0,
+      "mode": "free",
+      "compute_cap": 80,
+      "checkpoint": "local-seed2-step256.pt",
+      "checkpoint_sha256": "804a85103f912774b8f157283314d414cc6b66d9f0a866d8f83d2db9ec069267",
+      "public_hash": "52266bddf186b4cdf13313c9b450e30b7cf36e97e5e3051b1d3a3f9ff0e4c803",
+      "data_hash": "25b480ecebdbd87e86dcd7cd5b6f1bf284136929e9aa918913ad821c7e9cc115",
+      "microsteps": 2,
+      "executed_events": 0,
+      "duplicate_events": 0,
+      "proposed_execution_events": 2,
+      "task_correct": false,
+      "exact_result_correct": false,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.06719334609806538,
+      "total_process_cpu_seconds": 0.07633974399999932,
+      "categories": {
+        "neural_cell": {
+          "calls": 2,
+          "wall_seconds": 0.009156384039670229,
+          "process_cpu_seconds": 0.017803520000001072
+        },
+        "symbolic_session": {
+          "calls": 1,
+          "wall_seconds": 2.6287976652383804e-05,
+          "process_cpu_seconds": 2.526400000046891e-05
+        },
+        "event_reintegration_adapter": {
+          "calls": 1,
+          "wall_seconds": 9.695999324321747e-06,
+          "process_cpu_seconds": 9.311999999539466e-06
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.05800097808241844,
+          "process_cpu_seconds": 0.05850164799999824
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "depth": 32,
+      "example": 0,
+      "mode": "oracle_minimal",
+      "compute_cap": 36,
+      "checkpoint": "local-seed2-step256.pt",
+      "checkpoint_sha256": "804a85103f912774b8f157283314d414cc6b66d9f0a866d8f83d2db9ec069267",
+      "public_hash": "52266bddf186b4cdf13313c9b450e30b7cf36e97e5e3051b1d3a3f9ff0e4c803",
+      "data_hash": "25b480ecebdbd87e86dcd7cd5b6f1bf284136929e9aa918913ad821c7e9cc115",
+      "microsteps": 36,
+      "executed_events": 65,
+      "duplicate_events": 0,
+      "proposed_execution_events": 65,
+      "task_correct": false,
+      "exact_result_correct": true,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.9846572480164468,
+      "total_process_cpu_seconds": 1.1681736319999994,
+      "categories": {
+        "neural_cell": {
+          "calls": 36,
+          "wall_seconds": 0.15076460549607873,
+          "process_cpu_seconds": 0.29392555200000015
+        },
+        "symbolic_session": {
+          "calls": 35,
+          "wall_seconds": 0.0011799153871834278,
+          "process_cpu_seconds": 0.0011384160000007526
+        },
+        "event_reintegration_adapter": {
+          "calls": 35,
+          "wall_seconds": 0.029014409519732,
+          "process_cpu_seconds": 0.03419353600000008
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.8036983176134527,
+          "process_cpu_seconds": 0.8389161279999984
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "depth": 32,
+      "example": 1,
+      "mode": "free",
+      "compute_cap": 80,
+      "checkpoint": "local-seed2-step256.pt",
+      "checkpoint_sha256": "804a85103f912774b8f157283314d414cc6b66d9f0a866d8f83d2db9ec069267",
+      "public_hash": "b1485535781ed587efa2b86b34b21d9bff4d932623f93c1c368ab9f55a904811",
+      "data_hash": "e646f045efcabf02dda2302eefe24b53f82a2226904d2ac995e4e572510cb17b",
+      "microsteps": 2,
+      "executed_events": 0,
+      "duplicate_events": 0,
+      "proposed_execution_events": 2,
+      "task_correct": false,
+      "exact_result_correct": false,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.06673573330044746,
+      "total_process_cpu_seconds": 0.07543422399999855,
+      "categories": {
+        "neural_cell": {
+          "calls": 2,
+          "wall_seconds": 0.0087220030836761,
+          "process_cpu_seconds": 0.016906304000000816
+        },
+        "symbolic_session": {
+          "calls": 1,
+          "wall_seconds": 2.564815804362297e-05,
+          "process_cpu_seconds": 2.4687999999883914e-05
+        },
+        "event_reintegration_adapter": {
+          "calls": 1,
+          "wall_seconds": 8.848030120134354e-06,
+          "process_cpu_seconds": 8.448000000882416e-06
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.05797923402860761,
+          "process_cpu_seconds": 0.05849478399999697
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "depth": 32,
+      "example": 1,
+      "mode": "oracle_minimal",
+      "compute_cap": 36,
+      "checkpoint": "local-seed2-step256.pt",
+      "checkpoint_sha256": "804a85103f912774b8f157283314d414cc6b66d9f0a866d8f83d2db9ec069267",
+      "public_hash": "b1485535781ed587efa2b86b34b21d9bff4d932623f93c1c368ab9f55a904811",
+      "data_hash": "e646f045efcabf02dda2302eefe24b53f82a2226904d2ac995e4e572510cb17b",
+      "microsteps": 36,
+      "executed_events": 65,
+      "duplicate_events": 0,
+      "proposed_execution_events": 65,
+      "task_correct": false,
+      "exact_result_correct": true,
+      "post_event_pass": true,
+      "total_wall_seconds": 0.9823925942182541,
+      "total_process_cpu_seconds": 1.165277552000001,
+      "categories": {
+        "neural_cell": {
+          "calls": 36,
+          "wall_seconds": 0.1495701395906508,
+          "process_cpu_seconds": 0.29227038399999117
+        },
+        "symbolic_session": {
+          "calls": 35,
+          "wall_seconds": 0.001170668751001358,
+          "process_cpu_seconds": 0.0011282239999985677
+        },
+        "event_reintegration_adapter": {
+          "calls": 35,
+          "wall_seconds": 0.029548197519034147,
+          "process_cpu_seconds": 0.034509136000011154
+        },
+        "other_rollout_and_instrumentation": {
+          "calls": 1,
+          "wall_seconds": 0.8021035883575678,
+          "process_cpu_seconds": 0.837369808
+        }
+      }
+    }
+  ]
+}
