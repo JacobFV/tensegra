@@ -19,7 +19,7 @@ def oracle_logits(gold,token_count):
 
 def run(output):
     tick=time.monotonic();torch.set_num_threads(2);assert verify_vendor_manifest();rows=[]
-    variants={'original':{},'translated_visible_alias':{'alice':'cat'},'surface_collision_fixture':{'alice':'cat','carol':'gato'}}
+    variants={'original':{},'translated_visible_alias':{'alice':'red'},'surface_collision_fixture':{'alice':'red','carol':'rojo'}}
     for name,mapping in variants.items():
         example=build_tcn_example('unification',900100001,difficulty=.5,identifier_renaming=mapping);graph=example.privileged.graph
         for lang in ('english','spanish'):
