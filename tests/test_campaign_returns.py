@@ -199,3 +199,27 @@ def test_r08_optimizer_screen_preserves_fixed_capacity_and_exposure():
     for key in ['feature_sha256', 'head_seed', 'initialization_seed', 'updates', 'delays', 'batch_size']:
         assert cfg[key] == old[key]
     assert set(cfg['frozen_references']) == {'linear_reference', 'residual_original_lr'}
+
+
+def test_phase_readout_is_public_binary_selection():
+    import torch
+    from topoformer.campaign_returns_phase import PhaseReadout
+    torch.manual_seed(9)
+    linear = torch.nn.Linear(8, 3)
+    model = PhaseReadout(linear)
+    x = torch.randn(4, 8)
+    phases = torch.tensor([False, True, False, True])
+    torch.testing.assert_close(model(x, phases), linear(x), atol=0, rtol=0)
+    with torch.no_grad(): model.ingestion.bias.add_(1)
+    torch.testing.assert_close(model(x, phases)[phases], linear(x)[phases])
+    torch.testing.assert_close(model(x, phases)[~phases], linear(x)[~phases]+1)
+
+
+def test_r09_changes_only_binary_consumer_contract():
+    import json
+    from pathlib import Path
+    cfg=json.loads(Path('configs/campaign-r09-development.json').read_text())
+    old=json.loads(Path('configs/campaign-r07-development.json').read_text())
+    for key in ['feature_sha256','head_seed','updates','lr','delays','batch_size']:
+        assert cfg[key]==old[key]
+    assert cfg['require_replay']
