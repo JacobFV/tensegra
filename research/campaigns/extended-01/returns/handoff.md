@@ -51,3 +51,9 @@ R07 completed24.02seconds after21.18-second profile. Exact linear replay passes;
 R09 protocol/source32b6ffb plus defensive phase-order assertion cc388a4 is staged at `~/topoformer-campaign-01/returns/source-r09-reviewed`.18CPUtests pass. It compares a shared linear head with two independently trained linear heads selected solely by public zero-versus-positive delay, same initial function, R06 balanced data/normalization,900updates/.003/sample stream. Shared arm must exactly replay R06; phase gradient support and optimizer exposure are disclosed separately. No32, endpoint selection, extension, or replacement of R05. Reviewer preflight passed, awaiting explicit profile release. NO ACTIVE GPU JOB.
 
 Cumulative return process occupancy:1,311.54seconds. Root owns all scheduling and promotion.
+
+## R09 outcome
+
+R09 shared-versus-binary-phase development completed23.57seconds after21.56-second profile. Shared R06 replay is exact. Calibration grid minimum59→57/64 fails advancement; reused validation55→57 and mixture minimum4088→4090/4096 improve slightly. Both grid minima remain float−7.5 at16updates. Phase supervised exposures38,247 ingestion/192,153 recurrent; both classifiers receive900 optimizer steps. All14 phase-head balanced float errors at16 are neighboring half-unit labels. Report/raw fd9f191, independent audit pending. No32, extensions, or R05 replacements. No active GPU job; wait for coordinator's next discriminating question.
+
+R08 independent raw/cache audits bc6d3a9/900e2dd are complete; status380469e. Cumulative return process occupancy1,356.67seconds. R04/R05 confirmed restricted interfaces remain unchanged despite exploratory R06–R09 results.
