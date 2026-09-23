@@ -1,9 +1,10 @@
 """Capacity-matched return encoding, availability and workspace-only readout.
 
-Six facet encoders contain exactly ``width`` coordinates in total. Compressed
+In concat/facet arms six encoders contain ``width`` coordinates total. Compressed
 encoding sums their disjoint padded channels into one token; factorized encoding
 keeps six tokens. Thus trainable capacity and information coordinates match,
-while attention memory allocation/token cost deliberately differs.
+while attention memory allocation/token cost deliberately differs. The separate
+``mixed`` arm sums six full-width encodings and has more encoder parameters.
 """
 import math
 import torch

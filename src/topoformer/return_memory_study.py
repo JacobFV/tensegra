@@ -41,7 +41,7 @@ def run(config, output):
     output=Path(output); output.mkdir(parents=True,exist_ok=True)
     (output/'config.json').write_text(json.dumps(config,indent=2))
     source={n:hashlib.sha256(Path(__file__).with_name(n).read_bytes()).hexdigest() for n in ('return_memory.py','return_memory_study.py','retention_data.py','retention.py','thinking.py')}
-    manifest=dict(source=source,config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),runs=[])
+    manifest=dict(environment=dict(torch=torch.__version__,cuda=torch.version.cuda,device=str(device),device_name=torch.cuda.get_device_name(device) if device.type=='cuda' else 'CPU'),source=source,config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),runs=[])
     if set(config.get('validation_seeds',[])) & set(config.get('test_seeds',[])): raise ValueError('split seed collision')
     for seed in config.get('seeds',[0]):
         for encoding in config.get('encodings',['mixed','compressed','factorized']):
