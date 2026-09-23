@@ -128,7 +128,6 @@ def run(cfg,out):
         def subset(tree):return {k:subset(v) if isinstance(v,dict) else v[ids] for k,v in tree.items()}
         cache['balanced/8']=capture_batch(model,accessor,subset(pool),cfg['intervention_delays'],device,cfg['batch_size'])
         cache['balanced/8']['pool_indices']=ids
-        cache['extrapolation/8']=capture_batch(model,accessor,original,[32],device,cfg['batch_size'])
     rows=[];logits={}
     with torch.no_grad():
         for key,batch in cache.items():
