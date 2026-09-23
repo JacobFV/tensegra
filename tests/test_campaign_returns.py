@@ -164,3 +164,26 @@ def test_capture_selected_matches_existing_frozen_feature_path():
     for delay in [0,1]:
         torch.testing.assert_close(a['features'][delay],b['features'][delay])
         for field in a['targets']:torch.testing.assert_close(a['original_predictions'][delay][field],b['original_predictions'][delay][field])
+
+
+def test_residual_readout_initial_function_and_learning():
+    """Small width is a mechanical fixture, not an experimental workspace."""
+    from topoformer.campaign_returns_capacity import ResidualReadout
+    torch.manual_seed(7)
+    linear = torch.nn.Linear(8, 3)
+    model = ResidualReadout(linear, hidden=8)
+    x = torch.randn(12, 8)
+    torch.testing.assert_close(model(x), linear(x), atol=0, rtol=0)
+    loss = torch.nn.functional.cross_entropy(model(x), torch.arange(12) % 3)
+    loss.backward()
+    assert model.output.weight.grad.abs().sum() > 0
+    assert model.linear.weight.grad.abs().sum() > 0
+
+
+def test_r07_protocol_has_no_extrapolation_or_endpoint_selection():
+    import json
+    from pathlib import Path
+    cfg = json.loads(Path('configs/campaign-r07-development.json').read_text())
+    assert cfg['delays'] == [0, 1, 2, 4, 8, 16]
+    assert cfg['updates'] == 900 and cfg['require_replay']
+    assert cfg['head_seed'] == 33000012
