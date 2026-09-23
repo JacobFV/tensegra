@@ -1,0 +1,398 @@
+{
+  "config": {
+    "mode": "profile",
+    "device": "cuda",
+    "checkpoint": "/home/brandonin/topoformer-stage11/returns/main/10-wide_continue.pt",
+    "checkpoint_sha256": "487a0b632c398256ffd543b59138ef6b2b0648a38948b945e36262cc9f94051b",
+    "backbone_seed": 10,
+    "head_seed": 20000010,
+    "delays": [
+      0,
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "eval_distractors": [
+      2,
+      8
+    ],
+    "batch_size": 64,
+    "data": {
+      "train": {
+        "seed": 20000101,
+        "size": 64
+      },
+      "calibration": {
+        "seed": 20000201,
+        "size": 64
+      },
+      "validation": {
+        "seed": 20000301,
+        "size": 64
+      }
+    },
+    "ridge_grid": [
+      0.1
+    ],
+    "ce_updates": 10,
+    "ce_batch_size": 256,
+    "ce_lr": 0.003,
+    "ce_check_every": 10
+  },
+  "config_sha256": "4d50d714a01c54ea0ab16982f8ddbb9ada624bd35e642c7a4e313c7a9e9babb0",
+  "source": {
+    "campaign_returns.py": "2c564585b48b4396ff74c6f25065650208d0efc3a01695d53dc20b48dccf337e",
+    "return_crossdelay.py": "6c66bfd368cec5725d8cf60aa6fc74b1fdee068c6a49b9fdf993040c410358cb",
+    "return_diagnostics_probe.py": "d89799f7812b39c67670eb57009d058602633a880a67440a84e60aa8a4e0ded7",
+    "return_memory.py": "cbf4d732520673039e5db403dfb57979b2d3492063a82bbd1376793d9103e037",
+    "retention_data.py": "1e980177c4e9344c8824ef3b13e2afdca4499778f9efe027d122695a847585b5",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64"
+  },
+  "checkpoint_sha256": "487a0b632c398256ffd543b59138ef6b2b0648a38948b945e36262cc9f94051b",
+  "parameters": 55854360,
+  "head_parameters": 33825,
+  "width": 1024,
+  "memory_tokens": 6,
+  "memory_coordinates": 6144,
+  "fit_rows": 384,
+  "fit_unique_events": 64,
+  "label_counts": [
+    4,
+    2,
+    2,
+    0,
+    3,
+    1,
+    2,
+    0,
+    2,
+    2,
+    2,
+    0,
+    1,
+    0,
+    2,
+    0,
+    13,
+    1,
+    5,
+    0,
+    5,
+    1,
+    1,
+    0,
+    3,
+    3,
+    2,
+    2,
+    2,
+    1,
+    1,
+    0,
+    1
+  ],
+  "feature_cache": {
+    "path": "features.pt.gz",
+    "sha256": "92ca355408185ba64c7af977596553765e64f44c5b313a97750fbd30163cdeae",
+    "uncompressed_sha256": "5489265d90a58f2a3a548e23b1b2bcedccf21f94c26403683003bd021843e0cd",
+    "bytes": 7351959,
+    "uncompressed_bytes": 8060521
+  },
+  "logit_cache": {
+    "path": "logits.pt.gz",
+    "sha256": "7356b9655c03c57253d851e8e7780396abfeef8ed98c9eb04a1f5e8aed42b6ae",
+    "uncompressed_sha256": "79a7f81e97de55361b4b6367ac4b7b1e5a24f61487923fa19fc9adb9e8122d6f",
+    "bytes": 644986,
+    "uncompressed_bytes": 786837
+  },
+  "initial_backbone_state_sha256": "083ac7bc9c2816bb989eea5d69044b7126c3e03763cda4c07044a4aa8772f00c",
+  "fit_candidates": [
+    {
+      "alpha": 0.1,
+      "cells": [
+        {
+          "distractors": 2,
+          "delay": 0,
+          "correct": 47,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 1,
+          "correct": 50,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 2,
+          "correct": 47,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 4,
+          "correct": 43,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 8,
+          "correct": 38,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 16,
+          "correct": 31,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 0,
+          "correct": 47,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 1,
+          "correct": 48,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 2,
+          "correct": 47,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 4,
+          "correct": 42,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 8,
+          "correct": 36,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 16,
+          "correct": 29,
+          "total": 64
+        }
+      ],
+      "score": [
+        29,
+        505
+      ]
+    }
+  ],
+  "selected_alpha": 0.1,
+  "ce_curve": [
+    {
+      "step": 0,
+      "cells": [
+        {
+          "distractors": 2,
+          "delay": 0,
+          "correct": 56,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 1,
+          "correct": 60,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 2,
+          "correct": 59,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 4,
+          "correct": 57,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 8,
+          "correct": 54,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 16,
+          "correct": 52,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 0,
+          "correct": 56,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 1,
+          "correct": 60,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 2,
+          "correct": 59,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 4,
+          "correct": 56,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 8,
+          "correct": 54,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 16,
+          "correct": 51,
+          "total": 64
+        }
+      ],
+      "score": [
+        51,
+        674
+      ]
+    },
+    {
+      "step": 10,
+      "cells": [
+        {
+          "distractors": 2,
+          "delay": 0,
+          "correct": 48,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 1,
+          "correct": 53,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 2,
+          "correct": 53,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 4,
+          "correct": 53,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 8,
+          "correct": 52,
+          "total": 64
+        },
+        {
+          "distractors": 2,
+          "delay": 16,
+          "correct": 53,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 0,
+          "correct": 48,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 1,
+          "correct": 53,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 2,
+          "correct": 53,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 4,
+          "correct": 53,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 8,
+          "correct": 53,
+          "total": 64
+        },
+        {
+          "distractors": 8,
+          "delay": 16,
+          "correct": 53,
+          "total": 64
+        }
+      ],
+      "score": [
+        48,
+        625
+      ]
+    }
+  ],
+  "ce_losses": [
+    0.31188085675239563,
+    0.16604575514793396,
+    0.09440407156944275,
+    0.10676857829093933,
+    0.0811588242650032,
+    0.08743929862976074,
+    0.05949892848730087,
+    0.04141292721033096,
+    0.04658812656998634,
+    0.05497238039970398
+  ],
+  "selected_ce_step": 0,
+  "ce_optimizer_presentations": 2560,
+  "readout_hashes": {
+    "ridge.pt": "531886ad73cef95d0867344b9e1b58ba50f4810214c782a28ba8fc086a8e2f91",
+    "ce.pt": "1384c8ec2bf1b4e8129430b303a0c92dd1eb8be40cac3033443f105d6094edf3"
+  },
+  "predictions_sha256": "45d2e56fbeb9c4628638087322ccaafd29495db846bfc02251bb28993feacd20",
+  "capture_seconds": {
+    "train/2": 0.5508833089843392,
+    "calibration/2": 0.10747291520237923,
+    "calibration/8": 0.1234412076883018,
+    "validation/2": 0.10084534715861082,
+    "validation/8": 0.1219474608078599
+  },
+  "ridge_seconds": [
+    0.05571906175464392
+  ],
+  "ce_seconds": 0.10644225496798754,
+  "seconds": 2.7171399872750044,
+  "peak_cuda_allocated": 446848000,
+  "process_peak_rss": 2207207424,
+  "environment": {
+    "torch": "2.14.0+cu130",
+    "cuda": "13.0",
+    "device": "NVIDIA GB10",
+    "total_device_bytes": 128453668864
+  }
+}
