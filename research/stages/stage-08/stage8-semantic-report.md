@@ -89,7 +89,9 @@ annealing was added.
 The two main manifests preserve configs, source/compiler/generator hashes, corpus
 and heldout hashes, initial/final state hashes, environment, parameter counts and
 actual exposures. All 12 durable checkpoint files were independently rehashed.
-All 37,500 logged loss rows are finite. Recorded model-run walltime totals
+All 37,500 logged loss rows are finite. Independent review reconstructed all
+18,944 raw prediction rows and 296 curve groups, and verified all 36 train-only
+threshold vectors plus paired initialization/provenance across 12 runs. Recorded model-run walltime totals
 5,202.25 seconds, of which 4,900.99 seconds are optimizer work; corpus generation
 and setup add overhead. Peak CUDA allocated memory was 1,287,888,896 bytes.
 BF16 autocast is matched across arms; parameters and loss logits remain FP32.
