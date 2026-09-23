@@ -180,3 +180,70 @@ def test_context_arrival_is_exogenous_and_neural_pair_observables_match():
     fixed = actor_inputs(episode.public,session,1,cfg,complete_evidence=True)
     recurrent = actor_inputs(episode.public,session,6,cfg,complete_evidence=True)
     assert torch.equal(fixed[0],recurrent[0]) and torch.equal(fixed[1],recurrent[1])
+
+
+def test_final_grid_economy_and_new_controls():
+    from topoformer.thinking_study import evaluation_conditions
+    cfg = ThinkingStudyConfig(steps=24,eval_depths=[4,8,16,32],train_depth=4)
+    assert [c['depth'] for c in evaluation_conditions(cfg,0)] == [4,32]
+    assert [c['depth'] for c in evaluation_conditions(cfg,12)] == [4]
+    assert len(evaluation_conditions(cfg,24)) == 11
+    assert {'protected_learned','no_structure'} <= VARIANTS.keys()
+
+
+def test_free_emit_precedes_duplicate_execution(monkeypatch):
+    import torch
+    import topoformer.thinking_study as study
+    from topoformer.thinking_tasks import generate_episode
+    episode = generate_episode(seed=7,depth=1)
+    cfg = ThinkingStudyConfig(steps=0,max_microsteps=8)
+    model = study.build_model(cfg,0)
+    with torch.no_grad():
+        model.emit_probe.weight.zero_(); model.emit_probe.bias.fill_(100)
+    monkeypatch.setattr(study,'predicted_proposals',lambda *a,**k:(episode.gold.trace[0],[]))
+    result = study.rollout(model,episode.public,cfg)
+    assert result['microsteps']==2
+    assert result['trace'][1]['events']==[]
+    assert result['post_event_pass']
+
+
+def test_learned_protected_uses_typed_neural_values_without_exact_fallback(monkeypatch):
+    import torch
+    from topoformer.thinking_runtime import ProtectedSession
+    from topoformer.thinking_tasks import generate_episode
+    from topoformer.thinking_study import build_model, rollout
+    cfg = ThinkingStudyConfig(steps=0,max_microsteps=7)
+    episode = generate_episode(seed=7,depth=1)
+    model = build_model(cfg,0)
+    def forbidden(*args,**kwargs):
+        raise AssertionError('exact backend called')
+    monkeypatch.setattr(ProtectedSession,'execute',forbidden)
+    result = rollout(model,episode.public,cfg,'protected_learned',gold=episode.gold,teacher_forcing=True,training_unroll=True)
+    assert any(event['status']=='executed' for entry in result['trace'] for event in entry['events'])
+    assert torch.isfinite(result['losses']['learned_transition'])
+    gradients = torch.autograd.grad(result['losses']['learned_transition'],model.roundtrip_value.weight)
+    assert bool(gradients[0].abs().sum()>0)
+
+
+def test_ambiguity_delay_preserves_gold_semantics_and_alignment():
+    from topoformer.thinking_study import evaluation_episode
+    cfg = ThinkingStudyConfig(steps=24)
+    condition = dict(depth=2,condition='ambiguity_delay',kwargs={'delay':4})
+    delayed = evaluation_episode(cfg,0,0,condition)
+    original = evaluation_episode(cfg,0,0,dict(depth=2,condition='depth',kwargs={}))
+    assert len(delayed.public.frames)==len(delayed.gold.hypotheses)==7
+    assert delayed.gold.trace==original.gold.trace
+    assert delayed.gold.result==original.gold.result
+
+
+def test_training_hazard_matches_preexecution_emission_boundary():
+    from topoformer.thinking_tasks import generate_episode
+    from topoformer.thinking_study import build_model, rollout
+    cfg = ThinkingStudyConfig(steps=0,max_microsteps=7)
+    episode = generate_episode(seed=7,depth=1)
+    result = rollout(build_model(cfg,0),episode.public,cfg,gold=episode.gold,teacher_forcing=True,training_unroll=True)
+    # A halt at step3 occurs before the continuation branch executes its event.
+    assert result['trace'][2]['events']
+    assert result['halting_weights'][2]>0
+    # Continuation passes that executed a new event still have a subsequent cell.
+    assert result['post_event_pass']

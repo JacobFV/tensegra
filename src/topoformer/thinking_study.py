@@ -11,13 +11,15 @@ import hashlib
 import json
 from pathlib import Path
 import time
+import subprocess
+import platform
 import torch
 from torch.nn import functional as F
 
 AUXILIARIES = ('grounding', 'topology', 'transition', 'readiness')
 VARIANTS = {name: {} for name in ('local', 'global', 'fixed', 'fixed_compute', 'runtime_off',
     'event_drop', 'event_shuffle', 'event_wrong_value', 'public_graph', 'neural_fixed', 'neural_recurrent',
-    'task_only_cold', 'task_only_warm', 'anneal_all',
+    'task_only_cold', 'task_only_warm', 'anneal_all', 'protected_learned', 'no_structure',
     *(f'anneal_{name}' for name in AUXILIARIES))}
 
 @dataclass
@@ -45,6 +47,7 @@ class ThinkingStudyConfig:
     wall_seconds: float = 1800.
     save_checkpoints: bool = True
     extra_evaluations: bool = True
+    evaluation_schedule: str = 'economy_v1'
 
     def __post_init__(self):
         if self.threads not in (1, 2) or not 1 <= self.batch_size <= 32:
@@ -178,7 +181,7 @@ def inject_runtime_events(model, workspace, prediction, events, ids, config, var
     """Exact values enter through learned events and candidate routes only."""
     from .thinking_runtime import PRIMITIVE_NAMES
     k = prediction['routes'].shape[1]
-    successful = [(i,e) for i,e in enumerate(events[:k]) if e.status in ('executed','duplicate')]
+    successful = [(i,e) for i,e in enumerate(events[:k]) if e.status == 'executed']
     if variant == 'event_drop' or not successful:
         return workspace, workspace.sum()*0, 0, []
     values = torch.zeros(1,k); types = torch.zeros(1,k,dtype=torch.long)
@@ -229,6 +232,10 @@ def auxiliary_losses(prediction, targets, ids, config):
             for role in ('grounding_q','grounding_k'):
                 pooled = (prediction[role] * prediction['routes'][:,k,None,:,None]).sum(-2)
                 grounding.append(-pooled[...,valid].sum(-1).clamp_min(1e-8).log().mean())
+        if any(arg not in ids for arg in candidate.arguments):
+            for role in ('grounding_q','grounding_k'):
+                pooled = (prediction[role] * prediction['routes'][:,k,None,:,None]).sum(-2)
+                grounding.append(-pooled[...,-1].clamp_min(1e-8).log().mean())
         readiness.append(F.binary_cross_entropy_with_logits(prediction['readiness_logits'][:,k],torch.tensor([target.readiness])))
     losses['transition'] = torch.stack(transition).mean()
     losses['readiness'] = torch.stack(readiness).mean()
@@ -246,7 +253,7 @@ def rollout(model, public, config, variant='local', *, gold=None, teacher_forcin
     complete_evidence = variant in ('neural_fixed','neural_recurrent','fixed')
     context, memory, ids, _ = actor_inputs(public,session,1,config,complete_evidence=complete_evidence)
     workspace = model.initialize({'context':context})
-    sums = {key:workspace.sum()*0 for key in (*AUXILIARIES,'graph','task','emit','ponder','event','policy')}
+    sums = {key:workspace.sum()*0 for key in (*AUXILIARIES,'graph','task','emit','ponder','event','policy','learned_transition')}
     neural_only = variant in ('neural_fixed','neural_recurrent')
     runtime_enabled = variant not in ('runtime_off','fixed','neural_fixed','neural_recurrent')
     trace = []; task_losses = []; hazards = []; emit_allowed = []; log_probs = []; injected = 0; last_event_step = -1; pending_events = None
@@ -254,7 +261,12 @@ def rollout(model, public, config, variant='local', *, gold=None, teacher_forcin
     halted = False
     for step in range(1,limit+1):
         context,memory,ids,frame = actor_inputs(public,session,step,config,complete_evidence=complete_evidence)
-        prediction = model.step(workspace,context,memory,microstep=step,structural_strength=0. if neural_only else None)
+        graph_controls = {}
+        if variant == 'graph_permuted':
+            graph_controls['graph_permutation'] = torch.tensor([sorted(range(len(ids)),key=lambda i:digest(ids[i]))])
+        elif variant == 'graph_drop50':
+            graph_controls['graph_keep'] = torch.tensor([[[int(digest(a+'|'+b)[0],16)%2 for b in ids] for a in ids]],dtype=torch.float)
+        prediction = model.step(workspace,context,memory,microstep=step,structural_strength=0. if neural_only or variant=='no_structure' else None,**graph_controls)
         workspace = prediction['workspace']
         melted_audit = []
         if pending_events is not None:
@@ -262,7 +274,7 @@ def rollout(model, public, config, variant='local', *, gold=None, teacher_forcin
             prior_routes,prior_events = pending_events
             decoded = model.event_roundtrip(prior_routes @ workspace)
             for i,event in enumerate(prior_events):
-                if event.status not in ('executed','duplicate'): continue
+                if event.status != 'executed': continue
                 target_value = torch.tensor(float(event.value))
                 target_type = {'integer':0,'float':1,'boolean':2}[event.type]
                 target_op = PRIMITIVE_NAMES.index(event.primitive)
@@ -276,6 +288,9 @@ def rollout(model, public, config, variant='local', *, gold=None, teacher_forcin
             target_step = min(max(0,step-len(public.frames)),len(gold.trace)-1)
             from .thinking_tasks import CandidateTarget
             targets = tuple(next((target for target in all_targets if target.candidate.id == candidate.id and target.candidate.primitive == candidate.primitive and target.candidate.arguments == candidate.arguments), CandidateTarget(candidate,0.)) for candidate in gold.trace[target_step])
+            if len(targets)<prediction['op_logits'].shape[1]:
+                null_target = next((t for t in all_targets if any(arg not in ids for arg in t.candidate.arguments)),None)
+                if null_target is not None: targets = (*targets,null_target)
             losses = auxiliary_losses(prediction,targets,ids,config)
             for key,value in losses.items(): sums[key] = sums[key] + value
             full_graph = torch.zeros_like(prediction['predicted_adjacency'])
@@ -291,12 +306,26 @@ def rollout(model, public, config, variant='local', *, gold=None, teacher_forcin
             proposals = gold.trace[trace_index] if 0 <= trace_index < len(gold.trace) else ()
         events = (); event_audit = []
         available_before = tuple(session.registers)
+        eligible_before_execution = step>=config.min_microsteps and step>last_event_step
+        stop_before_execution = not training_unroll and not teacher_forcing and variant not in ('fixed','neural_fixed','fixed_compute') and eligible_before_execution and bool(prediction['emit'].reshape(-1)[0])
         # Reserve the last pass for mandatory recurrent processing of the latest event.
-        if runtime_enabled and step < limit:
-            events = session.execute(proposals,threshold=config.readiness_threshold)
+        if runtime_enabled and step < limit and not stop_before_execution:
+            if variant=='protected_learned':
+                predicted_values = model.event_roundtrip(prediction['routes'] @ workspace)['value'][0]
+                overrides = {}
+                expected = dict(gold.expected_values) if gold is not None else {}
+                for k,proposal in enumerate(proposals):
+                    value = float(predicted_values[k].detach().clamp(-64,64))
+                    operands = [session.registers.get(arg) for arg in proposal.arguments]
+                    overrides.setdefault(proposal.id,bool(value>.5) if proposal.primitive=='compare' else (value if any(r is not None and r.type=='float' for r in operands) else int(round(value))))
+                    if 'result:'+proposal.id in expected:
+                        sums['learned_transition'] = sums['learned_transition'] + F.mse_loss(predicted_values[k]/64,torch.tensor(float(expected['result:'+proposal.id]))/64)
+                events = session.execute_learned(proposals,overrides,threshold=config.readiness_threshold)
+            else:
+                events = session.execute(proposals,threshold=config.readiness_threshold)
             workspace,event_loss,n,event_audit = inject_runtime_events(model,workspace,prediction,events,ids,config,variant)
             sums['event'] = sums['event'] + event_loss
-            if any(event.status in ('executed','duplicate') for event in events):
+            if any(event.status=='executed' for event in events):
                 last_event_step = step
                 pending_events = (prediction['routes'],events)
             injected += n
@@ -305,7 +334,7 @@ def rollout(model, public, config, variant='local', *, gold=None, teacher_forcin
             emit_target = float('result:' + gold.trace[-1][0].id in session.registers and ready_to_emit)
             sums['emit'] = sums['emit'] + F.binary_cross_entropy_with_logits(prediction['emit_logits'].reshape(-1),torch.tensor([emit_target]))
         hazards.append(prediction['emit_probability'].mean())
-        emit_allowed.append(ready_to_emit and variant != 'fixed_compute')
+        emit_allowed.append(eligible_before_execution and variant != 'fixed_compute')
         if gold is not None:
             task_losses.append(F.cross_entropy(prediction['output_logits'][:,:129],torch.tensor([int(gold.result)+64])) + F.cross_entropy(prediction['output_logits'][:,129:],torch.tensor([int(gold.answer)])))
         trace.append(dict(microstep=step,frame=frame,available_before=available_before,proposals=[asdict(p) for p in proposals],event_roundtrips=event_audit+melted_audit,events=[asdict(e) for e in events],
@@ -322,7 +351,7 @@ def rollout(model, public, config, variant='local', *, gold=None, teacher_forcin
     sums['ponder'] = (halt_weights * torch.arange(1,step+1,dtype=halt_weights.dtype)).sum()
     if gold is not None:
         sums['task'] = (halt_weights * torch.stack(task_losses)).sum()
-    for key in (*AUXILIARIES,'graph','emit','event'): sums[key] = sums[key] / step
+    for key in (*AUXILIARIES,'graph','emit','event','learned_transition'): sums[key] = sums[key] / step
     output_register = session.registers.get(public.output_ids[0])
     semantic_result = None if output_register is None else output_register.value
     return dict(losses=sums,log_probs=log_probs,numeric_prediction=numeric_prediction,
@@ -345,7 +374,7 @@ def train_update(model,optimizer,episodes,config,variant,step,baseline):
         rewards.append(reward)
         if task_only and result['log_probs']:
             losses['policy'] = -(reward-baseline)*torch.stack(result['log_probs']).sum()
-        loss = losses['task'] + .1*weights['transition']*losses['event'] + weights['topology']*losses['graph'] + sum(weights[key]*losses[key] for key in AUXILIARIES)
+        loss = losses['task'] + weights['transition']*losses['learned_transition'] + .1*weights['transition']*losses['event'] + weights['topology']*losses['graph'] + sum(weights[key]*losses[key] for key in AUXILIARIES)
         loss = loss + (0. if task_only else config.emit_weight)*losses['emit'] + config.ponder_weight*losses['ponder'] + losses['policy']
         (loss / len(episodes)).backward()
         for key,value in losses.items(): totals[key] = totals.get(key,0.) + float(value.detach())/len(episodes)
@@ -380,7 +409,7 @@ def evaluate(model,episodes,config,variant,*,oracle_trace=False):
         examples.append(row)
         for status in statuses: failures[status] = failures.get(status,0)+1
     n = len(examples)
-    return dict(observation_protocol='complete_from_start' if variant in ('neural_fixed','neural_recurrent','fixed') else 'progressive_exogenous_context',evaluation_seconds=time.perf_counter()-started,examples=examples,counts=failures,n=n,readiness_calibration=calibration,readiness_brier=rate(sum((r['probability']-r['target'])**2 for r in calibration),len(calibration)),trajectory_exact_accuracy=rate(sum(e['trajectory_exact'] for e in examples),n),
+    return dict(execution_backend='learned' if variant=='protected_learned' else ('none' if variant in ('neural_fixed','neural_recurrent','runtime_off','fixed') else 'exact'),observation_protocol='complete_from_start' if variant in ('neural_fixed','neural_recurrent','fixed') else 'progressive_exogenous_context',evaluation_seconds=time.perf_counter()-started,examples=examples,counts=failures,n=n,readiness_calibration=calibration,readiness_brier=rate(sum((r['probability']-r['target'])**2 for r in calibration),len(calibration)),trajectory_exact_accuracy=rate(sum(e['trajectory_exact'] for e in examples),n),
         task_accuracy=rate(sum(e['task_correct'] for e in examples),n),
         exact_semantic_accuracy=rate(sum(e['exact_semantic_correct'] for e in examples),n),
         numeric_accuracy=rate(sum(e['numeric_correct'] for e in examples),n),
@@ -389,12 +418,45 @@ def evaluate(model,episodes,config,variant,*,oracle_trace=False):
         mean_microsteps=rate(sum(e['microsteps'] for e in examples),n))
 
 
+def evaluation_conditions(config, step):
+    depths = sorted(set(config.eval_depths))
+    if step == config.steps:
+        selected = depths
+    elif step == 0:
+        selected = sorted({depths[0],depths[-1]})
+    else:
+        selected = depths[:1]
+    rows = [dict(depth=d,condition='depth',kwargs={}) for d in selected]
+    if step == config.steps and config.extra_evaluations:
+        rows += [dict(depth=max(2,config.train_depth),condition=name,kwargs=kwargs) for name,kwargs in [
+            ('heldout_surface',dict(template='lexical')),('cross_motif',dict(motif='cross')),
+            ('heldout_composition',dict(operator_composition='heldout')),('heldout_wordorder',dict(template='reordered')),
+            ('distractors16',dict(distractors=16)),('distractors64',dict(distractors=64)),('ambiguity_delay',dict(delay=4))]]
+    return rows
+
+
+def evaluation_episode(config,seed,index,condition):
+    from .thinking_tasks import generate_episode
+    options = dict(condition['kwargs'])
+    delay = options.pop('delay',0)
+    distractors = options.pop('distractors',config.distractors)
+    episode = generate_episode(seed=1_000_000+seed*10000+index,depth=condition['depth'],distractors=distractors,context=index%2,**options)
+    if delay:
+        episode = replace(episode,public=replace(episode.public,frames=(episode.public.frames[0],)*delay+episode.public.frames),gold=replace(episode.gold,hypotheses=(episode.gold.hypotheses[0],)*delay+episode.gold.hypotheses,readiness=(episode.gold.readiness[0],)*delay+episode.gold.readiness))
+    return episode
+
+
 def run(config,output):
     from .thinking_tasks import generate_episode
     torch.set_num_threads(config.threads)
     output = Path(output); output.mkdir(parents=True,exist_ok=True)
     manifest = source_manifest()
-    (output/'manifest.json').write_text(json.dumps(dict(config=asdict(config),sources=manifest,source_hash=digest(manifest)),indent=2))
+    try:
+        git_commit = subprocess.check_output(['git','rev-parse','HEAD'],cwd=Path(__file__).resolve().parents[2],text=True).strip()
+    except (OSError,subprocess.CalledProcessError):
+        git_commit = None
+    run_manifest = dict(config=asdict(config),config_hash=digest(asdict(config)),sources=manifest,source_hash=digest(manifest),git_commit=git_commit,python=platform.python_version(),torch=torch.__version__,started_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),initializations={},checkpoints={})
+    (output/'manifest.json').write_text(json.dumps(run_manifest,indent=2))
     started = time.monotonic()
     def progress(kind,**fields):
         print(json.dumps(dict(kind=kind,elapsed_seconds=time.monotonic()-started,**fields)),flush=True)
@@ -404,33 +466,40 @@ def run(config,output):
                 progress('variant_start',seed=seed,variant=variant)
                 model = build_model(config,seed)
                 initial_hash = digest({k:v.detach().tolist() for k,v in model.state_dict().items()})
+                run_manifest['initializations'][f'{variant}:seed{seed}'] = initial_hash
                 optimizer = torch.optim.Adam(model.parameters(),lr=config.learning_rate)
                 baseline = 0.
                 for step in range(config.steps+1):
                     if time.monotonic()-started > config.wall_seconds: raise TimeoutError('study wall budget exhausted')
                     if step in config.checkpoints:
                         progress('checkpoint_start',seed=seed,variant=variant,step=step)
-                        eval_conditions = [dict(depth=d,condition='depth',kwargs={}) for d in config.eval_depths]
-                        if config.extra_evaluations:
-                            eval_conditions += [dict(depth=max(2,config.train_depth),condition=name,kwargs=kwargs) for name,kwargs in [('heldout_surface',dict(template='lexical')),('cross_motif',dict(motif='cross')),('heldout_composition',dict(operator_composition='heldout'))]]
+                        checkpoint_hash = digest({k:v.detach().tolist() for k,v in model.state_dict().items()})
+                        eval_conditions = evaluation_conditions(config,step)
                         for condition in eval_conditions:
                             depth = condition['depth']
                             eval_config = replace(config,max_microsteps=config.eval_max_microsteps)
                             previous_model_config = model.config
                             model.config = replace(model.config,max_microsteps=config.eval_max_microsteps)
-                            episodes = [generate_episode(seed=1_000_000+seed*10000+i,depth=depth,distractors=config.distractors,context=i%2,**condition['kwargs']) for i in range(config.eval_examples)]
-                            row = dict(kind='evaluation',seed=seed,variant=variant,step=step,depth=depth,condition=condition['condition'],compute_cap=eval_config.max_microsteps,initial_hash=initial_hash,source_hash=digest(manifest),**evaluate(model,episodes,eval_config,variant))
+                            episodes = [evaluation_episode(config,seed,i,condition) for i in range(config.eval_examples)]
+                            row = dict(kind='evaluation',seed=seed,variant=variant,step=step,depth=depth,condition=condition['condition'],compute_cap=eval_config.max_microsteps,checkpoint_hash=checkpoint_hash,initial_hash=initial_hash,source_hash=digest(manifest),**evaluate(model,episodes,eval_config,variant))
                             stream.write(json.dumps(row)+'\n'); stream.flush()
-                            if variant == 'local' and condition['condition']=='depth':
-                                if step in (0,config.steps):
-                                    oracle = dict(kind='evaluation',seed=seed,variant=variant,intervention='oracle_trace',privilege='gold actions and full unroll; not free policy',step=step,depth=depth,condition='oracle_trace',compute_cap=eval_config.max_microsteps,initial_hash=initial_hash,source_hash=digest(manifest),**evaluate(model,episodes,eval_config,variant,oracle_trace=True))
+                            if variant == 'local' and step==config.steps and condition['condition']=='depth' and depth in (min(config.eval_depths),max(config.eval_depths)):
+                                for oracle_name in ('oracle_trace','oracle_minimal'):
+                                    oracle_config = eval_config if oracle_name=='oracle_trace' else replace(eval_config,max_microsteps=len(episodes[0].public.frames)+len(episodes[0].gold.trace))
+                                    oracle = dict(kind='evaluation',seed=seed,variant=variant,intervention=oracle_name,privilege='gold actions and supplied unroll; not free policy',step=step,depth=depth,condition=oracle_name,compute_cap=oracle_config.max_microsteps,checkpoint_hash=checkpoint_hash,initial_hash=initial_hash,source_hash=digest(manifest),**evaluate(model,episodes,oracle_config,variant,oracle_trace=True))
                                     stream.write(json.dumps(oracle)+'\n'); stream.flush()
-                                for intervention in ('event_drop','event_shuffle','event_wrong_value','runtime_off'):
-                                    intervened = dict(kind='evaluation',seed=seed,variant=variant,intervention=intervention,step=step,depth=depth,condition='frozen_intervention',compute_cap=eval_config.max_microsteps,initial_hash=initial_hash,source_hash=digest(manifest),**evaluate(model,episodes,eval_config,intervention))
+                                for intervention in ('event_drop','event_shuffle','event_wrong_value','runtime_off','graph_permuted','graph_drop50','readiness_0.5','readiness_0.95'):
+                                    intervention_config = replace(eval_config,readiness_threshold=float(intervention.split('_')[1])) if intervention.startswith('readiness_') else eval_config
+                                    actor_variant = 'local' if intervention.startswith('readiness_') else intervention
+                                    intervened = dict(kind='evaluation',seed=seed,variant=variant,intervention=intervention,step=step,depth=depth,condition='frozen_intervention',readiness_threshold=intervention_config.readiness_threshold,compute_cap=eval_config.max_microsteps,checkpoint_hash=checkpoint_hash,initial_hash=initial_hash,source_hash=digest(manifest),**evaluate(model,episodes,intervention_config,actor_variant))
                                     stream.write(json.dumps(intervened)+'\n'); stream.flush()
                             model.config = previous_model_config
                         if config.save_checkpoints:
-                            torch.save(model.state_dict(),output/f'{variant}-seed{seed}-step{step}.pt')
+                            checkpoint_path = output/f'{variant}-seed{seed}-step{step}.pt'
+                            torch.save(model.state_dict(),checkpoint_path)
+                            run_manifest['checkpoints'][checkpoint_path.name] = dict(state_hash=checkpoint_hash,file_sha256=hashlib.sha256(checkpoint_path.read_bytes()).hexdigest(),elapsed_seconds=time.monotonic()-started)
+                        run_manifest['elapsed_seconds'] = time.monotonic()-started
+                        (output/'manifest.json').write_text(json.dumps(run_manifest,indent=2))
                         progress('checkpoint_complete',seed=seed,variant=variant,step=step)
                     if step == config.steps:
                         progress('variant_complete',seed=seed,variant=variant,step=step)
