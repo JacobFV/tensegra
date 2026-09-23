@@ -18,6 +18,7 @@ from .campaign_returns import sha, calibration, group_counts
 
 
 from .campaign_returns_diversity import fit_consumer
+from .campaign_returns_balanced import capture_balanced
 
 
 def run(cfg,out):
@@ -52,6 +53,10 @@ def run(cfg,out):
         assert cache[f'test/{d}']['event_row_hashes']==cache['test/2']['event_row_hashes']
     test_ids=set(cache['test/2']['event_row_hashes'])
     assert all(not(test_ids & ids) for ids in sets)
+    grid=cfg['balanced_grid']
+    cache['balanced/8']=capture_balanced(model,grid['seed'],grid['pool_size'],grid['per_cell'],8,grid['delays'],cfg['batch_size'],device)
+    grid_ids=set(cache['balanced/8']['event_row_hashes'])
+    assert all(not(grid_ids & ids) for ids in sets+[test_ids])
     rows=[];logits={}
     with torch.no_grad():
         for key,batch in cache.items():
@@ -78,7 +83,7 @@ def run(cfg,out):
     assert tensor_hash(model.state_dict())==initial
     predictions=out/'predictions.json.gz';predictions.write_bytes(gzip.compress(json.dumps(rows,separators=(',',':')).encode(),mtime=0))
     manifest=dict(config=cfg,config_sha256=hashlib.sha256(json.dumps(cfg,sort_keys=True).encode()).hexdigest(),
-        source={n:sha(Path(__file__).with_name(n)) for n in ('campaign_returns_confirmation.py','campaign_returns_diversity.py','campaign_returns.py','return_crossdelay.py','return_memory.py','retention_data.py','thinking.py')},
+        source={n:sha(Path(__file__).with_name(n)) for n in ('campaign_returns_balanced.py','campaign_returns_confirmation.py','campaign_returns_diversity.py','campaign_returns.py','return_crossdelay.py','return_memory.py','retention_data.py','thinking.py')},
         checkpoint_sha256=sha(checkpoint),backbone_state_sha256=initial,width=1024,backbone_parameters=sum(p.numel() for p in model.parameters()),
         fits=records,predictions_sha256=sha(predictions),features=save_cache(out/'features.pt.gz',cache),logits=save_cache(out/'logits.pt.gz',logits),
         seconds=time.monotonic()-started,peak_cuda_allocated=torch.cuda.max_memory_allocated(),process_peak_rss=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,

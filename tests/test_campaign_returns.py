@@ -46,3 +46,30 @@ def test_exposure_preserves_original_nine_hundred_prefix():
     assert cfg['head_seed']==22000011 and cfg['batch_size']==256 and cfg['lr']==.003
     assert 'ce-16384.pt' in cfg['reference_path']
     assert 32 not in cfg['delays']
+
+
+def test_r04_pairs_nested_diversity_without_delayed_test_selection():
+    import json
+    from pathlib import Path
+    cfg=json.loads((Path(__file__).parents[1]/'configs/campaign-r04-confirmation.json').read_text())
+    assert cfg['pool_sizes']==[4096,16384]
+    assert cfg['ce_updates']==900 and cfg['ce_batch_size']==256
+    assert 32 not in cfg['delays'] and 32 in cfg['test_delays']
+    seeds=[spec['seed'] for run in cfg['runs'] for spec in run['data'].values()]
+    assert len(set(seeds))==12
+    for run in cfg['runs']:
+        assert run['data']['train']['size']==max(cfg['pool_sizes'])
+        assert run['data']['calibration']['size']==1024
+        assert run['data']['validation']['size']==run['data']['test']['size']==4096
+
+
+def test_balanced_grid_uses_observed_typed_values_without_relabeling():
+    import torch
+    from topoformer.retention_data import make_batch
+    from topoformer.campaign_returns_balanced import balanced_indices
+    batch=make_batch(987612,1024,distractors=0)
+    ids=balanced_indices(batch,2)
+    assert len(ids)==104 and len(ids.unique())==104
+    pairs=torch.stack([batch['targets']['type'][ids],batch['targets']['value'][ids]],1)
+    assert torch.unique(pairs,dim=0,return_counts=True)[1].tolist()==[2]*52
+    assert torch.equal(batch['targets']['value'][ids],(2*batch['public']['event']['values'][ids,0]+16).long())
