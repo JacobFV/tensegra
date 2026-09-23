@@ -223,14 +223,20 @@
     },
     {
       "id": "R06",
-      "status": "profile_ready",
+      "status": "development_running",
       "source": "7e77c3d",
       "protocol": "returns/R06-protocol-draft.md",
       "hypothesis": "Balanced fitting improves rare legal type/value reconstruction without changing decoder or optimizer exposure",
       "intervention": "Only fitting event population; train-only normalization follows same rule",
       "comparison": "Original16k prefix versus balanced16k from same valid pool; fresh original-mixture and balanced cells",
       "selection": "Declared calibration minimum-cell improvement plus >=98% mixture; no32development",
-      "cap_profile_seconds": 60
+      "cap_profile_seconds": 60,
+      "cap_seconds": 300,
+      "estimated_seconds": [
+        150,
+        220
+      ],
+      "profile_seconds": 10.22
     },
     {
       "id": "C01",
@@ -246,24 +252,30 @@
     },
     {
       "id": "S07-occurrence",
-      "status": "cpu_design_and_independent_mapping_audit",
+      "status": "main_budget_freezing",
       "hypothesis": "Occurrence-specific copy supervision improves ordered graph induction beyond identity-only first-mention supervision",
       "intervention": "Original S01 actor; only ident-node copy training targets change to audited visible occurrence",
       "comparator": "S01 n8192 sameinit/data/65536presentations",
       "observable_inputs": "Unchanged public text and copy inventory; no gold spans forward",
       "privileged_targets": "Exact ordered occurrence alignment for training loss only",
       "promotion": "DEV exact>=10% and gain>=5pp; orderedF1>.90; copy>=.95; no automatic confirmation otherwise",
-      "budget": "Profile then expected<=900processseconds; no release yet"
+      "budget": "Profile then expected<=900processseconds; no release yet",
+      "profile_seconds": 9.979496821,
+      "estimated_seconds": [
+        650,
+        720
+      ]
     },
     {
       "id": "A05b",
-      "status": "running",
+      "status": "diagnostic_complete_audited",
       "source": "6704bd8",
       "protocol": "attention/a05b-protocol.md",
       "cap_seconds": 60,
       "kind": "frozen-checkpoint diagnostic",
       "data": "Fresh development102M,512events; no training",
-      "claim_boundary": "Address concentration changes retrieved attribute and payload features; not pure value mixing"
+      "claim_boundary": "Address concentration changes retrieved attribute and payload features; not pure value mixing",
+      "result": "116/271/403/512 of512 baseline/content16/address16/both16; no training, tensorhashesunchanged"
     }
   ],
   "policy": {
