@@ -23,3 +23,7 @@ def test_distinct_same_content_is_not_idempotent_ledger():
     assert len(set(b['public']['ids'][0].tolist()))==9
     # Deterministic noiseless constraints imply equal support, not doubled evidence confidence.
     q=b['targets']['posterior'];assert torch.equal(q[:,1],q[:,2])
+
+def test_public_ledger_noops_padding_first_write_and_absent_retraction():
+    p=dict(ids=torch.tensor([[-1,7,7,9,7,3]]),actions=torch.tensor([[0,1,1,-1,-1,1]]),frames=torch.tensor([[1,1,1,1,1,0]],dtype=torch.bool))
+    assert empty_ledger_frames(p).tolist()==[[True,False,False,False,True,True]]

@@ -1,0 +1,33 @@
+{
+  "mode": "protected",
+  "seed": 1,
+  "device": "cuda",
+  "checkpoint": "~/topoformer-stage8-artifacts/beliefs/idmatched/protected-1/model.pt",
+  "steps": 0,
+  "eval_count": 512,
+  "chunk": 32,
+  "eval_candidates": [
+    8,
+    16,
+    32
+  ],
+  "conditions": [
+    "clean",
+    "reorder",
+    "duplicate",
+    "long_duplicate",
+    "contradiction",
+    "retract",
+    "partial",
+    "empty",
+    "full_retract",
+    "distinct_equal",
+    "candidate_permutation",
+    "id_rename"
+  ],
+  "split_seeds": {
+    "validation": 9100000,
+    "test": 9200000
+  },
+  "study": "frozen_checkpoint_architectural_prior_intervention"
+}
