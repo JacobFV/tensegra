@@ -3,7 +3,7 @@
   "experiments": [
     {
       "id": "R01",
-      "status": "development_complete_confirmation_running",
+      "status": "completed_confirmation_failed",
       "kind": "development",
       "hypothesis": "A stronger scalar consumer and the wider-trained frozen backbone combine usefully",
       "intervention": "Same-capacity ridge or CE scalar refit, non-value heads fixed",
@@ -31,13 +31,14 @@
     },
     {
       "id": "S01",
-      "status": "n8192_running",
+      "status": "ladder_completed_extension_preparing",
       "protocol": "semantics/S01-design.md",
       "source": "cf46c23",
       "comparison": "128/1024/8192 distinct training constructions,65536 presentations each",
       "next_branch": "Exposure extension or attributable text-interface comparison based on curves",
       "n128_result": "Train exact0/128 despite100%copy;development exact0/512,copy46.97%,caltypedF1.628",
-      "n1024_result": "Devexact0/512,copy72.44%,calorderedF1.66262 vsN128.50009 atmatched65536presentations"
+      "n1024_result": "Devexact0/512,copy72.44%,calorderedF1.66262 vsN128.50009 atmatched65536presentations",
+      "n8192_result": "DEVcopy95.77%,caltypedF1.83892,orderedF1.85424;exact0/512. Lastinterval gains support optimizer-preserving extension."
     },
     {
       "id": "A01",
@@ -49,7 +50,7 @@
     },
     {
       "id": "R02",
-      "status": "completed_pending_audit",
+      "status": "completed_audited",
       "hypothesis": "Scalardecoder freshcontexttails may improve with fittingdiversity",
       "intervention": "4096/8192/16384fresh fit events, fixedCE900",
       "selection": "Fresh development only,seed11 chosen from failedconfirmation disclosed",
@@ -58,12 +59,12 @@
     },
     {
       "id": "A02",
-      "status": "completed_pending_final_audit",
+      "status": "completed_audited",
       "hypothesis": "Finite softbias mass dilution explains size/depth gap",
       "intervention": "soft4/soft8/size-adjustedlambda plus frozenmodelcounterfactual",
       "selection": "Fresh developmentseed102 only",
       "next_branch": "Freeze strongestfew arms for3pairedseedconfirmation,retain strongestbaselines",
-      "result": "Fixedlambda8selected; frozen4\u21928restoresall5devcellswithoutweightchange"
+      "result": "Strength initialized8 selected; frozen literal override8 restores all5developmentcells without weight change"
     },
     {
       "id": "R03",
@@ -83,18 +84,19 @@
     },
     {
       "id": "A03",
-      "status": "seed201_completed_remaining_frozen_seeds_queued",
+      "status": "seed202_running",
       "hypothesis": "Strongerfinitebias repairs the measured concentration failure but may notbeatstrongcontext/messagebaselines",
       "intervention": "Pairedsoft4/soft8/context/message/hard,3freshseeds,1024/cell",
       "next_branch": "Confirmedrouting comparison,thenpredictedgrounding ifinformative"
     },
     {
       "id": "R04",
-      "status": "registered_preparing",
+      "status": "reviewed_ready",
       "hypothesis": "Largerfittingpool improves reliableaggregate scalaraccess underfixedconsumer/exposure",
       "intervention": "Nested4096/16384fresh fittingevents,CE900;unchangedreference;threehistoricalbackbones",
       "evaluation": "4096freshvalidation and4096fresh test perbackbone;covered0\u201316;32testonly",
-      "next_branch": "Matched-distribution causaluse onlyifconsumedcontractpasses"
+      "next_branch": "Matched-distribution causaluse onlyifconsumedcontractpasses",
+      "balanced_diagnostic": "Separate3328events:52legaltype/value strata x64contexts; not primary mixture or gate replacement"
     }
   ],
   "policy": {

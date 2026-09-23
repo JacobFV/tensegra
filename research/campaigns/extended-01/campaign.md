@@ -18,8 +18,10 @@ Belief research stays frozen. Each branch may advance independently. A narrow va
 
 ## Current state
 
-R01 CE refitting substantially improves scalar access, but the frozen three-backbone confirmation fails its declared 0–16 contract: seed11 has1000/1024 correct at16. Raw/cache audit reproduces the failure. R02 tests fresh fitting diversity at fixed optimizer exposure; no composition promotion.
+R01 confirmation failed its declared scalar contract; the failure remains archived. R02 larger fitting pools improved fresh scalar access; R03 additional optimization improved fitting without reliable fresh gains. R04 now freezes the selected 16k-pool/900-update recipe for three-backbone fresh confirmation, paired with4k and unchanged-head references. A separate balanced typed-value grid will expose subtype tails. No composition promotion.
 
-A01 direct-attention development favors the strong keyed-context/message/hard baselines. Soft4 has correct argmax routing but poor value accuracy under joint size/depth shift. A02 isolates finite attention mass with stronger and size-adjusted bias, retaining all baselines.
+A03 direct-attention confirmation is running. First seed confirms that soft4 can have perfect argmax paths yet fail value retrieval; stronger finite bias and the strong context/message/hard baselines solve the clean joint shift. Remaining seeds are unchanged. No unique programmable-attention advantage established.
 
-S01 audited9728 alpha-distinct constructions with disjoint splits. The first matched-exposure arm (128 training constructions) is running;1024/8192 arms follow. Public-text and return acquisition remain independent. Queue/budget are authoritative for live GPU ownership.
+S01 diversity ladder completed at matched65,536presentations: fresh copy accuracy46.97%/72.44%/95.77% for128/1024/8192 distinct constructions; ordered-edgeF1 .500/.663/.854. Exact graphs remain0/512. These are one-seed development results. Strong recent gains justify an optimizer-preserving exposure extension before a new frontend. S02 independently probes the installed edge readout on frozen public-text node features.
+
+Queue/budget are authoritative for live ownership. Historical gates and source remain unchanged.
