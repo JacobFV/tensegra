@@ -1,0 +1,42 @@
+{
+  "config": {
+    "mode": "recurrent",
+    "seed": 1,
+    "device": "cuda",
+    "checkpoint": "~/topoformer-stage8-artifacts/beliefs/idmatched/recurrent-1/model.pt",
+    "steps": 0,
+    "eval_count": 512,
+    "chunk": 32,
+    "eval_candidates": [
+      8
+    ],
+    "conditions": [
+      "clean",
+      "distinct_equal_seen_id",
+      "distinct_equal_unseen_id",
+      "id_permute_seen"
+    ],
+    "split_seeds": {
+      "development": 9300000
+    },
+    "study": "post_registered_identity_shift_localization"
+  },
+  "config_sha256": "5021a1622c078357b85998705dccf78808ad9ae9a0b6c46e1e5f5895159dffe1",
+  "parameters": 16867395,
+  "source_sha256": {
+    "belief_contracts_study.py": "4dfc9b50f402f1cb6a33fec605c63b5c5f0b0e2c8331b282a210c678de67977d",
+    "belief_contracts.py": "5508451f141e1229601e04c5b2f15b5ed0ef1ad650ae5865965107d60ca21957",
+    "belief_state.py": "04e28df53062bf4124687309389988eba09e82bbc3c8cbc0edc86fabe2b6acd1"
+  },
+  "composition_allowed": false,
+  "workspace_width": 1024,
+  "checkpoint_sha256": "2fc6667b61cfbff4357ec11c10197863f35edc1675dab3dcd96e56c9e8711b81",
+  "training_seconds": 2.4638138711452484e-06,
+  "evaluation": {
+    "seconds": 2.069430227857083,
+    "rows": 8
+  },
+  "total_seconds": 2.780744042713195,
+  "rss_peak_kib": 1540820,
+  "cuda_peak_bytes": 1712598016
+}

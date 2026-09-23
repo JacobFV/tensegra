@@ -53,3 +53,24 @@ Additional N32 conditions remain separately descriptive; all models still fail t
 Total frozen-matrix runtime501.48seconds plus1.10second profile; peak allocated CUDA1,712,598,016bytes, process RSS1,649,568KiB. Six existing1024/2048 checkpoints,16,867,395parameters each; zero new optimizer presentations. The prior policy has zero trainable parameters but supplies an active-ID set. CUDA allocation and RSS are distinct measures on the shared-memory GB10; neither is total device capacity. Frozen source copies, configuration/checkpoint hashes and compressed posterior arrays are retained under `research/results/stage9/beliefs/`.
 
 The raw-ID coverage is especially narrow: IDs0–4 vary only the lowest three bits of the16-bit neural feature; higher bits are constant during Stage8 training. Renaming into256–65535 changes previously constant input coordinates. Exact ledger lookup should be invariant to such bijections, but the learned compatibility network need not be. This is a specific input-representation/exposure confound, not a claim that any recurrent system cannot track observations. The seen-ID diagnostic is necessary before attributing the `distinct_equal` failure to redundant-content accumulation alone.
+
+
+## Preregistered observation-identity localization
+
+The48-cell post-registered diagnostic uses fresh development events, not reopened validation/test selection. It changes only one redundant observation's ID (seen4 versus unseen100), or permutes the four clean IDs within0–3. All512events/cell and allthree paired checkpoints remain visible. Prior policy is supplied in the table; unrepaired raw results are also retained.
+
+| Comparator / control | Final support accuracy seeds0/1/2 | Mean posterior L1 seeds0/1/2 |
+|---|---|---|
+| Protected / clean |100 / 100 / 100%|.0007 / .0003 / .0004|
+| Protected / redundant seenID4 |50.78 / 48.24 / 100%|.6565 / .6904 / .3277|
+| Protected / redundant unseenID100 |50.78 / 48.24 / 99.80%|.6565 / .6904 / .3668|
+| Protected / permuted seenIDs0–3 |100 / 100 / 100%|.0007 / .0003 / .0004|
+| Recurrent / redundant seenID4 |96.29 / 100 / 100%|.2641 / .0039 / .0039|
+| Recurrent / redundant unseenID100 |87.11 / 100 / 100%|.4991 / .0409 / .0092|
+| Recurrent / permuted seenIDs0–3 |91.99 / 86.33 / 90.43%|.0740 / .0957 / .1457|
+
+This narrows the new failure further: unseen high ID bits are **not the sole cause**. SeenID4 was only used for contradictory/retracted primitive evidence during training, with observed primitive value1 or2, never0. Posthoc raw stratification confirms seeds0/1 fail every ID4+primitive0 case (0/252 and0/265) and succeed on every ID4+primitive1 case (260/260 and247/247). Seed2 gets the final choice correct but its primitive0 posterior trajectory has L1 .668 versus .000157 for primitive1. That stratification is diagnostic, not a new selected gate.
+
+The observed hole is compositional data coverage over a public nuisance identity and content value. Protected bookkeeping is correct; learned compatibility is sensitive to a semantically irrelevant association. Conversely, recurrent within-range ID permutation fails despite all numeric IDs having been seen; training ties IDs0–3 to arrival positions even when evidence roles are reordered. These controls do not prove which internal shortcut is used, but they exclude an explanation based only on unseen numeric ID magnitude and isolate failures under identity-renaming semantics.
+
+The additional model runtime was16.23seconds, no optimization. Five mechanical tests passed. All historical source/result bytes remain unchanged. No null-head A3 or broader model repair is justified by these failures: the original protected defect was a supplied-prior mismatch; expanded failures concern compatibility/identity invariance and recurrent posterior redistribution. A future narrowly controlled training augmentation could test those associations, but was not run here and does not change the failed expanded gate.
