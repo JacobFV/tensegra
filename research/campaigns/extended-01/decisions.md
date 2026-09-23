@@ -16,3 +16,6 @@
 - S01N128: allTRAINattributesfit butedgeerrorsblockexactgraphs; keepmatcheddiversityladder andpreparefrozen-nodeedge-onlyrefit tolocalizeconsumeracquisition. Goldedgereplacement ceiling126/128 because2sloterrorsremain.
 - A02frozenλ4→8 restores everydevelopmentcell; selectedfixed8forfreshconfirmation, notclaimingsuperiority overcontext/MP.
 - R02largerfittingpool improvesfreshscalaraccess butunderfits atfixed900updates; R03testsadditionaloptimization onthe samecache, ratherthanaddingrepresentationmachinery.
+
+- R03 exactlyreplays900updates; longerfits improveTRAINbutnotreliablyfreshvalidation. Keepselected900 andconfirmdata-poolintervention withlarger4096-eventheldouts, notanotherheadchange.
+- S01N1024 gainsfreshcopy72.44% versus46.97% atN128 under matched65536presentations, butexactgraphsremain0. CompleteN8192thenchooseextensionfromregisteredcurves.
