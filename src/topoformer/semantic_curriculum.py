@@ -175,7 +175,7 @@ def run(config):
     records=[]
     def record(model,arm,seed,seen,exposure,tokens,start):
         row=dict(arm=arm,seed=seed,optimizer_presentations=exposure,actual_unique_graphs_seen=len(seen),
-                 available_unique_graphs=train_count,public_tokens_seen=tokens,elapsed_seconds=time.monotonic()-start,
+                 available_unique_graphs=train_count,public_tokens_seen=tokens,feature_tokens_consumed=exposure if arm=='no_input' else tokens,elapsed_seconds=time.monotonic()-start,
                  renderer_exposure={'english':(exposure+1)//2,'spanish':exposure//2},evaluation={})
         if arm=='frequency': row.update(fit_label_presentations=2*train_count,actual_unique_graphs_seen=train_count,renderer_exposure={'english':train_count,'spanish':train_count})
         evaluation_start=time.monotonic()
@@ -202,7 +202,8 @@ def run(config):
             seen=set(); tokens=0; start=time.monotonic(); initial_hash=state_hash(model); training_seconds=0.
             cuda=model.initial.is_cuda
             if cuda: torch.cuda.reset_peak_memory_stats(model.initial.device)
-            checkpoints=set(config.get('eval_presentations',[0,presentations]))|{0,presentations}
+            requested_checkpoints=set(config.get('eval_presentations',[0,presentations]))|{0,presentations}
+            checkpoints={min(presentations,math.ceil(point/batch_size)*batch_size) for point in requested_checkpoints}
             for exposure in range(0,presentations+1,batch_size):
                 if exposure in checkpoints: record(model,arm,seed,seen,exposure,tokens,start)
                 if exposure==presentations: break
