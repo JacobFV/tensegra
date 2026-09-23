@@ -18,7 +18,7 @@ Historical gates are unchanged. A newly declared narrow composition contract may
 
 Reconstruct primary raw metrics, per-seed denominators, paired intervention outcomes, calibration/selection provenance and gate decisions without calling producer metric helpers. Verify source/config/data/checkpoint hashes and historical blob preservation. Challenge target ambiguity, identity shortcuts, missing evaluation coverage and unsupported universal claims early. Audits do not consume GPU unless the coordinator explicitly releases a slot.
 
-Current status: protocols requested; no campaign inference or training reviewed yet.
+Current status: campaign ongoing. Audited results and remaining limitations are recorded below; individual receipts distinguish raw reconstruction from cached inference replay.
 
 ## Initial protocol review
 
@@ -95,3 +95,11 @@ R04 independent review verifies432 raw cells and432 frozen-feature logit replays
 The balanced grid exposes a concrete acquisition failure hidden by aggregate accuracy: seed12 float zero at delay0 is0/64, recovering to62/64 at1 and16. Seed11 float-7.5,-6,+7.5 each score49/64 at16. Every grid event remains a valid original generator event:9,984 selections and operand witnesses independently replay;36 R01/R02/R04 populations totaling134,080 events are disjoint. R03's deliberate reuse is excluded. Each value stratum has only64 contexts, a diagnostic rather than a precise population guarantee. MAE/signed means use a disclosed FP32 tolerance on non-power-of-two support3328; integer correctness counts are exact.
 
 R05 preflight is restricted to an oracle-first-return, frozen scalar accessor, and newly learned comparator; it is not recurrent autonomous orchestration. Before any R05 outcomes, the exact query-only Bayes ceiling4324/5445 justified replacing a nearly maximal20point absence-drop requirement with15points plus80% of matched oracle-minus-query gain, retaining positive oracle gain, changed-fact tests and later98%-across-three-seeds confirmation. The prior draft remains history. Removing postselection delay32 is a prospective scope tightening, not a detected selection leak. Supplied swap metadata, dependency hashes, population disjointness and clean capture parity are now explicit.
+
+### Acquired returned-fact use and the next attention control
+
+R05 development independently reconstructs all126 raw cells and calibration-selected endpoints2000/1000/2000. Cached CPU replay verifies the frozen scalar accessor and actual learned, query-only and exact-value comparator inputs with zero argmax discrepancies. Learned clean accuracy is2041–2044/2048, versus2043 for the exact-value comparator and1634 for query-only. Removing the return reduces accuracy19.43–19.97 points; changed-answer wrong/swap controls follow supplied facts on867–868/871 and571–574/580 cases. These pass the prospective development checks, supporting frozen three-population confirmation rather than an autonomous-composition claim. The selected query-only endpoint has half the final optimizer presentations; identical development search budgets must not be described as identical selected exposure.
+
+A04's320 compact cells pass independent target/path/supplied-fact reconstruction. Its learned content matching is meaningful, but generator-only analysis finds long paths coalesce toward one terminal: mean1.383 identities at depth32. The unrun A05 confirmation was therefore held for a separately versioned blockwise-bijective generator. This prevents a depth claim from relying on an effectively start-independent task; historical A04 outcomes remain unchanged.
+
+S02's final edge-only refit reaches raw2/calibrated4 exact TRAIN graphs out of128, with zero development graphs; its midpoint34/128 calibrated result is not substituted for the registered final endpoint. S03's additional exposure still yields zero exact development graphs, but a privileged gold-edge replacement raises the ceiling to272/512 (280 with slots). These are localization results and motivate explicitly labeled compiler-contract diagnostics, not claims that the edge relation was learned.
