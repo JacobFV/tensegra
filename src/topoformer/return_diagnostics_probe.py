@@ -58,7 +58,7 @@ def metrics(pred,target):
 
 def run(config, output):
     torch.set_num_threads(2); output=Path(output);output.mkdir(parents=True,exist_ok=True)
-    device=config.get('device','cuda'); started=time.monotonic(); records=[]
+    device=config.get('device','cuda'); started=time.monotonic(); records=[]; metadata={}
     if len({spec[0] for spec in config['splits'].values()}) != len(config['splits']): raise ValueError('split seeds overlap')
     source={name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in ('return_diagnostics_probe.py','return_memory.py','retention_data.py','thinking.py')}
     manifest=dict(config=config,source=source,runs=[])
@@ -76,6 +76,7 @@ def run(config, output):
         for split, (data_seed,size) in config['splits'].items():
             batch=make_batch(data_seed,size,distractors=config.get('distractors',8))
             split_hashes[split]=event_hash(batch['public']['event'])
+            metadata[split]=dict(data_seed=data_seed,event_indices=list(range(size)),targets={k:v.tolist() for k,v in batch['targets'].items()},event_sha256=split_hashes[split])
             chunks={}; baseline={}
             with torch.no_grad():
              for start in range(0,size,config.get('batch_size',64)):
@@ -108,6 +109,7 @@ def run(config, output):
                 records.append(dict(run=name,split=split,boundary=boundary,family=family,alpha=alpha,selection=selection,metrics=metrics(pred,targets),predictions=pred.tolist(),targets=targets.tolist()))
         torch.cuda.synchronize()
         manifest['runs'].append(dict(run=name,checkpoint_sha256=checkpoint_sha,event_hashes=split_hashes,seconds=time.monotonic()-run_start,peak_cuda_allocated=torch.cuda.max_memory_allocated(),parameters=sum(p.numel() for p in model.parameters()),width=1024))
+        (output/'events.json').write_text(json.dumps(metadata,separators=(',',':')))
         (output/'manifest.json').write_text(json.dumps(manifest,indent=2));(output/'predictions.json').write_text(json.dumps(records,separators=(',',':')))
         print(name,manifest['runs'][-1]['seconds'],flush=True)
     manifest['seconds']=time.monotonic()-started;(output/'manifest.json').write_text(json.dumps(manifest,indent=2))
