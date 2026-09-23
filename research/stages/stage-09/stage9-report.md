@@ -15,19 +15,19 @@ Baseline: `0f44e13`. Experimental workspace width: **1024**. Versioned Stage 9 i
 | Semantic head realizability | Additive margin contradiction reproduced; interaction and conditional objectives express required fixtures | Restricted mathematical/fixture pass |
 | Fixed-node semantic acquisition | Prospective TRAIN-calibrated graphs: seed10=6/8, seeds11/12=8/8, identical across four arms | All-seed gate fails; public-text acquisition blocked |
 
-Means are descriptive, not substitutes for seedwise gates. Required belief/return cells contain512 examples; semantic fixed-set fixtures contain only8 graphs and make no generalization claim.
+Means are descriptive, not substitutes for seedwise gates. Return percentages shown use test examples with eight distractor rows; gates retain both prescribed distractor conditions. Required belief/return cells contain512 examples; semantic fixed-set fixtures contain only8 graphs and make no generalization claim.
 
 ## 1. Is the belief failure the prior, learned null inference, or both?
 
-For the protected model on the original matrix, the dominant recorded defect is the specified empty-evidence prior. Ordinary candidate logits are equal; learned null mass `u` produces posterior L1 exactly `2u`, verified within1.01e-7. Frozen gradients are nonzero: the objective supplies pressure to remove null mass, diluted across frames. This establishes the error mechanism and local gradient, not why the optimizer historically stopped there.
+For the protected model on the original matrix, the dominant recorded defect is the specified empty-evidence prior. Ordinary candidate logits are equal; learned null mass `u` produces posterior L1 exactly `2u`, verified within1.01e-7. Frozen gradients are nonzero: the objective supplies pressure to remove null mass, with the initial-frame contribution averaged across frames. This establishes the error mechanism and local gradient, not why the optimizer historically stopped there.
 
 The minimal A2 rule supplies the public uniform non-null prior whenever the active observation ledger is empty, including after full retraction. It changes no nonempty posterior. Both comparators receive equivalent public empty-ledger metadata. Protected A2 passes48/48 original validation cells; recurrent A2 still fails10/48. Expanded conditions fail for both. Recurrent residual errors often concern ordinary candidates, not null. Protected ID failures expose unseen ID/content combinations even for an ID seen during training. A new null head is therefore not justified as a universal repair.
 
-Duplicate observation IDs are idempotent ledger entries; equal content under distinct IDs remains distinct evidence. This programmed bookkeeping and supplied closed-world prior do not establish open-world uncertainty calibration. [Belief report](stage9-belief-report.md)
+Duplicate observation IDs are idempotent ledger entries; equal content under distinct IDs creates distinct ledger entries. In this deterministic noiseless benchmark, repeating the same constraint leaves the target posterior unchanged; independent noisy measurements are not modeled. This programmed bookkeeping and supplied closed-world prior do not establish open-world uncertainty calibration. [Belief report](stage9-belief-report.md)
 
 ## 2. Where does exact scalar information first become unreliable?
 
-The affine scalar field code preserves all33 half-unit values across fresh nuisance contexts:528/528 in every frozen path. The correctly selected facet after mixing is likewise528/528. Actual affine encodings do not exhibit the hypothesized magnitude collapse. Merged-memory linear probes are weaker; that is a limitation of the tested readout, not proof of absent information.
+The affine scalar field code preserves all33 half-unit values across fresh nuisance contexts:528/528 in all18 frozen checkpoints. The correctly selected facet after mixing is likewise528/528. Actual affine encodings do not exhibit the hypothesized magnitude collapse. Merged-memory linear probes are weaker; that is a limitation of the tested readout, not proof of absent information.
 
 The original workspace decoder is already unreliable at initial retrieval. Frozen-backbone probes and separately trained readout replacements recover substantial early accuracy without changing memory, encoder, attention, or recurrence. The first demonstrated failure is therefore the learned retrieval/workspace/readout boundary; the experiment does not uniquely assign all initial error to attention versus representation versus decoding.
 

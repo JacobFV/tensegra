@@ -110,3 +110,7 @@ Seeds11/12 fit8/8 calibrated graphs in every arm, but seed10 fits only6/8 with5 
 ## Final historical preservation
 
 After all diagnostic implementations and result exports, all **1,747 files tracked at baseline `0f44e13`** remain byte-identical, including Stage1–8 source, artifacts, reports and gate registry. The complete final Git-blob manifest is saved independently from the initial preservation check. New work is additive under the Stage9 research/source/config/test/tool paths. No old result was replaced by a corrected fixture or later favorable decoder.
+
+## Consolidated report and final verification
+
+The final report percentages, per-seed gate outcomes, calibration qualifications and compute accounting agree with raw/audited evidence. Minor wording clarifies that reported return percentages use the eight-distractor test cell and deterministic repeated-content constraints are not noisy independent likelihood measurements. The registry now names exact frozen source commits matching archived SHA256 for the probe and both semantic development recipes; categorical versus numerical probes are not described as parameter-matched to each other. Root final verification reports **553 tests plus6subtests passed** in8.38seconds on an immutable `2fa21bd` snapshot, a clean diff check, all1,747 baseline blobs unchanged and no newly oversized artifact. No scientific blocker to publication remains; failed competence gates and composition blocks are retained.
