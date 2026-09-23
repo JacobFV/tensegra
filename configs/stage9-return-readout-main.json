@@ -1,0 +1,51 @@
+{
+  "device": "cuda",
+  "seeds": [
+    10,
+    11,
+    12
+  ],
+  "updates": 1000,
+  "batch_size": 32,
+  "eval_batch_size": 64,
+  "head_train_seed": 9700101,
+  "head_train_size": 2048,
+  "validation_seed": 9800101,
+  "test_seed": 9900101,
+  "eval_size": 512,
+  "head_delays": [
+    0,
+    1,
+    2,
+    4
+  ],
+  "eval_delays": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "eval_distractors": [
+    2,
+    8
+  ],
+  "ridge_grid": [
+    0.01,
+    0.1,
+    1,
+    10
+  ],
+  "head_lr": 0.003,
+  "head_updates": 500,
+  "head_batch_size": 256,
+  "head_validate_every": 50,
+  "interventions": [
+    "event_drop",
+    "wrong_value",
+    "wrong_type",
+    "wrong_provenance"
+  ]
+}
