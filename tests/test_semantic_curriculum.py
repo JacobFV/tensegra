@@ -43,3 +43,12 @@ def test_smoke_exposure_manifest_and_heldout(tmp_path):
     assert all(row['optimizer_presentations'] in (0,2) for row in rows)
     assert all(row['actual_unique_graphs_seen']==1 for row in rows if row['optimizer_presentations']==2)
     assert all(set(row['evaluation'])=={'english','spanish','symbols','heldout_lexicon'} for row in rows)
+
+
+def test_frequency_control_vectorized_counts(tmp_path):
+    corpus=m.base.CorpusIndex(tmp_path/'corpus.db',requested=2,seed=13,max_attempts=20)
+    vocab=m.base.value_vocabulary(corpus[i] for i in range(2))
+    fitted=m.frequency_fit(corpus,range(2),vocab,128)
+    assert fitted['edges'].shape==(128,128,len(m.ROLES))
+    assert fitted['presence'].dtype==torch.bool
+    assert fitted['copy'].min()>=-1
