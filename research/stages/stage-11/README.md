@@ -6,5 +6,7 @@ Baseline `e10b80a`; standard width **1024**. Independent tracks advance under th
 - [Experiment registry](stage11-registry.json)
 - [Frozen belief reference](stage11-belief-reference.md)
 - [Independent review](stage11-review.md)
+- [Claims and their prerequisites](stage11-claim-map.md)
+- [Public-text acquisition protocol](stage11-semantic-text-design.md)
 
 The preferred belief interface separates observation addresses from semantic matching. New experiments concern return training horizons and public-text graph acquisition; they do not directly test programmable attention.
