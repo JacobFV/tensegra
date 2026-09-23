@@ -1,6 +1,6 @@
 # C02: prospective N2 public-code invariance intervention
 
-Status: CPU implementation/preflight only; profile and every main launch require root GPU release. Main process caps will be frozen from the mechanical profile. This is one exploratory development comparison, not three-seed confirmation. C01 N2 remains a failed fresh acquisition result; its optional extension trigger was fulfilled but root declined the extension. No C01 recipe or outcome is replaced.
+Status: CPU preflight and mechanical profile passed; every main launch requires root GPU release. Measured main caps are frozen at600s static/600s rekey (1200s sum). Rekey waits for static replay parity review. This is one exploratory development comparison, not three-seed confirmation. C01 N2 remains a failed fresh acquisition result; its optional extension trigger was fulfilled but root declined the extension. No C01 recipe or outcome is replaced.
 
 C01 selected N2 fits 255/256 answers and 256/256 values on the original fitting-pool prefix but obtains only 2940/4096 answers and 580/4096 values on fresh data despite 4056/4096 correct auxiliary ordered proposals. C02 tests whether immutable random identity codes support memorization. It does not presume that explanation is correct.
 
@@ -20,4 +20,4 @@ Report answer-only and auxiliary33-value accuracy, full ordered proposal/primiti
 
 Mechanical profile uses16 updates,32 training and16 evaluation rows, width1024, original batch256 replacement sampling. Profile namespaces539000001–4 are disjoint from main. Both static and rekey phases capped60s each, pending root release/reviewer; only timing/memory used to freeze main caps. The tiny profile is not an acquisition test. Original full two-LR N2 process466.858s includes data creation, evaluation and export; it is a rough guide, not a per-kernel timing estimate.
 
-CPU mechanics: exact identity links/null/nonkey evidence preserved; malformed identities refuse; dedicated generator deterministic and global RNG unchanged. A one-update paired width1024 smoke verifies same initialization/index stream/data with changed code views and complete endpoint/control exports. GPU profile/main remain unrun.
+CPU mechanics: exact identity links/null/nonkey evidence preserved; malformed identities refuse; dedicated generator deterministic and global RNG unchanged. A one-update paired width1024 smoke verifies same initialization/index stream/data with changed code views and complete endpoint/control exports. GPU mechanical profiles passed; main remains unrun at this freeze.
