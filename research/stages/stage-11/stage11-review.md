@@ -45,3 +45,9 @@ The short `[0,1,2,4,2,4]` and wide `[0,1,2,4,8,16]` schedules match update/event
 ## Calibration export and profile audit
 
 The semantic exporter now saves exact active pair indices, edge scores and labels at each checkpoint. Independent stdlib reconstruction verifies the profile's 32 raw/calibrated graph decisions, 26 relation threshold records, predicted-presence masks, actual-edge slot checks, and eight matched-English frequency-baseline graph records. This verifies instrumentation only; a 20-update profile cannot pass or fail the main acquisition hypothesis.
+
+## Return development result and main preflight
+
+The independent raw auditor reconstructs all 70 development rows. Both arms achieve 32/32 complete six-field reconstruction at every covered delay after the fixed 300 updates. Initial predictions, targets and event hashes agree on shared delays; fixed and fresh event identities are disjoint. Fresh-context joint results remain much weaker (wide delay16:265/512), so this is permission for the prespecified main comparison, not evidence of generalization.
+
+Main source `0c2332f` restores every frozen checkpoint parameter into both arms, resets the RNG and AdamW identically, preserves paired training batches, and records actual per-event uniqueness and train/validation/test disjointness. The only primary intervention is delay allocation; no decoder is refit on evaluation labels. Frozen-original and frozen-Stage10-ridge scores remain contextual references. Delay32 is excluded from training and validation curves, and no outcome selects the final update1000 checkpoint. Main launch is acceptable under the frozen budget after the coordinator's queue release.
