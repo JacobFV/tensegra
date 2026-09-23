@@ -1,0 +1,4894 @@
+{
+  "config": {
+    "device": "cuda",
+    "backbone_seeds": [
+      10,
+      11,
+      12
+    ],
+    "checkpoint_dir": "/home/brandonin/topoformer-stage9/returns/readout-main",
+    "data": {
+      "train": {
+        "seed": 10100001,
+        "size": 2048
+      },
+      "calibration": {
+        "seed": 10200001,
+        "size": 512
+      },
+      "test": {
+        "seed": 10300001,
+        "size": 512
+      }
+    },
+    "delays": [
+      0,
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "source_delays": [
+      0,
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "eval_distractors": [
+      2,
+      8
+    ],
+    "batch_size": 64,
+    "ridge_grid": [
+      0.01,
+      0.1,
+      1,
+      10
+    ],
+    "pooled_rows": 8192,
+    "pools": {
+      "short_pool": [
+        0,
+        1,
+        2,
+        4
+      ],
+      "shared_pool": [
+        0,
+        1,
+        2,
+        4,
+        8,
+        16
+      ]
+    }
+  },
+  "source": {
+    "return_crossdelay.py": "6c66bfd368cec5725d8cf60aa6fc74b1fdee068c6a49b9fdf993040c410358cb",
+    "return_diagnostics_probe.py": "d89799f7812b39c67670eb57009d058602633a880a67440a84e60aa8a4e0ded7",
+    "return_memory.py": "cbf4d732520673039e5db403dfb57979b2d3492063a82bbd1376793d9103e037",
+    "return_memory_study.py": "ad92e75945c0eff5e0157c71286070e4f181cd38eef63813d3bad4aa1fbc89a9",
+    "retention_data.py": "1e980177c4e9344c8824ef3b13e2afdca4499778f9efe027d122695a847585b5",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64"
+  },
+  "config_sha256": "6d9d671639ada48b853644e1bd0ad7b6f1a715c0b7fc25df4aac0ae884590e00",
+  "environment": {
+    "torch": "2.14.0+cu130",
+    "cuda": "13.0",
+    "device": "NVIDIA GB10",
+    "total_device_bytes": 128453668864
+  },
+  "runs": [
+    {
+      "seed": 10,
+      "checkpoint_sha256": "21b51a65806b698badb70abf0d045e9b24e190a6a163b0cbf82fe0aa1be763d4",
+      "width": 1024,
+      "backbone_parameters": 55854360,
+      "memory_tokens": 6,
+      "memory_coordinates": 6144,
+      "backbone_optimizer_presentations": 0,
+      "head_optimizer_presentations": 0,
+      "closed_form_solves": 36,
+      "supervised_fit_row_uses": 122880,
+      "unique_training_events": 2048,
+      "feature_dtype": "float32",
+      "ridge_fit_records": [
+        {
+          "head": "delay_0",
+          "fit_delays": [
+            0
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "0": 2048
+          },
+          "selection_sha256": "54e5628974e62614a2d717dd10cad46392701e25a56e22b8fe4712df0d5dfa28",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.1,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 796,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 398,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 398,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 924,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 462,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 462,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 856,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 428,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 428,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 776,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 388,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 388,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "ad92f08e028e9cb3a5b30b8013bbe6438d36b95199fb3f60ebb27d43d6ce24c9"
+        },
+        {
+          "head": "delay_1",
+          "fit_delays": [
+            1
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "1": 2048
+          },
+          "selection_sha256": "69ed02f298d9e1e0943ba9ec6deae18077847980f50a830ef5326d394ff4fc00",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 1,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 1000,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 501,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 499,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 1000,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 501,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 499,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 1005,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 504,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 501,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 996,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 499,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 497,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "d55927442af0dacc7bf2e7774557a6f2c4b624e85079d7aab2da33433544f12c"
+        },
+        {
+          "head": "delay_2",
+          "fit_delays": [
+            2
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "2": 2048
+          },
+          "selection_sha256": "acbcc999c8621c3c6f9c468fad0b4b1a9292f14f1e8a2f030f463fcd3f951cdb",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 1,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 989,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 497,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 492,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 992,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 500,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 492,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 998,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 501,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 497,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 990,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 497,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 493,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "6ea6f869408d2419e453b45dcfc76f5c34f176a227feca156f5e5114f31f3c27"
+        },
+        {
+          "head": "delay_4",
+          "fit_delays": [
+            4
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "4": 2048
+          },
+          "selection_sha256": "0c2d8c47e32ee35d06de76122f1e0c728bd71d76a19c51dc64d04f872ca6a730",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 10,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 981,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 489,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 983,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 494,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 489,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 986,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 495,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 491,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 987,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 494,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 493,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "a112b6f5ca3c57eae31a382768d69afbfc8f84741229970c9b9abe148c26586a"
+        },
+        {
+          "head": "delay_8",
+          "fit_delays": [
+            8
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "8": 2048
+          },
+          "selection_sha256": "16940d77ba2f1d1fe52c6e71cae9dcb08632ae5adb6fef28adb08cd1ed1d8157",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.1,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 975,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 491,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 484,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 976,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 491,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 485,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 975,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 483,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 975,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 489,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 486,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "54f0fd2a56c941ddb7275b3b473deac4eba15922141bafab5a0bd0273f85aa1a"
+        },
+        {
+          "head": "delay_16",
+          "fit_delays": [
+            16
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "16": 2048
+          },
+          "selection_sha256": "4d9ab84594519f2ceb2a8216e135d840d3ac9b5519accccd30dbc6f343526e28",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.01,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 968,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 486,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 482,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 966,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 485,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 481,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 962,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 484,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 478,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 958,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 481,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 477,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "a20c82ef44efd90f496c669c544289ea4c11a5fa8bb45bcd853eaadb4707cd40"
+        },
+        {
+          "head": "delay_32",
+          "fit_delays": [
+            32
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "32": 2048
+          },
+          "selection_sha256": "4c0fdce700a1da45dabed57d803ead31d63216e14e8a6592402140a1ed54fd4a",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.01,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 946,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 32,
+                  "distractors": 2,
+                  "correct": 472,
+                  "total": 512
+                },
+                {
+                  "delay": 32,
+                  "distractors": 8,
+                  "correct": 474,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 946,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 32,
+                  "distractors": 2,
+                  "correct": 472,
+                  "total": 512
+                },
+                {
+                  "delay": 32,
+                  "distractors": 8,
+                  "correct": 474,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 943,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 32,
+                  "distractors": 2,
+                  "correct": 473,
+                  "total": 512
+                },
+                {
+                  "delay": 32,
+                  "distractors": 8,
+                  "correct": 470,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 936,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 32,
+                  "distractors": 2,
+                  "correct": 468,
+                  "total": 512
+                },
+                {
+                  "delay": 32,
+                  "distractors": 8,
+                  "correct": 468,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "32dda4b4e58d048099b2d6e5dfa9edb87015a5aae25053d8ec471644d86fdfb5"
+        },
+        {
+          "head": "short_pool",
+          "fit_delays": [
+            0,
+            1,
+            2,
+            4
+          ],
+          "rows": 8192,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "0": 2048,
+            "1": 2048,
+            "2": 2048,
+            "4": 2048
+          },
+          "selection_sha256": "3e5f00cd92881f5bacd23daf8b7957a2cf1887700a4c885a9a4b5ebbfe2a4a6a",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.01,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 3723,
+              "total": 4096,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 380,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 498,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 380,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 494,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 491,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 3723,
+              "total": 4096,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 380,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 498,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 380,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 494,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 491,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 3722,
+              "total": 4096,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 379,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 493,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 499,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 379,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 494,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 492,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 3702,
+              "total": 4096,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 371,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 497,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 495,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 371,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 488,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 495,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 493,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "d130ab3f26853540c40113a02a43b4a1b925516ff81d0df514f7163a6067af85"
+        },
+        {
+          "head": "shared_pool",
+          "fit_delays": [
+            0,
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "rows": 8192,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "0": 1366,
+            "1": 1366,
+            "2": 1365,
+            "4": 1365,
+            "8": 1365,
+            "16": 1365
+          },
+          "selection_sha256": "0f340d1b8f58eff953664be4cca4b16f6f9074a79a141f1a4f40fd30f36702bf",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.01,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 5586,
+              "total": 6144,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 364,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 482,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 481,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 364,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 486,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 473,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 5585,
+              "total": 6144,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 364,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 482,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 491,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 481,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 364,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 486,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 473,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 5576,
+              "total": 6144,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 359,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 482,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 489,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 491,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 481,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 359,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 486,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 488,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 491,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 473,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 5548,
+              "total": 6144,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 344,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 480,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 491,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 495,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 482,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 344,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 480,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 489,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 477,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "f65d8981a1a72112e17fbcf2bd7240d56e824f812e3d96b88753a4a4c6deb19f"
+        }
+      ],
+      "feature_cache": {
+        "path": "10-features.pt.gz",
+        "sha256": "849ce7f9271b9d54e02ec9854c04a5f2278ea47e310eef8df2ec1cc8b6f47685",
+        "uncompressed_sha256": "46514eabc231d0cb7e22157d21b4cc59fa4d5a55fc2099042b27ae3685d2d705",
+        "bytes": 109493361,
+        "uncompressed_bytes": 119401699
+      },
+      "event_hashes": {
+        "train/2": "fca0d445e0b8d1d2e09b29722d130a17525e01ebd2323139920591a774caf399",
+        "calibration/2": "358f0f1063671e41823589b46386a9b6aee494237c7f434f8340775dbd760085",
+        "calibration/8": "358f0f1063671e41823589b46386a9b6aee494237c7f434f8340775dbd760085",
+        "test/2": "680daa10137215326b94c23d2708a350d6d4d577115661fb0698ed23d090f16a",
+        "test/8": "680daa10137215326b94c23d2708a350d6d4d577115661fb0698ed23d090f16a"
+      },
+      "public_hashes": {
+        "train/2": "2a5a6b1a70b056cc52fad0f24bf83343eb92aeee00926c8432868eec8856c581",
+        "calibration/2": "33c0f93f47addea84eb1e3d8db6d6c16b17375763e75083ba9a06b954e6bb727",
+        "calibration/8": "a4e052304c1d76f559d75c23c95ec7583155cdffb6c0c6e18b0218d1a79c4b63",
+        "test/2": "fa72c47b2d2aee6f60db9e5e92fb5da4463f7bae75d9f9e7c07dcb44e26531ca",
+        "test/8": "4d2514709bb3ad1b27f2b0934fc35d0ac763950ffb411684aeeb9094139afa20"
+      },
+      "prediction_sha256": "f795e2c0c6dabee136372f614e8ee1edbf8bf3311f5d31c655bd592d58bbaf3c",
+      "seconds": 18.77645647712052,
+      "peak_cuda_allocated_bytes": 446848000,
+      "peak_process_rss_bytes": 1771069440
+    },
+    {
+      "seed": 11,
+      "checkpoint_sha256": "8eb5917ebb9b8be7c209acae2be03b9fbb4b9903624ec8e6db4595e30a77ca94",
+      "width": 1024,
+      "backbone_parameters": 55854360,
+      "memory_tokens": 6,
+      "memory_coordinates": 6144,
+      "backbone_optimizer_presentations": 0,
+      "head_optimizer_presentations": 0,
+      "closed_form_solves": 36,
+      "supervised_fit_row_uses": 122880,
+      "unique_training_events": 2048,
+      "feature_dtype": "float32",
+      "ridge_fit_records": [
+        {
+          "head": "delay_0",
+          "fit_delays": [
+            0
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "0": 2048
+          },
+          "selection_sha256": "54e5628974e62614a2d717dd10cad46392701e25a56e22b8fe4712df0d5dfa28",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.1,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 298,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 149,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 149,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 978,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 489,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 489,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 898,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 449,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 449,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 820,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 410,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 410,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "82c44317ca2fed57e2efcd88e48d6ae8200dee2564d28bf68d31e17251d8c82a"
+        },
+        {
+          "head": "delay_1",
+          "fit_delays": [
+            1
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "1": 2048
+          },
+          "selection_sha256": "69ed02f298d9e1e0943ba9ec6deae18077847980f50a830ef5326d394ff4fc00",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.1,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 1015,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 508,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 507,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 1017,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 509,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 508,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 1015,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 508,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 507,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 1009,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 503,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 506,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "642998705538e9ec26cf95f6eb8ee8ec3405d0b4e14f853712c61df8cf33a81b"
+        },
+        {
+          "head": "delay_2",
+          "fit_delays": [
+            2
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "2": 2048
+          },
+          "selection_sha256": "acbcc999c8621c3c6f9c468fad0b4b1a9292f14f1e8a2f030f463fcd3f951cdb",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.01,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 1016,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 508,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 508,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 1016,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 508,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 508,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 1012,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 505,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 507,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 1000,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 500,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 500,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "261ca20d82f79b61ace20b4731cacd793950fc62ec5db4a15e68e889252793a9"
+        },
+        {
+          "head": "delay_4",
+          "fit_delays": [
+            4
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "4": 2048
+          },
+          "selection_sha256": "0c2d8c47e32ee35d06de76122f1e0c728bd71d76a19c51dc64d04f872ca6a730",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.01,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 999,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 500,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 499,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 999,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 500,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 499,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 998,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 499,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 499,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 991,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 495,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "9353ca65b0a29dbe433114f6bea21635504dfef9a1de171bba076fe737b21093"
+        },
+        {
+          "head": "delay_8",
+          "fit_delays": [
+            8
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "8": 2048
+          },
+          "selection_sha256": "16940d77ba2f1d1fe52c6e71cae9dcb08632ae5adb6fef28adb08cd1ed1d8157",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.01,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 992,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 496,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 991,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 495,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 496,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 989,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 494,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 495,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 978,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 489,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 489,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "08a0b0f58d14fc178f590bae4159f0217460abf0f3316f9b4d801fd4913e5050"
+        },
+        {
+          "head": "delay_16",
+          "fit_delays": [
+            16
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "16": 2048
+          },
+          "selection_sha256": "4d9ab84594519f2ceb2a8216e135d840d3ac9b5519accccd30dbc6f343526e28",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.01,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 974,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 489,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 485,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 974,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 489,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 485,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 971,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 488,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 483,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 963,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 483,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 480,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "afba3c8234f2076d7ab6207b120baaf3c1dbbfe78e8fe82fcc8dffb4aa6aec3f"
+        },
+        {
+          "head": "delay_32",
+          "fit_delays": [
+            32
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "32": 2048
+          },
+          "selection_sha256": "4c0fdce700a1da45dabed57d803ead31d63216e14e8a6592402140a1ed54fd4a",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 1,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 951,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 32,
+                  "distractors": 2,
+                  "correct": 478,
+                  "total": 512
+                },
+                {
+                  "delay": 32,
+                  "distractors": 8,
+                  "correct": 473,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 951,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 32,
+                  "distractors": 2,
+                  "correct": 478,
+                  "total": 512
+                },
+                {
+                  "delay": 32,
+                  "distractors": 8,
+                  "correct": 473,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 953,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 32,
+                  "distractors": 2,
+                  "correct": 479,
+                  "total": 512
+                },
+                {
+                  "delay": 32,
+                  "distractors": 8,
+                  "correct": 474,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 949,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 32,
+                  "distractors": 2,
+                  "correct": 476,
+                  "total": 512
+                },
+                {
+                  "delay": 32,
+                  "distractors": 8,
+                  "correct": 473,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "9d35d6eaaa08990e64eee95af127bcfff820ede984979e14b4756fb69a217338"
+        },
+        {
+          "head": "short_pool",
+          "fit_delays": [
+            0,
+            1,
+            2,
+            4
+          ],
+          "rows": 8192,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "0": 2048,
+            "1": 2048,
+            "2": 2048,
+            "4": 2048
+          },
+          "selection_sha256": "3e5f00cd92881f5bacd23daf8b7957a2cf1887700a4c885a9a4b5ebbfe2a4a6a",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.01,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 3810,
+              "total": 4096,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 394,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 507,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 505,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 497,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 394,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 506,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 507,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 500,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 3810,
+              "total": 4096,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 394,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 507,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 505,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 497,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 394,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 506,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 507,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 500,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 3809,
+              "total": 4096,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 393,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 507,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 506,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 497,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 393,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 508,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 506,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 499,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 3773,
+              "total": 4096,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 383,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 506,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 503,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 493,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 383,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 506,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 504,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 495,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "0b8324a85aa4aaed6a9b44ab8c8a1226b4df51c5b65554cdacb93bef736a319e"
+        },
+        {
+          "head": "shared_pool",
+          "fit_delays": [
+            0,
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "rows": 8192,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "0": 1366,
+            "1": 1366,
+            "2": 1365,
+            "4": 1365,
+            "8": 1365,
+            "16": 1365
+          },
+          "selection_sha256": "0f340d1b8f58eff953664be4cca4b16f6f9074a79a141f1a4f40fd30f36702bf",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.01,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 5741,
+              "total": 6144,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 395,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 504,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 500,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 495,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 481,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 395,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 501,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 503,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 499,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 480,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 5741,
+              "total": 6144,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 395,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 504,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 500,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 495,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 481,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 395,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 501,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 503,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 499,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 480,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 5737,
+              "total": 6144,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 394,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 501,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 501,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 481,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 394,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 501,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 504,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 499,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 478,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 5670,
+              "total": 6144,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 373,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 499,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 497,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 478,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 373,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 495,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 500,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 499,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 478,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "922519ea60da44d716725217c625b15d85314dee691d8fc7af02ec703c07a6d3"
+        }
+      ],
+      "feature_cache": {
+        "path": "11-features.pt.gz",
+        "sha256": "b57b26726fdd0ed62bbcc23c8b22c547782a9947ba0e9b6e8a62acaf99ddba70",
+        "uncompressed_sha256": "47999900780beaa12acf5f65fb2b3410c3df998dac0adb8ad543f101a2f26fb2",
+        "bytes": 109483403,
+        "uncompressed_bytes": 119401699
+      },
+      "event_hashes": {
+        "train/2": "fca0d445e0b8d1d2e09b29722d130a17525e01ebd2323139920591a774caf399",
+        "calibration/2": "358f0f1063671e41823589b46386a9b6aee494237c7f434f8340775dbd760085",
+        "calibration/8": "358f0f1063671e41823589b46386a9b6aee494237c7f434f8340775dbd760085",
+        "test/2": "680daa10137215326b94c23d2708a350d6d4d577115661fb0698ed23d090f16a",
+        "test/8": "680daa10137215326b94c23d2708a350d6d4d577115661fb0698ed23d090f16a"
+      },
+      "public_hashes": {
+        "train/2": "2a5a6b1a70b056cc52fad0f24bf83343eb92aeee00926c8432868eec8856c581",
+        "calibration/2": "33c0f93f47addea84eb1e3d8db6d6c16b17375763e75083ba9a06b954e6bb727",
+        "calibration/8": "a4e052304c1d76f559d75c23c95ec7583155cdffb6c0c6e18b0218d1a79c4b63",
+        "test/2": "fa72c47b2d2aee6f60db9e5e92fb5da4463f7bae75d9f9e7c07dcb44e26531ca",
+        "test/8": "4d2514709bb3ad1b27f2b0934fc35d0ac763950ffb411684aeeb9094139afa20"
+      },
+      "prediction_sha256": "f84cda990fd5b464b2edd6dd2a7afc7c348931e972d3390298730b7f75e0e134",
+      "seconds": 18.43198897689581,
+      "peak_cuda_allocated_bytes": 514597888,
+      "peak_process_rss_bytes": 1927442432
+    },
+    {
+      "seed": 12,
+      "checkpoint_sha256": "de2290552565a158e5425b76e8ed4b196a598c914e3aec9fa0b0c80dc64ee693",
+      "width": 1024,
+      "backbone_parameters": 55854360,
+      "memory_tokens": 6,
+      "memory_coordinates": 6144,
+      "backbone_optimizer_presentations": 0,
+      "head_optimizer_presentations": 0,
+      "closed_form_solves": 36,
+      "supervised_fit_row_uses": 122880,
+      "unique_training_events": 2048,
+      "feature_dtype": "float32",
+      "ridge_fit_records": [
+        {
+          "head": "delay_0",
+          "fit_delays": [
+            0
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "0": 2048
+          },
+          "selection_sha256": "54e5628974e62614a2d717dd10cad46392701e25a56e22b8fe4712df0d5dfa28",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.1,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 286,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 143,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 143,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 922,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 461,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 461,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 884,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 442,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 442,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 822,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 411,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 411,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "0323cce56cf262ac8a7f2803a3a6c42e85e338612090a5d9598fae87ab725f30"
+        },
+        {
+          "head": "delay_1",
+          "fit_delays": [
+            1
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "1": 2048
+          },
+          "selection_sha256": "69ed02f298d9e1e0943ba9ec6deae18077847980f50a830ef5326d394ff4fc00",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.1,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 1000,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 500,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 500,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 1002,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 501,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 501,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 1000,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 499,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 501,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 987,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 495,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "064e88818017c8d457f65bf42e3a0ce5ad3d83abfe5be79d5c6c1542a9bd1afd"
+        },
+        {
+          "head": "delay_2",
+          "fit_delays": [
+            2
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "2": 2048
+          },
+          "selection_sha256": "acbcc999c8621c3c6f9c468fad0b4b1a9292f14f1e8a2f030f463fcd3f951cdb",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.1,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 998,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 498,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 500,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 1001,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 500,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 501,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 999,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 501,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 498,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 988,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 494,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 494,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "f98f2bfcece5bf1402c98819bbd10d7929be1493285e546167b113d8a68e011c"
+        },
+        {
+          "head": "delay_4",
+          "fit_delays": [
+            4
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "4": 2048
+          },
+          "selection_sha256": "0c2d8c47e32ee35d06de76122f1e0c728bd71d76a19c51dc64d04f872ca6a730",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.1,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 986,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 491,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 495,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 988,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 496,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 987,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 493,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 494,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 976,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 489,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 487,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "4ee86371d970941bee311aa2a6dc96f94d8490ad7062c7d871d7f07274fdedcc"
+        },
+        {
+          "head": "delay_8",
+          "fit_delays": [
+            8
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "8": 2048
+          },
+          "selection_sha256": "16940d77ba2f1d1fe52c6e71cae9dcb08632ae5adb6fef28adb08cd1ed1d8157",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 1,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 986,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 494,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 986,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 494,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 987,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 493,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 494,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 979,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 489,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "bfcac6bef87574c197a2329799db63c6b42b46b93c01c2cd7fbeaab454758232"
+        },
+        {
+          "head": "delay_16",
+          "fit_delays": [
+            16
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "16": 2048
+          },
+          "selection_sha256": "4d9ab84594519f2ceb2a8216e135d840d3ac9b5519accccd30dbc6f343526e28",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.01,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 977,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 490,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 977,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 490,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 974,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 487,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 965,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 481,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 484,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "72101a523ce45add9ac53c87e7df9f1d9995f5a539153aff5d678e1005667d70"
+        },
+        {
+          "head": "delay_32",
+          "fit_delays": [
+            32
+          ],
+          "rows": 2048,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "32": 2048
+          },
+          "selection_sha256": "4c0fdce700a1da45dabed57d803ead31d63216e14e8a6592402140a1ed54fd4a",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.1,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 951,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 32,
+                  "distractors": 2,
+                  "correct": 477,
+                  "total": 512
+                },
+                {
+                  "delay": 32,
+                  "distractors": 8,
+                  "correct": 474,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 952,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 32,
+                  "distractors": 2,
+                  "correct": 477,
+                  "total": 512
+                },
+                {
+                  "delay": 32,
+                  "distractors": 8,
+                  "correct": 475,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 952,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 32,
+                  "distractors": 2,
+                  "correct": 474,
+                  "total": 512
+                },
+                {
+                  "delay": 32,
+                  "distractors": 8,
+                  "correct": 478,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 940,
+              "total": 1024,
+              "cells": [
+                {
+                  "delay": 32,
+                  "distractors": 2,
+                  "correct": 469,
+                  "total": 512
+                },
+                {
+                  "delay": 32,
+                  "distractors": 8,
+                  "correct": 471,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "fc7601d5f73a6bad136de3ddc34e47d9e46758c91b57fcd83d19f4fc5daef299"
+        },
+        {
+          "head": "short_pool",
+          "fit_delays": [
+            0,
+            1,
+            2,
+            4
+          ],
+          "rows": 8192,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "0": 2048,
+            "1": 2048,
+            "2": 2048,
+            "4": 2048
+          },
+          "selection_sha256": "3e5f00cd92881f5bacd23daf8b7957a2cf1887700a4c885a9a4b5ebbfe2a4a6a",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.01,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 3766,
+              "total": 4096,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 400,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 498,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 400,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 491,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 498,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 495,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 3761,
+              "total": 4096,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 399,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 498,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 399,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 495,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 3743,
+              "total": 4096,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 389,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 491,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 498,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 494,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 389,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 491,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 495,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 3704,
+              "total": 4096,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 380,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 491,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 380,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 491,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "085c7d4aab17e7961da0027e22307d706b13d5dad3e3ce1bbb87409411293161"
+        },
+        {
+          "head": "shared_pool",
+          "fit_delays": [
+            0,
+            1,
+            2,
+            4,
+            8,
+            16
+          ],
+          "rows": 8192,
+          "unique_events": 2048,
+          "per_delay_rows": {
+            "0": 1366,
+            "1": 1366,
+            "2": 1365,
+            "4": 1365,
+            "8": 1365,
+            "16": 1365
+          },
+          "selection_sha256": "0f340d1b8f58eff953664be4cca4b16f6f9074a79a141f1a4f40fd30f36702bf",
+          "coefficients": 33825,
+          "input_dimensions": 1024,
+          "label_support": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "chosen_alpha": 0.01,
+          "validation_grid": [
+            {
+              "alpha": 0.01,
+              "correct": 5628,
+              "total": 6144,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 379,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 476,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 485,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 486,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 379,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 483,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 485,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 485,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 0.1,
+              "correct": 5627,
+              "total": 6144,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 379,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 476,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 485,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 485,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 379,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 483,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 485,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 485,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 1,
+              "correct": 5623,
+              "total": 6144,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 378,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 477,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 484,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 491,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 378,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 482,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 485,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 490,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 496,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 483,
+                  "total": 512
+                }
+              ]
+            },
+            {
+              "alpha": 10,
+              "correct": 5579,
+              "total": 6144,
+              "cells": [
+                {
+                  "delay": 0,
+                  "distractors": 2,
+                  "correct": 365,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 2,
+                  "correct": 476,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 2,
+                  "correct": 483,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 2,
+                  "correct": 489,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 2,
+                  "correct": 492,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 2,
+                  "correct": 483,
+                  "total": 512
+                },
+                {
+                  "delay": 0,
+                  "distractors": 8,
+                  "correct": 365,
+                  "total": 512
+                },
+                {
+                  "delay": 1,
+                  "distractors": 8,
+                  "correct": 478,
+                  "total": 512
+                },
+                {
+                  "delay": 2,
+                  "distractors": 8,
+                  "correct": 486,
+                  "total": 512
+                },
+                {
+                  "delay": 4,
+                  "distractors": 8,
+                  "correct": 487,
+                  "total": 512
+                },
+                {
+                  "delay": 8,
+                  "distractors": 8,
+                  "correct": 491,
+                  "total": 512
+                },
+                {
+                  "delay": 16,
+                  "distractors": 8,
+                  "correct": 484,
+                  "total": 512
+                }
+              ]
+            }
+          ],
+          "fit_sha256": "a6deb30c14e9e4fa2714425f27589f6e90eb86e485376aca51702df6e1104e40"
+        }
+      ],
+      "feature_cache": {
+        "path": "12-features.pt.gz",
+        "sha256": "e68b6ae10c77eff29643d4ceb91250154beb20ee73091355ccf4117562a25075",
+        "uncompressed_sha256": "b1ed74daff38ed356184b889ff6638397457c3ef071386c01fa7b0e1af0b9bbd",
+        "bytes": 109481773,
+        "uncompressed_bytes": 119401699
+      },
+      "event_hashes": {
+        "train/2": "fca0d445e0b8d1d2e09b29722d130a17525e01ebd2323139920591a774caf399",
+        "calibration/2": "358f0f1063671e41823589b46386a9b6aee494237c7f434f8340775dbd760085",
+        "calibration/8": "358f0f1063671e41823589b46386a9b6aee494237c7f434f8340775dbd760085",
+        "test/2": "680daa10137215326b94c23d2708a350d6d4d577115661fb0698ed23d090f16a",
+        "test/8": "680daa10137215326b94c23d2708a350d6d4d577115661fb0698ed23d090f16a"
+      },
+      "public_hashes": {
+        "train/2": "2a5a6b1a70b056cc52fad0f24bf83343eb92aeee00926c8432868eec8856c581",
+        "calibration/2": "33c0f93f47addea84eb1e3d8db6d6c16b17375763e75083ba9a06b954e6bb727",
+        "calibration/8": "a4e052304c1d76f559d75c23c95ec7583155cdffb6c0c6e18b0218d1a79c4b63",
+        "test/2": "fa72c47b2d2aee6f60db9e5e92fb5da4463f7bae75d9f9e7c07dcb44e26531ca",
+        "test/8": "4d2514709bb3ad1b27f2b0934fc35d0ac763950ffb411684aeeb9094139afa20"
+      },
+      "prediction_sha256": "21d6ed314da8e32968c357c47b578035218026479d186aeb51cd7ef113697709",
+      "seconds": 18.488110400736332,
+      "peak_cuda_allocated_bytes": 514597888,
+      "peak_process_rss_bytes": 1927442432
+    }
+  ]
+}
