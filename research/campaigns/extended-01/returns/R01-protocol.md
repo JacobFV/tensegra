@@ -22,7 +22,7 @@ All 33 numerical labels must be represented in the fitting pool. This is fresh-c
 
 ## Budget, profile and advancement
 
-First profile the exact capture/readout path using 64 mechanical-profile events per partition, one ridge solve and ten CE updates. It is not a primary experiment and missing classes are permitted only there. Standard latent width remains 1024. Estimate initial development at 1–3 GPU-minutes; request a maximum5-minute release only after the profile. The coordinator owns all queue/budget decisions.
+First profile the exact capture/readout path using disjoint seeds 20000101/20000201/20000301 and 64 mechanical-profile events per partition, one ridge solve and ten CE updates. It is not a primary experiment and missing classes are permitted only there. Standard latent width remains 1024. Estimate initial development at 1–3 GPU-minutes; request a maximum5-minute release only after the profile. The coordinator owns all queue/budget decisions.
 
 Record training-set fit separately from fresh calibration/validation. Prefer a recipe that improves the weak boundary without losing covered-delay accuracy. A failed first recipe selects the smallest discriminating follow-up; it does not end the authorized campaign. Likely branches are more data/exposure, phase-conditioned consumers if zero versus recurrent states conflict, or an independently justified nonlinear decoder. Do not combine these changes before inspecting R01.
 
