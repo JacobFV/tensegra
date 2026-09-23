@@ -43,6 +43,9 @@ def evaluate(model, config, output, label, *, device):
                            strength_override=config.get('strength_override'), size_adjust=config.get('size_adjust',False))
             # Path agreement and values remain relative to the original clean graph.
             scores = metrics(result, gold, batch)
+            majority = F.one_hot(batch.values,16).sum(1).argmax(-1)
+            target_start = gold[:,-1].gather(1,batch.starts[:,None]).squeeze(1)
+            scores['public_payload_majority'] = majority == target_start
             for key, value in scores.items():
                 values.setdefault(key, []).append(value.cpu().numpy())
             preds.append(result['logits'].argmax(-1).cpu().numpy().astype('uint8'))
@@ -90,7 +93,9 @@ def run(config, output):
     for step in range(steps+1):
         if step in checkpoints:
             rows = evaluate(model,config,output,f'eval-{step:05d}',device=device)
-            curves.append({'step':step,'rows':rows,'elapsed_seconds':time.monotonic()-start})
+            curves.append({'step':step,'rows':rows,'elapsed_seconds':time.monotonic()-start,
+                           'strength_min':float(model.strength.detach().min()),'strength_max':float(model.strength.detach().max()),
+                           'context_scale':float(model.context_log_scale.detach().exp())})
             print(json.dumps({'step':step,'mode':config['mode'],'task':[r['task'] for r in rows],
                               'elapsed':time.monotonic()-start}),flush=True)
         if step == steps: break
