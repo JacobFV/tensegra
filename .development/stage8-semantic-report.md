@@ -134,8 +134,10 @@ A separate gold-only audit found a two-by-two XOR witness in each of the first
 1,000 main training graphs. The ordered-slot head adds a source-specific and a
 target-specific class logit. Its current loss labels sampled non-edge pairs as
 “no slot,” alongside ordered slots on actual edges. Two independent ordered edges
-and their cross pairs can therefore require an XOR classification that this
-additive head cannot satisfy with strict class margins. This is an irreducible
+and cross pairs labeled “no slot” can therefore require an XOR classification that this
+additive head cannot satisfy with strict class margins. The audit tests absence
+of an ordered slot; a cross pair can be either a non-edge or a real unordered
+edge. Both receive the no-slot target when sampled. This is an irreducible
 component of the slot training objective, not evidence that more data cannot help
 other semantic outputs.
 
