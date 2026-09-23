@@ -134,7 +134,10 @@ def graph_metrics(output,target):
     gold = target['presence'].bool()
     def pr(p,g):
         tp = (p & g).sum().item()
-        return dict(precision=tp/max(1,p.sum().item()),recall=tp/max(1,g.sum().item()))
+        predicted_count, gold_count = int(p.sum()), int(g.sum())
+        return dict(precision=tp/predicted_count if predicted_count else None,
+                    recall=tp/gold_count if gold_count else None,
+                    true_positive=int(tp), predicted_count=predicted_count, gold_count=gold_count)
     edges = output['edges'].gt(0) & predicted[:,:,None,None] & predicted[:,None,:,None]
     gold_edges = target['edges'].bool()
     lexical = output['lexical'].gt(0).eq(target['lexical'].bool()).all(-1)
@@ -169,7 +172,17 @@ def build_splits(config):
 
 
 def _mean(values):
-    return sum(values)/max(1,len(values))
+    values=[value for value in values if value is not None]
+    return sum(values)/len(values) if values else None
+
+
+def state_hash(model):
+    digest=hashlib.sha256()
+    for name,tensor in sorted(model.state_dict().items()):
+        value=tensor.detach().cpu().contiguous()
+        digest.update(name.encode()); digest.update(str(value.dtype).encode())
+        digest.update(str(tuple(value.shape)).encode()); digest.update(value.numpy().tobytes())
+    return digest.hexdigest()
 
 
 @torch.no_grad()
@@ -194,6 +207,11 @@ def evaluate(model,examples,language,seed):
         node_recall=_mean([r['metrics']['node']['recall'] for r in rows]),
         typed_edge_precision=_mean([r['metrics']['typed_edge']['precision'] for r in rows]),
         typed_edge_recall=_mean([r['metrics']['typed_edge']['recall'] for r in rows]),
+        graph_counts={kind:{key:sum(r['metrics'][kind][key] for r in rows)
+                      for key in ('true_positive','predicted_count','gold_count')}
+                      for kind in ('node','typed_edge')},
+        graph_defined_examples={kind:{metric:sum(r['metrics'][kind][metric] is not None for r in rows)
+                      for metric in ('precision','recall')} for kind in ('node','typed_edge')},
         **{key:_mean([r['metrics'][key] for r in rows]) for key in
            ('node_type_accuracy','lexical_hash_fidelity','exact_canonical_graph')},
         random_choice_baseline=_mean([r['chance'] for r in rows]),
@@ -235,19 +253,23 @@ def run(config):
         'semantic_supervision':['english'],'multisurface_consistency':['english',paired_language]}
     source_paths=[Path(__file__),Path(__file__).with_name('thinking.py'),Path(__file__).with_name('tcn_data.py'),Path(__file__).with_name('semantic_graph.py')]
     audit['source_hashes']={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in source_paths}
-    audit['data_hash']=hashlib.sha256(json.dumps(audit['examples'],sort_keys=True).encode()).hexdigest()
+    audit['data_hash']=hashlib.sha256(json.dumps(audit['examples']+audit['renamed_examples'],sort_keys=True).encode()).hexdigest()
+    audit['config_hash']=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest()
     (output_dir/'data-audit.json').write_text(json.dumps(audit,indent=2))
     records=[]
+    manifest=dict(data_hash=audit['data_hash'],config_hash=audit['config_hash'],
+                  source_hashes=audit['source_hashes'],runs=[])
     for seed in config['seeds']:
         for arm in ('single_pass','recurrent','semantic_supervision','multisurface_consistency'):
             torch.manual_seed(seed)
             model=LanguageActor(width=config['width'],workspace_rows=config['workspace_rows'],
                  node_capacity=config['node_capacity'],microsteps=1 if arm=='single_pass' else config['microsteps']).to(config.get('device','cpu'))
+            initial_hash=state_hash(model)
             optimizer=torch.optim.AdamW(model.parameters(),lr=config['learning_rate'])
             start=time.monotonic()
             for step in range(config['updates']+1):
                 if step in config['eval_steps'] or step==config['updates']:
-                    record=dict(seed=seed,arm=arm,step=step,elapsed_seconds=time.monotonic()-start,
+                    record=dict(seed=seed,arm=arm,step=step,initial_hash=initial_hash,data_hash=audit['data_hash'],config_hash=audit['config_hash'],elapsed_seconds=time.monotonic()-start,
                         evaluation={language:evaluate(model,heldout,language,seed+100000) for language in ('english','spanish','symbols')})
                     record['evaluation']['unseen_lexical']=evaluate(model,renamed,'english',seed+100000)
                     records.append(record)
@@ -276,8 +298,13 @@ def run(config):
                 if not torch.isfinite(loss): raise FloatingPointError('nonfinite training loss')
                 loss.backward(); nn.utils.clip_grad_norm_(model.parameters(),1.); optimizer.step()
                 with (output_dir/'losses.jsonl').open('a') as stream:
-                    stream.write(json.dumps(dict(seed=seed,arm=arm,step=step+1,loss=float(loss.detach()),parts={k:_mean(v) for k,v in loss_log.items()}))+'\n')
-            torch.save(model.state_dict(),output_dir/f'{arm}-seed{seed}.pt')
+                    stream.write(json.dumps(dict(seed=seed,arm=arm,step=step+1,data_hash=audit['data_hash'],initial_hash=initial_hash,loss=float(loss.detach()),parts={k:_mean(v) for k,v in loss_log.items()}))+'\n')
+            checkpoint=output_dir/f'{arm}-seed{seed}.pt'
+            torch.save(model.state_dict(),checkpoint)
+            manifest['runs'].append(dict(seed=seed,arm=arm,initial_hash=initial_hash,
+                final_state_hash=state_hash(model),checkpoint=checkpoint.name,
+                checkpoint_sha256=hashlib.sha256(checkpoint.read_bytes()).hexdigest()))
+            (output_dir/'manifest.json').write_text(json.dumps(manifest,indent=2))
     (output_dir/'results.json').write_text(json.dumps(records,indent=2))
     return records
 

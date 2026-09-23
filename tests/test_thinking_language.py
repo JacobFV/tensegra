@@ -62,3 +62,44 @@ def test_unseen_lexical_renaming_preserves_choice_alignment():
     assert all(rendered_answer(renamed,s.language) in s.options for s in renamed.public)
     assert rendered_answer(renamed,'english')==mapping[rendered_answer(original,'english')]
     assert renamed.public[0].text!=original.public[0].text
+
+
+def test_empty_decoder_precision_is_undefined_with_raw_support():
+    from topoformer.thinking_language import _mean
+    example=build_tcn_example('variable_binding',12)
+    target=graph_targets(example.privileged.graph,128)
+    output=dict(presence=torch.full((1,128),-100.),
+                kind=torch.zeros(1,128,14),lexical=torch.zeros(1,128,64),
+                edges=torch.full_like(target['edges'],-100.))
+    metrics=graph_metrics(output,target)
+    assert metrics['node']['precision'] is None
+    assert metrics['typed_edge']['precision'] is None
+    assert metrics['node']['recall']==0
+    assert metrics['node']['predicted_count']==0
+    assert metrics['node']['gold_count']==len(example.privileged.graph.nodes)
+    assert metrics['exact_canonical_graph']==0
+    assert _mean([None,None]) is None
+    assert _mean([None,.5])==.5
+
+
+def test_state_hash_pairs_initialization_and_detects_change():
+    from topoformer.thinking_language import state_hash
+    torch.manual_seed(42)
+    a=LanguageActor(width=16,microsteps=1)
+    torch.manual_seed(42)
+    b=LanguageActor(width=16,microsteps=3)
+    assert state_hash(a)==state_hash(b)
+    with torch.no_grad(): b.presence.bias.add_(1.)
+    assert state_hash(a)!=state_hash(b)
+
+
+def test_choice_baselines_use_shuffled_positions():
+    from collections import Counter
+    from topoformer.thinking_language import evaluate,rendered_answer
+    examples=[build_tcn_example('variable_binding',i) for i in range(3)]
+    model=LanguageActor(width=16,microsteps=1)
+    result=evaluate(model,examples,'english',91)
+    positions=[public_input(e,'english',91+i).options.index(rendered_answer(e,'english'))
+               for i,e in enumerate(examples)]
+    assert result['oracle_majority_position_baseline']==max(Counter(positions).values())/3
+    assert result['random_choice_baseline']==pytest.approx(1/6)
