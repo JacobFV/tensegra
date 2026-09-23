@@ -1,5 +1,5 @@
 """Frozen full-TRAIN coordinate-frequency reference on reserved constructions."""
-import argparse,gzip,json,time
+import argparse,gzip,json,time,hashlib
 from pathlib import Path
 import torch
 from .campaign_semantics import digest,write_gzip
@@ -17,7 +17,7 @@ def run(config):
     pred=unpack_graph(archived['prediction']);rows=load_cache(data/'reserved_confirmation.jsonl.gz');results=[]
     for row in rows:
         gold=target(row,audit['value_vocabulary']);results.append(dict(seed=row['seed'],semantic_sha256=row['semantic_sha256'],metrics=base.metrics(pred,gold)))
-    result=dict(config=config,scope=archived['scope'],prediction=archived['prediction'],rows=results,examples=len(results),exact=sum(r['metrics']['semantic_equivalence'] for r in results),cpu_seconds=time.monotonic()-tick)
+    result=dict(config=config,config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),source_sha256=digest(__file__),scope=archived['scope'],prediction=archived['prediction'],rows=results,examples=len(results),exact=sum(r['metrics']['semantic_equivalence'] for r in results),cpu_seconds=time.monotonic()-tick)
     write_gzip(config['output'],result);return result
 
 if __name__=='__main__':

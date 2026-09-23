@@ -1,5 +1,5 @@
 """Prespecified paired confirmation intervals, conditional on three fixed seeds."""
-import argparse,gzip,json
+import argparse,gzip,json,hashlib
 from pathlib import Path
 import numpy as np
 from .campaign_semantics import digest
@@ -35,7 +35,7 @@ def run(config):
             differences.append(d.astype(int)-c.astype(int));pairs.append(dict(seed=item['seed'],constant=int(c.sum()),decay=int(d.sum()),both_correct=int((c&d).sum()),constant_only=int((c&~d).sum()),decay_only=int((~c&d).sum()),neither=int((~c&~d).sum()),support=1024))
         interval=paired_interval(differences)
         outputs[policy]=dict(pairs=pairs,interval=interval,all_decayed_competent=all(x['decay']>=103 for x in pairs),replicated_directional_advantage=all(x>0 for x in interval['per_seed_mean']) and interval['shared_event_mean_interval'][0]>0)
-    result=dict(config=config,source_sha256=source,results=outputs,primary='calibrated_metrics',secondary='raw_metrics; supplied-schema outcomes separate')
+    result=dict(config=config,config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),analysis_source_sha256=digest(__file__),source_sha256=source,results=outputs,primary='calibrated_metrics',secondary='raw_metrics; supplied-schema outcomes separate')
     Path(config['output']).write_text(json.dumps(result,indent=2)+'\n');return result
 
 if __name__=='__main__':
