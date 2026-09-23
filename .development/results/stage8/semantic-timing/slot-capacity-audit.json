@@ -1,0 +1,83 @@
+{
+  "training_graphs": 1000,
+  "by_lesson": {
+    "variable_binding": {
+      "graphs": 4,
+      "graphs_with_witness": 4,
+      "first_witness": {
+        "sources": [
+          "root/0",
+          "root"
+        ],
+        "targets": [
+          "root/0/0",
+          "root/0"
+        ],
+        "labels": [
+          [
+            0,
+            -1
+          ],
+          [
+            -1,
+            0
+          ]
+        ],
+        "graph_sha256": "8cb120664b929c8811407d0c1bf62aa39d286e4fecf7d961dd516793c8649802"
+      }
+    },
+    "set_operations": {
+      "graphs": 120,
+      "graphs_with_witness": 120,
+      "first_witness": {
+        "sources": [
+          "root/0/0/0",
+          "root/0/0"
+        ],
+        "targets": [
+          "root/0/0/0/0",
+          "root/0/0/0"
+        ],
+        "labels": [
+          [
+            0,
+            -1
+          ],
+          [
+            -1,
+            0
+          ]
+        ],
+        "graph_sha256": "bb96ee9490ec95761bca634dc8bad73f0180a893d51771316f01764391470ea2"
+      }
+    },
+    "unification": {
+      "graphs": 876,
+      "graphs_with_witness": 876,
+      "first_witness": {
+        "sources": [
+          "root/0/0",
+          "root/0"
+        ],
+        "targets": [
+          "root/0/0/0",
+          "root/0/0"
+        ],
+        "labels": [
+          [
+            0,
+            -1
+          ],
+          [
+            -1,
+            0
+          ]
+        ],
+        "graph_sha256": "342974b7a20c16db235c312d3598eefac613d51691d007cb9c323650bb49331e"
+      }
+    }
+  },
+  "theorem": "For logits a[source,class]+b[target,class], a 2x2 XOR of two class labels cannot satisfy all four strict argmax inequalities.",
+  "scope": "Slot loss supervises no-slot on sampled nonedge pairs. This establishes an objective/head expressivity mismatch, not impossibility of exact graph decoding after an independent edge mask.",
+  "recipe_changed": false
+}
