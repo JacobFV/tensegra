@@ -135,12 +135,14 @@ def run(config, output, device):
     generator = torch.Generator().manual_seed(config['seed'] + 99000000)
     curve = []; best = -1; selected_step = None
     train_public, train_labels, _ = datasets['train']
+    visits = torch.zeros(len(train_labels['primitive']), dtype=torch.long)
     training_started = time.monotonic()
     for step in range(config['updates'] + 1):
         if step in config['checkpoints']:
             metrics, logits = evaluate(model, *datasets['calibration'][:2], device, config['batch_size'])
             train_metrics, _ = evaluate(model, sliced(train_public, slice(0, 1024), 'cpu'), sliced(train_labels, slice(0, 1024), 'cpu'), device, config['batch_size'])
-            curve.append(dict(step=step, calibration=metrics, train_prefix=train_metrics))
+            curve.append(dict(step=step, calibration=metrics, train_prefix=train_metrics,
+                              optimizer_presentations=int(visits.sum()), unique_training_events_visited=int((visits > 0).sum())))
             torch.save(dict(logits=logits, labels=datasets['calibration'][1]), output / f'calibration-{step}.pt')
             count = metrics['full_semantic']['correct']
             # Ascending steps and strict comparison implement earlier tie break.
@@ -152,6 +154,7 @@ def run(config, output, device):
         if step == config['updates']: break
         model.train()
         idx = torch.randint(len(train_labels['primitive']), (config['batch_size'],), generator=generator)
+        visits += torch.bincount(idx, minlength=len(visits))
         actor_public = sliced(train_public, idx, device)
         private = sliced(train_labels, idx, device)
         optimizer.zero_grad(set_to_none=True)
@@ -175,8 +178,15 @@ def run(config, output, device):
                               changed_proposal_support=None if kind == 'inventory_order' else int(changed.sum()))
         torch.save(dict(logits=out, labels=supplied_labels, original_labels=validation_labels,
                         original_labels_comparable=(kind != 'inventory_order'), public=public), output / f'control-{kind}.pt')
+    torch.save(visits, output / 'training-visitation.pt')
     source_names = ('campaign_composition.py', 'campaign_composition_acquire.py', 'interface_proposals.py', 'retention_data.py', 'thinking_runtime.py')
     summary = dict(config=config, device=device, data=manifests, selected_step=selected_step, validation=metrics, controls=controls,
+                   selected_checkpoint_sha256=hashlib.sha256((output / 'selected.pt').read_bytes()).hexdigest(),
+                   parameter_count=sum(p.numel() for p in model.parameters()),
+                   trainable_parameter_count=sum(p.numel() for p in model.parameters() if p.requires_grad),
+                   optimizer_presentations=int(visits.sum()), unique_training_events_visited=int((visits > 0).sum()),
+                   training_visitation_sha256=hashlib.sha256((output / 'training-visitation.pt').read_bytes()).hexdigest(),
+                   control_notes={'fresh_names': 'actor-input no-op invariance smoke test: names are not consumed; no lexical generalization claim'},
                    curve=curve, fit_seconds=fit_seconds, elapsed_seconds=time.monotonic() - started,
                    peak_cuda_bytes=torch.cuda.max_memory_allocated() if device.startswith('cuda') else 0,
                    source_sha256={name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in source_names},

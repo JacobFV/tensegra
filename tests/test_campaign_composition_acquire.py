@@ -39,6 +39,13 @@ def test_tiny_runner_artifact_selection_and_public_only_inputs(tmp_path, monkeyp
                   controls=['reverse_roles', 'inventory_order'])
     result = run(config, tmp_path / 'run', 'cpu')
     assert result['selected_step'] in (0, 1)
+    assert result['optimizer_presentations'] == 4
+    assert 1 <= result['unique_training_events_visited'] <= 4
+    visits = torch.load(tmp_path / 'run' / 'training-visitation.pt', weights_only=True)
+    assert int(visits.sum()) == 4
+    import hashlib
+    assert result['selected_checkpoint_sha256'] == hashlib.sha256((tmp_path / 'run' / 'selected.pt').read_bytes()).hexdigest()
+    assert result['parameter_count'] == sum(p.numel() for p in ProposalModel(key_dim=32, hidden=16).parameters())
     saved = torch.load(tmp_path / 'run' / 'validation.pt', weights_only=True)
     assert not {'event', 'values', 'targets', 'labels', 'reference'} & saved['public'].keys()
     assert json.loads((tmp_path / 'run' / 'summary.json').read_text())['validation'] == result['validation']
