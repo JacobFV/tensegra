@@ -31,3 +31,10 @@ def test_padding_sampled_heads_and_pointer_gradient():
     assert torch.allclose(single['slots'][pairs[:,0],pairs[:,1]],sampled['slots'],atol=1e-6)
     m.zero_grad();m(long)['edges'].square().mean().backward()
     assert m.copy_query.weight.grad is not None and m.copy_query.weight.grad.abs().sum()>0
+
+
+def test_no_text_control_retains_only_public_copy_inventory_size():
+    m=model(CopyConditionedActor,no_input=True)
+    out=m(ActorInput('bob erin alice',()))
+    assert out['copy'].shape==(8,3)
+    assert torch.equal(out['copy'][:,0],out['copy'][:,2])
