@@ -12,3 +12,13 @@ Acquisition is distinct from competence validation. Fixed-set memorization is an
 - Semantic graphs: the first 200-update acquisition did not recover ordered edges. A supervised-loss imbalance diluted positive slot gradients across padded pairs. A revised 2,000-update small-set diagnostic tests a balanced loss before any large scaling run. Preserve the failed recipe and its metrics. Keep evaluation constructions fixed across cardinalities and report actual distinct graph count and optimizer exposure.
 
 All success statements must distinguish learned readout from exact storage, typed-instruction retrieval from language parsing, and synthetic confidence calibration from learned candidate correctness. Acquisition-driven recipe revisions are reported as revisions, not as prespecified confirmations.
+
+## Timing-only retention amendment
+
+Before inspecting main evaluation outcomes, the first run's timing projected approximately 24 minutes for all interventions at every delay. The revised frozen schedule retains clean retention at every delay and all nine interventions at delay 16, including persistent-memory recovery. Cohorts, seeds, 512-example denominators, and competence thresholds are unchanged. The truncated run is marked incomplete and the amended run starts in a fresh output directory.
+
+## Additional independent budgets
+
+Halting main: three seeds, width 32, 2,000 updates, batch 32, 2,048 training examples, 512 examples per validation/test condition. The exact public evidence rule is an explicitly architectural upper bound, separate from learned output at oracle timing.
+
+Semantic scaling diagnostic: requested 1,000 and 10,000 distinct constructions, three seeds, 1,000 updates each, semantic and no-input controls, fixed 64-example heldout constructions and checkpoints 0/100/500/1000. This finite exposure budget cannot establish a million-example scaling law. Corpus feasibility and actual unique optimizer exposure must be reported. No semantic/runtime coupling is authorized.
