@@ -33,3 +33,7 @@ R04 runs frozen selected readout recipe with fresh3backbone data and separate ba
 Independent R04 raw/cache replay verifies the newmixture scalar contract across3backbones, while balanced floatzero/negative-tail failures rule outuniformscalarreliability. Advance only oracle-first-operation/learnedreturned-fact-use R05, withquery-only/exactvaluecontrols andwrong/drop/swapcausaltests. A >95%development screen is not the >=98%three-seedentryrequirement forfurthercomposition. Historicalsixfieldgatesremainunchanged; fresh16stepfieldwiseoutcomesreportedseparately.
 
 S02 head-only continuation failed fixedset exactfit and declined aftermidpoint; no bestcheckpointsubstitution. This doesnotinvalidate S03jointactorcontinuation selected independentlyfromdiversitylearningcurves. Parentprediction andfirstbatchRNGreplay passedbeforeupdates.
+
+## R05 pre-outcome contract correction
+
+Before any R05profile/training/outcomes, exact known query-onlyBayesprior was independently derived as4324/5445=79.4123049%. The original20ppdrop draft leaves only.5877ppbelowperfectperformance, inconsistent with>95%developmentacquisition. Versionedamendmentretainsdraftinhistory andrequires15ppdrop plus≥80%ofmatchedoracle-minus-querycleanbenefit, positiveoraclebenefit, andunchanged90%agreementwithsuppliedfactonchangedanswerinterventions. This is pre-outcomeanalyticalcontractrepair, notoutcome-tunedrelaxation. Furthercompositionentry≥98%x3unchanged.

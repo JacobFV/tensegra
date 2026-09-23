@@ -21,3 +21,13 @@ S02 exact cached/public BF16 logitparity passed; profile7.29668s. FrozenN128 pub
 A04 next attention design is content-dependent multi-neighbor selection with fresh attribute codes, strong dynamic neighbor-attention baseline. Design only pending allA03results. GAT/GATv2 methods consulted; no implementation/GPU yet.
 
 CPU audit ledger review/cpu-audit-time.json updated independently; budget CPUtotal copied at boundaries. Charged GPUbefore runningS022854.33419seconds. Plenty of authorized budget; continue informative branches, no stage-stop. Push integrated verified milestones, final fulltests/audit/preservation/jobs check later.
+
+## Latest boundary (21:20 UTC)
+
+R04 completed398.23s, independently audited432raw+432logitcells and allbalancedwitnesses/populationdisjointness. Restrictedmixture scalarpass: worstval4079/4038/4049 of4096. Balancedseed12floatzero0/64atdelay0, seed11negativefloattails49/64at16; no uniformreliability. Secondarynew16stepfieldwisethresholdspass, historicalgatesunchanged. R05oracle-first-return/learnedconsumer CPUsourcepreparing, profileunreleased. It is35→1024→2on33scalarprobfeatures+publicquery, notautonomousrecurrence. Pre-outcome analytical queryonlyBayes79.4123% justifiedversioned15ppdrop/80%oracle-relativegain ratherthanold20ppdrop; originaldraftpreserved. Wrong/swapconditionalagreement90%+support remains. Rootcaughtundeclared32developmentcapture; workerremovingbeforeprofile andaddingworkspaceparity/loggingguards.
+
+S02complete98.68698s, finalTRAINexactedge4/128calibratedvs34midpoint, failretained. Receipt directory s02-edge-refit (notedge-main). S03 RUNNING cap900 source d743464, parent+firstbatchreplaypassed. At98304presentations DEVcopy97.24%,orderedF1.88942,exact0. Endpoint131072pending.
+
+A03 full3seedsaudited/report+curvescommitted. A04contentselectorprofile60s reviewedsource2ba70af queuedafterS03; rootintegratedCPUimplementation andtests. NoA04GPUyet. Strongexactgather/hardonealgebraicbaseline, keyedcontextneighborprior explicit.
+
+Lastfullintegrationd97fb6f589tests+6subtests, nofailuresafterexportharnessfix; newerA04/S03/R05needfinalcombinedrerun. CPUauditupdatedreviewledger; rootbudgetcopiesatsafeboundaries. Progressbranchpushedthroughf03df8d; latercommitsnotyetpushed. Keepworking; authorizedbudgetmostlyunused, curvesinformative.
