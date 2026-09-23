@@ -45,9 +45,9 @@
     },
     {
       "id": "bounded-composition",
-      "status": "not_run",
+      "status": "entry_passed_protocol_review",
       "entry": "Everyactualconsumedlearnedinterface>=98% freshvalidationacross3seeds; specificscope;formalvalidity;causalreturninterventions",
-      "note": "R04 narrow scalar access passed. R05 consumer confirmation and P01 independent lowering acquisition remain prerequisites."
+      "note": "P01 and R05 consumed contracts independently passed; authorize narrow C01 protocol and CPU implementation. No end-to-end competence yet; main requires profile and leakage/comparability review."
     },
     {
       "id": "R05-development-use",
@@ -69,6 +69,19 @@
       "denominator": 4096,
       "audit": "review/R05-confirmation-summary.json",
       "limitations": "No autonomous lowering/scheduling; nearthreshold and scalar reconstruction errors remain; fixed finite numericaldomain"
+    },
+    {
+      "id": "P01-confirmed-dispatch",
+      "status": "passed_restricted",
+      "contract": "Complete typed instruction records; learned primitive/destination/ordered required operands; supplied unary arity",
+      "correct_by_seed": {
+        "302": 4096,
+        "303": 4096,
+        "304": 4095
+      },
+      "denominator": 4096,
+      "audit": "review/P01-runtime-audit.json; review/P01-population-audit.json; per-seed raw audits",
+      "limitation": "No language induction; fresh-name no-op; one wrong multiplication refused, not repaired"
     }
   ]
 }

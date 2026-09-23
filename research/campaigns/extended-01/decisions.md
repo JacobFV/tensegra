@@ -40,3 +40,6 @@ Before any R05profile/training/outcomes, exact known query-onlyBayesprior was in
 
 ## S04 endpoint: stop exposure-only branch
 The fixed262,144-presentation endpoint retains0/512exactgraphs and regresses oncopy/calibratedorderedF1 fromthe196,608checkpoint. Preserveboth; do notreplace thedeclaredendpointwitha bestcheckpoint. Longerconstant-recipe exposure is no longer the most discriminating next run. CPU-reviewed S06 changesonly the public-text state path whilekeeping existingblocks/heads/objective; profileactualcostbeforemainallocation. R05three-seedconfirmationreleasednext; attention/P01profilesmaintainindependenttrackprogress.
+
+## C01 scoped entry satisfied
+Independent three-seed P01 ordered-dispatch and R05 returned-fact decision audits pass their named consumed interfaces. This authorizes CPU implementation and protocol review of a scheduled two-operation composition, not a historical gate rewrite or a declaration that composition works. A wrong P01 multiplication was actually executed and refused for range, with no gold repair. Retain finite-domain/typed-input/supplied-arity limits and strong public-information-matched neural baselines. Profile before GPU allocation.

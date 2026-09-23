@@ -162,7 +162,7 @@
     {
       "id": "R05-confirmation",
       "protocol": "returns/R05-confirmation-protocol.md",
-      "status": "completed_audit_pending",
+      "status": "passed_restricted_audited",
       "source": "8b619f7"
     },
     {
@@ -207,7 +207,7 @@
     },
     {
       "id": "P01-confirmation",
-      "status": "completed_audit_pending",
+      "status": "passed_restricted_audited",
       "protocol": "composition/P01-confirmation-protocol.md",
       "source": "f0d0005",
       "config_source": "5c829ef",
@@ -230,6 +230,18 @@
       "comparison": "Original16k prefix versus balanced16k from same valid pool; fresh original-mixture and balanced cells",
       "selection": "Declared calibration minimum-cell improvement plus >=98% mixture; no32development",
       "cap_profile_seconds": 60
+    },
+    {
+      "id": "C01",
+      "status": "protocol_and_cpu_implementation",
+      "protocol": "composition/C01-conditional-design.md",
+      "entry_evidence": [
+        "review/P01-runtime-audit.json",
+        "review/R05-confirmation-summary.json"
+      ],
+      "scope": "Scheduled typed lowering, exact primitive, learned returned-fact decision; no autonomous planning",
+      "comparators": "Strong N1/N2 neural-only; oracle boundaries; exactcopy; causalreturn interventions",
+      "budget": "Must profile before main allocation"
     }
   ],
   "policy": {
