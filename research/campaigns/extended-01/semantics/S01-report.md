@@ -47,3 +47,18 @@ All cells remain0/512 complete development graphs. At the final N1024 checkpoint
 Final development node presence is exact506/512, with17,341 predicted versus17,337 gold nodes; kind15,207/17,337, copy9,345/12,972, values4,363/4,365. Only2/512 have every copied identity correct. Thus stronger average edge/copy performance has not produced complete canonical recovery. This is encouraging evidence for data diversity under fixed exposure, not semantic-transfer competence. The prespecified8,192-construction arm remains pending; no frontend change or confirmation-set inference follows from this intermediate comparison.
 
 Endpoint-kind breakdown further narrows N128 TRAIN failures: calibrated argument FP403/FN718 occur between legitimate `pred→ident` kinds; refers-to FP253/FN426 between legitimate `ident→entity` kinds. Some invalid-kind false positives coexist, but a type-only mask would leave major association errors. This is a posthoc count diagnostic, not a tested mask intervention.
+
+
+## Completed matched-diversity ladder
+
+The8,192-construction arm completed65,536presentations (8visits each),3,872,144optimizer tokens,496.955soptimizer time and665.953sfull occupancy. All three initialization hashes match exactly. Its final DEVcopy=.95768, calibrated typed/orderedF1=.83892/.85424; TRAIN128 diagnostic copy=.96101 and F1=.84073/.85346. All final raw/calibrated completegraph counts remain0.
+
+| TRAIN diversity | Presentations | Visits/graph | DEVcopy | DEVtypedF1(cal) | DEVorderedF1(cal) | DEVcomplete |
+|---:|---:|---:|---:|---:|---:|---:|
+|128|65,536|512|.46973|.62806|.50009|0/512|
+|1,024|65,536|64|.72444|.72231|.66262|0/512|
+|8,192|65,536|8|.95768|.83892|.85424|0/512|
+
+At32,768presentations the8,192arm already reachedDEVcopy.82755/orderedF1.71544, so its final interval improves these by.13013/.13880. This meets the prespecified exposure-extension criterion. The selected next experiment should preserve this optimizer trajectory and increase exposure, rather than attribute residual errors to an underpowered frontend before acquisition plateaus. No reserved confirmation outcome has been inspected.
+
+Final8,192-arm DEVpresence is exact511/512, kind16,738/17,337 (205complete sequences), copy12,399/12,972 (214complete sequences), and values4,365/4,365. Remaining exact-graph failure cannot be inferred from averageF1 alone. The data show useful fresh component acquisition under greater canonical diversity, while whole-graph competence remains unmet. This is one development initialization; paired confirmation of a selected claim remains required.
