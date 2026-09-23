@@ -77,3 +77,6 @@ The additional model runtime was16.23seconds, no optimization. Five mechanical t
 
 
 A separate deterministic data reconstruction counts9,216 unique main public constructions and1,536 ID-localization constructions, with zero overlap. Identity here means the exact nonce-key and candidate-record content with candidate order removed, not alpha-equivalence or new abstract program structure. The much larger reported episode-evaluation counts repeat these constructions across conditions, model arms and prior policies. Per-example construction hashes and generation keys are saved in `data-audit.json`; no optimizer examples were consumed.
+
+
+Independent review verified all48 ID-localization cells and all48 primitive strata with a separate standard-library reconstruction, including paired target equality and generation provenance (`6d1e312`). Thus both the main architectural-prior comparison and the follow-up coverage diagnosis are independently audited. Track A is complete; no additional training or calibration arm was attempted.
