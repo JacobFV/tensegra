@@ -92,3 +92,9 @@ The additive slot-head expressivity finding is mathematically valid: for two com
 A new independent standard-library bitmap auditor reconstructs node counts, typed/ordered edge counts, type accuracy, identity copying/equivalence and exact canonical semantic equivalence. All2304 acquisition rows pass every reconstructed metric, extending the earlier typed-edge-only audit.
 
 First immutable semantic main shard audit: all3072 N1k seed0 rows across semantic/no-text-feature arms, three exposure checkpoints and raw/calibrated decoders reproduce every semantic metric without discrepancy. Remaining paired seeds and N10k remain pending; this partial audit is not a completed scaling result.
+
+## Completed N1k semantic audit and research layout
+
+All9472 immutable N1k main prediction rows (three seeds, both neural arms, three exposure checkpoints, raw/calibrated decoders and frequency baseline) independently reproduce every semantic metric. All six source manifests match frozen26c8b5f, paired initialization hashes match, and all18 calibration threshold vectors reconstruct exactly from logged training-grid counts. Each final neural run sees1000 distinct graphs over100,000 presentations. N10k remains incomplete; no paired corpus-scaling conclusion is final yet.
+
+The user-authorized research-layout migration was independently checked:1449 mapped files,1421 byte-identical; all1337 immutable records preserved, including1331 checked directly against prior Git blob hashes. The compatibility alias resolves correctly and all relative Markdown file links resolve. Reports moved under `research/stages`, helper scripts under `research/tools`, and result bytes remain unchanged.
