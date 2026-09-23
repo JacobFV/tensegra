@@ -1,5 +1,6 @@
 """Independent, standard-library-only Stage 7 raw-count audit (no Torch)."""
 import argparse
+import gzip
 import hashlib
 import json
 from pathlib import Path
@@ -26,7 +27,8 @@ def audit_ab(directory):
     assert [r['seed'] for r in summary['seeds']]==config['seeds']
     results=[]; metric_checks=0
     for seed in config['seeds']:
-        raw=json.loads((directory/f'seed{seed}-raw.json').read_text()); seed_result=dict(seed=seed,A={},B={})
+        raw_path=directory/f'seed{seed}-raw.json'
+        raw=json.loads(raw_path.read_text() if raw_path.exists() else gzip.decompress(raw_path.with_suffix('.json.gz').read_bytes())); seed_result=dict(seed=seed,A={},B={})
         assert raw['optimizer_examples']==config['steps']*config['batch_size']
         assert raw['train_cardinality']==config['train_size']
         expected={f'{s}_{p}' for s in ('iid','ood') for p in (('validation','test') if config.get('main_budget_frozen') else ('validation',))}
