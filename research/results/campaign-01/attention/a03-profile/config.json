@@ -1,0 +1,33 @@
+{
+  "mode": "soft",
+  "width": 1024,
+  "seed": 199,
+  "train_seed": 12910000,
+  "eval_seed": 12920000,
+  "steps": 0,
+  "checkpoints": [],
+  "batch": 16,
+  "eval_batch": 32,
+  "eval_examples": 128,
+  "lr": 0.0003,
+  "strength": 8.0,
+  "conditions": [
+    {
+      "nodes": 64,
+      "depth": 16,
+      "data_group": 0
+    },
+    {
+      "nodes": 64,
+      "depth": 16,
+      "corruption": "spurious",
+      "data_group": 0
+    },
+    {
+      "nodes": 64,
+      "depth": 16,
+      "node_permutation": true,
+      "data_group": 0
+    }
+  ]
+}

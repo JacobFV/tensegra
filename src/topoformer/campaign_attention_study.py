@@ -80,7 +80,7 @@ def evaluate(model, config, output, label, *, device):
             arrays[f'c{ci}_{key}'] = np.concatenate(value)
     sync(device)
     np.savez_compressed(output / f'{label}.npz', **arrays)
-    write(output / f'{label}.json', {'rows':rows, 'wall_seconds_including_export':time.monotonic()-started})
+    write(output / f'{label}.json', {'eval_seed':config['eval_seed'],'eval_examples':config['eval_examples'],'rows':rows, 'wall_seconds_including_export':time.monotonic()-started})
     model.train()
     return rows
 
@@ -100,6 +100,7 @@ def run(config, output):
             raise ValueError('checkpoint checksum differs')
         model.load_state_dict(torch.load(path,map_location=device,weights_only=True))
     initial_hash = hashlib.sha256(b''.join(t.detach().cpu().numpy().tobytes() for t in model.state_dict().values())).hexdigest()
+    shared_hash = hashlib.sha256(b''.join(t.detach().cpu().numpy().tobytes() for k,t in model.state_dict().items() if k!='strength')).hexdigest()
     config_hash = hashlib.sha256(json.dumps(config, sort_keys=True).encode()).hexdigest()
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.get('lr',3e-4), weight_decay=1e-4)
     start = time.monotonic()
@@ -110,7 +111,10 @@ def run(config, output):
     if device.startswith('cuda'): torch.cuda.reset_peak_memory_stats()
     for step in range(steps+1):
         if step in checkpoints:
-            rows = evaluate(model,config,output,f'eval-{step:05d}',device=device)
+            eval_config=dict(config)
+            if step < steps and 'curve_seed' in config:
+                eval_config.update(eval_seed=config['curve_seed'],eval_examples=config['curve_examples'],conditions=config['curve_conditions'])
+            rows = evaluate(model,eval_config,output,f'eval-{step:05d}',device=device)
             curves.append({'step':step,'rows':rows,'elapsed_seconds':time.monotonic()-start,
                            'strength_min':float(model.strength.detach().min()),'strength_max':float(model.strength.detach().max()),
                            'context_scale':float(model.context_log_scale.detach().exp())})
@@ -139,7 +143,7 @@ def run(config, output):
                 'parameters_with_gradient':sum(p.numel() for p in model.parameters() if p.grad is not None),
                 'presentations':steps*config['batch'],'generated_graph_examples':steps*config['batch'],
                 'unique_canonical_graphs':None, 'deduplication':'not performed; independent procedural draws',
-                'initial_tensor_sha256':initial_hash,'config_sha256':config_hash,
+                'initial_tensor_sha256':initial_hash,'initial_shared_tensor_sha256':shared_hash,'config_sha256':config_hash,
                 'node_microsteps':microsteps*config.get('nodes',16), 'graph_microsteps':microsteps,
                 'wall_seconds_including_eval_export':time.monotonic()-start,
                 'cuda_peak_allocated_bytes':torch.cuda.max_memory_allocated() if device.startswith('cuda') else 0,

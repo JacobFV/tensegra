@@ -1,0 +1,135 @@
+{
+  "width": 1024,
+  "eval_seed": 32000000,
+  "steps": 500,
+  "checkpoints": [
+    10,
+    25,
+    50,
+    100,
+    250
+  ],
+  "batch": 16,
+  "eval_batch": 32,
+  "eval_examples": 1024,
+  "lr": 0.0003,
+  "conditions": [
+    {
+      "nodes": 16,
+      "depth": 4,
+      "data_group": 0
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 1
+    },
+    {
+      "nodes": 16,
+      "depth": 8,
+      "data_group": 2
+    },
+    {
+      "nodes": 64,
+      "depth": 16,
+      "data_group": 3
+    },
+    {
+      "nodes": 16,
+      "depth": 4,
+      "composition": true,
+      "data_group": 4
+    },
+    {
+      "nodes": 64,
+      "depth": 4,
+      "data_group": 5
+    },
+    {
+      "nodes": 16,
+      "depth": 16,
+      "data_group": 6
+    },
+    {
+      "nodes": 32,
+      "depth": 8,
+      "data_group": 7
+    },
+    {
+      "nodes": 16,
+      "depth": 4,
+      "data_group": 0,
+      "zero_strength": true
+    },
+    {
+      "nodes": 16,
+      "depth": 4,
+      "data_group": 0,
+      "corruption": "wrong"
+    },
+    {
+      "nodes": 16,
+      "depth": 4,
+      "data_group": 0,
+      "corruption": "identity"
+    },
+    {
+      "nodes": 16,
+      "depth": 4,
+      "data_group": 0,
+      "corruption": "missing"
+    },
+    {
+      "nodes": 16,
+      "depth": 4,
+      "data_group": 0,
+      "corruption": "spurious"
+    },
+    {
+      "nodes": 64,
+      "depth": 16,
+      "data_group": 3,
+      "corruption": "wrong"
+    },
+    {
+      "nodes": 64,
+      "depth": 16,
+      "data_group": 3,
+      "corruption": "identity"
+    },
+    {
+      "nodes": 64,
+      "depth": 16,
+      "data_group": 3,
+      "corruption": "missing"
+    },
+    {
+      "nodes": 64,
+      "depth": 16,
+      "data_group": 3,
+      "corruption": "spurious"
+    },
+    {
+      "nodes": 64,
+      "depth": 16,
+      "data_group": 3,
+      "node_permutation": true
+    }
+  ],
+  "curve_seed": 22000000,
+  "curve_examples": 256,
+  "curve_conditions": [
+    {
+      "nodes": 16,
+      "depth": 4
+    },
+    {
+      "nodes": 32,
+      "depth": 8
+    }
+  ],
+  "seed": 203,
+  "train_seed": 62300000,
+  "mode": "soft",
+  "strength": 4.0
+}
