@@ -1,0 +1,108 @@
+{
+  "mode": "confirmation",
+  "device": "cuda",
+  "delays": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "eval_distractors": [
+    2,
+    8
+  ],
+  "batch_size": 64,
+  "ridge_grid": [
+    0.01
+  ],
+  "ce_updates": 900,
+  "ce_batch_size": 256,
+  "ce_lr": 0.003,
+  "ce_check_every": 100,
+  "fixed_ce_step": 900,
+  "test_delays": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "runs": [
+    {
+      "backbone_seed": 10,
+      "head_seed": 24000010,
+      "checkpoint": "/home/brandonin/topoformer-stage11/returns/main/10-wide_continue.pt",
+      "checkpoint_sha256": "487a0b632c398256ffd543b59138ef6b2b0648a38948b945e36262cc9f94051b",
+      "data": {
+        "train": {
+          "seed": 24100101,
+          "size": 16384
+        },
+        "calibration": {
+          "seed": 25100101,
+          "size": 1024
+        },
+        "validation": {
+          "seed": 26100101,
+          "size": 1024
+        },
+        "test": {
+          "seed": 27100101,
+          "size": 1024
+        }
+      }
+    },
+    {
+      "backbone_seed": 11,
+      "head_seed": 24000011,
+      "checkpoint": "/home/brandonin/topoformer-stage11/returns/main/11-wide_continue.pt",
+      "checkpoint_sha256": "00e122c8cfe655dc9a8f801b48c5b5092db6caf8909479f2c3ac3910f0b7a077",
+      "data": {
+        "train": {
+          "seed": 24110101,
+          "size": 16384
+        },
+        "calibration": {
+          "seed": 25110101,
+          "size": 1024
+        },
+        "validation": {
+          "seed": 26110101,
+          "size": 1024
+        },
+        "test": {
+          "seed": 27110101,
+          "size": 1024
+        }
+      }
+    },
+    {
+      "backbone_seed": 12,
+      "head_seed": 24000012,
+      "checkpoint": "/home/brandonin/topoformer-stage11/returns/main/12-wide_continue.pt",
+      "checkpoint_sha256": "80f209e48d95efd18637658c8250dbd4d47870b36c05b358db554442127c0dc0",
+      "data": {
+        "train": {
+          "seed": 24120101,
+          "size": 16384
+        },
+        "calibration": {
+          "seed": 25120101,
+          "size": 1024
+        },
+        "validation": {
+          "seed": 26120101,
+          "size": 1024
+        },
+        "test": {
+          "seed": 27120101,
+          "size": 1024
+        }
+      }
+    }
+  ]
+}
