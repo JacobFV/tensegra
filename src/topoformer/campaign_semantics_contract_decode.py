@@ -1,5 +1,5 @@
 """Versioned CPU-only public compiler-contract decoding of frozen predictions."""
-import argparse, collections, gzip, json, time
+import argparse, collections, gzip, hashlib, json, time
 from pathlib import Path
 import torch
 from .campaign_semantics import digest, write_gzip
@@ -94,7 +94,7 @@ def run(config):
                         out,info=decode(pred,mask=mask,bookkeeping=book);m=metrics(out,gold)
                         actual=out['edges'] & out['presence'][:,None,None] & out['presence'][None,:,None]
                         old_error=base_edges.ne(gold['edges']);new_error=actual.ne(gold['edges'])
-                        rows.append(dict(checkpoint=arm['name'],split=split,policy=policy,variant=variant,seed=item['seed'],metrics=m,info=info,repair=bool(m['semantic_equivalence'] and not original['semantic_equivalence']),regression=bool(original['semantic_equivalence'] and not m['semantic_equivalence']),removed_errors=int((old_error&~new_error).sum()),introduced_errors=int((~old_error&new_error).sum()),edge_flips=out['edges'].ne(pred['edges']).nonzero().tolist(),slot_changes=[(i,j,int(out['slots'][i,j])) for i,j in out['slots'].ne(pred['slots']).nonzero().tolist()]))
+                        rows.append(dict(checkpoint=arm['name'],split=split,policy=policy,variant=variant,seed=item['seed'],metrics=m,info=info,repair=bool(m['semantic_equivalence'] and not original['semantic_equivalence']),regression=bool(original['semantic_equivalence'] and not m['semantic_equivalence']),removed_errors=int((old_error&~new_error).sum()),introduced_errors=int((~old_error&new_error).sum()),edge_flip_count=int(out['edges'].ne(pred['edges']).sum()),slot_change_count=int(out['slots'].ne(pred['slots']).sum()),edge_sha256=hashlib.sha256(out['edges'].numpy().tobytes()).hexdigest(),slot_sha256=hashlib.sha256(out['slots'].numpy().tobytes()).hexdigest()))
     summary=[]
     for key in sorted({(r['checkpoint'],r['split'],r['policy'],r['variant']) for r in rows}):
         rr=[r for r in rows if (r['checkpoint'],r['split'],r['policy'],r['variant'])==key]
