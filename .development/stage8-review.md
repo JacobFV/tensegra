@@ -40,3 +40,11 @@ Belief draft fixes reviewed: latent width1024 and feed-forward width2048; expect
 No main experiment budget, scientific gate pass, or composition clearance is implied by timing clearance.
 
 Additional pre-outcome checks: return `8b0f3a0` aligns all shared backbone parameters across the mixed/concatenated/facet arms by constructing unequal encoders last; tests assert equality. A stdlib-only independent generator audit on 1024 episodes (seed200000) found mean posterior support sizes 8→4.465→2.688→1.310→1 for eight candidates and 16→8.442→4.688→1.431→1 for sixteen. The revised generator therefore contains genuine staged ambiguity rather than almost immediate identification.
+
+## Acquisition artifact audit
+
+Audited committed/local acquisition artifacts independently using Python's standard library. Return acquisition contains 18 heldout evaluation rows across six arms; every saved field, scalar-joint, identity-joint and full-joint count exactly matches its raw predictions and targets. All six arms fit the 32-example training set perfectly at zero/one update, but heldout joint reconstruction is only 0–3/128. This is fitting evidence, not competence. Every manifest retains `composition_allowed=false`.
+
+Belief acquisition summaries exactly match the 14 validation cells per arm and saved distributions normalize. Both arms use width1024 and identical source hashes. Saved sample trajectories permit spot checks, not reconstruction of every aggregate; requested full compressed posterior exports for main-result auditing. Main source `1350eaf` aligns gate logic with the root registry: complete validation matrix, 512 episodes/cell, IID>.98 or moderate OOD>.95 final support accuracy, mean framewise posterior L1<.05 and impossible mass<.01. Empty-prior error remains an observed failure, not silently repaired after inspection.
+
+Return `dc2f9b1` chunks evaluation without changing public observations. Required second-argument scoring excludes the unary null class; the 512 threshold refers to episodes per cell, and required-argument denominators are reported separately. Semantic `662a2ee` batches public text with masks; private graph labels still only select supervised loss queries. These instrumentation/throughput changes do not add a privileged actor input.
