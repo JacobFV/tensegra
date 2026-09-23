@@ -57,6 +57,9 @@ def run(config, output):
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
     checkpoint = Path(config['checkpoint']).expanduser()
+    checkpoint_hash = hashlib.sha256(checkpoint.read_bytes()).hexdigest()
+    if checkpoint_hash != config['checkpoint_sha256']:
+        raise ValueError('Archived checkpoint hash mismatch')
     state = torch.load(checkpoint, map_location='cpu', weights_only=True)
     manifest = dict(config=config, checkpoint_sha256=hashlib.sha256(checkpoint.read_bytes()).hexdigest(),
                     source={name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
@@ -112,6 +115,8 @@ def run(config, output):
             path.write_bytes(gzip.compress(json.dumps(rows,separators=(',',':')).encode(),mtime=0))
             modelpath=output/f'{arm}-checkpoint.pt'; torch.save(model.state_dict(),modelpath)
             manifest['runs'].append(dict(arm=arm, passed_fixed_gate=acquisition_gate(final),curve=curve,
+                parameters=sum(p.numel() for p in model.parameters()), initial_state_sha256=tensor_hash(state),
+                predictions_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
                 schedule_counts=schedule_counts(schedule,config['updates']),presentations=config['updates']*config['batch_size'],
                 unique_training_events=config['batch_size'],event_sha256=tensor_hash(batch_cpu['public']['event']),
                 checkpoint_sha256=hashlib.sha256(modelpath.read_bytes()).hexdigest(),seconds=time.monotonic()-tick))

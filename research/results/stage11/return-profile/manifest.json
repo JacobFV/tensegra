@@ -1,0 +1,77 @@
+{
+  "config": {
+    "mode": "profile",
+    "device": "cuda",
+    "checkpoint": "/home/brandonin/topoformer-stage8-return/results/main/0-factorized-persistent.pt",
+    "seed": 11000001,
+    "batch_size": 32,
+    "lr": 0.0003
+  },
+  "checkpoint_sha256": "2102c2438a615973b09c28864d379158ebd3194bdd35b022218299bec48e53da",
+  "source": {
+    "return_horizon.py": "d0c429515075df2ee67975e26e118c3a6474a374699a225aaf161837dd2d111c",
+    "return_memory.py": "cbf4d732520673039e5db403dfb57979b2d3492063a82bbd1376793d9103e037",
+    "return_crossdelay.py": "6c66bfd368cec5725d8cf60aa6fc74b1fdee068c6a49b9fdf993040c410358cb",
+    "return_diagnostics_probe.py": "d89799f7812b39c67670eb57009d058602633a880a67440a84e60aa8a4e0ded7",
+    "retention_data.py": "1e980177c4e9344c8824ef3b13e2afdca4499778f9efe027d122695a847585b5",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64"
+  },
+  "config_sha256": "aa9f26b9ae5d54ca397b0d0181874136a72935401e45eef280c292937ee014ac",
+  "environment": {
+    "torch": "2.14.0+cu130",
+    "cuda": "13.0",
+    "device": "NVIDIA GB10",
+    "total_device_bytes": 128453668864
+  },
+  "runs": [
+    {
+      "delay": 0,
+      "kind": "training",
+      "seconds": 0.006954958662390709,
+      "losses": {
+        "value": 0.5583211183547974,
+        "type": 4.234291918692179e-05,
+        "operation": 0.00010091770673170686,
+        "argument0": 0.0021770638413727283,
+        "argument1": 0.0022113637533038855,
+        "provenance": 0.0021223435178399086
+      }
+    },
+    {
+      "delay": 4,
+      "kind": "training",
+      "seconds": 0.1927789649926126,
+      "losses": {
+        "value": 0.1656571626663208,
+        "type": 8.049758616834879e-05,
+        "operation": 0.0020793923176825047,
+        "argument0": 0.009727570228278637,
+        "argument1": 0.005223371088504791,
+        "provenance": 0.009841565042734146
+      }
+    },
+    {
+      "delay": 16,
+      "kind": "training",
+      "seconds": 0.3207898330874741,
+      "losses": {
+        "value": 1.1792562007904053,
+        "type": 9.522495383862406e-05,
+        "operation": 0.0007760660373605788,
+        "argument0": 0.016412392258644104,
+        "argument1": 0.0014093834906816483,
+        "provenance": 0.016744963824748993
+      }
+    },
+    {
+      "delay": 32,
+      "kind": "inference",
+      "seconds": 0.12064589327201247
+    }
+  ],
+  "parameters": 55854360,
+  "seconds": 1.8393510319292545,
+  "width": 1024,
+  "peak_cuda_allocated": 2156416512,
+  "process_peak_rss": 2252587008
+}
