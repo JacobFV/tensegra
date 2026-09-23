@@ -67,16 +67,18 @@ def run(cfg, output):
                         record=prediction_record(seed,'frozen_shared_readout',split,delay,distractor,batch,scalar)
                         record['run_id']=30+pair;rows.append(record)
         # Reference has no new optimizer exposure and is explicitly contextual.
+        torch.manual_seed(seed)
         model=ReturnMemoryModel(width=1024,encoding='factorized').to(device).eval();model.load_state_dict(initial)
         for split in ('validation','test'): evaluate(model,'frozen_original',split,cfg['eval_delays'])
         del model
         paired_batches=None
         for arm,schedule in cfg['schedules'].items():
             tick=time.monotonic()
+            torch.manual_seed(seed)
             model=ReturnMemoryModel(width=1024,encoding='factorized').to(device);model.load_state_dict(initial)
             assert tensor_hash(model.state_dict())==initial_hash
             optimizer=torch.optim.AdamW(model.parameters(),lr=cfg['lr'])
-            batches=[]; losses=[]
+            batches=[]; losses=[]; training_hashes=[]
             for step in range(cfg['updates']+1):
                 if step%cfg['curve_every']==0 or step==cfg['updates']:
                     model.eval()
@@ -88,7 +90,9 @@ def run(cfg, output):
                 ds=cfg['training_seed_base']+pair*10000+step
                 assert ds not in (cfg['validation_seed'],cfg['test_seed'])
                 cpu=make_batch(ds,cfg['batch_size'])
-                batches.append(dict(seed=ds,event_sha256=tensor_hash(cpu['public']['event'])))
+                row_hashes=[tensor_hash({key:value[i] for key,value in cpu['public']['event'].items()}) for i in range(cfg['batch_size'])]
+                training_hashes.extend(row_hashes)
+                batches.append(dict(seed=ds,event_sha256=tensor_hash(cpu['public']['event']),event_row_hashes=row_hashes))
                 terms=update(model,optimizer,move(cpu,device),schedule[step%len(schedule)])
                 losses.append(dict(update=step+1,delay=schedule[step%len(schedule)],loss=terms))
                 if (step+1)%250==0: print(seed,arm,step+1,terms['value'],flush=True)
@@ -97,11 +101,13 @@ def run(cfg, output):
             checkpoint=out/f'{seed}-{arm}.pt';torch.save(model.state_dict(),checkpoint)
             model.eval()
             for split in ('validation','test'):evaluate(model,arm,split,cfg['eval_delays'])
+            assert not(set(training_hashes) & set(event_reference['validation']))
+            assert not(set(training_hashes) & set(event_reference['test']))
             counts=schedule_counts(schedule,cfg['updates'])
             arm_meta.append(dict(arm=arm,initial_state_sha256=initial_hash,checkpoint_sha256=sha(checkpoint),
-                optimizer_reset=True,parameters=sum(p.numel() for p in model.parameters()),width=1024,memory_tokens=6,
+                optimizer_reset=True,torch_seed=seed,parameters=sum(p.numel() for p in model.parameters()),width=1024,memory_tokens=6,
                 allocated_memory_coordinates=6144,training_batches=batches,losses=losses,delay_updates=counts,
-                presentations=cfg['updates']*cfg['batch_size'],unique_training_events=cfg['updates']*cfg['batch_size'],
+                presentations=cfg['updates']*cfg['batch_size'],unique_training_events=len(set(training_hashes)),
                 recurrent_example_microsteps=sum(int(d)*n*cfg['batch_size'] for d,n in counts.items()),
                 seconds=time.monotonic()-tick))
             del optimizer,model;torch.cuda.empty_cache()
