@@ -18,6 +18,8 @@ The reverse ordered schedule, explicit node grounding, and unique outgoing typed
 
 [Learning curves](a01-curves.svg) separate task value, mean-head argmax path, and edge mass. The pointer diagnostic is not causal proof of neural computation. Structural strength and normalization can alter weighted mixtures without changing their argmax.
 
-A02 is registered before its outcomes: stronger fixed λ, a public size correction, and score interventions on frozen weights. It will test whether finite structural mass, rather than the learned state update, explains this discrepancy. Confirmation selection has not occurred.
+A02 is registered before its outcomes: stronger initial λ, a public size correction, and score interventions on frozen weights. It will test whether finite structural mass, rather than the learned state update, explains this discrepancy. Confirmation selection has not occurred.
 
 Process occupancy was 36.30 seconds, including five process initializations, training, evaluation, and export. Per-arm process times were: soft 7.07s, context 7.49s, message 5.29s, hard 7.20s, and no graph 9.21s. These whole-process times are not pure inference latency. The original 2.54s profile is charged separately. Eight CPU mechanical tests pass after A02 instrumentation; the primary experimental width remains 1024.
+
+Naming: `soft4` and `soft8` denote initial trainable strengths, not permanently fixed learned parameters. The frozen-checkpoint `strength_override=8` intervention is exactly fixed at8. Zero-strength evaluation is meaningful only for soft attention; other arms ignore that flag, so their duplicate zero-strength cells are no-op consistency checks rather than graph-removal ablations.
