@@ -1,0 +1,831 @@
+{
+  "config": {
+    "device": "cuda",
+    "seeds": [
+      10,
+      11,
+      12
+    ],
+    "updates": 1000,
+    "batch_size": 32,
+    "eval_batch_size": 64,
+    "head_train_seed": 9700101,
+    "head_train_size": 2048,
+    "validation_seed": 9800101,
+    "test_seed": 9900101,
+    "eval_size": 512,
+    "head_delays": [
+      0,
+      1,
+      2,
+      4
+    ],
+    "eval_delays": [
+      0,
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "eval_distractors": [
+      2,
+      8
+    ],
+    "ridge_grid": [
+      0.01,
+      0.1,
+      1,
+      10
+    ],
+    "head_lr": 0.003,
+    "head_updates": 500,
+    "head_batch_size": 256,
+    "head_validate_every": 50,
+    "interventions": [
+      "event_drop",
+      "wrong_value",
+      "wrong_type",
+      "wrong_provenance"
+    ]
+  },
+  "config_sha256": "91dd178556200ee5a35a10c74db6446e0d66373a333ee81e30a393a3089320e8",
+  "source": {
+    "return_diagnostics_repair.py": "6f8e89972fe480b7e4a7d2206d123269b09e2325a5c265b3c5c3121fccbcb748",
+    "return_diagnostics_probe.py": "d89799f7812b39c67670eb57009d058602633a880a67440a84e60aa8a4e0ded7",
+    "return_memory.py": "cbf4d732520673039e5db403dfb57979b2d3492063a82bbd1376793d9103e037",
+    "retention_data.py": "1e980177c4e9344c8824ef3b13e2afdca4499778f9efe027d122695a847585b5",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64"
+  },
+  "runs": [
+    {
+      "seed": 10,
+      "initial_state_sha256": "9c5e92ba6820d5755a5018dd52b6fd30870597637533ab16db109a63cb290819",
+      "head_train_event_hashes": [
+        "c66ddad2c8c636ce4775a3660f210bd0c1e5f1b25e6b6c9fd07be12ece5de639"
+      ],
+      "head_train_label_support": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "environment": {
+        "torch": "2.14.0+cu130",
+        "cuda": "13.0",
+        "device": "NVIDIA GB10",
+        "device_capacity": 128453668864
+      },
+      "width": 1024,
+      "parameters": 55854360,
+      "head_parameters": 33825,
+      "backbone_presentations": 32000,
+      "head_unique_events": 2048,
+      "head_feature_rows": 8192,
+      "head_ce_presentations": 128000,
+      "ridge_selection": [
+        {
+          "correct": 3724,
+          "total": 4096,
+          "alpha": 0.01
+        },
+        {
+          "correct": 3724,
+          "total": 4096,
+          "alpha": 0.1
+        },
+        {
+          "correct": 3718,
+          "total": 4096,
+          "alpha": 1
+        },
+        {
+          "correct": 3694,
+          "total": 4096,
+          "alpha": 10
+        }
+      ],
+      "chosen_alpha": 0.01,
+      "ce_curve": [
+        {
+          "step": 0,
+          "correct": 3354,
+          "total": 4096
+        },
+        {
+          "step": 50,
+          "correct": 3812,
+          "total": 4096
+        },
+        {
+          "step": 100,
+          "correct": 3910,
+          "total": 4096
+        },
+        {
+          "step": 150,
+          "correct": 3939,
+          "total": 4096
+        },
+        {
+          "step": 200,
+          "correct": 3963,
+          "total": 4096
+        },
+        {
+          "step": 250,
+          "correct": 3995,
+          "total": 4096
+        },
+        {
+          "step": 300,
+          "correct": 3968,
+          "total": 4096
+        },
+        {
+          "step": 350,
+          "correct": 3969,
+          "total": 4096
+        },
+        {
+          "step": 400,
+          "correct": 3922,
+          "total": 4096
+        },
+        {
+          "step": 450,
+          "correct": 3989,
+          "total": 4096
+        },
+        {
+          "step": 500,
+          "correct": 3995,
+          "total": 4096
+        }
+      ],
+      "chosen_ce_step": 250,
+      "backbone_curve": [
+        {
+          "step": 0,
+          "loss": {
+            "value": 3.3287277221679688,
+            "type": 1.3031589984893799,
+            "operation": 1.554137110710144,
+            "argument0": 2.080179452896118,
+            "argument1": 2.0851640701293945,
+            "provenance": 1.442748785018921
+          }
+        },
+        {
+          "step": 100,
+          "loss": {
+            "value": 2.366915225982666,
+            "type": 0.00252350140362978,
+            "operation": 0.0035273656249046326,
+            "argument0": 0.10423555225133896,
+            "argument1": 0.07780209928750992,
+            "provenance": 0.13914844393730164
+          }
+        },
+        {
+          "step": 200,
+          "loss": {
+            "value": 1.2148370742797852,
+            "type": 0.00014365703100338578,
+            "operation": 0.00047476618783548474,
+            "argument0": 0.007564844097942114,
+            "argument1": 0.009327959269285202,
+            "provenance": 0.006804641801863909
+          }
+        },
+        {
+          "step": 300,
+          "loss": {
+            "value": 0.7722094655036926,
+            "type": 0.000578920473344624,
+            "operation": 0.0002856088103726506,
+            "argument0": 0.006828701589256525,
+            "argument1": 0.007004218641668558,
+            "provenance": 0.010582873597741127
+          }
+        },
+        {
+          "step": 400,
+          "loss": {
+            "value": 1.1013281345367432,
+            "type": 0.00011576568067539483,
+            "operation": 0.001899953349493444,
+            "argument0": 0.0028939549811184406,
+            "argument1": 0.007195156067609787,
+            "provenance": 0.02493223175406456
+          }
+        },
+        {
+          "step": 500,
+          "loss": {
+            "value": 0.5120894908905029,
+            "type": 0.0004945860127918422,
+            "operation": 0.00032225664472207427,
+            "argument0": 0.005350995808839798,
+            "argument1": 0.00907148327678442,
+            "provenance": 0.0071636587381362915
+          }
+        },
+        {
+          "step": 600,
+          "loss": {
+            "value": 0.8004346489906311,
+            "type": 5.432397665572353e-05,
+            "operation": 0.0006173632573336363,
+            "argument0": 0.005669183563441038,
+            "argument1": 0.011485256254673004,
+            "provenance": 0.014268960803747177
+          }
+        },
+        {
+          "step": 700,
+          "loss": {
+            "value": 0.46313875913619995,
+            "type": 4.261247886461206e-05,
+            "operation": 0.00014177750563248992,
+            "argument0": 0.00856715440750122,
+            "argument1": 0.005966519936919212,
+            "provenance": 0.005674030631780624
+          }
+        },
+        {
+          "step": 800,
+          "loss": {
+            "value": 0.3958091139793396,
+            "type": 6.29320929874666e-05,
+            "operation": 0.00047425992670468986,
+            "argument0": 0.004311087541282177,
+            "argument1": 0.00288295466452837,
+            "provenance": 0.0023387717083096504
+          }
+        },
+        {
+          "step": 900,
+          "loss": {
+            "value": 0.495186984539032,
+            "type": 5.418119326350279e-05,
+            "operation": 9.286438580602407e-05,
+            "argument0": 0.007623316720128059,
+            "argument1": 0.008361391723155975,
+            "provenance": 0.006100344937294722
+          }
+        }
+      ],
+      "checkpoint_hashes": {
+        "10-backbone.pt": "21b51a65806b698badb70abf0d045e9b24e190a6a163b0cbf82fe0aa1be763d4",
+        "10-ridge.pt": "5e1e529594ae5cd2ede369347e31c94f91485692102c3da9462eb5323a9668bd",
+        "10-ce.pt": "57fc07919738774744a4fbdfb4f47617bf3f6b500bdbe69acf5abf5cc3db2ce5"
+      },
+      "seconds": 76.82183532603085,
+      "peak_cuda_allocated": 1293396480,
+      "process_peak_rss": 2391113728
+    },
+    {
+      "seed": 11,
+      "initial_state_sha256": "509154a47cd6d9a888e4a82deeae4bd078d7edbb43dd7f8235b93c9453df79fd",
+      "head_train_event_hashes": [
+        "c66ddad2c8c636ce4775a3660f210bd0c1e5f1b25e6b6c9fd07be12ece5de639"
+      ],
+      "head_train_label_support": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "environment": {
+        "torch": "2.14.0+cu130",
+        "cuda": "13.0",
+        "device": "NVIDIA GB10",
+        "device_capacity": 128453668864
+      },
+      "width": 1024,
+      "parameters": 55854360,
+      "head_parameters": 33825,
+      "backbone_presentations": 32000,
+      "head_unique_events": 2048,
+      "head_feature_rows": 8192,
+      "head_ce_presentations": 128000,
+      "ridge_selection": [
+        {
+          "correct": 3791,
+          "total": 4096,
+          "alpha": 0.01
+        },
+        {
+          "correct": 3794,
+          "total": 4096,
+          "alpha": 0.1
+        },
+        {
+          "correct": 3794,
+          "total": 4096,
+          "alpha": 1
+        },
+        {
+          "correct": 3791,
+          "total": 4096,
+          "alpha": 10
+        }
+      ],
+      "chosen_alpha": 0.1,
+      "ce_curve": [
+        {
+          "step": 0,
+          "correct": 3624,
+          "total": 4096
+        },
+        {
+          "step": 50,
+          "correct": 3969,
+          "total": 4096
+        },
+        {
+          "step": 100,
+          "correct": 4008,
+          "total": 4096
+        },
+        {
+          "step": 150,
+          "correct": 4001,
+          "total": 4096
+        },
+        {
+          "step": 200,
+          "correct": 3999,
+          "total": 4096
+        },
+        {
+          "step": 250,
+          "correct": 4044,
+          "total": 4096
+        },
+        {
+          "step": 300,
+          "correct": 4059,
+          "total": 4096
+        },
+        {
+          "step": 350,
+          "correct": 4038,
+          "total": 4096
+        },
+        {
+          "step": 400,
+          "correct": 4087,
+          "total": 4096
+        },
+        {
+          "step": 450,
+          "correct": 4076,
+          "total": 4096
+        },
+        {
+          "step": 500,
+          "correct": 4087,
+          "total": 4096
+        }
+      ],
+      "chosen_ce_step": 400,
+      "backbone_curve": [
+        {
+          "step": 0,
+          "loss": {
+            "value": 3.7524216175079346,
+            "type": 1.2461557388305664,
+            "operation": 1.5990784168243408,
+            "argument0": 2.025113105773926,
+            "argument1": 2.0393552780151367,
+            "provenance": 1.4387037754058838
+          }
+        },
+        {
+          "step": 100,
+          "loss": {
+            "value": 1.880829095840454,
+            "type": 0.001331258681602776,
+            "operation": 0.007044270634651184,
+            "argument0": 0.05749615654349327,
+            "argument1": 0.08380711823701859,
+            "provenance": 0.12462280690670013
+          }
+        },
+        {
+          "step": 200,
+          "loss": {
+            "value": 1.1436302661895752,
+            "type": 0.0004132552712690085,
+            "operation": 0.0013861532788723707,
+            "argument0": 0.0039444174617528915,
+            "argument1": 0.007755468599498272,
+            "provenance": 0.0025280220434069633
+          }
+        },
+        {
+          "step": 300,
+          "loss": {
+            "value": 0.7674508690834045,
+            "type": 0.0010720724239945412,
+            "operation": 0.0010997956851497293,
+            "argument0": 0.005962657742202282,
+            "argument1": 0.008373407647013664,
+            "provenance": 0.0033317492343485355
+          }
+        },
+        {
+          "step": 400,
+          "loss": {
+            "value": 0.6733250617980957,
+            "type": 5.6710108765400946e-05,
+            "operation": 0.00038058467907831073,
+            "argument0": 0.004936615005135536,
+            "argument1": 0.008197396993637085,
+            "provenance": 0.003656832966953516
+          }
+        },
+        {
+          "step": 500,
+          "loss": {
+            "value": 0.603003740310669,
+            "type": 7.003086648182943e-05,
+            "operation": 0.0002851371536962688,
+            "argument0": 0.0046219611540436745,
+            "argument1": 0.006962995044887066,
+            "provenance": 0.017779409885406494
+          }
+        },
+        {
+          "step": 600,
+          "loss": {
+            "value": 0.49634021520614624,
+            "type": 0.00014391724835149944,
+            "operation": 0.00032172276405617595,
+            "argument0": 0.0044021690264344215,
+            "argument1": 0.0037673739716410637,
+            "provenance": 0.015376299619674683
+          }
+        },
+        {
+          "step": 700,
+          "loss": {
+            "value": 0.5652556419372559,
+            "type": 0.0001567861036164686,
+            "operation": 0.0004118586948607117,
+            "argument0": 0.002491870429366827,
+            "argument1": 0.0070905527099967,
+            "provenance": 0.00410961639136076
+          }
+        },
+        {
+          "step": 800,
+          "loss": {
+            "value": 0.42855513095855713,
+            "type": 0.00020008767023682594,
+            "operation": 0.0005975741078145802,
+            "argument0": 0.018275517970323563,
+            "argument1": 0.004587003029882908,
+            "provenance": 0.006305453833192587
+          }
+        },
+        {
+          "step": 900,
+          "loss": {
+            "value": 0.48829764127731323,
+            "type": 0.0001869297120720148,
+            "operation": 0.0031137424521148205,
+            "argument0": 0.01324860192835331,
+            "argument1": 0.010974131524562836,
+            "provenance": 0.004995024763047695
+          }
+        }
+      ],
+      "checkpoint_hashes": {
+        "11-backbone.pt": "8eb5917ebb9b8be7c209acae2be03b9fbb4b9903624ec8e6db4595e30a77ca94",
+        "11-ridge.pt": "3f469852d52774ddbc1bd0f91e84f7e5b7e93a3857dd193d2ede51a7235c587f",
+        "11-ce.pt": "08e26b44e4559714a8a0d6e207d76487e770fd560497b7c1321272fff5aae45e"
+      },
+      "seconds": 76.70038148527965,
+      "peak_cuda_allocated": 1487979008,
+      "process_peak_rss": 2405150720
+    },
+    {
+      "seed": 12,
+      "initial_state_sha256": "687107b388a0d9e208da3f312e4e1e7613d3a5cce93303a99abacdeaf3d685aa",
+      "head_train_event_hashes": [
+        "c66ddad2c8c636ce4775a3660f210bd0c1e5f1b25e6b6c9fd07be12ece5de639"
+      ],
+      "head_train_label_support": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "environment": {
+        "torch": "2.14.0+cu130",
+        "cuda": "13.0",
+        "device": "NVIDIA GB10",
+        "device_capacity": 128453668864
+      },
+      "width": 1024,
+      "parameters": 55854360,
+      "head_parameters": 33825,
+      "backbone_presentations": 32000,
+      "head_unique_events": 2048,
+      "head_feature_rows": 8192,
+      "head_ce_presentations": 128000,
+      "ridge_selection": [
+        {
+          "correct": 3747,
+          "total": 4096,
+          "alpha": 0.01
+        },
+        {
+          "correct": 3747,
+          "total": 4096,
+          "alpha": 0.1
+        },
+        {
+          "correct": 3749,
+          "total": 4096,
+          "alpha": 1
+        },
+        {
+          "correct": 3706,
+          "total": 4096,
+          "alpha": 10
+        }
+      ],
+      "chosen_alpha": 1,
+      "ce_curve": [
+        {
+          "step": 0,
+          "correct": 3407,
+          "total": 4096
+        },
+        {
+          "step": 50,
+          "correct": 3904,
+          "total": 4096
+        },
+        {
+          "step": 100,
+          "correct": 3987,
+          "total": 4096
+        },
+        {
+          "step": 150,
+          "correct": 3966,
+          "total": 4096
+        },
+        {
+          "step": 200,
+          "correct": 3961,
+          "total": 4096
+        },
+        {
+          "step": 250,
+          "correct": 3965,
+          "total": 4096
+        },
+        {
+          "step": 300,
+          "correct": 4021,
+          "total": 4096
+        },
+        {
+          "step": 350,
+          "correct": 4059,
+          "total": 4096
+        },
+        {
+          "step": 400,
+          "correct": 4023,
+          "total": 4096
+        },
+        {
+          "step": 450,
+          "correct": 4049,
+          "total": 4096
+        },
+        {
+          "step": 500,
+          "correct": 4017,
+          "total": 4096
+        }
+      ],
+      "chosen_ce_step": 350,
+      "backbone_curve": [
+        {
+          "step": 0,
+          "loss": {
+            "value": 3.596040725708008,
+            "type": 1.230027437210083,
+            "operation": 1.8492212295532227,
+            "argument0": 2.124356746673584,
+            "argument1": 2.236044406890869,
+            "provenance": 1.4229705333709717
+          }
+        },
+        {
+          "step": 100,
+          "loss": {
+            "value": 1.8166003227233887,
+            "type": 0.001246840227395296,
+            "operation": 0.0033736510667949915,
+            "argument0": 0.1591397523880005,
+            "argument1": 0.05264285206794739,
+            "provenance": 0.10422150790691376
+          }
+        },
+        {
+          "step": 200,
+          "loss": {
+            "value": 0.9646068215370178,
+            "type": 0.00030012644128873944,
+            "operation": 0.0002160184521926567,
+            "argument0": 0.003105812706053257,
+            "argument1": 0.002770547056570649,
+            "provenance": 0.00586356408894062
+          }
+        },
+        {
+          "step": 300,
+          "loss": {
+            "value": 0.7734317779541016,
+            "type": 0.00032101001124829054,
+            "operation": 0.000339893827913329,
+            "argument0": 0.007067859638482332,
+            "argument1": 0.009575477801263332,
+            "provenance": 0.031373150646686554
+          }
+        },
+        {
+          "step": 400,
+          "loss": {
+            "value": 0.8632214665412903,
+            "type": 0.00013283044972922653,
+            "operation": 0.00028997115441598,
+            "argument0": 0.002797406632453203,
+            "argument1": 0.00564886350184679,
+            "provenance": 0.0014198953285813332
+          }
+        },
+        {
+          "step": 500,
+          "loss": {
+            "value": 0.6326603889465332,
+            "type": 0.0011761754285544157,
+            "operation": 0.0006190642016008496,
+            "argument0": 0.011751621030271053,
+            "argument1": 0.00954880565404892,
+            "provenance": 0.004346553701907396
+          }
+        },
+        {
+          "step": 600,
+          "loss": {
+            "value": 0.5280539989471436,
+            "type": 0.0018563774647191167,
+            "operation": 0.0018556652357801795,
+            "argument0": 0.00693666934967041,
+            "argument1": 0.006679994985461235,
+            "provenance": 0.007697404827922583
+          }
+        },
+        {
+          "step": 700,
+          "loss": {
+            "value": 0.31325018405914307,
+            "type": 0.00028322834987193346,
+            "operation": 0.0011022984981536865,
+            "argument0": 0.007204887457191944,
+            "argument1": 0.005793919786810875,
+            "provenance": 0.008288851007819176
+          }
+        },
+        {
+          "step": 800,
+          "loss": {
+            "value": 0.5285618305206299,
+            "type": 0.0006340359104797244,
+            "operation": 0.000774947926402092,
+            "argument0": 0.010309661738574505,
+            "argument1": 0.010471242479979992,
+            "provenance": 0.004456250928342342
+          }
+        },
+        {
+          "step": 900,
+          "loss": {
+            "value": 0.6846827268600464,
+            "type": 8.904516289476305e-05,
+            "operation": 0.0004220075788907707,
+            "argument0": 0.0034266964066773653,
+            "argument1": 0.0016212344635277987,
+            "provenance": 0.014748461544513702
+          }
+        }
+      ],
+      "checkpoint_hashes": {
+        "12-backbone.pt": "de2290552565a158e5425b76e8ed4b196a598c914e3aec9fa0b0c80dc64ee693",
+        "12-ridge.pt": "5c677cdcb4969547e2b09cb9c988321eb7700cda9c674dfdf436a57273c005cc",
+        "12-ce.pt": "34d09b75343757231a2643fa1fe09336620187f86607138fb35e1fcbd2f3eda5"
+      },
+      "seconds": 76.8274942827411,
+      "peak_cuda_allocated": 1491780096,
+      "process_peak_rss": 2405797888
+    }
+  ]
+}
