@@ -23,3 +23,5 @@ Inherited official thresholds and initial-frame inclusion unchanged. Report orig
 ## Budget and provenance
 
 No new model training planned. Estimate <=10 GPU minutes frozen inference plus <1 minute gradient diagnostics, after root queue authorization. Profile one N16 long-duplicate cell before freeze. Chunk evaluation to 32; model parameters 16,867,395. Same checkpoint and paired event IDs across A1/A2; raw posterior/targets gzip, checkpoint/source/config/data hashes saved. Report runtime, allocated CUDA bytes and RSS separately. Archived standard-library processing is CPU-only. Main freeze precedes untouched test. No further configuration selection on Stage8 tests.
+
+Root registry amendment before new inference: fresh evaluation namespace is 9M (validation 9100000, test 9200000). Existing seeds 0/1/2 are frozen historical diagnostics only. A new main, if needed/authorized, uses original training recipe at paired initialization seeds 10/11/12, then compares both prior policies on each same checkpoint. Track cap 15 GPU minutes. No outcome-based recipe change. Profile config uses historical protected0, N16 long repetition, 64 events (diagnostic only).
