@@ -45,3 +45,31 @@ class ThinkingTaskTests(unittest.TestCase):
         self.assertEqual(targets[-1].readiness,1.0)
         event, = session.execute(episode.gold.trace[-1])
         self.assertEqual(int(event.value),episode.gold.answer)
+
+    def test_cross_motif_has_real_merge(self):
+        from topoformer.thinking_runtime import ProtectedSession
+        for depth in (2,8,32):
+            e = generate_episode(42,depth=depth,motif='cross')
+            prior = {'result:'+c.id for c in e.gold.trace[0]}
+            self.assertEqual(set(e.gold.trace[1][1].arguments),prior)
+            self.assertTrue(audit_episode(e)['valid'])
+            self.assertLessEqual(audit_episode(e)['maximum_absolute_value'],64)
+            runtime = ProtectedSession(e.public.initial_values)
+            for group in e.gold.trace:
+                self.assertTrue(all(x.status == 'executed' for x in runtime.execute(group)))
+
+    def test_heldout_operator_composition(self):
+        for seed in range(20):
+            for motif in ('parallel','cross'):
+                train = generate_episode(seed,depth=8,motif=motif,operator_composition='train')
+                operations = { 'result:'+c.id:c.primitive for group in train.gold.trace for c in group }
+                for group in train.gold.trace:
+                    for c in group:
+                        self.assertFalse(c.primitive == 'mul' and any(operations.get(a) == 'sub' for a in c.arguments))
+                heldout = generate_episode(seed,depth=8,motif=motif,operator_composition='heldout')
+                self.assertEqual(heldout.gold.trace[0][0].primitive,'sub')
+                self.assertEqual(heldout.gold.trace[1][0].primitive,'mul')
+                self.assertIn('result:'+heldout.gold.trace[0][0].id,heldout.gold.trace[1][0].arguments)
+                self.assertTrue(audit_episode(heldout)['valid'])
+        for args in ({'motif':'bad'},{'operator_composition':'bad'},{'depth':1,'motif':'cross'}, {'depth':1,'operator_composition':'heldout'}):
+            with self.assertRaises(ValueError): generate_episode(**args)

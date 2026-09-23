@@ -14,7 +14,7 @@ from .thinking_runtime import Candidate, ValueRegister
 
 OPS = ('add', 'sub', 'mul', 'compare')
 TEMPLATES = ('canonical', 'infix', 'prefix', 'reordered', 'lexical')
-GENERATOR_VERSION = 'controlled-expressions-v1'
+GENERATOR_VERSION = 'controlled-expressions-v2'
 
 @dataclass(frozen=True)
 class PublicFrame:
@@ -110,11 +110,15 @@ def readiness_targets(episode: Episode, frame_index: int, available_ids, context
 
 
 def generate_episode(seed=0, depth=2, distractors=2, template='canonical', context=0,
-                     scheduling='learned'):
+                     scheduling='learned', motif='parallel', operator_composition='any'):
     if not 1 <= depth <= 32 or distractors < 0 or context not in (0,1):
         raise ValueError('invalid depth/distractors/context')
     if scheduling not in ('learned','supplied'):
         raise ValueError('scheduling must explicitly be learned or supplied')
+    if motif not in ('parallel','cross') or operator_composition not in ('any','train','heldout'):
+        raise ValueError('unknown motif or operator composition')
+    if depth < 2 and (motif == 'cross' or operator_composition == 'heldout'):
+        raise ValueError('cross motif and heldout composition require depth >= 2')
     rng = random.Random(seed)
     used = set()
     def name(prefix):
@@ -130,19 +134,33 @@ def generate_episode(seed=0, depth=2, distractors=2, template='canonical', conte
     current = [literal(rng.randint(-6,6)), literal(rng.randint(-6,6))]
     numerical = [values[0].value, values[1].value]
     trace, clauses, expected = [], [], []
+    previous_ops = [None,None]
     for level in range(depth):
         pair = []
+        previous_ids, previous_values = tuple(current), tuple(numerical)
         for lane in range(2):
             primitive = rng.choice(('add','sub','mul'))
+            if operator_composition == 'train' and previous_ops[lane] == 'sub' and primitive == 'mul':
+                primitive = rng.choice(('add','sub'))
+            if operator_composition == 'heldout' and lane == 0 and level < 2:
+                primitive = ('sub','mul')[level]
+            bridge = motif == 'cross' and level == 1 and lane == 1
+            if bridge and primitive == 'mul':
+                primitive = rng.choice(('add','sub'))
             operand = rng.choice((-1,1))
             operand_id = literal(operand)
             alternative_id = literal(-operand)
             identity = name('c')
-            arguments = (current[lane],operand_id)
+            if bridge:
+                # A genuine DAG merge: both parent returns are read from the
+                # previous microstep snapshot, never from this pair's writes.
+                operand_id, alternative_id = previous_ids[0], previous_ids[1]
+                operand = previous_values[0]
+            arguments = (previous_ids[lane],operand_id)
             # Reverse subtraction is essential to ordered binding evaluation.
             if rng.randrange(2): arguments = arguments[::-1]
             candidate = Candidate(identity,primitive,arguments,1.0)
-            a,b = (numerical[lane],operand) if arguments[0] == current[lane] else (operand,numerical[lane])
+            a,b = (previous_values[lane],operand) if arguments[0] == previous_ids[lane] else (operand,previous_values[lane])
             value = a+b if primitive == 'add' else a-b if primitive == 'sub' else a*b
             current[lane] = 'result:'+identity; numerical[lane] = value
             expected.append((current[lane],value)); pair.append(candidate)
@@ -152,6 +170,7 @@ def generate_episode(seed=0, depth=2, distractors=2, template='canonical', conte
             option_ids = [operand_id,alternative_id]; rng.shuffle(option_ids)
             clauses.append((candidate,lane,tuple(alternatives),uncertain_position,tuple(option_ids)))
         trace.append(tuple(pair))
+        previous_ops = [c.primitive for c in pair]
     for _ in range(distractors): literal(rng.randint(-8,8))
     dead = Candidate(name('c'),'add',(values[0].id,'unbound'),1.0)
     clauses.append((dead,1,('add','sub'),1,('unbound',)))

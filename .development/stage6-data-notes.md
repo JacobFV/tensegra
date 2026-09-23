@@ -11,3 +11,11 @@ Context is separate from the evidence frames and is released only once both publ
 Canonical, infix, prefix, reversed-clause/labelled-argument, and lexical renderers consume only observable statements and alternatives. They preserve one hidden DAG while yielding distinct surfaces. Exact DAGs use the shared `SemanticGraph` node/edge schema, explicit ordered arguments and return edges. `episode_hashes` records generator version, source, public, privileged and semantic hashes. Trace/readiness/hypotheses/results/answers remain only in `GoldEpisode`.
 
 Validation: seven stdlib tests cover depth32 reproducibility and bounded arithmetic, independent exact audit, runtime replay, context pairs, public-field separation, all finite readiness values/null, five distinct matched renderers, and malformed options. No Torch or training was run locally.
+
+## Structural and composition holdouts
+
+Generator v2 adds `motif='parallel'|'cross'` and `operator_composition='any'|'train'|'heldout'`. Defaults preserve all previous generated records (60 matched seed/depth comparisons verified). Cross mode inserts one genuine two-parent merge at level 1, lane 1, using both previous-level returns with add/sub; this changes dependency structure rather than simply permuting two independent chains. Both candidates still execute against one prior-step snapshot. Integer magnitudes remain below 64 through depth32.
+
+Composition training excludes every sub→mul dependency. Heldout composition forces sub→mul along lane 0's first two operations. Cross and heldout require depth≥2. The motif/control names are generator options only and are absent from public actor features; the model must infer the observable expression. Finite local ambiguity posteriors continue to describe the disclosed per-clause alternatives; these intentionally do not incorporate a dataset-level composition exclusion prior. Report those as local semantic-readiness labels rather than Bayesian posteriors over the entire restricted training distribution.
+
+Nine stdlib tests now pass, including exact/runtime depth32 cross replay and 40 train/heldout motif combinations checking the forbidden/present dependency pair.
