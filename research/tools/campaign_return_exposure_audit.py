@@ -2,7 +2,7 @@
 import argparse,gzip,json,time,hashlib,subprocess
 from pathlib import Path
 from campaign_returns_audit import counts,groups,FIELDS
-p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--reference',type=Path,required=True);p.add_argument('--source-ref',required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();start=time.monotonic();m=json.loads((a.root/'manifest.json').read_text());c=m['config'];ref=json.load(gzip.open(a.reference/'manifest.json.gz','rt'));rows=json.load(gzip.open(a.root/'predictions.json.gz','rt'));old=json.load(gzip.open(a.reference/'predictions.json.gz','rt'))
+p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--reference',type=Path,required=True);p.add_argument('--source-ref',required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();start=time.monotonic();m=json.load(gzip.open(a.root/'manifest.json.gz','rt')) if (a.root/'manifest.json.gz').exists() else json.loads((a.root/'manifest.json').read_text());c=m['config'];ref=json.load(gzip.open(a.reference/'manifest.json.gz','rt'));rows=json.load(gzip.open(a.root/'predictions.json.gz','rt'));old=json.load(gzip.open(a.reference/'predictions.json.gz','rt'))
 assert hashlib.sha256((a.root/'predictions.json.gz').read_bytes()).hexdigest()==m['predictions_sha256'];assert hashlib.sha256(json.dumps(c,sort_keys=True).encode()).hexdigest()==m['config_sha256']
 for name,want in m['source'].items():assert hashlib.sha256(subprocess.check_output(['git','show',f'{a.source_ref}:src/topoformer/{name}'])).hexdigest()==want
 idx={};prior={(r['split'],r['distractors'],r['target_delay']):r for r in old if r['head']=='ce_16384'}

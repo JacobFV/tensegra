@@ -3,7 +3,7 @@ import argparse,gzip,hashlib,io,json,time
 from pathlib import Path
 import torch
 p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--output',type=Path,required=True);a=p.parse_args();start=time.monotonic();torch.set_num_threads(2)
-m=json.loads((a.root/'manifest.json').read_text());cfg=m['config']
+m=json.load(gzip.open(a.root/'manifest.json.gz','rt')) if (a.root/'manifest.json.gz').exists() else json.loads((a.root/'manifest.json').read_text());cfg=m['config']
 ref=json.load(gzip.open(cfg['reference_manifest'],'rt'))
 def sha(data):return hashlib.sha256(data).hexdigest()
 def cache(name):
