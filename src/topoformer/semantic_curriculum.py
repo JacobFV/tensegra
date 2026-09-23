@@ -6,6 +6,9 @@ is the default; tests must explicitly request smaller widths.
 """
 from __future__ import annotations
 import argparse
+import base64
+import gzip
+import numpy as np
 import hashlib
 import json
 import math
@@ -151,6 +154,42 @@ def frequency_fit(corpus,indices,vocab,capacity):
             for key,counts in counters.items()}
 
 
+def pack_graph(graph):
+    result={k:v.tolist() for k,v in graph.items() if k!='edges'}
+    edges=graph['edges'].detach().cpu().numpy()
+    result['edges']=dict(shape=list(edges.shape),bitorder='little',
+                         packed_b64=base64.b64encode(np.packbits(edges,bitorder='little').tobytes()).decode())
+    return result
+
+
+def unpack_graph(graph):
+    result={k:torch.tensor(v) for k,v in graph.items() if k!='edges'}
+    encoded=graph['edges']; packed=np.frombuffer(base64.b64decode(encoded['packed_b64']),dtype=np.uint8)
+    edges=np.unpackbits(packed,bitorder=encoded['bitorder'],count=math.prod(encoded['shape'])).reshape(encoded['shape'])
+    result['edges']=torch.from_numpy(edges.astype(bool))
+    return result
+
+
+def evaluate(model,examples,language,vocab,capacity,renamed=False,raw_path=None,context=None):
+    """Same Stage7 metrics, lossless bit-packed raw edge tensors."""
+    rows=[]
+    with torch.no_grad():
+        for example in examples:
+            public,graph=base.surface_input(example,language,renamed)
+            gold=base.targets(graph,public,capacity,vocab,language=language)
+            pred=model if isinstance(model,dict) else base.decode(model(public),public)
+            rows.append(base.metrics(pred,gold))
+            if raw_path is not None:
+                with gzip.open(raw_path,'at',compresslevel=6) as stream:
+                    stream.write(json.dumps(dict(context=context,language=language,renamed=renamed,public_text=public.text,
+                      graph_sha256=graph.digest(),prediction=pack_graph(pred),target=pack_graph(gold),metrics=rows[-1]))+'\n')
+    result={k:sum(r[k] for r in rows)/len(rows) for k in ('node_type_accuracy','identity_copy_accuracy','entity_equivalence','semantic_equivalence')}
+    for key in ('node','typed_edge','ordered_edge'):
+        counts={field:sum(r[key][field] for r in rows) for field in ('true_positive','predicted_count','gold_count')}
+        result[key]={**counts,'f1':2*counts['true_positive']/max(1,counts['predicted_count']+counts['gold_count'])}
+    return {**result,'examples':len(rows)}
+
+
 def calibrate_edge_thresholds(model,examples,vocab,capacity,grid=(-6.,-4.,-2.,0.,2.,4.,6.,8.,12.)):
     """Per-relation decoder thresholds fitted exclusively on training graphs."""
     counts=torch.zeros(len(grid),len(ROLES),3,dtype=torch.long)
@@ -214,8 +253,8 @@ def run(config):
             return cache[public.text]
         evaluation_model=model if isinstance(model,dict) else cached_scores
         for language in ('english','spanish','symbols'):
-            row['evaluation'][language]=base.evaluate(evaluation_model,heldout,language,vocab,capacity,raw_path=output/'predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure))
-        row['evaluation']['heldout_lexicon']=base.evaluate(evaluation_model,heldout,'english',vocab,capacity,True,raw_path=output/'predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure))
+            row['evaluation'][language]=evaluate(evaluation_model,heldout,language,vocab,capacity,raw_path=output/'predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure))
+        row['evaluation']['heldout_lexicon']=evaluate(evaluation_model,heldout,'english',vocab,capacity,True,raw_path=output/'predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure))
         acquisition=[corpus[eval_count+i] for i in range(min(train_count,config.get('acquisition_count',8)))]
         if not isinstance(model,dict) and config.get('calibrate_edges',True):
             thresholds,calibration=calibrate_edge_thresholds(evaluation_model,acquisition,vocab,capacity)
@@ -223,9 +262,9 @@ def run(config):
             def calibrated(public):
                 scores=evaluation_model(public)
                 return {**scores,'edges':scores['edges']-thresholds}
-            row['calibrated_evaluation']={lang:base.evaluate(calibrated,heldout,lang,vocab,capacity,raw_path=output/'calibrated-predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure)) for lang in ('english','spanish','symbols')}
-            row['calibrated_evaluation']['heldout_lexicon']=base.evaluate(calibrated,heldout,'english',vocab,capacity,True,raw_path=output/'calibrated-predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure))
-        row['training_acquisition']={lang:base.evaluate(evaluation_model,acquisition,lang,vocab,capacity) for lang in ('english','spanish')}
+            row['calibrated_evaluation']={lang:evaluate(calibrated,heldout,lang,vocab,capacity,raw_path=output/'calibrated-predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure)) for lang in ('english','spanish','symbols')}
+            row['calibrated_evaluation']['heldout_lexicon']=evaluate(calibrated,heldout,'english',vocab,capacity,True,raw_path=output/'calibrated-predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure))
+        row['training_acquisition']={lang:evaluate(evaluation_model,acquisition,lang,vocab,capacity) for lang in ('english','spanish')}
         row['evaluation_seconds']=time.monotonic()-evaluation_start
         records.append(row)
         with (output/'curves.jsonl').open('a') as f: f.write(json.dumps(row)+'\n')

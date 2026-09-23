@@ -89,3 +89,12 @@ def test_edge_calibration_uses_only_supplied_training_examples():
     assert len(visited)==2 and audit['fit_graphs']==1
     assert thresholds.shape==(len(m.ROLES),)
     assert all(v in audit['grid'] for v in thresholds.tolist())
+
+
+def test_compact_graph_edges_roundtrip_losslessly():
+    e=m.base.build_tcn_example('variable_binding',13)
+    public,g=m.base.surface_input(e,'english')
+    gold=m.base.targets(g,public,128,m.base.value_vocabulary([e]))
+    recovered=m.unpack_graph(m.pack_graph(gold))
+    assert all(torch.equal(gold[k],recovered[k]) for k in gold)
+    assert m.base.metrics(recovered,gold)['semantic_equivalence']==1
