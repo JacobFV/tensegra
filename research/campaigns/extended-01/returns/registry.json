@@ -85,7 +85,7 @@
     "next": "R03 fixed16k optimization exposure"
   },
   "R03": {
-    "status": "prepared",
+    "status": "development_complete",
     "kind": "exposure_development",
     "pool_events": 16384,
     "endpoints": [
@@ -93,6 +93,33 @@
       1800,
       3600
     ],
-    "requested_cap_seconds": 120
+    "requested_cap_seconds": 120,
+    "source": "e05ca8f",
+    "selected_step": 900,
+    "process_seconds": 17.38,
+    "calibration_worst_correct": [
+      1010,
+      1006,
+      1009
+    ],
+    "validation_worst_correct": [
+      2019,
+      2020,
+      2016
+    ],
+    "next": "R04 fresh confirmation of 16384 events / 900 updates"
+  },
+  "R04": {
+    "status": "prepared",
+    "kind": "fresh_confirmation",
+    "backbone_seeds": [
+      10,
+      11,
+      12
+    ],
+    "fit_events": 16384,
+    "ce_updates": 900,
+    "delay32": "test_only",
+    "requested_cap_seconds": 300
   }
 }
