@@ -116,3 +116,27 @@ def test_gate_does_not_hide_failed_rejection_in_aggregate_accuracy():
     learned = dict(stop_reject_accuracy=.99, reject_accuracy=.94, premature_rate=0.,
                    task_accuracy=.99, arrival_accuracy={'3': 1., '5': 1., '7': 1.})
     assert not h.gate([{'learned': learned, 'minimum': {'task_accuracy': .3}}])['passed']
+
+
+def test_unrevealed_share_counterfactual_preserves_every_public_prefix():
+    h = api()
+    left = h.generate_episodes(96, 10, 'train', missing_share_seed=1)
+    right = h.generate_episodes(96, 10, 'train', missing_share_seed=2)
+    changed = 0
+    for i in range(96):
+        stop = int(left['arrival'][i])
+        prefix = 8 if left['reject'][i] else stop-1
+        for key in left['public']:
+            assert torch.equal(left['public'][key][i, :prefix], right['public'][key][i, :prefix])
+        if left['answer'][i] != right['answer'][i]:
+            changed += 1
+    assert changed > 20
+
+
+def test_exact_evidence_rule_solves_xor_and_waits_for_observable_deadline():
+    h = api()
+    data = h.generate_episodes(96, 18, 'validation')
+    predictions = h.rule_predictions(data['public'])
+    assert [p['prediction'] for p in predictions] == data['answer'].tolist()
+    assert [p['stop'] for p in predictions] == data['arrival'].tolist()
+    assert all(p['model_updates'] == 0 for p in predictions)

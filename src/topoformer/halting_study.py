@@ -23,10 +23,12 @@ FEATURES = 13
 CONTROLS = ('learned', 'minimum', 'fixed', 'oracle', 'soft_timing_bias', 'learned_soft_bias')
 
 
-def generate_episodes(n: int, seed: int, split: str):
+def generate_episodes(n: int, seed: int, split: str, *, missing_share_seed: int | None = None):
+    """Optional missing-share seed supports causally paired hidden-value controls."""
     if n < 1 or split not in ('train', 'validation', 'test'):
         raise ValueError('positive n and train/validation/test split required')
     rng = random.Random(seed)
+    hidden_rng = random.Random(seed + 1000003 if missing_share_seed is None else missing_share_seed)
     offset = {'train': 0, 'validation': 32, 'test': 64}[split]
     arrivals = (2, 4, 6) if split == 'train' else (3, 5, 7)
     context = torch.zeros(n, HORIZON, 1, FEATURES)
@@ -40,7 +42,7 @@ def generate_episodes(n: int, seed: int, split: str):
         other = [float(((name ^ 1) >> b) & 1) for b in range(7)]
         reject = i % 4 == 3
         arrival = HORIZON if reject else arrivals[(i // 4 * 3 + i % 4) % 3]
-        a, b = rng.randrange(2), rng.randrange(2)
+        a, b = rng.randrange(2), hidden_rng.randrange(2)
         # role bits 7:9; source certification 9; value one-hot 10:12.
         def row(k, role, certified, value):
             return torch.tensor(k + [float(role == 0), float(role == 1),
@@ -63,6 +65,43 @@ def generate_episodes(n: int, seed: int, split: str):
     return dict(public=dict(context=context, memory=memory, mask=mask),
                 answer=torch.tensor(answers), arrival=torch.tensor(stops),
                 reject=torch.tensor(rejects), names=names)
+
+
+def rule_predictions(public):
+    """Exact public-evidence XOR reference; no learned model or runtime calls.
+
+    This supplied rule is an observability/task upper bound, not a parameter-
+    matched learned control. Observation steps are not neural microsteps.
+    """
+    records = []
+    for i in range(public['context'].shape[0]):
+        for t in range(HORIZON):
+            key = public['context'][i, t, 0, :7]
+            rows = public['memory'][i, t]
+            valid = ((rows[:, :7] == key).all(-1) & (rows[:, 9] == 1)
+                     & public['mask'][i, t])
+            values = [rows[valid & (rows[:, 7+role] == 1), 11] for role in (0, 1)]
+            if all(len(v) == 1 for v in values):
+                prediction = int(values[0].item()) ^ int(values[1].item())
+            elif public['context'][i, t, 0, -1] == 1:
+                prediction = 2
+            else:
+                continue
+            records.append(dict(index=i, stop=t+1, prediction=prediction, model_updates=0))
+            break
+    return records
+
+
+def rule_summary(data):
+    records = rule_predictions(data['public'])
+    n = len(data['answer'])
+    correct = sum(r['prediction'] == int(data['answer'][r['index']]) for r in records)
+    exact = sum(r['stop'] == int(data['arrival'][r['index']]) for r in records)
+    reject = [r for r in records if data['reject'][r['index']]]
+    return dict(n=n, task_accuracy=correct/n, halt_exact_accuracy=exact/n,
+        reject_n=len(reject), reject_correct=sum(r['prediction'] == 2 for r in reject),
+        mean_observation_steps=sum(r['stop'] for r in records)/n,
+        neural_updates=0, parameter_matched=False, records=records)
 
 
 def make_model(width=16):
@@ -202,6 +241,7 @@ def run(config, output):
                 metrics = {}
                 for split in (('validation', 'test') if manifest['main_budget_frozen'] and step == config['steps'] else ('validation',)):
                     metrics[split] = {}
+                    (seed_dir/f'{split}-exact-rule-{step}.json').write_text(json.dumps(rule_summary(datasets[split])))
                     for control in CONTROLS:
                         records = evaluate(model, datasets[split], control)
                         metrics[split][control] = summarize(records)
