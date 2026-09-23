@@ -1,0 +1,424 @@
+{
+  "config": {
+    "train_count": 1000,
+    "vocab_pool_count": 10000,
+    "eval_count": 64,
+    "data_seed": 800000,
+    "heldout_exclusion_path": ".development/stage8-semantic-heldout-exclusions.json",
+    "max_attempts": 250000,
+    "presentations": 100000,
+    "batch_size": 32,
+    "width": 1024,
+    "workspace_rows": 8,
+    "microsteps": 2,
+    "node_capacity": 128,
+    "negative_pairs": 128,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "arms": [
+      "semantic",
+      "no_input"
+    ],
+    "frequency_control": true,
+    "sampling": "balanced_lessons",
+    "learning_rate": 0.0001,
+    "node_presentations": 1000,
+    "identity_presentations": 2000,
+    "eval_presentations": [
+      0,
+      10016,
+      100000
+    ],
+    "calibrate_edges": true,
+    "acquisition_count": 8,
+    "cache_surfaces": 20000,
+    "autocast_dtype": "bfloat16",
+    "device": "cuda",
+    "threads": 2,
+    "progress_every_updates": 100,
+    "output_dir": "results/stage8-semantic-main-n1000",
+    "expected_lessons": [
+      "set_operations",
+      "unification",
+      "variable_binding"
+    ]
+  },
+  "environment": {
+    "torch_version": "2.14.0+cu130",
+    "cuda_version": "13.0",
+    "device": "cuda",
+    "device_name": "NVIDIA GB10",
+    "threads": 2
+  },
+  "config_sha256": "98cd92f9795255fdff36aed0526a9f354142052c78c969cd10ee8c2fc4ea27d4",
+  "corpus": {
+    "requested_unique_graphs": 10128,
+    "actual_unique_graphs": 10128,
+    "attempts": 30674,
+    "duplicates": 20546,
+    "candidate_budget_exhausted": false,
+    "finite_space_exhaustion_proven": false,
+    "dataset_sha256": "0c7fff52d71e01e28755d0e67370c7542214218c07d03f432ed2e97963776708",
+    "generation_seconds": 26.73721129912883,
+    "difficulty": 0.5,
+    "dedup": "complete alpha-normalized typed ordered graph JSON; collision-free equality"
+  },
+  "source_sha256": {
+    "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+    "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+    "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+    "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb"
+  },
+  "value_vocabulary": [
+    "<unknown>",
+    "\"and\"",
+    "\"bind\"",
+    "\"color\"",
+    "\"not\"",
+    "\"obj\"",
+    "\"parent\"",
+    "\"select\"",
+    "\"shape\"",
+    "\"unify\"",
+    "\"value_of\"",
+    "null"
+  ],
+  "vocabulary_pool_unique_graphs": 10000,
+  "vocabulary_sha256": "9dced1ea7ab7e07d27e0242ac80c8549961a589538deb956dea3168935580802",
+  "pinned_generator": {
+    "lesson": "variable_binding",
+    "seed": 800000,
+    "difficulty": 0.5,
+    "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+    "compiler_version": "topoformer-termgraph-v1",
+    "renderer_version": "tcn-fixed-construction-v2",
+    "semantic_digest": "8cb120664b929c8811407d0c1bf62aa39d286e4fecf7d961dd516793c8649802",
+    "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+    "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "surface_sha256": {
+      "english": "e23c1cc395c82e156330231e1dd29ba59b367d79030ee9adbe91d13a10f8a7a0",
+      "spanish": "69c5621ebe6aac5e85db943dc3bf8077d0be86f86e37675c6dabe7e3d5d6b60f",
+      "symbols": "d57fc4efefa0ee8d1b0236015dd8d014d2282e0c0631d3ac19af13199cedfe7f"
+    },
+    "distinct_surface_texts": 3,
+    "identifier_renaming": {},
+    "execution_scope": "semantic_compiler_only"
+  },
+  "runs": [
+    {
+      "arm": "semantic",
+      "seed": 0,
+      "parameters": 57861981,
+      "width": 1024,
+      "autocast_dtype": "bfloat16",
+      "parameter_dtype": "float32",
+      "training_cache": {
+        "hits": 98000,
+        "misses": 2000,
+        "maxsize": 20000,
+        "currsize": 2000
+      },
+      "public_feature_cache": {
+        "hits": 98560,
+        "misses": 2256,
+        "maxsize": 32768,
+        "currsize": 2256
+      },
+      "initial_state_sha256": "c563ec9abac6afc44d66857def44e0ffb16639cd0bb460b33aee8c58f64611ef",
+      "final_state_sha256": "602ef9c7298c422de6edbc8cfa7a9ddad764741e0e69b5b40410c35885fcd79a",
+      "checkpoint_sha256": "069a4a8357c3b7a10183a7aab24598bee88e113a9f9e832fa970d38b8b5ebeb3",
+      "seconds": 433.52552364906296,
+      "training_seconds": 411.9549637660384,
+      "peak_cuda_allocated_bytes": 1286000640
+    },
+    {
+      "arm": "no_input",
+      "seed": 0,
+      "parameters": 57861981,
+      "width": 1024,
+      "autocast_dtype": "bfloat16",
+      "parameter_dtype": "float32",
+      "training_cache": {
+        "hits": 198000,
+        "misses": 2000,
+        "maxsize": 20000,
+        "currsize": 2000
+      },
+      "public_feature_cache": {
+        "hits": 199376,
+        "misses": 2256,
+        "maxsize": 32768,
+        "currsize": 2256
+      },
+      "initial_state_sha256": "c563ec9abac6afc44d66857def44e0ffb16639cd0bb460b33aee8c58f64611ef",
+      "final_state_sha256": "f3d6d2b66e72dfb26fb53f50a808de35142e9685427e4673024f2f647dc34f5c",
+      "checkpoint_sha256": "349e14fca0940438cd31e3c60e08d01c65fbdc44622fbd8b888edde2720e7c20",
+      "seconds": 402.121216353029,
+      "training_seconds": 379.59814231237397,
+      "peak_cuda_allocated_bytes": 1229712384
+    },
+    {
+      "arm": "semantic",
+      "seed": 1,
+      "parameters": 57861981,
+      "width": 1024,
+      "autocast_dtype": "bfloat16",
+      "parameter_dtype": "float32",
+      "training_cache": {
+        "hits": 298000,
+        "misses": 2000,
+        "maxsize": 20000,
+        "currsize": 2000
+      },
+      "public_feature_cache": {
+        "hits": 300192,
+        "misses": 2256,
+        "maxsize": 32768,
+        "currsize": 2256
+      },
+      "initial_state_sha256": "a668d5ce30028dff66720e5e84631f9a56bdce3e26d9c755c255b3233c9c5e7e",
+      "final_state_sha256": "a223027c37fc6a60360a10b591e9221c7deac7a54b454644e99bd4b5017c0ba9",
+      "checkpoint_sha256": "c6808c1c79a6f62ad57ccf2ff5a72e34e43dc038c41408859535c4509276f9b4",
+      "seconds": 434.72980038030073,
+      "training_seconds": 414.5017817863263,
+      "peak_cuda_allocated_bytes": 1287376896
+    },
+    {
+      "arm": "no_input",
+      "seed": 1,
+      "parameters": 57861981,
+      "width": 1024,
+      "autocast_dtype": "bfloat16",
+      "parameter_dtype": "float32",
+      "training_cache": {
+        "hits": 398000,
+        "misses": 2000,
+        "maxsize": 20000,
+        "currsize": 2000
+      },
+      "public_feature_cache": {
+        "hits": 401008,
+        "misses": 2256,
+        "maxsize": 32768,
+        "currsize": 2256
+      },
+      "initial_state_sha256": "a668d5ce30028dff66720e5e84631f9a56bdce3e26d9c755c255b3233c9c5e7e",
+      "final_state_sha256": "f317dca615e2241caaa702cc03ae58eff3ef834abcd8bff23cac71c6394f0230",
+      "checkpoint_sha256": "4a94bea4e63a5839ebe1d958c2f0b88f445d2bf48001f7cc44ad4617550b4ad1",
+      "seconds": 410.0363558619283,
+      "training_seconds": 383.6549627785571,
+      "peak_cuda_allocated_bytes": 1230105600
+    },
+    {
+      "arm": "semantic",
+      "seed": 2,
+      "parameters": 57861981,
+      "width": 1024,
+      "autocast_dtype": "bfloat16",
+      "parameter_dtype": "float32",
+      "training_cache": {
+        "hits": 498000,
+        "misses": 2000,
+        "maxsize": 20000,
+        "currsize": 2000
+      },
+      "public_feature_cache": {
+        "hits": 501824,
+        "misses": 2256,
+        "maxsize": 32768,
+        "currsize": 2256
+      },
+      "initial_state_sha256": "8925f15465e1aee8e35c3cb9a513865446568e89f52d0f085451feae3f32753a",
+      "final_state_sha256": "4b9dc16392795ca114a5562d8ef1ea0b18b2ec6198c0b5a35358c62986ec0780",
+      "checkpoint_sha256": "1a198c54f8d4eb8f59478381d725e9cbf1de5fc649bb2f2182d37e0928df094e",
+      "seconds": 435.0014980370179,
+      "training_seconds": 407.6421654592268,
+      "peak_cuda_allocated_bytes": 1287888896
+    },
+    {
+      "arm": "no_input",
+      "seed": 2,
+      "parameters": 57861981,
+      "width": 1024,
+      "autocast_dtype": "bfloat16",
+      "parameter_dtype": "float32",
+      "training_cache": {
+        "hits": 598000,
+        "misses": 2000,
+        "maxsize": 20000,
+        "currsize": 2000
+      },
+      "public_feature_cache": {
+        "hits": 602640,
+        "misses": 2256,
+        "maxsize": 32768,
+        "currsize": 2256
+      },
+      "initial_state_sha256": "8925f15465e1aee8e35c3cb9a513865446568e89f52d0f085451feae3f32753a",
+      "final_state_sha256": "3c610504d626025941f4f8ef1b12ae9e9dcafdd2ec4b2dbc7d04dd69cb578501",
+      "checkpoint_sha256": "bf6eaf98e9176f8ddeeec23756a45de5a2e9a2ea1aa843d48215d67e2480f6cc",
+      "seconds": 405.3468417469412,
+      "training_seconds": 380.6144719887525,
+      "peak_cuda_allocated_bytes": 1231219712
+    }
+  ],
+  "split_policy": "same fresh semantic heldout selection, nested unique training prefixes",
+  "split_audit": {
+    "inspected_prefix_overlap": 14,
+    "selected_heldout_overlap": 0,
+    "excluded_from_heldout_indices": [
+      0,
+      2,
+      3,
+      5,
+      6,
+      8,
+      11,
+      13,
+      15,
+      19,
+      21,
+      23,
+      39,
+      60
+    ],
+    "heldout_indices": [
+      1,
+      4,
+      7,
+      9,
+      10,
+      12,
+      14,
+      16,
+      17,
+      18,
+      20,
+      22,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77
+    ],
+    "exclusion_keys": 64,
+    "policy": "skip prior evaluation semantic keys only when reserving evaluation; never exclude them from training eligibility",
+    "exclusion_file_sha256": "aa2c4c2110c4b6675991f44f743c992d0efc8d0798726939442b666d3548afe1"
+  },
+  "sampling_policy": "balanced_lessons",
+  "lesson_counts": {
+    "variable_binding": 4,
+    "set_operations": 120,
+    "unification": 876
+  },
+  "frequency_fit_weighting": "inverse lesson size",
+  "training_digest": "f8601cfd6c5dff719db4d947689ca22bc519470b5a4315dd5ff92745220ce4f5",
+  "heldout_digest": "5ce95b94ceb84c1345f146a17c6f16c0f0f1a0a0d7bd820f6a3fb4bd11cdd194",
+  "training_distribution": {
+    "graphs": 1000,
+    "lessons": {
+      "variable_binding": 4,
+      "set_operations": 120,
+      "unification": 876
+    },
+    "nodes": {
+      "min": 25,
+      "max": 37,
+      "mean": 33.675
+    },
+    "edges": {
+      "min": 56,
+      "max": 85,
+      "mean": 76.256
+    },
+    "sha256": "f8601cfd6c5dff719db4d947689ca22bc519470b5a4315dd5ff92745220ce4f5"
+  },
+  "heldout_distribution": {
+    "graphs": 64,
+    "lessons": {
+      "unification": 40,
+      "set_operations": 24
+    },
+    "nodes": {
+      "min": 30,
+      "max": 37,
+      "mean": 33.796875
+    },
+    "edges": {
+      "min": 69,
+      "max": 85,
+      "mean": 74.9375
+    },
+    "sha256": "5ce95b94ceb84c1345f146a17c6f16c0f0f1a0a0d7bd820f6a3fb4bd11cdd194"
+  },
+  "missing_heldout_lessons": [
+    "variable_binding"
+  ],
+  "priors": [
+    "canonical compiler node order",
+    "privileged visible-copy and typed-edge labels",
+    "fixed ontology and node capacity",
+    "gold-edge training loss sampling only; no effect on hidden state",
+    "no_input control retains public pointer candidate count and token normalization"
+  ],
+  "limitations": [
+    "exact decoder-slot equivalence is not general graph isomorphism",
+    "value ontology is fitted on declared shared training-only vocabulary pool, including unoptimized examples in smaller corpus arms",
+    "curriculum, width, edge sampling and actor differ from stage7; not a single-variable comparison"
+  ],
+  "composition_allowed": false,
+  "raw_prediction_layout": "lossless bit-packed edge tensors; gzip shard per arm/seed/exposure"
+}
