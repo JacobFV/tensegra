@@ -25,3 +25,19 @@ def test_exact_value_distinct_from_half_unit():
     assert stats['counts']['value']['correct']==0
     assert stats['within_half_unit']==4
     assert stats['absolute_error']==.5
+
+
+def test_frozen_capture_matches_original():
+    import torch
+    from topoformer.return_memory import ReturnMemoryModel
+    from topoformer.retention_data import make_batch
+    from topoformer.return_diagnostics_probe import capture
+    # Explicit mechanical fixture; primary captures use width1024.
+    torch.manual_seed(4)
+    model=ReturnMemoryModel(width=24,heads=4).eval()
+    public=make_batch(30,2)['public']
+    with torch.no_grad():
+        features,state=capture(model,public,'factorized','persistent',(0,1,2))
+        actual=model(public,2)['state']
+    torch.testing.assert_close(state,actual)
+    assert features['scalar_premix'].shape==(2,24)
