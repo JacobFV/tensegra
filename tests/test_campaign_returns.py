@@ -134,3 +134,33 @@ def test_r05_confirmation_has_fixed_endpoints_and_postfit_extrapolation():
     seeds=[spec['seed'] for r in cfg['runs'] for spec in r['data'].values()]
     assert len(seeds)==len(set(seeds))==12
     assert all(r['data']['validation']['size']==r['data']['test']['size']==4096 for r in cfg['runs'])
+
+
+def test_balanced_fitting_population_is_unique_and_nearly_uniform():
+    import torch
+    from topoformer.retention_data import make_batch
+    from topoformer.campaign_returns_balanced_fit import fitting_indices
+    batch=make_batch(987612,1024,distractors=0)
+    ids=fitting_indices(batch,105,51)
+    assert len(ids)==105 and len(ids.unique())==105
+    pairs=torch.stack([batch['targets']['type'][ids],batch['targets']['value'][ids]],1)
+    counts=torch.unique(pairs,dim=0,return_counts=True)[1]
+    assert sorted(counts.tolist())==[2]*51+[3]
+
+
+def test_capture_selected_matches_existing_frozen_feature_path():
+    import torch
+    from topoformer.retention_data import make_batch
+    from topoformer.return_memory import ReturnMemoryModel
+    from topoformer.return_crossdelay import feature_batch
+    from topoformer.campaign_returns_balanced import capture_selected
+    # Small mechanical fixture only; all experimental workspaces are1024.
+    torch.set_num_threads(2);torch.manual_seed(17)
+    model=ReturnMemoryModel(width=32,encoding='factorized').eval()
+    batch=make_batch(716,2,distractors=2)
+    a=capture_selected(model,batch,716,torch.arange(2),2,[0,1],2,'cpu')
+    b=feature_batch(model,716,2,2,[0,1],2,'cpu')
+    assert a['event_row_hashes']==b['event_row_hashes']
+    for delay in [0,1]:
+        torch.testing.assert_close(a['features'][delay],b['features'][delay])
+        for field in a['targets']:torch.testing.assert_close(a['original_predictions'][delay][field],b['original_predictions'][delay][field])
