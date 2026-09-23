@@ -43,3 +43,7 @@ S01 `e6d1d28` keeps cached graph labels outside actor inputs, uses predicted nod
 ### R01 development raw audit
 
 Independent reconstruction verifies90 profile and90 development cells, every field/group/scalar error count, frozen non-value outputs, and calibration-only selection. Development selects ridge alpha.01 and CE step900. Worst covered validation accuracy is1016/1024 for CE,865/1024 unchanged, and828/1024 ridge. This is promising one-backbone development, not three-seed confirmation or a historical six-field pass. CPU audit walltimes are .067/.839seconds. Cache/coefficient byte and feature replay remain separate checks.
+
+R01 frozen-cache CPU replay completes in1.78seconds: compressed/uncompressed cache hashes, checkpoint/readout bytes, TRAIN normalization and split disjointness pass. All90 scalar logit cells replay with zero argmax disagreement, without backbone inference or refitting.
+
+A01 profile archive independently reconstructs four task/suffix/mean-head-path cells in.036seconds. Edge-mass aggregate consistency and bounds are checked, but the compact archive lacks full attention weights; independent edge-mass reconstruction is not claimed. The profile remains a mechanical test.
