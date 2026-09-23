@@ -5,3 +5,7 @@
 - Candidate order and nonce identities are randomized. Episode construction must retain multiple supported hypotheses until relevant primitive/order evidence arrives; unique destination keys must not trivially disambiguate the entire candidate.
 - Exact observation-id ledgers, duplicate suppression and retraction semantics are supplied architectural mechanisms. Candidate/evidence compatibility and increments remain learned. Oracle support is supervision/evaluation only, never learned actor input.
 - CUDA setup uses a new remote virtual environment (`~/topoformer-stage8-cuda`), preserving the earlier CPU environment. Official PyTorch CUDA13.0 wheels are used, following https://docs.pytorch.org/get-started/locally/ . Actual GPU forward/backward timing and device support must pass before experimental budgets are frozen.
+
+## Hardware verified
+
+Remote NVIDIA GB10, isolated PyTorch `2.14.0+cu130`, Python3.12. A1024-wide CUDA matrix forward/backward completed successfully. Dependency freeze: `results/stage8/cuda-requirements.txt`. Earlier CPU environments unchanged. Width1024 timing is authorized serially for beliefs, returns and semantics; no pilot result may count as a competence gate. All small-width tests are mechanical only.
