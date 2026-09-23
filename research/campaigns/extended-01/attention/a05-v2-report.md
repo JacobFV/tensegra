@@ -1,6 +1,6 @@
 # A05-development-v2: learned routes survive; finite reads still mix payloads
 
-The separately versioned block-permutation generator prevents the identity coalescence discovered before the original A05 draft ran. After the first hop, exactlyN/K identities remain distinct under arbitrary subsequent instructions. That property is programmed into the generator and verified independently of any learned model; it is not a learned memory result. The original A04 results and unrun A05 draft remain intact.
+The separately versioned block-permutation generator prevents the identity coalescence discovered before the original A05 draft ran. After the first hop, exactlyN/K identities remain distinct under arbitrary subsequent instructions. That property is programmed into the generator and verified independently of any learned model; it is not a learned memory result. The original A04 results and unrun A05 draft remain intact. Query/key selection consumes public immutable attribute codes and supplied instructions; the recurrent payload workspace does not have to infer its graph-node identity. This is learned content matching under explicit grounding, not evolving arbitrary latent grounding.
 
 In one fresh exploratory seed501, all three graph models again acquire100% task accuracy through the registered depth8 conditions by25updates. At the harder N128/depth32/K8 condition, the unchanged1000-update models diverge:
 
