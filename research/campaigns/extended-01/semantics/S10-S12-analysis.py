@@ -20,11 +20,13 @@ def target_hash(target):
     return hashlib.sha256(json.dumps(target,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
 
-def validate_archive(path,seed):
+def validate_archive(path,seed,arm):
     archive=load(path);manifest_path=Path(path).parent/'manifest.json.gz';manifest=load(manifest_path)
     if archive['update']!=24576 or len(archive['rows'])!=1024 or len(archive['train_rows'])!=128:raise ValueError('endpoint/support mismatch')
     if manifest['config']['seed']!=seed or manifest['confirmation_sha256']!=CONFIRMATION_SHA:raise ValueError('producer identity mismatch')
-    if not any(r['update']==24576 and r['evaluation_split']=='reserved_confirmation' for r in manifest['curves']):raise ValueError('producer split not reserved confirmation')
+    curves=[r for r in manifest['curves'] if r['update']==24576 and r['evaluation_split']=='reserved_confirmation']
+    if len(curves)!=1 or curves[0]['artifact']!=Path(path).name or curves[0]['sha256']!=digest(path):raise ValueError('producer final artifact binding mismatch')
+    if manifest['config']['learning_rate']!={'constant':1e-4,'decay':1e-5}[arm]:raise ValueError('producer LR arm mismatch')
     identities=[r['semantic_sha256'] for r in archive['rows']]
     if len(set(identities))!=1024:raise ValueError('repeated semantic construction')
     return archive,dict(archive_sha256=digest(path),manifest_sha256=digest(manifest_path),archive_path=str(path),manifest_path=str(manifest_path))
@@ -33,7 +35,7 @@ def validate_archive(path,seed):
 def endpoint(config,seed,arm):
     torch.set_num_threads(2);tick=time.monotonic()
     if digest(decoder.__file__)!=config['decoder_source_sha256']:raise ValueError('frozen decoder changed')
-    pair=next(x for x in config['pairs'] if x['seed']==seed);archive,provenance=validate_archive(pair[arm if arm!='frequency' else 'constant'],seed)
+    pair=next(x for x in config['pairs'] if x['seed']==seed);archive,provenance=validate_archive(pair[arm if arm!='frequency' else 'constant'],seed,arm if arm!='frequency' else 'constant')
     frequency=None
     if arm=='frequency':
         if digest(config['frequency_baseline'])!=config['frequency_sha256']:raise ValueError('frequency prediction changed')
@@ -41,17 +43,18 @@ def endpoint(config,seed,arm):
         if baseline['train_examples']!=8192:raise ValueError('frequency fit population changed')
     rows=[]
     for split,key in [('train','train_rows'),('confirmation','rows')]:
-        for event in archive[key]:
+        for event_index,event in enumerate(archive[key]):
             gold=unpack_graph(event['target'])
             for mode in ('raw','calibrated'):
                 packed=frequency if frequency is not None else event['raw'] if mode=='raw' else {**event['raw'],'edges':event['calibrated_edges']}
                 pred=unpack_graph(packed);base=metrics(pred,gold)
-                if frequency is None and base!=event[mode+'_metrics']:raise ValueError('primary actor metric replay failed')
+                primary=archive['train_metrics'][event_index][mode] if split=='train' else event[mode+'_metrics']
+                if frequency is None and base!=primary:raise ValueError('primary actor metric replay failed')
                 active=pred['presence'][:,None,None]&pred['presence'][None,:,None];old_error=(pred['edges']&active).ne(gold['edges'])
                 for variant,(mask,book) in POLICIES.items():
                     if time.monotonic()-tick>config['cpu_seconds']:raise TimeoutError('CPU analysis cap')
                     out,info=decoder.decode(pred,mask=mask,bookkeeping=book);m=metrics(out,gold);error=(out['edges']&active).ne(gold['edges'])
-                    rows.append(dict(split=split,mode=mode,variant=variant,event_seed=event['seed'],semantic_sha256=event['semantic_sha256'],target_sha256=target_hash(event['target']),metrics=m,info=info,repair=bool(m['semantic_equivalence'] and not base['semantic_equivalence']),regression=bool(base['semantic_equivalence'] and not m['semantic_equivalence']),removed_errors=int((old_error&~error).sum()),introduced_errors=int((~old_error&error).sum()),edge_sha256=hashlib.sha256(out['edges'].numpy().tobytes()).hexdigest(),slot_sha256=hashlib.sha256(out['slots'].numpy().tobytes()).hexdigest()))
+                    rows.append(dict(split=split,mode=mode,variant=variant,event_seed=event['seed'],semantic_sha256=event.get('semantic_sha256'),graph_sha256=event['graph_sha256'],target_sha256=target_hash(event['target']),metrics=m,info=info,repair=bool(m['semantic_equivalence'] and not base['semantic_equivalence']),regression=bool(base['semantic_equivalence'] and not m['semantic_equivalence']),removed_errors=int((old_error&~error).sum()),introduced_errors=int((~old_error&error).sum()),edge_sha256=hashlib.sha256(out['edges'].numpy().tobytes()).hexdigest(),slot_sha256=hashlib.sha256(out['slots'].numpy().tobytes()).hexdigest()))
     output=Path(config['output_dir']);output.mkdir(parents=True,exist_ok=True);path=output/(f'{seed}-{arm}.json.gz' if arm!='frequency' else 'frequency.json.gz')
     if path.exists():raise FileExistsError(path)
     write_gzip(path,dict(seed=seed,arm=arm,decoder_sha256=digest(decoder.__file__),analysis_sha256=digest(__file__),config=config,provenance=provenance,rows=rows,cpu_seconds=time.monotonic()-tick))
