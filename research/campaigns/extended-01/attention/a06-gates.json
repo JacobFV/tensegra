@@ -1,0 +1,55 @@
+{
+  "experiment": "A06",
+  "source": "b993a44",
+  "historical_gates_unchanged": true,
+  "autonomous_composition_authorized": false,
+  "gates": {
+    "iid_acquisition": {
+      "status": "passed_restricted",
+      "criterion": "Each graph arm/seed task >=.98",
+      "observed": "1.0 all9 graph-arm/seed IID cells"
+    },
+    "original_joint_shift": {
+      "status": "failed",
+      "criterion": "Each seed task >=.98 at N128/D32/K8",
+      "soft": [
+        0.7744140625,
+        0.6611328125,
+        0.623046875
+      ],
+      "hard": [
+        0.8505859375,
+        0.736328125,
+        0.6845703125
+      ],
+      "context": [
+        0.2490234375,
+        0.2490234375,
+        0.251953125
+      ]
+    },
+    "engineered_sharpness_joint_shift": {
+      "status": "passed_restricted",
+      "observed": "1.0 task and complete suffix every seed",
+      "policies": {
+        "soft": "content16",
+        "hard": "content16",
+        "context": "content16 plus address16"
+      },
+      "supplied": "Inference concentration policy, explicit grounding and reverse schedule"
+    },
+    "unique_soft_advantage": {
+      "status": "failed",
+      "reason": "No observed advantage over sharpened exact gather or keyed context"
+    },
+    "unconstrained_graph_token_baseline": {
+      "status": "not_run"
+    },
+    "learned_planning": {
+      "status": "not_run"
+    },
+    "autonomous_composition": {
+      "status": "not_run"
+    }
+  }
+}
