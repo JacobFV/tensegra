@@ -29,3 +29,7 @@ The confirmation can establish or reject a finite-bias repair and characterize c
 Report seed variability separately from event-sampling uncertainty. For paired bootstrap intervals, resample shared event indices within a condition and preserve the same sampled indices across all seeds/arms. Do not count repeated seeds or corruption views as new independent examples.
 
 Naming: `soft4` and `soft8` denote initial trainable strengths, not permanently fixed learned parameters. The frozen-checkpoint `strength_override=8` intervention is exactly fixed at8. Zero-strength evaluation is meaningful only for soft attention; other arms ignore that flag, so their duplicate zero-strength cells are no-op consistency checks rather than graph-removal ablations.
+
+## Prospective amendment before the first confirmation run
+
+Add two secondary, evaluation-only interventions to the soft4 arm: override every structural strength to8 at N16/D8 and N64/D16, using the identical base events. This tests the A02 frozen-weight repair across all three confirmation seeds. No weight update, checkpoint selection, or extra fitting occurs. Soft4 now has20 final cells; the other arms retain18. Primary comparisons are unchanged. Estimated additional process occupancy is30seconds total, inside the existing900second cap. This amendment was approved and committed before any confirmation outcome existed.
