@@ -50,5 +50,7 @@ class CopyConditionedActor(SemanticCurriculumActor):
                 edge=torch.einsum('nrd,md->nmr',source[row],target[row])/math.sqrt(self.edge_width);slots=ss[row,:,None,:]+st[row,None,:,:]
             else:
                 i,j=pairs[row].to(nodes.device).unbind(-1);edge=(source[row,i]*target[row,j,None,:]).sum(-1)/math.sqrt(self.edge_width);slots=ss[row,i]+st[row,j]
-            outputs.append(dict(presence=presence[row],kind=kind[row],value=value[row],copy=copy[row,:,:lengths[row]],edges=edge,slots=slots))
+            copying=copy[row,:,:lengths[row]]
+            if self.no_input:copying=copy[row].expand(-1,lengths[row])
+            outputs.append(dict(presence=presence[row],kind=kind[row],value=value[row],copy=copying,edges=edge,slots=slots))
         return outputs
