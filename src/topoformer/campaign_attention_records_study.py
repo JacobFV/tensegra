@@ -47,7 +47,10 @@ def run(cfg,out):
          wall_seconds_including_eval_export=time.monotonic()-start,
          cuda_peak_allocated_bytes=torch.cuda.max_memory_allocated() if str(device).startswith('cuda') else 0,
          process_peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
-         record_score_multiplier=float(model.record_log_scale.exp().detach()),address_scale=float(model.context_log_scale.exp().detach())))
+         record_score_multiplier=float(model.record_log_scale.exp().detach()),address_scale=float(model.context_log_scale.exp().detach()),
+         parameters_with_gradient=sum(p.numel() for p in model.parameters() if p.grad is not None),
+         parameters_nonzero_gradient_last_update=sum(p.numel() for p in model.parameters() if p.grad is not None and p.grad.abs().any().item()),
+         parameter_note='Inherited unused comparator tensors remain allocated; gradient counts are participation, not effective capacity.'))
     print(json.dumps(dict(completed=str(out),seconds=time.monotonic()-start)),flush=True)
 
 
