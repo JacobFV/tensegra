@@ -32,3 +32,9 @@ Primary development metric is complete start-payload accuracy at N32/D4; exact m
 Store configs/source/initial/checkpoint hashes, all seed outcomes, compact predictions/targets/diagnostic routes, loss curves, allocated parameters, CUDA peak allocation, process RSS and forward/process runtimes. Procedural draws are counted separately from deduplicated canonical graphs, which are not currently measured. The source remains versioned independently of A03.
 
 Exact gather and schedule are programmed guarantees. Content matching and payload processing are learned. Soft/hard performance alone does not imply learned planning or language induction. Corrupted graphs may remove essential information; do not add a recovery claim without a publicly identifiable task. After acquisition, evaluate fair graph corruption and learned-grounding extensions only when they answer a new question. No autonomous composition follows from this development study.
+
+## Profile receipt and development allocation
+
+The frozen2ba70af profile completed in3.64seconds full process occupancy,1.485seconds inside the runner. The single64-case N64/D8/K8 forward took.0343seconds. Peak CUDA allocation272,366,080bytes; process peak RSS2,009,552KiB;4,306,986 allocated parameters. This mechanical seed's task outcomes are not selection evidence.
+
+Using this condition cost together with A03's measured1000-update-equivalent training costs, the four-arm study is projected to require roughly120–200seconds, including80 evaluation cells per arm and exports. Startup dominates the12-update profile, so linear extrapolation of its total wall time is not a useful training estimate. Retain the prospective300second controller ceiling. If reached, preserve partial artifacts and register a completion decision without changing any selected outcome or dropping an arm. Root must separately release development; profile completion is not a main-run authorization.
