@@ -1,6 +1,6 @@
 # Stage 10: semantic invariance, cross-delay readout, and fixed-set acquisition
 
-Status: belief main study and final independent audits pending. Baseline `60ad5ee`; width 1024. Composition and supervision withdrawal remain blocked. This report separates three supporting-interface questions; none directly tests programmable attention.
+Experiments complete; final independent verification in progress. Baseline `60ad5ee`; width 1024. Composition and supervision withdrawal remain blocked. This report separates three supporting-interface questions; none directly tests programmable attention.
 
 ## Experiment scope
 
@@ -12,7 +12,7 @@ See [design](stage10-design.md), [registry](stage10-registry.json), and [indepen
 
 ## Belief invariance
 
-Both repairs pass every registered validation cell across all three initialization seeds: 90 required N8/N16 cells and 45 separately reported N32 cells per arm. The correlated-ID control fails expanded ID stress conditions; its final replicate and the untouched-test summary are still being finalized.
+Both repairs pass every registered validation cell across all three initialization seeds: 90 required N8/N16 cells and 45 separately reported N32 cells per arm. Untouched test data independently give the same 90/90 required and 45/45 additional-cell counts for both repairs. The correlated-ID reference passes only 78/90 required and 39/45 additional cells on each split; every seed fails the expanded contract, while all original conditions pass.
 
 The content-only arm retains IDs as ledger addresses but zeros their neural feature coordinates. Its posterior is exactly unchanged under consistent observation-ID renaming. This invariance is architectural; content compatibility is learned. Independent randomized-ID training also acquires the mean posterior contract, but does not supply exact invariance.
 
@@ -66,4 +66,4 @@ These tracks do not modify QK geometry. They neither validate programmable atten
 
 ## Verification and resources
 
-The immutable source snapshot passed 562 tests and six subtests. Final historical-byte and raw-metric review is pending. All experiments use the existing GB10 environment; the three-GPU-hour ceiling is retained. Per-track reports retain parameters, feature/memory allocations, distinct examples, exposure, timing and hashes. Final compute accounting will be completed after the belief matrix finishes.
+The immutable source snapshot passed 562 tests and six subtests. No package or test source changed afterward. Final historical-byte and raw-metric review is in progress. All experiments used the existing GB10 environment. Recorded job timers total about 21.2 minutes; conservative accounting charges 25 minutes, below the 180-minute ceiling. No jobs remain. [Compute accounting](stage10-compute.json) and per-track manifests retain dimensions, parameters, feature/memory allocations, distinct examples, exposure, timing and hashes.

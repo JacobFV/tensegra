@@ -5,8 +5,8 @@
   "composition_allowed": false,
   "supervision_withdrawal_allowed": false,
   "belief": {
-    "status": "not_run",
-    "note": "Main running; no all-seed decision yet",
+    "status": "passed_restricted",
+    "note": "Both repair arms pass registered mean posterior validation gates and untouched-test diagnostic thresholds; correlated reference fails expanded contract. Exact invariance remains architectural only.",
     "required": "Every required seed/cell; initial frame included; IID unique>.98, OOD unique>.95, mean frame L1<.05, impossible mass<.01;512/cell",
     "exact_renaming_invariance": "Programmed by ledger-only semantic ID masking, distinct from learned task competence",
     "ledger_only": {
@@ -14,18 +14,26 @@
       "required_validation_cells": 90,
       "additional_n32_cells": 45,
       "failed_cells": 0,
-      "scope": "Learned matching under supplied prior/ledger; exact observation-ID invariance is architectural"
+      "scope": "Learned matching under supplied prior/ledger; exact observation-ID invariance is architectural",
+      "test_required_passed": 90,
+      "test_additional_n32_passed": 45
     },
     "raw_randomized": {
       "status": "passed_restricted",
       "required_validation_cells": 90,
       "additional_n32_cells": 45,
       "failed_cells": 0,
-      "scope": "Mean posterior contract acquired; exact renaming invariance NOT established; rare large tails remain"
+      "scope": "Mean posterior contract acquired; exact renaming invariance NOT established; rare large tails remain",
+      "test_required_passed": 90,
+      "test_additional_n32_passed": 45
     },
     "raw_correlated": {
       "status": "failed",
-      "scope": "Expanded contract fails; final replicate pending, no missing cell passed"
+      "scope": "Every seed fails expanded contract; all original conditions pass",
+      "validation_required_passed": 78,
+      "validation_additional_n32_passed": 39,
+      "test_required_passed": 78,
+      "test_additional_n32_passed": 39
     }
   },
   "return_scalar_covered": {
