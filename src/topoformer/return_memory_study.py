@@ -74,6 +74,10 @@ def run(config, output):
                         optimizer.zero_grad(); loss.backward(); torch.nn.utils.clip_grad_norm_(model.parameters(),1.); optimizer.step()
                     model.eval(); rows=[]
                     with torch.no_grad():
+                        acquisition=data(10000+seed*100000,config.get('batch_size',8))
+                        acquisition_counts={str(length):counts(model(acquisition['public'],length,encoding,availability),acquisition['targets']) for length in config.get('train_steps',[0,1])}
+                        log.write(json.dumps(dict(phase='acquisition_probe',counts=acquisition_counts,interpretation='fixed-set reconstruction only' if config.get('fixed_set',False) else 'initial training batch only'))+'\n')
+                    with torch.no_grad():
                         for split in ('validation','test'):
                             for es in config.get(split+'_seeds',[]):
                                 for d in config.get('eval_distractors',[2,8]):
@@ -101,7 +105,7 @@ def run(config, output):
                                                 row['supplied_fact_counts']=counts(pred,supplied)
                                             rows.append(row); log.write(json.dumps(row)+'\n'); log.flush()
                     checkpoint=output/(name+'.pt'); torch.save(model.state_dict(),checkpoint)
-                    manifest['runs'].append(dict(seed=seed,encoding=encoding,availability=availability,width=model.width,parameters=sum(p.numel() for p in model.parameters()),facet_coordinates=sum(model.sizes),memory_tokens=6 if encoding=='factorized' else 1,allocated_memory_coordinates=model.width*(6 if encoding=='factorized' else 1),elapsed=time.monotonic()-started,updates=config.get('updates',0),examples_seen=config.get('updates',0)*config.get('batch_size',8),peak_cuda_bytes=torch.cuda.max_memory_allocated(device) if device.type=='cuda' else None,checkpoint_sha256=hashlib.sha256(checkpoint.read_bytes()).hexdigest(),retention_gate=gate([r for r in rows if r['split']=='validation'],config.get('validation_seeds',[]),config.get('eval_distractors',[2,8])),composition_allowed=False))
+                    manifest['runs'].append(dict(acquisition_counts=acquisition_counts,seed=seed,encoding=encoding,availability=availability,width=model.width,parameters=sum(p.numel() for p in model.parameters()),facet_coordinates=sum(model.sizes),memory_tokens=6 if encoding=='factorized' else 1,allocated_memory_coordinates=model.width*(6 if encoding=='factorized' else 1),elapsed=time.monotonic()-started,updates=config.get('updates',0),examples_seen=config.get('updates',0)*config.get('batch_size',8),peak_cuda_bytes=torch.cuda.max_memory_allocated(device) if device.type=='cuda' else None,checkpoint_sha256=hashlib.sha256(checkpoint.read_bytes()).hexdigest(),retention_gate=gate([r for r in rows if r['split']=='validation'],config.get('validation_seeds',[]),config.get('eval_distractors',[2,8])),composition_allowed=False))
                     (output/'manifest.json').write_text(json.dumps(manifest,indent=2))
     return manifest
 
