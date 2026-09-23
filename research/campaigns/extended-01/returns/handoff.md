@@ -43,3 +43,11 @@ R06 development completed in 135.48 seconds after a 10.22-second profile. Balanc
 R07 actor/protocol 8767225, mechanical-test import fix 844497b, and summary tool cb8f750 are ready. CPU tests: 15 passed. Immutable remote source is `~/topoformer-campaign-01/returns/source-r07-tested`. Compare exact R06 linear replay with a zero-output-initialized residual GELU consumer (1,117,250 versus 33,825 parameters), fixed 900 updates and identical batches, frozen R06 balanced cache. Reused calibration/validation are development, no delay32, no automatic 1800 extension. Reviewer preflight cleared. Await explicit coordinator profile release; no active GPU job. This readout does not replace audited R05 or any composition dependency.
 
 Cumulative return process occupancy is 1,185.19 seconds. R07 has not run.
+
+## Current frontier: R08 localization, R09 prepared
+
+R07 completed24.02seconds after21.18-second profile. Exact linear replay passes; residual nonlinear head worsens both fitting and fresh grid accuracy, worst ingestion float5.5 cell0/64. Raw/cache audit c538e8a verifies84cells. R08 held the residual head fixed and screened rates.0003/.0001/.00003: selected.0001 by final calibration only, minimum grid60/64 versuslinear59; reused validation57 versus55. Aggregate validation4085/4096 versuslinear4088. This small development tail gain does not establish nonlinear superiority or uniform reconstruction. All endpoints/curves preserved in d6c0c3c and plots f2b5480; independent audit pending. R08 profile37.61seconds, development43.54seconds.
+
+R09 protocol/source32b6ffb plus defensive phase-order assertion cc388a4 is staged at `~/topoformer-campaign-01/returns/source-r09-reviewed`.18CPUtests pass. It compares a shared linear head with two independently trained linear heads selected solely by public zero-versus-positive delay, same initial function, R06 balanced data/normalization,900updates/.003/sample stream. Shared arm must exactly replay R06; phase gradient support and optimizer exposure are disclosed separately. No32, endpoint selection, extension, or replacement of R05. Reviewer preflight passed, awaiting explicit profile release. NO ACTIVE GPU JOB.
+
+Cumulative return process occupancy:1,311.54seconds. Root owns all scheduling and promotion.
