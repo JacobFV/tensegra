@@ -1,6 +1,7 @@
 """Reproducible isolated belief acquisition; no readiness/runtime composition."""
 import argparse
 import hashlib
+import gzip
 import json
 from pathlib import Path
 import subprocess
@@ -9,7 +10,7 @@ import torch
 from .belief_state import BeliefModel,make_episodes,collate,loss,oracle
 
 
-def evaluate(model, count, seed, candidates, condition):
+def evaluate(model, count, seed, candidates, condition, raw_path=None):
     batch=collate(make_episodes(count,seed,candidates,condition=condition))
     if model is not None:
         device=next(model.parameters()).device
@@ -17,6 +18,9 @@ def evaluate(model, count, seed, candidates, condition):
     with torch.no_grad():
         p=oracle(batch['public']) if model is None else model(batch['public'])['logits'].softmax(-1)
     q=batch['targets']['posterior']; predicted=p.argmax(-1)
+    if raw_path is not None:
+        with gzip.open(raw_path,'wt') as handle:
+            json.dump({'posterior':p.tolist(),'target':q.tolist(),'seed':seed,'condition':condition,'candidates':candidates,'public_examples':{k:v[:8].tolist() for k,v in batch['public'].items()}},handle)
     expected_correct=q.gather(-1,predicted.unsqueeze(-1)).squeeze(-1)
     correct=expected_correct>0
     impossible=(p*(q==0)).sum(-1); entropy=-(p*p.clamp_min(1e-12).log()).sum(-1)
@@ -52,7 +56,7 @@ def run(config,out):
     torch.set_num_threads(config.get('threads',2)); torch.manual_seed(config['seed'])
     out=Path(out); out.mkdir(parents=True,exist_ok=True)
     device=torch.device(config.get('device','cpu'))
-    model=BeliefModel(config['mode'],width=config.get('width',1024),inner=config.get('inner',2048)).to(device)
+    model=BeliefModel(config['mode'],width=config.get('width',1024),inner=config.get('inner',2048),observation_id_features=config.get('observation_id_features',False)).to(device)
     opt=torch.optim.AdamW(model.parameters(),lr=config.get('lr',.0003))
     source={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (Path(__file__),Path(__file__).with_name('belief_state.py'))}
     manifest={'config':config,'config_sha256':hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),'source_sha256':source,'git':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'parameters':sum(p.numel() for p in model.parameters()),'architecture_supplied':['typed roles','candidate records','observation identity','protected ledger for protected arm'],'composition_allowed':False,'device':str(device),'cuda_name':torch.cuda.get_device_name(device) if device.type=='cuda' else None}
@@ -76,11 +80,13 @@ def run(config,out):
             for split in config.get('eval_splits',['validation','test']):
                 if split not in ('validation','test'): raise ValueError('unknown evaluation split')
                 offset={'validation':200000,'test':300000}[split]
-                row=evaluate(model,config.get('eval_count',128),offset+config['seed'],n,condition); row.update(seed=config['seed'],split=split,regime='iid' if n==config['candidates'] else 'moderate_ood'); rows.append(row)
+                row=evaluate(model,config.get('eval_count',128),offset+config['seed'],n,condition,raw_path=out/f'raw-{split}-{n}-{condition}.json.gz'); row.update(seed=config['seed'],split=split,regime='iid' if n==config['candidates'] else 'moderate_ood'); rows.append(row)
     (out/'metrics.json').write_text(json.dumps(rows))
     oracle_rows=[evaluate(None,config.get('eval_count',128),200000+config['seed'],n,c) for n in config.get('eval_candidates',[config['candidates']]) for c in ('clean','reorder','duplicate','long_duplicate','contradiction','retract','partial','empty')]
     (out/'oracle.json').write_text(json.dumps(oracle_rows))
     torch.save(model.state_dict(),out/'model.pt')
+    manifest['checkpoint_sha256']=hashlib.sha256((out/'model.pt').read_bytes()).hexdigest()
+    (out/'manifest.json').write_text(json.dumps(manifest,indent=2))
     return manifest
 
 

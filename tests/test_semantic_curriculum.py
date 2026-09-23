@@ -64,3 +64,37 @@ def test_true_minibatch_matches_singletons_with_public_padding():
         assert all(torch.allclose(a[k],b[k],atol=2e-6) for k in a)
     changed=model.forward_batch([publics[0],m.ActorInput('other text',())])[0]
     assert all(torch.allclose(batch[0][k],changed[k],atol=2e-6) for k in batch[0])
+
+
+def test_bfloat16_autocast_stays_finite_and_close():
+    torch.manual_seed(23)
+    model=m.SemanticCurriculumActor(value_count=3,width=16,microsteps=1,workspace_rows=2,capacity=8,edge_width=8)
+    public=m.ActorInput('a plus b',())
+    exact=model(public)
+    model.autocast_dtype='bfloat16'
+    mixed=model(public)
+    assert all(v.dtype==torch.float32 and torch.isfinite(v).all() for v in mixed.values())
+    assert all(torch.allclose(exact[k],mixed[k],atol=.025,rtol=.1) for k in exact)
+    sum(v.square().mean() for v in mixed.values()).backward()
+    assert all(torch.isfinite(p.grad).all() for p in model.parameters() if p.grad is not None)
+
+
+def test_edge_calibration_uses_only_supplied_training_examples():
+    examples=[m.base.build_tcn_example('variable_binding',13)]
+    vocab=m.base.value_vocabulary(examples); visited=[]
+    def scorer(public):
+        visited.append(public.text)
+        return dict(presence=torch.ones(128),edges=torch.zeros(128,128,len(m.ROLES)))
+    thresholds,audit=m.calibrate_edge_thresholds(scorer,examples,vocab,128)
+    assert len(visited)==2 and audit['fit_graphs']==1
+    assert thresholds.shape==(len(m.ROLES),)
+    assert all(v in audit['grid'] for v in thresholds.tolist())
+
+
+def test_compact_graph_edges_roundtrip_losslessly():
+    e=m.base.build_tcn_example('variable_binding',13)
+    public,g=m.base.surface_input(e,'english')
+    gold=m.base.targets(g,public,128,m.base.value_vocabulary([e]))
+    recovered=m.unpack_graph(m.pack_graph(gold))
+    assert all(torch.equal(gold[k],recovered[k]) for k in gold)
+    assert m.base.metrics(recovered,gold)['semantic_equivalence']==1

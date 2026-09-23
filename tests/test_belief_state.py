@@ -60,3 +60,25 @@ def test_gate_requires_every_validation_cell():
     assert not gate([dict(row,split='test')],[(0,'clean',8)])
     assert not gate([row],[(0,'clean',8),(1,'clean',8)])
     assert not gate([dict(row,frames=[dict(support_accuracy=1.,impossible_mass=0.,posterior_l1=.5)])],[(0,'clean',8)])
+
+
+def test_public_id_features_are_consumed_by_both_modes():
+    from topoformer.belief_state import observation_features
+    ids=torch.tensor([[-1,3,3,12]])
+    code=observation_features(ids)
+    assert code.shape==(1,4,16) and not code[0,0].any()
+    assert torch.equal(code[0,1],code[0,2]) and not torch.equal(code[0,1],code[0,3])
+    import pytest
+    with pytest.raises(ValueError): observation_features(torch.tensor([65536]))
+    b=collate(make_episodes(2,candidates=5))
+    for mode in ('recurrent','protected'):
+        m=BeliefModel(mode,width=32,inner=8,observation_id_features=True)
+        captured=[]
+        hook=m.encode.register_forward_pre_hook(lambda _,args:captured.append(args[0].detach().clone()))
+        baseline=m(b['public'])['logits']; first=captured[1]
+        changed={k:v.clone() for k,v in b['public'].items()};changed['ids'][:,1]=500
+        captured.clear();altered=m(changed)['logits'];second=captured[1]
+        hook.remove()
+        assert torch.equal(first[...,:-16],second[...,:-16])
+        assert not torch.equal(first[...,-16:],second[...,-16:])
+        assert torch.equal(baseline[:,0],altered[:,0])
