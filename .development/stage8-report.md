@@ -27,3 +27,9 @@ Final paired results, raw metric audits and integration status will be appended 
 ## Initial full-width diagnostic (ID-access caveat)
 
 After1000updates, both protected and generic recurrent models reach roughly99.6–100% clean/retraction final answers. Long repeated evidence is less stable in generic recurrence, but ID-access differs in this diagnostic, so strict stress-test attribution awaits the matched followup. Both models still fail broad posterior/prior/null gates. This does not support a general claim that generic latent recurrence cannot acquire evidence updates. It also does not isolate width as the sole cause of improvement relative Stage7, because the task/interface and training recipe differ.
+
+## Completed return main (independent audit pending)
+
+All 18 runs finished at width 1024; none passes the prespecified retention gate. With eight distractors, three-seed mean test joint reconstruction for factorized persistent memory is 89.19% at one step, 75.59% at 16 steps, and 61.98% at 32 steps. Concatenated persistent memory is 70.25%, 67.51%, and 67.90% respectively. Thus factorization improves short/intermediate-delay readout in this recipe but does not dominate at longer recurrence.
+
+At 16 steps, factorized persistent scalar accuracy is 79.04% (MAE 0.243), type 99.54%, and operation 97.98%. Scalar accuracy uses the frozen exact discrete-value criterion; MAE is a diagnostic, not a replacement gate. Protected storage remains separate from learned readout. Downstream returned-fact use stays blocked. See the subsystem report for every seed, field, delay and intervention.

@@ -37,3 +37,9 @@ The initial semantic COO prediction archive exceeded GitHub's100MB file limit; i
 ## Explicit historical width ablation
 
 Before ID-matched1024 results are observed, freeze a separately labeled width32/FF64 historical control on exactly the same Stage8 ID-matched task, data,1000updates, seeds and gates. Default/main remains1024. Run remotely with two CPU threads after the primary1024 study; expected5–7minutes including full output. This ablation can test width within the new recipe; neither its result nor cross-stage differences may be used to retune the frozen1024 main.
+
+## Semantic exposure main budget
+
+Optimized batch32 BF16 timing at genuine width1024 measured approximately 4.1–4.4ms per presentation, peak CUDA1.29GB. Authorize corpus cardinalities1k/10k, three paired seeds, semantic/no-input arms, checkpoints at actual10016 and100000 presentations along each trajectory:1.2million total presentations. Estimated85minutes warm training plus preprocessing/evaluation, roughly95–110minutes total. Run remotely after the ID-matched belief primary; the historical width32 CPU control may overlap using two threads.
+
+Before launch, freeze a balanced lesson presentation schedule shared across corpus sizes and log actual unique graphs, repetitions and per-lesson metrics. Alpha-deduplication leaves only four binding and120set graphs; a sequential corpus traversal would otherwise confound corpus size with lesson mixture. Fresh heldout seed800000 excludes previously inspected canonical evaluation keys; it has no fresh binding examples, so binding transfer cannot be claimed. Calibration uses training graphs only. Batch32 checkpoint10016 is reported literally rather than relabeled10000. No main-outcome recipe tuning or downstream composition.
