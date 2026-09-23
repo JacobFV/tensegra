@@ -120,3 +120,11 @@ def test_pinned_spanish_gender_agreement_is_visible_copy_target():
     gold=m.targets(g,public,128,m.value_vocabulary([e]),language='spanish')
     nodes=[i for i,n in enumerate(g.nodes) if n.kind in ('ident','entity') and n.value=='yellow']
     assert nodes and all(tok[int(gold['copy'][i])]=='amarilla' for i in nodes)
+
+
+def test_renderer_schedule_is_independent_of_dataset_cardinality():
+    m=module()
+    assert [m.training_language(step) for step in range(4)]==['english','spanish','english','spanish']
+    for count in (1000,10000):
+        languages=[m.training_language(step) for step in range(1000) for _ in range(2)]
+        assert languages.count('english')==languages.count('spanish')==1000

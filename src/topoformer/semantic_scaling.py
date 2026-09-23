@@ -215,6 +215,10 @@ def evaluate(model,examples,language,vocab,capacity,renamed=False,raw_path=None,
     result['examples']=len(rows); return result
 
 
+def training_language(step):
+    return ('english','spanish')[step%2]
+
+
 def split_indices(train_count,eval_count):
     return dict(eval=range(eval_count),train=range(eval_count,eval_count+train_count))
 
@@ -237,7 +241,7 @@ def run(config):
         pinned_audit=corpus[0].audit,runs=[],matching='fixed compiler traversal, exact values and identities and explicit ordered slots; no general isomorphism',
         gate_f={'passed':False,'reason':'requires paired cross-budget heldout typed-edge and semantic trend above baselines; no automatic single-run pass'},
         priors=['canonical decoder slot order','fixed node capacity and role/type ontology','first visible occurrence pointer supervision'],
-        train_renderers=['english','spanish'],heldout_renderer='symbols',
+        train_renderers=['english','spanish'],heldout_renderer='symbols',renderer_schedule='optimizer step parity, independent of N; repeated graphs may retain same renderer',
         limitations=['alpha-equivalent graphs counted once; not logical/denotational equivalence','heldout lexicon is consistent entity/variable renaming','no claim of exhaustive finite-family enumeration'])
     manifest['split_semantic_sha256']={name:hashlib.sha256(''.join(semantic_key(corpus[i].privileged.graph) for i in indices).encode()).hexdigest() for name,indices in splits.items()}
     manifest['split_policy']='fixed eval prefix reserved before nested train prefixes; canonical disjoint by SQLite uniqueness'
@@ -259,7 +263,7 @@ def run(config):
     records=[]
     def record(model,seed,arm,step,start,seen,tokcount):
         row=dict(seed=seed,arm=arm,step=step,optimizer_examples=step*config['batch_size'] if arm!='frequency' else 0,
-            actual_unique_graphs_seen=train_count if arm=='frequency' else len(seen),fit_label_examples=train_count if arm=='frequency' else step*config['batch_size'],public_tokens_seen=tokcount,elapsed_seconds=time.monotonic()-start,
+            actual_unique_graphs_seen=train_count if arm=='frequency' else len(seen),fit_label_examples=train_count if arm=='frequency' else step*config['batch_size'],public_tokens_seen=tokcount,renderer_exposure=({'english':train_count,'spanish':0} if arm=='frequency' else {'english':((step+1)//2)*config['batch_size'],'spanish':(step//2)*config['batch_size']}),elapsed_seconds=time.monotonic()-start,
             dataset_sha256=corpus.audit['dataset_sha256'],config_sha256=config_hash,
             evaluation={lang:evaluate(model,heldout,lang,vocab,capacity,raw_path=outdir/'raw-evaluation.jsonl.gz',context=dict(seed=seed,arm=arm,step=step)) for lang in ('english','spanish','symbols')})
         row['evaluation']['heldout_lexicon']=evaluate(model,heldout,'english',vocab,capacity,True,raw_path=outdir/'raw-evaluation.jsonl.gz',context=dict(seed=seed,arm=arm,step=step))
@@ -284,7 +288,7 @@ def run(config):
                 optimizer.zero_grad(); parts=[]; component_log=[]
                 for j in range(config['batch_size']):
                     index=(step*config['batch_size']+j)%train_count; e=train_example(index)
-                    language=('english','spanish')[(step//max(1,math.ceil(train_count/config['batch_size'])))%2]
+                    language=training_language(step)
                     public,g=surface_input(e,language)
                     seen.add(index); tokcount+=len(tokens(public)); component=losses(model(public),targets(g,public,capacity,vocab,language=language)); parts.append(sum(component.values())); component_log.append({k:float(v.detach()) for k,v in component.items()})
                 loss=torch.stack(parts).mean()
