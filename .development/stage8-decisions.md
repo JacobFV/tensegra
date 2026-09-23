@@ -1,0 +1,7 @@
+# Stage 8 implementation decisions
+
+- The default is a genuine width1024 latent workspace and recurrent computation. A narrow internal bottleneck may not silently replace that capacity. Smaller unit-test dimensions are labeled tests, not experimental standards.
+- Return controls distinguish mixed additive encoding, disjoint concatenated field encoding, and facet-token memory. The latter two can share parameters/informative coordinates while differing in allocated KV tokens; the mixed control may differ in encoder parameters, which must be reported. Field-specific query rows are an explicit decoding prior in every matched arm.
+- Candidate order and nonce identities are randomized. Episode construction must retain multiple supported hypotheses until relevant primitive/order evidence arrives; unique destination keys must not trivially disambiguate the entire candidate.
+- Exact observation-id ledgers, duplicate suppression and retraction semantics are supplied architectural mechanisms. Candidate/evidence compatibility and increments remain learned. Oracle support is supervision/evaluation only, never learned actor input.
+- CUDA setup uses a new remote virtual environment (`~/topoformer-stage8-cuda`), preserving the earlier CPU environment. Official PyTorch CUDA13.0 wheels are used, following https://docs.pytorch.org/get-started/locally/ . Actual GPU forward/backward timing and device support must pass before experimental budgets are frozen.
