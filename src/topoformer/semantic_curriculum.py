@@ -170,6 +170,8 @@ def run(config):
         for language in ('english','spanish','symbols'):
             row['evaluation'][language]=base.evaluate(evaluation_model,heldout,language,vocab,capacity,raw_path=output/'predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure))
         row['evaluation']['heldout_lexicon']=base.evaluate(evaluation_model,heldout,'english',vocab,capacity,True,raw_path=output/'predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure))
+        acquisition=[corpus[eval_count+i] for i in range(min(train_count,config.get('acquisition_count',8)))]
+        row['training_acquisition']={lang:base.evaluate(evaluation_model,acquisition,lang,vocab,capacity) for lang in ('english','spanish')}
         row['evaluation_seconds']=time.monotonic()-evaluation_start
         records.append(row)
         with (output/'curves.jsonl').open('a') as f: f.write(json.dumps(row)+'\n')
