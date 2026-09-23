@@ -106,7 +106,7 @@ class RoutingModel(nn.Module):
         nn.init.zeros_(self.update[-1].bias)
         self.readout = nn.Linear(width, classes)
 
-    def forward(self, batch, mode='soft', *, zero_strength=False):
+    def forward(self, batch, mode='soft', *, zero_strength=False, strength_override=None, size_adjust=False):
         if mode not in {'soft', 'hard', 'message', 'context', 'none'}:
             raise ValueError(mode)
         h = self.embed(batch.values)
@@ -132,7 +132,12 @@ class RoutingModel(nn.Module):
                 k = self.k(z).reshape(b, n, self.heads, w//self.heads).transpose(1, 2)
                 score = q @ k.transpose(-1, -2) / math.sqrt(w//self.heads)
                 if mode == 'soft' and not zero_strength:
-                    score = score + self.strength[relation, :, None, None] * a[:, None]
+                    strength = self.strength[relation, :, None, None]
+                    if strength_override is not None:
+                        strength = torch.full_like(strength, float(strength_override))
+                    if size_adjust:
+                        strength = strength + math.log(n / 16)
+                    score = score + strength * a[:, None]
                 if mode == 'hard':
                     score = score.masked_fill(~a[:, None].bool(), -torch.inf)
                 attention = score.softmax(-1)

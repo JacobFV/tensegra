@@ -35,11 +35,12 @@ def evaluate(model, config, output, label, *, device):
         for offset in range(0, config['eval_examples'], config['eval_batch']):
             count = min(config['eval_batch'], config['eval_examples'] - offset)
             batch = generate(count, condition['nodes'], condition['depth'],
-                seed=config['eval_seed'] + ci * 100000 + offset, device=device,
+                seed=config['eval_seed'] + condition.get('data_group',ci) * 100000 + offset, device=device,
                 heldout_composition=condition.get('composition', False))
             gold = targets(batch)
             given = corrupt(batch, condition.get('corruption','clean'), config['eval_seed']+ci*100000+offset+50000)
-            result = model(given, config['mode'], zero_strength=condition.get('zero_strength', False))
+            result = model(given, config['mode'], zero_strength=condition.get('zero_strength', False),
+                           strength_override=config.get('strength_override'), size_adjust=config.get('size_adjust',False))
             # Path agreement and values remain relative to the original clean graph.
             scores = metrics(result, gold, batch)
             for key, value in scores.items():
@@ -72,6 +73,11 @@ def run(config, output):
     torch.set_num_threads(2)
     torch.manual_seed(config['seed'])
     model = RoutingModel(width=config.get('width',1024), strength=config.get('strength',4.)).to(device)
+    if config.get('checkpoint'):
+        path = Path(config['checkpoint'])
+        if hashlib.sha256(path.read_bytes()).hexdigest() != config['checkpoint_sha256']:
+            raise ValueError('checkpoint checksum differs')
+        model.load_state_dict(torch.load(path,map_location=device,weights_only=True))
     initial_hash = hashlib.sha256(b''.join(t.detach().cpu().numpy().tobytes() for t in model.state_dict().values())).hexdigest()
     config_hash = hashlib.sha256(json.dumps(config, sort_keys=True).encode()).hexdigest()
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.get('lr',3e-4), weight_decay=1e-4)
@@ -93,7 +99,7 @@ def run(config, output):
                          seed=config['train_seed']+step,device=device,train=True)
         gold = targets(batch)
         optimizer.zero_grad(set_to_none=True)
-        result = model(batch,config['mode'])
+        result = model(batch,config['mode'], size_adjust=config.get('size_adjust',False))
         loss = F.cross_entropy(result['logits'].flatten(0,2),gold.flatten())
         loss.backward()
         norm = torch.nn.utils.clip_grad_norm_(model.parameters(),1.)
