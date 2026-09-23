@@ -168,6 +168,7 @@ def test_capture_selected_matches_existing_frozen_feature_path():
 
 def test_residual_readout_initial_function_and_learning():
     """Small width is a mechanical fixture, not an experimental workspace."""
+    import torch
     from topoformer.campaign_returns_capacity import ResidualReadout
     torch.manual_seed(7)
     linear = torch.nn.Linear(8, 3)
