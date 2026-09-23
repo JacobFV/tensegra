@@ -49,3 +49,19 @@ def test_tiny_runner_artifact_selection_and_public_only_inputs(tmp_path, monkeyp
     saved = torch.load(tmp_path / 'run' / 'validation.pt', weights_only=True)
     assert not {'event', 'values', 'targets', 'labels', 'reference'} & saved['public'].keys()
     assert json.loads((tmp_path / 'run' / 'summary.json').read_text())['validation'] == result['validation']
+
+
+def test_compact_export_replays_semantic_counts(tmp_path, monkeypatch):
+    import topoformer.campaign_composition_acquire as module
+    from topoformer.campaign_composition_export import export
+    import gzip
+    monkeypatch.setattr(module, 'make_model', lambda: ProposalModel(key_dim=32, hidden=16))
+    config = dict(seed=401, hidden=1024, key_dim=32, cpu_threads=1, learning_rate=.001, weight_decay=.01,
+                  batch_size=4, updates=1, checkpoints=[0, 1], control_seed=48030,
+                  data={split: dict(seed=48031+i, count=8) for i, split in enumerate(('train', 'calibration', 'validation'))}, controls=['reverse_roles'])
+    result = run(config, tmp_path / 'run', 'cpu')
+    manifest = export(tmp_path / 'run', tmp_path / 'raw')
+    rows = json.loads(gzip.decompress((tmp_path / 'raw' / 'validation.json.gz').read_bytes()))['rows']
+    count = sum(r['predicted_primitive'] == r['supplied_primitive'] and r['canonical_pointers'] == r['supplied_pointers'] for r in rows)
+    assert count == result['validation']['full_semantic']['correct']
+    assert manifest['selected_checkpoint_sha256'] == result['selected_checkpoint_sha256']

@@ -1,0 +1,132 @@
+{
+  "selected_checkpoint_sha256": "6e5f8fdcb719d19c61d2c020c9a8929be706ce3950edd36437e4e3a5eb705fee",
+  "source_sha256": {
+    "campaign_composition.py": "a10b6f1ac5341408dbbf0499a13ff921cdb9f713c4d691427fe6c896fb4d9733",
+    "campaign_composition_acquire.py": "cad67b5f5bb8e1f6e09bfea4ff2cdc4c3c3a46fc15d0e12f5ee418820a78f243",
+    "interface_proposals.py": "d6dd0639fe7726e382268eea13825ba7a78b2fb234d8acc6ed4fa9ae05d16458",
+    "retention_data.py": "1e980177c4e9344c8824ef3b13e2afdca4499778f9efe027d122695a847585b5",
+    "thinking_runtime.py": "42058f3bc523d43d169bd8520f7a4411c4849ee2f571621fc6e313683e59dad8"
+  },
+  "config": {
+    "version": "p01-v1-development",
+    "seed": 301,
+    "hidden": 1024,
+    "key_dim": 32,
+    "cpu_threads": 4,
+    "learning_rate": 0.001,
+    "weight_decay": 0.01,
+    "batch_size": 256,
+    "updates": 2000,
+    "checkpoints": [
+      0,
+      250,
+      500,
+      1000,
+      1500,
+      2000
+    ],
+    "data": {
+      "train": {
+        "seed": 48000001,
+        "count": 8192
+      },
+      "calibration": {
+        "seed": 48000002,
+        "count": 1024
+      },
+      "validation": {
+        "seed": 48000003,
+        "count": 4096
+      }
+    },
+    "control_seed": 48000100,
+    "controls": [
+      "record_order",
+      "inventory_order",
+      "fresh_names",
+      "reverse_roles",
+      "unrelated_instructions"
+    ],
+    "requested_process_cap_seconds": 360
+  },
+  "config_canonical_sha256": "4fb4b0f1a29f8c1ca747b22e8ab73e2582a714f1ee821aef6cfd21b5b3c651f2",
+  "data": {
+    "train": {
+      "seed": 48000001,
+      "count": 8192,
+      "public_tensor_sha256": "04ef01b4c772405206aec065cb2562870fe38a7bd57294f182ddd0a7153868f5"
+    },
+    "calibration": {
+      "seed": 48000002,
+      "count": 1024,
+      "public_tensor_sha256": "bf4654c1e8cb91a341de23fc5556f82889b7f879e23d3bf4707e947546678597"
+    },
+    "validation": {
+      "seed": 48000003,
+      "count": 4096,
+      "public_tensor_sha256": "4e506fcaa6b87daa136366a7bbb4e1134872928bd440e903fe0726667a0dc19a"
+    }
+  },
+  "files": {
+    "calibration-0.json.gz": {
+      "sha256": "536e457ebdd72ec807cea6f3c52bd8d4d980ef77cf2c1009649dae532438ba0c",
+      "rows": 1024,
+      "original_pt_sha256": "ab0ac7429fb8f940da7f0dede026b374d98b89a810768842d67cc61df35625ca"
+    },
+    "calibration-250.json.gz": {
+      "sha256": "512333afcf685ccfebcaadcc52a9ce4ea3bfe862f3468f90c34a117a3ff6f19a",
+      "rows": 1024,
+      "original_pt_sha256": "e0cb25dd7a48aabd4aecaf2f3af071deca7c9fee455aa0bbf98d8d2603e71659"
+    },
+    "calibration-500.json.gz": {
+      "sha256": "4f454b1c1ce9cdfa5839a0e21db843dce32cd2b4b959bb22a528cfc4bf0f4353",
+      "rows": 1024,
+      "original_pt_sha256": "41c3e58b027b0a36bbbc9541bf90c0d4553d1c781fca9a2d95082f19c2f929a8"
+    },
+    "calibration-1000.json.gz": {
+      "sha256": "3ae1ab7de8f9821bffeb14d865083bf31c087763a44f9511291f13a5381ca93e",
+      "rows": 1024,
+      "original_pt_sha256": "ae41bcea41ae89c2f3a57f0b7e901d1b5db7c47cab3dedc74244f5495167109c"
+    },
+    "calibration-1500.json.gz": {
+      "sha256": "eb9995a3a08d51d4cd863b632ccf24ca482207cd6b74f181f1897d9248d8c10d",
+      "rows": 1024,
+      "original_pt_sha256": "9e39eedb482c5d8bfab30934c2b79f21deb7350ccb5570b6f9140c3f2e3b6fe4"
+    },
+    "calibration-2000.json.gz": {
+      "sha256": "cb286c0627c12c2e2a379dc75abfeeaa60e236e53cbdde9ca3cf37ba9f596a71",
+      "rows": 1024,
+      "original_pt_sha256": "b68220c4fe727521104919912832074a14054d5e35fac1320dfc0ab3620a690e"
+    },
+    "validation.json.gz": {
+      "sha256": "772bd86050888d8febf0efc09d476022843ffcb75c126bf088ec56924fb6055a",
+      "rows": 4096,
+      "original_pt_sha256": "d93e2e37073237323adb2d46a319bb94831f704355fa8326c0854c2c6761a375"
+    },
+    "control-record_order.json.gz": {
+      "sha256": "64ead46430f2be702db248435d088ff3d4ec7fb7d4f717a9e7f5ac86806d85a1",
+      "rows": 4096,
+      "original_pt_sha256": "a507c92f9ebec745c13f55fa2eeb2b9073eba20c997316a9af0391d57df05ccd"
+    },
+    "control-inventory_order.json.gz": {
+      "sha256": "7633ec556b5f41ab7024de16e7b8168966b2749d5ad8747586bb8124a5cbfe5c",
+      "rows": 4096,
+      "original_pt_sha256": "c0641a7238bf2519f17bba1eb02783474918ddfd5776ff901e70fa5e2f405bf8"
+    },
+    "control-fresh_names.json.gz": {
+      "sha256": "899bbb3df7e79037788536b4bcf590c386d3532af91a16785556a267b5040849",
+      "rows": 4096,
+      "original_pt_sha256": "60f97d7e1f98329bd4af42f02beb38735e0593fd5565523c3f198d2dcf32993c"
+    },
+    "control-reverse_roles.json.gz": {
+      "sha256": "26828cc4da4a655547faf3088d2cf5d6e01e4dd065aaa6812e2bed817a5d4d74",
+      "rows": 4096,
+      "original_pt_sha256": "05a26692b5a3de1446aef428bb5749fe476906dba3f45c5b0b7ee05671600116"
+    },
+    "control-unrelated_instructions.json.gz": {
+      "sha256": "56e930e0ce9662f629fb9e0779165ecf903d49d36e48331f6b9f22d87d972601",
+      "rows": 4096,
+      "original_pt_sha256": "ce4e7fa93a96b65861d5ad29261461ef3cc5325ff62f031c0edf7225df4c5bca"
+    }
+  }
+}
