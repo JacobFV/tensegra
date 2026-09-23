@@ -115,3 +115,13 @@ def test_runner_keeps_confirmation_out_of_curves(tmp_path):
     assert before['eval_seed']==300 and before['eval_examples']==2
     assert after['eval_seed']==200 and after['eval_examples']==4
     assert after['rows'][0]['forward_seconds']>=0
+
+
+def test_strength_override_does_not_mutate_checkpoint():
+    b=generate(2,16,2,seed=75)
+    m=RoutingModel(width=32,heads=2)
+    before={k:v.clone() for k,v in m.state_dict().items()}
+    base=m(b,'soft')['weights']
+    overridden=m(b,'soft',strength_override=8.)['weights']
+    assert not torch.allclose(base,overridden)
+    assert all(torch.equal(v,m.state_dict()[k]) for k,v in before.items())
