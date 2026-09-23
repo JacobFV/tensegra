@@ -134,3 +134,11 @@ def test_zero_delay_still_requires_one_late_query_pass():
     public=make_batch(41,3,feature_dim=16)['public']
     output=model(public,0,'protected')
     assert output['cell_passes']==1
+
+
+def test_intervention_schedule_keeps_clean_curves_and_prespecified_control_delay():
+    from topoformer.retention_study import evaluation_interventions
+    config={'interventions':['none','event_drop','wrong_value'],'intervention_delays':[16]}
+    assert evaluation_interventions(config,0)==['none']
+    assert evaluation_interventions(config,32)==['none']
+    assert evaluation_interventions(config,16)==config['interventions']

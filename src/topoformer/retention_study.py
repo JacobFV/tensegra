@@ -57,6 +57,12 @@ def usage_gate(rows,seeds,distractors):
     return True
 
 
+def evaluation_interventions(config,delay):
+    selected=config.get('interventions',INTERVENTIONS)
+    allowed=config.get('intervention_delays')
+    return [name for name in selected if name=='none' or allowed is None or delay in allowed]
+
+
 def run(config,output):
     if config.get('phase','C1')!='C1': raise ValueError('C2 requires root gate audit and is not enabled in this runner')
     if set(config['validation_seeds']) & set(config.get('test_seeds',[])): raise ValueError('validation/test seeds must be disjoint')
@@ -96,7 +102,7 @@ def run(config,output):
                     for distractors in config.get('eval_distractors',[2,8]):
                         data=make_batch(eval_seed,config['eval_size'],f,distractors,limit)
                         for delay in config.get('eval_delays',[1,2,4,8,16,32]):
-                            for intervention in config.get('interventions',INTERVENTIONS):
+                            for intervention in evaluation_interventions(config,delay):
                                 replacement=make_batch(eval_seed+1000000,config['eval_size'],f,distractors,limit)
                                 public=data['public']
                                 # Overwrite uses its own complete event/identity universe;
