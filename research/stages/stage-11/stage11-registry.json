@@ -22,7 +22,7 @@
       "protocol": "stage11-return-design.md",
       "development_source": "1b2860b",
       "development_cap_minutes": 6,
-      "main_requires": "Independent preflight cleared; GPU queue release pending",
+      "main_requires": "Acquisition gate and code review passed; GPU queue release pending",
       "development_status": "passed_restricted",
       "development_evidence": "../../results/stage11/return-acquisition/manifest.json",
       "main_source_freeze": "0c2332f",
@@ -33,7 +33,7 @@
       ]
     },
     "semantic_fixed_text": {
-      "status": "not_run",
+      "status": "passed_restricted",
       "scope": "Small public-text complete fixed-set acquisition",
       "protocol": "stage11-semantic-text-design.md",
       "source_freeze": "5a80a4a",
@@ -48,13 +48,15 @@
         16,
         18
       ],
-      "main_cap_minutes": 20
+      "main_cap_minutes": 20,
+      "result": "Raw and TRAIN-calibrated 8/8 in all three seeds at final update4000",
+      "evidence": "../../results/stage11/audits/semantic-acquisition.json"
     },
     "semantic_fresh_known": {
-      "status": "blocked",
-      "requires": "Public-text fixed-set acquisition",
+      "status": "not_run",
+      "requires": "Satisfied: independent final fixed-text audit passed; inference released",
       "protocol": "stage11-semantic-fresh-design.md",
-      "source_freeze": "d923a24",
+      "source_freeze": "7936417",
       "required_unique_examples": 512,
       "threshold": "Exact complete graph accuracy >0.95 in every prescribed seed",
       "mode": "Frozen final actor inference only; no fitting",
