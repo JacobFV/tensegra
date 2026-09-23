@@ -24,7 +24,7 @@ class SelectorBatch:
 
 
 def generate(batch, nodes, depth, *, seed, groups=4, device='cpu', key_dim=64,
-             classes=16, train=False, heldout_composition=False):
+             classes=16, train=False, heldout_composition=False, balanced=False):
     if nodes % groups or nodes <= groups:
         raise ValueError('Each attribute must label multiple nodes; N must be divisible by K')
     g=torch.Generator().manual_seed(seed)
@@ -34,9 +34,19 @@ def generate(batch, nodes, depth, *, seed, groups=4, device='cpu', key_dim=64,
     attributes=torch.empty(batch,nodes,key_dim)
     attributes.scatter_(1,members.reshape(batch,nodes,1).expand(-1,-1,key_dim),
                         codes[:,:,None,:].expand(-1,-1,nodes//groups,-1).reshape(batch,nodes,key_dim))
-    choices=torch.randint(nodes//groups,(batch,3,nodes,groups),generator=g)
-    candidates=members[:,None,None,:,:].expand(-1,3,nodes,-1,-1).gather(-1,choices[...,None]).squeeze(-1)
-    adjacency=F.one_hot(candidates,nodes).sum(-2).float()
+    if balanced:
+        # Every relation/source-group/target-group block is a bijection.
+        # A public instruction collapses N starts to N/K once, then preserves
+        # that cardinality under arbitrary subsequent supplied instructions.
+        permutations=torch.rand(batch,3,groups,groups,nodes//groups,generator=g).argsort(-1)
+        destinations=members[:,None,None,:,:].expand(-1,3,groups,-1,-1).gather(-1,permutations)
+        candidates=destinations.permute(0,1,2,4,3).reshape(batch,3,nodes,groups)
+        ordered=F.one_hot(candidates,nodes).sum(-2).float()
+        adjacency=torch.empty_like(ordered).scatter_(2,members.reshape(batch,nodes)[:,None,:,None].expand(-1,3,-1,nodes),ordered)
+    else:
+        choices=torch.randint(nodes//groups,(batch,3,nodes,groups),generator=g)
+        candidates=members[:,None,None,:,:].expand(-1,3,nodes,-1,-1).gather(-1,choices[...,None]).squeeze(-1)
+        adjacency=F.one_hot(candidates,nodes).sum(-2).float()
     relations=torch.randint(3,(batch,depth),generator=g)
     if train:
         for t in range(1,depth):

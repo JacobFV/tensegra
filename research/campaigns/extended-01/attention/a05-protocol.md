@@ -1,4 +1,8 @@
-# A05: fresh confirmation of learned content-and-topology routing
+# A05 draft: superseded before any model run
+
+**Status:** superseded-before-run after a generator-only coalescence audit. No profile or confirmation outcomes exist. Retained as a registered, rejected plan; see `a05-status.json` and `a05-coalescence.json`.
+
+## Original proposed confirmation
 
 Registered before A05 outcomes. A04 acquired the interface in one development seed; this confirmation retains its1000-update recipe and tests three fresh paired initializations401/402/403. No additional route labels or architecture are introduced. The common input coordinate system, graph grounding, regular-neighborhood contract and reverse schedule are supplied. Query/key code matching and value processing are learned.
 
