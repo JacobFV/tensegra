@@ -29,3 +29,7 @@ External process occupancy was **398.23 seconds** including capture, fitting and
 Next is a separately frozen, narrow returned-fact-use study on the unchanged registered mixture, contingent on independent audit. It must retain the stratified failure report and causal wrong/drop/swap controls. No general composition or autonomous policy is established here.
 
 [Summary and paired counts](../../../results/campaign-01/returns/r04-confirmation/summary.json), [process receipt](../../../results/campaign-01/returns/r04-confirmation/process.json), and per-backbone raw predictions/manifests under the same result directory provide the verification path. Large immutable features, logits and readouts remain at `~/topoformer-campaign-01/returns/r04-confirmation/{10,11,12}/`.
+
+![Fresh test curves](../../../results/campaign-01/returns/r04-confirmation/readout-curves.png)
+
+![Balanced float error counts](../../../results/campaign-01/returns/r04-confirmation/balanced-float-errors.png)
