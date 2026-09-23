@@ -99,3 +99,19 @@ def test_restored_permutation_matches_all_metrics():
         # none/soft. Do not falsely demand equivariant tie-breaking.
         if mode in ('context','message','hard'):
             assert torch.equal(original['routes'],restored['routes'])
+
+
+def test_runner_keeps_confirmation_out_of_curves(tmp_path):
+    import json
+    from topoformer.campaign_attention_study import run
+    cfg={'mode':'soft','width':32,'seed':9,'train_seed':100,'eval_seed':200,
+         'curve_seed':300,'curve_examples':2,'curve_conditions':[{'nodes':4,'depth':1}],
+         'steps':1,'checkpoints':[],'batch':2,'nodes':4,'eval_batch':2,'eval_examples':4,
+         'lr':.0003,'device':'cpu','conditions':[{'nodes':8,'depth':3,'node_permutation':True}]}
+    out=tmp_path/'run'
+    run(cfg,out)
+    before=json.loads((out/'eval-00000.json').read_text())
+    after=json.loads((out/'eval-00001.json').read_text())
+    assert before['eval_seed']==300 and before['eval_examples']==2
+    assert after['eval_seed']==200 and after['eval_examples']==4
+    assert after['rows'][0]['forward_seconds']>=0
