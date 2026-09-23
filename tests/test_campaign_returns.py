@@ -85,3 +85,37 @@ def test_balanced_grid_preserves_exact_primitive_witnesses():
     computed=torch.stack([args[:,0]+args[:,1],args[:,0]-args[:,1],args[:,0]*args[:,1],-args[:,0],(args[:,0]<args[:,1]).float()],1)
     assert torch.equal(computed.gather(1,op[:,None])[:,0],value)
     assert torch.equal(event['argument_mask'][ids,0,1],op!=3)
+
+
+def test_r05_wrong_value_is_same_type_and_has_exact_witness():
+    import torch
+    from topoformer.retention_data import make_batch
+    from topoformer.campaign_returns_use import alter_public
+    batch=make_batch(71234,256,distractors=0)
+    original=batch['public'];public=alter_public(original,'wrong');event=public['event']
+    value=event['values'][:,0];typ=event['types'][:,0];op=event['operations'][:,0];args=event['operand_values'][:,0]
+    assert (value!=original['event']['values'][:,0]).all()
+    assert torch.equal(typ,original['event']['types'][:,0])
+    assert (value[typ==0]==value[typ==0].round()).all()
+    assert ((value[typ==2]==0)|(value[typ==2]==1)).all()
+    computed=torch.stack([args[:,0]+args[:,1],args[:,0]-args[:,1],args[:,0]*args[:,1],-args[:,0],(args[:,0]<args[:,1]).float()],1)
+    assert torch.equal(computed.gather(1,op[:,None])[:,0],value)
+    assert torch.equal(public['query'],original['query'])
+
+
+def test_r05_capture_matches_frozen_forward_and_drop_ignores_value():
+    import torch
+    from topoformer.retention_data import make_batch
+    from topoformer.return_memory import ReturnMemoryModel
+    from topoformer.campaign_returns_use import workspace,alter_public
+    # Explicitly small mechanical parity fixture; experimental width remains1024.
+    torch.set_num_threads(2);torch.manual_seed(91)
+    model=ReturnMemoryModel(width=32,encoding='factorized').eval()
+    public=make_batch(8123,2,distractors=2)['public']
+    with torch.no_grad():
+        captured=workspace(model,public,[0,1])
+        for d in (0,1):
+            actual=model(public,steps=d)['state']
+            torch.testing.assert_close(captured[d],model.norm(actual)[:,0])
+        a=workspace(model,public,[0,1],True);b=workspace(model,alter_public(public,'wrong'),[0,1],True)
+        for d in (0,1):torch.testing.assert_close(a[d],b[d])
