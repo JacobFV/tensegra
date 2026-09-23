@@ -56,10 +56,10 @@ allocated memory, process RSS and training/wall time are retained separately.
 
 ## Measured resource freeze
 
-On the configured GB10 CUDA environment, three cold updates took0.197training
-seconds and1.070wall seconds. A separately labeled30-update mechanical profile
-(seed201, outcomes not used for model selection) took0.566training seconds and
-1.311wall seconds. This projects approximately68training seconds for the3600
-main updates, plus checkpoint/export overhead. Main budget remains hard5minutes,
-expected under2minutes. CUDA allocation173MB; process RSS1.72millionKiB is
+On the configured GB10 CUDA environment, three cold updates took 0.197 training
+seconds and 1.070 wall seconds. A separately labeled 30-update mechanical profile
+(seed 201, outcomes not used for model selection) took 0.566 training seconds and
+1.311 wall seconds. This projects approximately 68 training seconds for the 3600
+main updates, plus checkpoint/export overhead. Main budget remains hard 5 minutes,
+expected under 2 minutes. CUDA allocation 173 MB; process RSS 1.72 millionKiB is
 recorded separately. No further profiling or recipe selection follows.
