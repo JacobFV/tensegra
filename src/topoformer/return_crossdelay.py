@@ -11,7 +11,7 @@ import time
 import torch
 from torch.nn import functional as F
 
-from .return_memory import ReturnMemoryModel
+from .return_memory import ReturnMemoryModel, FIELDS
 from .return_memory_study import move
 from .retention_data import make_batch
 from .return_diagnostics_probe import capture, fit_ridge, predict_ridge, metrics
@@ -65,17 +65,32 @@ def feature_batch(model, seed, size, distractors, delays, batch_size, device):
     """Generate once, then capture every delay on exactly the same events."""
     batch = make_batch(seed, size, distractors=distractors)
     chunks = {delay: [] for delay in delays}
+    predictions = {delay: {field: [] for field in FIELDS} for delay in delays}
     with torch.no_grad():
         for start in range(0, size, batch_size):
             def section(tree):
                 return {key: section(value) if isinstance(value, dict)
                         else value[start:start + batch_size] for key, value in tree.items()}
             public = move(section(batch['public']), device)
-            snapshots, _ = capture(model, public, 'factorized', 'persistent', tuple(delays))
-            for delay in delays:
+            states = []
+            hook = model.norm.register_forward_pre_hook(lambda module, args: states.append(args[0].detach().clone()))
+            try:
+                snapshots, _ = capture(model, public, 'factorized', 'persistent', tuple(delays))
+            finally:
+                hook.remove()
+            if len(states) != len(delays) or list(delays) != sorted(delays):
+                raise ValueError('Unexpected historical capture boundary order')
+            for delay, state in zip(delays, states):
                 chunks[delay].append(snapshots[f'workspace_{delay}'].cpu())
+                decoded = model.decode(state, public)
+                for field in FIELDS:
+                    predictions[delay][field].append(decoded[field].argmax(-1).cpu())
     return dict(features={delay: torch.cat(parts) for delay, parts in chunks.items()},
-                labels=batch['targets']['value'], targets=batch['targets'],
+                labels=batch['targets']['value'], targets={field: batch['targets'][field] for field in FIELDS},
+                original_predictions={delay: {field: torch.cat(parts) for field, parts in fields.items()}
+                                      for delay, fields in predictions.items()},
+                event_row_hashes=[tensor_hash({key: value[index] for key, value in batch['public']['event'].items()})
+                                  for index in range(size)],
                 data_seed=seed, event_indices=list(range(size)),
                 event_sha256=tensor_hash(batch['public']['event']),
                 public_sha256=tensor_hash(batch['public']), distractors=distractors)
@@ -101,6 +116,23 @@ def validation_score(cache, fit, delays, distractors, device):
             count += score
             total += len(pred)
     return count, total, cells
+
+
+
+def prediction_record(seed, head, split, delay, distractor, batch, scalar):
+    predictions = dict(batch['original_predictions'][delay], value=scalar)
+    matches = {field: predictions[field] == batch['targets'][field] for field in FIELDS}
+    counts = {field: dict(correct=int(correct.sum()), total=len(correct))
+              for field, correct in matches.items()}
+    counts['joint'] = dict(correct=int(torch.stack(list(matches.values())).all(0).sum()), total=len(scalar))
+    counts['nonvalue_joint'] = dict(correct=int(torch.stack([matches[field] for field in FIELDS[1:]]).all(0).sum()), total=len(scalar))
+    required = batch['targets']['argument1'] != 6
+    counts['argument1_required'] = dict(correct=int((matches['argument1'] & required).sum()), total=int(required.sum()))
+    return dict(seed=seed, head=head, split=split, target_delay=delay, distractors=distractor,
+                event_sha256=batch['event_sha256'],
+                predictions={field: value.tolist() for field, value in predictions.items()},
+                targets={field: value.tolist() for field, value in batch['targets'].items()},
+                counts=counts, metrics=metrics(scalar, batch['labels']))
 
 
 def run(config, output):
@@ -141,12 +173,17 @@ def run(config, output):
         hashes = [cache[f'{split}/2']['event_sha256'] for split in ('train', 'calibration', 'test')]
         if len(set(hashes)) != 3:
             raise ValueError('Data partition events overlap')
+        row_sets = [set(cache[f'{split}/2']['event_row_hashes']) for split in ('train', 'calibration', 'test')]
+        if any(left & right for i, left in enumerate(row_sets) for right in row_sets[i+1:]):
+            raise ValueError('Individual events overlap across data partitions')
         for split in ('calibration', 'test'):
             for distractor in config['eval_distractors']:
                 batch = cache[f'{split}/{distractor}']
                 if batch['event_sha256'] != cache[f'{split}/2']['event_sha256']:
                     raise ValueError('Distractor conditions changed underlying events')
                 torch.testing.assert_close(batch['labels'], cache[f'{split}/2']['labels'])
+                if batch['event_row_hashes'] != cache[f'{split}/2']['event_row_hashes']:
+                    raise ValueError('Individual event ordering differs across distractor conditions')
         cache_meta = save_cache(output / f'{seed}-features.pt.gz', cache)
         heads = [(f'delay_{delay}', [delay], config['data']['train']['size'])
                  for delay in config['source_delays']]
@@ -160,12 +197,8 @@ def run(config, output):
                 for distractor in config['eval_distractors']:
                     batch = cache[f'{split}/{distractor}']
                     for delay in config['delays']:
-                        with torch.no_grad():
-                            pred = model.scalar_heads[0](batch['features'][delay].to(device)).argmax(-1).cpu()
-                        stream.write(json.dumps(dict(seed=seed, head='original', split=split,
-                            target_delay=delay, distractors=distractor,
-                            event_sha256=batch['event_sha256'], predictions=pred.tolist(),
-                            targets=batch['labels'].tolist(), metrics=metrics(pred, batch['labels']))) + '\n')
+                        pred = batch['original_predictions'][delay]['value']
+                        stream.write(json.dumps(prediction_record(seed, 'original', split, delay, distractor, batch, pred)) + '\n')
             for name, fit_delays, row_count in heads:
                 x, y, pairs = select_features(cache['train/2'], fit_delays, row_count, device)
                 candidates = []
@@ -194,10 +227,9 @@ def run(config, output):
                         batch = cache[f'{split}/{distractor}']
                         for delay in config['delays']:
                             pred = predict_ridge(batch['features'][delay].to(device), fit).argmax(-1).cpu()
-                            stream.write(json.dumps(dict(seed=seed, head=name, split=split,
-                                target_delay=delay, fit_delays=fit_delays, distractors=distractor,
-                                event_sha256=batch['event_sha256'], predictions=pred.tolist(),
-                                targets=batch['labels'].tolist(), metrics=metrics(pred, batch['labels']))) + '\n')
+                            record = prediction_record(seed, name, split, delay, distractor, batch, pred)
+                            record['fit_delays'] = fit_delays
+                            stream.write(json.dumps(record) + '\n')
         meta = dict(seed=seed, checkpoint_sha256=checkpoint_hash, width=1024,
                     backbone_parameters=parameters, memory_tokens=6, memory_coordinates=6144,
                     backbone_optimizer_presentations=0, ridge_fit_records=fit_records, feature_cache=cache_meta,

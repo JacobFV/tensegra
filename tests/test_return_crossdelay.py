@@ -30,3 +30,16 @@ def test_feature_capture_matches_original_and_pairs_distractors():
         for delay in [0,1,2]:
             expected = model.norm(model(public, delay)['state'])[:,0]
             torch.testing.assert_close(first['features'][delay], expected)
+
+
+def test_compact_nonvalue_predictions_match_frozen_forward():
+    torch.manual_seed(8)
+    model = ReturnMemoryModel(width=24, heads=4).eval()
+    result = feature_batch(model, 104, 4, 2, [0,1,2], 2, 'cpu')
+    public = make_batch(104, 4, distractors=2)['public']
+    with torch.no_grad():
+        for delay in [0,1,2]:
+            expected = model(public, delay)['logits']
+            for field, scores in expected.items():
+                torch.testing.assert_close(result['original_predictions'][delay][field], scores.argmax(-1))
+    assert len(set(result['event_row_hashes'])) == 4
