@@ -53,3 +53,22 @@ def test_hard_message_routing_path():
     hard=m(b,'hard'); message=m(b,'message')
     assert torch.allclose(hard['logits'],message['logits'],atol=1e-6)
     assert metrics(hard,targets(b),b)['exact_pointer_path'].all()
+
+
+def test_corrupted_routing_scored_against_clean_graph():
+    b=generate(32,16,4,seed=211)
+    c=corrupt(b,'wrong',55)
+    m=RoutingModel(width=32,heads=2)
+    result=m(c,'message')
+    clean=metrics(result,targets(b),b)
+    supplied=metrics(result,targets(c),c)
+    assert supplied['exact_pointer_path'].all()
+    assert clean['exact_pointer_path'].float().mean()<.1
+    assert clean['edge_mass'].mean()<.2
+
+
+def test_size_strength_is_public_and_zero_still_exact():
+    b=generate(2,32,2,seed=777)
+    m=RoutingModel(width=32,heads=2)
+    assert torch.equal(m(b,'soft',zero_strength=True,size_adjust=True)['logits'],m(b,'none')['logits'])
+    assert m(b,'soft',strength_override=8.)['logits'].shape==(2,2,32,16)
