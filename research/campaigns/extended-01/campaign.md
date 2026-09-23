@@ -18,4 +18,8 @@ Belief research stays frozen. Each branch may advance independently. A narrow va
 
 ## Current state
 
-R01 one-backbone development CE scalar refit reaches at least1016/1024 across all tested fresh validation cells through16; independent raw/cache replay passes. Three-backbone fresh-event confirmation is running, with delay32 test-only. S01 audited9728 alpha-distinct constructions and profiled12.05s; matched128/1024/8192 corpus ladder is ready. A01 direct routing five-arm development is ready after2.54s profile. No composition yet. See queue/budget for live ownership.
+R01 CE refitting substantially improves scalar access, but the frozen three-backbone confirmation fails its declared 0–16 contract: seed11 has1000/1024 correct at16. Raw/cache audit reproduces the failure. R02 tests fresh fitting diversity at fixed optimizer exposure; no composition promotion.
+
+A01 direct-attention development favors the strong keyed-context/message/hard baselines. Soft4 has correct argmax routing but poor value accuracy under joint size/depth shift. A02 isolates finite attention mass with stronger and size-adjusted bias, retaining all baselines.
+
+S01 audited9728 alpha-distinct constructions with disjoint splits. The first matched-exposure arm (128 training constructions) is running;1024/8192 arms follow. Public-text and return acquisition remain independent. Queue/budget are authoritative for live GPU ownership.
