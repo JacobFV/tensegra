@@ -60,3 +60,7 @@ If the path is promising, an extra-workspace-pass control is required before con
 Width16 CPU fixtures are explicitly mechanical: common parameters and off-path forward/gradients are bitwise identical; variable-length padding is invariant; sampled/dense edges agree; downstream edge loss reaches the copy query. No primary model uses width16.
 
 The corpus has only two ordered tree shapes at structural depth3, despite many equality/reference patterns. Any successful new-construction result remains limited to that support. Supplied canonical output conventions, dense privileged supervision and programmed identity-equality diagnostics must remain distinct from learned parsing and future confirmation.
+
+## Measured profile (mechanical, not acquisition evidence)
+
+The fixed20-update seed901 profile used width1,024 and batch8. Optimizer time was2.00330 seconds; full wrapper occupancy11.33561 seconds (inner process9.70415). Peak allocated CUDA memory1,278,865,408 bytes; maximum process RSS2,960,496KiB. All57,853,781 parameters are active. Projection for8,192 updates is approximately821 optimizer seconds plus170–250 seconds for full evaluation/serialization; proposed main cap1,500 seconds awaits coordinator approval. Small16-row profile evaluation is mechanical and is not a substitute for the main512-row development set. Receipt and manifest are archived under `research/results/campaign-01/semantics/s09-grounded-profile`.
