@@ -1,0 +1,43 @@
+{
+  "config": {
+    "mode": "recurrent",
+    "device": "cuda",
+    "width": 1024,
+    "inner": 2048,
+    "seed": 2,
+    "threads": 2,
+    "steps": 1000,
+    "batch": 32,
+    "candidates": 8,
+    "probe_count": 64,
+    "eval_count": 512,
+    "eval_candidates": [
+      8,
+      16
+    ],
+    "eval_splits": [
+      "validation",
+      "test"
+    ],
+    "log_every": 200,
+    "lr": 0.0003,
+    "compatibility_weight": 1.0
+  },
+  "config_sha256": "283058762b973defbd505fcc0078faa6abb764a169ef41141a3827b8aa711155",
+  "source_sha256": {
+    "belief_study.py": "e1426676b0a8db9a8a2e7d1fa14976c7cfb151d8baed98a20e8e4d60fe98cc48",
+    "belief_state.py": "681d6b6ec773a9dd820b308f47de6fd1c27e20d85233ee3bc1d3820799b820f7"
+  },
+  "git": "871160b6909a7dabacbfa8fa5670d05eb82c0431",
+  "parameters": 16851011,
+  "architecture_supplied": [
+    "typed roles",
+    "candidate records",
+    "observation identity",
+    "protected ledger for protected arm"
+  ],
+  "composition_allowed": false,
+  "device": "cuda",
+  "cuda_name": "NVIDIA GB10",
+  "checkpoint_sha256": "e1de03bc4efa7ca11f349c108ebcf3bb8967d0f208c0b59b14563a541c408100"
+}
