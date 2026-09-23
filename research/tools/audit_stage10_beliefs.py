@@ -1,14 +1,20 @@
 """Independent posterior audit of Stage10 belief role separation."""
-import argparse,gzip,hashlib,json,math
+import argparse,gzip,hashlib,json,math,struct
 from pathlib import Path
 def load(p):
  with (gzip.open(p,'rt') if p.suffix=='.gz' else p.open()) as f:return json.load(f)
 def audit(root,require_complete=True):
- runs=[];frames=0;cells=0;pairing={}
+ runs=[];frames=0;cells=0;pairing={};calibration_checked=0
  for path in sorted(root.glob('*/manifest.json')):
   manifest=load(path);cfg=manifest['config'];seed=cfg['seed'];arm=cfg['arm']
   if seed not in (20,21,22):continue
   assert manifest['workspace_width']==1024
+  assert hashlib.sha256(json.dumps(cfg,sort_keys=True).encode()).hexdigest()==manifest['config_sha256']
+  for name,h in manifest['source_sha256'].items():assert hashlib.sha256((root.parent/'frozen-source'/name).read_bytes()).hexdigest()==h
+  inventory_path=path.parent/'training-id-inventory.json';inventory=load(inventory_path)
+  assert hashlib.sha256(inventory_path.read_bytes()).hexdigest()==manifest['training_id_inventory_sha256']
+  coverage=manifest['training_id_coverage'];assert len(inventory)==coverage['unique'] and len(set(inventory))==len(inventory)
+  for handle,seen_handle in coverage['historical_handles_seen'].items():assert (int(handle) in inventory)==seen_handle
   pairing.setdefault(seed,[]).append((manifest['initial_tensor_sha256'],manifest['semantic_training_stream_sha256']))
   rows=load(path.parent/'metrics.json');expected={(s,n,c) for s in cfg['split_seeds'] for n in cfg['eval_candidates'] for c in cfg['conditions']};seen=set();gate=[];raws={}
   for row in rows:
@@ -35,14 +41,14 @@ def audit(root,require_complete=True):
     assert sum(j==len(p)-1 and q[-1]==1 for p,q,j in zip(ps,qs,predictions))==frame['no_match_true_positive']
     assert sum(j==len(p)-1 and q[-1]==0 for p,q,j in zip(ps,qs,predictions))==frame['no_match_false_positive']
     for binrow in frame['calibration']:
-     lo=binrow['lower'];chosen=[(p[j],q[j]) for p,q,j in zip(ps,qs,predictions) if p[j]>=lo and (p[j]<lo+.1 if lo<.9 else p[j]<=1)]
-     # FP32 bin boundaries can differ from Python's decimal boundary. Require exact support only away from boundaries.
-     boundary=any(abs(p[j]-lo)<1e-7 or abs(p[j]-(lo+.1))<1e-7 for p,j in zip(ps,predictions))
-     if not boundary:
-      assert len(chosen)==binrow['count']
-      if chosen:
-       assert abs(sum(a for a,b in chosen)/len(chosen)-binrow['confidence'])<1e-6
-       assert abs(sum(b for a,b in chosen)/len(chosen)-binrow['expected_correctness'])<1e-6
+     k=round(binrow['lower']*10)
+     lo=struct.unpack('f',struct.pack('f',k/10))[0];hi=struct.unpack('f',struct.pack('f',(k+1)/10))[0]
+     chosen=[(p[j],q[j]) for p,q,j in zip(ps,qs,predictions) if p[j]>=lo and (p[j]<hi if k<9 else p[j]<=1)]
+     calibration_checked+=1
+     assert len(chosen)==binrow['count']
+     if chosen:
+      assert abs(sum(a for a,b in chosen)/len(chosen)-binrow['confidence'])<1e-6
+      assert abs(sum(b for a,b in chosen)/len(chosen)-binrow['expected_correctness'])<1e-6
    a=sum(l1)/len(l1);b=sum(imp)/len(imp);acc=final/512
    assert abs(a-row['mean_l1'])<1e-6 and abs(b-row['mean_impossible'])<1e-6 and acc==row['final_support_accuracy']
    passed=a<.05 and b<.01 and acc>(.98 if row['candidates']==8 else .95)
@@ -58,6 +64,6 @@ def audit(root,require_complete=True):
   runs.append(dict(seed=seed,arm=arm,cells=len(rows),max_renaming_delta=max(deltas),cells_detail=gate))
  if require_complete:assert len(runs)==9 and cells==810
  assert all((len(v)==3 or not require_complete) and len(set(v))==1 for v in pairing.values())
- return dict(runs=runs,cells_verified=cells,frames_verified=frames,paired_initial_tensors_and_semantic_streams=True,complete_matrix=len(runs)==9 and cells==810)
+ return dict(runs=runs,cells_verified=cells,frames_verified=frames,calibration_bins_verified=calibration_checked,paired_initial_tensors_and_semantic_streams=True,complete_matrix=len(runs)==9 and cells==810)
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--output',required=True,type=Path);p.add_argument('--partial',action='store_true');a=p.parse_args();out=audit(a.root,not a.partial);a.output.write_text(json.dumps(out,indent=2)+'\n');print('Verified',out['cells_verified'],'cells')

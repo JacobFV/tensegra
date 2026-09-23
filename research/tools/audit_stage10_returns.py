@@ -1,5 +1,5 @@
 """Independent raw reconstruction of frozen cross-delay return readouts."""
-import argparse,gzip,hashlib,json
+import argparse,gzip,hashlib,json,subprocess
 from pathlib import Path
 FIELDS=('value','type','operation','argument0','argument1','provenance')
 def counts(p,t):
@@ -10,6 +10,8 @@ def counts(p,t):
  return {k:dict(correct=sum(v),total=len(v)) for k,v in m.items()}
 def audit(root):
  manifest=json.loads((root/'manifest.json').read_text());cfg=manifest['config'];total=0;matrix=[];gates=[];retention=[]
+ assert hashlib.sha256(json.dumps(cfg,sort_keys=True).encode()).hexdigest()==manifest['config_sha256']
+ for name,h in manifest['source'].items():assert hashlib.sha256(subprocess.check_output(['git','show','33e48f4:src/topoformer/'+name],cwd=Path(__file__).resolve().parents[2])).hexdigest()==h
  assert [r['seed'] for r in manifest['runs']]==[10,11,12]
  for run in manifest['runs']:
   seed=run['seed'];path=root/f'{seed}-predictions.jsonl.gz'
