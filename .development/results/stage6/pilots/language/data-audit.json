@@ -1,0 +1,892 @@
+{
+  "config": {
+    "train_count": 18,
+    "eval_count": 9,
+    "data_seed": 610000,
+    "difficulty": 0.5,
+    "node_capacity": 128,
+    "width": 32,
+    "workspace_rows": 8,
+    "microsteps": 3,
+    "seeds": [
+      7,
+      19,
+      43
+    ],
+    "updates": 8,
+    "eval_steps": [
+      0,
+      4,
+      8
+    ],
+    "batch_size": 2,
+    "learning_rate": 0.001,
+    "graph_weight": 0.25,
+    "consistency_weight": 1.0,
+    "train_languages": [
+      "english"
+    ],
+    "paired_language": "spanish",
+    "device": "cpu",
+    "threads": 1,
+    "output_dir": "results/thinking/stage6-language-pilot"
+  },
+  "semantic_train": [
+    "6156154b8a4ccc5fcec7bf2bca4d86c9d6b8b26895dc3494936aae43ccceaf8f",
+    "1a446b98a3ccfb33d99338d4eaa1c2f224ce62edd1abc4b82ba2c904b1065eb1",
+    "428ea942f458e1ffcd1f9bcd6e447411f6be65ed713d814a1120649f31f8d32d",
+    "8882864196cb7fa2397da41a8368254f67ad68ac46881e6cd17cba60cbba0114",
+    "3688ad2a13cfb1b75283c50057047e67734b7acee97730c1f48b4605598901c8",
+    "0e92b0fbce0b1e103e9d4bc1896502afd9dfa6eb9cab0bfab277975df3b94e0f",
+    "ca7c9eb50d76b9d6dc42c5fc5ca18508e422626c079990b8790865bd113817f4",
+    "a9634f507949c7979ac56e18bb5b68a187527be9f27b44fc6897aa1bbe47d19a",
+    "e607642965b352dfe17f6644055bc0356816240a920af83de3fa550ac62bf1d1",
+    "862e5b4c9354b449d80a0b4ee5fe4f30246b50bfc4be1a7623f991ccb01655d7",
+    "b502544d6e758e1a276e85f50d3075fbe6f5f268ea3106fb98085c210f071994",
+    "9ab34d671c0f81c50c7c8a62a0b34bb1bf80d61e5baad12b80cc474f32a853d9",
+    "b15a94ba4ea3349b52e5556dbbd7064214f54ca2685aee6a6e658e62f2dafc2e",
+    "27cad39c4400ccc544d17f2c9744130bd98515a96ef6eb193ce4c31de915698c",
+    "de5fe0cc2d73924b66b2849297c61b5d66394f6d50c02c0910a4b65e5f364b90",
+    "1d5fa9d2aac8796fb326b74c5db9250bb48c5668c37b861f87a7680e01e73ce2",
+    "74bcb2957eb4f54550f6618fd6800e1ca26189ccf599e67ee72c27ee8f6da53e",
+    "f6a9e20f8368c81de0547c7b3d1bdc494db3f3171d2ce651a17d21a5fdf1a3b2"
+  ],
+  "semantic_eval": [
+    "9258346784a38ca9e0466a332f1c55c962c5c69071debecffa0b20a238af11c2",
+    "52fae2a8ad1bb3882c7f218af88228b723cc189c6158e65352b8409b17bf567e",
+    "bc50a02c391a90cd308ca14d8e2a6908b8a4246457554e199b3caa07d18b193f",
+    "6b79bc2c86bd009613c1a16f110c017f3ef04a45d5276d6de63796eeb9b44772",
+    "8b8d19a90d3aea31b1279e7283ccd9a1b1e8b6c242d1df542fd0f93947659cd1",
+    "3a3d7b5e9898329087efe447737d0ad5d24d0a2743978bc58ac11fde228fad60",
+    "f4d52dad5a24d32821182da878dbb8c60c8675ccf5a688015500caba7e1cf8e9",
+    "3173c7d2c710e1aacf84562ccde609fe16805a149b5bf94a1538c7ab44553f42",
+    "141e051b34c7f70ffec87bcfc211c26ae4d4dd6190435568836b6d046a409d6e"
+  ],
+  "dedup_collisions": 0,
+  "examples": [
+    {
+      "lesson": "variable_binding",
+      "seed": 610000,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "6156154b8a4ccc5fcec7bf2bca4d86c9d6b8b26895dc3494936aae43ccceaf8f",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "596010238f41cdc027ee9df15d3a1a2192d0b9acc2f215005ecf2346485a8893",
+        "spanish": "5dc4ba1c8fe4604b805db7e29d1f858d6c7949a4ab47fee1592e009acba8d968",
+        "symbols": "c336c0f058baa8d4bb23146d79e9cbac33c751f767729ce8762f5b2bc0c9b7cf"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "unification",
+      "seed": 610001,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "1a446b98a3ccfb33d99338d4eaa1c2f224ce62edd1abc4b82ba2c904b1065eb1",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "99d88374834fe6bdd01f2e22f795155b348095b0dc526f09022fc55ec65dfad3",
+        "spanish": "278e1c573ff9a69ae7bdd26d57a9757820a36fe421363747126a3368a34084f0",
+        "symbols": "421e34c8d0d8e03ce496976fe14b6561b295fa5a8013930e76c400e1c2fdfef8"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "set_operations",
+      "seed": 610002,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "428ea942f458e1ffcd1f9bcd6e447411f6be65ed713d814a1120649f31f8d32d",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "97ecb52189b962b2efe1795517bdf6b88aebfcf6479462ddc5064d653a7a2bc3",
+        "spanish": "b22b4f0151b5b0f505e6472d4fb24417b1850a488aea0ae42ef57526651c6d99",
+        "symbols": "432b1e3c47025afa0bd19da7a47e6c94ef4265d07257ee3713956f62f011431a"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "variable_binding",
+      "seed": 610003,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "8882864196cb7fa2397da41a8368254f67ad68ac46881e6cd17cba60cbba0114",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "449a31dbfa42ef5337089bfc8645517b9c06f435bf77b8f40f2814336e8657b0",
+        "spanish": "2b7c81cf90906b2ebc7877e6cc1b54bf45202166bd840145fc84b619571d4a79",
+        "symbols": "8cd893adefbe9ba181153b0e01866497fcdabf512c590ef5f3a2d7a0288e209e"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "unification",
+      "seed": 610004,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "3688ad2a13cfb1b75283c50057047e67734b7acee97730c1f48b4605598901c8",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "effdf9900e28bc55be7f6864a0cd525068e5acc8cf3b1155c2a3a16cb5506d3d",
+        "spanish": "0a0dba11715bbe30dd3e1f4bbd5a6be6e72e33a0b23dbc2509ce7e215e32b5c0",
+        "symbols": "b104624fe839485ba405f3e277254cf3178b7d602682439180edcc97ace835cd"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "set_operations",
+      "seed": 610005,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "0e92b0fbce0b1e103e9d4bc1896502afd9dfa6eb9cab0bfab277975df3b94e0f",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "37215734a93274968ee1709888c753cad5e8b6dee3ad8713d0d566fa997c6f19",
+        "spanish": "70bae718caf956d1b9b2060ace6ef2c2f3c788fdf5001d9410391c425fe37746",
+        "symbols": "128ef7df23c1e939a6ca39cdc4b12998a1291d31bb42d44fbc383f531fccb6f3"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "variable_binding",
+      "seed": 610006,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "ca7c9eb50d76b9d6dc42c5fc5ca18508e422626c079990b8790865bd113817f4",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "088eeae743eb1a79f2dbdca1a75a301b7e3ea97c9a12c4cdf1d5bb7217546c8e",
+        "spanish": "2c89ec5c2c3a8aac76460665f5bd92add2d3ddc8dbf2ca0aff591199f9d13deb",
+        "symbols": "8ee9d92eeff14ae2282d5d58512d5dcbc11c307f61856c28de670790994f5988"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "unification",
+      "seed": 610007,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "a9634f507949c7979ac56e18bb5b68a187527be9f27b44fc6897aa1bbe47d19a",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "8800c65a3242cd0cf9d6513015a7b5c35dd9d08e2fe387ad25ba00f2f85ecb83",
+        "spanish": "bc5a2682d2c5a670d836d89dbd2e00ec34321735954265fabc368d112b7c2b30",
+        "symbols": "624b7aa9085aa576d9aded6531dd71efdab134a028d79077bf3b3d382666de48"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "set_operations",
+      "seed": 610008,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "e607642965b352dfe17f6644055bc0356816240a920af83de3fa550ac62bf1d1",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "60a989d1062e92f36c49767a59ebc4e027482f9bad2f824af7bba9466846e1c1",
+        "spanish": "579ea7fe4fca48ea498c39e9087e3b6562bcb0654aae3d94f52af9fb8e577cd5",
+        "symbols": "6f80a3a1d3ecfb78ed0884bc1c34d9ab7b8898700a98f2501188c0380f0fb698"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "variable_binding",
+      "seed": 610009,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "862e5b4c9354b449d80a0b4ee5fe4f30246b50bfc4be1a7623f991ccb01655d7",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "e121d8f2a2220a907d8514ea17077b332c5ebd678c4c2bcc2d0a84bc11a953df",
+        "spanish": "4186e0658b4f9cc02016a55fac3bc6b62f363d5cf33cb9d18750d8c8545e3122",
+        "symbols": "0346efddcbe14ceb65563a43ef2927bb71acbbb2b497e25fd7930342dfb4db5b"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "unification",
+      "seed": 610010,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "b502544d6e758e1a276e85f50d3075fbe6f5f268ea3106fb98085c210f071994",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "ca0f1c8ff6559dd3899631065b96a2cdaac5e51a25200b51567ce5a06448dd29",
+        "spanish": "4995f839b817ff04ea9dcb4abb32c8052925af24fdce9ab4652e1c2d37251a13",
+        "symbols": "90378049d1585c0620f68b97b01ee407ee702c4eac2e8a762bdde1db7f69ffc9"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "set_operations",
+      "seed": 610011,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "9ab34d671c0f81c50c7c8a62a0b34bb1bf80d61e5baad12b80cc474f32a853d9",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "1b492d95a89d4db572ca638296f1cdfb283757858696798d0f20f57e113ba50c",
+        "spanish": "0c590c987afb5f6ff6df7a6b66cb02453c4b9775efc4a34485ee89335e43c12e",
+        "symbols": "203fd9e3f7c4655c5cd8e1971e218c8aaf0db90a5bf12f6bdc06063c9ebecab7"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "variable_binding",
+      "seed": 610012,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "b15a94ba4ea3349b52e5556dbbd7064214f54ca2685aee6a6e658e62f2dafc2e",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "048fa12550823cded5a8e0fb70f642600c3cc4db4b95674474686d51eef298e1",
+        "spanish": "b69f25cccc3998fabb13da32b274c3861aa3cb689ebc73ba424d4546d338e71e",
+        "symbols": "31369369ddd085ce8ddf8c0d755d4fdc2a367f3c78ca2310170b93a7bb705962"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "unification",
+      "seed": 610013,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "27cad39c4400ccc544d17f2c9744130bd98515a96ef6eb193ce4c31de915698c",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "6c2e3f52bc1eb4020d0f618b2f83bedd0077e082855e0d8054b7ee02d137d285",
+        "spanish": "d1684352371159d3e48670c8bdf1d5bcabd6d478cd1c00b8000a6ffaa59e609b",
+        "symbols": "19c5bda5072c69fd11f66ba8ac125609e7ae3bc53234f02283f28e4a89998680"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "set_operations",
+      "seed": 610014,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "de5fe0cc2d73924b66b2849297c61b5d66394f6d50c02c0910a4b65e5f364b90",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "51772e019efd76bc46880d3f55fef1dccc99d875b3d0689e86f90590de86d11b",
+        "spanish": "d9a9a61eea9cedd09378f53eeb28c8461927b9d31f3531baa838473e744437ba",
+        "symbols": "594e7cddf0f354d0abec468c4a88a2069c2f4b17d7c1cbf8709c66d7a52070b0"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "variable_binding",
+      "seed": 610015,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "1d5fa9d2aac8796fb326b74c5db9250bb48c5668c37b861f87a7680e01e73ce2",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "d621c6f2aff96458758886998a490110dcf1a850a702e8857b2a0e694639980a",
+        "spanish": "fbb382b00aec23fdafa35b2253ff77271f182bda80ed6704310a21859c6163f7",
+        "symbols": "e4b464a3f13e8b067d1ee8d80aab725af43750044a7d51ffb4b8338e9fd13751"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "unification",
+      "seed": 610016,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "74bcb2957eb4f54550f6618fd6800e1ca26189ccf599e67ee72c27ee8f6da53e",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "047dbcc7df5c1f8c939f1bd91f89f786e058d83a7a92237e2045b8e1c63e18b5",
+        "spanish": "d45afb857845b0f7d2746f41d932c61de5fde2189a3b6d88d044ec3427f746a0",
+        "symbols": "296677f138215fdd576673af883143a7f6e94faa0b42fae6cac68a807daf6cd6"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "set_operations",
+      "seed": 610017,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "f6a9e20f8368c81de0547c7b3d1bdc494db3f3171d2ce651a17d21a5fdf1a3b2",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "300fd8ec403a6fe1e2aa28581b33c683294081b039e898e2674350ac2dd266fd",
+        "spanish": "82d6b4b02fcf7618873bf5dffe9111f5ec72eb0fb88f2db8e8ec21dc63aacc2b",
+        "symbols": "794c1e9845dc1e1fd1dcef0d6c18351caf4a66b7ec455c36296b01d68afed5c3"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "variable_binding",
+      "seed": 610018,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "9258346784a38ca9e0466a332f1c55c962c5c69071debecffa0b20a238af11c2",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "b0895508f444d7c72ae7663a4fe683b2986641485bf54e454e1151f89c56b33b",
+        "spanish": "47684d49a27db03ff5a28135eba1d97eeb2d8ca03490b2e65b86cfda46dda3aa",
+        "symbols": "02b39251fd767fcb0c51cddaaa9843c20fe50033b883e7a3af033292b0456620"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "unification",
+      "seed": 610019,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "52fae2a8ad1bb3882c7f218af88228b723cc189c6158e65352b8409b17bf567e",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "3e7d785b610e40ead5ed570c6cad00b99a9a63d60143739873be2718ff235bc1",
+        "spanish": "30db17ad460b60db33251711f55738835f66c2eb195e4909230a3c7ddad38251",
+        "symbols": "194fadb98230b1d68cdf99713b02d298de4ba162de76eb328739f38f07b89acf"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "set_operations",
+      "seed": 610020,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "bc50a02c391a90cd308ca14d8e2a6908b8a4246457554e199b3caa07d18b193f",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "17ba5545c49d991245b40b482fd53452f63cb14ac77573bd5beecb7a44eb8df7",
+        "spanish": "c9c6824671a2f5acc0ed042b504b3bc5d309ccb0de53e55a4ec67cacb7e5a131",
+        "symbols": "a029bcf1474e4e64cffa7c55e06796f12b5a9bef23ec08dc7ec6c710b7e12a34"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "variable_binding",
+      "seed": 610021,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "6b79bc2c86bd009613c1a16f110c017f3ef04a45d5276d6de63796eeb9b44772",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "aaf6c116fb7fe3ffc496235e2e355a7034c9754a89c3b344b5c739c43925db82",
+        "spanish": "3373ed618d996adda6591b6ee40069de5a48aa73d6ef386bdfba97c70ff4b88e",
+        "symbols": "86b414f27480f9dc16030cb9e34fb58b5a097155222dc5ad29efcc7170bbee78"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "unification",
+      "seed": 610022,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "8b8d19a90d3aea31b1279e7283ccd9a1b1e8b6c242d1df542fd0f93947659cd1",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "f1f652ba08e5f09027f6cba1e7e97741ced329c5ebd54b9affd5c64da6ab8bf0",
+        "spanish": "7e91f104152d87cf2d03fc905b55b221ad9d3679dca438bc8cb62e48c239b778",
+        "symbols": "a74d3134012bfcfd96d99c5d7c4f2f40c22efcc4003991fb75a8036e09289b55"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "set_operations",
+      "seed": 610023,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "3a3d7b5e9898329087efe447737d0ad5d24d0a2743978bc58ac11fde228fad60",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "1318baffc526972438ccca9efe075ad35aee86cd372f346e9c397fd483b4bfa0",
+        "spanish": "fe0bf35094bf953c45246f8459451cdabcd67c9f2298775249729f77eb0dc345",
+        "symbols": "1e15caa283780ff0f92d45fd1397c412ecae21a0c2619ae42e45520b9a8174a8"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "variable_binding",
+      "seed": 610024,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "f4d52dad5a24d32821182da878dbb8c60c8675ccf5a688015500caba7e1cf8e9",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "8532ff042f766e2e59d9e0fcaa1ffe5198326013644716e1052d67dfdc96cfb5",
+        "spanish": "316d862f48b206cf22798b3a966f4f93a90180270a339cfbaadae36ea51c1512",
+        "symbols": "1b0d31d7e246f03cda7be561e5d1977fcc1122ebcb63b11413242f90874a0a04"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "unification",
+      "seed": 610025,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "3173c7d2c710e1aacf84562ccde609fe16805a149b5bf94a1538c7ab44553f42",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "48db6bfe13a55f4bad3e0ed44565aa544a994bcad7dbad96fd4466f9a5bd3719",
+        "spanish": "cc8c55ee2d507eb20f9cc8ecfd43e6e8c6ab1bbf7585965dc4b2fd44a0ca1fd1",
+        "symbols": "1dede0637d69659dbf4a006a10da6e81a7eded1740cb5ac002f27776bf8a127c"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "set_operations",
+      "seed": 610026,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "141e051b34c7f70ffec87bcfc211c26ae4d4dd6190435568836b6d046a409d6e",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "77f7b32c1f46c89c26a43bb236fca7471b3e24613a3254518584fa9559adfd3d",
+        "spanish": "e47654ec765c8a61814cb5173a3dfe3eb0edd9f58daa14b1f86056c5d95a4fd8",
+        "symbols": "02a6d83e07aa65c384a983efa39c3ee02ddcfd4cd553c2cee0f654ba548a6623"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {},
+      "execution_scope": "semantic_compiler_only"
+    }
+  ],
+  "renamed_examples": [
+    {
+      "lesson": "variable_binding",
+      "seed": 610018,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "2670f185a545eda4e3e886f9b5b8753c5c0f1b0b42d9d5ecbb35e1044257232d",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "6e6a919b4743047b1cf17417dd0b0753e491eba6f50030af81e87f0bcf1a3f71",
+        "spanish": "f96fbbe39e565779914217bd161a0f044a8caac5b49d198f1dd1d11985503ec1",
+        "symbols": "de992d112cd423880dccc2dbed6691995d049bca69ddf19ea552984424eb6d71"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {
+        "alice": "novelentity0",
+        "bob": "novelentity1",
+        "carol": "novelentity2",
+        "dave": "novelentity3",
+        "erin": "novelentity4",
+        "frank": "novelentity5"
+      },
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "unification",
+      "seed": 610019,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "a942db53de720c8d23d559dcc31eb07fe53a6848c1fa82907fdd29dd3c6879fc",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "e61d273d1a52daa6c77ebd5e2abf826ddc3952324c8b94fc19414db04dfa87f9",
+        "spanish": "044a8ed4074c0d8d664b360a7afdf7ce7675eefb0d3f76aca2656442541d757c",
+        "symbols": "26d43163fd1461b16de0a35ebbc2799af149de3afc170236e0f3aee89e7a68a0"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {
+        "alice": "novelentity0",
+        "bob": "novelentity1",
+        "carol": "novelentity2",
+        "dave": "novelentity3",
+        "erin": "novelentity4",
+        "frank": "novelentity5"
+      },
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "set_operations",
+      "seed": 610020,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "30b23577cbac5f801a24ec5baaa37ae2c66c2bac3ee8ce997ca9bee2d27d901d",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "2509e485fdca3544338d7ab0401f1353d5226d953d25dda30a5c60fb00525807",
+        "spanish": "3249bd0cdea29a2b13daf1b42731573ce68c9a566cc11674c2793735b0949d76",
+        "symbols": "52d0b1316e92002ace5f185fc074b0682cf41a2332a3c24dcfd1df5992299b73"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {
+        "o2": "novelentity0",
+        "o3": "novelentity1",
+        "o1": "novelentity2",
+        "o0": "novelentity3"
+      },
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "variable_binding",
+      "seed": 610021,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "991b91bd3c1b8bdef391117bf2d36712e9f36bc0fd38825ba3d047af4f15b69a",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "eccd110355ed1eba154ffd82134ee5fc556ca7408eec37d866ef1bc402bf0e74",
+        "spanish": "b6bcecd7a718c175485819c818e4dadd61e5e2d0f7fc142ca9d62fe71f4571d5",
+        "symbols": "784904b8f0f5eec2542019d86452ad921f6e0c942095fb62facb110c67002fe4"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {
+        "alice": "novelentity0",
+        "bob": "novelentity1",
+        "carol": "novelentity2",
+        "dave": "novelentity3",
+        "erin": "novelentity4",
+        "frank": "novelentity5"
+      },
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "unification",
+      "seed": 610022,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "8af3ed2d25f0707b5d3b2e8f18db8edab0d839f2cd618cd3020ded6cf5ebb89e",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "16a99fcf0e09b682933a646c9e8339c80ebb8c01aee43813a3d851d0ac04dcbc",
+        "spanish": "b6bf3b0248d572bc38964e8207e2c0f0d8a7e9bc003908b3457dca15e191fe4a",
+        "symbols": "3a448136553c1a568a18ca9b481540eacb02a573fad217ab584c19acfcb79c50"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {
+        "alice": "novelentity0",
+        "bob": "novelentity1",
+        "carol": "novelentity2",
+        "dave": "novelentity3",
+        "erin": "novelentity4",
+        "frank": "novelentity5"
+      },
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "set_operations",
+      "seed": 610023,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "ba58929530c7aa5c2f54b38f819bfc2e242d3baf91c9e10c7b6ab67cef5419e5",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "67265cc925792c5fea71e8e1e7fcdb7a9fb8fd561db66c7afd2f992e939dc28d",
+        "spanish": "36b655ec4fabff44396638f4f816ceb770e1f68ce1c3de2710a500ce19dfdd98",
+        "symbols": "3697d1237d6528398a6f7d10e3683cfb9283def8fba29b25aa42d8b286e58d3a"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {
+        "o2": "novelentity0",
+        "o3": "novelentity1",
+        "o0": "novelentity2",
+        "o1": "novelentity3"
+      },
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "variable_binding",
+      "seed": 610024,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "4b3ec0b60a0ddaa3b2c5bad56ea4553e096da14cd520abe2fe43fc8e672ded4d",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "365a398f08e6866c5b1ac92faf569555b9c7591337797ee7c4c6c49758bc9df1",
+        "spanish": "39ec133dbc317b442980fedce826b527dbeaf10452bcf10f3624ff83f113635f",
+        "symbols": "3ac0efd581070ebcdb257e5f5f7a8aabd496087aa388938e272811da002e3717"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {
+        "alice": "novelentity0",
+        "bob": "novelentity1",
+        "carol": "novelentity2",
+        "dave": "novelentity3",
+        "erin": "novelentity4",
+        "frank": "novelentity5"
+      },
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "unification",
+      "seed": 610025,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "dffe2d0451b8fdf6916b82d86fb96ba1b89e31d2c0f70fe287e9b86a1ff63be1",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "482633445c9720346a2d6b2986dad8d507d3ca1bc6b1e1d2827dfb30515a42b1",
+        "spanish": "a4da7df52de350a485c9d494982cf818774a36086cbf341852012aa116396f8f",
+        "symbols": "ac49a2d0bf4cfa9ab153857cb4c2bce9d24edc50ccfe6bd3f7c256311977d76f"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {
+        "alice": "novelentity0",
+        "bob": "novelentity1",
+        "carol": "novelentity2",
+        "dave": "novelentity3",
+        "erin": "novelentity4",
+        "frank": "novelentity5"
+      },
+      "execution_scope": "semantic_compiler_only"
+    },
+    {
+      "lesson": "set_operations",
+      "seed": 610026,
+      "difficulty": 0.5,
+      "source_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+      "compiler_version": "topoformer-termgraph-v1",
+      "renderer_version": "tcn-fixed-construction-v2",
+      "semantic_digest": "2ac63c5d1f2aa2d5bd935dd9275785382791002cc98c791dadc57d223cfbdcef",
+      "source_manifest_sha256": "2a83f274fd746f64a2cdefcaca718537b6917e2f2496faa6611bc2ff8a8fe350",
+      "compiler_sha256": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+      "adapter_sha256": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+      "surface_sha256": {
+        "english": "c524bdda74a84cded06b6cda3f260abdd3163a090119075daefba7640a0cb435",
+        "spanish": "d37cbb753d80cc68d4d9a608395a5c00dd76a580e50850abeca3d848573ab03b",
+        "symbols": "5d623562b8a04241896628ce8cdd8b280f18d89dd87ac1c82b5f20a65d5783ab"
+      },
+      "distinct_surface_texts": 3,
+      "identifier_renaming": {
+        "o2": "novelentity0",
+        "o3": "novelentity1",
+        "o0": "novelentity2",
+        "o1": "novelentity3"
+      },
+      "execution_scope": "semantic_compiler_only"
+    }
+  ],
+  "max_nodes": 37,
+  "execution_scope": "independent_tcn_semantic_track",
+  "limitations": [
+    "canonical traversal alignment; no isomorphism matching",
+    "edge slot order implicit in canonical node positions; roles explicitly decoded",
+    "64-bit lexical hash fidelity, not lexical string generation",
+    "unseen_lexical is controlled entity alpha-renaming on heldout constructions; no heldout-motif claim",
+    "Spanish paired exposure for consistency arm; symbols withheld from all arms",
+    "consistency arm also receives paired task supervision and extra surface exposure; not an isolated consistency causal effect"
+  ],
+  "public_lexical_hash_collisions": 0,
+  "task_counts": {
+    "train": {
+      "variable_binding": 6,
+      "unification": 6,
+      "set_operations": 6
+    },
+    "eval": {
+      "variable_binding": 3,
+      "unification": 3,
+      "set_operations": 3
+    }
+  },
+  "arm_surface_exposure": {
+    "single_pass": [
+      "english"
+    ],
+    "recurrent": [
+      "english"
+    ],
+    "semantic_supervision": [
+      "english"
+    ],
+    "multisurface_consistency": [
+      "english",
+      "spanish"
+    ]
+  },
+  "source_hashes": {
+    "thinking_language.py": "dfc4a8d497d155a2df36681e115b345a24b29097163d1e359f29be4cb0406ba1",
+    "thinking.py": "9771f9b6fd681d01374dc03ce3c8b984176534b4fe23d5b7b9589676926987f6",
+    "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb"
+  },
+  "data_hash": "f9dc6150de24a3f39ce82d690d514ba82f8b8eeec1cc50493c98eabdbe2f38b5"
+}
