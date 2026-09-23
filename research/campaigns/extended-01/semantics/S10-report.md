@@ -1,6 +1,6 @@
 # S10: public compiler contracts recover some complete graphs
 
-Status: exploratory frozen-output diagnostic; independent audit pending. Source `2085053` (protocol `a5a0ca0`). No training, GPU, score refit, threshold selection, new inference, or confirmation data. Frozen actor width remains 1024.
+Status: exploratory frozen-output diagnostic; independent audit passed (`c3a01f8`), all 15,360 records reconstructed independently including exact output hashes and metrics. Source `2085053` (protocol `a5a0ca0`). No training, GPU, score refit, threshold selection, new inference, or confirmation data. Frozen actor width remains 1024.
 
 ## Observation
 
