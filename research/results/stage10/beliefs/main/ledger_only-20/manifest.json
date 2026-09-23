@@ -1,0 +1,108 @@
+{
+  "config": {
+    "arm": "ledger_only",
+    "seed": 20,
+    "device": "cuda",
+    "threads": 2,
+    "steps": 1000,
+    "batch": 32,
+    "train_namespace": 10000000,
+    "curve_namespace": 10095000,
+    "split_seeds": {
+      "validation": 10100000,
+      "test": 10200000
+    },
+    "eval_candidates": [
+      8,
+      16,
+      32
+    ],
+    "conditions": [
+      "clean",
+      "reorder",
+      "duplicate",
+      "long_duplicate",
+      "contradiction",
+      "retract",
+      "partial",
+      "empty",
+      "full_retract",
+      "distinct_equal",
+      "candidate_permutation",
+      "id_rename",
+      "id_permute_seen",
+      "distinct_equal_seen_id",
+      "distinct_equal_unseen_id"
+    ],
+    "eval_count": 512,
+    "chunk": 32,
+    "log_every": 200,
+    "lr": 0.0003,
+    "study": "paired_main_fixed_budget_no_selection"
+  },
+  "config_sha256": "6b309e6776ab503ad60bfdd621cd015b2aa792605a1c1a1a70782c54f206aa69",
+  "source_sha256": {
+    "belief_invariance_study.py": "4278890e059c09eedc17cdef66c97f00f7ab66ebcf50f82fff682b99116775f4",
+    "belief_invariance.py": "15d7a000686c28d87b2cf0feb2ff6c67caf1f46b7f19956bd761ea9b1e21a58a",
+    "belief_contracts.py": "5508451f141e1229601e04c5b2f15b5ed0ef1ad650ae5865965107d60ca21957",
+    "belief_contracts_study.py": "4dfc9b50f402f1cb6a33fec605c63b5c5f0b0e2c8331b282a210c678de67977d",
+    "belief_state.py": "04e28df53062bf4124687309389988eba09e82bbc3c8cbc0edc86fabe2b6acd1"
+  },
+  "initial_checkpoint_sha256": "3ebb12ff1d160bed221d28a0aab9b7c65b7da54afa6af1721f3a75ddef42e5ab",
+  "initial_tensor_sha256": "170168d65e6844a2e3bcd2ef9f4087e0e77d903f88b3407ed6e9a5bb970d7fd1",
+  "parameters": 16867395,
+  "workspace_width": 1024,
+  "ff_width": 2048,
+  "inactive_id_weights": 16384,
+  "composition_allowed": false,
+  "device_name": "NVIDIA GB10",
+  "training_and_curve_seconds": 47.82212388701737,
+  "optimizer_presentations": 32000,
+  "unique_training_generation_keys": 32000,
+  "unique_public_constructions": 32000,
+  "construction_identity": "Exact nonce-key and candidate-record content, candidate-order invariant; not alpha-equivalence",
+  "semantic_training_stream_sha256": "25a3f77beb2b68aebe2ee0c8939ca0685ddc93a0afadab2af0ed59cd8f7a1367",
+  "public_training_stream_sha256": "b03450376f32c22334f5285288a2de054fa38c1d93519a1f1f73fade81cb2776",
+  "training_id_coverage": {
+    "unique": 5,
+    "assignments": 128000,
+    "minimum": 0,
+    "maximum": 4,
+    "bit_one_counts": [
+      58656,
+      53312,
+      10688,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "historical_handles_seen": {
+      "4": true,
+      "100": false
+    },
+    "historical_handle_primitive_values": {
+      "4": [
+        1,
+        2
+      ],
+      "100": []
+    }
+  },
+  "training_id_inventory_sha256": "86c1b3261036a8299ab366cd479dcf1b5b2f23151883c84211f33b6f01c39bc2",
+  "checkpoint_sha256": "9c5a34126522baa61ec279af6f15fe137a769887c79ad9273a4f56ad1fc708cd",
+  "final_tensor_sha256": "84840c0d585071b0ea8bd27be0c5ff2863367ec98371da5412dad60a8314bf86",
+  "evaluation_seconds": 71.52597881807014,
+  "total_seconds": 119.69897487387061,
+  "cuda_peak_bytes": 564333056,
+  "rss_peak_kib": 2085144
+}
