@@ -108,12 +108,15 @@ def test_r05_capture_matches_frozen_forward_and_drop_ignores_value():
     from topoformer.retention_data import make_batch
     from topoformer.return_memory import ReturnMemoryModel
     from topoformer.campaign_returns_use import workspace,alter_public
+    from topoformer.return_diagnostics_probe import capture
     # Explicitly small mechanical parity fixture; experimental width remains1024.
     torch.set_num_threads(2);torch.manual_seed(91)
     model=ReturnMemoryModel(width=32,encoding='factorized').eval()
     public=make_batch(8123,2,distractors=2)['public']
     with torch.no_grad():
         captured=workspace(model,public,[0,1])
+        historical,_=capture(model,public,'factorized','persistent',(0,1))
+        for d in (0,1):torch.testing.assert_close(captured[d],historical[f'workspace_{d}'])
         for d in (0,1):
             actual=model(public,steps=d)['state']
             torch.testing.assert_close(captured[d],model.norm(actual)[:,0])
