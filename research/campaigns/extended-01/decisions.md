@@ -55,3 +55,6 @@ A06 independently confirms concentration repairs for every strong routing interf
 
 ### 23:05 UTC — acquisition and output contracts
 N1 clean answer accuracy is strong, while reversal errors survive fully correct argmax lowering and near-exact soft operand retrieval; do not blame proposal drift. Wait for N2 before freezing confirmation. S10 tests only public compiler bookkeeping/type constraints on archived predictions, independently of S09 training. S11 may change only restored optimizer LR from S03, because the fixed-LR extension regressed; restore semantics must explicitly override loaded param-group LR rather than only constructor configuration.
+
+## 23:48 UTC — confirmation and stronger controls
+S11's minimal LR change warrants the frozen three-parent paired S12 confirmation before adding S09's contextual path. C02's single-seed rekey benefit is substantial but remains below the acquired-interface criterion; retain it and test the stronger N1's role shortcut with one isolated augmentation. A07 addresses the remaining graph-record comparator gap without altering A06. No confirmation results select these development branches.
