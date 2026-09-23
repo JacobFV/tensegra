@@ -1,36 +1,24 @@
 {
   "gpu_seconds_ceiling": 10800,
-  "accounting": "Conservative serialized job walltime, including CPU export, charged against GPU ceiling. Brief fixtures logged too. No concurrent GPU jobs.",
-  "jobs": [
-    {
-      "name": "belief_profile_and_gradients",
-      "seconds": 1.1,
-      "kind": "frozen_checkpoint_diagnostic",
-      "source": "857a57c"
-    },
-    {
-      "name": "belief_frozen_contract_matrix",
-      "seconds": 501.477,
-      "kind": "frozen_checkpoint_inference",
-      "source": "523ec15"
-    },
-    {
-      "name": "return_scalar_grid",
-      "seconds": 8.55,
-      "gpu_seconds": 0,
-      "kind": "two_thread_CPU_frozen_diagnostic"
-    },
-    {
-      "name": "semantic_oracle_profile",
-      "seconds": 1.071,
-      "kind": "mechanical_head_training_profile",
-      "source": "c379744"
-    }
-  ],
-  "pending_caps_seconds": {
-    "return_frozen_probes": 600,
-    "semantic_oracle_development": 300,
-    "belief_id_localization": 60
+  "accounting": "Recorded model/job times below are not a precise GPU utilization measure. Conservative reservation charged2000seconds total including profiles, process/export overhead and brief GPU fixtures; no concurrent GPU training. CPU archive audits and independent checkpoint replays are separate. All jobs complete.",
+  "recorded_seconds": {
+    "belief_profile_matrix_id_diagnostic": 518.807,
+    "return_frozen_probes": 172.26288388296962,
+    "return_main": 230.3497110940516,
+    "return_main_profile": 2.075,
+    "semantic_oracle_and_affine": 90.188589142402,
+    "semantic_oracle_profile": 1.071,
+    "semantic_calibrated_confirmation": 68.3696617600508
   },
-  "no_new_backbone_training_yet": true
+  "conservative_charged_seconds": 2000,
+  "unused_ceiling_seconds": 8800,
+  "pending_jobs": [],
+  "primary_workspace_width": 1024,
+  "hardware_evidence": "research/results/stage9/hardware-preflight.txt",
+  "allocation_minutes": {
+    "belief": 15,
+    "returns": 75,
+    "semantics": 75,
+    "reserve": 15
+  }
 }

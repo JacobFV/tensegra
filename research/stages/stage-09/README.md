@@ -2,6 +2,9 @@
 
 Baseline: `0f44e13`. Standard workspace width: **1024**. No composition or supervision withdrawal.
 
+- [Consolidated findings and stopping decisions](stage9-report.md)
+- [Belief results](stage9-belief-report.md)
+- [Semantic results](stage9-semantic-report.md)
 - [Design, sequencing, and resource ceiling](stage9-design.md)
 - [Experiment registry](stage9-registry.json)
 - [Stage 9 gates](stage9-gates.json) — historical Stage 8 gates remain unchanged
