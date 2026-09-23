@@ -1,0 +1,42 @@
+{
+  "version": "p01-v1-fresh-confirmation",
+  "seed": 303,
+  "hidden": 1024,
+  "key_dim": 32,
+  "cpu_threads": 4,
+  "learning_rate": 0.001,
+  "weight_decay": 0.01,
+  "batch_size": 256,
+  "updates": 2000,
+  "checkpoints": [
+    0,
+    250,
+    500,
+    1000,
+    1500,
+    2000
+  ],
+  "data": {
+    "train": {
+      "seed": 482000001,
+      "count": 8192
+    },
+    "calibration": {
+      "seed": 482000002,
+      "count": 1024
+    },
+    "validation": {
+      "seed": 482000003,
+      "count": 4096
+    }
+  },
+  "control_seed": 482000100,
+  "controls": [
+    "record_order",
+    "inventory_order",
+    "fresh_names",
+    "reverse_roles",
+    "unrelated_instructions"
+  ],
+  "requested_process_cap_seconds": 120
+}
