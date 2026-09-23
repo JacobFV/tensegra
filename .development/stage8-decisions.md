@@ -33,3 +33,7 @@ A separately frozen followup will expose the same stable public ID features to b
 ## Artifact publication
 
 The initial semantic COO prediction archive exceeded GitHub's100MB file limit; its push was rejected. The original is preserved remotely with a SHA256 manifest. Lossless bit packing reduced it to22MB, with every decoded tensor checked. A clean-tree progress snapshot is published on `feat/stage8-progress`; final main integration will exclude the superseded oversized blob's unpublished history while retaining source snapshots/hashes and all raw evidence. No Stage1–7 history is rewritten.
+
+## Explicit historical width ablation
+
+Before ID-matched1024 results are observed, freeze a separately labeled width32/FF64 historical control on exactly the same Stage8 ID-matched task, data,1000updates, seeds and gates. Default/main remains1024. Run remotely with two CPU threads after the primary1024 study; expected5–7minutes including full output. This ablation can test width within the new recipe; neither its result nor cross-stage differences may be used to retune the frozen1024 main.
