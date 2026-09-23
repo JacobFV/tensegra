@@ -52,3 +52,15 @@ def test_frequency_control_vectorized_counts(tmp_path):
     assert fitted['edges'].shape==(128,128,len(m.ROLES))
     assert fitted['presence'].dtype==torch.bool
     assert fitted['copy'].min()>=-1
+
+
+def test_true_minibatch_matches_singletons_with_public_padding():
+    torch.manual_seed(17)
+    model=m.SemanticCurriculumActor(value_count=3,width=16,microsteps=1,workspace_rows=2,capacity=8,edge_width=8)
+    publics=[m.ActorInput('a',()),m.ActorInput('b plus c plus d',())]
+    singles=[model(p) for p in publics]
+    batch=model.forward_batch(publics)
+    for a,b in zip(singles,batch):
+        assert all(torch.allclose(a[k],b[k],atol=2e-6) for k in a)
+    changed=model.forward_batch([publics[0],m.ActorInput('other text',())])[0]
+    assert all(torch.allclose(batch[0][k],changed[k],atol=2e-6) for k in batch[0])

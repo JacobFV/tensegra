@@ -54,29 +54,42 @@ class SemanticCurriculumActor(nn.Module):
         self.edge_width = edge_width
 
     def forward(self, public, *, pairs=None):
-        if not isinstance(public,ActorInput): raise TypeError('public ActorInput required')
-        features,_ = encode_public(ActorInput(public.text,('dummy',)))
-        features = features.to(self.initial.device)
-        if self.no_input: features = torch.zeros_like(features[:,:1])
-        memory = self.features(features)
-        state = self.initial
-        mask = torch.ones(memory.shape[:2],dtype=torch.bool,device=memory.device)
+        return self.forward_batch([public],pairs=None if pairs is None else [pairs])[0]
+
+    def forward_batch(self, publics, *, pairs=None):
+        if not publics or any(not isinstance(p,ActorInput) for p in publics):
+            raise TypeError('nonempty public ActorInput batch required')
+        encoded=[]; lengths=[]
+        for public in publics:
+            features,_=encode_public(ActorInput(public.text,('dummy',)))
+            lengths.append(len(base.tokens(public)))
+            encoded.append(torch.zeros_like(features[0,:1]) if self.no_input else features[0])
+        features=nn.utils.rnn.pad_sequence(encoded,batch_first=True).to(self.initial.device)
+        mask=torch.arange(features.shape[1],device=features.device)[None,:]<torch.tensor([len(e) for e in encoded],device=features.device)[:,None]
+        memory=self.features(features)
+        state=self.initial.expand(len(publics),-1,-1)
         for _ in range(self.microsteps):
-            for block in self.blocks: state,_ = block(state,memory,mask,0.)
-        nodes = self.decode_nodes(self.queries,state,state,need_weights=False)[0][0]+self.queries[0]
-        source = self.edge_source(nodes).reshape(self.capacity,len(ROLES),self.edge_width)
-        target = self.edge_target(nodes)
-        if pairs is None:
-            edge = torch.einsum('nrd,md->nmr',source,target)/math.sqrt(self.edge_width)
-            slots = self.slot_source(nodes)[:,None,:]+self.slot_target(nodes)[None,:,:]
-        else:
-            i,j = pairs.to(nodes.device).unbind(-1)
-            edge = (source[i]*target[j,None,:]).sum(-1)/math.sqrt(self.edge_width)
-            slots = self.slot_source(nodes)[i]+self.slot_target(nodes)[j]
-        copy = self.copy_query(nodes)@self.copy_key(features[0]).T/math.sqrt(self.width)
-        if self.no_input: copy = copy.expand(-1,len(base.tokens(public)))
-        return dict(presence=self.presence(nodes)[:,0],kind=self.kind(nodes),value=self.value(nodes),
-                    copy=copy,edges=edge,slots=slots)
+            for block in self.blocks: state,_=block(state,memory,mask,0.)
+        queries=self.queries.expand(len(publics),-1,-1)
+        nodes=self.decode_nodes(queries,state,state,need_weights=False)[0]+queries
+        source=self.edge_source(nodes).reshape(len(publics),self.capacity,len(ROLES),self.edge_width)
+        target=self.edge_target(nodes)
+        copy=self.copy_query(nodes)@self.copy_key(features).transpose(-1,-2)/math.sqrt(self.width)
+        presence=self.presence(nodes)[...,0]; kind=self.kind(nodes); value=self.value(nodes)
+        slot_source=self.slot_source(nodes); slot_target=self.slot_target(nodes)
+        outputs=[]
+        for row in range(len(publics)):
+            if pairs is None:
+                edge=torch.einsum('nrd,md->nmr',source[row],target[row])/math.sqrt(self.edge_width)
+                slots=slot_source[row,:,None,:]+slot_target[row,None,:,:]
+            else:
+                i,j=pairs[row].to(nodes.device).unbind(-1)
+                edge=(source[row,i]*target[row,j,None,:]).sum(-1)/math.sqrt(self.edge_width)
+                slots=slot_source[row,i]+slot_target[row,j]
+            copying=copy[row,:,:lengths[row]]
+            if self.no_input: copying=copy[row].expand(-1,lengths[row])
+            outputs.append(dict(presence=presence[row],kind=kind[row],value=value[row],copy=copying,edges=edge,slots=slots))
+        return outputs
 
 
 def sampled_pairs(gold, generator, negative_count=128):
@@ -195,18 +208,24 @@ def run(config):
                 if exposure==presentations: break
                 if cuda: torch.cuda.synchronize(model.initial.device)
                 train_start=time.monotonic()
-                optimizer.zero_grad(); logs=[]
+                optimizer.zero_grad(); logs=[]; publics=[]; golds=[]; pair_queries=[]
                 for offset in range(batch_size):
                     index,language=exposure_schedule(exposure+offset,train_count)
                     public,g=base.surface_input(corpus[eval_count+index],language)
                     gold=base.targets(g,public,capacity,vocab,language)
-                    pairs=sampled_pairs(gold,generator,config.get('negative_pairs',128))
-                    parts=sampled_losses(model(public,pairs=pairs),gold,pairs)
-                    weights=curriculum_weights(exposure+offset,config.get('node_presentations',1000),config.get('identity_presentations',2000))
-                    loss=sum(weights[k]*v for k,v in parts.items())/batch_size
-                    if not torch.isfinite(loss): raise FloatingPointError('nonfinite loss')
-                    loss.backward(); logs.append({k:float(v.detach()) for k,v in parts.items()})
+                    publics.append(public); golds.append(gold)
+                    pair_queries.append(sampled_pairs(gold,generator,config.get('negative_pairs',128)))
                     seen.add(index); tokens+=len(base.tokens(public))
+                outputs=model.forward_batch(publics,pairs=pair_queries)
+                objectives=[]
+                for offset,(prediction,gold,pairs) in enumerate(zip(outputs,golds,pair_queries)):
+                    parts=sampled_losses(prediction,gold,pairs)
+                    weights=curriculum_weights(exposure+offset,config.get('node_presentations',1000),config.get('identity_presentations',2000))
+                    objectives.append(sum(weights[k]*v for k,v in parts.items()))
+                    logs.append({k:float(v.detach()) for k,v in parts.items()})
+                loss=torch.stack(objectives).mean()
+                if not torch.isfinite(loss): raise FloatingPointError('nonfinite loss')
+                loss.backward()
                 nn.utils.clip_grad_norm_(model.parameters(),1.); optimizer.step()
                 if cuda: torch.cuda.synchronize(model.initial.device)
                 training_seconds+=time.monotonic()-train_start
