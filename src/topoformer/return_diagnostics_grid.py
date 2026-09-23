@@ -49,6 +49,7 @@ def run(config,out):
          public,y=batch(9500101,1,config['device']);e=public['event']
          for key in e:
             if key!='values': e[key]=e[key][:1].expand_as(e[key]).clone()
+         e['operand_values'][:,:,1]=e['values']
          raw=model.encoders[0]((e['values']/8).unsqueeze(-1))[:,0]; mem=model.encode(e,encoding)[:,0]
          for boundary,vectors in [('raw',raw),('memory',mem)]:
             distance=torch.cdist(vectors,vectors);distance.fill_diagonal_(float('inf'))
