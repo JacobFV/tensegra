@@ -44,3 +44,13 @@ def test_frozen_capture_matches_original():
             torch.testing.assert_close(features[f'workspace_{delay}'],expected)
     torch.testing.assert_close(state,actual)
     assert features['scalar_premix'].shape==(2,24)
+
+
+def test_scalar_grid_has_valid_distinct_ordered_identities():
+    from topoformer.return_diagnostics_grid import batch
+    public,y=batch(9400101,16,'cpu')
+    event=public['event']
+    assert (event['arguments'][:,:,0]!=event['arguments'][:,:,1]).any(-1).all()
+    assert (event['operand_values'].sum(-1)==event['values']).all()
+    assert (event['types']==1).all() and (event['operations']==0).all()
+    assert len(y.unique())==33

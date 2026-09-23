@@ -22,7 +22,10 @@ def batch(seed, contexts, device):
     event['argument_mask'].fill_(True)
     # make_batch unary absence is repaired by selecting a public nonzero identity.
     missing=event['arguments'][:,:,1].square().sum(-1)==0
-    event['arguments'][:,:,1]=torch.where(missing[:,:,None],data['public']['argument_keys'][:,1:2],event['arguments'][:,:,1])
+    keys=data['public']['argument_keys']
+    first_is_zero=(event['arguments'][:,:,0]-keys[:,0:1]).square().sum(-1)==0
+    fallback=torch.where(first_is_zero[:,:,None],keys[:,1:2],keys[:,0:1])
+    event['arguments'][:,:,1]=torch.where(missing[:,:,None],fallback,event['arguments'][:,:,1])
     return data['public'],y
 
 
