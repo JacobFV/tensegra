@@ -60,3 +60,5 @@ The [semantic report](stage8-semantic-report.md) contains full seed, surface, co
 ## Overall conclusion
 
 Ordinary belief updating is learned in the supplied candidate-local interface. Protected bookkeeping improves stress-test posterior stability, while prescribed prior/null calibration remains inadequate. Persistent return access improves substantially but exact scalar reconstruction and long-horizon readout remain below criterion. Semantic component recovery benefits from meaningful training exposure, without whole-graph or robust surface-transfer competence. These are separate measured boundaries, not evidence of a single general failure of neural recurrence.
+
+Final regression on an immutable repository snapshot: **538 tests and 6 subtests passed** in 9.51 seconds on the linked machine. Research-directory migration separately passed raw-byte preservation and local Markdown-link audits. No Stage 1–7 experiment result contents were changed.
