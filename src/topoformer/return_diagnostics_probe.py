@@ -72,16 +72,18 @@ def run(config, output):
         for split, (data_seed,size) in config['splits'].items():
             batch=make_batch(data_seed,size,distractors=config.get('distractors',8))
             split_hashes[split]=event_hash(batch['public']['event'])
-            chunks={}; baseline=[]
+            chunks={}; baseline={}
             with torch.no_grad():
              for start in range(0,size,config.get('batch_size',64)):
                 def sl(tree):return {k:sl(v) if isinstance(v,dict) else v[start:start+config.get('batch_size',64)] for k,v in tree.items()}
                 public=move(sl(batch['public']),device)
                 captured,state=capture(model,public,encoding,availability,tuple(config['delays']))
                 for key,value in captured.items(): chunks.setdefault(key,[]).append(value.cpu())
-                baseline.append(model.decode(state,public)['value'].argmax(-1).cpu())
+                for key,value in captured.items():
+                    if key.startswith('workspace_'): baseline.setdefault(key,[]).append(model.scalar_heads[0](value).argmax(-1).cpu())
             splits[split]=({k:torch.cat(v).to(device) for k,v in chunks.items()},batch['targets']['value'].to(device))
-            records.append(dict(run=name,split=split,boundary='historical_decoder_final',metrics=metrics(torch.cat(baseline),batch['targets']['value'])))
+            for key,values in baseline.items():
+                records.append(dict(run=name,split=split,boundary=key,family='historical_decoder',metrics=metrics(torch.cat(values),batch['targets']['value']),predictions=torch.cat(values).tolist(),targets=batch['targets']['value'].tolist()))
         if not config.get('profile_only',False):
          train,y=splits['train']; val,vy=splits['validation']; test,ty=splits['test']
          for boundary,x in train.items():
