@@ -1,0 +1,53 @@
+{
+  "config": {
+    "mode": "recurrent",
+    "seed": 2,
+    "device": "cuda",
+    "checkpoint": "~/topoformer-stage8-artifacts/beliefs/idmatched/recurrent-2/model.pt",
+    "steps": 0,
+    "eval_count": 512,
+    "chunk": 32,
+    "eval_candidates": [
+      8,
+      16,
+      32
+    ],
+    "conditions": [
+      "clean",
+      "reorder",
+      "duplicate",
+      "long_duplicate",
+      "contradiction",
+      "retract",
+      "partial",
+      "empty",
+      "full_retract",
+      "distinct_equal",
+      "candidate_permutation",
+      "id_rename"
+    ],
+    "split_seeds": {
+      "validation": 9100000,
+      "test": 9200000
+    },
+    "study": "frozen_checkpoint_architectural_prior_intervention"
+  },
+  "config_sha256": "86fbd01c457da0a3f37b84880e101bf6ddde005f387c8046889f817b5a4bfba9",
+  "parameters": 16867395,
+  "source_sha256": {
+    "belief_contracts_study.py": "4dfc9b50f402f1cb6a33fec605c63b5c5f0b0e2c8331b282a210c678de67977d",
+    "belief_contracts.py": "9385f79d4be9623611bc6bae50551b2a5466cb4a052f8811fbb3c4b4908745b6",
+    "belief_state.py": "04e28df53062bf4124687309389988eba09e82bbc3c8cbc0edc86fabe2b6acd1"
+  },
+  "composition_allowed": false,
+  "workspace_width": 1024,
+  "checkpoint_sha256": "11a4368aaab78da51035a5399b6aaf676b2c7580b0a79f7c710976fe0eb6bdf3",
+  "training_seconds": 2.00001522898674e-06,
+  "evaluation": {
+    "seconds": 95.36943485867232,
+    "rows": 144
+  },
+  "total_seconds": 96.13793817861006,
+  "rss_peak_kib": 1649568,
+  "cuda_peak_bytes": 1712598016
+}
