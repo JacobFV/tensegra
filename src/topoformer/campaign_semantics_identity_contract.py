@@ -1,5 +1,5 @@
 """Scoped programmed refers-to relation from learned public copy identities."""
-import argparse,gzip,json,time
+import argparse,gzip,hashlib,json,time
 from pathlib import Path
 import torch
 from .campaign_semantics import digest,write_gzip
@@ -57,7 +57,7 @@ def run(config):
                     edges=pred['edges'].clone();edges[:,:,r]=ref;candidate={**pred,'edges':edges}
                     record['arms'][arm]=dict(metrics=metrics(candidate,gold),reference=count_relation(ref&active,gold['edges'][:,:,r]))
                 record['programmed_ref_indices']=relation.nonzero().tolist();rows.append(record)
-    result=dict(config=config,audit=audit,archive_sha256=digest(config['archive']),source_sha256=digest(__file__),rows=rows,cpu_seconds=time.monotonic()-start)
+    result=dict(config=config,config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),dependencies_sha256={n:digest(Path(__file__).with_name(n)) for n in ('semantic_graph.py','semantic_curriculum.py','semantic_scaling.py','thinking_language.py','campaign_semantics_data.py')},audit=audit,archive_sha256=digest(config['archive']),source_sha256=digest(__file__),rows=rows,cpu_seconds=time.monotonic()-start)
     write_gzip(out/'predictions.json.gz',result)
     summary={}
     for split in ('train','development'):
