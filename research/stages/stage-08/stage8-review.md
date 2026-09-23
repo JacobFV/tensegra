@@ -1,6 +1,6 @@
 # Stage 8 independent review
 
-Status: implementation review in progress. No scientific result or competence pass is established by this document yet.
+Status: source, provenance and raw-metric review completed for the frozen Stage8 studies. All interface competence gates remain failed; no composition or supervision withdrawal is authorized. Chronological findings below retain the pre-outcome review record.
 
 ## Prespecified review boundary
 
@@ -92,3 +92,23 @@ The additive slot-head expressivity finding is mathematically valid: for two com
 A new independent standard-library bitmap auditor reconstructs node counts, typed/ordered edge counts, type accuracy, identity copying/equivalence and exact canonical semantic equivalence. All2304 acquisition rows pass every reconstructed metric, extending the earlier typed-edge-only audit.
 
 First immutable semantic main shard audit: all3072 N1k seed0 rows across semantic/no-text-feature arms, three exposure checkpoints and raw/calibrated decoders reproduce every semantic metric without discrepancy. Remaining paired seeds and N10k remain pending; this partial audit is not a completed scaling result.
+
+## Completed N1k semantic audit and research layout
+
+All9472 immutable N1k main prediction rows (three seeds, both neural arms, three exposure checkpoints, raw/calibrated decoders and frequency baseline) independently reproduce every semantic metric. All six source manifests match frozen26c8b5f, paired initialization hashes match, and all18 calibration threshold vectors reconstruct exactly from logged training-grid counts. Each final neural run sees1000 distinct graphs over100,000 presentations. N10k remains incomplete; no paired corpus-scaling conclusion is final yet.
+
+The user-authorized research-layout migration was independently checked:1449 mapped files,1421 byte-identical; all1337 immutable records preserved, including1331 checked directly against prior Git blob hashes. The compatibility alias resolves correctly and all relative Markdown file links resolve. Reports moved under `research/stages`, helper scripts under `research/tools`, and result bytes remain unchanged.
+
+N10k seed0 immutable subset audit:3072 raw/calibrated rows across both arms and all exposure checkpoints reproduce every metric without error. Later seeds and the final cross-corpus comparison remain pending.
+
+N10k seed1 immutable subset audit likewise verifies all3072 raw/calibrated rows across both arms and exposure checkpoints. Final seed2 and cross-corpus provenance/completeness remain pending.
+
+## Final semantic main audit and gate interpretation
+
+All12 frozen neural runs completed. Both corpus conditions use identical heldout semantic graphs, categorical vocabulary, source hashes and paired initial weights. All36 per-relation calibration vectors reconstruct exactly from their training-only grid counts. The larger corpus arm visits1793 unique graphs by10,016 presentations and all10,000 by100,000; the smaller arm visits all1000. Available data and realized exposure are therefore reported distinctly.
+
+Every9472 N10k raw prediction row passes independent reconstruction across all fields and exact graph metrics; together with N1k this covers18,944 main rows. Mean calibrated English typed-edge F1 increases with exposure from0.377→0.531 at N1k and0.313→0.549 at N10k. This is genuine partial edge acquisition, unlike Stage7's flat finite-exposure diagnostic. However, final raw-zero English F1 is0.333/0.320 versus frequency0.441; decoder calibration is essential to the reported English advantage. Heldout symbolic-renderer means0.400/0.436 do not surpass frequency0.441, renamed-lexicon conditions remain below that baseline, and exact canonical graph recovery stays zero. GateF remains failed for robust semantic transfer/runtime integration. No scaling-law, general language-understanding or complete graph-induction claim follows.
+
+The final review distinguishes supplied ledger/pointer semantics, learned compatibility and readout, privileged trajectory/graph labels, decoder calibration and measured generalization. Width1024 is used throughout primary studies; historical32 is explicitly an ablation. Strong clean proposal updates and improved short-delay return decoding are positive findings, but they do not override the frozen posterior/retention/semantic gates.
+
+All296 final curve groups independently match sums/means of their raw row metrics, including raw/calibrated surfaces and frequency baselines. No discrepancies were found in final count aggregation, calibration selection or source pairing.

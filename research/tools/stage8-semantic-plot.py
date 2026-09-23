@@ -19,7 +19,7 @@ for decoder,name in [('evaluation','raw'),('calibrated_evaluation','train-calibr
         for col,surface in enumerate(('english','spanish','symbols','heldout_lexicon')):
             ax=axes[row,col]
             for arm in ('semantic','no_input','frequency'):
-                points=sorted([r for r in data if r['decoder']==decoder and r['corpus']==corpus and r['arm']==arm and r['surface']==surface and r['lesson']=='all'],key=lambda r:r['presentations'])
+                points=sorted([r for r in data if r['decoder']==('evaluation' if arm=='frequency' else decoder) and r['corpus']==corpus and r['arm']==arm and r['surface']==surface and r['lesson']=='all'],key=lambda r:r['presentations'])
                 if not points:continue
                 x=[p['presentations'] for p in points]
                 y=[p['typed_edge_f1']['mean'] for p in points]

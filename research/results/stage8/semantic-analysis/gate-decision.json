@@ -1,0 +1,24 @@
+{
+  "gate": "F: semantic scaling / transfer",
+  "passed": false,
+  "composition_allowed": false,
+  "complete_runs": 12,
+  "optimizer_presentations": 1200000,
+  "optimizer_updates": 37500,
+  "latent_width": 1024,
+  "observed": [
+    "Known-renderer typed/ordered edge prediction improves from10016 to100000 presentations",
+    "Calibrated English edgeF1 exceeds frequency prior across both corpora",
+    "Corpus-size effect is small/mixed",
+    "Exact canonical graph recovery remains zero",
+    "Heldout-symbols mean typed-edgeF1 and every heldout-lexicon seed remain below frequency prior"
+  ],
+  "limitations": [
+    "Raw threshold-zero typed-edge scores remain below frequency prior",
+    "Not a clean width-only comparison withStage7",
+    "Additive slot-head/no-slot objective contains impossible XOR label patterns",
+    "No fresh variable-binding heldout constructions",
+    "Only64fresh heldout graphs and3seeds, no broad semantic competence claim"
+  ],
+  "decision": "Do not integrate semantic induction with runtime or anneal supervision."
+}

@@ -1,6 +1,6 @@
 # Stage 8: full-width protected semantic interfaces
 
-**In progress. Default latent width1024. No composition or supervision withdrawal.**
+**Completed and independently audited. Default latent width 1024. All broad competence gates fail; no composition or supervision withdrawal.**
 
 Stage8 tests learned evidence updates and return readout independently. It also separates procedural semantic corpus size from actual optimizer exposure. Baseline Stage1–7 files remain unchanged.
 
@@ -22,7 +22,7 @@ The width1024 semantic model improves node/type/identity recovery on eight train
 
 See [plan](stage8-plan.md), [decisions](stage8-decisions.md), [gate registry](stage8-gates.json), and [independent review](stage8-review.md). Every experiment freezes config/source before final evaluation. Timing/acquisition and main outcomes remain distinct. CUDAdependency freeze is under `results/stage8/cuda-requirements.txt`; GPU is remote NVIDIA GB10, PyTorch2.14.0+cu130. No local training or mutation of previous environments.
 
-Final paired results, raw metric audits and integration status will be appended after the queued studies finish.
+All planned main studies and independent raw-metric audits are complete.
 
 ## Initial full-width diagnostic (ID-access caveat)
 
@@ -46,4 +46,19 @@ Both strict gates fail: 14/48 protected and 24/48 recurrent validation cells. Pr
 
 Persistent return access tests repeated learned retrieval/readout of an intact record, not memory disappearance. The one-to-sixteen-step marginal decline is not a measured forgetting probability. Paired correct/wrong transitions and conditional non-value/value accuracy should be computed from matched examples. Before changing value encoding, isolate field encoding, mixed memory, initial retrieval and late workspace readout using disjoint probe training/evaluation sets. A supplied exact initial belief prior is a separate architectural-prior control, not learned calibration. These followups do not alter completed gates or the frozen semantic sweep.
 
-Completed reports and raw evidence: [beliefs](stage8-belief-report.md), [returns](stage8-return-report.md), [independent audit](stage8-review.md). Semantic scaling remains in progress.
+Completed reports and raw evidence: [beliefs](stage8-belief-report.md), [returns](stage8-return-report.md), [independent audit](stage8-review.md). Semantic scaling is complete; see the results below.
+
+
+## Completed semantic exposure study
+
+Twelve width-1024 runs completed 1.2 million presentations and 37,500 optimizer updates. Increasing exposure from 10,016 to 100,000 presentations improves train-calibrated English typed-edge F1 from .377 to .531 for the 1k corpus and .313 to .549 for the 10k corpus. The matched-mixture frequency baseline is .441; raw-threshold neural scores remain below it. Calibration is fitted on training graphs only and is part of the reported interface.
+
+This establishes partial component learning and an exposure benefit in the known renderer. It does not establish a corpus-size scaling law or robust semantic transfer: exact canonical graph recovery remains zero, and held-out renderer/lexicon results do not robustly beat the frequency baseline. Gate F fails. An independently documented additive slot-head/loss mismatch limits interpretation of ordering failures; it was not changed during the frozen study.
+
+The [semantic report](stage8-semantic-report.md) contains full seed, surface, corpus, threshold and exposure comparisons. Independent audit reconstructed all 18,944 raw prediction rows, 296 curve groups and 36 training-only calibration vectors; all 12 checkpoint hashes match. Remote GPU work has finished.
+
+## Overall conclusion
+
+Ordinary belief updating is learned in the supplied candidate-local interface. Protected bookkeeping improves stress-test posterior stability, while prescribed prior/null calibration remains inadequate. Persistent return access improves substantially but exact scalar reconstruction and long-horizon readout remain below criterion. Semantic component recovery benefits from meaningful training exposure, without whole-graph or robust surface-transfer competence. These are separate measured boundaries, not evidence of a single general failure of neural recurrence.
+
+Final regression on an immutable repository snapshot: **538 tests and 6 subtests passed** in 9.51 seconds on the linked machine. Research-directory migration separately passed raw-byte preservation and local Markdown-link audits. No Stage 1–7 experiment result contents were changed.
