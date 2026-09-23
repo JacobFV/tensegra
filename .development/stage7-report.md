@@ -9,7 +9,7 @@ Stage 7 successfully isolates trainable interfaces, but the frozen studies do no
 | Interface | Frozen evidence | Decision |
 |---|---|---|
 | A: complete proposal | 100% full ordered proposals for each of three seeds on IID and moderate-OOD validation/test sets, 1,024 examples per cell | Pass within supplied typed-instruction scope |
-| A2: progressive evidence | Separately trained recurrent public-instruction posterior study | Final results pending |
+| A2: progressive evidence | Training final proposal accuracy 92–94%; IID test 9.18/13.09/13.67%, OOD test 8.20/9.96/12.30% | Fail generalization; no further composition |
 | B: learned-proposal readiness | Test precision 99.45/99.02/99.12%; executable recall 52.31/81.78/38.40% | Fail: seed 2 misses 50% recall; no execution coupling |
 | C: return retention | All nine seed/arm runs fail; test joint accuracy after 16 updates is 9.30/10.72/9.38% for once/protected/gated arms | Fail; returned-fact use remains blocked |
 | E: halting | Validation exact timing 99.02/100/99.22%; joint timing/task 99.02/92.97/99.22% | Fail all-seed joint gate; seed 1 also has test timing/rejection errors |
@@ -20,6 +20,8 @@ Readiness uses a frozen proposal model and an explicitly supplied public registe
 Return retention reveals substantial acquisition error before long recurrence: at one update, unseen test values are only 57.5–58.2% accurate, and joint semantic reconstruction is 13.3–15.1%. Additional recurrence worsens it. Exact protected records survive, but every arm reuses a width-32 encoder that mixes value, type, operation, ordered argument vectors, and provenance. These data do not isolate protection as ineffective; the shared neural encoding/readout is already a bottleneck. Untrained late-use heads are not evidence about learned return consumption. C2 was not trained.
 
 Halting is no longer universally stuck at the minimum. Two seeds learn strong variable-time behavior, and the remaining seed has perfect validation timing but weaker task acquisition. Its heldout test also exposes premature stopping and rejection errors. The prespecified joint gate remains failed; successful seeds do not override the failure.
+
+Progressive formation uses a supplied finite joint hypothesis set and the existing four-block recurrent cell. It fits the small training set but becomes confidently wrong on heldout episodes: final probability mass on impossible hypotheses is about 87–92%. Falling entropy therefore does not establish growing semantic certainty. Complete-evidence keyed retrieval success does not by itself acquire this recurrent evidence-integration interface.
 
 ## What is supplied and what is learned
 
