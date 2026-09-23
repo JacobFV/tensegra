@@ -57,12 +57,13 @@ def corrected_losses(output,gold,pairs):
 
 def evaluate(model,items):
     """Inference receives public text only. Gold selects calibration loss, never actor inputs."""
-    model.eval();cache=[];scores=[];labels=[]
+    model.eval();cache=[];scores=[];labels=[];calibration_data=[]
     with torch.no_grad():
         for public,gold,example in items:
             output=model(public);pred=base.decode(output,public)
             active=pred['presence'][:,None]&pred['presence'][None,:]
             scores.append(output['edges'][active]);labels.append(gold['edges'].to(active.device)[active])
+            calibration_data.append(dict(graph_seed=example.audit['seed'],pairs=active.nonzero().cpu().tolist(),scores=scores[-1].cpu().tolist(),targets=labels[-1].cpu().tolist()))
             cache.append((public,gold,example,output,pred))
         joined=torch.cat(scores);truth=torch.cat(labels)
         if len(joined):thresholds,calibration=train_relation_thresholds(joined,truth)
@@ -75,15 +76,15 @@ def evaluate(model,items):
             raw_metrics=base.metrics(pred,gold);cal_metrics=base.metrics(cal,gold)
             rows.append(dict(graph_seed=example.audit['seed'],graph_sha256=example.privileged.graph.digest(),public_text=public.text,raw=pack_graph(pred),calibrated=pack_graph(cal),target=pack_graph(gold),raw_metrics=raw_metrics,calibrated_metrics=cal_metrics))
     model.train()
-    return dict(rows=rows,calibration=calibration,calibration_policy='final/checkpoint TRAIN only; one threshold/relation minimizes entry errors over predicted-present pairs, lowest tie; no predicted pairs => threshold0 fallback',raw_exact=sum(r['raw_metrics']['semantic_equivalence'] for r in rows),calibrated_exact=sum(r['calibrated_metrics']['semantic_equivalence'] for r in rows))
+    return dict(rows=rows,calibration=calibration,calibration_data=calibration_data,calibration_policy='final/checkpoint TRAIN only; one threshold/relation minimizes entry errors over predicted-present pairs, lowest tie; no predicted pairs => threshold0 fallback',raw_exact=sum(r['raw_metrics']['semantic_equivalence'] for r in rows),calibrated_exact=sum(r['calibrated_metrics']['semantic_equivalence'] for r in rows))
 
 
 def run(config):
     torch.set_num_threads(2);out=Path(config['output_dir']);out.mkdir(parents=True,exist_ok=False)
     examples=fixed_corpus(config['graphs'],config['data_seed'],config['lesson'])
     items,vocab,audit=prepare(examples,config['node_capacity'],config['language']);runs=[]
-    files=[Path(__file__),Path(__file__).with_name('semantic_curriculum.py'),Path(__file__).with_name('semantic_scaling.py'),Path(__file__).with_name('semantic_contracts.py')]
-    manifest=dict(config=config,config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in files},graph_audits=[e.audit for e in examples],public_observability=audit,value_vocabulary=vocab,runs=runs)
+    files=[Path(__file__).with_name(name) for name in ('semantic_text_acquisition.py','semantic_curriculum.py','semantic_scaling.py','semantic_contracts.py','thinking.py','thinking_language.py','semantic_graph.py','tcn_data.py')]
+    manifest=dict(config=config,environment=dict(torch_version=torch.__version__,cuda_version=torch.version.cuda,device_name=torch.cuda.get_device_name() if config['device']=='cuda' else 'cpu',threads=torch.get_num_threads(),parameter_dtype='float32',dense_autocast=config.get('autocast_dtype')),config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in files},graph_audits=[e.audit for e in examples],public_observability=audit,value_vocabulary=vocab,runs=runs)
     # Same labeled fixed mixture, no text features; repeated labels cannot alter frequencies.
     class Corpus:
         def __getitem__(self,index):return examples[index]
