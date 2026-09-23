@@ -13,11 +13,13 @@ def counts(r):
 def load(p):
  with (gzip.open(p,'rt')if p.suffix=='.gz'else p.open())as f:return json.load(f)
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
-def audit(root):
- x=load(root/'manifest.json');cfg=x['config'];repo=Path(__file__).resolve().parents[2]
+def audit(root,require_complete=True):
+ x=load(root/('manifest.json.gz' if (root/'manifest.json.gz').exists() else 'manifest.json'));cfg=x['config'];repo=Path(__file__).resolve().parents[2]
  assert hashlib.sha256(json.dumps(cfg,sort_keys=True).encode()).hexdigest()==x['config_sha256']
  for name,h in x['source'].items():assert hashlib.sha256(subprocess.check_output(['git','show','9ccadae:src/topoformer/'+name],cwd=repo)).hexdigest()==h
- assert [r['backbone_seed']for r in x['runs']]==cfg['backbone_seeds']==[10,11,12]
+ assert cfg['backbone_seeds']==[10,11,12]
+ assert [r['backbone_seed']for r in x['runs']]==cfg['backbone_seeds'][:len(x['runs'])]
+ if require_complete:assert len(x['runs'])==3
  totals=curvecount=0;gates=[];paired=[];training=[]
  for run in x['runs']:
   seed=run['backbone_seed'];p=root/f'{seed}-predictions.json.gz';c=root/f'{seed}-curves.json.gz';assert sha(p)==run['predictions_sha256']and sha(c)==run['curves_sha256'];rows=load(p);curves=load(c)
@@ -56,6 +58,6 @@ def audit(root):
      for field in ('value','joint'):
       a=matches(ix[('short_continue',split,delay,k)],field);b=matches(ix[('wide_continue',split,delay,k)],field)
       paired.append(dict(seed=seed,split=split,delay=delay,distractors=k,field=field,correct_correct=sum(v and w for v,w in zip(a,b)),correct_wrong=sum(v and not w for v,w in zip(a,b)),wrong_correct=sum(not v and w for v,w in zip(a,b)),wrong_wrong=sum(not v and not w for v,w in zip(a,b))))
- return dict(rows_verified=totals,curve_rows_verified=curvecount,complete_matrix=True,training=training,retention_gates=gates,paired_short_to_wide=paired)
+ return dict(rows_verified=totals,curve_rows_verified=curvecount,complete_matrix=len(x['runs'])==3,observed_seeds=[r['backbone_seed']for r in x['runs']],training=training,retention_gates=gates,paired_short_to_wide=paired)
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--output',required=True,type=Path);a=p.parse_args();out=audit(a.root);a.output.write_text(json.dumps(out,indent=2)+'\n');print({k:v for k,v in out.items()if k not in ('training','retention_gates','paired_short_to_wide')})
+ p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--output',required=True,type=Path);p.add_argument('--partial',action='store_true');a=p.parse_args();out=audit(a.root,not a.partial);a.output.write_text(json.dumps(out,indent=2)+'\n');print({k:v for k,v in out.items()if k not in ('training','retention_gates','paired_short_to_wide')})
