@@ -4,6 +4,7 @@ import argparse,gzip,hashlib,json,resource,time
 from functools import lru_cache
 from pathlib import Path
 import torch
+import numpy as np
 from torch import nn
 from . import semantic_scaling as base
 from .campaign_semantics_data import load_cache,target
@@ -34,14 +35,15 @@ def decode(output,public,thresholds):
 
 
 def calibrated_evaluation(model,train,dev,out,update,calibration_count=128,eval_count=None):
-    model.eval();scores=[];truth=[];calibration_rows=[];train_cache=[]
+    model.eval();scores=[];truth=[];calibration_rows=[];calibration_pairs=[];offsets=[0];train_cache=[]
     tick=time.monotonic()
     with torch.no_grad():
         for index in range(min(len(train),calibration_count)):
             public,gold,row=train[index];output=model(public);cpu={k:v.cpu() for k,v in output.items()};pred=base.decode(cpu,public)
             active=pred['presence'][:,None]&pred['presence'][None,:]
             scores.append(cpu['edges'][active]);truth.append(gold['edges'][active]);train_cache.append((pred,cpu['edges'],gold,row))
-            calibration_rows.append(dict(seed=row['seed'],pairs=active.nonzero().tolist(),scores=scores[-1].tolist(),targets=truth[-1].tolist()))
+            calibration_rows.append(dict(seed=row['seed'],start=offsets[-1],stop=offsets[-1]+int(active.sum())))
+            offsets.append(calibration_rows[-1]['stop']);calibration_pairs.append(active.nonzero().short())
         s=torch.cat(scores);y=torch.cat(truth)
         if len(s):thresholds,calibration=train_relation_thresholds(s,y)
         else:thresholds=torch.zeros(len(ROLES));calibration=[dict(threshold=0.,empty_support=True,positive=0,negative=0,train_errors=0) for _ in ROLES]
@@ -50,7 +52,9 @@ def calibrated_evaluation(model,train,dev,out,update,calibration_count=128,eval_
         for index in range(min(len(dev),eval_count or len(dev))):
             public,gold,row=dev[index];output=model(public);raw,cal=decode(output,public,thresholds)
             rows.append(dict(seed=row['seed'],semantic_sha256=row['semantic_sha256'],graph_sha256=row['graph_sha256'],raw=pack_graph(raw),calibrated_edges=pack_graph(cal)['edges'],target=pack_graph(gold),raw_metrics=base.metrics(raw,gold),calibrated_metrics=base.metrics(cal,gold)))
-    result=dict(update=update,thresholds=thresholds.tolist(),calibration=calibration,calibration_data=calibration_rows,train_metrics=train_metrics,rows=rows,evaluation_seconds=time.monotonic()-tick)
+    cal_path=out/f'calibration-u{update}.npz'
+    np.savez_compressed(cal_path,scores=s.numpy(),targets=y.numpy(),pairs=torch.cat(calibration_pairs).numpy(),offsets=np.asarray(offsets,dtype=np.int64))
+    result=dict(update=update,thresholds=thresholds.tolist(),calibration=calibration,calibration_records=calibration_rows,calibration_data_artifact=cal_path.name,calibration_data_sha256=digest(cal_path),train_metrics=train_metrics,rows=rows,evaluation_seconds=time.monotonic()-tick)
     path=out/f'evaluation-u{update}.json.gz';write_gzip(path,result)
     def summary(rows,key):
         def micro(kind):
