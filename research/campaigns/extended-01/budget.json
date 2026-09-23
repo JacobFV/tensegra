@@ -10,7 +10,7 @@
     "attention": 10800,
     "adaptive_flex": 5760
   },
-  "charged_seconds": 9028.489822518166,
+  "charged_seconds": 9281.323766590165,
   "reserved_running_seconds": 600.0,
   "jobs": [
     {
@@ -597,9 +597,20 @@
       "seconds": 10.6961090197,
       "receipt": "research/results/campaign-01/composition/c02-profile/batch.json",
       "recorded_utc": "2026-09-23T23:27:08.221368+00:00"
+    },
+    {
+      "id": "C02-static",
+      "kind": "exploration",
+      "source": "8a1d2a1",
+      "cap_seconds": 600.0,
+      "released_utc": "2026-09-23T23:28:56.704162+00:00",
+      "status": "completed",
+      "seconds": 252.833944072,
+      "receipt": "research/results/campaign-01/composition/c02-development/static/occupancy.json",
+      "recorded_utc": "2026-09-23T23:34:01.649662+00:00"
     }
   ],
-  "cpu_audit_seconds": 2689.6334869575803,
+  "cpu_audit_seconds": 2690.5589459923212,
   "accounting": "Monotonic process occupancy includes initialization/training/evaluation/failed runs/export; profiles charged. Serial GPU only. Unmeasured failures receive conservative charges.",
   "projected_ready_caps_seconds": 9600,
   "accounting_notes": "Ready caps are estimates, not completed charges or concurrent reservations. Only queue.running may use GPU.",
@@ -625,6 +636,11 @@
       "id": "S10-frequency",
       "seconds": 33.17,
       "note": "Workerreported fullCPUwall; noGPU"
+    },
+    {
+      "id": "S10-S11-secondary",
+      "seconds": 21.41,
+      "note": "CPU frozen supplied-schema reuse; no GPU"
     }
   ]
 }

@@ -41,3 +41,6 @@ S11 soleGPUowner source14f0293 cap900, exactrestoreguards passed. S09main frozen
 
 ### 23:31 UTC
 GPUowner C02-static source8a1d2a1/confige17a800 cap600; rekeyseparatelyreleasedafterparity. S11completed649.4482s: learnedcal122/512/raw13, S10secondarycal372/raw381, fullyindependentlyaudited1cd6d22. S12confirmation source dbd3575 preflightpending, 3independentparents701–703131072→pairedconstant/decay196608; reserved1024finalonly; expected7500–8100s/cap9000. S09profiledmain DEFERREDunrun. Returnsbranchclosedwithsynthesisbe0a9d9/R04R05confirmed andtailfailurespreserved; attentionclosedA06audited. Rootallhistoricaldiffadd-only. Latestprogresspushc6334dd; pushnewS11milestonenow.
+
+### 23:40 UTC reconciliation
+C02-static completed252.833944072s and exact historical replay independently audited. C02-rekey now explicitly released, source8a1d2a1/confige17a800 cap600; rootqueue soleGPUowner. S12 source/protocol/analysis throughc6cbed2 integrated; parent701 next cap1400, pairedforks800 each, threefreshparents701–703; no confirmation forward yet. Final case-preserving lexicalbijection audited and separately frozen secondary. S09 remains deferred unrun. Claim map corrected: C01 is one exact operation plus learned decision, not two symbolic executions; semantic S11 learned122/512 and supplied372/512 distinct.
