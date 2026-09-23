@@ -19,6 +19,14 @@ def digest(value):
 def file_digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
+def tensor_digest(model):
+    fingerprint = hashlib.sha256()
+    for name, tensor in sorted(model.state_dict().items()):
+        fingerprint.update(name.encode())
+        fingerprint.update(str((tensor.shape, tensor.dtype)).encode())
+        fingerprint.update(tensor.detach().cpu().contiguous().numpy().tobytes())
+    return fingerprint.hexdigest()
+
 def on_device(batch, device):
     return {group: {key: value.to(device) for key, value in fields.items()}
             for group, fields in batch.items()}
@@ -79,7 +87,7 @@ def run(config, out):
                ('belief_invariance_study.py', 'belief_invariance.py', 'belief_contracts.py',
                 'belief_contracts_study.py', 'belief_state.py')]
     manifest = dict(config=config, config_sha256=digest(config), source_sha256={p.name: file_digest(p) for p in sources},
-                    initial_checkpoint_sha256=file_digest(out / 'initial.pt'),
+                    initial_checkpoint_sha256=file_digest(out / 'initial.pt'), initial_tensor_sha256=tensor_digest(model),
                     parameters=sum(p.numel() for p in model.parameters()), workspace_width=1024, ff_width=2048,
                     inactive_id_weights=16384 if config['arm'] == 'ledger_only' else 0,
                     composition_allowed=False, device_name=torch.cuda.get_device_name() if config['device'] == 'cuda' else 'cpu')
@@ -87,6 +95,12 @@ def run(config, out):
     probe_config = {**config, 'eval_candidates': [8], 'conditions': ['clean', 'id_rename'],
                     'split_seeds': {'development_curve': config['curve_namespace']}}
     curve = []
+    semantic_stream = hashlib.sha256()
+    public_stream = hashlib.sha256()
+    unique_constructions = set()
+    observed_ids = set()
+    bit_ones = [0] * 16
+    id_assignments = 0
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.get('lr', .0003))
     schedule = ('clean', 'partial', 'contradiction', 'retract', 'duplicate', 'reorder')
     for step in range(config['steps'] + 1):
@@ -100,6 +114,18 @@ def run(config, out):
             break
         episodes = make_training_episodes(config['batch'], config['train_namespace'] + step,
                                           config['arm'], schedule[step % len(schedule)])
+        for episode in episodes:
+            construction = {'keys': episode['keys'], 'records': sorted(episode['records'])}
+            unique_constructions.add(digest(construction))
+            content = {**construction, 'events': [event[1:] for event in episode['events']]}
+            semantic_stream.update(digest(content).encode())
+            public_stream.update(digest({**construction, 'events': episode['events']}).encode())
+            handles = {event[0] for event in episode['events'] if event[0] >= 0}
+            observed_ids.update(handles)
+            id_assignments += len(handles)
+            for identity in handles:
+                for bit in range(16):
+                    bit_ones[bit] += (identity >> bit) & 1
         batch = on_device(collate(episodes), config['device'])
         optimizer.zero_grad()
         terms = loss(model(batch['public']), batch)
@@ -116,9 +142,18 @@ def run(config, out):
     manifest['training_and_curve_seconds'] = time.perf_counter() - start
     manifest['optimizer_presentations'] = config['steps'] * config['batch']
     manifest['unique_training_generation_keys'] = config['steps'] * config['batch']
+    manifest['unique_public_constructions'] = len(unique_constructions)
+    manifest['construction_identity'] = 'Exact nonce-key and candidate-record content, candidate-order invariant; not alpha-equivalence'
+    manifest['semantic_training_stream_sha256'] = semantic_stream.hexdigest()
+    manifest['public_training_stream_sha256'] = public_stream.hexdigest()
+    manifest['training_id_coverage'] = dict(unique=len(observed_ids), assignments=id_assignments,
+                                            minimum=min(observed_ids) if observed_ids else None,
+                                            maximum=max(observed_ids) if observed_ids else None,
+                                            bit_one_counts=bit_ones)
     (out / 'curve.json').write_text(json.dumps(curve))
     torch.save(model.state_dict(), out / 'model.pt')
     manifest['checkpoint_sha256'] = file_digest(out / 'model.pt')
+    manifest['final_tensor_sha256'] = tensor_digest(model)
     evaluation_start = time.perf_counter()
     rows = evaluate(model, config, out, config['seed'])
     (out / 'metrics.json').write_text(json.dumps(rows))

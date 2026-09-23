@@ -20,7 +20,7 @@ All arms start from identical complete parameter tensors for each paired seed. T
 
 ## Development, freeze and budget
 
-Development seed90 only, separate training namespace10,010,000 and validation10,090,000. Profile two updates and representative 512-event evaluation before authorizing a main budget. Then one bounded acquisition probe of at most300 updates establishes finite learning and useful fresh-data improvement; it does not select among several recipes. Stop for diagnosis if loss is nonfinite or acquisition is absent. No test inspection during development.
+Development seed101 only, separate training namespace10,010,000 and validation10,090,000. Profile two updates and representative 512-event evaluation before authorizing a main budget. Then one bounded acquisition probe of at most300 updates establishes finite learning and useful fresh-data improvement; it does not select among several recipes. Stop for diagnosis if loss is nonfinite or acquisition is absent. No test inspection during development.
 
 Proposed main: paired initialization seeds20/21/22, each arm1000 updates ×32 fresh episodes, AdamW lr0.0003, compatibility weight1, gradient norm clip1. Six-condition schedule clean/partial/contradiction/retract/duplicate/reorder, inherited unchanged. Training seeds are10,000,000 + (initialization_seed−20)×2000 + step. Validation10,100,000 + initialization_seed; untouched test10,200,000 + initialization_seed. These do not overlap prior-stage namespaces or development. Source/config freeze precedes main training and test inference. Fixed final checkpoint; no outcome-based best-checkpoint selection. Step0 and scheduled curves are saved. Main authorized only after root resource release.
 
