@@ -58,3 +58,29 @@ focused tests with `PYTHONPATH=installed` on `gb10-direct` using the existing
 of the license, manifest and all grammar JSON resources. The build snapshot is
 in `~/topoformer-pilot/stage6-semantic-check`; full-suite validation remains with
 the root coordinator.
+
+## Identifier rendering and lexical generalization update
+
+Verified a subtle upstream distinction: `lang.render(Ident('carol'))` returns
+`carol` in Spanish, whereas `lang.token('carol')` returns `Carolina`. Upstream
+`Lesson.example` uses the latter for options but the former in these lessons'
+observations. Our adapter now explicitly renders every option as an `Ident`,
+matching the observation's identity treatment. It does not translate options as
+vocabulary tokens. Regression tests cover all three lesson/language combinations.
+`TCNPrivileged.answer_index` and privileged JSON metadata preserve the original
+option index independently of surface spelling; option shuffling should remap
+this index by the known permutation.
+
+Optional `identifier_renaming` on both construction APIs applies an injective
+alpha-renaming to the single Term and canonical choices/answer before graph
+compilation and rendering. Binding/unification permit name choices and variables
+A–E; set operations permits object choices. Properties and predicate heads cannot
+be renamed, collisions are rejected, and the mapping is audit-only. Hidden
+original generator metadata is explicitly nested under `generator_hidden`;
+canonical options, index and the renaming are separate privileged metadata.
+This is a controlled lexical generalization intervention, not evidence of
+natural-language vocabulary induction. Renderer adapter version is v2.
+
+Updated verification: six focused semantic/adapter tests pass remotely on
+`gb10-direct` (0.53 seconds), including scene property/head preservation under
+object renaming and collision rejection. The vendored closure is unchanged.
