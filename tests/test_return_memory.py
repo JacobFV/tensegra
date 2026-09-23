@@ -71,3 +71,13 @@ def test_paired_common_backbone_identical_across_encodings():
             assert torch.equal(states[0][key],states[1][key])
             assert torch.equal(states[0][key],states[2][key])
     assert all(torch.equal(states[1][key],states[2][key]) for key in states[1])
+
+
+def test_chunked_eval_matches_whole_batch():
+    from topoformer.return_memory_study import predict_chunked, counts
+    m=model(); b=make_batch(7,5,8)
+    with torch.no_grad():
+        whole=m(b['public'],1)
+        chunked=predict_chunked(m,b['public'],1,'factorized','persistent',batch_size=2)
+    for key in FIELDS: torch.testing.assert_close(whole['logits'][key],chunked['logits'][key],atol=1e-5,rtol=1e-5)
+    assert counts(whole,b['targets'])==counts(chunked,b['targets'])

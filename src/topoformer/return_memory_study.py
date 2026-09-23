@@ -20,7 +20,10 @@ def counts(output, targets):
     matches['identity_joint'] = torch.stack([matches[k] for k in FIELDS[3:]]).all(0)
     matches['scalar_joint'] = torch.stack([matches[k] for k in FIELDS[:3]]).all(0)
     matches['joint'] = torch.stack([matches[k] for k in FIELDS]).all(0)
-    return {k:{'correct':int(v.sum()),'total':v.numel()} for k,v in matches.items()}
+    result={k:{'correct':int(v.sum()),'total':v.numel()} for k,v in matches.items()}
+    required=targets['argument1'] != output['logits']['argument1'].shape[-1]-1
+    result['argument1_required']={'correct':int((matches['argument1'] & required).sum()),'total':int(required.sum())}
+    return result
 
 
 def gate(rows, seeds, distractors):
@@ -30,9 +33,24 @@ def gate(rows, seeds, distractors):
             selected = [r for r in rows if r['seed']==seed and r['distractors']==d and r['steps']==16 and r['intervention']=='none']
             if len(selected)!=1: return False
             for field in FIELDS:
-                c=selected[0]['counts'][field]
-                if c['total'] < 512 or c['correct']/c['total'] <= (.99 if field in ('type','operation') else .98): return False
+                c=selected[0]['counts']['argument1_required' if field=='argument1' else field]
+                if selected[0]['counts']['joint']['total'] < 512 or c['total'] == 0 or c['correct']/c['total'] <= (.99 if field in ('type','operation') else .98): return False
     return True
+
+
+def predict_chunked(model, public, steps, encoding, availability, intervention='none', replacement=None, batch_size=64):
+    """Bound evaluation memory without changing per-example observations."""
+    def slice_tree(value, start, stop):
+        if torch.is_tensor(value): return value[start:stop]
+        return {k:slice_tree(v,start,stop) for k,v in value.items()}
+    parts=[]
+    for start in range(0,public['event']['values'].shape[0],batch_size):
+        stop=start+batch_size
+        parts.append(model(slice_tree(public,start,stop),steps,encoding,availability,intervention,
+                           None if replacement is None else slice_tree(replacement,start,stop)))
+    return dict(logits={k:torch.cat([p['logits'][k] for p in parts]) for k in FIELDS},
+                register=None if parts[0]['register'] is None else
+                {k:torch.cat([p['register'][k] for p in parts]) for k in parts[0]['register']})
 
 
 def run(config, output):
@@ -59,7 +77,7 @@ def run(config, output):
                         for es in config.get('validation_seeds',[]):
                             batch=data(es,config.get('eval_size',64))
                             for length in (0,1):
-                                pred=model(batch['public'],length,encoding,availability)
+                                pred=predict_chunked(model,batch['public'],length,encoding,availability,batch_size=config.get('eval_batch_size',64))
                                 log.write(json.dumps(dict(phase='initialized_validation',step=0,data_seed=es,steps=length,counts=counts(pred,batch['targets'])))+'\n')
                     model.train()
                     for step in range(config.get('updates',0)+1):
@@ -83,6 +101,7 @@ def run(config, output):
                                 for d in config.get('eval_distractors',[2,8]):
                                     for length in config.get('eval_steps',[0,1,2,4,8,16,32]):
                                         for intervention in config.get('interventions',['none']):
+                                            if intervention!='none' and length not in config.get('intervention_steps',[16]): continue
                                             batch=data(es,config.get('eval_size',64),d)
                                             replacement=data(es+1000000,config.get('eval_size',64),d)
                                             target=batch['targets']; public=batch['public']
@@ -91,7 +110,7 @@ def run(config, output):
                                                 target=replacement['targets']
                                             # No lifecycle command is issued when zero recurrent steps execute.
                                             if length==0 and intervention in ('release','overwrite'): continue
-                                            pred=model(public,length,encoding,availability,intervention,replacement['public']['event'])
+                                            pred=predict_chunked(model,public,length,encoding,availability,intervention,replacement['public']['event'],config.get('eval_batch_size',64))
                                             row=dict(phase='eval',split=split,seed=es,distractors=d,steps=length,intervention=intervention,counts=counts(pred,target),predictions={k:v.argmax(-1).tolist() for k,v in pred['logits'].items()},targets={k:target[k].tolist() for k in FIELDS},register_active=pred['register'] is not None)
                                             if pred['register'] is not None:
                                                 supplied=dict(target)
