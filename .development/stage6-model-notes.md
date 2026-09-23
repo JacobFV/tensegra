@@ -54,3 +54,15 @@ All-masked and truly empty node memories ground entirely to null. Three new
 regressions failed before these changes; all twelve model tests now pass, and the
 full isolated baseline-plus-owned-files remote suite reports **383 passed**.
 Runner notified of both changed graph and grounding tensor shapes before pilots.
+
+Pre-main halting correction: removed hard-budget-normalized progress from the
+emission prior. The probe now uses
+`sigmoid(probe - alpha*softplus(soft_min-t) + beta*softplus(t-soft_max))`,
+with independent positive configuration fields `soft_min_microsteps=2`,
+`soft_max_microsteps=10`, `emit_alpha=.5`, and `emit_beta=.05`. Hard minimum and
+maximum only clamp the probability. Thus hard caps 12 and 80 produce exactly the
+same non-clamped emission probability for identical current state/context at
+microstep 3. This fixes a train/evaluation budget confound before the controlled
+main experiment, without adding weights or changing workspace/language outputs.
+Both new regression tests failed against the previous implementation; fourteen
+model tests and the full isolated remote baseline suite now pass: **385 passed**.

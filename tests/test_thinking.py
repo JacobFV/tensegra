@@ -159,3 +159,27 @@ def test_structural_geometry_preserves_relation_identity():
     swapped = model.step(state,context,memory,adjacency=graph.flip(1))
     assert not torch.allclose(first['attentions'][0][:,2:],swapped['attentions'][0][:,2:])
     torch.testing.assert_close(first['attentions'][0][:,:2],swapped['attentions'][0][:,:2])
+
+
+def test_emission_prior_is_independent_of_nonbinding_hard_budget():
+    from dataclasses import replace
+    from topoformer.thinking import ThinkingModel
+    model,context,memory = model_fixture()
+    short = ThinkingModel(replace(model.config,max_microsteps=12))
+    long = ThinkingModel(replace(model.config,max_microsteps=80))
+    short.load_state_dict(model.state_dict()); long.load_state_dict(model.state_dict())
+    state = model.initialize({'context':context})
+    a = short.step(state,context,memory,microstep=3)
+    b = long.step(state,context,memory,microstep=3)
+    torch.testing.assert_close(a['emit_probability'],b['emit_probability'],rtol=0,atol=0)
+    assert short.step(state,context,memory,microstep=12)['emit'].all()
+
+
+def test_soft_emission_bias_matches_independent_threshold_formula():
+    model,context,memory = model_fixture()
+    state = model.initialize({'context':context})
+    out = model.step(state,context,memory,microstep=3)
+    cfg = model.config
+    bias = (-cfg.emit_alpha*torch.nn.functional.softplus(torch.tensor(cfg.soft_min_microsteps-3.))
+            +cfg.emit_beta*torch.nn.functional.softplus(torch.tensor(3.-cfg.soft_max_microsteps)))
+    torch.testing.assert_close(out['emit_probability'],torch.sigmoid(out['emit_logits']+bias))

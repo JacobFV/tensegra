@@ -26,6 +26,10 @@ class ThinkingConfig:
     output_classes: int = 129
     min_microsteps: int = 2
     max_microsteps: int = 8
+    soft_min_microsteps: float = 2.
+    soft_max_microsteps: float = 10.
+    emit_alpha: float = .5
+    emit_beta: float = .05
     temperature: float = .3
     structural_strength: float = 2.
     ponder_cost: float = .01
@@ -37,6 +41,8 @@ class ThinkingConfig:
             raise ValueError('dimensions must be positive')
         if self.temperature <= 0 or not 0 <= self.min_microsteps <= self.max_microsteps:
             raise ValueError('invalid temperature or microstep limits')
+        if not (0 < self.soft_min_microsteps <= self.soft_max_microsteps and self.emit_alpha > 0 and self.emit_beta > 0):
+            raise ValueError('soft emission thresholds and coefficients must be positive and ordered')
 
 
 def _masked_softmax(logits, mask):
@@ -189,9 +195,12 @@ class ThinkingModel(nn.Module):
         identity_logits = identity_logits.masked_fill(~identity_mask[:,None,:].bool(),-torch.inf)
         pooled = state.mean(1)
         emit_logits = self.emit_probe(pooled).squeeze(-1)
-        # Smooth pressure complements hard bounds; no gold stopping signal enters.
-        progress = (float(microstep)-c.min_microsteps)/max(1,c.max_microsteps-c.min_microsteps)
-        probability = (emit_logits + 4*(progress-.5)).sigmoid()
+        # Soft stopping priors are independent of the hard safety budget, so
+        # extending evaluation depth cannot change emission at the same state/t.
+        t = emit_logits.new_tensor(float(microstep))
+        bias = (-c.emit_alpha*F.softplus(c.soft_min_microsteps-t)
+                +c.emit_beta*F.softplus(t-c.soft_max_microsteps))
+        probability = (emit_logits + bias).sigmoid()
         if microstep < c.min_microsteps:
             probability = torch.zeros_like(probability)
         if microstep >= c.max_microsteps:
