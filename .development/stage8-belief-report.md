@@ -1,12 +1,71 @@
 # Stage 8 belief interfaces
 
-## Status
+## Primary: 1024-wide, observation-ID matched
 
-The strict observation-ID-matched primary study is frozen and pending execution.
-The completed initial main is preserved as a **metadata-asymmetric diagnostic**:
-its recurrent encoder did not consume observation IDs while the protected ledger
-did. Both consumed identical candidate/evidence/role/action payloads. This limits
-causal interpretation of its ID-dependent stress comparisons.
+Both learned arms receive identical candidate, role, action, value and16-bit
+observation-ID features. Each has16,867,395 parameters; four distinct1024-wide
+residual MLP phases (FF2048) recur over evidence. This is a candidate-local MLP
+comparison, not a replication of Stage7's attention transformer. The protected
+arm is supplied an idempotent observation ledger; neural learning supplies
+compatibility increments. The comparator must maintain evidence in unrestricted
+candidate states. Both receive the same direct posterior/compatibility supervision.
+
+Three paired seeds,1000updates×32 fresh episodes,512validation and512test per
+N8/N16 condition, eight evidence conditions. Training episodes are paired across
+arms. Every model is evaluated at step0. No settings were tuned after the main
+freeze. Source/config freeze: `bac2950`; source hashes are identical across runs.
+
+| Test condition, across seeds and N8/N16 | Protected | Recurrent |
+|---|---:|---:|
+| Clean final support accuracy |100%|99.80–100%|
+| Independent evidence reorder |100%|98.83–99.41%|
+| Eight-fold repeated IDs, final support accuracy |100%|98.05–99.80%|
+| Explicit retraction final support accuracy |100%|99.80–100%|
+| Eight-fold repeated IDs, mean posterior L1 |.0011–.0071|.0685–.1274|
+
+For clean complete evidence, final support is a singleton, so support accuracy is
+complete joint proposal accuracy. In partial/empty conditions, membership alone
+is not semantic certainty; the full posterior and calibration are evaluated too.
+
+**Both prespecified gates fail.** Protected14/48 and recurrent24/48 validation
+cells fail at least one threshold. The protected failures are sharply localized:
+its initial empty-evidence prior assigns3.40–5.68% null mass at N8 and
+1.73–2.92% at N16, above the1% impossible-mass limit. This initial error also
+raises frame-averaged errors in shorter conditions. Learned prior calibration has
+not reached the required level within the fixed budget.
+
+For attribution only, excluding that initial frame gives a worst condition-mean
+posterior L1 of **.00244** and impossible mass **.00122** for protected updates
+across nonempty validation conditions. The recurrent comparator reaches
+**.13172 / .06586**, respectively, on long repetition. This diagnostic does **not**
+relax the registered gate, and does not authorize readiness or composition.
+
+The positive result is learned compatibility plus stable supplied bookkeeping,
+not learned duplicate/retraction algorithms. The recurrent comparator also
+acquires ordinary progressive beliefs under this wider, fresh-data recipe.
+Generic recurrence is therefore not intrinsically incapable of this task.
+Long repetition is33evidence frames, mostly redundant observations; it is not
+33novel reasoning operations or algorithmic-depth extrapolation.
+
+An independent audit reconstructs192cells /98,304 episode evaluations from full
+raw posteriors and targets. Repeated conditions and model arms share episodes;
+that evaluation count is not a count of independent unique semantic graphs.
+
+Primary artifacts: `results/stage8/belief-idmatched/` includes every posterior,
+target, calibration curve, source/config/checkpoint hash, gate reason and plot.
+Checkpoints remain at `gb10-direct:~/topoformer-stage8-artifacts/beliefs/idmatched/`.
+Protected training plus probes took about35seconds per seed; recurrent about50.
+Those exclude final raw export/oracle evaluation; they are not complete job times.
+The recurrent arm executes additional phase calls for its auxiliary loss, so
+parameter/exposure matching does not mean matched FLOPs.
+
+## Historical width control
+
+A separately prespecified width32/FF64 control is running on two CPU threads with
+identical ID-matched data, objective, optimizer, updates, seeds, and gates. It is an
+explicit historical ablation;1024 remains the default and primary configuration.
+It will isolate width within Stage8, without identifying which changes from
+Stage7 caused the acquisition improvement. No historical result tunes the primary.
 
 ## Completed diagnostic
 
