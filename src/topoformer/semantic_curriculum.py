@@ -165,10 +165,12 @@ def run(config):
                  available_unique_graphs=train_count,public_tokens_seen=tokens,elapsed_seconds=time.monotonic()-start,
                  renderer_exposure={'english':(exposure+1)//2,'spanish':exposure//2},evaluation={})
         if arm=='frequency': row.update(fit_label_presentations=2*train_count,actual_unique_graphs_seen=train_count,renderer_exposure={'english':train_count,'spanish':train_count})
+        evaluation_start=time.monotonic()
         evaluation_model = model if isinstance(model,dict) else lambda public: {k:v.cpu() for k,v in model(public).items()}
         for language in ('english','spanish','symbols'):
             row['evaluation'][language]=base.evaluate(evaluation_model,heldout,language,vocab,capacity,raw_path=output/'predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure))
         row['evaluation']['heldout_lexicon']=base.evaluate(evaluation_model,heldout,'english',vocab,capacity,True,raw_path=output/'predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure))
+        row['evaluation_seconds']=time.monotonic()-evaluation_start
         records.append(row)
         with (output/'curves.jsonl').open('a') as f: f.write(json.dumps(row)+'\n')
     if config.get('frequency_control',True):
@@ -182,11 +184,15 @@ def run(config):
                         workspace_rows=config.get('workspace_rows',8),microsteps=config.get('microsteps',2),no_input=arm=='no_input').to(config.get('device','cpu'))
             optimizer=torch.optim.AdamW(model.parameters(),lr=config.get('learning_rate',.0001))
             generator=torch.Generator().manual_seed(seed+1729)
-            seen=set(); tokens=0; start=time.monotonic(); initial_hash=state_hash(model)
+            seen=set(); tokens=0; start=time.monotonic(); initial_hash=state_hash(model); training_seconds=0.
+            cuda=model.initial.is_cuda
+            if cuda: torch.cuda.reset_peak_memory_stats(model.initial.device)
             checkpoints=set(config.get('eval_presentations',[0,presentations]))|{0,presentations}
             for exposure in range(0,presentations+1,batch_size):
                 if exposure in checkpoints: record(model,arm,seed,seen,exposure,tokens,start)
                 if exposure==presentations: break
+                if cuda: torch.cuda.synchronize(model.initial.device)
+                train_start=time.monotonic()
                 optimizer.zero_grad(); logs=[]
                 for offset in range(batch_size):
                     index,language=exposure_schedule(exposure+offset,train_count)
@@ -200,10 +206,12 @@ def run(config):
                     loss.backward(); logs.append({k:float(v.detach()) for k,v in parts.items()})
                     seen.add(index); tokens+=len(base.tokens(public))
                 nn.utils.clip_grad_norm_(model.parameters(),1.); optimizer.step()
+                if cuda: torch.cuda.synchronize(model.initial.device)
+                training_seconds+=time.monotonic()-train_start
                 with (output/'losses.jsonl').open('a') as f: f.write(json.dumps(dict(arm=arm,seed=seed,presentations=exposure+batch_size,parts={k:sum(row[k] for row in logs)/batch_size for k in logs[0]},weights=weights))+'\n')
             path=output/f'{arm}-{seed}.pt'; torch.save(model.state_dict(),path)
             manifest['runs'].append(dict(arm=arm,seed=seed,parameters=sum(p.numel() for p in model.parameters()),width=model.width,
-                           initial_state_sha256=initial_hash,final_state_sha256=state_hash(model),checkpoint_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),seconds=time.monotonic()-start))
+                           initial_state_sha256=initial_hash,final_state_sha256=state_hash(model),checkpoint_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),seconds=time.monotonic()-start,training_seconds=training_seconds,peak_cuda_allocated_bytes=torch.cuda.max_memory_allocated(model.initial.device) if cuda else 0))
             (output/'manifest.json').write_text(json.dumps(manifest,indent=2))
     return records
 
