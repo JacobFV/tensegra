@@ -6,7 +6,8 @@ def read(path):
     with (gzip.open(path,'rt') if path.suffix=='.gz' else path.open()) as f:return json.load(f)
 
 def return_probes(root):
-    rows=read(root/'predictions.json.gz') if (root/'predictions.json.gz').exists() else read(root/'predictions.json')
+    path=next((root/name for name in ('predictions.json.gz','predictions.json','results.json') if (root/name).exists()),None)
+    rows=[r for r in read(path) if 'metrics' in r]
     errors=[];selections={}
     for i,r in enumerate(rows):
         p,q=r['predictions'],r['targets'];n=len(q)
