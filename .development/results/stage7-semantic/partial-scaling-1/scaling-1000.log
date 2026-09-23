@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/tmp/stage7-semantic-scaling.3EEZ4D/src/topoformer/semantic_scaling.py", line 288, in <module>
+    run(json.loads(Path(parser.parse_args().config).read_text()))
+  File "/tmp/stage7-semantic-scaling.3EEZ4D/src/topoformer/semantic_scaling.py", line 275, in run
+    seen.add(index); tokcount+=len(tokens(public)); component=losses(model(public),targets(g,public,capacity,vocab,language=language)); parts.append(sum(component.values())); component_log.append({k:float(v.detach()) for k,v in component.items()})
+                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/stage7-semantic-scaling.3EEZ4D/src/topoformer/semantic_scaling.py", line 101, in targets
+    if rendered not in tok: raise ValueError(f'identifier is not visibly copyable: {rendered}')
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: identifier is not visibly copyable: amarillo

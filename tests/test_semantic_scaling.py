@@ -57,6 +57,9 @@ def test_runner_step_zero_exposure_and_no_input_baseline(tmp_path):
     assert {r['arm'] for r in result}=={'semantic','no_input','frequency'}
     assert all(r['optimizer_examples']==0 for r in result if r['step']==0)
     assert all('symbols' in r['evaluation'] and 'heldout_lexicon' in r['evaluation'] for r in result)
+    frequency=next(r for r in result if r['arm']=='frequency')
+    assert frequency['fit_label_examples']==3
+    assert frequency['actual_unique_graphs_seen']==3
     assert (tmp_path/'run'/'manifest.json').exists()
 
 
@@ -108,3 +111,12 @@ def test_slot_gradient_not_diluted_by_padding():
         masses.append(float(out['slots'].grad[mask].abs().sum()))
     assert masses[0]==pytest.approx(masses[1],rel=.01)
     assert masses[0]>.5
+
+
+def test_pinned_spanish_gender_agreement_is_visible_copy_target():
+    m=module(); e=m.build_tcn_example('set_operations',700191,difficulty=.5)
+    public,g=m.surface_input(e,'spanish'); tok=m.tokens(public)
+    assert 'amarilla' in tok and 'amarillo' not in tok
+    gold=m.targets(g,public,128,m.value_vocabulary([e]),language='spanish')
+    nodes=[i for i,n in enumerate(g.nodes) if n.kind in ('ident','entity') and n.value=='yellow']
+    assert nodes and all(tok[int(gold['copy'][i])]=='amarilla' for i in nodes)

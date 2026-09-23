@@ -9,7 +9,6 @@ not rendered corpora. Repeated surfaces/renamings never increase graph cardinali
 from __future__ import annotations
 import argparse
 from collections import Counter
-from functools import lru_cache
 import hashlib
 import gzip
 import json
@@ -86,22 +85,9 @@ def value_vocabulary(examples):
     return ['<unknown>']+sorted({json.dumps(n.value,sort_keys=True) for e in examples for n in e.privileged.graph.nodes if n.kind not in ('ident','entity')})
 
 
-@lru_cache(maxsize=512)
-def identifier_forms(value,language):
-    """Supervision only: exact forms from the unchanged pinned renderer pack."""
+def targets(graph,public,capacity,vocab,language="english"):
     from ._vendor.tcn_language.languages import get_language
     from ._vendor.tcn_language._structure import Ident
-    from ._vendor.tcn_language.languages.lexicon import load_vocabulary
-    forms={get_language(language).render(Ident(value))}
-    if language!='symbols':
-        lexical=load_vocabulary(language)[0]
-        adjective=lexical.adjectives.get(value); noun=lexical.nouns.get(value)
-        if adjective is not None: forms.update(getattr(adjective,key) for key in ('base','ms','fs','mp','fp'))
-        if noun is not None: forms.update((noun.lemma,noun.plural))
-    return frozenset(forms-{''})
-
-
-def targets(graph,public,capacity,vocab,language="english"):
     if isinstance(public,tuple): public=public[0]
     if len(graph.nodes)>capacity: raise ValueError('graph exceeds prespecified node capacity')
     tok=tokens(public); indices={n.id:i for i,n in enumerate(graph.nodes)}
@@ -111,9 +97,9 @@ def targets(graph,public,capacity,vocab,language="english"):
     for i,n in enumerate(graph.nodes):
         out['presence'][i]=True; out['kind'][i]=KINDS.index(n.kind)
         if n.kind in ('ident','entity'):
-            visible=[j for j,token in enumerate(tok) if token in identifier_forms(str(n.value),language)]
-            if not visible: raise ValueError(f'identifier is not visibly copyable: {n.value}')
-            out['copy'][i]=visible[0]
+            rendered=get_language(language).render(Ident(str(n.value)))
+            if rendered not in tok: raise ValueError(f'identifier is not visibly copyable: {rendered}')
+            out['copy'][i]=tok.index(rendered)
         else:
             value=json.dumps(n.value,sort_keys=True); out['value'][i]=vocab.index(value) if value in vocab else 0
     for e in graph.edges:
@@ -259,7 +245,7 @@ def run(config):
     records=[]
     def record(model,seed,arm,step,start,seen,tokcount):
         row=dict(seed=seed,arm=arm,step=step,optimizer_examples=step*config['batch_size'] if arm!='frequency' else 0,
-            actual_unique_graphs_seen=train_count if arm=='frequency' else len(seen),fit_label_examples=train_count if arm=='frequency' else step*config['batch_size'],public_tokens_seen=tokcount,elapsed_seconds=time.monotonic()-start,
+            actual_unique_graphs_seen=len(seen),public_tokens_seen=tokcount,elapsed_seconds=time.monotonic()-start,
             dataset_sha256=corpus.audit['dataset_sha256'],config_sha256=config_hash,
             evaluation={lang:evaluate(model,heldout,lang,vocab,capacity,raw_path=outdir/'raw-evaluation.jsonl.gz',context=dict(seed=seed,arm=arm,step=step)) for lang in ('english','spanish','symbols')})
         row['evaluation']['heldout_lexicon']=evaluate(model,heldout,'english',vocab,capacity,True,raw_path=outdir/'raw-evaluation.jsonl.gz',context=dict(seed=seed,arm=arm,step=step))
