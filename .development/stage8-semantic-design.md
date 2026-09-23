@@ -13,8 +13,9 @@ optimizer presentations E={10k,100k,1M}. Resource authorization follows actual
 A presentation is one graph rendered in one language. English/Spanish alternate
 for every graph, independent of N. At E presentations, at most E/2 distinct graphs
 have been consumed. Curves log unique graphs actually seen, tokens, presentations,
-renderer counts and available corpus size separately. Evaluation is the same
-reserved 64-graph prefix across N; train sets are nested disjoint prefixes.
+renderer counts and available corpus size separately. Evaluation uses the same 64 fresh semantic keys across N, excluding previously
+inspected evaluation keys; training sets are nested disjoint prefixes. The final
+main freeze uses balanced lesson presentations to hold family mixture fixed.
 
 The first 1000 presentations supervise node presence/types, then values and visible
 identity copying enter, and sampled typed/ordered edges enter at 2000. Every loss

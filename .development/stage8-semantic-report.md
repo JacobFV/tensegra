@@ -1,7 +1,7 @@
 # Stage 8 semantic acquisition: preliminary measurements
 
 Status: implementation and acquisition probes, **not yet a scaling result**.
-The paired scaling study is pending resource freeze. No semantic-runtime coupling
+The paired scaling study is frozen and queued; see the main-study section below. No semantic-runtime coupling
 or supervision withdrawal is enabled.
 
 ## Standard width and resource evidence
@@ -72,3 +72,58 @@ Calibration consumes 16 privileged training label presentations even at optimize
 step 0; that additional decoder-fitting budget is explicit. Calibration is not a
 new neural competence result. The failed original acquisition artifacts remain
 unchanged.
+
+## Frozen main study
+
+The resource freeze is now committed in `stage8-semantic-main-freeze.json`; the
+study is queued, not yet a reported learning result. It uses 1k/10k available
+training graphs, three paired seeds, semantic/no-text-feature arms, and one
+100,000-presentation trajectory per arm with measurements at 0/10,016/100,000.
+The 10k-scale measurement is explicitly **10,016**, aligned with batch32.
+
+Optimized batch32 BF16 timing measured warm training steps of 0.1409 s for
+semantic and 0.1313 s for no-input: 4.40/4.10 ms per presentation. The first steps
+were 0.473/0.665 s. Removing per-field GPU synchronization and caching deterministic
+CPU data changed throughput, not the mathematical per-example loss. Parameters
+remain FP32; dense operations use BF16 autocast and loss logits return to FP32.
+The projected serialized budget is approximately 95–110 minutes for all 1.2M
+presentations, preprocessing and evaluation. This estimate is not a completion
+claim.
+
+### Diversity and genuinely fresh evaluation
+
+The generated pool contains only four variable-binding and 120 set-operation
+canonical constructions at this difficulty; the remaining accepted constructions
+are unification examples. The raw N=1k and N=10k corpus distributions therefore
+would change lesson mixture substantially. The main study fixes **equal lesson
+presentation frequency**, independently cycling through each lesson's available
+graphs and pairing English/Spanish renderings. The frequency control uses inverse
+lesson-size weights to match that intended mixture. Repeated small-family examples
+remain repeated examples, not new unique graphs. Actual unique counts and lesson
+exposures are recorded at every checkpoint.
+
+The main corpus uses a new data seed, 800000. Merely changing the seed was not
+enough: 14 of its initial evaluation-prefix keys matched previously inspected
+canonical graphs. Those keys are skipped only while reserving evaluation; they
+remain eligible training examples. The final 64 heldout graphs have zero overlap
+with the prior 64-key fixture, whose digest also matches Stage7's principal
+heldout set. The new heldout contains 40 unification and 24 set-operation graphs.
+It has **no fresh variable-binding constructions**, so this study cannot establish
+variable-binding structural transfer. Both aggregate and per-lesson metrics are
+required in the final interpretation.
+
+The first eight main training graphs alone fit the edge thresholds. Neither main
+heldout outcomes nor the previously inspected validation labels select thresholds.
+The recipe, curriculum, sampling mixture and seeds are frozen before main learning
+outcomes. No runtime composition or supervision withdrawal is authorized by this
+study.
+
+### Raw artifact representation
+
+Raw predictions preserve every tensor field. Binary edge tensors are stored as
+shape-tagged, little-endian bitmaps instead of oversized coordinate lists, with
+one gzip shard per arm/seed/exposure. The historical acquisition conversion
+reduced approximately 478 MB to 22 MB and verified every decoded field exactly.
+Original compressed SHA256, converted SHA256 and record counts are committed;
+the original is also retained in the remote durable artifact directory. Exact
+historical source snapshots are committed independently of branch ancestry.
