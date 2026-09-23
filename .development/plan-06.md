@@ -10,6 +10,6 @@
 - [x] Progressive-evidence tasks: test exact trace replay, no future actor fields, nonbinary readiness targets, distractors/null, same-result different-context answers and matched surfaces; implement paired generators.
 - [x] Runner: verify actor canaries, teacher-forced/free-running separation, per-loss gradients, separate annealing, step-zero and fixed/adaptive compute controls; small pilots then freeze paired experiments.
 - [x] Independent artifact analysis: conditionals/calibration/risk/compute, depth/renderer/composition matrices, event interventions, source/data/checkpoint audits, failure traces and concise report.
-- [ ] Full regression verification, preserve earlier stages, commit artifacts, integrate/push and clean owned worktree.
+- [x] Full regression verification, preserve earlier stages, commit artifacts, integrate/push and clean owned worktree.
 
 Review focus: hidden graph/trace leakage; readiness labels accidentally become action masks; oracle register resets; direct final-result readout bypassing reintegration; halting measured only during teacher forcing; thought labels imposed on workspace rows; matched input/compute controls; counterfeit multi-surface splits.

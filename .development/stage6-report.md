@@ -170,6 +170,8 @@ All four independent anneals, all-auxiliary annealing and cold/warm task-only co
 
 The coordinator reports full remote regression at controlled source `c258785`: **452 tests passed plus 6 subtests in 5.60 seconds**. A later isolated full run at `955fc8f`, including analyzer `3434f17`, passed **454 tests plus 6 subtests in 4.89 seconds**, also reported by the coordinator. The [independent review](stage6-review.md) records the final inference/training emission-boundary correction and protected learned-value checks. This is implementation evidence, not learned-performance evidence; the report author did not rerun the remote suite.
 
+Final integration was verified on merged main revision `15bde6b`: **454 tests and 6 subtests passed in 4.83 seconds**. Code, raw evidence and reports were pushed, and the clean temporary local worktree was removed.
+
 Final conclusions must distinguish what was constructed, what survived architectural tests, what was learned under teacher forcing, what the free policy executed, and what the workspace correctly emitted. Exact protected semantics do not transfer exactness to learned readout. Failure to acquire useful autonomous proposals, generalize, preserve returned values or stop appropriately will be reported as a result.
 
 The [preservation audit](stage6-preservation.json), recorded in `955fc8f` against checked commit `0abc5a5`, verifies identical Git blobs for 352 baseline files, including 30 source files, 25 tests, 16 configurations and 219 result artifacts. The only modified pre-existing files are README (Stage 6 usage) and pyproject (vendor package data). New Stage 6 files are outside that comparison.
