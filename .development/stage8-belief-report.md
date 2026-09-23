@@ -34,7 +34,7 @@ its initial empty-evidence prior assigns 3.40–5.68% null mass at N8 and
 raises frame-averaged errors in shorter conditions. Learned prior calibration has
 not reached the required level within the fixed budget.
 
-For attribution only, excluding that initial frame gives a worst condition-mean
+For posthoc attribution only, excluding that initial frame gives a worst condition-mean
 posterior L1 of **.00244** and impossible mass **.00122** for protected updates
 across nonempty validation conditions. The recurrent comparator reaches
 **.13172 / .06586**, respectively, on long repetition. This diagnostic does **not**
