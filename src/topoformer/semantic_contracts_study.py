@@ -3,13 +3,14 @@ import argparse
 import hashlib
 import json
 import time
+import resource
 from pathlib import Path
 import torch
 from torch import nn
 from torch.nn import functional as F
 from .semantic_contracts import SlotScorer,slot_objective,single_slot_labels
 from . import semantic_scaling as base
-from .thinking_language import ROLES
+from .thinking_language import ROLES,state_hash
 
 
 class FixedNodeDecoder(nn.Module):
@@ -60,7 +61,8 @@ def run(config):
       for interaction in (False,True):
        for conditional in (False,True):
         torch.manual_seed(seed);model=FixedNodeDecoder(config['width'],interaction=interaction,rank=config['rank']).to(device)
-        optimizer=torch.optim.Adam(model.parameters(),lr=config['learning_rate']);start=time.monotonic();curve=[]
+        initial_hash=state_hash(model)
+        optimizer=torch.optim.Adam(model.parameters(),lr=config['learning_rate']);start=time.monotonic();curve=[];losses=[]
         if device=='cuda':torch.cuda.reset_peak_memory_stats()
         for update in range(config['updates']+1):
             if update in config['checkpoints']:
@@ -72,10 +74,11 @@ def run(config):
                 loss=F.binary_cross_entropy_with_logits(edges,truth.float(),reduction='none')
                 edge_loss=.5*(loss[truth].mean()+loss[~truth].mean())
                 parts.append(edge_loss+slot_objective(slots,ordered,truth.any(-1),edge_conditional=conditional))
-            total=torch.stack(parts).mean();total.backward();optimizer.step()
+            total=torch.stack(parts).mean();total.backward();optimizer.step();losses.append(float(total.detach()))
         if device=='cuda':torch.cuda.synchronize()
-        runs.append(dict(seed=seed,head='interaction' if interaction else 'additive',objective='edge_conditional' if conditional else 'all_pairs',parameters=sum(p.numel() for p in model.parameters()),seconds=time.monotonic()-start,peak_cuda_allocated=torch.cuda.max_memory_allocated() if device=='cuda' else None,curve=curve))
-        (out/'results.json').write_text(json.dumps(dict(config=config,runs=runs,priors=['Oracle graph-and-node identity one-hot padded to width1024','Node attributes, presence and visible copies supplied exactly; edge existence/relation/slot learned','Gold edges select loss entries only; final existence uses predicted logits']),indent=2)+'\n')
+        checkpoint=out/f'head-{interaction}-conditional-{conditional}-seed{seed}.pt';torch.save(model.state_dict(),checkpoint)
+        runs.append(dict(initial_state_sha256=initial_hash,final_state_sha256=state_hash(model),checkpoint_sha256=hashlib.sha256(checkpoint.read_bytes()).hexdigest(),optimizer_presentations=config['updates']*len(examples),actual_unique_graphs=len(examples),losses=losses,process_maxrss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,seed=seed,head='interaction' if interaction else 'additive',objective='edge_conditional' if conditional else 'all_pairs',parameters=sum(p.numel() for p in model.parameters()),seconds=time.monotonic()-start,peak_cuda_allocated=torch.cuda.max_memory_allocated() if device=='cuda' else None,curve=curve))
+        (out/'results.json').write_text(json.dumps(dict(config=config,config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (Path(__file__),Path(__file__).with_name('semantic_contracts.py'))},graph_audits=[a for _,_,_,a in examples],runs=runs,priors=['Oracle graph-and-node identity one-hot padded to width1024','Node attributes, presence and visible copies supplied exactly; edge existence/relation/slot learned','Gold edges select loss entries only; final existence uses predicted logits']),indent=2)+'\n')
     return runs
 
 if __name__=='__main__':
