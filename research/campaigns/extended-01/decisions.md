@@ -46,3 +46,6 @@ Independent three-seed P01 ordered-dispatch and R05 returned-fact decision audit
 
 ## Direct-token path did not improve matched-exposure acquisition
 S06 finished65,536presentations in697.94processseconds, exact0/512; copy andedges are worse thanS01 atsameexposure. This rejects a benefit under thisrecipe, not every possible contextualtextmodel. Retain originalactor for the independentlyregistered occurrence-supervision test. A05bfrozenaddress diagnostic and R06balancedfitprofile receive the nextshortslots; C01CPUimplementation continues independently.
+
+### 22:49 UTC — distinguish failed acquisition from missing information
+S07/S08 do not justify more exposure of the same actor: occurrence acquisition is partial and ordered edges remain wrong even at correctly aligned nodes. Request one stronger public token-to-node path before GPU scheduling. R07 nonlinear decoder damages training fit at unchanged LR; R08 changes only optimizer rate, retaining fixed900 updates and all failed endpoints. A06 confirmation runs unchanged; C01 remains next major release.
