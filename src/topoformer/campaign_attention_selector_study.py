@@ -9,7 +9,7 @@ from pathlib import Path
 import numpy as np
 import torch
 from torch.nn import functional as F
-from .campaign_attention_selector import SelectorModel,generate,targets,oracle_successors,metrics,swap_instruction,permute_nodes
+from .campaign_attention_selector import SelectorModel,generate,targets,oracle_successors,metrics,swap_instruction,permute_nodes,corrupt
 from .campaign_attention import restore_node_order
 from .campaign_attention_study import write,sync
 
@@ -23,15 +23,15 @@ def evaluate(model,cfg,out,step,device):
             batch=generate(count,c['nodes'],c['depth'],groups=c.get('groups',4),seed=cfg['eval_seed']+c.get('data_group',ci)*100000+offset,device=device,heldout_composition=c.get('composition',False))
             original=batch
             if c.get('instruction_swap'):batch=swap_instruction(batch)
-            gold=targets(batch);given=batch;order=None
+            gold=targets(batch);given=corrupt(batch,c.get('corruption','clean'),cfg['eval_seed']+ci*100000+offset+50000);order=None
             if c.get('node_permutation'):
                 g=torch.Generator(device=device).manual_seed(cfg['eval_seed']+offset+777)
-                order=torch.rand(count,c['nodes'],generator=g,device=device).argsort(-1);given=permute_nodes(batch,order)
-            if c.get('wrong_instruction'):given=swap_instruction(batch)
+                order=torch.rand(count,c['nodes'],generator=g,device=device).argsort(-1);given=permute_nodes(given,order)
+            if c.get('wrong_instruction'):given=swap_instruction(given)
             if str(device).startswith('cuda'):
                 t0=torch.cuda.Event(enable_timing=True);t1=torch.cuda.Event(enable_timing=True);t0.record()
             else:t0=time.monotonic()
-            result=model(given,cfg['mode'],zero_strength=c.get('zero_strength',False),zero_content=c.get('zero_content',False))
+            result=model(given,cfg['mode'],zero_strength=c.get('zero_strength',False),zero_content=c.get('zero_content',False),selector_scale_override=c.get('selector_scale_override'))
             if str(device).startswith('cuda'):t1.record();timers.append((t0,t1))
             else:elapsed+=time.monotonic()-t0
             if order is not None:result=restore_node_order(result,order)
@@ -83,7 +83,11 @@ def run(cfg,out):
     optimizer=torch.optim.AdamW(model.parameters(),lr=cfg.get('lr',.0003),weight_decay=1e-4)
     start=time.monotonic();curves=[];losses=[];draws=0;node_steps=0
     for step in range(cfg['steps']+1):
-        if step in cfg['checkpoints']:curves.append(evaluate(model,cfg,out,step,device))
+        if step in cfg['checkpoints']:
+            evaluation=dict(cfg)
+            if step!=cfg['steps'] and 'curve_conditions' in cfg:
+                evaluation.update(conditions=cfg['curve_conditions'],eval_seed=cfg['curve_eval_seed'],eval_examples=cfg.get('curve_examples',256))
+            curves.append(evaluate(model,evaluation,out,step,device))
         if step==cfg['steps']:break
         depth=1+step%4
         batch=generate(cfg['batch'],cfg['nodes'],depth,groups=cfg.get('groups',4),seed=cfg['train_seed']+step,device=device,train=True)

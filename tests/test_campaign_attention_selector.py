@@ -73,3 +73,36 @@ def test_compact_supplied_and_swap_targets(tmp_path):
     assert np.array_equal(z['c0_gold'],z['c2_gold'])
     changed=z['c1_oracle_terminal']!=z['c1_original_terminal']
     assert changed.sum()==rows[1]['changed_terminal_count']
+
+def test_regular_corruption_and_scale_override():
+    from topoformer.campaign_attention_selector import corrupt
+    b=generate(3,16,3,seed=99)
+    for kind in ['wrong','identity']:
+        c=corrupt(b,kind,100)
+        assert torch.equal(c.adjacency.sum(-1),b.adjacency.sum(-1))
+        # A conjugation preserves degree multiset rather than each node's label.
+        assert torch.equal(c.adjacency.sum(-2).sort(-1).values,b.adjacency.sum(-2).sort(-1).values)
+        s=oracle_successors(c)
+        for t in range(3):
+            attributes=c.attributes.gather(1,s[:,t,:,None].expand(-1,-1,64))
+            assert torch.equal(attributes,c.instructions[:,t,None].expand_as(attributes))
+        assert torch.equal(c.values,b.values) and torch.equal(c.attributes,b.attributes)
+    m=SelectorModel(width=32,heads=4);before={k:v.clone() for k,v in m.state_dict().items()}
+    m(b,'soft',selector_scale_override=16)
+    assert all(torch.equal(v,m.state_dict()[k]) for k,v in before.items())
+
+def test_corruption_metric_references_and_curve_isolation(tmp_path):
+    import json
+    from topoformer.campaign_attention_selector import corrupt
+    from topoformer.campaign_attention_selector_study import run
+    b=generate(8,16,2,seed=123);given=corrupt(b,'wrong',124);m=SelectorModel(width=32,heads=4)
+    out=m(given,'hard');score=metrics(out,targets(b),b)
+    assert torch.allclose(score['supplied_edge_mass'],torch.ones(8),atol=1e-6)
+    assert (score['edge_mass']<.9).any()
+    cfg=dict(seed=1,width=32,steps=1,batch=2,nodes=16,groups=4,train_seed=1,eval_seed=200,
+             eval_examples=8,eval_batch=4,checkpoints=[0,1],mode='hard',device='cpu',conditions=[dict(nodes=16,depth=2)],
+             curve_conditions=[dict(nodes=16,depth=1)],curve_eval_seed=300,curve_examples=4)
+    path=tmp_path/'isolation';run(cfg,path)
+    early=json.loads((path/'eval-00000.json').read_text());final=json.loads((path/'eval-00001.json').read_text())
+    assert early['eval_seed']==300 and final['eval_seed']==200
+    assert early['rows'][0]['examples']==4 and final['rows'][0]['examples']==8
