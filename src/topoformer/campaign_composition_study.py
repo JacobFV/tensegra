@@ -9,7 +9,7 @@ from torch import nn
 from .campaign_composition import make_lowering_batch, model_inputs
 from .campaign_composition_acquire import private_labels, controlled_rows, labels_from_public, sliced, tensor_digest
 from .campaign_composition_models import NeuralOperandBaseline, ContextualBaseline
-from .campaign_composition_runtime import frozen_interfaces, load_checked, propose, build_returns, consume, manipulate, exact_copy
+from .campaign_composition_runtime import frozen_interfaces, load_checked, propose, build_returns, consume, manipulate, exact_copy, interfaces_state_hashes
 from .campaign_returns_use import answer
 from .interface_proposals import proposal_loss
 
@@ -114,6 +114,7 @@ def train_baseline(config, phase, output, device):
 
 def hybrid(config, output, device):
     start = time.monotonic(); interfaces = frozen_interfaces(config['interfaces'], device); cells = []; audits = []
+    frozen_before = interfaces_state_hashes(interfaces)
     for distractors in config['eval_distractors']:
         data, public_inputs, labels = get_data(config['data']['validation'], distractors)
         rows = data['public']; predicted = propose(interfaces['lowerer'], rows, device)
@@ -163,7 +164,11 @@ def hybrid(config, output, device):
             for delay, outcome in result['cells'].items():
                 cells.append(dict(arm='public_'+kind, distractors=8, delay=delay, requested=counts(outcome['predictions'], requested_answer), requested_changed=counts(outcome['predictions'], requested_answer, requested_answer != labels['task']), **paired_metrics(outcome['predictions'], labels['task'], result['supplied'])))
             torch.save(dict(result=result, original=labels['task'], requested=requested_answer, proposal=altered_pred, reasons=bundle['reasons'], supplied_public=bundle['public']), output/f'public-{kind}.pt')
-    return dict(phase='hybrid', cells=cells, proposal_audits=audits, causal_checks=causal_checks(output, config['intervention_delays']), elapsed_seconds=time.monotonic()-start)
+    frozen_after = interfaces_state_hashes(interfaces)
+    frozen = dict(before=frozen_before, after=frozen_after, unchanged=frozen_before == frozen_after)
+    (output/'frozen-state.json').write_text(json.dumps(frozen,indent=2)+'\n')
+    if not frozen['unchanged']: raise RuntimeError('hybrid frozen state changed')
+    return dict(phase='hybrid', cells=cells, proposal_audits=audits, frozen_state=frozen, causal_checks=causal_checks(output, config['intervention_delays']), elapsed_seconds=time.monotonic()-start)
 
 
 def causal_checks(output, delays):
@@ -202,7 +207,7 @@ def run(config, phase, output, device):
     output = Path(output); output.mkdir(parents=True, exist_ok=False)
     summary = hybrid(config, output, device) if phase == 'hybrid' else train_baseline(config, phase, output, device)
     if device.startswith('cuda'): torch.cuda.synchronize()
-    files = ('campaign_composition.py','campaign_composition_acquire.py','campaign_composition_models.py','campaign_composition_runtime.py','campaign_composition_study.py','campaign_returns_use.py','retention_data.py','interface_proposals.py','thinking_runtime.py','return_memory.py')
+    files = ('campaign_composition.py','campaign_composition_acquire.py','campaign_composition_models.py','campaign_composition_runtime.py','campaign_composition_study.py','campaign_returns_use.py','retention_data.py','interface_proposals.py','thinking_runtime.py','return_memory.py','return_crossdelay.py','return_memory_study.py','thinking.py','retention.py','return_diagnostics_probe.py','campaign_returns.py','campaign_returns_balanced.py')
     summary.update(config=config, config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(), torch_version=torch.__version__, float32_matmul_precision=torch.get_float32_matmul_precision(), source_sha256={name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in files},
                    peak_cuda_bytes=torch.cuda.max_memory_allocated() if device.startswith('cuda') else 0,
                    claim='one-development-population scheduled bounded composition; no learned planning or timing')

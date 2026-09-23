@@ -85,6 +85,8 @@ def test_hybrid_runner_refusals_and_oracles_are_separate(tmp_path, monkeypatch):
     output=tmp_path/'hybrid';output.mkdir()
     result=study.hybrid(config,output,'cpu')
     assert len(result['proposal_audits'])==2
+    assert result['frozen_state']['unchanged']
+    assert result['frozen_state']['before'] == result['frozen_state']['after']
     assert (output/'oracle_return-8.pt').exists()
     drop=torch.load(output/'intervention-drop.pt',weights_only=True)
     assert (drop['result']['supplied']==-1).all()

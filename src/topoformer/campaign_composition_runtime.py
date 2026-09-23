@@ -7,6 +7,7 @@ from .campaign_composition import make_model, model_inputs, execute_proposal
 from .campaign_composition_acquire import canonical_prediction
 from .campaign_returns_use import workspace, alter_public, answer
 from .return_memory import ReturnMemoryModel
+from .return_crossdelay import tensor_hash
 
 
 def load_checked(path, expected, device):
@@ -100,3 +101,9 @@ def exact_copy(interfaces, bundle, device):
     query = public['query'].to(device) / encoded.new_tensor([8., 1.])
     with torch.no_grad(): pred[bundle['indices']] = interfaces['oracle'](torch.cat((encoded, query), -1)).argmax(-1).cpu()
     return pred
+
+
+def interfaces_state_hashes(interfaces):
+    """In-memory frozen parameters/buffers plus scalar normalization state."""
+    return {name: tensor_hash(value.state_dict() if isinstance(value, nn.Module) else value)
+            for name, value in interfaces.items() if isinstance(value, (nn.Module, torch.Tensor))}
