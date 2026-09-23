@@ -55,3 +55,21 @@ def test_exact_gather_equals_neighbor_masking():
     a=b.adjacency[torch.arange(2),b.relations[:,t]]
     expected=score.expand(-1,-1,16,-1).masked_fill(~a[:,None].bool(),-torch.inf).softmax(-1).mean(1)
     assert torch.allclose(m(b,'hard')['weights'][:,0],expected,atol=1e-7)
+
+def test_compact_supplied_and_swap_targets(tmp_path):
+    import json
+    import numpy as np
+    from topoformer.campaign_attention_selector_study import run
+    cfg=dict(seed=1,width=32,steps=1,batch=2,nodes=16,groups=4,train_seed=1,eval_seed=200,
+             eval_examples=8,eval_batch=4,checkpoints=[1],mode='hard',device='cpu',conditions=[
+                 dict(nodes=16,depth=2,data_group=0),dict(nodes=16,depth=2,instruction_swap=True,data_group=0),
+                 dict(nodes=16,depth=2,wrong_instruction=True,data_group=0)])
+    path=tmp_path/'run';run(cfg,path);z=np.load(path/'eval-00001.npz');rows=json.loads((path/'eval-00001.json').read_text())['rows']
+    bi=np.arange(8)
+    for ci in range(3):
+        pred=z[f'c{ci}_pred'][:,-1][bi,z[f'c{ci}_start']]
+        assert np.array_equal(pred==z[f'c{ci}_supplied_final_target'],z[f'c{ci}_agreement_supplied_task'])
+    assert np.array_equal(z['c1_supplied_final_target'],z['c2_supplied_final_target'])
+    assert np.array_equal(z['c0_gold'],z['c2_gold'])
+    changed=z['c1_oracle_terminal']!=z['c1_original_terminal']
+    assert changed.sum()==rows[1]['changed_terminal_count']
