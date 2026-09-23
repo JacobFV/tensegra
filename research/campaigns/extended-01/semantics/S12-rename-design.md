@@ -1,0 +1,11 @@
+# S12 optional secondary: consistent unseen identifier spellings
+
+This is an inference-only paired lexical diagnostic on the same1,024 reserved semantic constructions. It does not change primary S12 known-renderer confirmation or train any new renderer. Freeze before any renamed model forward.
+
+Use the single audited case-preserving bijection in `s12-rename-case-audit/audit.json`: uppercase variablesA–E becomeNUVAAZ–NUVAEZ; six lowercase names become distinct lowercase novel strings. Every replacement is a single public token. All11 spellings are absent from TRAIN, and lexical feature hashes do not collide. The original word order, punctuation, token count, equality pattern and variable-case convention remain. Update canonical identifier/entity values and entity IDs consistently; retain typed/order graph structure.
+
+CPU audit verifies every renamed graph is alpha-equivalent and all1,024 bounded target tensors (including exact copy positions) are unchanged. Cache SHAa3f3bc5ed3d6fb188f5fb787d079af532cc67ec170a6b89937ea1d0f7777a4fb. An earlier lowercase-only mapping was a CPU feasibility check and was replaced before any model forward to preserve the uppercase variable cue; its audit is retained, not used as a selectable evaluation policy.
+
+If separately released, evaluate all six fixed S12 branch endpoints on these same1,024 renamed inputs. Load each model's already-frozen primary TRAIN thresholds; no renamed calibration, vocabulary refit, model selection, or posthoc mapping choice. Report raw/calibrated complete graphs, exact copy, typed/ordered edges, and per-example original→renamed correct/wrong transitions, paired by semantic construction. Report degradation for each seed/arm and the full novel-token support. This is a diagnostic, not a required primary competence gate or new language family. Applying the frozen S10 public equality/schema decoder remains a separately labeled engineering reference.
+
+No renamed predictions have been generated. CPU audit uses privileged graphs only for checking semantic equivalence and target generation; inference inputs remain public renamed text. Main confirmation can proceed independently while this optional evaluator awaits source/hash review and queue authorization.
