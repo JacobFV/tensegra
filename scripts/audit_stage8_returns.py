@@ -1,5 +1,6 @@
 """Audit saved return predictions and prespecified retention gate (stdlib only)."""
 import argparse
+import gzip
 import json
 from pathlib import Path
 
@@ -10,7 +11,10 @@ def audit(root):
     errors=[];rows_checked=0;examples=0;gate_results=[]
     for run in manifest['runs']:
         name=f"{run['seed']}-{run['encoding']}-{run['availability']}"
-        rows=[json.loads(x) for x in (root/(name+'.jsonl')).read_text().splitlines()]
+        path=root/(name+'.jsonl')
+        if path.exists(): rows=[json.loads(x) for x in path.read_text().splitlines()]
+        else:
+            with gzip.open(str(path)+'.gz','rt') as stream: rows=[json.loads(x) for x in stream]
         evaluations=[r for r in rows if r['phase']=='eval']
         for r in evaluations:
             matches={k:[a==b for a,b in zip(r['predictions'][k],r['targets'][k])] for k in FIELDS}
