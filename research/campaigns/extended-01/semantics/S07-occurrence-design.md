@@ -9,3 +9,9 @@ Use width 1024, 8 workspace rows, four blocks reused twice, seed 201, batch 8, 8
 Prospective promotion requires calibrated complete DEV graph accuracy at least 10% (at least 52/512), at least five percentage points above S01-N8192, ordered-edge F1 > .90, and canonical copy accuracy >= .95. Report raw metrics in parallel. Failure remains informative and does not trigger an automatic confirmation run. Reusing development data makes this search, not an independent generalization confirmation.
 
 Apply the frozen S05 reference equality rule only as a separately labeled engineering diagnostic, never replacing primary learned metrics. Record counts beyond alpha-distinct identity: topology/type/ordered-slot skeletons, equality patterns and depth/node-count distributions. Renderer-specific occurrence alignment will not be assumed valid for reordered or held-out surfaces.
+
+## Measured profile and frozen main budget
+
+The queue-authorized 20-update width-1024 profile completed in 9.97950 full-process seconds; optimizer time 1.52851 s, CUDA allocated peak 1,225,680,896 bytes, process RSS 2,964,088 KiB. Its initial parameter hash matches the S01 reference mechanical profile exactly. Main forecast is 650–720 s including full TRAIN128/DEV512 evaluations and exports; frozen `campaign-s07-occurrence.json` retains 8,192 updates/65,536 presentations with a 900 s external cap. Profile metrics are mechanical, not acquisition evidence. Root release remains required.
+
+The independent occurrence mapping audit and three CPU fixtures pass, including exact inherited decoder/graph metric agreement for oracle occurrence-copy predictions. Corpus shape audit finds two ordered trees (all depth3), despite distinct equality/reference patterns; any new-construction claim is scoped accordingly.
