@@ -32,7 +32,7 @@ def run(output):
             copy_nodes=[i for i,n in enumerate(graph.nodes) if n.kind in ('ident','entity')]
             assert all(int(gold['value'][i])==-1 for i in copy_nodes)
             table=[dict(node_index=i,kind=graph.nodes[i].kind,canonical_label=graph.nodes[i].value,copy_index=int(gold['copy'][i]),copied_public_token=tok[int(gold['copy'][i])],value_target=int(gold['value'][i])) for i in copy_nodes]
-            rows.append(dict(variant=name,renderer=lang,public_text=public.text,graph_sha256=graph.digest(),first_copy=first,visible_forms=forms,identity_collisions=collisions,copy_node_targets=table,oracle_logit_metric=metrics(pred,gold),inference_alias_lookup_calls=0,qualified_for_surface_dataset=not collisions))
+            rows.append(dict(variant=name,renderer=lang,public_text=public.text,graph_sha256=graph.digest(),noncopy_target_sha256=hashlib.sha256(b''.join(gold[k].numpy().tobytes() for k in ('presence','kind','value','edges','slots'))).hexdigest(),first_copy=first,visible_forms=forms,identity_collisions=collisions,copy_node_targets=table,oracle_logit_metric=metrics(pred,gold),inference_alias_lookup_calls=0,qualified_for_surface_dataset=not collisions))
     result=dict(scope='Three fixed same-instance fixtures x two surfaces; oracle logits test representation only, not learned acquisition',rows=rows,cpu_seconds=time.monotonic()-tick,source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
     Path(output).write_text(json.dumps(result,indent=2)+'\n')
 if __name__=='__main__':
