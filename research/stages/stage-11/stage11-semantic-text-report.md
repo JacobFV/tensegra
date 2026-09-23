@@ -1,6 +1,6 @@
 # Stage 11: public-text graph acquisition
 
-All three final checkpoints recover all eight complete canonical graphs, with both raw and TRAIN-calibrated decoding. This passes the narrowly scoped fixed-set acquisition gate. Independent raw-metric/provenance review is pending; fresh-construction evaluation has not yet run.
+All three final checkpoints recover all eight complete canonical graphs, with both raw and TRAIN-calibrated decoding. This passes the narrowly scoped fixed-set acquisition gate. Independent raw-metric/provenance review confirms the acquisition result. The subsequent frozen-actor known-renderer test fails: every seed recovers 0/512 fresh complete graphs.
 
 ## Scope and supplied information
 
@@ -42,4 +42,33 @@ Measured optimizer time totals 778.58 seconds (12.98 minutes); per-seed wall int
 
 ## Interpretation
 
-This establishes acquisition of complete public-text-to-canonical-graph outputs for eight supervised English unification examples. It removes the previous fixed-set acquisition block in this narrow family. It does not establish fresh construction transfer, variable renaming, heldout rendering, semantic trajectory learning, or runtime competence. The model can still memorize these eight surfaces. The separately preregistered frozen transfer evaluation requires >95% complete graphs in every seed over 512 alpha-distinct constructions, using unchanged vocabulary and final TRAIN thresholds. Until that evaluation passes, further transfer claims and heldout-family advancement remain blocked.
+This establishes acquisition of complete public-text-to-canonical-graph outputs for eight supervised English unification examples. It removes the previous fixed-set acquisition block in this narrow family. It does not establish fresh construction transfer, variable renaming, heldout rendering, semantic trajectory learning, or runtime competence. The model can still memorize these eight surfaces. The separately preregistered frozen transfer evaluation requires >95% complete graphs in every seed over 512 alpha-distinct constructions, using unchanged vocabulary and final TRAIN thresholds. That evaluation fails as detailed below; further heldout-family advancement remains blocked.
+
+## Frozen fresh-construction result
+
+Before any fresh prediction, the protocol fixed a >95% complete-graph gate in every seed, a 512-example alpha-disjoint set, unchanged actor/checkpoints/vocabulary, and each seed's final TRAIN8 thresholds. All 512 first generated candidates were eligible: no train-alpha overlap, duplicate alpha key, unknown non-copy category, noncopyable target, capacity overflow, or observed public/hash collision. They use the same English renderer and have no lexical-token novelty relative to the eight training surfaces. This is therefore a clean narrow test of new constructions within familiar renderer/token and output support, not unseen-language or arbitrary-notation transfer. Alpha disjointness is asserted relative to Stage 11 training, not every historically inspected construction.
+
+| Seed | Complete raw / calibrated | Type accuracy | Exact copy accuracy | Raw typed-edge F1 | Calibrated typed-edge F1 | Raw ordered-edge F1 |
+|---|---|---|---|---|---|---|
+| 30 | 0/512 / 0/512 | .7064 | .2909 | .5477 | .5284 | .3606 |
+| 31 | 0/512 / 0/512 | .7192 | .2991 | .5732 | .5703 | .4182 |
+| 32 | 0/512 / 0/512 | .7193 | .3153 | .5775 | .5738 | .4211 |
+
+Each seed has 17,287 gold nodes, 39,550 typed edges and 13,051 ordered edges across these 512 graphs. Node-presence F1 remains .9761 / .9870 / .9793, which is insufficient evidence for semantic recovery. The compact summary includes precision/recall, graph-size support, entity-equivalence scores, conditional slot counts, and all privileged replacement ceilings. The lossless localization archive contains per-graph/per-relation false positives and false negatives.
+
+For raw decoding, slot labels are correct on 19,628/20,118, 19,627/20,052, and 20,462/21,074 correctly predicted edge pairs. These conditional denominators exclude missed and spurious edges; the much lower ordered-edge F1 includes those failures. Correcting any single predicted component with gold—presence, type, categorical value, copy, edge set, or slots—still produces 0/512 complete graphs for every seed. Even replacing all node attributes together leaves complete recovery at zero. These privileged diagnostic ceilings establish that more than one output component fails; they do not prove which component can be learned or authorize a gold-conditioned inference path.
+
+No new threshold was fitted on fresh labels, and no optimizer step or checkpoint selection occurred. The known-renderer transfer gate is **failed**. All dependent alpha-renaming/heldout-renderer studies and additional training stop here. This does not show failure under adequate broader exposure: the model saw only eight unique constructions, despite 32,000 presentations per seed.
+
+## Timing and reproducibility receipts
+
+The fresh actor inference totals 18.61 seconds; the prelaunch-provenance-to-final-artifact timestamp interval is 39.07 seconds including setup and repeated compressed export. The corresponding main interval is 826.86 seconds (13.78 minutes), versus 778.58 seconds of measured optimizer execution. These file timestamp intervals are process-occupancy proxies, not profiler-derived GPU kernel times. Conservative compute charges are 14 minutes for main and 1 minute for fresh evaluation, plus the separately retained brief profile. No further semantic GPU work is authorized or running.
+
+Reconstruction commands:
+
+```bash
+PYTHONPATH=src python research/tools/stage11-semantic-text-localize.py research/results/stage11/semantic-text/fresh.json.gz research/results/stage11/semantic-text/fresh-localization.json.gz
+python research/tools/stage11-semantic-text-summary.py research/results/stage11/semantic-text/fresh.json.gz research/results/stage11/semantic-text/fresh-localization.json.gz research/results/stage11/semantic-text/fresh-summary.json
+```
+
+The source-to-result chain is acquisition source `5a80a4a`, frozen-transfer source `7936417`, per-file hashes in the raw archives, and SHA-verified immutable final checkpoints. Subsequent edits concern archived analysis/reporting only. The independent review reconstructs metrics and threshold provenance separately from the runner.

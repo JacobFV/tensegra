@@ -8,7 +8,7 @@ from topoformer.thinking_language import ROLES
 p=argparse.ArgumentParser();p.add_argument('archive',type=Path);p.add_argument('output',type=Path);a=p.parse_args()
 x=json.load(gzip.open(a.archive,'rt'));rows=[]
 for run in x['runs']:
-    point=run['curves'][-1]
+    point=run['curves'][-1] if 'curves' in run else dict(update=4000,rows=run['rows'])
     for record in point['rows']:
       gold=unpack_graph(record['target'])
       for decoder in ('raw','calibrated'):
@@ -20,6 +20,11 @@ for run in x['runs']:
         ceilings={key:metrics({**pred,key:gold[key]},gold)['semantic_equivalence'] for key in ('presence','kind','value','copy','edges','slots')}
         ceilings['all_node_attributes']=metrics({**pred,**{key:gold[key] for key in ('presence','kind','value','copy')}},gold)['semantic_equivalence']
         known_slots=gold['edges'].any(-1)
+        matched_edges=(edge&gold['edges']).any(-1)
+        conditional_slot=dict(correct=int((pred['slots'].eq(gold['slots'])&matched_edges).sum()),denominator=int(matched_edges.sum()))
         counts=dict(presence=int(pred['presence'].ne(gold['presence']).sum()),kind=int(pred['kind'][gold['presence']].ne(gold['kind'][gold['presence']]).sum()),value=int(pred['value'][gold['value'].ge(0)].ne(gold['value'][gold['value'].ge(0)]).sum()),copy=int(pred['copy'][gold['copy'].ge(0)].ne(gold['copy'][gold['copy'].ge(0)]).sum()),slots_on_gold_edges=int(pred['slots'][known_slots].ne(gold['slots'][known_slots]).sum()))
-        rows.append(dict(seed=run['seed'],update=point['update'],graph_seed=record['graph_seed'],decoder=decoder,component_error_counts=counts,edge_errors_by_relation=per_relation,oracle_component_exact=ceilings,exact=metrics(pred,gold)['semantic_equivalence']))
-a.output.write_text(json.dumps(dict(scope='Archived predictions only; replacing components with gold is a privileged diagnostic, not deployable performance or a new fit.',rows=rows),indent=2)+'\n')
+        rows.append(dict(seed=run['seed'],update=point['update'],graph_seed=record['graph_seed'],decoder=decoder,component_error_counts=counts,edge_errors_by_relation=per_relation,slot_accuracy_given_correct_edge=conditional_slot,oracle_component_exact=ceilings,exact=metrics(pred,gold)['semantic_equivalence']))
+payload=json.dumps(dict(scope='Archived predictions only; replacing components with gold is a privileged diagnostic, not deployable performance or a new fit.',rows=rows),separators=(',',':')).encode()
+if a.output.suffix=='.gz':
+    with gzip.GzipFile(filename=str(a.output),mode='wb',mtime=0) as f:f.write(payload)
+else:a.output.write_bytes(payload)
