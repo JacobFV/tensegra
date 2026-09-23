@@ -13,6 +13,7 @@ import json
 import math
 from pathlib import Path
 from functools import lru_cache
+from collections import Counter
 import time
 import torch
 from torch import nn
@@ -27,6 +28,18 @@ def encode_text(text):
     """CPU public features only; no labels or learned state enter this cache."""
     features,_=encode_public(ActorInput(text,('dummy',)))
     return features,len(base.tokens(ActorInput(text,())))
+
+
+def construction_summary(examples):
+    lessons=Counter(); nodes=[]; edges=[]; digest=hashlib.sha256()
+    for example in examples:
+        graph=example.privileged.graph
+        lessons[example.audit['lesson']]+=1
+        nodes.append(len(graph.nodes)); edges.append(len(graph.edges))
+        digest.update(base.semantic_key(graph).encode())
+    def sizes(values):
+        return dict(min=min(values),max=max(values),mean=sum(values)/len(values)) if values else {}
+    return dict(graphs=len(nodes),lessons=dict(lessons),nodes=sizes(nodes),edges=sizes(edges),sha256=digest.hexdigest())
 
 
 def exposure_schedule(presentation, train_count):
@@ -247,11 +260,12 @@ def run(config):
     vocab=base.value_vocabulary(corpus[i] for i in range(eval_count,eval_count+vocab_pool_count))
     capacity=config.get('node_capacity',128)
     files=[Path(__file__),Path(base.__file__),Path(__file__).with_name('thinking.py'),Path(__file__).with_name('thinking_language.py'),Path(__file__).with_name('tcn_data.py'),Path(__file__).with_name('semantic_graph.py')]
+    train_summary=construction_summary(corpus[i] for i in train_indices)
+    heldout_summary=construction_summary(heldout)
     manifest=dict(config=config,environment=dict(torch_version=torch.__version__,cuda_version=torch.version.cuda,device=config.get('device','cpu'),device_name=torch.cuda.get_device_name() if config.get('device','cpu').startswith('cuda') else 'cpu',threads=torch.get_num_threads()),config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),corpus=corpus.audit,source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in files},
                   value_vocabulary=vocab,vocabulary_pool_unique_graphs=vocab_pool_count,vocabulary_sha256=hashlib.sha256(json.dumps(vocab).encode()).hexdigest(),pinned_generator=corpus[0].audit,runs=[],
                   split_policy='same heldout prefix, nested unique training prefixes',
-                  training_digest=hashlib.sha256(''.join(base.semantic_key(corpus[i].privileged.graph) for i in train_indices).encode()).hexdigest(),
-                  heldout_digest=hashlib.sha256(''.join(base.semantic_key(e.privileged.graph) for e in heldout).encode()).hexdigest(),
+                  training_digest=train_summary['sha256'],heldout_digest=heldout_summary['sha256'],training_distribution=train_summary,heldout_distribution=heldout_summary,
                   priors=['canonical compiler node order','privileged visible-copy and typed-edge labels','fixed ontology and node capacity','gold-edge training loss sampling only; no effect on hidden state','no_input control retains public pointer candidate count and token normalization'],
                   limitations=['exact decoder-slot equivalence is not general graph isomorphism','value ontology is fitted on declared shared training-only vocabulary pool, including unoptimized examples in smaller corpus arms','curriculum, width, edge sampling and actor differ from stage7; not a single-variable comparison'],
                   composition_allowed=False,raw_prediction_layout='lossless bit-packed edge tensors; gzip shard per arm/seed/exposure')
