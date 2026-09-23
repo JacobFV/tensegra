@@ -1,0 +1,151 @@
+{
+  "seed": 603,
+  "width": 1024,
+  "steps": 1000,
+  "batch": 16,
+  "nodes": 32,
+  "groups": 4,
+  "lr": 0.0003,
+  "strength": 8,
+  "train_seed": 201300000,
+  "eval_seed": 151000000,
+  "eval_examples": 1024,
+  "eval_batch": 64,
+  "checkpoints": [
+    0,
+    10,
+    25,
+    50,
+    100,
+    250,
+    500,
+    1000
+  ],
+  "conditions": [
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0
+    },
+    {
+      "nodes": 64,
+      "depth": 4,
+      "data_group": 1
+    },
+    {
+      "nodes": 32,
+      "depth": 8,
+      "data_group": 2
+    },
+    {
+      "nodes": 64,
+      "depth": 8,
+      "data_group": 3
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "composition": true,
+      "data_group": 4
+    },
+    {
+      "nodes": 64,
+      "depth": 4,
+      "groups": 8,
+      "data_group": 5
+    },
+    {
+      "nodes": 32,
+      "depth": 32,
+      "data_group": 6
+    },
+    {
+      "nodes": 128,
+      "depth": 4,
+      "data_group": 7
+    },
+    {
+      "nodes": 128,
+      "depth": 32,
+      "groups": 8,
+      "data_group": 8
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0,
+      "instruction_swap": true
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0,
+      "wrong_instruction": true
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0,
+      "zero_content": true
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0,
+      "node_permutation": true
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0,
+      "corruption": "wrong"
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0,
+      "corruption": "identity"
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0,
+      "zero_strength": true
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0,
+      "selector_scale_override": 16.0
+    },
+    {
+      "nodes": 32,
+      "depth": 32,
+      "data_group": 6,
+      "selector_scale_override": 16.0
+    },
+    {
+      "nodes": 128,
+      "depth": 32,
+      "groups": 8,
+      "data_group": 8,
+      "selector_scale_override": 16.0
+    }
+  ],
+  "mode": "none",
+  "generator": "block_permutation_v2",
+  "curve_eval_seed": 142000000,
+  "curve_examples": 256,
+  "curve_conditions": [
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0
+    },
+    {
+      "nodes": 64,
+      "depth": 8,
+      "data_group": 3
+    }
+  ]
+}
