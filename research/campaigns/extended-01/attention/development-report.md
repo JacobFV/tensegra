@@ -1,23 +1,23 @@
 # Attention development: explicit routing comparison
 
-Exploratory seed101, not confirmation. The strongest equal-information baselines dominate softλ4 at combined size/depth shift. We retain them.
+This is an exploratory result from seed 101, not confirmation. The strongest equal-information baselines dominate soft λ=4 at the combined size/depth shift. We retain those baselines.
 
-| Interface | N16/D4 | N32/D4 | N16/D8 | N32/D8 | Heldout22pair |
+| Interface | N16/D4 | N32/D4 | N16/D8 | N32/D8 | Held-out (2,2) pair |
 |---|---:|---:|---:|---:|---:|
-| Softλ4 | 1.000 | .988 | .895 | .246 | 1.000 |
+| Soft λ=4 | 1.000 | .988 | .895 | .246 | 1.000 |
 | Structured address context | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 |
 | Message passing | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 |
 | Hard attention | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 |
 | No graph | .160 | .168 | .156 | .102 | .188 |
 
-Final500updates,8000generatedgraph presentations,256freshvalidationgraphs/cell. Samewidth1024, initialstate, data and updatecount. All arms allocate4,241,449parameters but not all parameters participate in every arm. Message passing avoids contentQK and is cheaper; allocated parameter matching does not equate activecapacity orFLOPs. Hard/message routing are identical on functional graphs. Their agreement is not independent replication.
+These are results after 500 updates and 8,000 generated graph presentations, with 256 fresh validation graphs per cell. Arms share width 1024, initial parameters, data, and update count. All allocate 4,241,449 parameters, but not all parameters participate in every arm. Message passing avoids content QK computation and is cheaper; matching allocated parameters does not equate active capacity or FLOPs. Hard and message routing are identical on functional graphs. Their agreement is not independent replication.
 
-Context/message/hard reach1.0 in everycell atfirst10updatecheckpoint. Soft retains1.0 mean-head-argmax fullpointer-path accuracy in allcells, despite .246valueaccuracy atN32/D8. Atthatcell clean-edge massis.626soft versus.982context and1.0hard/message. Correct argmaxidentity doesnot guarantee useful weightedpayload propagation. This supports investigating dilution without attributing failure to identitybinding.
+Context, message passing, and hard attention reach 1.0 in every cell at the first checkpoint, after 10 updates. Soft attention retains 1.0 mean-head argmax full-pointer-path accuracy in every cell, despite .246 value accuracy at N32/D8. In that cell, clean-edge mass is .626 for soft attention, .982 for context, and 1.0 for hard attention and message passing. Correct argmax identity does not guarantee useful weighted payload propagation. This motivates investigating dilution without attributing the failure to identity binding.
 
-The reverse ordered schedule, explicitnodegrounding, and unique outgoingtypededge are supplied. Hard/message and known-keyprior context receive powerful routingpriors; the shared payloadembedding/update/classifier is learned. This experiment doesnot establish learnedplanning, surfaceunderstanding or advantageouslatentgrounding. Under correctsingle-successor graphhardrouting exactly selectsneighbors; this is not learnedpointerexecution.
+The reverse ordered schedule, explicit node grounding, and unique outgoing typed edge are supplied. Hard routing, message passing, and context with a known-key prior receive powerful routing priors; the shared payload embedding, update, and classifier are learned. This experiment does not establish learned planning, surface understanding, or an advantage from latent grounding. With a correct single-successor graph, hard routing selects the neighbor exactly; that selection is programmed.
 
-[Learningcurves](a01-curves.svg) separate taskvalue, mean-headargmaxpath andedge mass. The pointerdiagnostic isnot a causalproof ofneural computation. Softstrength and normalization can alterweightedmixtures withoutchanging itsargmax.
+[Learning curves](a01-curves.svg) separate task value, mean-head argmax path, and edge mass. The pointer diagnostic is not causal proof of neural computation. Structural strength and normalization can alter weighted mixtures without changing their argmax.
 
-A02is registered beforeitsoutcomes: strongerfixedλ, publicsizecorrection, andfrozenweight scoreinterventions. It willtest whether mass, ratherthan learnedstateupdate, explains themismatch. No tuningofbaselines orconfirmationselectionyet.
+A02 is registered before its outcomes: stronger fixed λ, a public size correction, and score interventions on frozen weights. It will test whether finite structural mass, rather than the learned state update, explains this discrepancy. Confirmation selection has not occurred.
 
-Processoccupancy36.30seconds includes5processinitializations/training/evaluation/export. Perarm soft7.07s/context7.49s/message5.29s/hard7.20s/none9.21s. These wholetrainingprocess times arenot pureinference latency. Originalprofile2.54s ischargedseparately. CPUmechanicaltests8passed afterA02instrumentation; primaryexperimentalwidth1024.
+Process occupancy was 36.30 seconds, including five process initializations, training, evaluation, and export. Per-arm process times were: soft 7.07s, context 7.49s, message 5.29s, hard 7.20s, and no graph 9.21s. These whole-process times are not pure inference latency. The original 2.54s profile is charged separately. Eight CPU mechanical tests pass after A02 instrumentation; the primary experimental width remains 1024.
