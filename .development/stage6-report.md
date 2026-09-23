@@ -8,8 +8,8 @@
 |---|---|---|
 | [TCN wiring pilot](results/stage6/pilots/language/README.md) | 3 seeds × 4 arms, 8 updates, 18 train/9 evaluation constructions | Pipeline/resource validation only |
 | [Controlled timing configuration](../configs/stage6-timing.json) | 1 seed × 2 arms, 8 updates | Resource/wiring check only |
-| [TCN main configuration](../configs/stage6-language.json) | Frozen source `4c36557`; 3 seeds × 4 arms, 256 updates, 240 train/48 evaluation constructions | Running at initial draft; final manifest/grid/analysis pending |
-| Controlled main | Final source, arms and budget pending | No main quantitative claim yet |
+| [TCN main configuration](../configs/stage6-language.json) | Frozen source `4c36557`; 3 seeds × 4 arms, 256 updates, 240 train/48 evaluation constructions | All 12 runs completed; archive/integrity analysis pending |
+| [Controlled main configuration](../configs/stage6.json) | Config `462a5e3`; 15 arms × 3 seed shards, 256 updates, batch 2, depth-4 training; evaluation at 4/8/16/32 | Final source freeze and completed artifacts pending |
 
 Pilot artifacts remain labeled pilots. They are not pooled with main experiments. No partial main-run metrics are used for conclusions.
 
