@@ -1,15 +1,85 @@
 {
-  "status": "implementation_in_progress",
+  "status": "frozen_studies_running",
   "composition_allowed": false,
   "supervision_withdrawal_allowed": false,
   "rule": "Require prespecified validation competence across every paired seed and required condition; report untouched test results separately. Pilot success does not authorize composition.",
   "gates": {
-    "A_proposals": {"status": "pending", "primitive_accuracy_gt": 0.99, "each_operand_accuracy_gt": 0.99, "full_ordered_iid_and_moderate_ood_gt": 0.98, "scope": "typed role-bearing instruction records; not surface-language understanding"},
-    "B_readiness": {"status": "pending", "precision_gt": 0.99, "executable_recall_gte": 0.5, "requires": ["frozen validation-selected threshold", "calibration reliability", "local advantage on mixed-readiness groups", "overlapping correct/incorrect score distributions"]},
-    "C_retention": {"status": "pending", "delay": 16, "type_and_primitive_gt": 0.99, "value_and_each_identity_gt": 0.98, "requires": ["unrelated activity", "workspace-only learned readout", "protected-register integrity reported separately"]},
-    "D_return_use": {"status": "blocked_by_C", "accuracy_gt": 0.95, "required_return_intervention_drop_gte": 0.2},
-    "E_halting": {"status": "pending", "stop_or_reject_accuracy_gt": 0.95, "premature_rate_lt": 0.01, "distinct_arrival_steps_gte": 3, "task_advantage_over_minimum_gte": 0.2},
-    "F_semantic_scaling": {"status": "pending", "requires": ["positive typed-edge and graph-semantic learning trend", "above simple baselines", "heldout renderer or lexicon transfer", "actual unique construction and optimizer exposure counts"]}
+    "A_proposals": {
+      "status": "passed_restricted_typed_instruction_benchmark",
+      "primitive_accuracy_gt": 0.99,
+      "each_operand_accuracy_gt": 0.99,
+      "full_ordered_iid_and_moderate_ood_gt": 0.98,
+      "scope": "typed role-bearing instruction records; not surface-language understanding",
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "examples_per_seed_condition": 1024,
+      "validation_full_accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "test_full_accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "evidence": "results/stage7-ab/ab-main/summary.json",
+      "restriction": "Learned local instruction retrieval and ordered binding; not surface parsing or execution."
+    },
+    "B_readiness": {
+      "status": "supplied_score_control_failed_learned_proposal_calibration_pending",
+      "precision_gt": 0.99,
+      "executable_recall_gte": 0.5,
+      "requires": [
+        "frozen validation-selected threshold",
+        "calibration reliability",
+        "local advantage on mixed-readiness groups",
+        "overlapping correct/incorrect score distributions"
+      ],
+      "note": "Supplied-score calibration cannot certify actual proposal readiness; all supplied-score seeds fail coverage."
+    },
+    "C_retention": {
+      "status": "pending",
+      "delay": 16,
+      "type_and_primitive_gt": 0.99,
+      "value_and_each_identity_gt": 0.98,
+      "requires": [
+        "unrelated activity",
+        "workspace-only learned readout",
+        "protected-register integrity reported separately"
+      ]
+    },
+    "D_return_use": {
+      "status": "blocked_by_C",
+      "accuracy_gt": 0.95,
+      "required_return_intervention_drop_gte": 0.2
+    },
+    "E_halting": {
+      "status": "pending",
+      "stop_or_reject_accuracy_gt": 0.95,
+      "premature_rate_lt": 0.01,
+      "distinct_arrival_steps_gte": 3,
+      "task_advantage_over_minimum_gte": 0.2
+    },
+    "F_semantic_scaling": {
+      "status": "pending",
+      "requires": [
+        "positive typed-edge and graph-semantic learning trend",
+        "above simple baselines",
+        "heldout renderer or lexicon transfer",
+        "actual unique construction and optimizer exposure counts"
+      ]
+    }
   },
-  "blocked_dependents": ["A2 until strict A competence", "candidate/runtime composition until A and B", "second crystallization until C and D", "runtime halting until E", "TCN/runtime coupling until F", "supervision annealing until corresponding interface competence"]
+  "blocked_dependents": [
+    "A2 authorized only for the passed typed-instruction scope; no runtime composition",
+    "candidate/runtime composition until A and B",
+    "second crystallization until C and D",
+    "runtime halting until E",
+    "TCN/runtime coupling until F",
+    "supervision annealing until corresponding interface competence"
+  ]
 }
