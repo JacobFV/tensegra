@@ -86,10 +86,7 @@ def run(config):
     files=[Path(__file__).with_name(name) for name in ('semantic_text_acquisition.py','semantic_curriculum.py','semantic_scaling.py','semantic_contracts.py','thinking.py','thinking_language.py','semantic_graph.py','tcn_data.py')]
     manifest=dict(config=config,environment=dict(torch_version=torch.__version__,cuda_version=torch.version.cuda,device_name=torch.cuda.get_device_name() if config['device']=='cuda' else 'cpu',threads=torch.get_num_threads(),parameter_dtype='float32',dense_autocast=config.get('autocast_dtype')),config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in files},graph_audits=[e.audit for e in examples],public_observability=audit,value_vocabulary=vocab,runs=runs)
     # Same labeled fixed mixture, no text features; repeated labels cannot alter frequencies.
-    class Corpus:
-        def __getitem__(self,index):return examples[index]
-    from .semantic_curriculum import frequency_fit
-    frequency=frequency_fit(Corpus(),list(range(len(examples))),vocab,config['node_capacity'])
+    frequency={key:torch.stack([gold[key] for _,gold,_ in items]).long().mode(0).values.to(items[0][1][key].dtype) for key in items[0][1]}
     manifest['frequency']=[dict(graph_seed=e.audit['seed'],metrics=base.metrics(frequency,gold)) for _,gold,e in items]
     for seed in config['seeds']:
         torch.manual_seed(seed)
