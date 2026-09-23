@@ -36,3 +36,13 @@ def test_diversity_uses_one_maximal_pool_and_fixed_updates():
     assert cfg['ce_updates']==900 and cfg['backbone_seed']==11
     assert cfg['data']['validation']['size']==2048
     assert 32 not in cfg['delays']
+
+
+def test_exposure_preserves_original_nine_hundred_prefix():
+    import json
+    from pathlib import Path
+    cfg=json.loads((Path(__file__).parents[1]/'configs/campaign-r03-development.json').read_text())
+    assert cfg['endpoints']==[900,1800,3600]
+    assert cfg['head_seed']==22000011 and cfg['batch_size']==256 and cfg['lr']==.003
+    assert 'ce-16384.pt' in cfg['reference_path']
+    assert 32 not in cfg['delays']
