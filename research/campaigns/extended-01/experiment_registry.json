@@ -223,7 +223,7 @@
     },
     {
       "id": "R06",
-      "status": "development_running",
+      "status": "development_improved_audited",
       "source": "7e77c3d",
       "protocol": "returns/R06-protocol-draft.md",
       "hypothesis": "Balanced fitting improves rare legal type/value reconstruction without changing decoder or optimizer exposure",
@@ -236,11 +236,12 @@
         150,
         220
       ],
-      "profile_seconds": 10.22
+      "profile_seconds": 10.22,
+      "result": "Gridvalidation minimum41\u219255/64; mixture4076\u21924088/4096; notuniform98%reliability. Freshoriginalcontrolalreadyfixesfloatzero."
     },
     {
       "id": "C01",
-      "status": "profile_ready",
+      "status": "main_budget_freezing",
       "protocol": "composition/C01-conditional-design.md",
       "entry_evidence": [
         "review/P01-runtime-audit.json",
@@ -254,11 +255,31 @@
         "hybrid": 60,
         "n1": 60,
         "n2": 120
-      }
+      },
+      "process_caps": {
+        "hybrid": 600,
+        "n1": 900,
+        "n2": 1800
+      },
+      "estimated_seconds": {
+        "hybrid": [
+          200,
+          400
+        ],
+        "n1": [
+          110,
+          300
+        ],
+        "n2": [
+          500,
+          850
+        ]
+      },
+      "search": "2 learning rates \u00d74000updates\u00d7256 perneuralarm; calibration selection; report allsearchcost"
     },
     {
       "id": "S07-occurrence",
-      "status": "main_ready",
+      "status": "running",
       "hypothesis": "Occurrence-specific copy supervision improves ordered graph induction beyond identity-only first-mention supervision",
       "intervention": "Original S01 actor; only ident-node copy training targets change to audited visible occurrence",
       "comparator": "S01 n8192 sameinit/data/65536presentations",
@@ -305,6 +326,16 @@
       "selection": "Fixed1000updates; prescribed learned/content16/address16+content16 policies; no confirmation tuning",
       "examples_per_cell": 1024,
       "claim": "Compare concentration repairs and strongest structured interfaces; no uniqueattention advantage presupposed"
+    },
+    {
+      "id": "R07",
+      "status": "cpu_protocol_implementation",
+      "hypothesis": "Nonlinear readout capacity recovers remaining frozen-feature scalar tails",
+      "comparison": "Linear decoder replay vs zero-initialized residual1024-GELU-33 MLP, sharedinitialfunction",
+      "data": "Reused R06balanced fit/cal/DEV features; not untouchedconfirmation",
+      "exposure": "900updates andidenticalbatches primary; no unmatchedextension",
+      "invariants": "Frozenbackbone/features/normalization; noR05consumer swap",
+      "budget": "Profile beforeallocation"
     }
   ],
   "policy": {
