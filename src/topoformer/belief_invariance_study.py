@@ -31,7 +31,7 @@ def on_device(batch, device):
     return {group: {key: value.to(device) for key, value in fields.items()}
             for group, fields in batch.items()}
 
-def evaluate(model, config, out, seed, count=None, write_raw=True):
+def evaluate(model, config, out, seed, count=None, write_raw=True, training_ids=None):
     rows = []
     count = config['eval_count'] if count is None else count
     for n in config['eval_candidates']:
@@ -62,6 +62,11 @@ def evaluate(model, config, out, seed, count=None, write_raw=True):
                     delta = (p - clean_predictions).abs()
                     row['bijection_max_probability_delta'] = float(delta.max())
                     row['bijection_mean_l1'] = float(delta.sum(-1).mean())
+                if training_ids is not None:
+                    handles = [identity for episode in episodes
+                               for identity in {event[0] for event in episode['events'] if event[0] >= 0}]
+                    row['evaluation_id_assignments'] = len(handles)
+                    row['evaluation_unseen_id_assignments'] = sum(identity not in training_ids for identity in handles)
                 row.update(arm=config['arm'], seed=seed, split=split, candidates=n, condition=condition)
                 row['passed'] = (count >= 512 and row['final_support_accuracy'] > (.98 if n == 8 else .95)
                                  and row['mean_l1'] < .05 and row['mean_impossible'] < .01)
@@ -101,12 +106,13 @@ def run(config, out):
     observed_ids = set()
     bit_ones = [0] * 16
     id_assignments = 0
+    id_primitive_coverage = {4: set(), 100: set()}
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.get('lr', .0003))
     schedule = ('clean', 'partial', 'contradiction', 'retract', 'duplicate', 'reorder')
     for step in range(config['steps'] + 1):
         if step in (0, config['steps']) or step % config.get('log_every', 200) == 0:
             curve.append(dict(step=step, seconds=time.perf_counter() - start,
-                              cells=evaluate(model, probe_config, out, config['seed'], count=64, write_raw=False)))
+                              cells=evaluate(model, probe_config, out, config['seed'], count=64, write_raw=False, training_ids=observed_ids)))
             print(json.dumps({'step': step, 'arm': config['arm'], 'seconds': curve[-1]['seconds'],
                               'clean': curve[-1]['cells'][0]['final_support_accuracy'],
                               'renamed': curve[-1]['cells'][1]['final_support_accuracy']}), flush=True)
@@ -122,6 +128,9 @@ def run(config, out):
             public_stream.update(digest({**construction, 'events': episode['events']}).encode())
             handles = {event[0] for event in episode['events'] if event[0] >= 0}
             observed_ids.update(handles)
+            for identity, action, role, value in episode['events']:
+                if action == 1 and role == 0 and identity in id_primitive_coverage:
+                    id_primitive_coverage[identity].add(value)
             id_assignments += len(handles)
             for identity in handles:
                 for bit in range(16):
@@ -149,13 +158,16 @@ def run(config, out):
     manifest['training_id_coverage'] = dict(unique=len(observed_ids), assignments=id_assignments,
                                             minimum=min(observed_ids) if observed_ids else None,
                                             maximum=max(observed_ids) if observed_ids else None,
-                                            bit_one_counts=bit_ones)
+                                            bit_one_counts=bit_ones, historical_handles_seen={str(i): i in observed_ids for i in (4, 100)},
+                                            historical_handle_primitive_values={str(i): sorted(v) for i, v in id_primitive_coverage.items()})
+    (out / 'training-id-inventory.json').write_text(json.dumps(sorted(observed_ids)))
+    manifest['training_id_inventory_sha256'] = file_digest(out / 'training-id-inventory.json')
     (out / 'curve.json').write_text(json.dumps(curve))
     torch.save(model.state_dict(), out / 'model.pt')
     manifest['checkpoint_sha256'] = file_digest(out / 'model.pt')
     manifest['final_tensor_sha256'] = tensor_digest(model)
     evaluation_start = time.perf_counter()
-    rows = evaluate(model, config, out, config['seed'])
+    rows = evaluate(model, config, out, config['seed'], training_ids=observed_ids)
     (out / 'metrics.json').write_text(json.dumps(rows))
     manifest.update(evaluation_seconds=time.perf_counter() - evaluation_start,
                     total_seconds=time.perf_counter() - start,
