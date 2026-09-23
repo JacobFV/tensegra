@@ -12,3 +12,7 @@
 
 - R01 confirmation failed the declared three-seed scalar contract at seed11/delay16. Preserve it; do not retroactively narrow to0–8. R02 will isolate fitting diversity at fixedCE900 on freshdevelopment, identifying seed11 as selected failure case.
 - A01 strongest matched baselines saturate quickly; retain this negative result. A02 tests finite soft-routing concentration using stronger/size-adjusted bias, including frozenmodelcounterfactual; no weakerbaseline substitution.
+
+- S01N128: allTRAINattributesfit butedgeerrorsblockexactgraphs; keepmatcheddiversityladder andpreparefrozen-nodeedge-onlyrefit tolocalizeconsumeracquisition. Goldedgereplacement ceiling126/128 because2sloterrorsremain.
+- A02frozenλ4→8 restores everydevelopmentcell; selectedfixed8forfreshconfirmation, notclaimingsuperiority overcontext/MP.
+- R02largerfittingpool improvesfreshscalaraccess butunderfits atfixed900updates; R03testsadditionaloptimization onthe samecache, ratherthanaddingrepresentationmachinery.

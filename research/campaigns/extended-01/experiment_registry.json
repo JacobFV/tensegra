@@ -31,7 +31,7 @@
     },
     {
       "id": "S01",
-      "status": "n128_completed_larger_arms_queued",
+      "status": "n1024_running",
       "protocol": "semantics/S01-design.md",
       "source": "cf46c23",
       "comparison": "128/1024/8192 distinct training constructions,65536 presentations each",
@@ -48,19 +48,42 @@
     },
     {
       "id": "R02",
-      "status": "reviewed_ready",
+      "status": "completed_pending_audit",
       "hypothesis": "Scalardecoder freshcontexttails may improve with fittingdiversity",
       "intervention": "4096/8192/16384fresh fit events, fixedCE900",
       "selection": "Fresh development only,seed11 chosen from failedconfirmation disclosed",
-      "next_branch": "Newfreshconfirmation only if informative repair"
+      "next_branch": "Newfreshconfirmation only if informative repair",
+      "result": "N4096/8192/16384 d16fresh2048 accuracy97.85/98.49/98.63 atfixed900; largerpoolpartiallyunderfit"
     },
     {
       "id": "A02",
-      "status": "running",
+      "status": "completed_pending_final_audit",
       "hypothesis": "Finite softbias mass dilution explains size/depth gap",
       "intervention": "soft4/soft8/size-adjustedlambda plus frozenmodelcounterfactual",
       "selection": "Fresh developmentseed102 only",
-      "next_branch": "Freeze strongestfew arms for3pairedseedconfirmation,retain strongestbaselines"
+      "next_branch": "Freeze strongestfew arms for3pairedseedconfirmation,retain strongestbaselines",
+      "result": "Fixedlambda8selected; frozen4\u21928restoresall5devcellswithoutweightchange"
+    },
+    {
+      "id": "R03",
+      "status": "registered_preparing",
+      "hypothesis": "Additional optimization of the larger fitting pool improves fresh scalar access",
+      "intervention": "Same16kcache,900/1800/3600CEupdates;noarchitecturechange",
+      "next_branch": "Frozenfreshconfirmation only afterdevelopment selection"
+    },
+    {
+      "id": "S02",
+      "status": "registered_preparing",
+      "hypothesis": "Frozen learned node states contain edge distinctions the installed head has not acquired",
+      "intervention": "Existingedgeheadonly continued training onfrozenN128representations; otherheads fixed",
+      "next_branch": "Distinguishheadacquisition fromtext-interface limitation"
+    },
+    {
+      "id": "A03",
+      "status": "profiled_confirmation_preparing",
+      "hypothesis": "Strongerfinitebias repairs the measured concentration failure but may notbeatstrongcontext/messagebaselines",
+      "intervention": "Pairedsoft4/soft8/context/message/hard,3freshseeds,1024/cell",
+      "next_branch": "Confirmedrouting comparison,thenpredictedgrounding ifinformative"
     }
   ],
   "policy": {
