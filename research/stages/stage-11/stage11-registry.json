@@ -17,12 +17,12 @@
       "scope": "Reference manifest verified; no new learning/inference; inherits Stage10 restricted evidence"
     },
     "returns": {
-      "status": "not_run",
+      "status": "failed",
       "scope": "Paired short/wide horizon training; unchanged architecture and loss",
       "protocol": "stage11-return-design.md",
       "development_source": "1b2860b",
       "development_cap_minutes": 6,
-      "main_requires": "Satisfied; paired main released with frozen recipe and 35-minute cap",
+      "main_requires": "Completed under frozen recipe; independently verified",
       "development_status": "passed_restricted",
       "development_evidence": "../../results/stage11/return-acquisition/manifest.json",
       "main_source_freeze": "0c2332f",
@@ -30,7 +30,9 @@
       "estimated_main_minutes": [
         8,
         15
-      ]
+      ],
+      "result": "All 48 full retention cells fail; wide passes all non-value criteria at16 but scalar fails",
+      "evidence": "../../results/stage11/audits/return-main.json"
     },
     "semantic_fixed_text": {
       "status": "passed_restricted",
@@ -62,7 +64,8 @@
       "mode": "Frozen final actor inference only; no fitting",
       "main_cap_minutes": 5,
       "scope": "Fresh alpha-distinct English constructions from eight fitted graphs, familiar tokens",
-      "result": "All three seeds 0/512 complete graphs, raw and frozen calibrated; independent audit pending"
+      "result": "All three seeds 0/512 complete graphs, raw and frozen calibrated; independently verified",
+      "evidence": "../../results/stage11/audits/semantic-fresh.json"
     },
     "semantic_transfer": {
       "status": "blocked",
@@ -72,5 +75,10 @@
       "status": "not_run",
       "scope": "Separate future matched QK intervention; no universal return gate"
     }
+  },
+  "accounting": {
+    "conservative_charge_minutes": 30,
+    "ceiling_minutes": 180,
+    "new_experiments_complete": true
   }
 }
