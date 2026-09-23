@@ -32,3 +32,6 @@ A06 three-seed confirmation sole GPU owner;601/602 finished,603 running. C01hybr
 
 ### 22:57 UTC
 GPUowner C01-n1 cap900; hybrid117.9894s completed, primary all12cells >=4076/4096 and causal controls pass (not confirmation). R08profile37.61/main43.54 done; source5a01b0c, selectedLR.0001 via frozen calibration rule, outcomespending. A06 reports/raw/audits integrated, complete405cells/12checkpoints. S09semantic CPUimplementation in progress; semantic_contract explorer audits optional schema-constrained decoding read-only.
+
+### 23:01 UTC
+C01N1 completed75.1416s, selected .0003step4000 cal2031/2048; freshanswer4056/4096, reversedroles3775/4096, noextensiontrigger. C01N2 runningcap1800 frozen361a691. S09 publicpredictedpointerread source5377318 profilecleared. S10newisolatedCPUworker audits suppliedoutputschema masking/bookkeeping overfrozenpredictions, noGPU. R08 selected .0001 smalltailgain; no nonlinearconfirmation. R09binaryingestionphasereadout CPUdesign next.
