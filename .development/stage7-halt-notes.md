@@ -1,0 +1,25 @@
+# Stage7 independent halting diagnostic
+
+`python -m topoformer.halting_study --config configs/stage7-halt-smoke.json --output NEW_DIRECTORY` explicitly starts the runner. Smoke/acquisition budgets are provisional; root must authorize training and freeze a main budget separately. No training was performed while implementing this track. Unit integration uses zero optimizer steps only.
+
+## Task and supplied priors
+
+Each episode asks for XOR of two certified shares belonging to the queried name. Public rows encode seven name bits, share role, certification, and binary value. Every current snapshot has four shuffled, visible rows: certified first share, second share (or an unrelated replacement), an uncertified rumor, and a certified wrong-name share. Before sufficient arrival the rumor uses the queried name; after arrival its name changes to the distractor name, balancing the arrival of the genuine queried share. Role, certification, and name marginals remain constant: sufficiency requires their conjunction. Distractor values are sampled independently of the missing true share. Masks remain constant; neither missingness nor fixed row position reveals sufficiency. Arrived evidence remains publicly available: this diagnostic does **not** establish learned long-term retention. Certification, share role, key coding, and persistent current evidence are explicit strong representational priors.
+
+Solvable training arrival times are 2/4/6; validation and test use 3/5/7. Training, validation, and test name pools are disjoint (0–31/32–63/64–95). A quarter of episodes never provide a complete pair and require reject class 2 at the observable step-8 deadline. Before that deadline, absence alone cannot establish no solution. The generator's answer, sufficiency step, and rejection status are private loss/evaluation labels; the actor receives only current context, evidence rows/masks, and recurrent workspace. No symbolic runtime or proposal model is invoked.
+
+The actor reuses `ThinkingModel.step`, including its four recurrent blocks. Task CE is supervised only after sufficient evidence or at the rejection deadline; halt BCE supervises continue versus emit across the eight updates. No intermediate gold answer or gold sufficiency is inserted into latent state.
+
+## Frozen controls, metrics, and gate
+
+All controls use exactly the same trained parameters and public observations, changing only the stopping rule: learned logit, minimum step 1, fixed step 8, private oracle sufficiency, fixed soft timing bias alone, and learned logit with the existing cell's soft bias. Oracle stopping is explicitly privileged. Evaluations execute only active examples at each update, so reported updates count actual four-block transitions rather than selecting a prediction from a fully executed rollout.
+
+Reports contain task accuracy, exact halt, joint correct stop/reject, no-solution rejection, premature rate, extra steps, raw per-example results, stop histograms by evidence arrival, and task-minus-compute utility at costs 0/.01/.05/.1. The halt gate requires every validation seed to exceed .95 joint stop/task accuracy and .95 no-solution rejection accuracy, stay strictly below .01 premature rate, exceed .95 joint accuracy at at least three sufficient arrival times, and exceed minimum-stop task accuracy by strictly more than .20. Halting competence alone never authorizes composition. Pilot/acquisition runs evaluate validation only; frozen main runs inspect test once at the final budget.
+
+Each run saves configuration, current source hashes (including reused thinking cell), Torch version, dataset/initial/checkpoint files and hashes, seed, parameter count, optimizer exposure, step-0 and periodic evaluation, every task/halt loss, elapsed time, and a validation gate report. Output directories must be new; accidental overwrite fails.
+
+## Verification
+
+Tests were written before implementation and failed remotely on the missing diagnostic. Follow-up leakage and pilot-test-isolation regressions also failed before their fixes. Eight focused tests passed on `gb10-direct`, using the existing Python environment but source copied into a fresh `/tmp/stage7-halt-red.eJxRT5` directory with at most two CPU threads. No previous frozen checkout was modified. Full-suite result is reported separately after completion.
+
+Full remote bare `pytest -q`: **487 passed, 6 subtests passed** in 15.54 seconds. Initial incomplete snapshot collection lacked `scripts/audit_binding_checkpoints.py` and concurrent workers' source modules; after refreshing those files, two old study tests failed solely because the copied directory lacked Git metadata (`test_smoke_resume_and_reject_changed_configuration`, `test_resume_checks_config_and_source`). Initializing a repository and committing the isolated temporary snapshot resolved those provenance-environment failures; no existing checkout was changed. The passing snapshot includes concurrent tracks as they existed when copied; root must revalidate the final integrated tree if those tracks change.
