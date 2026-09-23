@@ -35,3 +35,11 @@ R05 confirmation completed352.54seconds, frozen8b619f7. All36covered validation 
 R06 actor7e77c3d and config are staged immutably at `~/topoformer-campaign-01/returns/source-r06`. Reviewer preflight passed;13CPUtests pass. Registrye14c06e. It compares original16k prefix against balanced315/316-per52-strata selection from onefresh65536-event pool, samebackbone12/head/900updates. No phaseconditioning or architecture change. Fresh original and grid cal/val, no32. Profile uses separate seeds and1024fits; requested60seconds. Main estimate150–240seconds, requested300pendingprofile. NO ACTIVE GPU JOB; await explicit root release.
 
 External return process occupancy cumulatively:613.80(R01–R04)+4.18(R05profile)+68.97(R05development)+352.54(R05confirmation)=1039.49seconds. No additional GPU experiments have run.
+
+## Current frontier: R06 audited, R07 prepared
+
+R06 development completed in 135.48 seconds after a 10.22-second profile. Balanced versus original fitting improved the worst calibration grid cell 44→59/64 and validation grid cell 41→55/64; original-mixture validation minimum 4076→4088/4096. Both fresh refits already recover float zero, so that specific repair is not attributable to balancing. Independent audit 09cb46d verifies all 126 raw and cached prediction cells. No uniform-value pass or automatic confirmation follows.
+
+R07 actor/protocol 8767225, mechanical-test import fix 844497b, and summary tool cb8f750 are ready. CPU tests: 15 passed. Immutable remote source is `~/topoformer-campaign-01/returns/source-r07-tested`. Compare exact R06 linear replay with a zero-output-initialized residual GELU consumer (1,117,250 versus 33,825 parameters), fixed 900 updates and identical batches, frozen R06 balanced cache. Reused calibration/validation are development, no delay32, no automatic 1800 extension. Reviewer preflight cleared. Await explicit coordinator profile release; no active GPU job. This readout does not replace audited R05 or any composition dependency.
+
+Cumulative return process occupancy is 1,185.19 seconds. R07 has not run.
