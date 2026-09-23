@@ -29,3 +29,7 @@ Authorize fresh-data1000updates×batch32, three paired initializations, six enco
 A source audit during the frozen belief main run found that protected ledger operations consume observation IDs while the generic recurrent encoder only consumes payload/role/action. Preserve this run as an architectural-plus-metadata-access comparison; clean/order conditions have a narrower interpretation. Do not claim a strictly matched update comparison on ID-dependent duplicate/retraction controls.
 
 A separately frozen followup will expose the same stable public ID features to both learned encoders, test ID sensitivity and repeated-ID consistency, and repeat unchanged1000update/3seed/512condition budgets atwidth1024. No silent source substitution or pooling of recipes. GPU queue: currentbelief → semantic batchtiming → returnmain → ID-matched beliefmain → semantic exposure sweep.
+
+## Artifact publication
+
+The initial semantic COO prediction archive exceeded GitHub's100MB file limit; its push was rejected. The original is preserved remotely with a SHA256 manifest. Lossless bit packing reduced it to22MB, with every decoded tensor checked. A clean-tree progress snapshot is published on `feat/stage8-progress`; final main integration will exclude the superseded oversized blob's unpublished history while retaining source snapshots/hashes and all raw evidence. No Stage1–7 history is rewritten.
