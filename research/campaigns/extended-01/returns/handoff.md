@@ -1,3 +1,5 @@
 # Return track handoff
 
 Owner branch campaign/returns, isolated worktree campaign-returns. Coordinator owns GPU; profile completed; development awaiting release. Historical baseline123299a. R01 protocol written: frozen Stage11 wide checkpoint10, fresh4096fit/1024cal/1024validation, shared-delay categorical ridge and CE versus unchanged. Delay32 excluded from development. Initial envelope2GPUh, adaptive; do not terminate campaign on one failed recipe. Source7616067 reviewed and profiled:3.96s process occupancy, width1024, CUDA446.85MB/RSS2.207GB. Two CPU tests pass. Expected development30–60s; requested ceiling300s. No development launched.
+
+R01developmentcompleted26.19s. CE900selectedoncalibration, worstfreshvalidation1016/1024(99.22%), trainingall4096correcteverydelay. Ridge.01strongafterrecurrencebutzero828/1024. No32observed. NextfreezeCE900/ridge.01 confirmation3widebackbones10/11/12 with4096freshfit and1024freshcal/validation/testperseed; no repeatedrecipe tuning. Parentrelease required. Rawcountauditpassed; coefficient replay pending.
