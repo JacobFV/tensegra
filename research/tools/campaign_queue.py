@@ -25,12 +25,14 @@ def record(root, action, job_id, seconds, kind='exploration', source='', receipt
             raise ValueError('Campaign elapsed deadline reached')
         ceiling = budget['gpu_seconds_ceiling']
         if kind != 'confirmation':
-            ceiling -= budget['confirmation_reserve_seconds']
+            confirmed = sum(j['seconds'] for j in budget['jobs'] if j['kind'] == 'confirmation')
+            ceiling -= max(0, budget['confirmation_reserve_seconds'] - confirmed)
         if budget['charged_seconds'] + seconds > ceiling:
             raise ValueError('Requested release exceeds available budget/reserve')
         queue['running'] = dict(id=job_id, kind=kind, source=source,
                                 cap_seconds=seconds, released_utc=now.isoformat())
-        queue['ready'] = [x for x in queue['ready'] if x != job_id]
+        queue['ready'] = [x for x in queue['ready']
+                          if (x.get('id') if isinstance(x, dict) else x) != job_id]
         budget['reserved_running_seconds'] = seconds
     else:
         running = queue['running']
