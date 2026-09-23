@@ -1,6 +1,6 @@
 # Stage 7: isolated semantic interfaces
 
-**Status: final audits and progressive/scaling diagnostics in progress. Autonomous recomposition remains blocked.**
+**Completed: isolated studies, raw-metric audits, and reports. Autonomous recomposition remains blocked.**
 
 Stage 7 successfully isolates trainable interfaces, but the frozen studies do not establish a competent composed system. Complete-evidence typed proposal selection passes. Calibrated readiness, return retention, and reliable joint halting/task behavior do not pass across all seeds. Earlier-stage source and artifacts remain unchanged.
 
@@ -13,7 +13,7 @@ Stage 7 successfully isolates trainable interfaces, but the frozen studies do no
 | B: learned-proposal readiness | Test precision 99.45/99.02/99.12%; executable recall 52.31/81.78/38.40% | Fail: seed 2 misses 50% recall; no execution coupling |
 | C: return retention | All nine seed/arm runs fail; test joint accuracy after 16 updates is 9.30/10.72/9.38% for once/protected/gated arms | Fail; returned-fact use remains blocked |
 | E: halting | Validation exact timing 99.02/100/99.22%; joint timing/task 99.02/92.97/99.22% | Fail all-seed joint gate; seed 1 also has test timing/rejection errors |
-| F: semantic graphs | Small-set acquisition fails exact graph reconstruction; renderer-matched cardinality diagnostic in progress | No semantic/runtime integration |
+| F: semantic graphs | Matched-renderer English typed-edge F1 0.15130 at N=1,000 and 0.15121 at N=10,000; exact graph recovery 0/64 in every final seed/surface | Fail; no semantic/runtime integration |
 
 Readiness uses a frozen proposal model and an explicitly supplied public register-type table. Its candidate-specific calibration beats a global scalar on grouped independent examples, but this is not a test of competing interpretations inside one shared world. The separate supplied-score calibration experiment also fails its coverage requirement.
 
@@ -44,3 +44,9 @@ Protected storage and exact execution are architectural capabilities. Typed inst
 - [Independent review](stage7-review.md), [gate registry](stage7-gates.json), [budget decisions](stage7-budget-notes.md), and [reproduction commands](stage7-runbook.md).
 
 Raw metrics, configs, source snapshots/hashes, checkpoints or durable checkpoint manifests, plots, and deterministic failures accompany each track. Small-set acquisition and frozen main results are kept separate. Validation determines competence; final test reports assess the frozen recipe. No failed interface underwent supervision withdrawal or dependent composition.
+
+## Semantic scaling boundary and verification
+
+The corrected semantic comparison uses three paired seeds, the same 64 heldout constructions, matched initial weights and exactly 1,000 English plus 1,000 Spanish optimizer presentations per arm. The neural runs visit 1,000 versus 2,000 distinct graphs from available corpora of 1,000 versus 10,000. Mean English typed-edge F1 is flat (.15130 versus .15121); no-input controls reach .15565/.14002. Whole heldout symbolic-renderer F1 is .16075/.14961, with zero exact recovery. Frequency controls have greater label exposure at N=10,000 and are identified as such. These budgets do not test full 10,000-example convergence, let alone 100,000–1,000,000-example scaling. Earlier renderer-confounded curves remain separately archived.
+
+The integrated source passes **511 tests plus 6 subtests**. Independent audits reconstruct raw predictions, confidence reliability bins, gate denominators, dataset identities, source hashes, retention counts, timing histograms and semantic graph metrics. All Stage1–6 tracked files are unchanged. No new primitive family, pretrained model, agentic capability, or runtime composition was introduced.

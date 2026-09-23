@@ -1,5 +1,5 @@
 {
-  "status": "frozen_studies_running",
+  "status": "completed_isolated_studies_composition_blocked",
   "composition_allowed": false,
   "supervision_withdrawal_allowed": false,
   "rule": "Require prespecified validation competence across every paired seed and required condition; report untouched test results separately. Pilot success does not authorize composition.",
@@ -150,13 +150,29 @@
       "note": "Seed1 validation pure timing100% but task/joint92.97%; test also has premature stops/rejection failures. No runtime halting composition."
     },
     "F_semantic_scaling": {
-      "status": "pending",
+      "status": "failed_no_exact_recovery_or_positive_scaling_trend",
       "requires": [
         "positive typed-edge and graph-semantic learning trend",
         "above simple baselines",
         "heldout renderer or lexicon transfer",
         "actual unique construction and optimizer exposure counts"
-      ]
+      ],
+      "evidence": "results/stage7-semantic/gate-f.json",
+      "english_typed_edge_f1": [
+        0.1512989855177079,
+        0.15121106230218967
+      ],
+      "available_cardinalities": [
+        1000,
+        10000
+      ],
+      "unique_graphs_seen": [
+        1000,
+        2000
+      ],
+      "optimizer_examples_per_run": 2000,
+      "exact_graph_recovery": 0.0,
+      "note": "Matched renderer schedules; no-input F1 .15565/.14002. Larger100k/1M runs not undertaken. This is finite-budget exposure, not converged scaling."
     },
     "A2_progressive": {
       "status": "failed_generalization",
