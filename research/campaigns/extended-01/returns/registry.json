@@ -1,8 +1,7 @@
 {
   "R01": {
     "status": "confirmation_failed_restricted",
-    "kind": "development",
-    "backbone_seed": 10,
+    "kind": "development_then_frozen_confirmation",
     "protocol": "R01-protocol.md",
     "profile_cap_seconds": 60,
     "development_estimate_seconds": [
@@ -11,7 +10,6 @@
     ],
     "development_cap_requested_seconds": 300,
     "confirmation": true,
-    "delay32_exposed": false,
     "source": "7616067",
     "profile_process_seconds": 3.96,
     "profile_runner_seconds": 2.7171399872750044,
@@ -36,6 +34,46 @@
       "backbone11 validation delay16 distractors2",
       "backbone11 validation delay16 distractors8"
     ],
-    "next": "R02: nested fitting diversity at fixed900 CE updates on selected backbone11"
+    "next": "R02: nested fitting diversity at fixed900 CE updates on selected backbone11",
+    "development": {
+      "backbone_seeds": [
+        10
+      ],
+      "delay32_exposed": false,
+      "source": "7616067",
+      "process_seconds": 26.19
+    },
+    "confirmation_detail": {
+      "backbone_seeds": [
+        10,
+        11,
+        12
+      ],
+      "historical_seed10_used_in_development": true,
+      "delay32_exposed": true,
+      "delay32_split": "final_test_only",
+      "selection_uses_delay32": false,
+      "source": "0df707b",
+      "process_seconds": 95.9,
+      "status": "failed_0_through_16_contract"
+    }
+  },
+  "R02": {
+    "status": "queued_not_launched",
+    "kind": "failure_directed_development",
+    "backbone_seed": 11,
+    "source": "5eb6c9f",
+    "pool_sizes": [
+      4096,
+      8192,
+      16384
+    ],
+    "ce_updates": 900,
+    "delay32_exposed": false,
+    "estimate_seconds": [
+      70,
+      110
+    ],
+    "requested_cap_seconds": 300
   }
 }
