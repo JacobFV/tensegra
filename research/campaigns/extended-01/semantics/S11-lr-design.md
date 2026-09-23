@@ -27,3 +27,5 @@ The corpus remains8,192 distinct equality/reference patterns but only two ordere
 ## Frozen implementation and preflight
 
 `campaign-s11-lr.json` freezes the sole1e-5 override and900-second requested cap. The new runner restores all prior state, overrides only optimizer param-group learning rates, rejects a changed parent/comparator hash or different first-batch/pair-sampling receipt, and preserves exact initial prediction replay. Two CPU mechanical tests pass: optimizer state differs only in LR, and archived BCE computation retains support counts. No GPU profile is needed because the unchanged geometry was already measured. Archived parent/comparator calibration losses are saved separately before new outcomes. The source and config are committed before coordinator release; GPU permission is not implied by this frozen config.
+
+AdamW uses the learning rate in both the adaptive gradient step and decoupled weight-decay update. Thus LR-only changes the effective decay amount per update while keeping the weight_decay hyperparameter unchanged; it is not a pure gradient-noise intervention.
