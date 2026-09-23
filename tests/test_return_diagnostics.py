@@ -39,5 +39,8 @@ def test_frozen_capture_matches_original():
     with torch.no_grad():
         features,state=capture(model,public,'factorized','persistent',(0,1,2))
         actual=model(public,2)['state']
+        for delay in (0,1,2):
+            expected=model.norm(model(public,delay)['state'])[:,0]
+            torch.testing.assert_close(features[f'workspace_{delay}'],expected)
     torch.testing.assert_close(state,actual)
     assert features['scalar_premix'].shape==(2,24)

@@ -59,6 +59,7 @@ def metrics(pred,target):
 def run(config, output):
     torch.set_num_threads(2); output=Path(output);output.mkdir(parents=True,exist_ok=True)
     device=config.get('device','cuda'); started=time.monotonic(); records=[]
+    if len({spec[0] for spec in config['splits'].values()}) != len(config['splits']): raise ValueError('split seeds overlap')
     source={name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in ('return_diagnostics_probe.py','return_memory.py','retention_data.py','thinking.py')}
     manifest=dict(config=config,source=source,runs=[])
     for seed in config['seeds']:
@@ -68,6 +69,9 @@ def run(config, output):
         model=ReturnMemoryModel(width=1024,encoding=encoding).to(device)
         model.load_state_dict(torch.load(path,map_location=device,weights_only=True));model.eval()
         checkpoint_sha=hashlib.sha256(path.read_bytes()).hexdigest(); splits={}; split_hashes={}
+        historical=json.loads((Path(config['checkpoint_dir'])/'manifest.json').read_text())
+        expected=next(r for r in historical['runs'] if r['seed']==seed and r['encoding']==encoding and r['availability']==availability)
+        if checkpoint_sha != expected['checkpoint_sha256']: raise ValueError('Historical checkpoint hash mismatch')
         torch.cuda.reset_peak_memory_stats(); run_start=time.monotonic()
         for split, (data_seed,size) in config['splits'].items():
             batch=make_batch(data_seed,size,distractors=config.get('distractors',8))
@@ -84,6 +88,7 @@ def run(config, output):
             splits[split]=({k:torch.cat(v).to(device) for k,v in chunks.items()},batch['targets']['value'].to(device))
             for key,values in baseline.items():
                 records.append(dict(run=name,split=split,boundary=key,family='historical_decoder',metrics=metrics(torch.cat(values),batch['targets']['value']),predictions=torch.cat(values).tolist(),targets=batch['targets']['value'].tolist()))
+        if len(set(split_hashes.values())) != len(split_hashes): raise ValueError('event split collision')
         if not config.get('profile_only',False):
          train,y=splits['train']; val,vy=splits['validation']; test,ty=splits['test']
          for boundary,x in train.items():
@@ -95,10 +100,12 @@ def run(config, output):
                 pred=raw.argmax(-1) if family=='categorical_ridge' else raw[:,0].round().long().clamp(0,32)
                 fits.append((int((pred==vy).sum()),alpha,fit))
             _,alpha,fit=max(fits,key=lambda z:z[0])
+            coefficients=output/f'{name}-{boundary}-{family}.pt'; torch.save(tuple(v.cpu() for v in fit),coefficients)
+            selection=dict(validation_grid=[dict(alpha=a,correct=c,total=len(vy)) for c,a,_ in fits],parameters=int(fit[2].numel()),coefficient_sha256=hashlib.sha256(coefficients.read_bytes()).hexdigest(),train_label_support=sorted(y.unique().tolist()))
             for split,(features,targets) in splits.items():
                 raw=predict_ridge(features[boundary],fit)
                 pred=raw.argmax(-1) if family=='categorical_ridge' else raw[:,0].round().long().clamp(0,32)
-                records.append(dict(run=name,split=split,boundary=boundary,family=family,alpha=alpha,metrics=metrics(pred,targets),predictions=pred.tolist(),targets=targets.tolist()))
+                records.append(dict(run=name,split=split,boundary=boundary,family=family,alpha=alpha,selection=selection,metrics=metrics(pred,targets),predictions=pred.tolist(),targets=targets.tolist()))
         torch.cuda.synchronize()
         manifest['runs'].append(dict(run=name,checkpoint_sha256=checkpoint_sha,event_hashes=split_hashes,seconds=time.monotonic()-run_start,peak_cuda_allocated=torch.cuda.max_memory_allocated(),parameters=sum(p.numel() for p in model.parameters()),width=1024))
         (output/'manifest.json').write_text(json.dumps(manifest,indent=2));(output/'predictions.json').write_text(json.dumps(records,separators=(',',':')))
