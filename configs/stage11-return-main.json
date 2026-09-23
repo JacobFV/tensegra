@@ -1,0 +1,11 @@
+{
+ "device":"cuda",
+ "checkpoint_dir":"/home/brandonin/topoformer-stage9/returns/readout-main",
+ "ridge_dir":"/home/brandonin/topoformer-stage10/returns/main",
+ "backbone_seeds":[10,11,12],
+ "updates":1000,"batch_size":32,"lr":0.0003,
+ "schedules":{"short_continue":[0,1,2,4,2,4],"wide_continue":[0,1,2,4,8,16]},
+ "training_seed_base":11300000,"validation_seed":11400001,"test_seed":11500001,
+ "eval_size":512,"eval_batch_size":32,"eval_distractors":[2,8],
+ "eval_delays":[0,1,2,4,8,16,32],"curve_delays":[0,1,2,4,8,16],"curve_every":250
+}
