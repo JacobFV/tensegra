@@ -1,6 +1,6 @@
 # Stage 9 independent review
 
-Status: historical failure-localization audit in progress. Baseline is `0f44e13`. No new model training or inference has been performed by this audit. Existing Stage 8 gate decisions remain unchanged; no composition or supervision withdrawal is permitted.
+Status: independent source, archived/raw metric, checkpoint and calibration replay audits complete; final repository regression is tracked by the root verification. Baseline is `0f44e13`. This review distinguishes archived numerical reconstruction from explicitly labeled CPU frozen-checkpoint inference. No training was performed by the audit. Existing Stage 8 gate decisions remain unchanged; no composition or supervision withdrawal is permitted.
 
 ## Source-to-report map
 
@@ -106,3 +106,7 @@ The isolated grid fixture has a separately preserved v2 contract correction: con
 The separately frozen confirmation contains all12 prescribed seed/head/objective runs on the new8-graph fixed set. Independent raw reconstruction verifies480 graph/checkpoint rows, including raw and final calibrated predictions. Independent CPU replay reloads and rehashes all12 checkpoints and refits thresholds with a separately written grouped-score sweep. All156 per-relation support/error counts and96 calibrated graph outcomes match; CPU/GPU threshold differences are at most4.77e-7 without changing decisions.
 
 Seeds11/12 fit8/8 calibrated graphs in every arm, but seed10 fits only6/8 with5 remaining edge errors in each arm. Raw decoding stays0/8 throughout. The prospective all-seed calibrated fixed-acquisition gate therefore **fails**; no aggregate mean or successful development seed rescues it. Public-text acquisition and fresh/heldout semantic transfer remain blocked. This narrower result supports a substantial decoder-calibration component while retaining an acquisition/score-separation failure on a fresh initialization; it does not establish that slot correction alone solves complete semantic acquisition.
+
+## Final historical preservation
+
+After all diagnostic implementations and result exports, all **1,747 files tracked at baseline `0f44e13`** remain byte-identical, including Stage1–8 source, artifacts, reports and gate registry. The complete final Git-blob manifest is saved independently from the initial preservation check. New work is additive under the Stage9 research/source/config/test/tool paths. No old result was replaced by a corrected fixture or later favorable decoder.
