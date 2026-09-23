@@ -41,7 +41,9 @@ def run(cfg,out):
             rows.append(dict(condition=condition,examples=cfg['examples'],forward_seconds=seconds,**{name:float(joined[name].mean()) for name in score}))
         tag=f"{checkpoint['seed']}-{checkpoint['mode']}"
         np.savez_compressed(out/f'{tag}.npz',**raw);write(out/f'{tag}.json',dict(rows=rows))
-        receipts.append(dict(**checkpoint,initial_tensor_sha256=initial,final_tensor_sha256=tensor_hash(),parameters=sum(p.numel() for p in model.parameters())))
+        final=tensor_hash()
+        if final!=initial:raise RuntimeError('Frozen inference mutated checkpoint tensors')
+        receipts.append(dict(**checkpoint,initial_tensor_sha256=initial,final_tensor_sha256=final,parameters=sum(p.numel() for p in model.parameters())))
         del model
     np.savez_compressed(out/'public.npz',**public)
     write(out/'manifest.json',dict(checkpoints=receipts,optimizer_updates=0,examples_per_cell=cfg['examples'],wall_seconds=time.monotonic()-start,cuda_peak_allocated_bytes=torch.cuda.max_memory_allocated() if str(device).startswith('cuda') else 0,process_peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss))
