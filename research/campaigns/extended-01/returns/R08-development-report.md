@@ -20,7 +20,7 @@ The three screened heads share the exact initial residual function, R06 balanced
 
 R06 populations are reused development data. The screen adds three recipes to the cumulative search record; no fresh confirmation or new initialization is involved. Delay32 is absent. The audited R04/R05 consumers and composition dependencies remain unchanged. Fresh paired confirmation with adequate per-stratum support would be needed before promoting the selected tail improvement.
 
-External process occupancy was43.54seconds, peak CUDA allocation1,208,889,856bytes. No extension was run. Independent audit is pending.
+External process occupancy was43.54seconds, peak CUDA allocation1,208,889,856bytes. No extension was run. Independent audits bc6d3a9 and 900e2dd verify all 210 raw cells, final calibration selection, all 210 frozen-feature CPU decoder predictions, checkpoint hashes, and unchanged references.
 
 [All rates and every type/value cell](../../../results/campaign-01/returns/r08-development/summary.json), [raw predictions](../../../results/campaign-01/returns/r08-development/predictions.json.gz), [manifest and complete curves](../../../results/campaign-01/returns/r08-development/manifest.json.gz), [process receipt](../../../results/campaign-01/returns/r08-development/process.json), and [prospective protocol](R08-protocol.md).
 
