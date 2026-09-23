@@ -32,7 +32,7 @@
       "evidence": "research/stages/stage-09/stage9-review.md; independent historical reconstruction complete at33acfe1"
     },
     "belief_contract": {
-      "status": "not_run",
+      "status": "failed",
       "hypothesis": "Does a public empty-ledger prior remove the prior defect without concealing learned post-evidence null errors?",
       "observables_and_targets": "Public candidate/event/ID/action data; posterior targets evaluation only",
       "supplied_vs_learned": "Ledger/prior supplied, compatibility and nonempty null learned",
@@ -40,11 +40,12 @@
       "selection_and_untouched_test": "Fresh validation/test incl initial and full-retraction frames; a3 blocked pending diagnosis",
       "gpu_minutes_cap": 15,
       "source_config_freeze": "523ec15; configs/stage9-belief-frozen-*.json",
-      "actual_gpu_seconds": 0,
-      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
+      "actual_gpu_seconds": 518.807,
+      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision",
+      "restricted_result": "Protected supplied-prior original matrix passed_restricted; expanded contract failed; recurrent original remained failed."
     },
     "return_localization": {
-      "status": "not_run",
+      "status": "diagnostic_only",
       "hypothesis": "Where does exact scalar readout first fail?",
       "observables_and_targets": "Public perfect events and nuisance context; semantic labels for probes only",
       "supplied_vs_learned": "Frozen encoder/backbone; new diagnostic readout learned",
@@ -56,19 +57,20 @@
       "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
     },
     "return_repair": {
-      "status": "blocked",
+      "status": "failed",
       "hypothesis": "At most two minimal evidence-supported repairs",
       "observables_and_targets": "Same public Stage8 return interface",
       "supplied_vs_learned": "Workspace-only learned reconstruction remains primary",
       "comparison": "Unchanged reference vs selected repairs, paired seeds",
       "selection_and_untouched_test": "Blocked until localization and frozen recipe; fresh512/cell",
       "gpu_minutes_cap": 50,
-      "source_config_freeze": null,
+      "source_config_freeze": "4046fca; configs/stage9-return-readout-main.json",
       "actual_gpu_seconds": 0,
-      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
+      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision",
+      "result": "All nine seed/readout gates failed; independently audited."
     },
     "semantic_realizability": {
-      "status": "not_run",
+      "status": "failed",
       "hypothesis": "Can head/objective represent and acquire ordered-edge targets?",
       "observables_and_targets": "Synthetic pair features and privileged node features",
       "supplied_vs_learned": "Explicitly privileged diagnostics, not surface understanding",
@@ -77,7 +79,8 @@
       "gpu_minutes_cap": 15,
       "source_config_freeze": null,
       "actual_gpu_seconds": 0,
-      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
+      "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision",
+      "result": "Mathematical head realizability passed_restricted; raw learned fixed-set graph gate failed. Training-only calibrated result is separate."
     },
     "semantic_acquisition": {
       "status": "blocked",
@@ -90,6 +93,18 @@
       "source_config_freeze": null,
       "actual_gpu_seconds": 0,
       "stop": "No dependent large run after failed acquisition, unidentifiability or capacity failure; no budget extension without user decision"
+    },
+    "semantic_calibrated_confirmation": {
+      "status": "not_run",
+      "hypothesis": "Does a prospective training-only relation threshold contract recover complete fixed-set graphs across fresh paired initializations?",
+      "observables_and_targets": "Privileged fixed-node codes; graph labels for head training and training-only calibration, never inference",
+      "supplied_vs_learned": "Exact attributes supplied; edge/slot scores learned; thresholds trained on fixed fitting set",
+      "comparison": "Four head/objective arms; raw and calibrated decisions parallel",
+      "selection_and_untouched_test": "No heldout-generalization claim. Final300 checkpoint only; declared per-relation minimum train errors/lowest threshold ties. Every12runs mustfit8/8.",
+      "gpu_minutes_cap": 3,
+      "source_config_freeze": "30e36ed; configs/stage9-semantic-calibrated-confirmation.json",
+      "actual_gpu_seconds": 0,
+      "stop": "Any failed seed blocks dependent public-text acquisition; historical raw gate never relabeled."
     }
   }
 }

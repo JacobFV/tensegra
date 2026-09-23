@@ -43,3 +43,9 @@ The four three-update head profiles took 0.458/0.065/0.284/0.264 seconds (first 
 ## Oracle edge-fixture correction
 
 The first C2 development matrix (eight runs, 44.4 model-seconds) fits every real-edge slot but no complete graph; residual edge errors are false positives. The fixture's edge projections omitted the biases present in the Stage 8 reference. Preserve that failed result. Authorize a separately versioned faithful-affine check restoring only those bias terms, at the identical four-arm × two-seed × 300-update budget (cap2GPUminutes). Do not extend exposure or infer a public-text conclusion from the simplified fixture. C3 remains blocked until a faithful complete-acquisition test succeeds.
+
+## Prospective calibrated decoder contract
+
+Read-only per-relation analysis corrects the earlier global-overlap interpretation: both faithful fixed-node models separate positive and negative training pairs within every relation. Posthoc training-only thresholds yield8/8graphs while raw zero yields0/8. This is not a retroactive raw-gate pass. The original failed gate and all predictions remain unchanged.
+
+Authorize a separately frozen prospective confirmation (`30e36ed`): four arms × fresh initialization seeds10/11/12,8fixed graphs generated at seed9001000, same300updates and affine head. At the final checkpoint only, fit each relation threshold to minimize unweighted training-pair errors; deterministic ties choose the lowest boundary and absent-positive relations use the maximum training logit. No heldout labels enter calibration. Raw predictions remain parallel. A new restricted calibrated-acquisition gate requires8/8complete graphs in every one of12runs. Estimated≤2minutes, hard3minutes. Public-text acquisition is considered only after this prospective gate and independent audit, with a new bounded protocol; no automatic scaling or composition.

@@ -4,7 +4,7 @@
   "composition_allowed": false,
   "supervision_withdrawal_allowed": false,
   "belief": {
-    "status": "not_run",
+    "status": "failed",
     "every_seed_and_required_cell": true,
     "minimum_examples": 512,
     "iid_unique_accuracy_gt": 0.98,
@@ -12,10 +12,12 @@
     "mean_framewise_l1_lt": 0.05,
     "impossible_mass_lt": 0.01,
     "include_initial_frame": true,
-    "architectural_contract_separate_from_learned_calibration": true
+    "architectural_contract_separate_from_learned_calibration": true,
+    "supplied_prior_original_protected": "passed_restricted",
+    "expanded_contract": "failed"
   },
   "returns": {
-    "status": "not_run",
+    "status": "failed",
     "minimum_examples": 512,
     "delay": 16,
     "type_and_primitive_gt": 0.99,
@@ -24,11 +26,11 @@
     "diagnostic_copy_cannot_pass": true
   },
   "semantic_head": {
-    "status": "not_run",
+    "status": "passed_restricted",
     "required": "All representable mechanical interaction fixtures exactly classified; old incompatibility reproduced"
   },
   "semantic_fixed_set": {
-    "status": "not_run",
+    "status": "failed",
     "exact_graph_accuracy": 1.0,
     "required": "All fixed graphs, all declared seeds; privileged-node and public-text gates separate"
   },
@@ -46,5 +48,11 @@
     "typed_and_ordered_f1_gt": 0.99,
     "every_seed": true,
     "missing_or_saturated_family": "unavailable; cannot pass"
+  },
+  "semantic_calibrated_fixed_set": {
+    "status": "not_run",
+    "exact_graph_accuracy": 1.0,
+    "required": "All8fixedgraphs inall12prospective runs; training-onlythresholds, no heldout/generalization claim",
+    "old_raw_gate_unchanged": true
   }
 }
