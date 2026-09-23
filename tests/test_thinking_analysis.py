@@ -150,6 +150,39 @@ class AnalysisTests(unittest.TestCase):
                 with self.assertRaises(ValueError):a.merge_shards({'seeds':[1,2],'variants':['local'],'steps':0},shards,root/'merged')
                 self.assertFalse((root/'merged').exists())
 
+    def test_economy_grid_tracks_anchors_final_ood_and_privileged_oracles(self):
+        config=dict(seeds=[1],variants=['local','fixed'],steps=2,checkpoints=[0,1,2],
+                    eval_depths=[2,8,32],train_depth=2,evaluation_schedule='economy_v1',extra_evaluations=True)
+        expected=a.expected_controlled_evaluations(config)
+        self.assertEqual(len(expected),46)
+        self.assertNotIn(('local',1,0,8,'depth','none'),expected)
+        self.assertIn(('local',1,2,32,'oracle_minimal','oracle_minimal'),expected)
+        self.assertIn(('fixed',1,2,2,'heldout_wordorder','none'),expected)
+        cells=[dict(variant=v,seeds=[seed],step=step,depth=depth,condition=condition,intervention=intervention)
+               for v,seed,step,depth,condition,intervention in expected]
+        summary=dict(track='controlled_execution',aggregates=[c for c in cells if not c['condition'].startswith('oracle')],
+                     privileged_oracles=[c for c in cells if c['condition'].startswith('oracle')])
+        self.assertTrue(a.coverage_audit(summary,config)['complete'])
+        summary['privileged_oracles'].pop()
+        self.assertFalse(a.coverage_audit(summary,config)['complete'])
+
+    def test_merge_preserves_modern_shard_provenance_and_verifies_expected_hash(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);shards=[self.make_shard(root,'left',1),self.make_shard(root,'right',2)]
+            for seed,shard in enumerate(shards,1):
+                path=shard/'manifest.json';manifest=json.loads(path.read_text());name=f'local-seed{seed}-step0.pt'
+                manifest.update(config_hash=a.digest(manifest['config']),git_commit='samecommit',started_utc=f'2026-09-22T00:00:0{seed}Z',
+                    elapsed_seconds=seed,initializations={f'local:seed{seed}':f'init{seed}'},
+                    checkpoints={name:dict(state_hash=f'state{seed}',file_sha256=a.file_hash(shard/name))})
+                path.write_text(json.dumps(manifest))
+                r=json.loads((shard/'metrics.jsonl').read_text());r['checkpoint_hash']=f'state{seed}';(shard/'metrics.jsonl').write_text(json.dumps(r)+'\n')
+            combined=a.merge_shards({'seeds':[1,2]},shards,root/'combined')
+            self.assertEqual(len(combined['checkpoints']),2)
+            self.assertEqual(combined['initializations']['local:seed2'],'init2')
+            self.assertEqual(combined['config_hash'],a.digest(combined['config']))
+            (shards[1]/'local-seed2-step0.pt').write_bytes(b'corrupt')
+            with self.assertRaises(ValueError):a.merge_shards({'seeds':[1,2]},shards,root/'bad')
+
     def test_file_hash_audit_and_stream(self):
         with tempfile.TemporaryDirectory() as d:
             path=Path(d)/'x.jsonl';path.write_text('{"n":1}\n\n{"n":2}\n')

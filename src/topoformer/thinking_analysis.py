@@ -117,7 +117,7 @@ def controlled_cell(row):
         if key in row and row[key] is not None and value is not None and not math.isclose(value,row[key],abs_tol=1e-7):raise ValueError('inconsistent stored metric '+key)
     return dict(seed=row['seed'],metrics=metrics,counts=dict(counts),calibration=calibration(row.get('readiness_calibration',[])),
         data_hash=digest([(e.get('input_hash'),e.get('data_hash')) for e in row['examples']]),initial_hash=row.get('initial_hash'),
-        compute_cap=row.get('compute_cap'),microstep_histogram=dict(histogram),observation_protocol=row.get('observation_protocol'))
+        compute_cap=row.get('compute_cap'),microstep_histogram=dict(histogram),observation_protocol=row.get('observation_protocol'),execution_backend=row.get('execution_backend'))
 
 
 def aggregate(items):
@@ -125,7 +125,7 @@ def aggregate(items):
     counts=Counter();histogram=Counter()
     for item in items:
         counts.update(item.get('counts',{}));histogram.update(item.get('microstep_histogram',{}))
-    return dict(observation_protocols=sorted({x['observation_protocol'] for x in items if x.get('observation_protocol')}),seeds=sorted(x['seed'] for x in items),metrics={k:describe([x['metrics'].get(k) for x in items]) for k in sorted(metrics)},counts=dict(counts),microstep_histogram=dict(histogram))
+    return dict(execution_backends=sorted({x['execution_backend'] for x in items if x.get('execution_backend')}),observation_protocols=sorted({x['observation_protocol'] for x in items if x.get('observation_protocol')}),seeds=sorted(x['seed'] for x in items),metrics={k:describe([x['metrics'].get(k) for x in items]) for k in sorted(metrics)},counts=dict(counts),microstep_histogram=dict(histogram))
 
 
 def contrasts(groups, reference, fields):
@@ -157,7 +157,7 @@ def summarize_controlled(rows):
         identity=(*key,row['seed'])
         if identity in seen:raise ValueError('duplicate evaluation')
         seen.add(identity);sources.add(row.get('source_hash'))
-        cell=controlled_cell(row);pair=(row['seed'],row['step'],row['depth'], 'depth' if key[1] in ('frozen_intervention','oracle_trace') else key[1])
+        cell=controlled_cell(row);pair=(row['seed'],row['step'],row['depth'], 'depth' if key[1] in ('frozen_intervention','oracle_trace','oracle_minimal') else key[1])
         if pair in data and data[pair]!=cell['data_hash']:raise ValueError('unpaired evaluation data')
         data[pair]=cell['data_hash']
         if row['seed'] in initials and initials[row['seed']]!=cell['initial_hash']:raise ValueError('unpaired initialization')
@@ -167,11 +167,11 @@ def summarize_controlled(rows):
     cells=[dict(zip(fields,key),**aggregate(items),calibration=merge_calibration([i['calibration'] for i in items]),compute_caps=sorted({i['compute_cap'] for i in items if i['compute_cap'] is not None})) for key,items in sorted(groups.items())]
     interventions=[]
     for key,items in groups.items():
-        if key[4] in ('none','oracle_trace'):continue
+        if key[4] in ('none','oracle_trace','oracle_minimal'):continue
         reference=groups.get((key[0],'depth',key[2],key[3],'none'),[])
         paired={('control',*key[1:]):reference,('intervention',*key[1:]):items}
         interventions.extend(contrasts(paired,'control',fields))
-    return dict(track='controlled_execution',aggregates=[c for c in cells if c['condition']!='oracle_trace'],privileged_oracles=[c for c in cells if c['condition']=='oracle_trace'],paired_contrasts=contrasts(groups,'local',fields),frozen_intervention_contrasts=interventions,
+    return dict(track='controlled_execution',aggregates=[c for c in cells if c['condition'] not in ('oracle_trace','oracle_minimal')],privileged_oracles=[c for c in cells if c['condition'] in ('oracle_trace','oracle_minimal')],paired_contrasts=contrasts(groups,'local',fields),frozen_intervention_contrasts=interventions,
         curves=[dict(variant=v,step=s,**aggregate(items)) for (v,s),items in sorted(training.items())],
         provenance=dict(source_hashes=sorted(s for s in sources if s),initial_hashes=initials,evaluation_cells=len(seen),training_schedule_steps=len(schedules),training_objectives=sorted(objectives)),
         caveats=['Supplied progressively disclosed interface is not TCN language induction.',
@@ -252,23 +252,44 @@ def audit_language(data, manifest, root):
         denominator_semantics='undefined_is_null_with_raw_counts' if modern else 'legacy_zero_undefined_no_raw_counts')
 
 
+def expected_controlled_evaluations(config):
+    """Mirror the declared runner schedule, retaining old full-grid support."""
+    expected=set();depths=sorted(set(config.get('eval_depths',[])))
+    if not depths:return expected
+    schedule=config.get('evaluation_schedule','full_grid')
+    if schedule not in ('full_grid','economy_v1'):raise ValueError('unknown evaluation schedule')
+    final=config.get('steps',0);steps=set(config.get('checkpoints',[]))|{0,final}
+    for variant in config.get('variants',[]):
+        for seed in config.get('seeds',[]):
+            for step in steps:
+                selected=depths if schedule=='full_grid' or step==final else sorted({depths[0],depths[-1]}) if step==0 else depths[:1]
+                expected.update((variant,seed,step,depth,'depth','none') for depth in selected)
+            if schedule!='economy_v1':continue
+            if config.get('extra_evaluations',True):
+                for condition in ('heldout_surface','cross_motif','heldout_composition','heldout_wordorder','distractors16','distractors64','ambiguity_delay'):
+                    expected.add((variant,seed,final,max(2,config.get('train_depth',2)),condition,'none'))
+            if variant=='local':
+                for depth in {depths[0],depths[-1]}:
+                    for oracle in ('oracle_trace','oracle_minimal'):expected.add((variant,seed,final,depth,oracle,oracle))
+                    for intervention in ('event_drop','event_shuffle','event_wrong_value','runtime_off','graph_permuted','graph_drop50','readiness_0.5','readiness_0.95'):
+                        expected.add((variant,seed,final,depth,'frozen_intervention',intervention))
+    return expected
+
+
 def coverage_audit(summary, config):
-    """Report incomplete grids instead of silently treating partial runs as full studies."""
+    """Report missing declared cells rather than mislabel partial runs as complete."""
     actual=set()
-    for cell in summary['aggregates']:
-        if summary['track']=='controlled_execution' and cell['condition']!='depth':continue
-        axis=cell.get('depth',cell.get('renderer'))
-        actual.update((cell['variant'],seed,cell['step'],axis) for seed in cell['seeds'])
     if summary['track']=='controlled_execution':
-        variants=config.get('variants',[]);steps=set(config.get('checkpoints',[]))|{0,config.get('steps',0)}
-        axes=config.get('eval_depths',[])
+        for cell in summary['aggregates']+summary.get('privileged_oracles',[]):
+            actual.update((cell['variant'],seed,cell['step'],cell['depth'],cell['condition'],cell.get('intervention','none')) for seed in cell['seeds'])
+        expected=expected_controlled_evaluations(config)
     else:
+        for cell in summary['aggregates']:actual.update((cell['variant'],seed,cell['step'],cell['renderer']) for seed in cell['seeds'])
         variants=config.get('arms',['single_pass','recurrent','semantic_supervision','multisurface_consistency'])
         steps=set(config.get('eval_steps',[]))|{config.get('updates',0)}
-        axes=['english','spanish','symbols']
-    expected={(v,seed,step,axis) for v in variants for seed in config.get('seeds',[]) for step in steps for axis in axes}
+        expected={(v,seed,step,axis) for v in variants for seed in config.get('seeds',[]) for step in steps for axis in ('english','spanish','symbols')}
     return dict(complete=bool(expected) and expected<=actual,expected_cells=len(expected),observed_cells=len(actual),missing=[list(x) for x in sorted(expected-actual)],
-                scope='Core depth or renderer grid; optional OOD/intervention coverage reported in aggregates.')
+                scope='Declared economy_v1 includes OOD/interventions/oracles; legacy controlled and language coverage check core grid.')
 
 
 def merge_shards(canonical_config, shard_dirs, output):
@@ -292,7 +313,9 @@ def merge_shards(canonical_config, shard_dirs, output):
         if not seeds or len(set(seeds))!=len(seeds) or all_seeds.intersection(seeds):raise ValueError('overlapping/duplicate shard seeds')
         all_seeds.update(seeds)
         comparable={k:v for k,v in config.items() if k!='seeds'}
-        common={k:v for k,v in manifest.items() if k!='config'}
+        varying={'config','config_hash','initializations','checkpoints','elapsed_seconds','started_utc'}
+        common={k:v for k,v in manifest.items() if k not in varying}
+        if manifest.get('config_hash') and manifest['config_hash']!=digest(config):raise ValueError('invalid shard config hash')
         if manifest.get('source_hash')!=digest(manifest.get('sources',{})):raise ValueError('invalid shard source manifest hash')
         if shared is None:shared=comparable;common_manifest=common
         elif comparable!=shared:raise ValueError('shard configs differ beyond seeds')
@@ -307,11 +330,14 @@ def merge_shards(canonical_config, shard_dirs, output):
     merged_config={**shared,'seeds':list(expected_seeds)}
     output.parent.mkdir(parents=True,exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='.stage6-merge-',dir=output.parent) as temporary:
-        staging=Path(temporary)/'combined';staging.mkdir();provenance=[];checkpoint_names=set()
+        staging=Path(temporary)/'combined';staging.mkdir();provenance=[];checkpoint_names=set();merged_initializations={};merged_checkpoints={};elapsed_sum=0.;started=[]
         merged_path=staging/'metrics.jsonl.gz'
         with merged_path.open('wb') as merged_raw,gzip.GzipFile(filename='',mode='wb',fileobj=merged_raw,mtime=0,compresslevel=1) as merged_stream:
             for index,(directory,manifest_path,manifest,metrics) in enumerate(entries):
                 config=manifest['config'];seeds=set(config['seeds']);variants=set(config['variants'])
+                merged_initializations.update(manifest.get('initializations',{}));merged_checkpoints.update(manifest.get('checkpoints',{}))
+                elapsed_sum+=manifest.get('elapsed_seconds',0.)
+                if manifest.get('started_utc'):started.append(manifest['started_utc'])
                 shard_archive=staging/'shards'/f'{index:03d}';shard_archive.mkdir(parents=True)
                 shutil.copyfile(manifest_path,shard_archive/'manifest.json')
                 (shard_archive/'config.json').write_text(json.dumps(config,indent=2,allow_nan=False)+'\n')
@@ -330,7 +356,11 @@ def merge_shards(canonical_config, shard_dirs, output):
                         seen.add(identity)
                         if kind=='evaluation':
                             if row.get('source_hash')!=manifest['source_hash']:raise ValueError('row source hash differs from shard manifest')
-                            if row.get('condition','depth')=='depth':grid.add((variant,seed,step,row['depth']))
+                            grid.add((variant,seed,step,row['depth'],row.get('condition','depth'),row.get('intervention','none')))
+                            init=manifest.get('initializations',{}).get(f'{variant}:seed{seed}')
+                            if init is not None and row.get('initial_hash')!=init:raise ValueError('row initial state differs from manifest')
+                            checkpoint=manifest.get('checkpoints',{}).get(f'{variant}-seed{seed}-step{step}.pt')
+                            if checkpoint is not None and row.get('checkpoint_hash')!=checkpoint['state_hash']:raise ValueError('row checkpoint state differs from manifest')
                         elif kind=='training':
                             if not 1<=step<=config['steps']:raise ValueError('training step outside configured range')
                             training[(variant,seed)]+=1
@@ -340,16 +370,20 @@ def merge_shards(canonical_config, shard_dirs, output):
                 if pairs!=expected_pairs:raise ValueError('missing variant/seed run')
                 if any(training[pair]!=config['steps'] for pair in expected_pairs):raise ValueError('missing training updates')
                 steps=set(config.get('checkpoints',[]))|{0,config['steps']}
-                expected_grid={(v,seed,step,depth) for v,seed in expected_pairs for step in steps for depth in config['eval_depths']}
-                if not expected_grid<=grid:raise ValueError('missing core evaluation cells')
+                expected_grid=expected_controlled_evaluations(config)
+                if not expected_grid<=grid:raise ValueError('missing declared evaluation cells')
                 checkpoints={}
                 for checkpoint in sorted(directory.glob('*.pt')):
                     name=checkpoint.name
                     expected_names={f'{v}-seed{seed}-step{step}.pt' for v,seed in expected_pairs for step in steps}
                     if name not in expected_names or name in checkpoint_names:raise ValueError('checkpoint outside shard identity or duplicate name')
-                    checkpoint_names.add(name);wanted=file_hash(checkpoint);shutil.copyfile(checkpoint,staging/name)
+                    checkpoint_names.add(name);wanted=file_hash(checkpoint)
+                    producer=manifest.get('checkpoints',{}).get(name)
+                    if producer is not None and producer['file_sha256']!=wanted:raise ValueError('checkpoint differs from producer hash')
+                    shutil.copyfile(checkpoint,staging/name)
                     if file_hash(staging/name)!=wanted:raise ValueError('checkpoint changed while copying')
                     checkpoints[name]=dict(sha256=wanted,bytes=checkpoint.stat().st_size)
+                if not manifest.get('checkpoints',{}).keys()<=checkpoints.keys():raise ValueError('missing producer checkpoint file')
                 required_final={f'{v}-seed{seed}-step{config["steps"]}.pt' for v,seed in expected_pairs}
                 if config.get('save_checkpoints',False) and not required_final<=checkpoints.keys():raise ValueError('missing final checkpoint')
                 provenance.append(dict(shard_index=index,input_directory=str(directory),manifest_sha256=file_hash(manifest_path),
@@ -357,7 +391,10 @@ def merge_shards(canonical_config, shard_dirs, output):
                     metrics_input_sha256=file_hash(metrics),metrics_uncompressed_sha256=uncompressed.hexdigest(),
                     archived_metrics_sha256=file_hash(archived_metrics),metrics_rows=row_count,checkpoints=checkpoints,
                     archived_manifest=f'shards/{index:03d}/manifest.json',archived_metrics=f'shards/{index:03d}/metrics.jsonl.gz'))
-        combined={**common_manifest,'config':merged_config,'combined_from':provenance,'merge':dict(
+        combined={**common_manifest,'config':merged_config,'config_hash':digest(merged_config),
+            'initializations':merged_initializations,'checkpoints':merged_checkpoints,'elapsed_seconds':elapsed_sum,
+            'started_utc':min(started) if started else None,'combined_from':provenance,'merge':dict(
+            elapsed_seconds_semantics='sum_shard_elapsed_seconds_not_parallel_wall',
             kind='disjoint_seed_shards_of_one_study',canonical_input_config_hash=digest(canonical_config),resolved_config_hash=digest(merged_config),
             metrics_sha256=file_hash(merged_path),analysis_source_sha256=file_hash(__file__),
             checkpoint_note='Copied bytes checked against measured shard file hashes; no model state loaded.')}
