@@ -318,3 +318,9 @@ The full paired budgets are in `configs/stage6.json` and
 and [methods](.development/stage6-methods.md) for experiment status, supervision
 boundaries, negative findings, and the distinction between learned behavior and
 supplied exact semantics. Earlier stages remain independently reproducible.
+
+The completed 57-run study is a bounded negative result: learned policies did not
+complete correct runtime trajectories, adaptive emission collapsed to the minimum
+depth, and the language decoder remained near chance. Oracle execution stayed
+exact, but learned output after symbolic return remained weak. The implementation
+does not yet demonstrate a reliable learned latent–symbolic–latent interface.
