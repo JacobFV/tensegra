@@ -25,3 +25,14 @@ def test_confirmation_freezes_recipe_and_data_partitions():
     assert len(set(seeds))==12
     assert [run['backbone_seed'] for run in cfg['runs']]==[10,11,12]
     assert all(run['data']['validation']['size']>=1024 for run in cfg['runs'])
+
+
+def test_diversity_uses_one_maximal_pool_and_fixed_updates():
+    import json
+    from pathlib import Path
+    cfg=json.loads((Path(__file__).parents[1]/'configs/campaign-r02-development.json').read_text())
+    assert cfg['pool_sizes']==[4096,8192,16384]
+    assert cfg['data']['train']['size']==max(cfg['pool_sizes'])
+    assert cfg['ce_updates']==900 and cfg['backbone_seed']==11
+    assert cfg['data']['validation']['size']==2048
+    assert 32 not in cfg['delays']
