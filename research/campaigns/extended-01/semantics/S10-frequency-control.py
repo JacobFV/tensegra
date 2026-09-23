@@ -6,6 +6,7 @@ from topoformer.campaign_semantics import digest,write_gzip
 from topoformer.campaign_semantics_data import load_cache,target
 from topoformer.semantic_curriculum import unpack_graph,pack_graph
 from topoformer.semantic_scaling import metrics
+from topoformer import campaign_semantics_contract_decode as decoder
 from topoformer.campaign_semantics_contract_decode import run
 
 if __name__=='__main__':
@@ -21,5 +22,5 @@ if __name__=='__main__':
     path=Path(c['archive_output']);path.parent.mkdir(parents=True,exist_ok=True);write_gzip(path,archive)
     config=dict(arms=[dict(name='TRAIN8192_frequency',archive=str(path))],data_dir=c['data_dir'],output_dir=c['output_dir'],cpu_seconds=max(1,c['cpu_seconds']-(time.monotonic()-tick)))
     run(config)
-    receipt=dict(wall_internal_seconds=time.monotonic()-tick,baseline_sha256=digest(c['baseline']),baseline_scope=baseline['scope'],baseline_dev_replay=512,script_sha256=digest(__file__),config_sha256=digest(a.config),supplied_policy_source_sha256=digest(Path(__file__).parents[4]/'src/topoformer/campaign_semantics_contract_decode.py') if False else hashlib.sha256(__import__('inspect').getsource(__import__('topoformer.campaign_semantics_contract_decode',fromlist=[''])).encode()).hexdigest())
+    receipt=dict(wall_internal_seconds=time.monotonic()-tick,baseline_sha256=digest(c['baseline']),baseline_scope=baseline['scope'],baseline_dev_replay=512,script_sha256=digest(__file__),config_sha256=digest(a.config),supplied_policy_source_sha256=digest(decoder.__file__))
     (Path(c['output_dir'])/'baseline-provenance.json').write_text(json.dumps(receipt,indent=2)+'\n')
