@@ -1,0 +1,21 @@
+{
+  "phase": "C1",
+  "seeds": [0, 1, 2],
+  "modes": ["once", "protected", "gated"],
+  "threads": 2,
+  "feature_dim": 32,
+  "width": 32,
+  "value_limit": 8,
+  "batch_size": 32,
+  "steps": 1000,
+  "fixed_set": false,
+  "lr": 0.001,
+  "log_every": 20,
+  "train_delays": [1, 2, 4],
+  "validation_seeds": [810001, 810002, 810003],
+  "test_seeds": [910001, 910002, 910003],
+  "eval_size": 512,
+  "eval_delays": [0, 1, 2, 4, 8, 16, 32],
+  "eval_distractors": [2, 8],
+  "interventions": ["none", "event_drop", "wrong_value", "wrong_type", "wrong_provenance", "delay_memory_drop", "query_counterfactual", "unrelated_activity", "release", "overwrite"]
+}

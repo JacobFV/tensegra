@@ -60,7 +60,7 @@ class ReturnRetentionModel(nn.Module):
         return result
 
     def forward(self,public,delay,mode='protected',intervention='none',replacement_event=None):
-        if mode not in MODES or intervention not in INTERVENTIONS or delay not in (1,2,4,8,16,32):
+        if mode not in MODES or intervention not in INTERVENTIONS or delay not in (0,1,2,4,8,16,32):
             raise ValueError('invalid retention condition')
         event={k:v.clone() for k,v in public['event'].items()}
         if intervention=='wrong_value':

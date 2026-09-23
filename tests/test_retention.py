@@ -127,3 +127,10 @@ def test_every_perfect_event_matches_existing_exact_runtime():
         assert result.type==target_type
         seen.add(op)
     assert seen==set(PRIMITIVE_NAMES)
+
+
+def test_zero_delay_still_requires_one_late_query_pass():
+    model=ReturnRetentionModel(feature_dim=16,width=16)
+    public=make_batch(41,3,feature_dim=16)['public']
+    output=model(public,0,'protected')
+    assert output['cell_passes']==1
