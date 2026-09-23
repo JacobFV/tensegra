@@ -31,3 +31,7 @@ Versioned modules/configs, diagnostic package and contract tests; three subsyste
 ## First profiled release
 
 Belief frozen-checkpoint profiling (source `857a57c`) used 64 N16 episodes with 33 frames: 0.374 seconds for paired prior-output evaluation; 1.10 seconds including gradient diagnostics, 928 MB peak CUDA allocation and 1.52 GB RSS. Checkpoint SHA matched. Authorized the frozen 3-seed × 2-model × 3-size × 12-condition × 2-split matrix at 512 episodes/cell, estimated 2–4 minutes including export. This is an architectural inference intervention on existing checkpoints, not newly trained calibration. No training is required merely to rename the historical initialization seeds.
+
+## Post-freeze attribution followup: observation IDs
+
+The first completed frozen checkpoint fixes the original matrix with the supplied prior but fails new large-ID conditions. Preserve the full original run. A separately named development-only followup will compare clean IDs0–3 plus a repeated-content observation at ID4 (seen training range) against an otherwise equivalent new ID100, and within-range ID permutation against out-of-range renaming. This is attribution of ID shift versus content redundancy, not main-recipe selection or a replacement test. Use fresh development data and log every checkpoint outcome. No null-head repair is authorized from this observation alone.
