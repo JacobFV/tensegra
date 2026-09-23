@@ -15,7 +15,7 @@ ROLES = 4  # primitive, destination, ordered operand 0 and operand 1
 def make_episodes(count, seed=0, candidates=8, key_dim=16, condition='clean'):
     if key_dim < 3 or candidates + 3 > 2**key_dim:
         raise ValueError('nonce capacity exceeded')
-    if candidates < 2 or condition not in ('clean','reorder','duplicate','contradiction','retract','partial','empty'):
+    if candidates < 2 or condition not in ('clean','reorder','duplicate','long_duplicate','contradiction','retract','partial','empty'):
         raise ValueError('invalid episode configuration')
     rng = random.Random(seed)
     episodes = []
@@ -36,7 +36,9 @@ def make_episodes(count, seed=0, candidates=8, key_dim=16, condition='clean'):
         roles = list(range(ROLES))
         if condition == 'reorder': rng.shuffle(roles)
         events = [(i, 1, role, records[gold][role]) for i,role in enumerate(roles)]
-        if condition == 'duplicate': events = [e for event in events for e in (event,event)]
+        if condition in ('duplicate','long_duplicate'):
+            repeats=2 if condition=='duplicate' else 8
+            events=[event for event in events for _ in range(repeats)]
         if condition in ('contradiction','retract'):
             wrong = (records[gold][0]+1)%5
             events.append((4,1,0,wrong))

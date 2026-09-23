@@ -85,7 +85,7 @@ plot are committed. No test split was inspected.
 
 Main configuration frozen after acquisition: same source/architecture and lr,
 1000 updates ×32 fresh episodes, paired seeds0/1/2, 512 validation and512 test per
-N8/N16 condition, all7 evidence controls. No further acquisition-driven tuning.
-All expected validation cells (42 per arm) must pass the root registry; every-frame
+N8/N16 condition, all8 evidence controls (including heldout 8-fold duplicate IDs). No further acquisition-driven tuning.
+All expected validation cells (48 per arm) must pass the root registry; every-frame
 calibration retained. Test cells cannot select settings. Runtime composition and
 readiness remain prohibited while any required belief gate fails.

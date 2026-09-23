@@ -3,7 +3,7 @@ from topoformer.belief_state import make_episodes,collate,BeliefModel,loss,oracl
 
 
 def test_oracle_conditions():
-    for condition in ('clean','reorder','duplicate','contradiction','retract','partial','empty'):
+    for condition in ('clean','reorder','duplicate','long_duplicate','contradiction','retract','partial','empty'):
         b=collate(make_episodes(5,condition=condition))
         assert torch.equal(oracle(b['public']),b['targets']['posterior'])
 
