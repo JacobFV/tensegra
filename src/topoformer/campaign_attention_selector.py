@@ -84,13 +84,38 @@ def swap_instruction(batch):
     return replace(batch,instructions=instruction)
 
 
+def corrupt(batch,kind,seed):
+    """A05 regular-degree controls; caller retains clean targets.
+
+    Source-row shuffling preserves both degree sequences and local code coverage.
+    Correspondence conjugation permutes only nodes with the same public code.
+    """
+    a=batch.adjacency;b,relations,n,_=a.shape
+    g=torch.Generator(device=a.device).manual_seed(seed)
+    if kind=='wrong':
+        order=torch.rand(b,relations,n,generator=g,device=a.device).argsort(-1)
+        changed=a.gather(2,order[...,None].expand(-1,-1,-1,n))
+    elif kind=='identity':
+        # Grouping uses complete public vectors, not privileged group labels.
+        _,group=torch.unique(batch.attributes.reshape(b*n,-1),dim=0,return_inverse=True)
+        members=group.reshape(b,n).argsort(-1).reshape(b,batch.degree,n//batch.degree)
+        order_inside=torch.rand(members.shape,generator=g,device=a.device).argsort(-1)
+        shuffled=members.gather(-1,order_inside)
+        order=torch.empty(b,n,dtype=torch.long,device=a.device)
+        order.scatter_(1,members.reshape(b,n),shuffled.reshape(b,n))
+        changed=a.gather(2,order[:,None,:,None].expand(-1,relations,-1,n)).gather(3,order[:,None,None,:].expand(-1,relations,n,-1))
+    elif kind=='clean':return batch
+    else:raise ValueError(kind)
+    return replace(batch,adjacency=changed)
+
+
 class SelectorModel(RoutingModel):
     def __init__(self,width=1024,key_dim=64,classes=16,heads=8,strength=8.):
         super().__init__(width,key_dim,classes,heads,strength)
         self.attribute_encoder=nn.Linear(key_dim,width,bias=False)
         self.selector_log_scale=nn.Parameter(torch.tensor(math.log(8.)))
 
-    def forward(self,batch,mode='soft',*,zero_strength=False,zero_content=False):
+    def forward(self,batch,mode='soft',*,zero_strength=False,zero_content=False,selector_scale_override=None):
         if mode not in {'soft','hard','context','none'}:raise ValueError(mode)
         h=self.embed(batch.values);b,n,w=h.shape;bi=torch.arange(b,device=h.device)
         attributes=batch.attributes
@@ -106,7 +131,8 @@ class SelectorModel(RoutingModel):
             relation=batch.relations[:,t];a=batch.adjacency[bi,relation]
             q=self.q(self.attribute_encoder(batch.instructions[:,t])).reshape(b,self.heads,1,w//self.heads)
             q=F.normalize(q,dim=-1)
-            score=(q@k.transpose(-1,-2))*self.selector_log_scale.exp().clamp(max=64)
+            scale=self.selector_log_scale.exp().clamp(max=64) if selector_scale_override is None else float(selector_scale_override)
+            score=(q@k.transpose(-1,-2))*scale
             score=score.expand(-1,-1,n,-1)
             if zero_content:score=torch.zeros_like(score)
             if mode=='soft' and not zero_strength:score=score+self.strength[relation,:,None,None]*a[:,None]
@@ -139,4 +165,6 @@ def metrics(output,gold,batch):
     selected_mass=output['weights'].gather(-1,selected[...,None]).squeeze(-1)
     return dict(task=correct[:,-1].gather(1,batch.starts[:,None]).squeeze(1),all_node=correct.float().mean((1,2)),
                 suffix_value_trajectory=correct.all((1,2)),exact_pointer_path=path,
-                selected_mass=selected_mass.mean((1,2)),edge_mass=output['edge_mass'].mean((1,2)))
+                selected_mass=selected_mass.mean((1,2)),
+                edge_mass=(output['weights']*batch.adjacency[bi[:,None],batch.relations.flip(1)]).sum(-1).mean((1,2)),
+                supplied_edge_mass=output['edge_mass'].mean((1,2)))
