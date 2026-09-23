@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import resource
 from pathlib import Path
 import time
 import torch
@@ -61,7 +62,7 @@ def run(config, output):
     device=config.get('device','cuda'); started=time.monotonic(); records=[]; metadata={}
     if len({spec[0] for spec in config['splits'].values()}) != len(config['splits']): raise ValueError('split seeds overlap')
     source={name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest() for name in ('return_diagnostics_probe.py','return_memory.py','retention_data.py','thinking.py')}
-    manifest=dict(config=config,source=source,runs=[])
+    manifest=dict(config=config,config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),source=source,runs=[],environment=dict(torch=torch.__version__,cuda=torch.version.cuda,device=torch.cuda.get_device_name(),device_capacity=torch.cuda.get_device_properties(0).total_memory))
     for seed in config['seeds']:
       for encoding in config['encodings']:
        for availability in config['availability']:
@@ -108,7 +109,7 @@ def run(config, output):
                 pred=raw.argmax(-1) if family=='categorical_ridge' else raw[:,0].round().long().clamp(0,32)
                 records.append(dict(run=name,split=split,boundary=boundary,family=family,alpha=alpha,selection=selection,metrics=metrics(pred,targets),predictions=pred.tolist(),targets=targets.tolist()))
         torch.cuda.synchronize()
-        manifest['runs'].append(dict(run=name,checkpoint_sha256=checkpoint_sha,event_hashes=split_hashes,seconds=time.monotonic()-run_start,peak_cuda_allocated=torch.cuda.max_memory_allocated(),parameters=sum(p.numel() for p in model.parameters()),width=1024))
+        manifest['runs'].append(dict(run=name,checkpoint_sha256=checkpoint_sha,event_hashes=split_hashes,seconds=time.monotonic()-run_start,peak_cuda_allocated=torch.cuda.max_memory_allocated(),parameters=sum(p.numel() for p in model.parameters()),width=1024,process_peak_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,optimizer_presentations=0,probe_training_examples=config['splits']['train'][1]))
         (output/'events.json').write_text(json.dumps(metadata,separators=(',',':')))
         (output/'manifest.json').write_text(json.dumps(manifest,indent=2));(output/'predictions.json').write_text(json.dumps(records,separators=(',',':')))
         print(name,manifest['runs'][-1]['seconds'],flush=True)
