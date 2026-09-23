@@ -36,3 +36,11 @@ No successful diagnostic authorizes autonomous composition, supervision withdraw
 - None of A/B/C is a direct intervention on programmable QK geometry. Prior topology experiments retain their own scope; these studies neither replace nor invalidate them.
 
 Independent raw-metric/provenance review, full regression tests and historical-byte verification precede merge/push. Use research/stages/stage-10, research/results/stage10 and research/tools only. Keep all failures and selection decisions.
+
+## Profiled releases
+
+Semantic profile:30 warm updates in0.566 training seconds/1.311 wall seconds; main was frozen at1200 updates ×3 seeds with five-minute cap. Completed in49.83 wall seconds; no added semantic experiment follows its restricted pass.
+
+Belief development/profile total61.63 seconds. Both repair arms passed the registered64-event clean acquisition check; main freeze requires the separate final development check and exact ledger-only renaming test. The complete nine-run evaluation is estimated16–20 minutes, inside the45-minute track cap. It follows return capture in the serialized queue.
+
+Return profile:1.768 seconds,447MB peak CUDA allocation and1.60GB RSS. Source33e48f4 approved for the unchanged three-backbone seven-by-seven matrix and matched-row shared decoder; estimate2–3 minutes, hard five-minute run cap. All fitting and selection policies were declared before untouched test evaluation.
