@@ -290,3 +290,31 @@ See the [Stage 5 methods](.development/stage5-methods.md),
 [report](.development/stage5-report.md) for supervision boundaries, controls,
 confidence accounting and the distinction between interpreter support and
 what the neural benchmark measures.
+
+## Recurrent workspace and local runtime execution
+
+Stage 6 adds a four-phase recurrent workspace, candidate-specific typed lowering
+and readiness, adaptive emission, and protected persistent arithmetic registers.
+Typed runtime returns re-enter the workspace before further computation. Candidate
+routes may overlap; workspace rows are features, not discrete thought identities.
+
+Two experiments isolate different interfaces: a controlled progressive-evidence
+runtime task, and semantic decoding from multiple surfaces of a pinned TCN language
+generator. Hidden graphs and traces are supervision targets, not actor inputs.
+The language decoder does not yet drive the runtime end to end.
+
+```sh
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
+  .venv/bin/python -m topoformer.thinking_study \
+  --config configs/stage6-smoke.json --output results/thinking-smoke
+
+OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
+  .venv/bin/python -m topoformer.thinking_language \
+  --config configs/stage6-language-pilot.json
+```
+
+The full paired budgets are in `configs/stage6.json` and
+`configs/stage6-language.json`. Read the [Stage 6 report](.development/stage6-report.md)
+and [methods](.development/stage6-methods.md) for experiment status, supervision
+boundaries, negative findings, and the distinction between learned behavior and
+supplied exact semantics. Earlier stages remain independently reproducible.
