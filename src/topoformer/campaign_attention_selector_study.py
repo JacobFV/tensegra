@@ -31,7 +31,7 @@ def evaluate(model,cfg,out,step,device):
             if str(device).startswith('cuda'):
                 t0=torch.cuda.Event(enable_timing=True);t1=torch.cuda.Event(enable_timing=True);t0.record()
             else:t0=time.monotonic()
-            result=model(given,cfg['mode'],zero_strength=c.get('zero_strength',False),zero_content=c.get('zero_content',False),selector_scale_override=c.get('selector_scale_override'))
+            result=model(given,cfg['mode'],zero_strength=c.get('zero_strength',False),zero_content=c.get('zero_content',False),selector_scale_override=c.get('selector_scale_override'),context_scale_override=c.get('context_scale_override'))
             if str(device).startswith('cuda'):t1.record();timers.append((t0,t1))
             else:elapsed+=time.monotonic()-t0
             if order is not None:result=restore_node_order(result,order)
@@ -79,6 +79,11 @@ def run(cfg,out):
     write(out/'source.json',{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sources})
     device=cfg.get('device','cuda');torch.set_num_threads(2);torch.manual_seed(cfg['seed'])
     model=SelectorModel(width=cfg.get('width',1024),strength=cfg.get('strength',8)).to(device)
+    if cfg.get('checkpoint'):
+        checkpoint=Path(cfg['checkpoint'])
+        if hashlib.sha256(checkpoint.read_bytes()).hexdigest()!=cfg['checkpoint_sha256']:
+            raise ValueError('Frozen checkpoint hash mismatch')
+        model.load_state_dict(torch.load(checkpoint,map_location=device,weights_only=True))
     initial=hashlib.sha256(b''.join(t.detach().cpu().numpy().tobytes() for t in model.state_dict().values())).hexdigest()
     optimizer=torch.optim.AdamW(model.parameters(),lr=cfg.get('lr',.0003),weight_decay=1e-4)
     start=time.monotonic();curves=[];losses=[];draws=0;node_steps=0
@@ -98,8 +103,11 @@ def run(cfg,out):
     torch.save(model.state_dict(),out/'checkpoint.pt');sync(device)
     manifest=dict(seed=cfg['seed'],mode=cfg['mode'],width=cfg.get('width',1024),parameters_allocated=sum(p.numel() for p in model.parameters()),
         initial_tensor_sha256=initial,config_sha256=hashlib.sha256(json.dumps(cfg,sort_keys=True).encode()).hexdigest(),
-        checkpoint_sha256=hashlib.sha256((out/'checkpoint.pt').read_bytes()).hexdigest(),presentations=draws,generated_graph_draws=draws,unique_canonical_graphs=None,node_microsteps=node_steps,
-        curves=curves,losses=torch.stack(losses).cpu().tolist(),wall_seconds_including_eval_export=time.monotonic()-start,
+        checkpoint_sha256=hashlib.sha256((out/'checkpoint.pt').read_bytes()).hexdigest(),
+        frozen_input_checkpoint_sha256=cfg.get('checkpoint_sha256'),
+        final_tensor_sha256=hashlib.sha256(b''.join(t.detach().cpu().numpy().tobytes() for t in model.state_dict().values())).hexdigest(),
+        presentations=draws,generated_graph_draws=draws,unique_canonical_graphs=None,node_microsteps=node_steps,
+        curves=curves,losses=torch.stack(losses).cpu().tolist() if losses else [],wall_seconds_including_eval_export=time.monotonic()-start,
         cuda_peak_allocated_bytes=torch.cuda.max_memory_allocated() if str(device).startswith('cuda') else 0,process_peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
         learned_strength=model.strength.detach().cpu().tolist(),selector_scale=float(model.selector_log_scale.exp().detach()),
         parameters_with_gradient=sum(p.numel() for p in model.parameters() if p.grad is not None),

@@ -1,0 +1,51 @@
+{
+  "seed": 501,
+  "width": 1024,
+  "steps": 0,
+  "batch": 16,
+  "nodes": 32,
+  "groups": 4,
+  "lr": 0.0003,
+  "strength": 8,
+  "train_seed": 91000000,
+  "eval_seed": 102000000,
+  "eval_examples": 512,
+  "eval_batch": 64,
+  "checkpoints": [
+    0
+  ],
+  "conditions": [
+    {
+      "nodes": 128,
+      "depth": 32,
+      "groups": 8,
+      "data_group": 0
+    },
+    {
+      "nodes": 128,
+      "depth": 32,
+      "groups": 8,
+      "data_group": 0,
+      "selector_scale_override": 16.0
+    },
+    {
+      "nodes": 128,
+      "depth": 32,
+      "groups": 8,
+      "data_group": 0,
+      "context_scale_override": 16.0
+    },
+    {
+      "nodes": 128,
+      "depth": 32,
+      "groups": 8,
+      "data_group": 0,
+      "selector_scale_override": 16.0,
+      "context_scale_override": 16.0
+    }
+  ],
+  "mode": "context",
+  "generator": "block_permutation_v2",
+  "checkpoint": "/home/brandonin/topoformer-campaign01/attention/a05-v2/context/checkpoint.pt",
+  "checkpoint_sha256": "0fc8976545d14b302c6a55e36c10d7b351daf8e9a0f75249a2ec09235642d5ab"
+}

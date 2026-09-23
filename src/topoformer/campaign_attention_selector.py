@@ -125,14 +125,15 @@ class SelectorModel(RoutingModel):
         self.attribute_encoder=nn.Linear(key_dim,width,bias=False)
         self.selector_log_scale=nn.Parameter(torch.tensor(math.log(8.)))
 
-    def forward(self,batch,mode='soft',*,zero_strength=False,zero_content=False,selector_scale_override=None):
+    def forward(self,batch,mode='soft',*,zero_strength=False,zero_content=False,selector_scale_override=None,context_scale_override=None):
         if mode not in {'soft','hard','context','none'}:raise ValueError(mode)
         h=self.embed(batch.values);b,n,w=h.shape;bi=torch.arange(b,device=h.device)
         attributes=batch.attributes
         address_reads=None
         if mode=='context':
             q=F.normalize(self.context_q(batch.keys),dim=-1);k=F.normalize(self.context_k(batch.keys),dim=-1)
-            address_reads=(q@k.transpose(-1,-2)*self.context_log_scale.exp().clamp(max=64)).softmax(-1)
+            address_scale=self.context_log_scale.exp().clamp(max=64) if context_scale_override is None else float(context_scale_override)
+            address_reads=(q@k.transpose(-1,-2)*address_scale).softmax(-1)
             attributes=address_reads@attributes
         z=self.attribute_encoder(attributes)
         k=F.normalize(self.k(z).reshape(b,n,self.heads,w//self.heads).transpose(1,2),dim=-1)

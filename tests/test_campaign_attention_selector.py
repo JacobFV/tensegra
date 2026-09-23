@@ -122,3 +122,18 @@ def test_balanced_generator_preserves_identity_cardinality():
         for t in range(32):
             p=successor[0,t,p]
             assert len(torch.unique(p))==8
+
+def test_context_override_and_frozen_inference(tmp_path):
+    import hashlib,json
+    from topoformer.campaign_attention_selector_study import run
+    b=generate(2,16,2,seed=7,balanced=True);m=SelectorModel(width=32)
+    before={k:v.clone() for k,v in m.state_dict().items()}
+    m(b,'context',selector_scale_override=16,context_scale_override=16)
+    assert all(torch.equal(v,m.state_dict()[k]) for k,v in before.items())
+    checkpoint=tmp_path/'frozen.pt';torch.save(before,checkpoint)
+    cfg=dict(seed=991,width=32,steps=0,batch=2,nodes=16,generator='block_permutation_v2',groups=4,train_seed=1,eval_seed=400,
+             eval_examples=4,eval_batch=4,checkpoints=[0],mode='context',device='cpu',conditions=[dict(nodes=16,depth=2,context_scale_override=16)],
+             checkpoint=str(checkpoint),checkpoint_sha256=hashlib.sha256(checkpoint.read_bytes()).hexdigest())
+    out=tmp_path/'frozen-run';run(cfg,out);manifest=json.loads((out/'manifest.json').read_text())
+    assert manifest['initial_tensor_sha256']==manifest['final_tensor_sha256']
+    assert manifest['presentations']==0 and manifest['losses']==[]
