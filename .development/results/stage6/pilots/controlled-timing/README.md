@@ -1,0 +1,11 @@
+# Controlled timing pilot
+
+Frozen producer `4c36557`; analyzer `44d6f59` ran from `/tmp` without modifying the remote checkout. This is a one-seed timing/wiring run: local and neural_recurrent, eight updates, batch four, width 32, depth 1–2 training with 12 microsteps, and two depth-2 evaluation examples with an 80-step cap. Thirty raw rows contain 16 training updates and 14 evaluations, including separately reported privileged oracle and frozen intervention rows. Checkpoint binaries remain remote; their measured hashes are in the summary.
+
+Training took 4.663 seconds for local (0.583 s/update) and 4.512 seconds for neural_recurrent (0.564 s/update). Evaluation took 4.045 seconds for local, including full-unroll oracles and interventions, and 0.256 seconds for neural_recurrent. Recorded function timings total 13.477 seconds and exclude startup, model construction, serialization and checkpoint writes. These same-size measurements inform a compute budget, not a performance conclusion.
+
+Main autonomous task accuracy is zero for both arms at the final checkpoint; learned microstep means are 2.5 local and 2.0 neural_recurrent. Privileged gold-trace/full-unroll evaluation reaches exact semantic result, semantic decision and trajectory accuracy 1.0, while learned task output remains zero. Oracle rows are separate in `privileged_oracles`, and do not establish learned execution. One seed has undefined between-seed SD (`null`).
+
+The local actor sees progressive disclosures and exogenous context; the neural control sees complete public input from the start. `matched_observation_protocol=false` makes this distinction explicit in paired comparisons. Training uses survival-weighted task cross-entropy; this source predates the main-study hard-maximum prior correction and evaluation-economy changes. It is not the final controlled study.
+
+Validation: source manifest and per-file source hashes match the frozen checkout, controlled data/init pairing checks pass, core evaluation coverage is complete, and the decompressed archived JSONL matches the analyzed input SHA256. Standalone figures were produced remotely and the readiness-risk figure was visually inspected. The archive contains config, original manifest, compressed raw rows, summary, timing breakdown and figures. No training was launched during analysis.
