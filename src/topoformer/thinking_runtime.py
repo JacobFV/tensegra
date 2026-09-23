@@ -140,6 +140,23 @@ class ProtectedSession:
         Malformed API containers raise before any mutation. Well-shaped but
         invalid operations return refusals. The method never checks a gold action.
         """
+        return self._execute(proposals, threshold, None)
+
+    def execute_learned(self, proposals: Iterable[Candidate],
+                        value_overrides: Mapping[str, Scalar],
+                        threshold: float = .5) -> tuple[ReturnEvent, ...]:
+        """Explicit learned-transition control, with no exact-result fallback.
+
+        Predictions supply values only. Identity, availability, arity, output
+        type, bounds, snapshot isolation and idempotence remain protected.
+        """
+        if not isinstance(value_overrides, Mapping):
+            raise TypeError('value_overrides must map candidate identities to predicted scalars')
+        return self._execute(proposals, threshold, dict(value_overrides))
+
+    def _execute(self, proposals: Iterable[Candidate], threshold: float,
+                 value_overrides: Mapping[str, Scalar] | None) -> tuple[ReturnEvent, ...]:
+        learned = value_overrides is not None
         if type(threshold) not in (int, float) or not math.isfinite(threshold) or not 0 <= threshold <= 1:
             raise ValueError('threshold must be finite in [0,1]')
         candidates = tuple(proposals)
@@ -153,7 +170,7 @@ class ProtectedSession:
         returned = []
         for c in candidates:
             event = ReturnEvent(c.id, c.primitive, c.arguments)
-            signature = (c.primitive, c.arguments)
+            signature = (c.primitive, c.arguments, learned)
             previous = self._completed.get(c.id) or pending.get(c.id)
             if len(signatures[c.id]) > 1 or (previous is not None and previous[0] != signature):
                 returned.append(replace(event, status='conflict', reason='candidate identity has incompatible proposals'))
@@ -179,22 +196,35 @@ class ProtectedSession:
             if any(arg is None or arg.type not in ('integer', 'float') for arg in args):
                 returned.append(replace(event, reason='argument unavailable or not numeric'))
                 continue
-            values = [arg.value for arg in args]
-            try:
-                if c.primitive == 'add': value = values[0] + values[1]
-                elif c.primitive == 'sub': value = values[0] - values[1]
-                elif c.primitive == 'mul': value = values[0] * values[1]
-                elif c.primitive == 'neg': value = -values[0]
-                else: value = values[0] < values[1]
-            except (OverflowError, ArithmeticError):
-                returned.append(replace(event, reason='numeric overflow'))
-                continue
+            if learned:
+                if c.id not in value_overrides:
+                    returned.append(replace(event, reason='missing learned value prediction'))
+                    continue
+                value = value_overrides[c.id]
+                expected_type = (bool if c.primitive == 'compare' else
+                                 float if any(arg.type == 'float' for arg in args) else int)
+                if type(value) is not expected_type:
+                    returned.append(replace(event, reason='learned prediction has incorrect output type'))
+                    continue
+            else:
+                values = [arg.value for arg in args]
+                try:
+                    if c.primitive == 'add': value = values[0] + values[1]
+                    elif c.primitive == 'sub': value = values[0] - values[1]
+                    elif c.primitive == 'mul': value = values[0] * values[1]
+                    elif c.primitive == 'neg': value = -values[0]
+                    else: value = values[0] < values[1]
+                except (OverflowError, ArithmeticError):
+                    returned.append(replace(event, reason='numeric overflow'))
+                    continue
             if not self._valid_value(value):
                 returned.append(replace(event, reason='result exceeds finite numeric bound'))
                 continue
             # Ordered unique ancestors plus transition identity; argument order
             # itself is always retained, including repeated arguments.
             provenance = tuple(dict.fromkeys(p for arg in args for p in (arg.provenance or (arg.id,)))) + ('candidate:' + c.id,)
+            if learned:
+                provenance += ('learned_transition:' + c.id,)
             event = replace(event, value=value, type=_scalar_type(value), register_id=result_id,
                             provenance=provenance, status='executed', affected=(result_id,))
             pending[c.id] = (signature, event)

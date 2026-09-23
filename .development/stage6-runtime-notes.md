@@ -24,3 +24,11 @@ The operation is an append-only register transition, not a general graph rewrite
 ## Verification
 
 Twelve focused stdlib tests pass locally using an import-only package stub to bypass the package's unrelated Torch import (Torch is unavailable locally). Tests cover order, types, persistent returns, candidate-local readiness, snapshot availability, multiple independent/shared-read operations, duplicate/conflict stability, rejected-write atomicity, malformed-batch atomicity, immutable interfaces, bounded/nonfinite values, schema adapters, and output namespace protection. Full Torch-enabled regression remains the coordinator's remote verification responsibility.
+
+## Explicit learned-transition control
+
+`execute_learned(proposals, value_overrides, threshold=.5)` is a separately named experimental control; `execute` remains exact with unchanged output semantics. Overrides map candidate IDs to Python scalar predictions. This path never performs primitive arithmetic or comparison to compute an expected answer. It infers only the schema output type: compare requires `bool`; arithmetic requires `float` if any operand is float, otherwise `int`. A mathematically wrong bounded prediction is accepted. Missing predictions for new transitions, mismatched scalar types, nonfinite values and out-of-bound predictions refuse without writing; there is no exact fallback.
+
+Availability, arity, primitive identity, readiness, snapshot semantics, result IDs and all protected memory checks are shared. Learned result provenance additionally contains `learned_transition:<candidate.id>`. Transition mode is part of the committed identity: an exact call cannot silently replay a learned result or vice versa. Identical learned retries return the committed event regardless of a new prediction, maintaining immutable idempotence. Incompatible operations still conflict symmetrically. The learned path is the sole explicit experimental exception to exact scalar computation, rather than an arbitrary workspace-to-register write API.
+
+Five added tests (17 total passing locally) verify unchanged exact event contents, acceptance of incorrect arithmetic, no exact overflow validity oracle, missing/invalid value atomic rejection, float/boolean output typing, simultaneous learned proposals, stable duplicate retries and cross-mode conflicts. No training was run for this change.

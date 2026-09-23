@@ -93,10 +93,6 @@ class ProtectedSessionTests(unittest.TestCase):
         self.assertEqual(e.status, 'conflict')
         self.assertEqual(s.registers['result:x'].value, 9)
 
-
-if __name__ == '__main__':
-    unittest.main()
-
 class BoundaryTests(unittest.TestCase):
     def test_malformed_batch_is_atomic(self):
         s = ProtectedSession((ValueRegister('a', 2, 'integer'),))
@@ -118,3 +114,53 @@ class BoundaryTests(unittest.TestCase):
         for value, kind in ((float('nan'), 'float'), (float('inf'), 'float'), ([], 'integer'), (10**1000, 'integer')):
             with self.assertRaises(ValueError):
                 ProtectedSession((ValueRegister('a', value, kind),))
+
+class LearnedTransitionTests(unittest.TestCase):
+    def session(self):
+        return ProtectedSession((ValueRegister('a', 7, 'integer'), ValueRegister('b', 3, 'integer')))
+
+    def test_explicit_wrong_arithmetic_is_accepted_and_exact_unchanged(self):
+        c = Candidate('x', 'add', ('a', 'b'))
+        exact = self.session().execute((c,))[0]
+        learned = self.session().execute_learned((c,), {'x': -99})[0]
+        self.assertEqual((exact.value, exact.provenance), (10, ('a', 'b', 'candidate:x')))
+        self.assertEqual((learned.status, learned.value, learned.type), ('executed', -99, 'integer'))
+        self.assertIn('learned_transition:x', learned.provenance)
+        self.assertEqual((exact.arguments, exact.register_id), (learned.arguments, learned.register_id))
+
+    def test_missing_invalid_and_nonfinite_override_reject_without_fallback(self):
+        c = Candidate('x', 'add', ('a', 'b'))
+        for overrides in ({}, {'x': True}, {'x': 1.5}, {'x': float('nan')}, {'x': 10**20}, {'x': []}):
+            s = self.session()
+            e = s.execute_learned((c,), overrides)[0]
+            self.assertEqual(e.status, 'rejected')
+            self.assertEqual(tuple(s.registers), ('a', 'b'))
+            self.assertEqual(s.events, ())
+
+    def test_simultaneous_duplicates_and_mode_conflicts(self):
+        s = self.session()
+        a, b = Candidate('x', 'add', ('a', 'b')), Candidate('y', 'sub', ('a', 'b'))
+        events = s.execute_learned((a, b, a), {'x': 20, 'y': 30})
+        self.assertEqual([e.status for e in events], ['executed', 'executed', 'duplicate'])
+        self.assertEqual(s.execute_learned((a,), {'x': 99})[0].value, 20)
+        self.assertEqual(len(s.events), 2)
+        self.assertEqual(s.execute((a,))[0].status, 'conflict')
+        fresh = self.session()
+        self.assertEqual([e.status for e in fresh.execute_learned((a, Candidate('x', 'mul', ('a', 'b'))), {'x': 3})], ['conflict', 'conflict'])
+        self.assertEqual(len(fresh.registers), 2)
+
+    def test_expected_float_and_comparison_types(self):
+        for primitive, override, expected in (('add', 5.0, 'executed'), ('add', 5, 'rejected'), ('compare', False, 'executed'), ('compare', 0, 'rejected')):
+            s = ProtectedSession((ValueRegister('a', 7.0, 'float'), ValueRegister('b', 3, 'integer')))
+            self.assertEqual(s.execute_learned((Candidate('x', primitive, ('a', 'b')),), {'x': override})[0].status, expected)
+
+    def test_no_exact_overflow_check_in_learned_path(self):
+        # Exact product exceeds the bound; learned transition still accepts its
+        # own bounded prediction. The exact result cannot act as a validity oracle.
+        s = ProtectedSession((ValueRegister('a', 100, 'integer'),), max_abs_value=100)
+        c = Candidate('x', 'mul', ('a', 'a'))
+        self.assertEqual(s.execute_learned((c,), {'x': 1})[0].value, 1)
+
+
+if __name__ == '__main__':
+    unittest.main()
