@@ -27,3 +27,9 @@ Primary development question is IID acquisition; secondary is retained task/path
 Before the screen, profile fresh mechanical seed599 for12updates and64 largest-conditionN128/D32/K8 examples. No profile outcome selects architecture or data. Root must release the GPU. Proposed profile cap60seconds. Use its measured cost to declare the four-arm development envelope before launch; preliminary cap300seconds. The preceding A04 four-arm1000-update study cost63.01seconds, but the new long-path evaluation adds work and must be measured.
 
 After this exploratory screen, register a fresh three-seed confirmation only for informative acquired behavior. The superseded A05 confirmation seeds/data remain uninspected; they are not reported as failed model runs. Keep trained horizon1–4, tested32, public inputs, privileged suffix labels, exact guarantees, learned matching and statistical limits separate.
+
+## Measured profile / declared main allocation
+
+Source53bf204 profile completed3.76seconds full process occupancy (1.741seconds inside runner). The largest64-case N128/D32/K8 forward took.2381seconds. Peak CUDA allocation704,211,968bytes and process RSS2,132,044KiB. This is a mechanical resource fixture, not an acquisition result.
+
+The two added deep conditions across eight256-case monitoring checkpoints add roughly61seconds of forward work over the four-arm A04 study; generation, scoring and exports add overhead. Project the complete v2 screen at130–180seconds, retain the300second full-controller ceiling and preserve all partial artifacts if reached. No source/configuration change is selected from profile task outcomes. Root must release development separately.
