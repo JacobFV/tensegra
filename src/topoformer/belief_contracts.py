@@ -10,7 +10,7 @@ from torch import nn
 from .belief_state import make_episodes
 
 ORIGINAL_CONDITIONS=('clean','reorder','duplicate','long_duplicate','contradiction','retract','partial','empty')
-NEW_CONDITIONS=('full_retract','distinct_equal','candidate_permutation','id_rename')
+NEW_CONDITIONS=('full_retract','distinct_equal','candidate_permutation','id_rename','distinct_equal_seen_id','distinct_equal_unseen_id','id_permute_seen')
 
 def empty_ledger_frames(public):
     ids=public['ids'].tolist(); actions=public['actions'].tolist(); frames=public['frames'].tolist()
@@ -46,6 +46,12 @@ def contract_episodes(count,seed,candidates=8,condition='clean'):
             ep['events'] += [(i,-1,r,v) for i,a,r,v in reversed(ep['events'][1:])]
         elif condition=='distinct_equal':
             ep['events']=[ep['events'][0]]+[x for i,a,r,v in ep['events'][1:] for x in [(i,a,r,v),(i+100,a,r,v)]]
+        elif condition in ('distinct_equal_seen_id','distinct_equal_unseen_id'):
+            _,a,r,v=ep['events'][1]
+            ep['events'].insert(2,(4 if condition=='distinct_equal_seen_id' else 100,a,r,v))
+        elif condition=='id_permute_seen':
+            ids=random.Random(seed+idx+654).sample(range(4),4)
+            ep['events']=[(ids[i] if i>=0 else i,a,r,v) for i,a,r,v in ep['events']]
         elif condition=='candidate_permutation':
             random.Random(seed+idx+987).shuffle(ep['records'])
         else:

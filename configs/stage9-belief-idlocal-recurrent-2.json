@@ -1,0 +1,22 @@
+{
+  "mode": "recurrent",
+  "seed": 2,
+  "device": "cuda",
+  "checkpoint": "~/topoformer-stage8-artifacts/beliefs/idmatched/recurrent-2/model.pt",
+  "steps": 0,
+  "eval_count": 512,
+  "chunk": 32,
+  "eval_candidates": [
+    8
+  ],
+  "conditions": [
+    "clean",
+    "distinct_equal_seen_id",
+    "distinct_equal_unseen_id",
+    "id_permute_seen"
+  ],
+  "split_seeds": {
+    "development": 9300000
+  },
+  "study": "post_registered_identity_shift_localization"
+}

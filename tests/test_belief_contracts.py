@@ -27,3 +27,12 @@ def test_distinct_same_content_is_not_idempotent_ledger():
 def test_public_ledger_noops_padding_first_write_and_absent_retraction():
     p=dict(ids=torch.tensor([[-1,7,7,9,7,3]]),actions=torch.tensor([[0,1,1,-1,-1,1]]),frames=torch.tensor([[1,1,1,1,1,0]],dtype=torch.bool))
     assert empty_ledger_frames(p).tolist()==[[True,False,False,False,True,True]]
+
+def test_localization_seen_and_unseen_id_have_identical_content_and_targets():
+    a=contract_episodes(4,88,condition='distinct_equal_seen_id');b=contract_episodes(4,88,condition='distinct_equal_unseen_id')
+    for x,y in zip(a,b):
+        assert x['posterior']==y['posterior']
+        assert [e[1:] for e in x['events']]==[e[1:] for e in y['events']]
+        assert x['events'][2][0]==4 and y['events'][2][0]==100
+    c=collate(contract_episodes(4,88,condition='id_permute_seen'))
+    assert torch.equal(oracle(c['public']),c['targets']['posterior'])
