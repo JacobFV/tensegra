@@ -26,6 +26,8 @@ The successful 20-update profile estimated 16–18 minutes for the prescribed ma
 
 The restricted acquisition gate requires all three final checkpoints to decode all eight complete canonical graphs correctly. Component F1 or training loss cannot substitute. Any successful fixed-set result permits only a separately declared frozen-actor fresh-construction evaluation. It does not authorize broader training, runtime composition, or supervision withdrawal.
 
+![Fixed-set learning curves and separate fresh-construction component scores](../../results/stage11/semantic-text/acquisition-transfer.svg)
+
 ## Observed acquisition
 
 | Seed | Exact graphs at 0 / 125 / 250 / 1000 updates | At 2000 | Final 4000 | Training seconds | Run wall seconds |
