@@ -29,3 +29,9 @@ Both original dense-evaluation and sampled-training edge formulas are preserved 
 Profile config is32 updates on8 TRAIN/8 development records, explicitly mechanical; the main config remains128/512 and4,800updates. The profile's shortened schedule is a disclosed reset, while main inherits the original128-example schedule and RNG states. A separate launcher prevents changes to the frozen S01 launcher. No lifecycle, slot, node encoder, inference schema mask, or threshold-policy change is introduced.
 
 The frozen config pins the expected parent checkpoint SHA256 and the runner verifies it before loading. Gradient clipping now acts only on the edge-head gradients, whereas joint training clipped the combined backbone/other-head norm. This is intentionally frozen-backbone optimization, not a claim of identical optimizer updates to a full-model continuation.
+
+## Measured profile and main budget request
+
+Profile source7844351 completed32updates on8TRAIN/8DEV: full external occupancy7.29668s, inner6.17339s, optimizer.39699s (firststep.18533s), capture.72106s. Actual public-forward/cache maximum logit error0.0 on both subsets; frozen nonedge parameter hashes unchanged. Trainable edge parameters1,836,800; actual node width1024. PeakCUDA allocated1,021,263,360bytes, processRSS2,704,520KiB. Profile outputs are mechanical and do not select a recipe.
+
+Conservative projection without removing firststep overhead is~60s for4,800headupdates; full640examplecapture, three TRAINcalibration/DEV evaluations, cache/checkpoint/raw serialization may add~60s. Therefore request180s full-occupancy cap, expected90–120s, before main launch. This updates only the measured compute reservation, not the declared exposure/config/checkpoints/selection. Coordinator authorization remains necessary. Profile artifacts live under research/results/campaign-01/semantics/s02-edge-profile.
