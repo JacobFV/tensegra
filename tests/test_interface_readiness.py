@@ -33,3 +33,13 @@ def test_calibrator_schema_mask_is_exact_and_trainable():
 def test_correlated_and_high_support_wrong_are_present():
     records = make_readiness(120, seed=8)
     assert any(not r['correct'] and min(r['factors'][:3]) > .97 and r['factors'][-1] == 1 for r in records)
+
+
+def test_calibrator_accepts_destination_factor_and_schema_position():
+    model = Calibrator(factor_count=6,schema_index=4)
+    x = torch.tensor([[.9,.9,.9,.9,0.,1.], [.9,.9,.9,.9,1.,1.]])
+    assert model(x)[0] == 0 and model(x)[1] > 0
+
+
+def test_threshold_groups_equal_scores_before_counting_precision():
+    assert select_threshold([.9,.9,.8],[True,False,True]) > 1

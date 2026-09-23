@@ -53,23 +53,31 @@ def make_readiness(groups, *, seed):
 
 
 class Calibrator(nn.Module):
-    def __init__(self):
+    def __init__(self, factor_count=5, schema_index=3):
         super().__init__()
-        self.linear = nn.Linear(6, 1)
+        self.schema_index = schema_index
+        self.linear = nn.Linear(factor_count+1, 1)
 
     def forward(self, factors):
         features = torch.cat((factors, factors.prod(-1, keepdim=True)), -1)
-        return self.linear(features).squeeze(-1).sigmoid() * factors[:, 3]
+        return self.linear(features).squeeze(-1).sigmoid() * factors[:, self.schema_index]
 
 
 def select_threshold(scores, truth, precision=.99):
     if len(scores) != len(truth) or not scores:
         raise ValueError('nonempty matching scores and labels required')
+    # Sweep complete equal-score groups so ties are never partially selected.
+    grouped = {}
+    for score, label in zip(scores, truth):
+        n, tp = grouped.get(score, (0,0))
+        grouped[score] = (n+1,tp+int(label))
+    selected = positive = 0
     eligible = []
-    for threshold in sorted(set(scores)):
-        m = readiness_metrics(scores, truth, threshold, bins=0)
-        if m['precision'] > precision:
-            eligible.append((m['true_positive'], -threshold, threshold))
+    for threshold in sorted(grouped, reverse=True):
+        n, tp = grouped[threshold]
+        selected += n; positive += tp
+        if positive/selected > precision:
+            eligible.append((positive,-threshold,threshold))
     return max(eligible)[2] if eligible else 1.000001
 
 

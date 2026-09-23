@@ -250,3 +250,122 @@ likelihood observations are supplied priors, not learned proposal discovery.
     torch.save(model.state_dict(),output/'progressive.pt')
     (output/'progressive.json').write_text(json.dumps(result,indent=2))
     return result
+
+
+def proposal_confidence_records(model, examples, *, condition, split):
+    """Confidence from frozen learned proposals, current/past public evidence only."""
+    batch = collate_proposals(examples,condition)
+    past = collate_proposals(examples,'missing')
+    with torch.no_grad():
+        current_out, past_out = model(batch),model(past)
+        operation_support, operation = current_out['primitive'].softmax(-1).max(-1)
+        pointer_support,pointers = current_out['pointers'].softmax(-1).max(-1)
+        old_operation = past_out['primitive'].argmax(-1)
+        old_pointers = past_out['pointers'].argmax(-1)
+    records = []
+    for i,example in enumerate(examples):
+        op,ptr = int(operation[i]),pointers[i].tolist()
+        unary = op == PRIMITIVES.index('neg')
+        boolean_keys = {example.keys[k] for k,t in enumerate(batch['register_types'][i,:len(example.keys)]) if int(t) == 1}
+        used = ptr[1:2] if unary else ptr[1:]
+        schema = all(example.keys[k] not in boolean_keys for k in used)
+        schema = schema and ((example.keys[ptr[0]] in boolean_keys) == (op == PRIMITIVES.index('compare')))
+        full = op == PRIMITIVES.index(example.primitive) and ptr[:2] == list(example.targets[:2]) and (example.primitive == 'neg' or ptr[2] == example.targets[2])
+        matches = [op == int(old_operation[i])] + [ptr[j] == int(old_pointers[i,j]) for j in range(2 if unary else 3)]
+        stability = sum(matches)/len(matches)
+        factors = [float(operation_support[i]),float(pointer_support[i,0]),float(pointer_support[i,1]),
+                   1. if unary else float(pointer_support[i,2]),float(schema),stability]
+        records.append({'condition':condition,'split':split,'index':i,'factors':factors,
+                        'primitive':op,'pointers':ptr,'target_primitive':PRIMITIVES.index(example.primitive),
+                        'target_pointers':list(example.targets),'schema':bool(schema),'full_correct':bool(full),
+                        'correct':bool(full and schema),'product_score':float(torch.tensor(factors).prod())})
+    return records
+
+
+def run_proposal_calibration(checkpoint_directory, output, config):
+    """Fresh calibration of actual learned candidate errors; no runtime action.
+
+Executable means private full ordered task correctness AND exact schema validity.
+A group comprises independent examples in deterministic shuffled groups of four.
+"""
+    checkpoint_directory,output = Path(checkpoint_directory),Path(output)
+    output.mkdir(parents=True,exist_ok=True)
+    base = json.loads((checkpoint_directory/'manifest.json').read_text())
+    torch.set_num_threads(2)
+    result = {'config':config,'config_hash':digest(config),'base_manifest_hash':digest(base),
+              'factor_order':['primitive','destination','operand1','operand2','schema','stability'],
+              'stability_history':'Past missing operation/argument evidence; current condition public evidence. No future observations.',
+              'executable_definition':'Full correct ordered proposal and exact schema valid',
+              'public_type_prior':'Exact immutable register type table supplied in every evidence frame; schema uses only this public table.',
+              'scope_limitation':'Calibration on prespecified missing/permuted mixture; independent examples grouped4, not competing hypotheses in one world.',
+              'source_hashes':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (Path(__file__),Path(__file__).with_name('interface_readiness.py'),Path(__file__).with_name('interface_proposals.py'))},
+              'seeds':{}}
+    for seed in config['seeds']:
+        torch.manual_seed(seed+810000)
+        model = ProposalModel(hidden=base['config']['hidden'])
+        checkpoint = checkpoint_directory/f'seed{seed}-proposal.pt'
+        model.load_state_dict(torch.load(checkpoint,weights_only=True))
+        model.eval()
+        datasets = {}
+        for part_index,part in enumerate(('calibration','validation','test')):
+            rows = []
+            for split_index,split in enumerate(('iid','ood')):
+                data = make_proposals(config['examples'],seed=810000+seed*10000+part_index*100+split_index,split=split)
+                for condition in ('complete','missing','permuted'):
+                    rows.extend(proposal_confidence_records(model,data,condition=condition,split=split))
+            random.Random(seed*100+part_index).shuffle(rows)
+            for index,row in enumerate(rows): row['group'] = index//4
+            groups = {}
+            for row in rows: groups.setdefault(row['group'],[]).append(row)
+            for row in rows:
+                n = sum(r['correct'] for r in groups[row['group']])
+                row['group_kind'] = 'zero_ready' if n == 0 else 'multiple_ready' if n>1 else 'mixed'
+            datasets[part] = rows
+        calibrator = Calibrator(factor_count=6,schema_index=4)
+        initial = state_hash(calibrator)
+        optimizer = torch.optim.Adam(calibrator.parameters(),lr=config.get('lr',.03))
+        x = torch.tensor([r['factors'] for r in datasets['calibration']])
+        y = torch.tensor([float(r['correct']) for r in datasets['calibration']])
+        curves = []
+        for step in range(config['steps']+1):
+            probs = calibrator(x)
+            loss = nn.functional.binary_cross_entropy(probs.clamp(1e-6,1-1e-6),y)
+            if step % 100 == 0 or step == config['steps']:
+                curves.append({'step':step,'calibration_bce':float(loss.detach())})
+            if step < config['steps']:
+                optimizer.zero_grad();loss.backward();optimizer.step()
+        scores = {}
+        with torch.no_grad():
+            for part,rows in datasets.items(): scores[part] = calibrator(torch.tensor([r['factors'] for r in rows])).tolist()
+        val,vs = datasets['validation'],scores['validation']
+        threshold = select_threshold(vs,[r['correct'] for r in val])
+        global_threshold = select_threshold(global_scores(val,vs),[r['correct'] for r in val])
+        sr = {'threshold':threshold,'global_threshold':global_threshold,'threshold_source':'validation','curves':curves,
+              'proposal_checkpoint_sha256':hashlib.sha256(checkpoint.read_bytes()).hexdigest(),
+              'data_hashes':{k:digest(v) for k,v in datasets.items()},'initial_hash':initial,'checkpoint_hash':state_hash(calibrator),
+              'correlation_matrix':torch.corrcoef(x.T).tolist()}
+        for part in ('validation','test'):
+            rows,score = datasets[part],scores[part]
+            truth = [r['correct'] for r in rows]
+            gs = global_scores(rows,score)
+            local = readiness_metrics(score,truth,threshold)
+            global_result = readiness_metrics(gs,truth,global_threshold)
+            mixed = [i for i,r in enumerate(rows) if 0 < sum(t['correct'] for t in rows[(i//4)*4:(i//4)*4+4]) < 4]
+            ml = readiness_metrics([score[i] for i in mixed],[truth[i] for i in mixed],threshold)
+            mg = readiness_metrics([gs[i] for i in mixed],[truth[i] for i in mixed],global_threshold)
+            local['local_advantage'] = ml['recall']-mg['recall']
+            per_condition = {}
+            for split in ('iid','ood'):
+                for condition in ('complete','missing','permuted'):
+                    indices = [i for i,r in enumerate(rows) if r['split']==split and r['condition']==condition]
+                    per_condition[f'{split}_{condition}'] = readiness_metrics([score[i] for i in indices],[truth[i] for i in indices],threshold)
+            sr[part] = {'local':local,'global':global_result,'mixed_local':ml,'mixed_global':mg,
+                        'per_condition':per_condition,'gate_b':gate_b(local),
+                        'records':[dict(r,calibrated=s) for r,s in zip(rows,score)]}
+        torch.save(calibrator.state_dict(),output/f'seed{seed}-calibrator.pt')
+        (output/f'seed{seed}-actual-confidence.json').write_text(json.dumps(sr,indent=2))
+        result['seeds'][seed] = {'validation':sr['validation']['local'],'test':sr['test']['local'],'gate_b_test':sr['test']['gate_b']}
+    result['all_seed_gate_b'] = all(r['gate_b_test'] for r in result['seeds'].values()) and bool(result['seeds'])
+    result['runtime_composition_authorized'] = False
+    (output/'actual-confidence-summary.json').write_text(json.dumps(result,indent=2))
+    return result

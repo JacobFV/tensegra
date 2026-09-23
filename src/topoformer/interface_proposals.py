@@ -21,6 +21,7 @@ class ProposalExample:
     composition: str
     instructions: tuple
     query_destination: tuple
+    register_types: tuple
 
 
 def make_proposals(count, *, seed, split='iid', candidates=None, primitive=None, key_dim=16):
@@ -61,7 +62,8 @@ def make_proposals(count, *, seed, split='iid', candidates=None, primitive=None,
         names = tuple(f'{prefix}_{rng.getrandbits(48):012x}' for _ in keys)
         values = tuple(rng.randint(21, 80) if split == 'ood' else rng.randint(-10, 10) for _ in keys)
         result.append(ProposalExample(PRIMITIVES[chosen[1]], tuple(keys), names, values, role_keys, targets,
-                                      'two_derived' if split == 'ood' else 'chain_or_leaf', tuple(instructions), chosen[0]))
+                                      'two_derived' if split == 'ood' else 'chain_or_leaf', tuple(instructions), chosen[0],
+                                      tuple('boolean' if any(r[0] == key and r[1] == 4 for r in instructions) else 'integer' for key in keys)))
     return result
 
 
@@ -94,6 +96,7 @@ def collate_proposals(examples, control='complete'):
     return {'keys': keys, 'valid': valid, 'instruction_destinations':destinations,
             'instruction_arguments':arguments, 'instruction_cues':cues, 'instruction_valid':instruction_valid,
             'query_destination':torch.tensor([x.query_destination for x in examples]),
+            'register_types':torch.tensor([[int(t == 'boolean') for t in x.register_types]+[-1]*(n-len(x.keys)) for x in examples]),
             'primitive': primitive, 'targets': torch.tensor([x.targets for x in examples]),
             'binary': primitive != PRIMITIVES.index('neg')}
 
