@@ -19,3 +19,13 @@ Historical gates are unchanged. A newly declared narrow composition contract may
 Reconstruct primary raw metrics, per-seed denominators, paired intervention outcomes, calibration/selection provenance and gate decisions without calling producer metric helpers. Verify source/config/data/checkpoint hashes and historical blob preservation. Challenge target ambiguity, identity shortcuts, missing evaluation coverage and unsupported universal claims early. Audits do not consume GPU unless the coordinator explicitly releases a slot.
 
 Current status: protocols requested; no campaign inference or training reviewed yet.
+
+## Initial protocol review
+
+R01 separates fresh fit/calibration/validation events, uses the same1024-dimensional frozen wide-backbone features for ridge/CE, and selects across covered-delay cells without exposing32. Optimizer exposure differs and is disclosed. A later consumer promotion must still demonstrate dependence on supplied values through interventions; prediction accuracy alone does not establish this.
+
+S01 distinguishes nested corpus audits from completed scaling arms and proposes meaningful eight-epoch exposure to8192 alpha-distinct graphs. The128 TRAIN calibration subset is valid but relation support/fallback must be recorded. All target categories must remain publicly identifiable; canonical bookkeeping is not semantic evidence. Dev/confirmation must stay alpha-disjoint from every training prefix.
+
+A01 explicitly supplies reverse-path dynamic programming and all-node intermediate supervision to all arms. This tests propagation interfaces rather than learned planning. Strong message passing and keyed graph context are appropriate comparators. Requested explicit continuation decisions rather than an ambiguous 'losses improve' rule, clearly labeled zero-lambda ablation, and corruption normalization/serialization that preserves equivalent supplied information.
+
+These are protocol-level findings. Source preflight, resource profiling and coordinator release remain pending.
