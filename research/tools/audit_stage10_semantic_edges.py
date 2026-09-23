@@ -14,6 +14,7 @@ def threshold(pairs):
         if err<best[0]:best=(err,score)
     return best
 x=load(BASE/'exposure.json.gz');checks=0;rows=[]
+assert hashlib.sha256(json.dumps(x['config'],sort_keys=True).encode()).hexdigest()==x['config_sha256']
 for name,h in x['source_sha256'].items(): assert sha(BASE/'frozen-source'/name)==h
 assert [r['seed'] for r in x['runs']]==[20,21,22]
 for run in x['runs']:

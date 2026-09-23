@@ -22,6 +22,27 @@ def audit(root,require_complete=True):
      if e:assert max(abs(v-1/row['candidates']) for v in p[:-1])<1e-7 and p[-1]==0
      l1.append(sum(abs(a-b) for a,b in zip(p,q)));imp.append(sum(a for a,b in zip(p,q) if b==0))
     final+=tar[-1][max(range(len(ep[-1])),key=ep[-1].__getitem__)]>0
+   for frame in row['frames']:
+    t=frame['frame'];ps=[ep[t] for ep in raw['posterior']];qs=[ep[t] for ep in raw['target']]
+    predictions=[max(range(len(p)),key=p.__getitem__) for p in ps]
+    truth=[q[-1] for q in qs];null=[p[-1] for p in ps]
+    support=sum(q[j]>0 for q,j in zip(qs,predictions))
+    assert support==frame['support_correct']
+    assert sum(sum(v>0 for v in q)>1 for q in qs)==frame['ambiguous']
+    assert sum(truth)==frame['null_targets']
+    assert abs(sum((a-b)**2 for a,b in zip(null,truth))/512-frame['null_brier'])<1e-6
+    assert abs(sum(a-b for a,b in zip(null,truth))/512-frame['null_signed_error'])<1e-6
+    assert sum(j==len(p)-1 and q[-1]==1 for p,q,j in zip(ps,qs,predictions))==frame['no_match_true_positive']
+    assert sum(j==len(p)-1 and q[-1]==0 for p,q,j in zip(ps,qs,predictions))==frame['no_match_false_positive']
+    for binrow in frame['calibration']:
+     lo=binrow['lower'];chosen=[(p[j],q[j]) for p,q,j in zip(ps,qs,predictions) if p[j]>=lo and (p[j]<lo+.1 if lo<.9 else p[j]<=1)]
+     # FP32 bin boundaries can differ from Python's decimal boundary. Require exact support only away from boundaries.
+     boundary=any(abs(p[j]-lo)<1e-7 or abs(p[j]-(lo+.1))<1e-7 for p,j in zip(ps,predictions))
+     if not boundary:
+      assert len(chosen)==binrow['count']
+      if chosen:
+       assert abs(sum(a for a,b in chosen)/len(chosen)-binrow['confidence'])<1e-6
+       assert abs(sum(b for a,b in chosen)/len(chosen)-binrow['expected_correctness'])<1e-6
    a=sum(l1)/len(l1);b=sum(imp)/len(imp);acc=final/512
    assert abs(a-row['mean_l1'])<1e-6 and abs(b-row['mean_impossible'])<1e-6 and acc==row['final_support_accuracy']
    passed=a<.05 and b<.01 and acc>(.98 if row['candidates']==8 else .95)
