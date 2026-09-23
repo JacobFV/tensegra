@@ -14,10 +14,10 @@ from .thinking_language import ROLES,state_hash
 
 
 class FixedNodeDecoder(nn.Module):
-    def __init__(self,width=1024,*,interaction=False,rank=128):
+    def __init__(self,width=1024,*,interaction=False,rank=128,edge_affine=False):
         super().__init__();self.rank=rank
-        self.source=nn.Linear(width,len(ROLES)*rank,bias=False)
-        self.target=nn.Linear(width,rank,bias=False)
+        self.source=nn.Linear(width,len(ROLES)*rank,bias=edge_affine)
+        self.target=nn.Linear(width,rank,bias=edge_affine)
         self.slots=SlotScorer(width,base.MAX_SLOT+1,interaction=interaction,interaction_width=rank)
     def forward(self,nodes,pairs):
         i,j=pairs.unbind(-1)
@@ -60,7 +60,7 @@ def run(config):
     for seed in config['seeds']:
       for interaction in (False,True):
        for conditional in (False,True):
-        torch.manual_seed(seed);model=FixedNodeDecoder(config['width'],interaction=interaction,rank=config['rank']).to(device)
+        torch.manual_seed(seed);model=FixedNodeDecoder(config['width'],interaction=interaction,rank=config['rank'],edge_affine=config.get('edge_affine',False)).to(device)
         initial_hash=state_hash(model)
         optimizer=torch.optim.Adam(model.parameters(),lr=config['learning_rate']);start=time.monotonic();curve=[];losses=[]
         if device=='cuda':torch.cuda.reset_peak_memory_stats()

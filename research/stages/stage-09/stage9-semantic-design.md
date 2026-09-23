@@ -72,3 +72,14 @@ Selection uses fixed-set development fitting only. No test surfaces, no learned
 thresholds, no exposure extension after inspecting outcomes. Advancement needs
 exact graph fitting under predicted edge existence in both development seeds;
 otherwise public acquisition stays blocked and this bounded failure is reported.
+
+## Faithful affine-head correction (separate diagnostic)
+
+The first c2 fixture removed edge projection biases, whereas Stage8 uses affine
+projections. It failed complete acquisition in every arm despite perfect slots
+on true edges. This fixture mismatch limits attribution. Before further outcomes,
+a separately named `stage9-semantic-oracle-affine` restores exactly those biases;
+all other data,300updates,2development seeds and4arms remain fixed. The failed
+bias-free result remains reported. Root approved≤2GPUminutes; no extra exposure
+or tuned threshold. This is removal of a diagnostic confound, not a new runtime
+or architecture. Public acquisition remains blocked until reviewed results.

@@ -9,7 +9,7 @@ torch.set_num_threads(2)
 config=json.loads((a.result_directory/'results.json').read_text())['config']
 examples=fixtures(config['graphs'],config['width'],config['data_seed'],'cpu');result=[]
 for seed in config['seeds']:
-    model=FixedNodeDecoder(config['width'],rank=config['rank'])
+    model=FixedNodeDecoder(config['width'],rank=config['rank'],edge_affine=config.get('edge_affine',False))
     model.load_state_dict(torch.load(a.result_directory/f'head-False-conditional-False-seed{seed}.pt',weights_only=True,map_location='cpu'))
     rows=[]
     with torch.no_grad():
