@@ -123,3 +123,9 @@ width within Stage8; it does not establish a causal explanation of Stage7's
 failure, which also used different data/training/interfaces. The smaller control
 will run only after the primary1024 study, on at most2CPUthreads if resource
 checks are acceptable, without taking the shared GPU queue.
+
+Historical32 resource probe:19,267parameters; second warm update plus8-example
+probe .0306s on2CPUthreads. Six full trainings plus all raw/oracle evaluation are
+estimated5–7minutes. Root authorized this bounded CPU run after the primary1024
+study, concurrently with later semantic GPU work; such shared-host timing is not
+an uncontended throughput benchmark. No historical result selects primary settings.
