@@ -1,0 +1,49 @@
+{
+  "hidden": 1024,
+  "key_dim": 32,
+  "seed": 501,
+  "sample_seed": 510000100,
+  "data": {
+    "train": {
+      "seed": 510000001,
+      "count": 16384
+    },
+    "calibration": {
+      "seed": 510000002,
+      "count": 2048
+    },
+    "validation": {
+      "seed": 510000003,
+      "count": 4096
+    },
+    "fresh_validation": {
+      "seed": 530000003,
+      "count": 4096
+    }
+  },
+  "updates": 4000,
+  "checkpoints": [
+    0,
+    250,
+    500,
+    1000,
+    2000,
+    3000,
+    4000
+  ],
+  "batch_size": 256,
+  "public_controls": [
+    "record_order",
+    "inventory_order",
+    "fresh_names",
+    "reverse_roles",
+    "unrelated_instructions"
+  ],
+  "version": "c02-v1-development",
+  "learning_rate": 0.0003,
+  "rekey_seed": 530000100,
+  "eval_rekey_seed": 530000200,
+  "control_seed": 530000300,
+  "historical_directory": "/home/brandonin/topoformer-campaign-01/composition/c01-development-n2",
+  "status": "CPU preflight; profile required; main caps unfrozen; no GPU release"
+}
