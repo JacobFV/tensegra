@@ -89,3 +89,15 @@ Coordinator reports immutable integrated `c7291de` remote regression: 506 tests 
 ## A2 frozen progressive outcome audit
 
 `stage7-progressive-audit.py` independently recomputes final metrics from all 6,144 saved validation/test episodes (30,720 posterior frames), verifies normalized probabilities, and matches exact source/config hashes and the original main A prerequisite matrix. Joint choice correctness, executable/reject stratification, mean absolute posterior error, impossible-hypothesis mass and posterior entropy all match. Heldout test joint accuracy is only 8.20–13.67%; final impossible mass is 86.98–91.54%. Entropy decreases while wrong hypotheses gain confidence. The finite supplied-candidate progressive diagnostic fails acquisition/generalization; complete-evidence A success must not be extended to partial evidence. No tuning or composition followed the frozen failure.
+
+## Corrected semantic scaling final audit
+
+`stage7-semantic-audit.py` passes on the final corrected 1k/10k artifacts: 192 compact raw final records reproduce all decomposed metrics; 50 curve rows match exposure counts and derived F1; 72 reported summary aggregations were independently recomputed. Both budgets share exact source, identical paired initializations and parameter counts for every neural seed/arm, and the same 64 heldout constructions. Twelve durable remote checkpoint files match manifest SHA256 hashes.
+
+A read-only remote SQLite check compared full canonical graph strings: 1,064 and 10,064 unique constructions, respectively; identical 64-example evaluation prefix; exactly nested training prefixes; zero evaluation/training intersections. Observed corpus counts and attempt/duplicate arithmetic match manifests. Evaluation split hash is `66cdc5fadd22b63ae6de2e2b7b2d5cbda315d179dd60e58620af54516adf9f87`. No Torch workload was used for these independent checks.
+
+Each corrected neural run sees exactly 2,000 optimizer examples, equally split 1,000 English / 1,000 Spanish by an N-independent schedule. Distinct graph exposure is 1,000 versus 2,000; the latter is not full 10k acquisition. Frequency baselines fit all N labels and therefore have a different label-exposure budget. Earlier renderer-confounded results are archived separately and must not support attribution to dataset cardinality.
+
+Every evaluated exact-semantic score remains zero. Mean English typed-edge F1 is .15130 at 1k and .15121 at 10k; ordered-edge F1 is .08132 and .07823. Other surfaces also fail full semantic recovery. Gate F correctly remains false: no positive acquired-semantic scaling conclusion and no runtime coupling.
+
+All final per-track raw gate interpretations are now independently verified. Final integrated regression and clean integration remain coordinator responsibilities; no scientific gate blocker is hidden by the successful software tests.
