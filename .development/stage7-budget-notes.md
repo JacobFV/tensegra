@@ -22,3 +22,11 @@ Before inspecting main evaluation outcomes, the first run's timing projected app
 Halting main: three seeds, width 32, 2,000 updates, batch 32, 2,048 training examples, 512 examples per validation/test condition. The exact public evidence rule is an explicitly architectural upper bound, separate from learned output at oracle timing.
 
 Semantic scaling diagnostic: requested 1,000 and 10,000 distinct constructions, three seeds, 1,000 updates each, semantic and no-input controls, fixed 64-example heldout constructions and checkpoints 0/100/500/1000. This finite exposure budget cannot establish a million-example scaling law. Corpus feasibility and actual unique optimizer exposure must be reported. No semantic/runtime coupling is authorized.
+
+## Corrected renderer-matched semantic diagnostic
+
+The first completed cardinality sweep used an epoch-dependent renderer schedule: at the same 2,000 optimizer-example budget, N=1,000 exposed English and Spanish while N=10,000 exposed English only. Those results are archived as confounded diagnostics. The corrected repeat changes only the renderer schedule to optimizer-step parity, preserving architecture, loss, budgets, seeds, heldout graphs, and cardinalities. Each arm receives exactly 1,000 English and 1,000 Spanish presentations. The source/configuration and schedule regression were committed before restart (`d4056f7`). Actual unique construction exposure still differs (1,000 versus 2,000), and neither run establishes full convergence or million-example scaling.
+
+## Integrated verification
+
+An immutable checkout at `0694ec5` passed **511 tests and 6 subtests** remotely in 7.26 seconds with two CPU threads. All differences against Stage6 baseline `04263b2` are additions; existing Stage1–6 files are unchanged. Remaining semantic result collection and report-only changes do not alter the verified model source.
