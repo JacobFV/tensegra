@@ -9,3 +9,9 @@
 ## Hardware verified
 
 Remote NVIDIA GB10, isolated PyTorch `2.14.0+cu130`, Python3.12. A1024-wide CUDA matrix forward/backward completed successfully. Dependency freeze: `results/stage8/cuda-requirements.txt`. Earlier CPU environments unchanged. Width1024 timing is authorized serially for beliefs, returns and semantics; no pilot result may count as a competence gate. All small-width tests are mechanical only.
+
+## Pre-main acquisition budgets
+
+CUDA timing validated width1024: belief arms16,851,011parameters (~404MB peak); returnfacet model55,854,360parameters (~1.18GB); semanticmodel57,861,981parameters (~1.22GB). These are timing probes, not competence evidence.
+
+Authorize sequential independent acquisitions: belief two learned arms,256updates×batch32 fresh episodes,128validation only; return six encoder/access arms,300updates×32fixed examples,128validation only; semantic8distinctgraphs,1000presentations with node/identity/edge curriculum boundaries100/300, semantic/no-input arms. All use1024-wide computation. Fixed-set success does not authorize composition; no final test outcomes are used for recipe selection. Main budgets will be frozen after these timings/acquisition diagnostics.
