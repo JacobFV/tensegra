@@ -26,10 +26,10 @@ class SlotScorer(nn.Module):
 
     def forward(self,nodes,pairs):
         i,j=pairs.unbind(-1)
-        output=self.source(nodes[i])+self.target(nodes[j])
+        output=self.source(nodes)[i]+self.target(nodes)[j]
         if self.interaction:
-            source=self.pair_source(nodes[i]).reshape(-1,self.classes,self.interaction_width)
-            target=self.pair_target(nodes[j])
+            source=self.pair_source(nodes)[i].reshape(-1,self.classes,self.interaction_width)
+            target=self.pair_target(nodes)[j]
             output=output+(source*target[:,None,:]).sum(-1)/self.interaction_width**.5
         return output
 
