@@ -86,5 +86,18 @@ def audit_and_cache(config):
 def load_cache(path):
     with gzip.open(path,'rt') as f:return [json.loads(line) for line in f]
 
+
+def audit_cached_target_identifiability(data_dir,output):
+    """Additional full canonical target collision check, including alpha aliases."""
+    tick=time.monotonic();torch.set_num_threads(2);root=Path(data_dir);audit=json.loads((root/'audit.json').read_text());seen={};examples=0
+    for split in audit['split_records']:
+        for row in load_cache(root/f'{split}.jsonl.gz'):
+            gold=target(row,audit['value_vocabulary']);n=len(row['nodes'])
+            signature=json.dumps(dict(nodes=[[int(gold[k][i]) for k in ('kind','value','copy')] for i in range(n)],edges=sorted(row['edges'],key=lambda e:(e[0],e[1],e[2],-1 if e[3] is None else e[3]))),sort_keys=True,separators=(',',':'))
+            if row['text'] in seen and seen[row['text']]!=signature:raise ValueError('same public text has incompatible canonical targets')
+            seen[row['text']]=signature;examples+=1
+    record=dict(examples=examples,distinct_public=len(seen),incompatible_canonical_targets=0,criterion='Full canonical node kind/value/copy-position sequence and all indexed typed ordered edges, not alpha key alone',cache_sha256=audit['cache_sha256'],cpu_seconds=time.monotonic()-tick)
+    Path(output).write_text(json.dumps(record,indent=2)+'\n');return record
+
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('config');a=p.parse_args();print(json.dumps(audit_and_cache(json.loads(Path(a.config).read_text())),indent=2))
