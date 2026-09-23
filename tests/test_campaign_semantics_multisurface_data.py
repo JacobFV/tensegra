@@ -1,0 +1,27 @@
+import unittest
+from topoformer.campaign_semantics_multisurface_data import make_record,public_view,target,regenerate_allowed_train,run
+from topoformer.campaign_semantics_data import compact_example,target as old_target
+from topoformer.campaign_semantics_surface_contract import SurfaceCopyContractError
+from topoformer.semantic_scaling import surface_input
+from topoformer.tcn_data import build_tcn_example
+import torch
+
+class MultisurfacePreparationTests(unittest.TestCase):
+    vocab=['<unknown>','"parent"','"unify"','null']
+    def test_train_regeneration_and_public_projection(self):
+        e=build_tcn_example('unification',900100001,difficulty=.5);public,_=surface_input(e,'english');old=compact_example(e,public)
+        row=regenerate_allowed_train([old],self.vocab,{})[0]
+        self.assertEqual(set(row['surfaces']),{'english','spanish'})
+        self.assertEqual(public_view(row,'english').text,old['text'])
+        gold=old_target(old,self.vocab);new=target(row,self.vocab,'english')
+        self.assertTrue(all(torch.equal(gold[k],new[k]) for k in gold))
+        poison={**row,'nodes':None,'edges':None,'semantic_sha256':'secret'}
+        self.assertEqual(public_view(poison,'spanish'),public_view(row,'spanish'))
+    def test_translated_copy_position_and_collision(self):
+        e=build_tcn_example('unification',900100001,difficulty=.5,identifier_renaming={'alice':'red'});row=make_record(e,self.vocab,{})
+        a=target(row,self.vocab,'english');b=target(row,self.vocab,'spanish')
+        self.assertEqual(int(a['copy'][7]),11);self.assertEqual(int(b['copy'][7]),13)
+        e=build_tcn_example('unification',900100001,difficulty=.5,identifier_renaming={'alice':'red','carol':'rojo'})
+        with self.assertRaises(SurfaceCopyContractError):make_record(e,self.vocab,{})
+    def test_bulk_generation_requires_explicit_release(self):
+        with self.assertRaisesRegex(ValueError,'not been released'):run({'generation_status':'prepared_not_authorized'})
