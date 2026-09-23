@@ -12,3 +12,16 @@ def test_exact_half_unit_error_support():
     groups=group_counts(row)
     assert groups['value']['16']==dict(correct=0,total=1,signed_error_sum=.5,absolute_error_sum=.5)
     assert groups['value_type_operation']['17/1/1']['correct']==1
+
+
+def test_confirmation_freezes_recipe_and_data_partitions():
+    import json
+    from pathlib import Path
+    cfg=json.loads((Path(__file__).parents[1]/'configs/campaign-r01-confirmation.json').read_text())
+    assert cfg['ce_updates']==cfg['fixed_ce_step']==900
+    assert cfg['ridge_grid']==[.01]
+    assert 32 not in cfg['delays'] and 32 in cfg['test_delays']
+    seeds=[spec['seed'] for run in cfg['runs'] for spec in run['data'].values()]
+    assert len(set(seeds))==12
+    assert [run['backbone_seed'] for run in cfg['runs']]==[10,11,12]
+    assert all(run['data']['validation']['size']>=1024 for run in cfg['runs'])
