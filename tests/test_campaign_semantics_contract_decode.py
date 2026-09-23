@@ -40,3 +40,19 @@ class ConfirmationAnalysisFixtures(unittest.TestCase):
         self.assertEqual(result['shared_event_interval'],[0.,0.])
         self.assertEqual(result['per_seed_interval'],[[1.,1.],[0.,0.],[-1.,-1.]])
         with self.assertRaises(ValueError):module.paired_interval([[0]*1024]*2,100,12012)
+
+    def test_confirmation_artifact_and_lr_binding(self):
+        import gzip,hashlib,importlib.util,json,tempfile
+        from pathlib import Path
+        path=Path(__file__).parents[1]/'research/campaigns/extended-01/semantics/S10-S12-analysis.py'
+        spec=importlib.util.spec_from_file_location('s10_s12_contract_fixture',path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);p=root/'evaluation-u24576.json.gz'
+            with gzip.open(p,'wt') as f:json.dump(dict(update=24576,rows=[dict(semantic_sha256=str(i)) for i in range(1024)],train_rows=[{}]*128),f)
+            manifest=dict(config=dict(seed=701,learning_rate=1e-4),confirmation_sha256=m.CONFIRMATION_SHA,curves=[dict(update=24576,evaluation_split='reserved_confirmation',artifact=p.name,sha256=hashlib.sha256(p.read_bytes()).hexdigest())])
+            with gzip.open(root/'manifest.json.gz','wt') as f:json.dump(manifest,f)
+            m.validate_archive(p,701,'constant')
+            with self.assertRaises(ValueError):m.validate_archive(p,701,'decay')
+            manifest['curves'][0]['sha256']='invalid'
+            with gzip.open(root/'manifest.json.gz','wt') as f:json.dump(manifest,f)
+            with self.assertRaises(ValueError):m.validate_archive(p,701,'constant')
