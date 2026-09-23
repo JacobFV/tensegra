@@ -1,6 +1,6 @@
 # Stage 10: cross-delay return readout
 
-**Completed at width 1024; independent audit pending. All restricted scalar and inherited full-return checks fail.** The positive result is narrower: exposing one fixed readout to a wider range of frozen recurrent states improves its transfer to an unseen delay, even with matched training-row and event budgets. No backbone, encoder, runtime, or attention mechanism was changed.
+**Completed and independently audited at width 1024. All restricted scalar and inherited full-return checks fail.** The positive result is narrower: exposing one fixed readout to a wider range of frozen recurrent states improves its transfer to an unseen delay, even with matched training-row and event budgets. No backbone, encoder, runtime, or attention mechanism was changed.
 
 ## Design and provenance
 
@@ -89,3 +89,5 @@ Implementation: `src/topoformer/return_crossdelay.py`; configuration: `configs/s
 The full study took **55.70 seconds** across three frozen backbones. Peak allocated CUDA memory was 514.6 MB; peak process RSS was 1.93 GB. Device capacity is recorded separately in the manifest. There were no backbone or head optimizer updates: each backbone supplies 36 closed-form fits, 122,880 fit-row uses, nine selected heads and only 2,048 distinct fitting events. Four mechanical tests passed. The 328.46 MB of losslessly compressed feature caches and 27 fitted heads remain immutable at `gb10-direct:~/topoformer-stage10/returns/main`, with compressed and reconstructed cache hashes. No core environment was changed.
 
 For aggregation clarity, shared-readout 32-step counts are 1,383/1,536 (90.04%) with two distractors and 1,376/1,536 (89.58%) with eight. Pooling both conditions gives 2,759/3,072 (89.81%), but those are repeated model/condition measurements of the same 512 underlying test events. The headline 14.58-point comparison above specifically uses the eight-distractor condition, rather than this pooled descriptive figure.
+
+Independent audit `6d0f95f` (with support clarification `a4c8288`) reconstructed all 1,029 raw rows, matrix cells, field/joint counts and calibration selections. It verified 27 fitted-head hashes and all three compressed/reconstructed cache hashes, replayed all 945 new-readout prediction rows exactly on CPU, checked train-only normalization and selected-row hashes, and confirmed individual event disjointness. This is independent metric and readout replay validation; it is not a separate backbone-training replication.
