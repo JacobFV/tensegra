@@ -51,3 +51,31 @@ The CPU-only frozen encoder check took8.55seconds. Every one of18 scalar affine 
 Selecting the correct encoded facet remains528/528 for all six facet checkpoints. After mixed/concatenated encoding, the same linear numerical probe reaches only295–371/528 across the twelve checkpoints. This establishes weaker linear accessibility after merging nuisance fields; a failed linear probe does not establish absence of scalar information. This privileged facet selection does not bypass the historical workspace gate in reported competence decisions. Actual affine/mixed encoding pair distances and norms are saved; no magnitude-destruction claim is inferred from LayerNorm alone.
 
 Workspace boundary probes consume `model.norm(state)[:,0]`, exactly the same normalized scalar row as the original scalar classification head. Thus the baseline/probe comparison does not conflate removal of final LayerNorm with a different decoder. Frozen capture parity is tested against the historical forward at0/1/2 mechanical steps; primary captures retain1024dimensions. Probe source finalized at`e12d546` before test inference, with per-alpha validation counts, saved coefficient hashes, event identities, configuration hash and distinct GPU allocation/process RSS/device-capacity measurements.
+
+## Completed frozen boundary probes
+
+All18 checkpoints finished in172.3seconds wall time; peak allocated CUDA memory488MB and process peak RSS2.04GB are distinct from device capacity. Source/config were frozen before test inference. Every original checkpoint hash matched Stage8. Probe fitting uses disjoint2,048/512/512-event train/validation/test partitions; all33 bounded numerical labels are observed during probe training. This is fresh-context diagnosis, not unseen-class transfer.
+
+Factorized persistent memory, test exact scalar accuracy, means across the three frozen checkpoint seeds:
+
+| Boundary | Original classifier | Categorical ridge probe | Numerical ridge probe |
+|---|---:|---:|---:|
+| Scalar field before mixer | — |18.55%|100.00%|
+| Correct memory facet | — |81.51%|100.00%|
+| Initial workspace retrieval |84.90%|94.73%|96.61%|
+| One update |89.39%|98.70%|70.51%|
+| Four updates |85.87%|97.79%|56.58%|
+| Sixteen updates |79.56%|95.57%|43.68%|
+| Thirty-two updates |69.53%|94.60%|34.77%|
+
+The affine scalar field retains its value and the selected facet preserves numerically accessible information. The original decoder already fails after initial retrieval. At one update a newly fitted categorical linear readout substantially improves exact reconstruction from exactly the original decoder's normalized input. Thus original readout quality is a material bottleneck; its errors cannot all be attributed to absent information. A linear numerical readout becomes weak after recurrent processing while categorical recovery stays much stronger: the workspace does not preserve a simply linear numerical coordinate. Neither probe establishes absence of information when it fails.
+
+Each probe above is trained separately at its own delay. In particular the sixteen/thirty-two-step probe receives training examples from that delay. These are **not recurrent extrapolation scores**. Late categorical probe errors remain, so stronger readout does not establish complete retention either. Raw seed-level predictions, per-value/type/primitive errors, confusion matrices and validation-selection records are preserved in `return-frozen-probes`;252 fitted probe tensors remain immutable on GB10 with hashes. Categorical ridge has33,825 fitted coefficients; numerical ridge1,025. Squared-error categorical regression is a limited diagnostic family, and its poor premix result cannot demonstrate a linear-softmax expressivity limit.
+
+## Minimal repair selected on validation only
+
+The validation results show the same categorical decoder opportunity (one-update exact98.44/99.22/98.63% versus original81.64/92.58/88.48%). They motivate one change: refit the scalar readout while freezing the learned workspace. No encoder, memory tokenization, recurrence, runtime, or numerical domain changes.
+
+A paired main comparison is declared using new initialization seeds10/11/12 and three fresh Stage8-recipe backbones. Compare their unchanged scalar classifier with (1) one categorical ridge head fitted jointly on delays0/1/2/4 and (2) a cross-entropy-refitted head on exactly the same frozen features/labels. The second repair controls whether further classifier acquisition, rather than ridge specifically, explains improvement. Ridge regularization selects from the same four-value validation grid. CE starts from the original head, gets500updates×256sampled feature rows at learning rate.003, and selects the earliest best checkpoint among every50updates on pooled short-delay validation accuracy. The CE and closed-form ridge objectives/exposures/FLOPs are not equal; report this explicitly.
+
+Both heads use2,048 fresh events×four short delays (8,192 feature rows). All readout selection uses validation, with a new untouched512-event test cohort at2/8 distractors and0/1/2/4/8/16/32delays. All six output fields, full joint correctness, exact scalar criteria and original gate thresholds remain. No readout success can override unchanged type/primitive/identity failures. Corruption controls score original and actually supplied facts separately. No lifecycle training or downstream-use experiment is added. A representative profile precedes main launch.
