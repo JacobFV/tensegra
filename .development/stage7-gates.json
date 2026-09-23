@@ -53,7 +53,7 @@
       ]
     },
     "C_retention": {
-      "status": "pending",
+      "status": "failed_every_arm_and_initialization",
       "delay": 16,
       "type_and_primitive_gt": 0.99,
       "value_and_each_identity_gt": 0.98,
@@ -61,7 +61,56 @@
         "unrelated activity",
         "workspace-only learned readout",
         "protected-register integrity reported separately"
-      ]
+      ],
+      "evidence": "results/stage7-c/gate-audit.json",
+      "runs": [
+        {
+          "initialization": 0,
+          "mode": "once",
+          "gate_c": false
+        },
+        {
+          "initialization": 0,
+          "mode": "protected",
+          "gate_c": false
+        },
+        {
+          "initialization": 0,
+          "mode": "gated",
+          "gate_c": false
+        },
+        {
+          "initialization": 1,
+          "mode": "once",
+          "gate_c": false
+        },
+        {
+          "initialization": 1,
+          "mode": "protected",
+          "gate_c": false
+        },
+        {
+          "initialization": 1,
+          "mode": "gated",
+          "gate_c": false
+        },
+        {
+          "initialization": 2,
+          "mode": "once",
+          "gate_c": false
+        },
+        {
+          "initialization": 2,
+          "mode": "protected",
+          "gate_c": false
+        },
+        {
+          "initialization": 2,
+          "mode": "gated",
+          "gate_c": false
+        }
+      ],
+      "note": "Short-delay unseen value/identity decoding already weak; additional recurrent degradation. Exact storage remains intact. No C2 training."
     },
     "D_return_use": {
       "status": "blocked_by_C",
