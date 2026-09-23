@@ -1,0 +1,42 @@
+{
+  "device": "cuda",
+  "backbone_seeds": [
+    10
+  ],
+  "checkpoint_dir": "/home/brandonin/topoformer-stage9/returns/readout-main",
+  "data": {
+    "train": {
+      "seed": 10100000,
+      "size": 64
+    },
+    "calibration": {
+      "seed": 10200000,
+      "size": 64
+    },
+    "test": {
+      "seed": 10300000,
+      "size": 64
+    }
+  },
+  "delays": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16,
+    32
+  ],
+  "source_delays": [
+    1
+  ],
+  "eval_distractors": [
+    2
+  ],
+  "batch_size": 64,
+  "ridge_grid": [
+    0.1
+  ],
+  "pooled_rows": 8192,
+  "pools": {}
+}
