@@ -35,7 +35,17 @@ def evaluate(model, count, seed, candidates, condition):
 def gate(rows, expected):
     if not expected or not rows: return False
     indexed={(r['seed'],r['condition'],r['candidates']):r for r in rows if r.get('split')=='validation'}
-    return all(k in indexed and indexed[k]['count']>=512 and indexed[k]['frames'][-1]['support_accuracy']>.98 and indexed[k]['frames'][-1]['impossible_mass']<.02 and all(f['posterior_l1']<.1 for f in indexed[k]['frames']) for k in expected)
+    for key in expected:
+        if key not in indexed: return False
+        row=indexed[key]; frames=row.get('frames',[])
+        if row.get('count',0)<512 or not frames: return False
+        regime=row.get('regime')
+        if regime not in ('iid','moderate_ood'): return False
+        accuracy=.98 if regime=='iid' else .95
+        if frames[-1]['support_accuracy']<=accuracy: return False
+        if sum(f['posterior_l1'] for f in frames)/len(frames)>=.05: return False
+        if sum(f['impossible_mass'] for f in frames)/len(frames)>=.01: return False
+    return True
 
 
 def run(config,out):
@@ -64,7 +74,7 @@ def run(config,out):
     for n in config.get('eval_candidates',[config['candidates'],config['candidates']*2]):
         for condition in ('clean','reorder','duplicate','contradiction','retract','partial','empty'):
             for split,offset in (('validation',200000),('test',300000)):
-                row=evaluate(model,config.get('eval_count',128),offset+config['seed'],n,condition); row.update(seed=config['seed'],split=split); rows.append(row)
+                row=evaluate(model,config.get('eval_count',128),offset+config['seed'],n,condition); row.update(seed=config['seed'],split=split,regime='iid' if n==config['candidates'] else 'moderate_ood'); rows.append(row)
     (out/'metrics.json').write_text(json.dumps(rows)); torch.save(model.state_dict(),out/'model.pt')
     return manifest
 

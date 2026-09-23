@@ -55,7 +55,7 @@ def test_gate_requires_every_validation_cell():
     from topoformer.belief_study import gate
     assert not gate([],[])
     assert not gate([],[(0,'clean',8)])
-    row=dict(seed=0,condition='clean',candidates=8,count=512,split='validation',frames=[dict(support_accuracy=1.,impossible_mass=0.,posterior_l1=0.)])
+    row=dict(seed=0,condition='clean',candidates=8,count=512,split='validation',regime='iid',frames=[dict(support_accuracy=1.,impossible_mass=0.,posterior_l1=0.)])
     assert gate([row],[(0,'clean',8)])
     assert not gate([dict(row,split='test')],[(0,'clean',8)])
     assert not gate([row],[(0,'clean',8),(1,'clean',8)])

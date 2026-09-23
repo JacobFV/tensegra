@@ -45,8 +45,8 @@ must not be confused with certain identification. Raw sample trajectories remain
 available separately.
 
 Provisional validation competence requires every declared seed/condition/count
-cell, >=512 examples/cell, final support accuracy >98%, impossible mass <2%, and
-posterior L1 <0.1 at every frame. No empty/missing matrix passes. Test results do
+cell, >=512 examples/cell, final support accuracy >98% IID / >95% moderate OOD, mean framewise impossible
+mass <1%, and mean framewise posterior L1 <0.05, matching the root gate registry. No empty/missing matrix passes. Test results do
 not select thresholds. Readiness, composition, and supervision withdrawal remain
 blocked until independently audited gates authorize them.
 
