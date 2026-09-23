@@ -1,0 +1,724 @@
+{
+  "config": {
+    "version": "p01-v1-profile-only",
+    "seed": 399,
+    "hidden": 1024,
+    "key_dim": 32,
+    "cpu_threads": 4,
+    "learning_rate": 0.001,
+    "weight_decay": 0.01,
+    "batch_size": 256,
+    "updates": 64,
+    "checkpoints": [
+      0,
+      16,
+      64
+    ],
+    "data": {
+      "train": {
+        "seed": 47900001,
+        "count": 512
+      },
+      "calibration": {
+        "seed": 47900002,
+        "count": 128
+      },
+      "validation": {
+        "seed": 47900003,
+        "count": 128
+      }
+    },
+    "control_seed": 47900100,
+    "controls": [
+      "record_order",
+      "inventory_order",
+      "fresh_names",
+      "reverse_roles",
+      "unrelated_instructions"
+    ],
+    "requested_process_cap_seconds": 60
+  },
+  "device": "cuda",
+  "data": {
+    "train": {
+      "seed": 47900001,
+      "count": 512,
+      "public_tensor_sha256": "ee3f70410e629f59ba7297f9368f97951cab4f0e825302959fdcc4b2095695ba"
+    },
+    "calibration": {
+      "seed": 47900002,
+      "count": 128,
+      "public_tensor_sha256": "185701a99470f51631d79d3cd5f9cafd373a52a2fe49c2abc0ae2889da4d5a36"
+    },
+    "validation": {
+      "seed": 47900003,
+      "count": 128,
+      "public_tensor_sha256": "cb50b0ef14fb98019da9a9e27f187283355a0e658ce0a02db88c2bd4a6cf838d"
+    }
+  },
+  "selected_step": 64,
+  "validation": {
+    "full_semantic": {
+      "correct": 128,
+      "total": 128
+    },
+    "predicted_public_schema_valid": {
+      "correct": 128,
+      "total": 128
+    },
+    "primitive": {
+      "correct": 128,
+      "total": 128
+    },
+    "destination": {
+      "correct": 128,
+      "total": 128
+    },
+    "operand0": {
+      "correct": 128,
+      "total": 128
+    },
+    "required_operand1": {
+      "correct": 99,
+      "total": 99
+    },
+    "raw_null_pointer_diagnostic": {
+      "correct": 0,
+      "total": 29
+    },
+    "canonical_null_schema": {
+      "correct": 29,
+      "total": 29
+    },
+    "noncommutative_order": {
+      "correct": 51,
+      "total": 51
+    }
+  },
+  "controls": {
+    "record_order": {
+      "supplied": {
+        "full_semantic": {
+          "correct": 128,
+          "total": 128
+        },
+        "predicted_public_schema_valid": {
+          "correct": 128,
+          "total": 128
+        },
+        "primitive": {
+          "correct": 128,
+          "total": 128
+        },
+        "destination": {
+          "correct": 128,
+          "total": 128
+        },
+        "operand0": {
+          "correct": 128,
+          "total": 128
+        },
+        "required_operand1": {
+          "correct": 99,
+          "total": 99
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 29
+        },
+        "canonical_null_schema": {
+          "correct": 29,
+          "total": 29
+        },
+        "noncommutative_order": {
+          "correct": 51,
+          "total": 51
+        }
+      },
+      "original": {
+        "full_semantic": {
+          "correct": 128,
+          "total": 128
+        },
+        "predicted_public_schema_valid": {
+          "correct": 128,
+          "total": 128
+        },
+        "primitive": {
+          "correct": 128,
+          "total": 128
+        },
+        "destination": {
+          "correct": 128,
+          "total": 128
+        },
+        "operand0": {
+          "correct": 128,
+          "total": 128
+        },
+        "required_operand1": {
+          "correct": 99,
+          "total": 99
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 29
+        },
+        "canonical_null_schema": {
+          "correct": 29,
+          "total": 29
+        },
+        "noncommutative_order": {
+          "correct": 51,
+          "total": 51
+        }
+      },
+      "changed_proposal_support": 0
+    },
+    "inventory_order": {
+      "supplied": {
+        "full_semantic": {
+          "correct": 128,
+          "total": 128
+        },
+        "predicted_public_schema_valid": {
+          "correct": 128,
+          "total": 128
+        },
+        "primitive": {
+          "correct": 128,
+          "total": 128
+        },
+        "destination": {
+          "correct": 128,
+          "total": 128
+        },
+        "operand0": {
+          "correct": 128,
+          "total": 128
+        },
+        "required_operand1": {
+          "correct": 99,
+          "total": 99
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 29
+        },
+        "canonical_null_schema": {
+          "correct": 29,
+          "total": 29
+        },
+        "noncommutative_order": {
+          "correct": 51,
+          "total": 51
+        }
+      },
+      "original": null,
+      "changed_proposal_support": null
+    },
+    "fresh_names": {
+      "supplied": {
+        "full_semantic": {
+          "correct": 128,
+          "total": 128
+        },
+        "predicted_public_schema_valid": {
+          "correct": 128,
+          "total": 128
+        },
+        "primitive": {
+          "correct": 128,
+          "total": 128
+        },
+        "destination": {
+          "correct": 128,
+          "total": 128
+        },
+        "operand0": {
+          "correct": 128,
+          "total": 128
+        },
+        "required_operand1": {
+          "correct": 99,
+          "total": 99
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 29
+        },
+        "canonical_null_schema": {
+          "correct": 29,
+          "total": 29
+        },
+        "noncommutative_order": {
+          "correct": 51,
+          "total": 51
+        }
+      },
+      "original": {
+        "full_semantic": {
+          "correct": 128,
+          "total": 128
+        },
+        "predicted_public_schema_valid": {
+          "correct": 128,
+          "total": 128
+        },
+        "primitive": {
+          "correct": 128,
+          "total": 128
+        },
+        "destination": {
+          "correct": 128,
+          "total": 128
+        },
+        "operand0": {
+          "correct": 128,
+          "total": 128
+        },
+        "required_operand1": {
+          "correct": 99,
+          "total": 99
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 29
+        },
+        "canonical_null_schema": {
+          "correct": 29,
+          "total": 29
+        },
+        "noncommutative_order": {
+          "correct": 51,
+          "total": 51
+        }
+      },
+      "changed_proposal_support": 0
+    },
+    "reverse_roles": {
+      "supplied": {
+        "full_semantic": {
+          "correct": 128,
+          "total": 128
+        },
+        "predicted_public_schema_valid": {
+          "correct": 128,
+          "total": 128
+        },
+        "primitive": {
+          "correct": 128,
+          "total": 128
+        },
+        "destination": {
+          "correct": 128,
+          "total": 128
+        },
+        "operand0": {
+          "correct": 128,
+          "total": 128
+        },
+        "required_operand1": {
+          "correct": 99,
+          "total": 99
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 29
+        },
+        "canonical_null_schema": {
+          "correct": 29,
+          "total": 29
+        },
+        "noncommutative_order": {
+          "correct": 51,
+          "total": 51
+        }
+      },
+      "original": {
+        "full_semantic": {
+          "correct": 29,
+          "total": 128
+        },
+        "predicted_public_schema_valid": {
+          "correct": 128,
+          "total": 128
+        },
+        "primitive": {
+          "correct": 128,
+          "total": 128
+        },
+        "destination": {
+          "correct": 128,
+          "total": 128
+        },
+        "operand0": {
+          "correct": 29,
+          "total": 128
+        },
+        "required_operand1": {
+          "correct": 0,
+          "total": 99
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 29
+        },
+        "canonical_null_schema": {
+          "correct": 29,
+          "total": 29
+        },
+        "noncommutative_order": {
+          "correct": 0,
+          "total": 51
+        }
+      },
+      "changed_proposal_support": 99
+    },
+    "unrelated_instructions": {
+      "supplied": {
+        "full_semantic": {
+          "correct": 128,
+          "total": 128
+        },
+        "predicted_public_schema_valid": {
+          "correct": 128,
+          "total": 128
+        },
+        "primitive": {
+          "correct": 128,
+          "total": 128
+        },
+        "destination": {
+          "correct": 128,
+          "total": 128
+        },
+        "operand0": {
+          "correct": 128,
+          "total": 128
+        },
+        "required_operand1": {
+          "correct": 99,
+          "total": 99
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 29
+        },
+        "canonical_null_schema": {
+          "correct": 29,
+          "total": 29
+        },
+        "noncommutative_order": {
+          "correct": 51,
+          "total": 51
+        }
+      },
+      "original": {
+        "full_semantic": {
+          "correct": 128,
+          "total": 128
+        },
+        "predicted_public_schema_valid": {
+          "correct": 128,
+          "total": 128
+        },
+        "primitive": {
+          "correct": 128,
+          "total": 128
+        },
+        "destination": {
+          "correct": 128,
+          "total": 128
+        },
+        "operand0": {
+          "correct": 128,
+          "total": 128
+        },
+        "required_operand1": {
+          "correct": 99,
+          "total": 99
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 29
+        },
+        "canonical_null_schema": {
+          "correct": 29,
+          "total": 29
+        },
+        "noncommutative_order": {
+          "correct": 51,
+          "total": 51
+        }
+      },
+      "changed_proposal_support": 0
+    }
+  },
+  "selected_checkpoint_sha256": "848c888d0c4c3182caf3dd1ea06db2236b199b0880fc873fa57010710331fbcf",
+  "parameter_count": 142341,
+  "trainable_parameter_count": 142341,
+  "optimizer_presentations": 16384,
+  "unique_training_events_visited": 512,
+  "training_visitation_sha256": "f51fce9ce717efc946da57d68240924c4245766771e3e8137ba3f210f74505d7",
+  "control_notes": {
+    "fresh_names": "actor-input no-op invariance smoke test: names are not consumed; no lexical generalization claim"
+  },
+  "curve": [
+    {
+      "step": 0,
+      "calibration": {
+        "full_semantic": {
+          "correct": 0,
+          "total": 128
+        },
+        "predicted_public_schema_valid": {
+          "correct": 19,
+          "total": 128
+        },
+        "primitive": {
+          "correct": 26,
+          "total": 128
+        },
+        "destination": {
+          "correct": 14,
+          "total": 128
+        },
+        "operand0": {
+          "correct": 11,
+          "total": 128
+        },
+        "required_operand1": {
+          "correct": 10,
+          "total": 92
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 36
+        },
+        "canonical_null_schema": {
+          "correct": 0,
+          "total": 36
+        },
+        "noncommutative_order": {
+          "correct": 0,
+          "total": 42
+        }
+      },
+      "train_prefix": {
+        "full_semantic": {
+          "correct": 0,
+          "total": 512
+        },
+        "predicted_public_schema_valid": {
+          "correct": 79,
+          "total": 512
+        },
+        "primitive": {
+          "correct": 124,
+          "total": 512
+        },
+        "destination": {
+          "correct": 56,
+          "total": 512
+        },
+        "operand0": {
+          "correct": 66,
+          "total": 512
+        },
+        "required_operand1": {
+          "correct": 48,
+          "total": 426
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 86
+        },
+        "canonical_null_schema": {
+          "correct": 0,
+          "total": 86
+        },
+        "noncommutative_order": {
+          "correct": 1,
+          "total": 215
+        }
+      },
+      "optimizer_presentations": 0,
+      "unique_training_events_visited": 0
+    },
+    {
+      "step": 16,
+      "calibration": {
+        "full_semantic": {
+          "correct": 126,
+          "total": 128
+        },
+        "predicted_public_schema_valid": {
+          "correct": 128,
+          "total": 128
+        },
+        "primitive": {
+          "correct": 127,
+          "total": 128
+        },
+        "destination": {
+          "correct": 128,
+          "total": 128
+        },
+        "operand0": {
+          "correct": 127,
+          "total": 128
+        },
+        "required_operand1": {
+          "correct": 92,
+          "total": 92
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 36
+        },
+        "canonical_null_schema": {
+          "correct": 35,
+          "total": 36
+        },
+        "noncommutative_order": {
+          "correct": 42,
+          "total": 42
+        }
+      },
+      "train_prefix": {
+        "full_semantic": {
+          "correct": 507,
+          "total": 512
+        },
+        "predicted_public_schema_valid": {
+          "correct": 512,
+          "total": 512
+        },
+        "primitive": {
+          "correct": 512,
+          "total": 512
+        },
+        "destination": {
+          "correct": 512,
+          "total": 512
+        },
+        "operand0": {
+          "correct": 508,
+          "total": 512
+        },
+        "required_operand1": {
+          "correct": 425,
+          "total": 426
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 86
+        },
+        "canonical_null_schema": {
+          "correct": 86,
+          "total": 86
+        },
+        "noncommutative_order": {
+          "correct": 214,
+          "total": 215
+        }
+      },
+      "optimizer_presentations": 4096,
+      "unique_training_events_visited": 511
+    },
+    {
+      "step": 64,
+      "calibration": {
+        "full_semantic": {
+          "correct": 128,
+          "total": 128
+        },
+        "predicted_public_schema_valid": {
+          "correct": 128,
+          "total": 128
+        },
+        "primitive": {
+          "correct": 128,
+          "total": 128
+        },
+        "destination": {
+          "correct": 128,
+          "total": 128
+        },
+        "operand0": {
+          "correct": 128,
+          "total": 128
+        },
+        "required_operand1": {
+          "correct": 92,
+          "total": 92
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 36
+        },
+        "canonical_null_schema": {
+          "correct": 36,
+          "total": 36
+        },
+        "noncommutative_order": {
+          "correct": 42,
+          "total": 42
+        }
+      },
+      "train_prefix": {
+        "full_semantic": {
+          "correct": 512,
+          "total": 512
+        },
+        "predicted_public_schema_valid": {
+          "correct": 512,
+          "total": 512
+        },
+        "primitive": {
+          "correct": 512,
+          "total": 512
+        },
+        "destination": {
+          "correct": 512,
+          "total": 512
+        },
+        "operand0": {
+          "correct": 512,
+          "total": 512
+        },
+        "required_operand1": {
+          "correct": 426,
+          "total": 426
+        },
+        "raw_null_pointer_diagnostic": {
+          "correct": 0,
+          "total": 86
+        },
+        "canonical_null_schema": {
+          "correct": 86,
+          "total": 86
+        },
+        "noncommutative_order": {
+          "correct": 215,
+          "total": 215
+        }
+      },
+      "optimizer_presentations": 16384,
+      "unique_training_events_visited": 512
+    }
+  ],
+  "fit_seconds": 0.8511399361304939,
+  "elapsed_seconds": 2.074094516225159,
+  "peak_cuda_bytes": 104467968,
+  "source_sha256": {
+    "campaign_composition.py": "a10b6f1ac5341408dbbf0499a13ff921cdb9f713c4d691427fe6c896fb4d9733",
+    "campaign_composition_acquire.py": "cad67b5f5bb8e1f6e09bfea4ff2cdc4c3c3a46fc15d0e12f5ee418820a78f243",
+    "interface_proposals.py": "d6dd0639fe7726e382268eea13825ba7a78b2fb234d8acc6ed4fa9ae05d16458",
+    "retention_data.py": "1e980177c4e9344c8824ef3b13e2afdca4499778f9efe027d122695a847585b5",
+    "thinking_runtime.py": "42058f3bc523d43d169bd8520f7a4411c4849ee2f571621fc6e313683e59dad8"
+  },
+  "config_sha256": "2edb6c177de708b2cac835185505b045f937f58b51f70345e89b276828cdafea",
+  "claim": "single-development-seed typed dispatch only; no composition or promotion"
+}
