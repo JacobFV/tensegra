@@ -120,3 +120,11 @@ optimizer, exposure budget, objective weighting or conditioning would solve the
 latter; no further speculative sweep was run. It does not support claims that
 neural recurrence is intrinsically incapable of structured state. This entire
 track concerns supporting semantic interfaces, not programmable attention.
+
+Independent review reconstructed all512recorded fixed-node rows across16runs,
+verified identical paired initialization, recomputed edge/slot/complete-graph
+counts, and rehashed all16durable checkpoints. See
+[raw-metric audit](../../results/stage9/audits/semantic-fixed-node.json) and
+[checkpoint audit](../../results/stage9/audits/semantic-fixed-node-checkpoints.json).
+The8fixed constructions comprise3binding,3unification and2set examples; repeated
+optimizer presentations and both seeds do not increase that semantic support.
