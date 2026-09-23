@@ -1,0 +1,71 @@
+{
+  "metric_float_tolerance": {
+    "relative": 2e-06,
+    "absolute": 1e-07,
+    "note": "Only MAE and signed-error means; all integer counts exact. Non-power-of-two balanced support has FP32 rounding."
+  },
+  "narrow_scalar_gates": [
+    {
+      "arm": "unchanged",
+      "split": "validation",
+      "minimum_correct": 3393,
+      "support": 4096,
+      "passed": false
+    },
+    {
+      "arm": "unchanged",
+      "split": "test",
+      "minimum_correct": 3372,
+      "support": 4096,
+      "passed": false
+    },
+    {
+      "arm": "ce_4096",
+      "split": "validation",
+      "minimum_correct": 4077,
+      "support": 4096,
+      "passed": true
+    },
+    {
+      "arm": "ce_4096",
+      "split": "test",
+      "minimum_correct": 4077,
+      "support": 4096,
+      "passed": true
+    },
+    {
+      "arm": "ce_16384",
+      "split": "validation",
+      "minimum_correct": 4079,
+      "support": 4096,
+      "passed": true
+    },
+    {
+      "arm": "ce_16384",
+      "split": "test",
+      "minimum_correct": 4086,
+      "support": 4096,
+      "passed": true
+    }
+  ],
+  "rows_verified": 144,
+  "source_ref": "a4bd692",
+  "exposure": [
+    {
+      "events": 4096,
+      "rows": 24576,
+      "visited_rows": 24573,
+      "visited_events": 4096,
+      "validation_minimum": 4077
+    },
+    {
+      "events": 16384,
+      "rows": 98304,
+      "visited_rows": 88764,
+      "visited_events": 16384,
+      "validation_minimum": 4079
+    }
+  ],
+  "cpu_audit_wall_seconds": 4.261983366974164,
+  "scope": "Raw metrics, nested populations, visitation bitsets and source hashes. Frozen feature/weight replay remains separate; follow the registered development/confirmation role rather than promoting individual cells."
+}

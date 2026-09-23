@@ -14,7 +14,9 @@ for fit in m['fits']:
  n=fit['events'];path=a.root/f'ce-{n}.pt';assert sha(path.read_bytes())==fit['checkpoint_sha256'];head=torch.load(path,map_location='cpu',weights_only=True)
  x=torch.cat([f['train/2']['features'][d][:n]for d in cfg['delays']]);torch.testing.assert_close(head['mean'],x.mean(0),atol=2e-6,rtol=2e-6);torch.testing.assert_close(head['scale'],x.std(0).clamp_min(.01),atol=2e-6,rtol=2e-6)
  assert f['train/2']['event_row_hashes'][:n]==fit['training_event_hashes'];heads[f'ce_{n}']=head
-sets=[set(f[s+'/2']['event_row_hashes'])for s in cfg['data']];assert all(not(l&r)for i,l in enumerate(sets)for r in sets[i+1:]);checks=[]
+sets=[set(f[s+'/2']['event_row_hashes'])for s in cfg['data']];
+if 'balanced/8'in f:sets.append(set(f['balanced/8']['event_row_hashes']))
+assert all(not(l&r)for i,l in enumerate(sets)for r in sets[i+1:]);checks=[]
 for key,batch in f.items():
  for d,x in batch['features'].items():
   replay=dict(unchanged=torch.nn.functional.linear(x,original['scalar_heads.0.weight'],original['scalar_heads.0.bias']))

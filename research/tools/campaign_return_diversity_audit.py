@@ -1,8 +1,16 @@
 """Independent nested-data return readout raw metric and exposure audit."""
-import argparse,gzip,json,hashlib,subprocess,time
+import argparse,gzip,json,hashlib,subprocess,time,math
 from pathlib import Path
 from collections import Counter
-from campaign_returns_audit import counts,groups,FIELDS
+from campaign_returns_audit import counts as historical_counts,groups,FIELDS
+
+def counts(row):
+ errors=[(p-y)/2 for p,y in zip(row['predictions']['value'],row['targets']['value'])];n=len(errors)
+ exact=dict(correct=sum(e==0 for e in errors),total=n,mae=sum(abs(e)for e in errors)/n,signed_error=sum(errors)/n,within_half=sum(abs(e)<=.5 for e in errors))
+ for key,value in exact.items():
+  if key in ('mae','signed_error'):assert math.isclose(row['metrics'][key],value,rel_tol=2e-6,abs_tol=1e-7)
+  else:assert row['metrics'][key]==value
+ return historical_counts(dict(row,metrics=exact))
 
 def audit(root,ref):
  t=time.monotonic();m=json.load(gzip.open(root/'manifest.json.gz','rt'));c=m['config'];rows=json.load(gzip.open(root/'predictions.json.gz','rt'))
@@ -35,6 +43,6 @@ def audit(root,ref):
   assert f['label_counts']==f['support_by_field']['value']and min(f['label_counts'])>0
   exposure.append(dict(events=n,rows=f['rows'],visited_rows=sum(bits),visited_events=f['unique_events_sampled'],validation_minimum=min(r['counts']['value']['correct']for r in rows if r['split']=='validation'and r['head']==f'ce_{n}')))
  scalar_gates=[dict(arm=arm,split=split,minimum_correct=min(r['counts']['value']['correct']for r in rows if r['split']==split and r['head']==arm and r['target_delay']in c['delays']),support=c['data'][split]['size'],passed=all(r['counts']['value']['correct']/r['counts']['value']['total']>=.98 for r in rows if r['split']==split and r['head']==arm and r['target_delay']in c['delays']))for arm in arms for split in ('validation','test')if split in c['data']]
- return dict(narrow_scalar_gates=scalar_gates,rows_verified=len(rows),source_ref=ref,exposure=exposure,cpu_audit_wall_seconds=time.monotonic()-t,scope='Raw metrics, nested populations, visitation bitsets and source hashes. Frozen feature/weight replay remains separate; follow the registered development/confirmation role rather than promoting individual cells.')
+ return dict(metric_float_tolerance=dict(relative=2e-6,absolute=1e-7,note='Only MAE and signed-error means; all integer counts exact. Non-power-of-two balanced support has FP32 rounding.'),narrow_scalar_gates=scalar_gates,rows_verified=len(rows),source_ref=ref,exposure=exposure,cpu_audit_wall_seconds=time.monotonic()-t,scope='Raw metrics, nested populations, visitation bitsets and source hashes. Frozen feature/weight replay remains separate; follow the registered development/confirmation role rather than promoting individual cells.')
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('root',type=Path);p.add_argument('--source-ref',required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args();o=audit(a.root,a.source_ref);a.output.write_text(json.dumps(o,indent=2)+'\n');print(o)
