@@ -83,3 +83,19 @@ def test_equal_content_mass_fixture():
     out=m(b,'soft')
     expected=math.exp(4)/(math.exp(4)+15)
     assert torch.allclose(out['edge_mass'],torch.full_like(out['edge_mass'],expected),atol=1e-6)
+
+
+def test_restored_permutation_matches_all_metrics():
+    from topoformer.campaign_attention import restore_node_order
+    b=generate(2,16,4,seed=1235)
+    order=torch.rand(2,16).argsort(-1)
+    model=RoutingModel(width=32,heads=2)
+    for mode in ('soft','context','message','hard','none'):
+        original=model(b,mode)
+        restored=restore_node_order(model(permute_nodes(b,order),mode),order)
+        for key in ('logits','weights','edge_mass'):
+            assert torch.allclose(original[key],restored[key],atol=2e-5)
+        # Exact argmax ties among duplicate payloads may select another row in
+        # none/soft. Do not falsely demand equivariant tie-breaking.
+        if mode in ('context','message','hard'):
+            assert torch.equal(original['routes'],restored['routes'])

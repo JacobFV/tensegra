@@ -176,3 +176,18 @@ def metrics(output, gold, batch):
     return {'task': task, 'log_read_margin': (correct_log-wrong_log).mean((1,2)), 'all_node': correct.float().mean((1,2)),
             'suffix_value_trajectory': correct.all((1,2)), 'exact_pointer_path': path,
             'edge_mass': (output['weights'] * batch.adjacency[bi[:, None], batch.relations.flip(1)]).sum(-1).mean((1,2))}
+
+
+def restore_node_order(output, order):
+    """Map an equivariant forward result back to original node coordinates."""
+    b,n=order.shape
+    inv=order.argsort(-1)
+    d=output['routes'].shape[1]
+    result=dict(output)
+    result['logits']=output['logits'].gather(2,inv[:,None,:,None].expand(-1,d,-1,output['logits'].shape[-1]))
+    routed=order[:,None,:].expand(-1,d,-1).gather(2,output['routes'])
+    result['routes']=routed.gather(2,inv[:,None,:].expand(-1,d,-1))
+    result['edge_mass']=output['edge_mass'].gather(2,inv[:,None,:].expand(-1,d,-1))
+    w=output['weights'].gather(2,inv[:,None,:,None].expand(-1,d,-1,n))
+    result['weights']=w.gather(3,inv[:,None,None,:].expand(-1,d,n,-1))
+    return result
