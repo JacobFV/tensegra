@@ -6,7 +6,6 @@ is the default; tests must explicitly request smaller widths.
 """
 from __future__ import annotations
 import argparse
-from collections import Counter
 import hashlib
 import json
 import math
@@ -113,9 +112,8 @@ def sampled_losses(out,gold,pairs):
 
 
 def frequency_fit(corpus,indices,vocab,capacity):
-    """Sparse elementwise counts; no huge node-pair×vocabulary tensor."""
-    counters = {}
-    shapes = {}
+    """Vectorized categorical counts; pair tables have small fixed vocabularies."""
+    counters = {}; shapes = {}
     for index in indices:
         e=corpus[index]
         for language in ('english','spanish'):
@@ -123,11 +121,14 @@ def frequency_fit(corpus,indices,vocab,capacity):
             gold = base.targets(g,public,capacity,vocab,language)
             for key,value in gold.items():
                 shapes[key]=(value.shape,value.dtype)
-                if key not in counters: counters[key]={}
-                for position,label in enumerate(value.flatten().tolist()):
-                    counters[key].setdefault(position,Counter())[label]+=1
-    return {key:torch.tensor([counts[i].most_common(1)[0][0] for i in range(math.prod(shapes[key][0]))],
-                             dtype=shapes[key][1]).reshape(shapes[key][0]) for key,counts in counters.items()}
+                size={'presence':2,'kind':len(KINDS),'value':len(vocab)+1,
+                      'copy':2049,'edges':2,'slots':base.MAX_SLOT+1}[key]
+                labels=value.long()+(1 if key in ('value','copy','slots') else 0)
+                if labels.max()>=size: raise ValueError('frequency pointer exceeds fixed token capacity')
+                if key not in counters: counters[key]=torch.zeros((*value.shape,size),dtype=torch.int32)
+                counters[key].scatter_add_(-1,labels[...,None],torch.ones_like(labels[...,None],dtype=torch.int32))
+    return {key:(counts.argmax(-1)-(1 if key in ('value','copy','slots') else 0)).to(shapes[key][1])
+            for key,counts in counters.items()}
 
 
 def run(config):
