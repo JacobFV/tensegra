@@ -72,6 +72,7 @@ def evaluate(model,cache,sets,out,update):
 def run(config):
     torch.set_num_threads(2);start=time.monotonic();out=Path(config['output_dir']);out.mkdir(parents=True,exist_ok=False);data=Path(config['data_dir']);audit=json.loads((data/'audit.json').read_text());vocab=audit['value_vocabulary']
     sets={g:Dataset(load_cache(data/('train.jsonl.gz' if g=='train' else 'development.jsonl.gz'))[:config['train_count'] if g=='train' else config['evaluation_count']],vocab) for g in ('train','development')}
+    if digest(config['parent_checkpoint'])!=config['parent_checkpoint_sha256']:raise ValueError('parent checkpoint hash differs from frozen config')
     checkpoint=torch.load(config['parent_checkpoint'],map_location='cuda',weights_only=True)
     model=SemanticCurriculumActor(value_count=len(vocab),width=1024,capacity=128,workspace_rows=8,microsteps=2,autocast_dtype='bfloat16').cuda();model.load_state_dict(checkpoint['model']);model.eval()
     optimizer=torch.optim.AdamW(model.parameters(),lr=1e-4);optimizer.load_state_dict(checkpoint['optimizer'])
