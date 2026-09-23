@@ -6,6 +6,8 @@ def matches(r,key):
  fields=FIELDS if key=='joint' else (key,)
  return [all(r['predictions'][f][i]==r['targets'][f][i]for f in fields)for i in range(len(r['targets']['value']))]
 def counts(r):
+ errors=[(a-b)/2 for a,b in zip(r['predictions']['value'],r['targets']['value'])];m=r['metrics']
+ assert m==dict(correct=sum(e==0 for e in errors),total=len(errors),mae=sum(abs(e)for e in errors)/len(errors),signed_error=sum(errors)/len(errors),within_half=sum(abs(e)<=.5 for e in errors))
  m={f:matches(r,f)for f in FIELDS};m['joint']=matches(r,'joint');m['nonvalue_joint']=[all(v)for v in zip(*(m[f]for f in FIELDS[1:]))];m['argument1_required']=[ok for ok,y in zip(m['argument1'],r['targets']['argument1'])if y!=6]
  return {k:dict(correct=sum(v),total=len(v))for k,v in m.items()}
 def load(p):
