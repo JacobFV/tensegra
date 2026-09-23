@@ -23,3 +23,9 @@ Acquisition (256updates, one seed,128validation cases/cell) showed near-perfect 
 ## Return main budget
 
 Authorize fresh-data1000updates×batch32, three paired initializations, six encoder/access arms, genuine width1024. Train delays0/1/2/4; evaluate clean0/1/2/4/8/16/32, interventions16only,512examples/cell. Required second-operand identity excludes unary null cases. Use bounded evaluation minibatches and freeze config/source before final test. Exactstorage and neuralreadout remain separate.
+
+## Observation-ID fairness correction
+
+A source audit during the frozen belief main run found that protected ledger operations consume observation IDs while the generic recurrent encoder only consumes payload/role/action. Preserve this run as an architectural-plus-metadata-access comparison; clean/order conditions have a narrower interpretation. Do not claim a strictly matched update comparison on ID-dependent duplicate/retraction controls.
+
+A separately frozen followup will expose the same stable public ID features to both learned encoders, test ID sensitivity and repeated-ID consistency, and repeat unchanged1000update/3seed/512condition budgets atwidth1024. No silent source substitution or pooling of recipes. GPU queue: currentbelief → semantic batchtiming → returnmain → ID-matched beliefmain → semantic exposure sweep.
