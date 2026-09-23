@@ -8,7 +8,6 @@ from __future__ import annotations
 import argparse
 import base64
 import gzip
-import numpy as np
 import hashlib
 import json
 import math
@@ -164,17 +163,22 @@ def frequency_fit(corpus,indices,vocab,capacity):
 
 def pack_graph(graph):
     result={k:v.tolist() for k,v in graph.items() if k!='edges'}
-    edges=graph['edges'].detach().cpu().numpy()
+    edges=graph['edges'].detach().cpu()
+    flat=edges.flatten().to(torch.uint8)
+    padded=F.pad(flat,(0,(-flat.numel())%8))
+    packed=(padded.reshape(-1,8)*(2**torch.arange(8))).sum(-1).tolist()
     result['edges']=dict(shape=list(edges.shape),bitorder='little',
-                         packed_b64=base64.b64encode(np.packbits(edges,bitorder='little').tobytes()).decode())
+                         packed_b64=base64.b64encode(bytes(packed)).decode())
     return result
 
 
 def unpack_graph(graph):
     result={k:torch.tensor(v) for k,v in graph.items() if k!='edges'}
-    encoded=graph['edges']; packed=np.frombuffer(base64.b64decode(encoded['packed_b64']),dtype=np.uint8)
-    edges=np.unpackbits(packed,bitorder=encoded['bitorder'],count=math.prod(encoded['shape'])).reshape(encoded['shape'])
-    result['edges']=torch.from_numpy(edges.astype(bool))
+    encoded=graph['edges']
+    if encoded['bitorder']!='little': raise ValueError('unsupported edge bit order')
+    packed=torch.tensor(list(base64.b64decode(encoded['packed_b64'])),dtype=torch.uint8)
+    edges=((packed[:,None]>>torch.arange(8))&1).flatten()[:math.prod(encoded['shape'])]
+    result['edges']=edges.reshape(encoded['shape']).bool()
     return result
 
 
