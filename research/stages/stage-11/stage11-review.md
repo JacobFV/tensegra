@@ -25,3 +25,7 @@ Fresh known-renderer construction evaluation proceeds only after fixed-set compl
 Review source/protocol selection boundaries before main launch. Reconstruct raw counts and gates without importing producer metrics; inspect pairing, data/hash provenance and checkpoint identity. For retained feature/score caches, replay frozen decoding on CPU where practical. Distinguish numerical reconstruction from fresh inference. Recheck all baseline tracked bytes at completion, review report claims against raw evidence, and preserve failed attempts and stopping decisions.
 
 Initial source inventory is recorded in `research/results/stage11/audits/initial-baseline-preservation.json`.
+
+## Frozen belief reference
+
+The reference-only package independently verifies 41 local source/configuration/artifact hashes and links all nine retained comparator checkpoint hashes to Stage10's independent byte audit. No new belief model inference, training, adapter or remote checkpoint rehashing occurred. Retaining all three ledger-only seeds avoids best-seed selection. The guarantee concerns consistently renamed opaque observation handles, not meaningful entity identities or posterior correctness.
