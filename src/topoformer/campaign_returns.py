@@ -67,13 +67,15 @@ def run(cfg,out):
     model.requires_grad_(False)
     cache={};capture_times={}
     for split,spec in cfg['data'].items():
+        if split == 'test': continue
         for distractor in ([2] if split=='train' else cfg['eval_distractors']):
             tick=time.monotonic()
             cache[f'{split}/{distractor}']=feature_batch(model,spec['seed'],spec['size'],distractor,cfg['delays'],cfg['batch_size'],device)
             torch.cuda.synchronize();capture_times[f'{split}/{distractor}']=time.monotonic()-tick
-    sets=[set(cache[f'{split}/2']['event_row_hashes']) for split in cfg['data']]
+    sets=[set(cache[f'{split}/2']['event_row_hashes']) for split in cfg['data'] if split != 'test']
     assert all(not(left&right) for i,left in enumerate(sets) for right in sets[i+1:])
     for split in cfg['data']:
+        if split == 'test': continue
         reference=cache[f'{split}/2']
         for key,batch in cache.items():
             if key.startswith(split+'/'):assert batch['event_row_hashes']==reference['event_row_hashes']
@@ -99,13 +101,26 @@ def run(cfg,out):
         if step%cfg['ce_check_every']==0 or step==cfg['ce_updates']:
             cells=calibration(cache,lambda features:head((features-mean)/scale),device)
             score=selection_score(cells);ce_curve.append(dict(step=step,cells=cells,score=score))
-            if best is None or score>best:best=score;best_state=copy.deepcopy(head.state_dict());best_step=step
+            if (step == cfg['fixed_ce_step'] if 'fixed_ce_step' in cfg else best is None or score>best):
+                best=score;best_state=copy.deepcopy(head.state_dict());best_step=step
         if step==cfg['ce_updates']:break
         index=torch.randint(len(x),(cfg['ce_batch_size'],),device=device,generator=generator)
         loss=F.cross_entropy(head(z[index]),y[index]);optimizer.zero_grad(set_to_none=True);loss.backward();optimizer.step()
         ce_losses.append(float(loss.detach()))
-    ce_seconds=time.monotonic()-tick;head.load_state_dict(best_state);head.eval()
+    ce_seconds=time.monotonic()-tick
+    if 'fixed_ce_step' in cfg: assert best_step == cfg['fixed_ce_step'] == cfg['ce_updates']
+    head.load_state_dict(best_state);head.eval()
     cepath=out/'ce.pt';torch.save(dict(state={k:v.cpu() for k,v in head.state_dict().items()},mean=mean.cpu(),scale=scale.cpu()),cepath)
+    # Test recurrence is first exposed after the fixed recipe/weights are finalized.
+    if 'test' in cfg['data']:
+        spec=cfg['data']['test']
+        for distractor in cfg['eval_distractors']:
+            tick=time.monotonic()
+            cache[f'test/{distractor}']=feature_batch(model,spec['seed'],spec['size'],distractor,cfg['test_delays'],cfg['batch_size'],device)
+            torch.cuda.synchronize();capture_times[f'test/{distractor}']=time.monotonic()-tick
+            assert cache[f'test/{distractor}']['event_row_hashes']==cache['test/2']['event_row_hashes']
+        test_ids=set(cache['test/2']['event_row_hashes'])
+        assert all(not(test_ids & ids) for ids in sets)
     rows=[];logits={}
     with torch.no_grad():
         for key,batch in cache.items():
@@ -125,7 +140,7 @@ def run(cfg,out):
         width=1024,memory_tokens=6,memory_coordinates=6144,fit_rows=len(y),fit_unique_events=len(set(train['event_row_hashes'])),
         label_counts=torch.bincount(train['labels'],minlength=33).tolist(),feature_cache=feature_record,logit_cache=logit_record,
         initial_backbone_state_sha256=tensor_hash(model.state_dict()),fit_candidates=candidates,selected_alpha=selected_alpha,
-        ce_curve=ce_curve,ce_losses=ce_losses,selected_ce_step=best_step,ce_optimizer_presentations=cfg['ce_updates']*cfg['ce_batch_size'],
+        recipe_fixed=('fixed_ce_step' in cfg),ce_curve=ce_curve,ce_losses=ce_losses,selected_ce_step=best_step,ce_optimizer_presentations=cfg['ce_updates']*cfg['ce_batch_size'],
         readout_hashes={p.name:sha(p) for p in (ridgepath,cepath)},predictions_sha256=sha(predictions),
         capture_seconds=capture_times,ridge_seconds=fit_times,ce_seconds=ce_seconds,seconds=time.monotonic()-started,
         peak_cuda_allocated=torch.cuda.max_memory_allocated(),process_peak_rss=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss*1024,
@@ -136,4 +151,8 @@ def run(cfg,out):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--config',required=True);p.add_argument('--output',required=True)
-    a=p.parse_args();run(json.loads(Path(a.config).read_text()),a.output)
+    a=p.parse_args();config=json.loads(Path(a.config).read_text())
+    if 'runs' in config:
+        specs=config.pop('runs')
+        for spec in specs:run(config|spec,Path(a.output)/str(spec['backbone_seed']))
+    else:run(config,a.output)
