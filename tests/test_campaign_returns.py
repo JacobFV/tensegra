@@ -61,3 +61,15 @@ def test_r04_pairs_nested_diversity_without_delayed_test_selection():
         assert run['data']['train']['size']==max(cfg['pool_sizes'])
         assert run['data']['calibration']['size']==1024
         assert run['data']['validation']['size']==run['data']['test']['size']==4096
+
+
+def test_balanced_grid_uses_observed_typed_values_without_relabeling():
+    import torch
+    from topoformer.retention_data import make_batch
+    from topoformer.campaign_returns_balanced import balanced_indices
+    batch=make_batch(987612,1024,distractors=0)
+    ids=balanced_indices(batch,2)
+    assert len(ids)==104 and len(ids.unique())==104
+    pairs=torch.stack([batch['targets']['type'][ids],batch['targets']['value'][ids]],1)
+    assert torch.unique(pairs,dim=0,return_counts=True)[1].tolist()==[2]*52
+    assert torch.equal(batch['targets']['value'][ids],(2*batch['public']['event']['values'][ids,0]+16).long())
