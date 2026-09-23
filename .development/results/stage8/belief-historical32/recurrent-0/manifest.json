@@ -1,0 +1,45 @@
+{
+  "config": {
+    "mode": "recurrent",
+    "device": "cpu",
+    "width": 32,
+    "inner": 64,
+    "seed": 0,
+    "threads": 2,
+    "steps": 1000,
+    "batch": 32,
+    "candidates": 8,
+    "probe_count": 64,
+    "eval_count": 512,
+    "eval_candidates": [
+      8,
+      16
+    ],
+    "eval_splits": [
+      "validation",
+      "test"
+    ],
+    "log_every": 200,
+    "lr": 0.0003,
+    "compatibility_weight": 1.0,
+    "observation_id_features": true,
+    "study": "historical_width32_ablation_only"
+  },
+  "config_sha256": "d899a62651238a35cafadd6ca666181dfcbf74253dd5a8a27f1deb601e1f2e8d",
+  "source_sha256": {
+    "belief_study.py": "5e89625340179bc686527f7d7fc4b8f664b88be6fb5e0e48a51246c046c64b03",
+    "belief_state.py": "04e28df53062bf4124687309389988eba09e82bbc3c8cbc0edc86fabe2b6acd1"
+  },
+  "git": "041ab76f0bc6949986c9bb4e53aa9101dd2cf4b5",
+  "parameters": 19267,
+  "architecture_supplied": [
+    "typed roles",
+    "candidate records",
+    "observation identity",
+    "protected ledger for protected arm"
+  ],
+  "composition_allowed": false,
+  "device": "cpu",
+  "cuda_name": null,
+  "checkpoint_sha256": "2ba5a06e873408ee61ecde95ea64bb07d3d2d89b5ea6c26ed478e284eaaf8c01"
+}
