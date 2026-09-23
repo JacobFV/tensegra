@@ -20,7 +20,7 @@ def evaluate(model,cfg,out,step,device):
         collected={};elapsed=0.;timers=[]
         for offset in range(0,cfg['eval_examples'],cfg['eval_batch']):
             count=min(cfg['eval_batch'],cfg['eval_examples']-offset)
-            batch=generate(count,c['nodes'],c['depth'],groups=c.get('groups',4),seed=cfg['eval_seed']+c.get('data_group',ci)*100000+offset,device=device,heldout_composition=c.get('composition',False))
+            batch=generate(count,c['nodes'],c['depth'],groups=c.get('groups',4),seed=cfg['eval_seed']+c.get('data_group',ci)*100000+offset,device=device,heldout_composition=c.get('composition',False),balanced=cfg.get('generator','independent_v1')=='block_permutation_v2')
             original=batch
             if c.get('instruction_swap'):batch=swap_instruction(batch)
             gold=targets(batch);given=corrupt(batch,c.get('corruption','clean'),cfg['eval_seed']+ci*100000+offset+50000);order=None
@@ -90,7 +90,7 @@ def run(cfg,out):
             curves.append(evaluate(model,evaluation,out,step,device))
         if step==cfg['steps']:break
         depth=1+step%4
-        batch=generate(cfg['batch'],cfg['nodes'],depth,groups=cfg.get('groups',4),seed=cfg['train_seed']+step,device=device,train=True)
+        batch=generate(cfg['batch'],cfg['nodes'],depth,groups=cfg.get('groups',4),seed=cfg['train_seed']+step,device=device,train=True,balanced=cfg.get('generator','independent_v1')=='block_permutation_v2')
         result=model(batch,cfg['mode']);gold=targets(batch)
         loss=F.cross_entropy(result['logits'].flatten(0,2),gold.flatten())
         optimizer.zero_grad(set_to_none=True);loss.backward();torch.nn.utils.clip_grad_norm_(model.parameters(),1.);optimizer.step()

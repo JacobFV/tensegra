@@ -25,3 +25,7 @@ Source2ba70af; seed301; four matched1000-update runs,16,000 graph draws each; no
 Full development controller occupancy63.01seconds: soft16.82, exact gather13.98, keyed context17.14, no graph15.05. The preceding mechanical profile cost3.64seconds. Six CPU contract tests passed, including unique local matches, repeated global codes, direct reference paths, permutation behavior, gradients, exact-gather/mask equivalence and independent supplied-target reconstruction. Independent raw audit is requested; historical artifacts remain unchanged.
 
 Next: narrow three-seed confirmation on fresh constructions and larger separate/joint shifts. No architecture changes or route auxiliary are justified by this development result. No composition or calibrated execution claim follows from it.
+
+## Subsequent generator-only limitation audit
+
+Before extending this benchmark to depth32, a CPU-only audit (128 new N128/K8 graphs, no learned model) found the mean number of distinct terminal identities falls from16 after one hop to6.17 after four,2.30 after sixteen and1.38 after thirty-two. Changing the first instruction changes the terminal entity in only12.5% of these depth32 episodes. Thus a longer supplied path is not automatically sustained identity-sensitive computation. A04's fresh-code acquisition result remains valid, but no deep identity-maintenance claim is made. The unrun A05 confirmation draft is superseded by a separately versioned block-permutation generator and a fresh development screen.

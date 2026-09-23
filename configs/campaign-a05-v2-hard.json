@@ -1,0 +1,97 @@
+{
+  "seed": 501,
+  "width": 1024,
+  "steps": 1000,
+  "batch": 16,
+  "nodes": 32,
+  "groups": 4,
+  "lr": 0.0003,
+  "strength": 8,
+  "train_seed": 91000000,
+  "eval_seed": 92000000,
+  "eval_examples": 256,
+  "eval_batch": 64,
+  "checkpoints": [
+    0,
+    10,
+    25,
+    50,
+    100,
+    250,
+    500,
+    1000
+  ],
+  "conditions": [
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0
+    },
+    {
+      "nodes": 64,
+      "depth": 4,
+      "data_group": 1
+    },
+    {
+      "nodes": 32,
+      "depth": 8,
+      "data_group": 2
+    },
+    {
+      "nodes": 64,
+      "depth": 8,
+      "data_group": 3
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "composition": true,
+      "data_group": 4
+    },
+    {
+      "nodes": 64,
+      "depth": 4,
+      "groups": 8,
+      "data_group": 5
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "instruction_swap": true,
+      "data_group": 0
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "wrong_instruction": true,
+      "data_group": 0
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "zero_content": true,
+      "data_group": 0
+    },
+    {
+      "nodes": 32,
+      "depth": 4,
+      "node_permutation": true,
+      "data_group": 0
+    },
+    {
+      "nodes": 128,
+      "depth": 32,
+      "groups": 8,
+      "data_group": 10
+    },
+    {
+      "nodes": 128,
+      "depth": 32,
+      "groups": 8,
+      "data_group": 10,
+      "selector_scale_override": 16.0
+    }
+  ],
+  "mode": "hard",
+  "generator": "block_permutation_v2"
+}

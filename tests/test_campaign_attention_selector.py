@@ -106,3 +106,19 @@ def test_corruption_metric_references_and_curve_isolation(tmp_path):
     early=json.loads((path/'eval-00000.json').read_text());final=json.loads((path/'eval-00001.json').read_text())
     assert early['eval_seed']==300 and final['eval_seed']==200
     assert early['rows'][0]['examples']==4 and final['rows'][0]['examples']==8
+
+def test_balanced_generator_preserves_identity_cardinality():
+    for seed in [981,982,983]:
+        b=generate(4,32,32,seed=seed,groups=4,balanced=True)
+        assert (b.adjacency.sum(-1)==4).all() and (b.adjacency.sum(-2)==4).all()
+        successor=oracle_successors(b);pointer=torch.arange(32)[None].expand(4,-1)
+        for t in range(32):
+            pointer=successor[:,t].gather(1,pointer)
+            assert all(len(torch.unique(row))==8 for row in pointer)
+        # Restrict starts to one code: every instruction is a bijection into
+        # the requested group, so no two identities in that group can merge.
+        _,groups=torch.unique(b.attributes[0],dim=0,return_inverse=True)
+        p=torch.where(groups==0)[0]
+        for t in range(32):
+            p=successor[0,t,p]
+            assert len(torch.unique(p))==8
