@@ -24,3 +24,5 @@ A separate CPU-only diagnostic permits arbitrary node renumbering while preservi
 For DEV, S01 fails the node-attribute multiset in 390/512 cases and edge-label multiset in the remaining122; S06 splits504/8, S07 splits481/31. Thus canonical numbering alone is not concealing fully correct graphs in these inspected outputs. This does not prove that canonical-order supervision is the easiest way to learn them.
 
 NetworkX3.6.1 was already installed. The bounded audit took33.09184 CPU seconds with no neural inference; a mechanical fixture verifies renumbering invariance and rejection of changed identities or ordered slots. Raw decisions are in `research/results/campaign-01/semantics/s08-isomorphism`. Canonical primary metrics remain unchanged.
+
+Independent audit completed: reviewer `c538e8a` reconstructed S07 raw decisions/calibration and S08 lossless-logit statistics; `9196ec2` independently checked all3,840 exact-isomorphism rejections. No count discrepancies were found.

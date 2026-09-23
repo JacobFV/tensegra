@@ -21,3 +21,5 @@ Source `04b44e9`, main config `2c576db`: width1,024, eight workspace rows, four 
 All results are development evidence on two tree shapes at depth3, with diverse equality/reference patterns. [S08](S08-report.md) separately tests whether the new alignment target was acquired. The original occurrence proposition is not refuted merely because graph recovery fails; its elementary learned effect must be measured directly.
 
 Raw scores/targets, calibration records, field/error counts, immutable checkpoint hashes and full receipts are under `research/results/campaign-01/semantics/s07-occurrence-n8192-dev201`; separate engineered-reference predictions are in `s07-occurrence-identity-diagnostic`. Independent reconstruction requested. Reserved confirmation predictions remain untouched.
+
+Independent audit completed: reviewer `c538e8a` reconstructed S07 raw decisions/calibration and S08 lossless-logit statistics; `9196ec2` independently checked all3,840 exact-isomorphism rejections. No count discrepancies were found.
