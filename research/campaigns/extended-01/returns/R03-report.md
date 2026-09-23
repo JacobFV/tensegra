@@ -14,7 +14,7 @@ All remaining delay-16 validation errors are float-valued returns. With eight di
 
 The single shared 1,024-input categorical head has 33,825 parameters. Its pool contains 16,384 distinct events and 98,304 delay-specific rows, with 230,400 / 460,800 / 921,600 optimizer presentations. External process occupancy was 17.38 seconds, including initialization and export; peak CUDA allocation was 1,208,889,856 bytes. This is optimization exposure on frozen features, not further recurrent-backbone training.
 
-Next: freeze the development-selected **16,384-event, 900-update** recipe for fresh three-backbone confirmation (R04). Neither the failed R01 confirmation nor this reused development validation is promoted into an execution authorization. Independent audit is pending.
+Next: freeze the development-selected **16,384-event, 900-update** recipe for fresh three-backbone confirmation (R04). Neither the failed R01 confirmation nor this reused development validation is promoted into an execution authorization. Independent audit passed all 90 raw cells, cached-logit replay and exact step-900 agreement with R02 (reviewer commits 3bc6566/7970609).
 
 [Manifest](../../../results/campaign-01/returns/r03-development/manifest.json.gz), [raw predictions](../../../results/campaign-01/returns/r03-development/predictions.json.gz), and [process receipt](../../../results/campaign-01/returns/r03-development/process.json) retain all endpoints. Remote coefficients and lossless logits remain under `~/topoformer-campaign-01/returns/r03-development/`; immutable feature provenance points to R02.
 
