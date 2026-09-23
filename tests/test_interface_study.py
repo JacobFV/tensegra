@@ -15,3 +15,10 @@ def test_step_zero_artifacts_and_gates_do_not_claim_acquisition(tmp_path):
     assert raw['readiness']['threshold_source'] == 'validation'
     assert raw['data_hashes']['iid_validation'] != raw['data_hashes']['iid_test']
     assert raw['delta']['supplied_operation_and_operands']
+
+
+def test_progressive_training_blocks_missing_full_gate(tmp_path):
+    import pytest
+    from topoformer.interface_study import run_progressive
+    with pytest.raises(ValueError, match='Gate A'):
+        run_progressive({}, [0,1,2], tmp_path, steps=1)

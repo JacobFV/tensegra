@@ -84,3 +84,15 @@ def test_boolean_comparison_results_never_feed_numeric_operands():
     for row in make_proposals(100,seed=19,split='ood'):
         boolean_keys = {r[0] for r in row.instructions if r[1] == 4}
         assert all(r[2] not in boolean_keys and r[3] not in boolean_keys for r in row.instructions)
+
+
+def test_progressive_joint_support_has_no_crossed_impossible_pairs_or_future_input():
+    from topoformer.interface_proposals import joint_evidence, JointPosteriorModel
+    episode = joint_evidence(seed=1, steps=4)
+    assert episode['hypotheses'] == [('sub', 'd', 'a', 'b'), ('sub', 'd', 'b', 'a')]
+    model = JointPosteriorModel(hidden=8)
+    full = model(episode['frames'][None])
+    prefix = model(episode['frames'][None,:2])
+    assert torch.allclose(full[:,:2],prefix)
+    assert torch.allclose(full.sum(-1),torch.ones(1,4))
+    assert full.shape[-1] == 2

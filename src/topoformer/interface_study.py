@@ -209,3 +209,44 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+def run_progressive(validation_matrix, expected_seeds, output, *, steps, seed=0, train_size=128, eval_size=512):
+    """Explicit separate A2 run; refuses incomplete or failed frozen Gate A.
+
+Caller must authorize/freeze its budget. The finite candidate set and public
+likelihood observations are supplied priors, not learned proposal discovery.
+"""
+    if not gate_a_matrix(validation_matrix, expected_seeds):
+        raise ValueError('Gate A must pass every expected seed and validation condition')
+    from .interface_proposals import JointPosteriorModel, joint_evidence
+    torch.set_num_threads(2)
+    torch.manual_seed(seed)
+    train = [joint_evidence(seed=seed*10000+i) for i in range(train_size)]
+    validation = [joint_evidence(seed=seed*10000+2000+i) for i in range(eval_size)]
+    frames = torch.stack([r['frames'] for r in train])
+    targets = torch.stack([r['private_posterior'] for r in train])
+    model = JointPosteriorModel()
+    initial = state_hash(model)
+    optimizer = torch.optim.Adam(model.parameters(),lr=.01)
+    curves = []
+    for step in range(steps+1):
+        belief = model(frames)
+        loss = -(targets*belief.clamp_min(1e-8).log()).sum(-1).mean()
+        if step % 50 == 0 or step == steps:
+            curves.append({'step':step,'joint_cross_entropy':float(loss.detach())})
+        if step < steps:
+            optimizer.zero_grad(); loss.backward(); optimizer.step()
+    with torch.no_grad():
+        beliefs = model(torch.stack([r['frames'] for r in validation]))
+    truth = torch.stack([r['private_posterior'] for r in validation])
+    result = {'scope':'Supplied finite joint hypotheses and likelihood evidence; no runtime composition',
+              'curves':curves,'mean_absolute_posterior_error':float((beliefs-truth).abs().mean()),
+              'private_targets':truth.tolist(),'beliefs':beliefs.tolist(),'initial_hash':initial,
+              'checkpoint_hash':state_hash(model),'gate_matrix_hash':digest(validation_matrix),
+              'config':dict(steps=steps,seed=seed,train_size=train_size,eval_size=eval_size),
+              'public_frames_hash':digest(frames.tolist())}
+    output = Path(output); output.mkdir(parents=True,exist_ok=True)
+    torch.save(model.state_dict(),output/'progressive.pt')
+    (output/'progressive.json').write_text(json.dumps(result,indent=2))
+    return result

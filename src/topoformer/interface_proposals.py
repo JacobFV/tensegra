@@ -178,3 +178,35 @@ def arithmetic_delta(operation, left, right=None):
     else:
         raise ValueError(operation)
     return {'remove_operands': [left] if operation == 'neg' else [left, right], 'insert_value': value, 'value_type':'boolean' if operation == 'compare' else 'integer'}
+
+
+def joint_evidence(*, seed, steps=6):
+    """Narrow A2 scaffold with supplied finite JOINT hypotheses and likelihoods.
+
+Public frames reveal likelihood support sequentially. Private posterior targets
+are normalized accumulated likelihoods; no independently factorized arg choices
+can invent the impossible (a,a) or (b,b) hypotheses.
+"""
+    rng = random.Random(seed)
+    frames = torch.tensor([[[rng.uniform(.1,.9)] for _ in range(2)] for _ in range(steps)])
+    log_support = frames.squeeze(-1).log().cumsum(0)
+    return {'hypotheses':[('sub','d','a','b'),('sub','d','b','a')],
+            'frames':frames, 'private_posterior':log_support.softmax(-1)}
+
+
+class JointPosteriorModel(nn.Module):
+    """Past/current public-frame recurrence; no future frame or target input."""
+    def __init__(self, hidden=16):
+        super().__init__()
+        self.cell = nn.GRUCell(1,hidden)
+        self.readout = nn.Linear(hidden,1)
+        self.hidden = hidden
+
+    def forward(self, frames):
+        b,t,h,_ = frames.shape
+        state = frames.new_zeros(b*h,self.hidden)
+        beliefs = []
+        for step in range(t):
+            state = self.cell(frames[:,step].reshape(b*h,1),state)
+            beliefs.append(self.readout(state).reshape(b,h).softmax(-1))
+        return torch.stack(beliefs,1)
