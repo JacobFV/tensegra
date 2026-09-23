@@ -39,3 +39,7 @@ The first completed frozen checkpoint fixes the original matrix with the supplie
 ## Profiled semantic oracle development release
 
 The four three-update head profiles took 0.458/0.065/0.284/0.264 seconds (first includes cold startup). Peak CUDA allocation: 170 MB additive / 392 MB interaction; head parameters 1.90M / 6.36M with width-1024 privileged node codes and interaction rank128. Authorize the frozen four-arm × two-development-seed × 300-update fixed-node comparison, estimated2–3minutes, hard cap5minutes. It runs after frozen return probes. This is closed-set privileged decoder acquisition, not public-text or fresh-structure success. Stop at the declared budget; C3 remains gated.
+
+## Oracle edge-fixture correction
+
+The first C2 development matrix (eight runs, 44.4 model-seconds) fits every real-edge slot but no complete graph; residual edge errors are false positives. The fixture's edge projections omitted the biases present in the Stage 8 reference. Preserve that failed result. Authorize a separately versioned faithful-affine check restoring only those bias terms, at the identical four-arm × two-seed × 300-update budget (cap2GPUminutes). Do not extend exposure or infer a public-text conclusion from the simplified fixture. C3 remains blocked until a faithful complete-acquisition test succeeds.
