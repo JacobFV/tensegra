@@ -1,3 +1,7 @@
+## Current final state
+
+A06 complete: all12models, sourceb993a44, raw/report04101ee. Fullprocess355.31s, batchrelease-to-receipt462.00s; totalattention890.50s. All grapharms acquireIID and moderateOOD. OriginaljointN128D32K8 soft68.62%,gather75.72%,context25.00% mean; all diagnosticpaths100%. Frozencontent16 repairssoft/gather100%; contextboth16repairs100%, whilecontentonly60.32%. Each has100%complete suffix aftersuccessfulrepair. Strongbaseline tie, no unique attentionadvantage. Ordinaryunconstrainedgraph-tokenbaseline absent and prominently disclosed. Fullreview pending. No activeattentionGPUjobs and noneplanned. Parent requested closebranch, notnewarchitecture. Durablecheckpointroot ~/topoformer-campaign01/attention/a06. Afterreview, updatea06-report auditstatus andsendrootfinalcommit.
+
 # Attention track handoff
 
 Current source/config freeze: **b993a44**, A06 confirmation ready, not launched. Parent /root is sole GPU scheduler. Await explicit per-seed release; do not run automatically. Remote source `/tmp/campaign-a06-source-b993a44`;10 CPU tests passed1.48s, reviewer preflight clear. Controller `research/campaigns/extended-01/attention/run-a06.sh SEED`; root cap300seconds per seed601/602/603. Outputs `/tmp/campaign-a06-results/SEED`. Report GPU FREE/full occupancy before fetching/analysis. Immutable configs preserve four arms1000updates,1024fresh final events,19cells/arm and22context. No selection from confirmation outcomes.
