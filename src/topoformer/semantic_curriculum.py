@@ -241,6 +241,24 @@ def calibrate_edge_thresholds(model,examples,vocab,capacity,grid=(-6.,-4.,-2.,0.
                           policy='fixed first training graphs, both languages; no evaluation labels; per-relation grid F1; lowest threshold wins ties')
 
 
+def partition_corpus(corpus,eval_count,vocab_pool_count,excluded_keys=()):
+    """Reserve fresh semantic keys for evaluation; exclusions remain train-eligible."""
+    excluded=set(excluded_keys); heldout=[]; skipped=[]; prefix_overlap=0
+    for index in range(len(corpus)):
+        key=base.semantic_key(corpus[index].privileged.graph)
+        if index<eval_count and key in excluded: prefix_overlap+=1
+        if key in excluded: skipped.append(index)
+        else: heldout.append(index)
+        if len(heldout)==eval_count: break
+    if len(heldout)<eval_count: raise ValueError('not enough fresh heldout semantic constructions')
+    reserved=set(heldout)
+    training=[i for i in range(len(corpus)) if i not in reserved][:vocab_pool_count]
+    if len(training)<vocab_pool_count: raise ValueError('not enough training vocabulary constructions')
+    return heldout,training,dict(inspected_prefix_overlap=prefix_overlap,selected_heldout_overlap=0,
+             excluded_from_heldout_indices=skipped,heldout_indices=heldout,
+             exclusion_keys=len(excluded),policy='skip prior evaluation semantic keys only when reserving evaluation; never exclude them from training eligibility')
+
+
 def run(config):
     if not base.verify_vendor_manifest(): raise ValueError('vendor checksum mismatch')
     torch.set_num_threads(min(2,config.get('threads',2)))
@@ -251,20 +269,25 @@ def run(config):
     presentations=config['presentations']; batch_size=config.get('batch_size',2)
     if presentations % batch_size: raise ValueError('presentations must divide batch size exactly')
     if eval_count<1: raise ValueError('nonempty heldout required')
-    corpus=base.CorpusIndex(output/'corpus.db',requested=vocab_pool_count+eval_count,seed=config.get('data_seed',700000),
+    exclusion_path=config.get('heldout_exclusion_path')
+    exclusion_bytes=Path(exclusion_path).read_bytes() if exclusion_path else b''
+    exclusion_keys=json.loads(exclusion_bytes)['semantic_keys'] if exclusion_bytes else []
+    corpus=base.CorpusIndex(output/'corpus.db',requested=vocab_pool_count+eval_count+len(set(exclusion_keys)),seed=config.get('data_seed',700000),
                            max_attempts=config.get('max_attempts',20*(vocab_pool_count+eval_count)))
     (output/'corpus.json').write_text(json.dumps(corpus.audit,indent=2))
     if len(corpus)<vocab_pool_count+eval_count: raise ValueError('actual corpus insufficient; no training performed')
-    heldout=[corpus[i] for i in range(eval_count)]
-    train_indices=range(eval_count,eval_count+train_count)
-    vocab=base.value_vocabulary(corpus[i] for i in range(eval_count,eval_count+vocab_pool_count))
+    heldout_indices,vocab_indices,split_audit=partition_corpus(corpus,eval_count,vocab_pool_count,exclusion_keys)
+    split_audit['exclusion_file_sha256']=hashlib.sha256(exclusion_bytes).hexdigest() if exclusion_bytes else None
+    heldout=[corpus[i] for i in heldout_indices]
+    train_indices=vocab_indices[:train_count]
+    vocab=base.value_vocabulary(corpus[i] for i in vocab_indices)
     capacity=config.get('node_capacity',128)
     files=[Path(__file__),Path(base.__file__),Path(__file__).with_name('thinking.py'),Path(__file__).with_name('thinking_language.py'),Path(__file__).with_name('tcn_data.py'),Path(__file__).with_name('semantic_graph.py')]
     train_summary=construction_summary(corpus[i] for i in train_indices)
     heldout_summary=construction_summary(heldout)
     manifest=dict(config=config,environment=dict(torch_version=torch.__version__,cuda_version=torch.version.cuda,device=config.get('device','cpu'),device_name=torch.cuda.get_device_name() if config.get('device','cpu').startswith('cuda') else 'cpu',threads=torch.get_num_threads()),config_sha256=hashlib.sha256(json.dumps(config,sort_keys=True).encode()).hexdigest(),corpus=corpus.audit,source_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in files},
                   value_vocabulary=vocab,vocabulary_pool_unique_graphs=vocab_pool_count,vocabulary_sha256=hashlib.sha256(json.dumps(vocab).encode()).hexdigest(),pinned_generator=corpus[0].audit,runs=[],
-                  split_policy='same heldout prefix, nested unique training prefixes',
+                  split_policy='same fresh semantic heldout selection, nested unique training prefixes',split_audit=split_audit,
                   training_digest=train_summary['sha256'],heldout_digest=heldout_summary['sha256'],training_distribution=train_summary,heldout_distribution=heldout_summary,
                   priors=['canonical compiler node order','privileged visible-copy and typed-edge labels','fixed ontology and node capacity','gold-edge training loss sampling only; no effect on hidden state','no_input control retains public pointer candidate count and token normalization'],
                   limitations=['exact decoder-slot equivalence is not general graph isomorphism','value ontology is fitted on declared shared training-only vocabulary pool, including unoptimized examples in smaller corpus arms','curriculum, width, edge sampling and actor differ from stage7; not a single-variable comparison'],
@@ -272,7 +295,7 @@ def run(config):
     (output/'manifest.json').write_text(json.dumps(manifest,indent=2))
     @lru_cache(maxsize=config.get('cache_surfaces',20000))
     def training_item(index,language):
-        public,graph=base.surface_input(corpus[eval_count+index],language)
+        public,graph=base.surface_input(corpus[train_indices[index]],language)
         return public,base.targets(graph,public,capacity,vocab,language)
     records=[]
     def record(model,arm,seed,seen,exposure,tokens,start):
@@ -289,7 +312,7 @@ def run(config):
         for language in ('english','spanish','symbols'):
             row['evaluation'][language]=evaluate(evaluation_model,heldout,language,vocab,capacity,raw_path=output/'predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure))
         row['evaluation']['heldout_lexicon']=evaluate(evaluation_model,heldout,'english',vocab,capacity,True,raw_path=output/'predictions.jsonl.gz',context=dict(arm=arm,seed=seed,presentations=exposure))
-        acquisition=[corpus[eval_count+i] for i in range(min(train_count,config.get('acquisition_count',8)))]
+        acquisition=[corpus[train_indices[i]] for i in range(min(train_count,config.get('acquisition_count',8)))]
         if not isinstance(model,dict) and config.get('calibrate_edges',True):
             thresholds,calibration=calibrate_edge_thresholds(evaluation_model,acquisition,vocab,capacity)
             row['edge_calibration']=calibration

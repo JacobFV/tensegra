@@ -98,3 +98,14 @@ def test_compact_graph_edges_roundtrip_losslessly():
     recovered=m.unpack_graph(m.pack_graph(gold))
     assert all(torch.equal(gold[k],recovered[k]) for k in gold)
     assert m.base.metrics(recovered,gold)['semantic_equivalence']==1
+
+
+def test_fresh_holdout_exclusion_does_not_discard_training_candidates(tmp_path):
+    corpus=m.base.CorpusIndex(tmp_path/'corpus.db',requested=8,seed=7,max_attempts=40)
+    excluded=[m.base.semantic_key(corpus[i].privileged.graph) for i in (0,1)]
+    heldout,training,audit=m.partition_corpus(corpus,2,3,excluded)
+    assert heldout==[2,3]
+    assert training==[0,1,4]
+    assert audit['inspected_prefix_overlap']==2
+    assert audit['selected_heldout_overlap']==0
+    assert not set(heldout)&set(training)
