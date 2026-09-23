@@ -29,3 +29,9 @@ Initial source inventory is recorded in `research/results/stage11/audits/initial
 ## Frozen belief reference
 
 The reference-only package independently verifies 41 local source/configuration/artifact hashes and links all nine retained comparator checkpoint hashes to Stage10's independent byte audit. No new belief model inference, training, adapter or remote checkpoint rehashing occurred. Retaining all three ledger-only seeds avoids best-seed selection. The guarantee concerns consistently renamed opaque observation handles, not meaningful entity identities or posterior correctness.
+
+## Public-text protocol preflight
+
+Source `0365be6` uses the existing width-1024 public-text actor. Sampled gold pair indices select edge/slot loss outputs only after the latent node representations have been computed; they do not alter input context or recurrence. Deployment uses predicted node presence and edges. Training-only calibration evaluates predicted-present pairs and cannot restore a missed node with a gold mask. The edge-conditional slot objective is a separately documented correction inherited from the decoder diagnostics.
+
+The proposed eight-construction unification corpus and final-update fitting gate are explicitly narrow. Three initialization seeds, fixed 4,000-update cap, no early-success checkpoint selection, and a stopped dependent generalization track on failure are appropriate. Public observability and resource profiling still need completion before the main launch. Requested lossless calibration pair scores/targets to permit independent threshold reconstruction without rerunning the full neural actor.
