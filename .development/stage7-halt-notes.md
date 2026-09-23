@@ -31,3 +31,42 @@ Following explicit root authorization, smoke completed 2 updates in 0.695s. Acqu
 Before main launch, root explicitly authorized and froze `configs/stage7-halt-main.json`: three seeds, width32, 2000 updates, batch32, 2048 fixed training examples, 512 validation and 512 test examples, evaluation every500. Test is inspected only at the final budget. No architecture changes are permitted after launch; failures remain failures and never trigger composition.
 
 The generator now supports an independently seeded missing-share value for causal counterfactual controls. A regression test changes that value while holding every insufficient public prefix (and entire no-solution sequence) identical. Ten focused remote tests pass. A separate exact public-evidence XOR rule is logged as an observability/task upper bound: it performs zero neural updates and is explicitly not a parameter-matched learned baseline. The existing private oracle-timing control still uses learned output heads, separating perception/task failure from learned stopping failure.
+
+## Frozen main outcome: joint gate failed
+
+The prespecified all-seed **joint timing/task competence gate failed**: seeds0 and2 passed, seed1 failed. No thresholds, source, architecture, or budget changed after main launch; no runtime composition was run. Each seed used73,017 parameters and64,000 optimizer examples (2000×32), against2048 fixed training examples. Elapsed times were155.64/166.10/174.50s (496.24s total). Each validation/test split has512 episodes:128 each for arrivals3/5/7 and no solution.
+
+Pure halt exactness and joint exact-stop-plus-correct-task are distinct. The gate remains the original stricter joint criterion; its failure does not erase timing learned by seed1 on validation.
+
+| Split | Seed | Task % | Pure exact halt % | Joint % | Premature count | Correct reject | Mean updates |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| validation | 0 | 99.80 | 99.02 | 99.02 | 0/512 | 128/128 | 5.760 |
+| validation | 1 | 92.97 | 100.00 | 92.97 | 0/512 | 128/128 | 5.750 |
+| validation | 2 | 99.80 | 99.22 | 99.22 | 4/512 | 127/128 | 5.717 |
+| test | 0 | 100.00 | 100.00 | 100.00 | 0/512 | 128/128 | 5.750 |
+| test | 1 | 85.74 | 93.95 | 83.20 | 11/512 | 112/128 | 5.764 |
+| test | 2 | 99.22 | 99.22 | 99.22 | 0/512 | 128/128 | 5.758 |
+
+Seed1 validation halted exactly at every arrival (128/128 for each arrival3/5/7 and rejection), but XOR task mistakes reduced joint success to476/512. Its final test independently showed timing/rejection weaknesses:11 premature episodes (2 late-arrival,9 no-solution),112/128 correct rejections, and481/512 exact stops. Seeds0/2 do not compensate for that all-seed failure.
+
+Matched frozen controls use the same73,017 parameters and public evidence; only stopping changes. Values below are task accuracy / mean neural updates.
+
+| Split / seed | Learned | Minimum | Fixed8 | Oracle timing, learned output | Timing bias only | Learned + bias |
+|---|---:|---:|---:|---:|---:|---:|
+| validation / 0 | 99.80% / 5.760 | 38.87% / 1.000 | 99.80% / 8.000 | 100.00% / 5.750 | 63.67% / 6.000 | 99.80% / 5.760 |
+| validation / 1 | 92.97% / 5.750 | 38.48% / 1.000 | 93.36% / 8.000 | 92.97% / 5.750 | 59.57% / 6.000 | 92.97% / 5.750 |
+| validation / 2 | 99.80% / 5.717 | 33.20% / 1.000 | 99.80% / 8.000 | 99.61% / 5.750 | 61.91% / 6.000 | 99.80% / 5.717 |
+| test / 0 | 100.00% / 5.750 | 37.50% / 1.000 | 100.00% / 8.000 | 100.00% / 5.750 | 62.89% / 6.000 | 100.00% / 5.750 |
+| test / 1 | 85.74% / 5.764 | 36.52% / 1.000 | 90.43% / 8.000 | 85.16% / 5.750 | 57.81% / 6.000 | 85.74% / 5.764 |
+| test / 2 | 99.22% / 5.758 | 38.09% / 1.000 | 98.24% / 8.000 | 100.00% / 5.750 | 62.50% / 6.000 | 99.22% / 5.758 |
+
+The exact public-evidence XOR rule achieved512/512 task answers,512/512 exact observation stops, and128/128 rejections on every validation and test split. It is a supplied rule upper bound with zero neural updates, **not** a matched learned baseline. The learned-output/private-oracle-timing control exposes perception/task error: seed1 remained92.97% validation and85.16% test even when given perfect stop timing.
+
+[Actual validation stopping distributions](stage7-halt-main-arrivals.png) show counts and frequencies by sufficient arrival/no-solution. [Main report](stage7-halt-main-report.json) includes pure exact per-arrival counts separately from joint accuracy, all controls, costs, step0/curves, loss endpoints, denominators, and hashes. [Acquisition report](stage7-halt-acquisition-report.json) and its separate plot preserve the earlier failure. Compressed raw metric archives include all per-example records and per-loss curves for each phase.
+
+Durable remote artifacts on `gb10-direct`:
+
+- `/home/brandonin/topoformer-stage7-artifacts/halting/probes-1ee0a6a/` —153 files, separate smoke/acquisition outputs and source.
+- `/home/brandonin/topoformer-stage7-artifacts/halting/main-b49d53d/` —148 files, main checkpoint/data/source/raw curves/plot.
+- Each directory contains `SHA256SUMS.json` covering every preserved file. Main source hash: `c9ad90611739611149f7f5bb4d2bc7f7ae74197c19319738ca9b451323b270b0`; source/config freeze commit `b49d53d`.
+- Committed raw archive SHA256: main `9d35a03e1a08867c4e105e0e6f055d398c0eed5bd44ade34b7a32b2751804084`; acquisition `d88197adbefb9ebb7e4e74cf2d32bc415f284be9f5dc0a7b709c3c0e602ee165`.

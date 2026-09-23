@@ -1,0 +1,5270 @@
+{
+  "phase": "frozen_main",
+  "gate_semantics": "prespecified JOINT exact timing and task/rejection competence; pure timing metrics reported separately",
+  "manifest": {
+    "config_sha256": "38ed6ffaf37d1a6aa5ded67f6b8c5e2573cb8b80c8c73bd0bd9f0b6ea9032adc",
+    "torch_version": "2.14.0+cpu",
+    "source_sha256": {
+      "halting_study.py": "c9ad90611739611149f7f5bb4d2bc7f7ae74197c19319738ca9b451323b270b0",
+      "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64"
+    },
+    "controls": [
+      "learned",
+      "minimum",
+      "fixed",
+      "oracle",
+      "soft_timing_bias",
+      "learned_soft_bias"
+    ],
+    "public_priors": "certified keyed shares, persistent current evidence, observable deadline",
+    "main_budget_frozen": true,
+    "seeds": [
+      {
+        "seed": 0,
+        "parameters": 73017,
+        "elapsed_seconds": 155.63857811503112,
+        "examples_seen": 64000,
+        "optimizer_steps": 2000,
+        "hashes": {
+          "initial.pt": "1c9b38bb2c1021df9c47584a99994ebc6e30a5049709dde35ab9f69162743ca7",
+          "checkpoint.pt": "3f7c829219fdf21f88060a71adcc94f8966cb00cf957601f5d254d3222ca8a00",
+          "data.pt": "a729c3cea3310976636c4ab19206459b25ed68c682fb16435e7df3b8a77b952a"
+        }
+      },
+      {
+        "seed": 1,
+        "parameters": 73017,
+        "elapsed_seconds": 166.10097888391465,
+        "examples_seen": 64000,
+        "optimizer_steps": 2000,
+        "hashes": {
+          "initial.pt": "7fdf3bd7d7c9880635449258fb52853b00c4e6669a09006044a5bdc7b62228ba",
+          "checkpoint.pt": "b51ab1e4467ac6be73d33d1dcaf759b978ed1e7b2e6195229769167e3a3cd90a",
+          "data.pt": "ded5c35a35ac75b74b09c83539f65d109fb9c4fd62406e1ec19d5299b2e82dcf"
+        }
+      },
+      {
+        "seed": 2,
+        "parameters": 73017,
+        "elapsed_seconds": 174.4999041291885,
+        "examples_seen": 64000,
+        "optimizer_steps": 2000,
+        "hashes": {
+          "initial.pt": "3c8519cf71c39641edd7255a94a46a1e6d02ddb5340e31e2b41d1a67cc0640c0",
+          "checkpoint.pt": "c9cad4c9639cc3146f5d438e6c74fff19eb5f051ae7a508af6bda77d85cd01b6",
+          "data.pt": "fa8da0fc865a101e66eae62d0ee87b69bf6533e3cf46a0a4ad971d14f02756ea"
+        }
+      }
+    ]
+  },
+  "gate": {
+    "passed": false,
+    "validation_seed_checks": [
+      {
+        "stop_reject": true,
+        "premature": true,
+        "rejection": true,
+        "variable_arrivals": true,
+        "task_advantage": true
+      },
+      {
+        "stop_reject": false,
+        "premature": true,
+        "rejection": true,
+        "variable_arrivals": false,
+        "task_advantage": true
+      },
+      {
+        "stop_reject": true,
+        "premature": true,
+        "rejection": true,
+        "variable_arrivals": true,
+        "task_advantage": true
+      }
+    ],
+    "composition_allowed": false,
+    "halting_competence": false,
+    "reason": "all validation seeds must pass; no dependent recomposition on failure",
+    "scope": "main"
+  },
+  "seeds": [
+    {
+      "seed": 0,
+      "curves": [
+        {
+          "step": 0,
+          "examples_seen": 0,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.380859375,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.380859375,
+                  "0.01": 0.370859375,
+                  "0.05": 0.330859375,
+                  "0.1": 0.280859375
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.380859375,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.380859375,
+                  "0.01": 0.370859375,
+                  "0.05": 0.330859375,
+                  "0.1": 0.280859375
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.37109375,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.37109375,
+                  "0.01": 0.29109375,
+                  "0.05": -0.028906250000000022,
+                  "0.1": -0.42890625000000004
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.35546875,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.35546875,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.421875,
+                  "5": 0.515625,
+                  "7": 0.484375
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.35546875,
+                  "0.01": 0.29796875,
+                  "0.05": 0.06796874999999997,
+                  "0.1": -0.21953125000000007
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.369140625,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.369140625,
+                  "0.01": 0.309140625,
+                  "0.05": 0.06914062499999996,
+                  "0.1": -0.2308593750000001
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.357421875,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.90625,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "2": 121,
+                    "1": 7
+                  },
+                  "5": {
+                    "2": 116,
+                    "1": 12
+                  },
+                  "7": {
+                    "2": 111,
+                    "1": 17
+                  },
+                  "8": {
+                    "2": 116,
+                    "1": 12
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.357421875,
+                  "0.01": 0.338359375,
+                  "0.05": 0.262109375,
+                  "0.1": 0.16679687499999998
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 500,
+          "examples_seen": 16000,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.390625,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.75,
+                "extra_steps": 0.25,
+                "mean_updates": 4.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 128
+                  },
+                  "5": {
+                    "4": 128
+                  },
+                  "7": {
+                    "4": 128
+                  },
+                  "8": {
+                    "4": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.390625,
+                  "0.01": 0.350625,
+                  "0.05": 0.190625,
+                  "0.1": -0.009375000000000022
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.36328125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.36328125,
+                  "0.01": 0.35328125,
+                  "0.05": 0.31328125,
+                  "0.1": 0.26328125
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.38671875,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.0078125,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.03125,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.38671875,
+                  "0.01": 0.30671875,
+                  "0.05": -0.013281250000000022,
+                  "0.1": -0.41328125000000004
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.39453125,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.39453125,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 0.03125,
+                "arrival_accuracy": {
+                  "3": 0.515625,
+                  "5": 0.4765625,
+                  "7": 0.5546875
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.39453125,
+                  "0.01": 0.33703125,
+                  "0.05": 0.10703124999999997,
+                  "0.1": -0.18046875000000007
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.388671875,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.388671875,
+                  "0.01": 0.328671875,
+                  "0.05": 0.08867187499999996,
+                  "0.1": -0.2113281250000001
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.390625,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.75,
+                "extra_steps": 0.25,
+                "mean_updates": 4.001953125,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 128
+                  },
+                  "5": {
+                    "4": 128
+                  },
+                  "7": {
+                    "4": 127,
+                    "5": 1
+                  },
+                  "8": {
+                    "4": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.390625,
+                  "0.01": 0.35060546875,
+                  "0.05": 0.19052734375,
+                  "0.1": -0.009570312500000011
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 1000,
+          "examples_seen": 32000,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.537109375,
+                "halt_exact_accuracy": 0.1015625,
+                "stop_reject_accuracy": 0.07421875,
+                "premature_rate": 0.5703125,
+                "extra_steps": 0.525390625,
+                "mean_updates": 4.91796875,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.265625,
+                  "7": 0.03125
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 64,
+                    "6": 27,
+                    "5": 33,
+                    "7": 4
+                  },
+                  "5": {
+                    "6": 38,
+                    "4": 41,
+                    "5": 47,
+                    "7": 2
+                  },
+                  "7": {
+                    "5": 39,
+                    "4": 48,
+                    "6": 37,
+                    "7": 4
+                  },
+                  "8": {
+                    "7": 4,
+                    "5": 37,
+                    "4": 54,
+                    "6": 32,
+                    "8": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.537109375,
+                  "0.01": 0.4879296875,
+                  "0.05": 0.2912109375,
+                  "0.1": 0.04531249999999998
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.373046875,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.373046875,
+                  "0.01": 0.363046875,
+                  "0.05": 0.323046875,
+                  "0.1": 0.273046875
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.576171875,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.001953125,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0078125,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.576171875,
+                  "0.01": 0.496171875,
+                  "0.05": 0.17617187499999998,
+                  "0.1": -0.22382812500000004
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.556640625,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.556640625,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 0.0078125,
+                "arrival_accuracy": {
+                  "3": 0.78125,
+                  "5": 0.734375,
+                  "7": 0.703125
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.556640625,
+                  "0.01": 0.499140625,
+                  "0.05": 0.26914062499999997,
+                  "0.1": -0.018359375000000067
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.54296875,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.54296875,
+                  "0.01": 0.48296875,
+                  "0.05": 0.24296874999999996,
+                  "0.1": -0.05703125000000009
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.54296875,
+                "halt_exact_accuracy": 0.115234375,
+                "stop_reject_accuracy": 0.08203125,
+                "premature_rate": 0.5546875,
+                "extra_steps": 0.546875,
+                "mean_updates": 5.005859375,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.296875,
+                  "7": 0.03125
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 56,
+                    "6": 29,
+                    "5": 39,
+                    "7": 4
+                  },
+                  "5": {
+                    "6": 39,
+                    "4": 33,
+                    "5": 54,
+                    "7": 2
+                  },
+                  "7": {
+                    "5": 48,
+                    "6": 41,
+                    "4": 35,
+                    "7": 4
+                  },
+                  "8": {
+                    "7": 4,
+                    "5": 40,
+                    "4": 48,
+                    "6": 35,
+                    "8": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.54296875,
+                  "0.01": 0.49291015625,
+                  "0.05": 0.29267578125,
+                  "0.1": 0.04238281249999998
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 1500,
+          "examples_seen": 48000,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 1.0,
+                "halt_exact_accuracy": 0.998046875,
+                "stop_reject_accuracy": 0.998046875,
+                "premature_rate": 0.0,
+                "extra_steps": 0.001953125,
+                "mean_updates": 5.751953125,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 1.0,
+                  "7": 0.9921875
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 127,
+                    "8": 1
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 1.0,
+                  "0.01": 0.94248046875,
+                  "0.05": 0.71240234375,
+                  "0.1": 0.4248046875
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.3828125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3828125,
+                  "0.01": 0.3728125,
+                  "0.05": 0.3328125,
+                  "0.1": 0.2828125
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 1.0,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.25,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 1.0,
+                  "0.01": 0.92,
+                  "0.05": 0.6,
+                  "0.1": 0.19999999999999996
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 1.0,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 1.0,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 1.0,
+                  "7": 1.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 1.0,
+                  "0.01": 0.9425,
+                  "0.05": 0.7124999999999999,
+                  "0.1": 0.42499999999999993
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.63671875,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.63671875,
+                  "0.01": 0.57671875,
+                  "0.05": 0.33671874999999996,
+                  "0.1": 0.03671874999999991
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 1.0,
+                "halt_exact_accuracy": 0.998046875,
+                "stop_reject_accuracy": 0.998046875,
+                "premature_rate": 0.0,
+                "extra_steps": 0.001953125,
+                "mean_updates": 5.751953125,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 1.0,
+                  "7": 0.9921875
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 127,
+                    "8": 1
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 1.0,
+                  "0.01": 0.94248046875,
+                  "0.05": 0.71240234375,
+                  "0.1": 0.4248046875
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 2000,
+          "examples_seen": 64000,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.998046875,
+                "halt_exact_accuracy": 0.990234375,
+                "stop_reject_accuracy": 0.990234375,
+                "premature_rate": 0.0,
+                "extra_steps": 0.009765625,
+                "mean_updates": 5.759765625,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 1.0,
+                  "7": 0.9609375
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 123,
+                    "8": 5
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.998046875,
+                  "0.01": 0.94044921875,
+                  "0.05": 0.7100585937499999,
+                  "0.1": 0.42207031249999993
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.388671875,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.388671875,
+                  "0.01": 0.378671875,
+                  "0.05": 0.338671875,
+                  "0.1": 0.288671875
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.998046875,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.25,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.998046875,
+                  "0.01": 0.918046875,
+                  "0.05": 0.598046875,
+                  "0.1": 0.19804687499999996
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 1.0,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 1.0,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 1.0,
+                  "7": 1.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 1.0,
+                  "0.01": 0.9425,
+                  "0.05": 0.7124999999999999,
+                  "0.1": 0.42499999999999993
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.63671875,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.63671875,
+                  "0.01": 0.57671875,
+                  "0.05": 0.33671874999999996,
+                  "0.1": 0.03671874999999991
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.998046875,
+                "halt_exact_accuracy": 0.990234375,
+                "stop_reject_accuracy": 0.990234375,
+                "premature_rate": 0.0,
+                "extra_steps": 0.009765625,
+                "mean_updates": 5.759765625,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 1.0,
+                  "7": 0.9609375
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 123,
+                    "8": 5
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.998046875,
+                  "0.01": 0.94044921875,
+                  "0.05": 0.7100585937499999,
+                  "0.1": 0.42207031249999993
+                }
+              }
+            },
+            "test": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 1.0,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 1.0,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 1.0,
+                  "7": 1.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 1.0,
+                  "0.01": 0.9425,
+                  "0.05": 0.7124999999999999,
+                  "0.1": 0.42499999999999993
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.375,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.375,
+                  "0.01": 0.365,
+                  "0.05": 0.325,
+                  "0.1": 0.275
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 1.0,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.25,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 1.0,
+                  "0.01": 0.92,
+                  "0.05": 0.6,
+                  "0.1": 0.19999999999999996
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 1.0,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 1.0,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 1.0,
+                  "7": 1.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 1.0,
+                  "0.01": 0.9425,
+                  "0.05": 0.7124999999999999,
+                  "0.1": 0.42499999999999993
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.62890625,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.62890625,
+                  "0.01": 0.56890625,
+                  "0.05": 0.32890624999999996,
+                  "0.1": 0.02890624999999991
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 1.0,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 1.0,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 1.0,
+                  "7": 1.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 1.0,
+                  "0.01": 0.9425,
+                  "0.05": 0.7124999999999999,
+                  "0.1": 0.42499999999999993
+                }
+              }
+            }
+          }
+        }
+      ],
+      "pure_timing_strata": {
+        "validation": {
+          "3": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 128,
+            "premature_count": 0,
+            "correct_task_count": 128
+          },
+          "5": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 128,
+            "premature_count": 0,
+            "correct_task_count": 128
+          },
+          "7": {
+            "n": 128,
+            "halt_exact_count": 123,
+            "halt_exact_accuracy": 0.9609375,
+            "joint_count": 123,
+            "premature_count": 0,
+            "correct_task_count": 127
+          },
+          "8": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 128,
+            "premature_count": 0,
+            "correct_task_count": 128
+          }
+        },
+        "test": {
+          "3": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 128,
+            "premature_count": 0,
+            "correct_task_count": 128
+          },
+          "5": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 128,
+            "premature_count": 0,
+            "correct_task_count": 128
+          },
+          "7": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 128,
+            "premature_count": 0,
+            "correct_task_count": 128
+          },
+          "8": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 128,
+            "premature_count": 0,
+            "correct_task_count": 128
+          }
+        }
+      },
+      "exact_rule": {
+        "validation": {
+          "n": 512,
+          "task_accuracy": 1.0,
+          "halt_exact_accuracy": 1.0,
+          "reject_n": 128,
+          "reject_correct": 128,
+          "mean_observation_steps": 5.75,
+          "neural_updates": 0,
+          "parameter_matched": false
+        },
+        "test": {
+          "n": 512,
+          "task_accuracy": 1.0,
+          "halt_exact_accuracy": 1.0,
+          "reject_n": 128,
+          "reject_correct": 128,
+          "mean_observation_steps": 5.75,
+          "neural_updates": 0,
+          "parameter_matched": false
+        }
+      },
+      "loss_first": {
+        "step": 1,
+        "task": 1.5765634775161743,
+        "halt": 0.8836427927017212
+      },
+      "loss_last": {
+        "step": 2000,
+        "task": 2.9043543690931983e-05,
+        "halt": 1.911998333525844e-05
+      }
+    },
+    {
+      "seed": 1,
+      "curves": [
+        {
+          "step": 0,
+          "examples_seen": 0,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.267578125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.068359375,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 119,
+                    "2": 9
+                  },
+                  "5": {
+                    "1": 120,
+                    "2": 8
+                  },
+                  "7": {
+                    "1": 116,
+                    "2": 12
+                  },
+                  "8": {
+                    "1": 122,
+                    "2": 6
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.267578125,
+                  "0.01": 0.25689453125,
+                  "0.05": 0.21416015625,
+                  "0.1": 0.1607421875
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.265625,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.265625,
+                  "0.01": 0.255625,
+                  "0.05": 0.215625,
+                  "0.1": 0.165625
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.291015625,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.12109375,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.484375,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.291015625,
+                  "0.01": 0.21101562499999998,
+                  "0.05": -0.10898437500000002,
+                  "0.1": -0.508984375
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.306640625,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.306640625,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 0.484375,
+                "arrival_accuracy": {
+                  "3": 0.1875,
+                  "5": 0.3046875,
+                  "7": 0.25
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.306640625,
+                  "0.01": 0.249140625,
+                  "0.05": 0.019140624999999967,
+                  "0.1": -0.26835937500000007
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.306640625,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.306640625,
+                  "0.01": 0.246640625,
+                  "0.05": 0.006640624999999956,
+                  "0.1": -0.2933593750000001
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.26953125,
+                "halt_exact_accuracy": 0.0234375,
+                "stop_reject_accuracy": 0.0078125,
+                "premature_rate": 0.9765625,
+                "extra_steps": 0.0,
+                "mean_updates": 2.10546875,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.03125,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "2": 116,
+                    "3": 12
+                  },
+                  "5": {
+                    "2": 115,
+                    "3": 13
+                  },
+                  "7": {
+                    "2": 107,
+                    "3": 21
+                  },
+                  "8": {
+                    "2": 120,
+                    "3": 8
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.26953125,
+                  "0.01": 0.2484765625,
+                  "0.05": 0.1642578125,
+                  "0.1": 0.05898437499999998
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 500,
+          "examples_seen": 16000,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.384765625,
+                "halt_exact_accuracy": 0.142578125,
+                "stop_reject_accuracy": 0.056640625,
+                "premature_rate": 0.5,
+                "extra_steps": 0.693359375,
+                "mean_updates": 5.361328125,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.2265625,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "5": 84,
+                    "6": 44
+                  },
+                  "5": {
+                    "5": 73,
+                    "6": 55
+                  },
+                  "7": {
+                    "5": 84,
+                    "6": 44
+                  },
+                  "8": {
+                    "6": 42,
+                    "5": 86
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.384765625,
+                  "0.01": 0.33115234375,
+                  "0.05": 0.11669921875,
+                  "0.1": -0.1513671875
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.353515625,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.353515625,
+                  "0.01": 0.343515625,
+                  "0.05": 0.303515625,
+                  "0.1": 0.253515625
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.384765625,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.384765625,
+                  "0.01": 0.304765625,
+                  "0.05": -0.015234375000000022,
+                  "0.1": -0.41523437500000004
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.384765625,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.384765625,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.5234375,
+                  "5": 0.484375,
+                  "7": 0.53125
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.384765625,
+                  "0.01": 0.327265625,
+                  "0.05": 0.09726562499999997,
+                  "0.1": -0.19023437500000007
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.384765625,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.384765625,
+                  "0.01": 0.324765625,
+                  "0.05": 0.08476562499999996,
+                  "0.1": -0.2152343750000001
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.384765625,
+                "halt_exact_accuracy": 0.080078125,
+                "stop_reject_accuracy": 0.025390625,
+                "premature_rate": 0.5,
+                "extra_steps": 0.8125,
+                "mean_updates": 5.5625,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.1015625,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 73,
+                    "5": 55
+                  },
+                  "5": {
+                    "6": 87,
+                    "5": 41
+                  },
+                  "7": {
+                    "5": 61,
+                    "6": 67
+                  },
+                  "8": {
+                    "6": 61,
+                    "5": 67
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.384765625,
+                  "0.01": 0.329140625,
+                  "0.05": 0.10664062499999999,
+                  "0.1": -0.17148437500000002
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 1000,
+          "examples_seen": 32000,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.5625,
+                "halt_exact_accuracy": 0.466796875,
+                "stop_reject_accuracy": 0.326171875,
+                "premature_rate": 0.33203125,
+                "extra_steps": 0.326171875,
+                "mean_updates": 5.22265625,
+                "reject_n": 128,
+                "reject_accuracy": 0.03125,
+                "arrival_accuracy": {
+                  "3": 0.3046875,
+                  "5": 0.5625,
+                  "7": 0.40625
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 44,
+                    "4": 50,
+                    "5": 25,
+                    "8": 3,
+                    "6": 4,
+                    "7": 2
+                  },
+                  "5": {
+                    "4": 29,
+                    "5": 83,
+                    "7": 5,
+                    "8": 4,
+                    "6": 7
+                  },
+                  "7": {
+                    "4": 42,
+                    "5": 20,
+                    "7": 56,
+                    "6": 7,
+                    "8": 3
+                  },
+                  "8": {
+                    "4": 37,
+                    "8": 56,
+                    "5": 24,
+                    "7": 7,
+                    "6": 4
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.5625,
+                  "0.01": 0.5102734375,
+                  "0.05": 0.30136718749999997,
+                  "0.1": 0.04023437499999993
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.373046875,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.373046875,
+                  "0.01": 0.363046875,
+                  "0.05": 0.323046875,
+                  "0.1": 0.273046875
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.591796875,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.013671875,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0546875,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.591796875,
+                  "0.01": 0.511796875,
+                  "0.05": 0.19179687499999998,
+                  "0.1": -0.20820312500000004
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.59765625,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.59765625,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 0.0546875,
+                "arrival_accuracy": {
+                  "3": 0.796875,
+                  "5": 0.796875,
+                  "7": 0.7421875
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.59765625,
+                  "0.01": 0.54015625,
+                  "0.05": 0.31015624999999997,
+                  "0.1": 0.022656249999999933
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.53125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.53125,
+                  "0.01": 0.47125,
+                  "0.05": 0.23124999999999996,
+                  "0.1": -0.06875000000000009
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.568359375,
+                "halt_exact_accuracy": 0.46484375,
+                "stop_reject_accuracy": 0.3203125,
+                "premature_rate": 0.318359375,
+                "extra_steps": 0.34765625,
+                "mean_updates": 5.30859375,
+                "reject_n": 128,
+                "reject_accuracy": 0.03125,
+                "arrival_accuracy": {
+                  "3": 0.265625,
+                  "5": 0.578125,
+                  "7": 0.40625
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 37,
+                    "4": 54,
+                    "5": 28,
+                    "8": 3,
+                    "6": 4,
+                    "7": 2
+                  },
+                  "5": {
+                    "4": 22,
+                    "5": 89,
+                    "7": 5,
+                    "8": 4,
+                    "6": 8
+                  },
+                  "7": {
+                    "4": 31,
+                    "6": 10,
+                    "5": 28,
+                    "7": 56,
+                    "8": 3
+                  },
+                  "8": {
+                    "4": 28,
+                    "5": 30,
+                    "8": 56,
+                    "6": 7,
+                    "7": 7
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.568359375,
+                  "0.01": 0.5152734375,
+                  "0.05": 0.3029296875,
+                  "0.1": 0.03749999999999998
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 1500,
+          "examples_seen": 48000,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.97265625,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.97265625,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.890625,
+                  "5": 1.0,
+                  "7": 1.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.97265625,
+                  "0.01": 0.91515625,
+                  "0.05": 0.6851562499999999,
+                  "0.1": 0.39765624999999993
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.38671875,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.38671875,
+                  "0.01": 0.37671875,
+                  "0.05": 0.33671875,
+                  "0.1": 0.28671875
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.9375,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.25,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.9375,
+                  "0.01": 0.8575,
+                  "0.05": 0.5375,
+                  "0.1": 0.13749999999999996
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.97265625,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.97265625,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.890625,
+                  "5": 1.0,
+                  "7": 1.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.97265625,
+                  "0.01": 0.91515625,
+                  "0.05": 0.6851562499999999,
+                  "0.1": 0.39765624999999993
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.60546875,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.60546875,
+                  "0.01": 0.54546875,
+                  "0.05": 0.30546874999999996,
+                  "0.1": 0.005468749999999911
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.97265625,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.97265625,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.890625,
+                  "5": 1.0,
+                  "7": 1.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.97265625,
+                  "0.01": 0.91515625,
+                  "0.05": 0.6851562499999999,
+                  "0.1": 0.39765624999999993
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 2000,
+          "examples_seen": 64000,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.9296875,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.9296875,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.890625,
+                  "5": 0.875,
+                  "7": 0.953125
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.9296875,
+                  "0.01": 0.8721875,
+                  "0.05": 0.6421874999999999,
+                  "0.1": 0.35468749999999993
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.384765625,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.384765625,
+                  "0.01": 0.374765625,
+                  "0.05": 0.334765625,
+                  "0.1": 0.284765625
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.93359375,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.25,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.93359375,
+                  "0.01": 0.85359375,
+                  "0.05": 0.53359375,
+                  "0.1": 0.13359374999999996
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.9296875,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.9296875,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.890625,
+                  "5": 0.875,
+                  "7": 0.953125
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.9296875,
+                  "0.01": 0.8721875,
+                  "0.05": 0.6421874999999999,
+                  "0.1": 0.35468749999999993
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.595703125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.595703125,
+                  "0.01": 0.535703125,
+                  "0.05": 0.29570312499999996,
+                  "0.1": -0.004296875000000089
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.9296875,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.9296875,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.890625,
+                  "5": 0.875,
+                  "7": 0.953125
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.9296875,
+                  "0.01": 0.8721875,
+                  "0.05": 0.6421874999999999,
+                  "0.1": 0.35468749999999993
+                }
+              }
+            },
+            "test": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.857421875,
+                "halt_exact_accuracy": 0.939453125,
+                "stop_reject_accuracy": 0.83203125,
+                "premature_rate": 0.021484375,
+                "extra_steps": 0.05859375,
+                "mean_updates": 5.763671875,
+                "reject_n": 128,
+                "reject_accuracy": 0.875,
+                "arrival_accuracy": {
+                  "3": 0.859375,
+                  "5": 0.8203125,
+                  "7": 0.7734375
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 126,
+                    "4": 2
+                  },
+                  "5": {
+                    "5": 121,
+                    "8": 5,
+                    "6": 2
+                  },
+                  "7": {
+                    "7": 115,
+                    "8": 11,
+                    "6": 2
+                  },
+                  "8": {
+                    "8": 119,
+                    "7": 3,
+                    "5": 6
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.857421875,
+                  "0.01": 0.79978515625,
+                  "0.05": 0.56923828125,
+                  "0.1": 0.28105468749999996
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.365234375,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.365234375,
+                  "0.01": 0.355234375,
+                  "0.05": 0.315234375,
+                  "0.1": 0.265234375
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.904296875,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.21875,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.875,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.904296875,
+                  "0.01": 0.824296875,
+                  "0.05": 0.504296875,
+                  "0.1": 0.10429687499999996
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.8515625,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.8515625,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 0.875,
+                "arrival_accuracy": {
+                  "3": 0.875,
+                  "5": 0.828125,
+                  "7": 0.828125
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.8515625,
+                  "0.01": 0.7940625,
+                  "0.05": 0.5640624999999999,
+                  "0.1": 0.27656249999999993
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.578125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.578125,
+                  "0.01": 0.518125,
+                  "0.05": 0.27812499999999996,
+                  "0.1": -0.02187500000000009
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.857421875,
+                "halt_exact_accuracy": 0.939453125,
+                "stop_reject_accuracy": 0.83203125,
+                "premature_rate": 0.021484375,
+                "extra_steps": 0.05859375,
+                "mean_updates": 5.763671875,
+                "reject_n": 128,
+                "reject_accuracy": 0.875,
+                "arrival_accuracy": {
+                  "3": 0.859375,
+                  "5": 0.8203125,
+                  "7": 0.7734375
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 126,
+                    "4": 2
+                  },
+                  "5": {
+                    "5": 121,
+                    "8": 5,
+                    "6": 2
+                  },
+                  "7": {
+                    "7": 115,
+                    "8": 11,
+                    "6": 2
+                  },
+                  "8": {
+                    "8": 119,
+                    "7": 3,
+                    "5": 6
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.857421875,
+                  "0.01": 0.79978515625,
+                  "0.05": 0.56923828125,
+                  "0.1": 0.28105468749999996
+                }
+              }
+            }
+          }
+        }
+      ],
+      "pure_timing_strata": {
+        "validation": {
+          "3": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 114,
+            "premature_count": 0,
+            "correct_task_count": 114
+          },
+          "5": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 112,
+            "premature_count": 0,
+            "correct_task_count": 112
+          },
+          "7": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 122,
+            "premature_count": 0,
+            "correct_task_count": 122
+          },
+          "8": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 128,
+            "premature_count": 0,
+            "correct_task_count": 128
+          }
+        },
+        "test": {
+          "3": {
+            "n": 128,
+            "halt_exact_count": 126,
+            "halt_exact_accuracy": 0.984375,
+            "joint_count": 110,
+            "premature_count": 0,
+            "correct_task_count": 112
+          },
+          "5": {
+            "n": 128,
+            "halt_exact_count": 121,
+            "halt_exact_accuracy": 0.9453125,
+            "joint_count": 105,
+            "premature_count": 0,
+            "correct_task_count": 106
+          },
+          "7": {
+            "n": 128,
+            "halt_exact_count": 115,
+            "halt_exact_accuracy": 0.8984375,
+            "joint_count": 99,
+            "premature_count": 2,
+            "correct_task_count": 109
+          },
+          "8": {
+            "n": 128,
+            "halt_exact_count": 119,
+            "halt_exact_accuracy": 0.9296875,
+            "joint_count": 112,
+            "premature_count": 9,
+            "correct_task_count": 112
+          }
+        }
+      },
+      "exact_rule": {
+        "validation": {
+          "n": 512,
+          "task_accuracy": 1.0,
+          "halt_exact_accuracy": 1.0,
+          "reject_n": 128,
+          "reject_correct": 128,
+          "mean_observation_steps": 5.75,
+          "neural_updates": 0,
+          "parameter_matched": false
+        },
+        "test": {
+          "n": 512,
+          "task_accuracy": 1.0,
+          "halt_exact_accuracy": 1.0,
+          "reject_n": 128,
+          "reject_correct": 128,
+          "mean_observation_steps": 5.75,
+          "neural_updates": 0,
+          "parameter_matched": false
+        }
+      },
+      "loss_first": {
+        "step": 1,
+        "task": 4.849310874938965,
+        "halt": 0.903475821018219
+      },
+      "loss_last": {
+        "step": 2000,
+        "task": 0.0022431693505495787,
+        "halt": 0.0016611815663054585
+      }
+    },
+    {
+      "seed": 2,
+      "curves": [
+        {
+          "step": 0,
+          "examples_seen": 0,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.33203125,
+                "halt_exact_accuracy": 0.08203125,
+                "stop_reject_accuracy": 0.005859375,
+                "premature_rate": 0.71875,
+                "extra_steps": 0.59375,
+                "mean_updates": 3.05859375,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0078125,
+                  "5": 0.0,
+                  "7": 0.015625
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 77,
+                    "8": 29,
+                    "3": 2,
+                    "2": 16,
+                    "7": 3,
+                    "6": 1
+                  },
+                  "5": {
+                    "8": 37,
+                    "1": 75,
+                    "2": 13,
+                    "6": 2,
+                    "7": 1
+                  },
+                  "7": {
+                    "1": 80,
+                    "8": 29,
+                    "6": 2,
+                    "7": 2,
+                    "2": 15
+                  },
+                  "8": {
+                    "1": 81,
+                    "8": 38,
+                    "2": 8,
+                    "7": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.33203125,
+                  "0.01": 0.3014453125,
+                  "0.05": 0.17910156249999998,
+                  "0.1": 0.026171874999999956
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.330078125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.330078125,
+                  "0.01": 0.320078125,
+                  "0.05": 0.280078125,
+                  "0.1": 0.230078125
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.333984375,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.333984375,
+                  "0.01": 0.253984375,
+                  "0.05": -0.06601562500000002,
+                  "0.1": -0.46601562500000004
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.330078125,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.330078125,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.40625,
+                  "5": 0.5234375,
+                  "7": 0.390625
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.330078125,
+                  "0.01": 0.272578125,
+                  "0.05": 0.04257812499999997,
+                  "0.1": -0.24492187500000007
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.330078125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.330078125,
+                  "0.01": 0.270078125,
+                  "0.05": 0.030078124999999956,
+                  "0.1": -0.2699218750000001
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.333984375,
+                "halt_exact_accuracy": 0.228515625,
+                "stop_reject_accuracy": 0.025390625,
+                "premature_rate": 0.337890625,
+                "extra_steps": 1.26171875,
+                "mean_updates": 5.865234375,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.078125,
+                  "5": 0.0,
+                  "7": 0.0234375
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 64,
+                    "3": 29,
+                    "4": 4,
+                    "2": 22,
+                    "7": 3,
+                    "6": 1,
+                    "5": 5
+                  },
+                  "5": {
+                    "8": 75,
+                    "2": 13,
+                    "4": 7,
+                    "3": 30,
+                    "7": 2,
+                    "6": 1
+                  },
+                  "7": {
+                    "2": 17,
+                    "8": 67,
+                    "3": 34,
+                    "7": 3,
+                    "6": 1,
+                    "5": 3,
+                    "4": 3
+                  },
+                  "8": {
+                    "8": 85,
+                    "2": 18,
+                    "5": 2,
+                    "3": 19,
+                    "7": 1,
+                    "4": 3
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.333984375,
+                  "0.01": 0.27533203125,
+                  "0.05": 0.04072265624999999,
+                  "0.1": -0.2525390625
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 500,
+          "examples_seen": 16000,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.330078125,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.130859375,
+                "premature_rate": 0.5,
+                "extra_steps": 0.5,
+                "mean_updates": 5.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.5234375,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "5": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "5": 128
+                  },
+                  "8": {
+                    "5": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.330078125,
+                  "0.01": 0.280078125,
+                  "0.05": 0.080078125,
+                  "0.1": -0.169921875
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.330078125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.330078125,
+                  "0.01": 0.320078125,
+                  "0.05": 0.280078125,
+                  "0.1": 0.230078125
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.41796875,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.41796875,
+                  "0.01": 0.33796875,
+                  "0.05": 0.017968749999999978,
+                  "0.1": -0.38203125000000004
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.375,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.375,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.40625,
+                  "5": 0.5234375,
+                  "7": 0.5703125
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.375,
+                  "0.01": 0.3175,
+                  "0.05": 0.08749999999999997,
+                  "0.1": -0.20000000000000007
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.330078125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.330078125,
+                  "0.01": 0.270078125,
+                  "0.05": 0.030078124999999956,
+                  "0.1": -0.2699218750000001
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.330078125,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.130859375,
+                "premature_rate": 0.5,
+                "extra_steps": 0.5,
+                "mean_updates": 5.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.5234375,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "5": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "5": 128
+                  },
+                  "8": {
+                    "5": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.330078125,
+                  "0.01": 0.280078125,
+                  "0.05": 0.080078125,
+                  "0.1": -0.169921875
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 1000,
+          "examples_seen": 32000,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.37109375,
+                "halt_exact_accuracy": 0.009765625,
+                "stop_reject_accuracy": 0.00390625,
+                "premature_rate": 0.6796875,
+                "extra_steps": 0.4453125,
+                "mean_updates": 4.51953125,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.015625,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 93,
+                    "6": 34,
+                    "5": 1
+                  },
+                  "5": {
+                    "4": 92,
+                    "6": 31,
+                    "5": 5
+                  },
+                  "7": {
+                    "4": 98,
+                    "6": 30
+                  },
+                  "8": {
+                    "4": 90,
+                    "6": 32,
+                    "5": 6
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.37109375,
+                  "0.01": 0.3258984375,
+                  "0.05": 0.1451171875,
+                  "0.1": -0.08085937500000001
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.330078125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.330078125,
+                  "0.01": 0.320078125,
+                  "0.05": 0.280078125,
+                  "0.1": 0.230078125
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.388671875,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.388671875,
+                  "0.01": 0.308671875,
+                  "0.05": -0.011328125000000022,
+                  "0.1": -0.41132812500000004
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.376953125,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.376953125,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.4921875,
+                  "5": 0.546875,
+                  "7": 0.46875
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.376953125,
+                  "0.01": 0.319453125,
+                  "0.05": 0.08945312499999997,
+                  "0.1": -0.19804687500000007
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.369140625,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.369140625,
+                  "0.01": 0.309140625,
+                  "0.05": 0.06914062499999996,
+                  "0.1": -0.2308593750000001
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.373046875,
+                "halt_exact_accuracy": 0.013671875,
+                "stop_reject_accuracy": 0.0078125,
+                "premature_rate": 0.638671875,
+                "extra_steps": 0.58203125,
+                "mean_updates": 4.880859375,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.03125,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 67,
+                    "6": 59,
+                    "5": 2
+                  },
+                  "5": {
+                    "4": 71,
+                    "6": 50,
+                    "5": 7
+                  },
+                  "7": {
+                    "4": 74,
+                    "6": 49,
+                    "5": 5
+                  },
+                  "8": {
+                    "6": 54,
+                    "4": 61,
+                    "5": 13
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.373046875,
+                  "0.01": 0.32423828125,
+                  "0.05": 0.12900390625,
+                  "0.1": -0.11503906250000001
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 1500,
+          "examples_seen": 48000,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.916015625,
+                "halt_exact_accuracy": 0.79296875,
+                "stop_reject_accuracy": 0.77734375,
+                "premature_rate": 0.078125,
+                "extra_steps": 0.177734375,
+                "mean_updates": 5.76953125,
+                "reject_n": 128,
+                "reject_accuracy": 0.8046875,
+                "arrival_accuracy": {
+                  "3": 0.65625,
+                  "5": 0.8359375,
+                  "7": 0.8125
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 84,
+                    "5": 11,
+                    "4": 28,
+                    "6": 4,
+                    "2": 1
+                  },
+                  "5": {
+                    "5": 107,
+                    "6": 10,
+                    "4": 1,
+                    "2": 2,
+                    "7": 6,
+                    "3": 2
+                  },
+                  "7": {
+                    "7": 104,
+                    "8": 7,
+                    "2": 2,
+                    "6": 11,
+                    "5": 2,
+                    "3": 2
+                  },
+                  "8": {
+                    "8": 111,
+                    "6": 8,
+                    "5": 3,
+                    "7": 5,
+                    "2": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.916015625,
+                  "0.01": 0.8583203125,
+                  "0.05": 0.6275390624999999,
+                  "0.1": 0.33906249999999993
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.359375,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.359375,
+                  "0.01": 0.349375,
+                  "0.05": 0.309375,
+                  "0.1": 0.259375
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.951171875,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.220703125,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.8828125,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.951171875,
+                  "0.01": 0.871171875,
+                  "0.05": 0.551171875,
+                  "0.1": 0.15117187499999996
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.951171875,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.951171875,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 0.8828125,
+                "arrival_accuracy": {
+                  "3": 0.9921875,
+                  "5": 0.9921875,
+                  "7": 0.9375
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.951171875,
+                  "0.01": 0.893671875,
+                  "0.05": 0.6636718749999999,
+                  "0.1": 0.37617187499999993
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.626953125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.626953125,
+                  "0.01": 0.566953125,
+                  "0.05": 0.32695312499999996,
+                  "0.1": 0.02695312499999991
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.919921875,
+                "halt_exact_accuracy": 0.791015625,
+                "stop_reject_accuracy": 0.775390625,
+                "premature_rate": 0.072265625,
+                "extra_steps": 0.1875,
+                "mean_updates": 5.794921875,
+                "reject_n": 128,
+                "reject_accuracy": 0.8125,
+                "arrival_accuracy": {
+                  "3": 0.640625,
+                  "5": 0.828125,
+                  "7": 0.8203125
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 82,
+                    "5": 11,
+                    "4": 30,
+                    "6": 4,
+                    "2": 1
+                  },
+                  "5": {
+                    "5": 106,
+                    "6": 11,
+                    "7": 7,
+                    "3": 3,
+                    "2": 1
+                  },
+                  "7": {
+                    "7": 105,
+                    "8": 7,
+                    "2": 1,
+                    "6": 11,
+                    "5": 2,
+                    "3": 2
+                  },
+                  "8": {
+                    "8": 112,
+                    "6": 8,
+                    "5": 3,
+                    "7": 4,
+                    "2": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.919921875,
+                  "0.01": 0.86197265625,
+                  "0.05": 0.63017578125,
+                  "0.1": 0.3404296875
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 2000,
+          "examples_seen": 64000,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.998046875,
+                "halt_exact_accuracy": 0.9921875,
+                "stop_reject_accuracy": 0.9921875,
+                "premature_rate": 0.0078125,
+                "extra_steps": 0.0,
+                "mean_updates": 5.716796875,
+                "reject_n": 128,
+                "reject_accuracy": 0.9921875,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 0.984375,
+                  "7": 0.9921875
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 126,
+                    "2": 2
+                  },
+                  "7": {
+                    "7": 127,
+                    "2": 1
+                  },
+                  "8": {
+                    "8": 127,
+                    "2": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.998046875,
+                  "0.01": 0.94087890625,
+                  "0.05": 0.71220703125,
+                  "0.1": 0.4263671875
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.33203125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.33203125,
+                  "0.01": 0.32203125,
+                  "0.05": 0.28203125,
+                  "0.1": 0.23203125
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.998046875,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.248046875,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.9921875,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.998046875,
+                  "0.01": 0.918046875,
+                  "0.05": 0.598046875,
+                  "0.1": 0.19804687499999996
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 0.99609375,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.99609375,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 0.9921875,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 1.0,
+                  "7": 0.9921875
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.99609375,
+                  "0.01": 0.93859375,
+                  "0.05": 0.7085937499999999,
+                  "0.1": 0.42109374999999993
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.619140625,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.619140625,
+                  "0.01": 0.559140625,
+                  "0.05": 0.31914062499999996,
+                  "0.1": 0.01914062499999991
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.998046875,
+                "halt_exact_accuracy": 0.9921875,
+                "stop_reject_accuracy": 0.9921875,
+                "premature_rate": 0.0078125,
+                "extra_steps": 0.0,
+                "mean_updates": 5.716796875,
+                "reject_n": 128,
+                "reject_accuracy": 0.9921875,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 0.984375,
+                  "7": 0.9921875
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 126,
+                    "2": 2
+                  },
+                  "7": {
+                    "7": 127,
+                    "2": 1
+                  },
+                  "8": {
+                    "8": 127,
+                    "2": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.998046875,
+                  "0.01": 0.94087890625,
+                  "0.05": 0.71220703125,
+                  "0.1": 0.4263671875
+                }
+              }
+            },
+            "test": {
+              "learned": {
+                "n": 512,
+                "task_accuracy": 0.9921875,
+                "halt_exact_accuracy": 0.9921875,
+                "stop_reject_accuracy": 0.9921875,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0078125,
+                "mean_updates": 5.7578125,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 1.0,
+                  "7": 0.96875
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 124,
+                    "8": 4
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.9921875,
+                  "0.01": 0.934609375,
+                  "0.05": 0.704296875,
+                  "0.1": 0.41640625
+                }
+              },
+              "minimum": {
+                "n": 512,
+                "task_accuracy": 0.380859375,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 128
+                  },
+                  "5": {
+                    "1": 128
+                  },
+                  "7": {
+                    "1": 128
+                  },
+                  "8": {
+                    "1": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.380859375,
+                  "0.01": 0.370859375,
+                  "0.05": 0.330859375,
+                  "0.1": 0.280859375
+                }
+              },
+              "fixed": {
+                "n": 512,
+                "task_accuracy": 0.982421875,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.25,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 128
+                  },
+                  "5": {
+                    "8": 128
+                  },
+                  "7": {
+                    "8": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.982421875,
+                  "0.01": 0.902421875,
+                  "0.05": 0.582421875,
+                  "0.1": 0.18242187499999996
+                }
+              },
+              "oracle": {
+                "n": 512,
+                "task_accuracy": 1.0,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 1.0,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 1.0,
+                  "7": 1.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 128
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 1.0,
+                  "0.01": 0.9425,
+                  "0.05": 0.7124999999999999,
+                  "0.1": 0.42499999999999993
+                }
+              },
+              "soft_timing_bias": {
+                "n": 512,
+                "task_accuracy": 0.625,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 128,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 128
+                  },
+                  "5": {
+                    "6": 128
+                  },
+                  "7": {
+                    "6": 128
+                  },
+                  "8": {
+                    "6": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.625,
+                  "0.01": 0.565,
+                  "0.05": 0.32499999999999996,
+                  "0.1": 0.02499999999999991
+                }
+              },
+              "learned_soft_bias": {
+                "n": 512,
+                "task_accuracy": 0.9921875,
+                "halt_exact_accuracy": 0.9921875,
+                "stop_reject_accuracy": 0.9921875,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0078125,
+                "mean_updates": 5.7578125,
+                "reject_n": 128,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 1.0,
+                  "5": 1.0,
+                  "7": 0.96875
+                },
+                "arrival_n": {
+                  "3": 128,
+                  "5": 128,
+                  "7": 128,
+                  "8": 128
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 128
+                  },
+                  "5": {
+                    "5": 128
+                  },
+                  "7": {
+                    "7": 124,
+                    "8": 4
+                  },
+                  "8": {
+                    "8": 128
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.9921875,
+                  "0.01": 0.934609375,
+                  "0.05": 0.704296875,
+                  "0.1": 0.41640625
+                }
+              }
+            }
+          }
+        }
+      ],
+      "pure_timing_strata": {
+        "validation": {
+          "3": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 128,
+            "premature_count": 0,
+            "correct_task_count": 128
+          },
+          "5": {
+            "n": 128,
+            "halt_exact_count": 126,
+            "halt_exact_accuracy": 0.984375,
+            "joint_count": 126,
+            "premature_count": 2,
+            "correct_task_count": 128
+          },
+          "7": {
+            "n": 128,
+            "halt_exact_count": 127,
+            "halt_exact_accuracy": 0.9921875,
+            "joint_count": 127,
+            "premature_count": 1,
+            "correct_task_count": 128
+          },
+          "8": {
+            "n": 128,
+            "halt_exact_count": 127,
+            "halt_exact_accuracy": 0.9921875,
+            "joint_count": 127,
+            "premature_count": 1,
+            "correct_task_count": 127
+          }
+        },
+        "test": {
+          "3": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 128,
+            "premature_count": 0,
+            "correct_task_count": 128
+          },
+          "5": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 128,
+            "premature_count": 0,
+            "correct_task_count": 128
+          },
+          "7": {
+            "n": 128,
+            "halt_exact_count": 124,
+            "halt_exact_accuracy": 0.96875,
+            "joint_count": 124,
+            "premature_count": 0,
+            "correct_task_count": 124
+          },
+          "8": {
+            "n": 128,
+            "halt_exact_count": 128,
+            "halt_exact_accuracy": 1.0,
+            "joint_count": 128,
+            "premature_count": 0,
+            "correct_task_count": 128
+          }
+        }
+      },
+      "exact_rule": {
+        "validation": {
+          "n": 512,
+          "task_accuracy": 1.0,
+          "halt_exact_accuracy": 1.0,
+          "reject_n": 128,
+          "reject_correct": 128,
+          "mean_observation_steps": 5.75,
+          "neural_updates": 0,
+          "parameter_matched": false
+        },
+        "test": {
+          "n": 512,
+          "task_accuracy": 1.0,
+          "halt_exact_accuracy": 1.0,
+          "reject_n": 128,
+          "reject_correct": 128,
+          "mean_observation_steps": 5.75,
+          "neural_updates": 0,
+          "parameter_matched": false
+        }
+      },
+      "loss_first": {
+        "step": 1,
+        "task": 1.0222939252853394,
+        "halt": 1.3768625259399414
+      },
+      "loss_last": {
+        "step": 2000,
+        "task": 0.00010230949555989355,
+        "halt": 9.96504386421293e-05
+      }
+    }
+  ]
+}

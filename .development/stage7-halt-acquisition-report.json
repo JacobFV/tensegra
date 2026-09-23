@@ -1,0 +1,5061 @@
+{
+  "phase": "acquisition",
+  "manifest": {
+    "config_sha256": "1d798c1eafb12344a712738d4811238c289cf2482cb6ca539a1dff81d5987aa8",
+    "torch_version": "2.14.0+cpu",
+    "source_sha256": {
+      "halting_study.py": "1ee0a6a608742ffb8ed9da1161f308b052a77881ed0d15f2bdc53531518c9088",
+      "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64"
+    },
+    "controls": [
+      "learned",
+      "minimum",
+      "fixed",
+      "oracle",
+      "soft_timing_bias",
+      "learned_soft_bias"
+    ],
+    "public_priors": "certified keyed shares, persistent current evidence, observable deadline",
+    "main_budget_frozen": false,
+    "seeds": [
+      {
+        "seed": 0,
+        "parameters": 19625,
+        "elapsed_seconds": 15.321918725967407,
+        "examples_seen": 4800,
+        "optimizer_steps": 200,
+        "hashes": {
+          "initial.pt": "89453da5bd9746c660517cc10a025f29b695945f5600c090a032a136133c8e4a",
+          "checkpoint.pt": "277d42567ad74f3debd2c8ae01815f7aaf33b10559bd1ef2251d9a5d42c76103",
+          "data.pt": "798dabe556e44c4ca1605cfd77195270ff35eb9ac74b02b58a6f601a826e81c8"
+        }
+      },
+      {
+        "seed": 1,
+        "parameters": 19625,
+        "elapsed_seconds": 17.189925919752568,
+        "examples_seen": 4800,
+        "optimizer_steps": 200,
+        "hashes": {
+          "initial.pt": "bf41a78a43a3c41ac346cc3a6656cf6d058b54761c3ed4caf25b39f7531a1cfd",
+          "checkpoint.pt": "b66d4cbed132e04d46aa8c56e8617558a5f3b7ee459a470ec08f53679f9dc691",
+          "data.pt": "f3d92a4f04571e54447b4b348818744ce3e70c673b1a947d9c445350b0f3e18d"
+        }
+      },
+      {
+        "seed": 2,
+        "parameters": 19625,
+        "elapsed_seconds": 17.461398497223854,
+        "examples_seen": 4800,
+        "optimizer_steps": 200,
+        "hashes": {
+          "initial.pt": "d12c598635f5681500a3a708a17134a90e7c2df2324d644594b30f28f480e602",
+          "checkpoint.pt": "6f8909aaf929bac218a825b72fb4fb8a8a3db15c4f1d37b983b815acfa91387e",
+          "data.pt": "522c44d289477f74e6d9f59d02ce931c00e882552d590149c2aa84820551f0ac"
+        }
+      }
+    ]
+  },
+  "gate": {
+    "passed": false,
+    "validation_seed_checks": [
+      {
+        "stop_reject": false,
+        "premature": false,
+        "rejection": false,
+        "variable_arrivals": false,
+        "task_advantage": false
+      },
+      {
+        "stop_reject": false,
+        "premature": false,
+        "rejection": false,
+        "variable_arrivals": false,
+        "task_advantage": false
+      },
+      {
+        "stop_reject": false,
+        "premature": false,
+        "rejection": false,
+        "variable_arrivals": false,
+        "task_advantage": false
+      }
+    ],
+    "composition_allowed": false,
+    "halting_competence": false,
+    "reason": "all validation seeds must pass; no dependent recomposition on failure",
+    "scope": "acquisition_only_not_main_claim"
+  },
+  "seeds": [
+    {
+      "seed": 0,
+      "curves": [
+        {
+          "step": 0,
+          "examples_seen": 0,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.3958333333333333,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3958333333333333,
+                  "0.01": 0.3858333333333333,
+                  "0.05": 0.3458333333333333,
+                  "0.1": 0.2958333333333333
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.3958333333333333,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3958333333333333,
+                  "0.01": 0.3858333333333333,
+                  "0.05": 0.3458333333333333,
+                  "0.1": 0.2958333333333333
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.3958333333333333,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3958333333333333,
+                  "0.01": 0.3158333333333333,
+                  "0.05": -0.004166666666666707,
+                  "0.1": -0.40416666666666673
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.3958333333333333,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.3958333333333333,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.4166666666666667,
+                  "5": 0.5416666666666666,
+                  "7": 0.625
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3958333333333333,
+                  "0.01": 0.3383333333333333,
+                  "0.05": 0.10833333333333328,
+                  "0.1": -0.17916666666666675
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.3958333333333333,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3958333333333333,
+                  "0.01": 0.3358333333333333,
+                  "0.05": 0.09583333333333327,
+                  "0.1": -0.20416666666666677
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.3958333333333333,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.3125,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 18,
+                    "2": 6
+                  },
+                  "5": {
+                    "1": 14,
+                    "2": 10
+                  },
+                  "7": {
+                    "1": 18,
+                    "2": 6
+                  },
+                  "8": {
+                    "1": 16,
+                    "2": 8
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3958333333333333,
+                  "0.01": 0.3827083333333333,
+                  "0.05": 0.3302083333333333,
+                  "0.1": 0.2645833333333333
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 50,
+          "examples_seen": 1200,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.4270833333333333,
+                "halt_exact_accuracy": 0.13541666666666666,
+                "stop_reject_accuracy": 0.09375,
+                "premature_rate": 0.6041666666666666,
+                "extra_steps": 0.3958333333333333,
+                "mean_updates": 4.6875,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.375,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "5": 13,
+                    "4": 11
+                  },
+                  "5": {
+                    "5": 13,
+                    "4": 10,
+                    "6": 1
+                  },
+                  "7": {
+                    "6": 2,
+                    "4": 8,
+                    "5": 14
+                  },
+                  "8": {
+                    "5": 18,
+                    "4": 5,
+                    "6": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4270833333333333,
+                  "0.01": 0.3802083333333333,
+                  "0.05": 0.19270833333333331,
+                  "0.1": -0.041666666666666685
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.3541666666666667,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3541666666666667,
+                  "0.01": 0.3441666666666667,
+                  "0.05": 0.3041666666666667,
+                  "0.1": 0.25416666666666665
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.3854166666666667,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.020833333333333332,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.08333333333333333,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3854166666666667,
+                  "0.01": 0.30541666666666667,
+                  "0.05": -0.014583333333333337,
+                  "0.1": -0.41458333333333336
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.4166666666666667,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.4166666666666667,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.08333333333333333,
+                "arrival_accuracy": {
+                  "3": 0.5833333333333334,
+                  "5": 0.5416666666666666,
+                  "7": 0.4583333333333333
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4166666666666667,
+                  "0.01": 0.3591666666666667,
+                  "0.05": 0.12916666666666665,
+                  "0.1": -0.15833333333333338
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.4166666666666667,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4166666666666667,
+                  "0.01": 0.3566666666666667,
+                  "0.05": 0.11666666666666664,
+                  "0.1": -0.1833333333333334
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.4270833333333333,
+                "halt_exact_accuracy": 0.14583333333333334,
+                "stop_reject_accuracy": 0.10416666666666667,
+                "premature_rate": 0.59375,
+                "extra_steps": 0.4166666666666667,
+                "mean_updates": 4.739583333333333,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.4166666666666667,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "5": 15,
+                    "4": 9
+                  },
+                  "5": {
+                    "5": 14,
+                    "4": 9,
+                    "6": 1
+                  },
+                  "7": {
+                    "6": 2,
+                    "4": 7,
+                    "5": 15
+                  },
+                  "8": {
+                    "5": 19,
+                    "4": 4,
+                    "6": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4270833333333333,
+                  "0.01": 0.37968749999999996,
+                  "0.05": 0.19010416666666666,
+                  "0.1": -0.046875
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 100,
+          "examples_seen": 2400,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.4270833333333333,
+                "halt_exact_accuracy": 0.1875,
+                "stop_reject_accuracy": 0.09375,
+                "premature_rate": 0.5208333333333334,
+                "extra_steps": 0.59375,
+                "mean_updates": 5.208333333333333,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.3333333333333333,
+                  "7": 0.041666666666666664
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 5,
+                    "5": 18,
+                    "4": 1
+                  },
+                  "5": {
+                    "5": 17,
+                    "4": 3,
+                    "6": 3,
+                    "7": 1
+                  },
+                  "7": {
+                    "6": 7,
+                    "5": 15,
+                    "4": 1,
+                    "7": 1
+                  },
+                  "8": {
+                    "5": 16,
+                    "6": 7,
+                    "4": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4270833333333333,
+                  "0.01": 0.375,
+                  "0.05": 0.16666666666666663,
+                  "0.1": -0.09375000000000006
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.3541666666666667,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3541666666666667,
+                  "0.01": 0.3441666666666667,
+                  "0.05": 0.3041666666666667,
+                  "0.1": 0.25416666666666665
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.3645833333333333,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.13541666666666666,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.5416666666666666,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3645833333333333,
+                  "0.01": 0.2845833333333333,
+                  "0.05": -0.03541666666666671,
+                  "0.1": -0.43541666666666673
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.5625,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.5625,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.5416666666666666,
+                "arrival_accuracy": {
+                  "3": 0.5833333333333334,
+                  "5": 0.4583333333333333,
+                  "7": 0.6666666666666666
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.5625,
+                  "0.01": 0.505,
+                  "0.05": 0.27499999999999997,
+                  "0.1": -0.012500000000000067
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.4270833333333333,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4270833333333333,
+                  "0.01": 0.3670833333333333,
+                  "0.05": 0.12708333333333327,
+                  "0.1": -0.17291666666666677
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.4270833333333333,
+                "halt_exact_accuracy": 0.19791666666666666,
+                "stop_reject_accuracy": 0.10416666666666667,
+                "premature_rate": 0.5104166666666666,
+                "extra_steps": 0.6041666666666666,
+                "mean_updates": 5.25,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.375,
+                  "7": 0.041666666666666664
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 6,
+                    "5": 17,
+                    "4": 1
+                  },
+                  "5": {
+                    "5": 18,
+                    "6": 3,
+                    "4": 2,
+                    "7": 1
+                  },
+                  "7": {
+                    "6": 8,
+                    "5": 14,
+                    "4": 1,
+                    "7": 1
+                  },
+                  "8": {
+                    "5": 15,
+                    "6": 8,
+                    "4": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4270833333333333,
+                  "0.01": 0.3745833333333333,
+                  "0.05": 0.1645833333333333,
+                  "0.1": -0.09791666666666671
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 150,
+          "examples_seen": 3600,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.4375,
+                "halt_exact_accuracy": 0.17708333333333334,
+                "stop_reject_accuracy": 0.125,
+                "premature_rate": 0.5,
+                "extra_steps": 0.59375,
+                "mean_updates": 5.322916666666667,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.2916666666666667,
+                  "7": 0.20833333333333334
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 4,
+                    "5": 13,
+                    "4": 6,
+                    "7": 1
+                  },
+                  "5": {
+                    "5": 11,
+                    "4": 6,
+                    "6": 5,
+                    "7": 2
+                  },
+                  "7": {
+                    "7": 6,
+                    "5": 9,
+                    "4": 3,
+                    "6": 6
+                  },
+                  "8": {
+                    "6": 8,
+                    "4": 3,
+                    "5": 9,
+                    "7": 4
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4375,
+                  "0.01": 0.38427083333333334,
+                  "0.05": 0.17135416666666664,
+                  "0.1": -0.09479166666666672
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.3541666666666667,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3541666666666667,
+                  "0.01": 0.3441666666666667,
+                  "0.05": 0.3041666666666667,
+                  "0.1": 0.25416666666666665
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.4791666666666667,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4791666666666667,
+                  "0.01": 0.39916666666666667,
+                  "0.05": 0.07916666666666666,
+                  "0.1": -0.32083333333333336
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.4479166666666667,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.4479166666666667,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.625,
+                  "5": 0.5,
+                  "7": 0.6666666666666666
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4479166666666667,
+                  "0.01": 0.3904166666666667,
+                  "0.05": 0.16041666666666665,
+                  "0.1": -0.12708333333333338
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.4375,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4375,
+                  "0.01": 0.3775,
+                  "0.05": 0.13749999999999996,
+                  "0.1": -0.1625000000000001
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.4375,
+                "halt_exact_accuracy": 0.1875,
+                "stop_reject_accuracy": 0.125,
+                "premature_rate": 0.4895833333333333,
+                "extra_steps": 0.6354166666666666,
+                "mean_updates": 5.416666666666667,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.2916666666666667,
+                  "7": 0.20833333333333334
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 5,
+                    "5": 15,
+                    "4": 3,
+                    "7": 1
+                  },
+                  "5": {
+                    "5": 12,
+                    "4": 5,
+                    "6": 5,
+                    "7": 2
+                  },
+                  "7": {
+                    "7": 6,
+                    "5": 11,
+                    "4": 1,
+                    "6": 6
+                  },
+                  "8": {
+                    "6": 9,
+                    "4": 2,
+                    "7": 4,
+                    "5": 9
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4375,
+                  "0.01": 0.3833333333333333,
+                  "0.05": 0.16666666666666663,
+                  "0.1": -0.10416666666666674
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 200,
+          "examples_seen": 4800,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.3854166666666667,
+                "halt_exact_accuracy": 0.16666666666666666,
+                "stop_reject_accuracy": 0.09375,
+                "premature_rate": 0.53125,
+                "extra_steps": 0.5625,
+                "mean_updates": 5.15625,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.20833333333333334,
+                  "7": 0.16666666666666666
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 3,
+                    "5": 11,
+                    "4": 8,
+                    "7": 2
+                  },
+                  "5": {
+                    "4": 11,
+                    "5": 9,
+                    "6": 2,
+                    "7": 2
+                  },
+                  "7": {
+                    "7": 5,
+                    "4": 8,
+                    "8": 1,
+                    "5": 7,
+                    "6": 3
+                  },
+                  "8": {
+                    "6": 7,
+                    "4": 4,
+                    "5": 9,
+                    "8": 2,
+                    "7": 2
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3854166666666667,
+                  "0.01": 0.3338541666666667,
+                  "0.05": 0.12760416666666669,
+                  "0.1": -0.13020833333333331
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.3541666666666667,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3541666666666667,
+                  "0.01": 0.3441666666666667,
+                  "0.05": 0.3041666666666667,
+                  "0.1": 0.25416666666666665
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.3645833333333333,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3645833333333333,
+                  "0.01": 0.2845833333333333,
+                  "0.05": -0.03541666666666671,
+                  "0.1": -0.43541666666666673
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.3958333333333333,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.3958333333333333,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.5833333333333334,
+                  "5": 0.4583333333333333,
+                  "7": 0.5416666666666666
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3958333333333333,
+                  "0.01": 0.3383333333333333,
+                  "0.05": 0.10833333333333328,
+                  "0.1": -0.17916666666666675
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.3854166666666667,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3854166666666667,
+                  "0.01": 0.3254166666666667,
+                  "0.05": 0.08541666666666664,
+                  "0.1": -0.2145833333333334
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.3854166666666667,
+                "halt_exact_accuracy": 0.1875,
+                "stop_reject_accuracy": 0.10416666666666667,
+                "premature_rate": 0.5104166666666666,
+                "extra_steps": 0.5625,
+                "mean_updates": 5.208333333333333,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.25,
+                  "7": 0.16666666666666666
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 3,
+                    "5": 11,
+                    "4": 8,
+                    "7": 2
+                  },
+                  "5": {
+                    "5": 11,
+                    "4": 9,
+                    "6": 2,
+                    "7": 2
+                  },
+                  "7": {
+                    "7": 5,
+                    "4": 7,
+                    "5": 8,
+                    "8": 1,
+                    "6": 3
+                  },
+                  "8": {
+                    "6": 8,
+                    "4": 3,
+                    "5": 9,
+                    "8": 2,
+                    "7": 2
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3854166666666667,
+                  "0.01": 0.33333333333333337,
+                  "0.05": 0.125,
+                  "0.1": -0.13541666666666669
+                }
+              }
+            }
+          }
+        }
+      ],
+      "training_final": {
+        "learned": {
+          "n": 96,
+          "task_accuracy": 0.46875,
+          "halt_exact_accuracy": 0.17708333333333334,
+          "stop_reject_accuracy": 0.10416666666666667,
+          "premature_rate": 0.3541666666666667,
+          "extra_steps": 1.125,
+          "mean_updates": 5.458333333333333,
+          "reject_n": 24,
+          "reject_accuracy": 0.0,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.2916666666666667,
+            "6": 0.125
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "5": 10,
+              "6": 4,
+              "4": 8,
+              "7": 2
+            },
+            "4": {
+              "5": 6,
+              "4": 8,
+              "7": 4,
+              "6": 6
+            },
+            "6": {
+              "7": 4,
+              "6": 7,
+              "4": 8,
+              "5": 4,
+              "8": 1
+            },
+            "8": {
+              "7": 11,
+              "6": 3,
+              "5": 5,
+              "8": 2,
+              "4": 3
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.46875,
+            "0.01": 0.4141666666666667,
+            "0.05": 0.19583333333333336,
+            "0.1": -0.07708333333333328
+          }
+        },
+        "minimum": {
+          "n": 96,
+          "task_accuracy": 0.4166666666666667,
+          "halt_exact_accuracy": 0.0,
+          "stop_reject_accuracy": 0.0,
+          "premature_rate": 1.0,
+          "extra_steps": 0.0,
+          "mean_updates": 1.0,
+          "reject_n": 24,
+          "reject_accuracy": 0.0,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.0,
+            "6": 0.0
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "1": 24
+            },
+            "4": {
+              "1": 24
+            },
+            "6": {
+              "1": 24
+            },
+            "8": {
+              "1": 24
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.4166666666666667,
+            "0.01": 0.4066666666666667,
+            "0.05": 0.3666666666666667,
+            "0.1": 0.31666666666666665
+          }
+        },
+        "fixed": {
+          "n": 96,
+          "task_accuracy": 0.5104166666666666,
+          "halt_exact_accuracy": 0.25,
+          "stop_reject_accuracy": 0.041666666666666664,
+          "premature_rate": 0.0,
+          "extra_steps": 3.0,
+          "mean_updates": 8.0,
+          "reject_n": 24,
+          "reject_accuracy": 0.16666666666666666,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.0,
+            "6": 0.0
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "8": 24
+            },
+            "4": {
+              "8": 24
+            },
+            "6": {
+              "8": 24
+            },
+            "8": {
+              "8": 24
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.5104166666666666,
+            "0.01": 0.4304166666666666,
+            "0.05": 0.11041666666666661,
+            "0.1": -0.2895833333333334
+          }
+        },
+        "oracle": {
+          "n": 96,
+          "task_accuracy": 0.5,
+          "halt_exact_accuracy": 1.0,
+          "stop_reject_accuracy": 0.5,
+          "premature_rate": 0.0,
+          "extra_steps": 0.0,
+          "mean_updates": 5.0,
+          "reject_n": 24,
+          "reject_accuracy": 0.16666666666666666,
+          "arrival_accuracy": {
+            "2": 0.625,
+            "4": 0.5416666666666666,
+            "6": 0.6666666666666666
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "2": 24
+            },
+            "4": {
+              "4": 24
+            },
+            "6": {
+              "6": 24
+            },
+            "8": {
+              "8": 24
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.5,
+            "0.01": 0.45,
+            "0.05": 0.25,
+            "0.1": 0.0
+          }
+        },
+        "soft_timing_bias": {
+          "n": 96,
+          "task_accuracy": 0.46875,
+          "halt_exact_accuracy": 0.25,
+          "stop_reject_accuracy": 0.16666666666666666,
+          "premature_rate": 0.25,
+          "extra_steps": 1.5,
+          "mean_updates": 6.0,
+          "reject_n": 24,
+          "reject_accuracy": 0.0,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.0,
+            "6": 0.6666666666666666
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "6": 24
+            },
+            "4": {
+              "6": 24
+            },
+            "6": {
+              "6": 24
+            },
+            "8": {
+              "6": 24
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.46875,
+            "0.01": 0.40875,
+            "0.05": 0.16874999999999996,
+            "0.1": -0.1312500000000001
+          }
+        },
+        "learned_soft_bias": {
+          "n": 96,
+          "task_accuracy": 0.46875,
+          "halt_exact_accuracy": 0.17708333333333334,
+          "stop_reject_accuracy": 0.10416666666666667,
+          "premature_rate": 0.3541666666666667,
+          "extra_steps": 1.125,
+          "mean_updates": 5.479166666666667,
+          "reject_n": 24,
+          "reject_accuracy": 0.0,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.2916666666666667,
+            "6": 0.125
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "5": 10,
+              "6": 4,
+              "4": 8,
+              "7": 2
+            },
+            "4": {
+              "5": 6,
+              "4": 8,
+              "7": 4,
+              "6": 6
+            },
+            "6": {
+              "7": 4,
+              "6": 7,
+              "4": 8,
+              "5": 4,
+              "8": 1
+            },
+            "8": {
+              "7": 11,
+              "6": 5,
+              "5": 3,
+              "8": 2,
+              "4": 3
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.46875,
+            "0.01": 0.4139583333333333,
+            "0.05": 0.19479166666666664,
+            "0.1": -0.07916666666666672
+          }
+        }
+      },
+      "loss_first": {
+        "step": 1,
+        "task": 3.8290061950683594,
+        "halt": 0.9497198462486267
+      },
+      "loss_last": {
+        "step": 200,
+        "task": 0.6841444373130798,
+        "halt": 0.38906168937683105
+      }
+    },
+    {
+      "seed": 1,
+      "curves": [
+        {
+          "step": 0,
+          "examples_seen": 0,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.25,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.25,
+                  "0.01": 0.24,
+                  "0.05": 0.2,
+                  "0.1": 0.15
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.25,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.25,
+                  "0.01": 0.24,
+                  "0.05": 0.2,
+                  "0.1": 0.15
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.25,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.25,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.25,
+                  "0.01": 0.16999999999999998,
+                  "0.05": -0.15000000000000002,
+                  "0.1": -0.55
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.25,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.25,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 1.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.25,
+                  "0.01": 0.1925,
+                  "0.05": -0.03750000000000003,
+                  "0.1": -0.32500000000000007
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.25,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.25,
+                  "0.01": 0.19,
+                  "0.05": -0.050000000000000044,
+                  "0.1": -0.3500000000000001
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.25,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.25,
+                  "0.01": 0.24,
+                  "0.05": 0.2,
+                  "0.1": 0.15
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 50,
+          "examples_seen": 1200,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.2708333333333333,
+                "halt_exact_accuracy": 0.052083333333333336,
+                "stop_reject_accuracy": 0.020833333333333332,
+                "premature_rate": 0.4479166666666667,
+                "extra_steps": 1.15625,
+                "mean_updates": 6.291666666666667,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.08333333333333333
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 15,
+                    "7": 9
+                  },
+                  "5": {
+                    "7": 6,
+                    "6": 18
+                  },
+                  "7": {
+                    "6": 19,
+                    "7": 5
+                  },
+                  "8": {
+                    "7": 8,
+                    "6": 16
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2708333333333333,
+                  "0.01": 0.20791666666666664,
+                  "0.05": -0.04375000000000007,
+                  "0.1": -0.35833333333333345
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.34375,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.34375,
+                  "0.01": 0.33375,
+                  "0.05": 0.29375,
+                  "0.1": 0.24375
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.2708333333333333,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2708333333333333,
+                  "0.01": 0.1908333333333333,
+                  "0.05": -0.1291666666666667,
+                  "0.1": -0.5291666666666668
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.2916666666666667,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.2916666666666667,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.4166666666666667,
+                  "5": 0.375,
+                  "7": 0.375
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2916666666666667,
+                  "0.01": 0.2341666666666667,
+                  "0.05": 0.004166666666666652,
+                  "0.1": -0.2833333333333334
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.2708333333333333,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2708333333333333,
+                  "0.01": 0.21083333333333332,
+                  "0.05": -0.02916666666666673,
+                  "0.1": -0.3291666666666668
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.2708333333333333,
+                "halt_exact_accuracy": 0.0625,
+                "stop_reject_accuracy": 0.020833333333333332,
+                "premature_rate": 0.4375,
+                "extra_steps": 1.15625,
+                "mean_updates": 6.302083333333333,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.08333333333333333
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 15,
+                    "7": 9
+                  },
+                  "5": {
+                    "7": 6,
+                    "6": 18
+                  },
+                  "7": {
+                    "6": 18,
+                    "7": 6
+                  },
+                  "8": {
+                    "7": 8,
+                    "6": 16
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2708333333333333,
+                  "0.01": 0.20781249999999998,
+                  "0.05": -0.04427083333333337,
+                  "0.1": -0.35937500000000006
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 100,
+          "examples_seen": 2400,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.28125,
+                "halt_exact_accuracy": 0.10416666666666667,
+                "stop_reject_accuracy": 0.03125,
+                "premature_rate": 0.4791666666666667,
+                "extra_steps": 0.8854166666666666,
+                "mean_updates": 5.760416666666667,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.125,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 11,
+                    "7": 3,
+                    "5": 10
+                  },
+                  "5": {
+                    "7": 4,
+                    "6": 12,
+                    "5": 8
+                  },
+                  "7": {
+                    "5": 10,
+                    "7": 2,
+                    "6": 12
+                  },
+                  "8": {
+                    "6": 12,
+                    "7": 4,
+                    "5": 8
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.28125,
+                  "0.01": 0.22364583333333332,
+                  "0.05": -0.006770833333333337,
+                  "0.1": -0.2947916666666667
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.3229166666666667,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3229166666666667,
+                  "0.01": 0.3129166666666667,
+                  "0.05": 0.2729166666666667,
+                  "0.1": 0.22291666666666668
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.28125,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.28125,
+                  "0.01": 0.20124999999999998,
+                  "0.05": -0.11875000000000002,
+                  "0.1": -0.51875
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.28125,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.28125,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.4583333333333333,
+                  "5": 0.2916666666666667,
+                  "7": 0.375
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.28125,
+                  "0.01": 0.22375,
+                  "0.05": -0.006250000000000033,
+                  "0.1": -0.29375000000000007
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.2916666666666667,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2916666666666667,
+                  "0.01": 0.2316666666666667,
+                  "0.05": -0.00833333333333336,
+                  "0.1": -0.3083333333333334
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.28125,
+                "halt_exact_accuracy": 0.09375,
+                "stop_reject_accuracy": 0.020833333333333332,
+                "premature_rate": 0.4791666666666667,
+                "extra_steps": 0.90625,
+                "mean_updates": 5.791666666666667,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.08333333333333333,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 12,
+                    "7": 3,
+                    "5": 9
+                  },
+                  "5": {
+                    "7": 4,
+                    "6": 13,
+                    "5": 7
+                  },
+                  "7": {
+                    "5": 9,
+                    "7": 2,
+                    "6": 13
+                  },
+                  "8": {
+                    "6": 12,
+                    "7": 4,
+                    "5": 8
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.28125,
+                  "0.01": 0.22333333333333333,
+                  "0.05": -0.00833333333333336,
+                  "0.1": -0.2979166666666667
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 150,
+          "examples_seen": 3600,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.2916666666666667,
+                "halt_exact_accuracy": 0.15625,
+                "stop_reject_accuracy": 0.052083333333333336,
+                "premature_rate": 0.5,
+                "extra_steps": 0.625,
+                "mean_updates": 5.21875,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.20833333333333334,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "5": 21,
+                    "6": 3
+                  },
+                  "5": {
+                    "6": 9,
+                    "5": 15
+                  },
+                  "7": {
+                    "5": 20,
+                    "6": 4
+                  },
+                  "8": {
+                    "5": 19,
+                    "6": 5
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2916666666666667,
+                  "0.01": 0.2394791666666667,
+                  "0.05": 0.030729166666666696,
+                  "0.1": -0.2302083333333333
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.3229166666666667,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3229166666666667,
+                  "0.01": 0.3129166666666667,
+                  "0.05": 0.2729166666666667,
+                  "0.1": 0.22291666666666668
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.2708333333333333,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.19791666666666666,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.7916666666666666,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2708333333333333,
+                  "0.01": 0.1908333333333333,
+                  "0.05": -0.1291666666666667,
+                  "0.1": -0.5291666666666668
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.5,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.5,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.7916666666666666,
+                "arrival_accuracy": {
+                  "3": 0.4166666666666667,
+                  "5": 0.2916666666666667,
+                  "7": 0.5
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.5,
+                  "0.01": 0.4425,
+                  "0.05": 0.21249999999999997,
+                  "0.1": -0.07500000000000007
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.3125,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3125,
+                  "0.01": 0.2525,
+                  "0.05": 0.012499999999999956,
+                  "0.1": -0.2875000000000001
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.2916666666666667,
+                "halt_exact_accuracy": 0.15625,
+                "stop_reject_accuracy": 0.052083333333333336,
+                "premature_rate": 0.5,
+                "extra_steps": 0.6354166666666666,
+                "mean_updates": 5.25,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.20833333333333334,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "5": 20,
+                    "6": 4
+                  },
+                  "5": {
+                    "6": 9,
+                    "5": 15
+                  },
+                  "7": {
+                    "5": 20,
+                    "6": 4
+                  },
+                  "8": {
+                    "5": 17,
+                    "6": 7
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2916666666666667,
+                  "0.01": 0.2391666666666667,
+                  "0.05": 0.029166666666666674,
+                  "0.1": -0.23333333333333334
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 200,
+          "examples_seen": 4800,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.2916666666666667,
+                "halt_exact_accuracy": 0.052083333333333336,
+                "stop_reject_accuracy": 0.020833333333333332,
+                "premature_rate": 0.4895833333333333,
+                "extra_steps": 0.96875,
+                "mean_updates": 5.916666666666667,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.08333333333333333,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 15,
+                    "7": 3,
+                    "5": 6
+                  },
+                  "5": {
+                    "6": 16,
+                    "5": 4,
+                    "7": 4
+                  },
+                  "7": {
+                    "5": 7,
+                    "7": 1,
+                    "6": 16
+                  },
+                  "8": {
+                    "6": 15,
+                    "7": 5,
+                    "5": 4
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2916666666666667,
+                  "0.01": 0.2325,
+                  "0.05": -0.004166666666666652,
+                  "0.1": -0.3
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.3229166666666667,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3229166666666667,
+                  "0.01": 0.3129166666666667,
+                  "0.05": 0.2729166666666667,
+                  "0.1": 0.22291666666666668
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.2604166666666667,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.20833333333333334,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.8333333333333334,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2604166666666667,
+                  "0.01": 0.18041666666666667,
+                  "0.05": -0.13958333333333334,
+                  "0.1": -0.5395833333333333
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.4895833333333333,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.4895833333333333,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.8333333333333334,
+                "arrival_accuracy": {
+                  "3": 0.4583333333333333,
+                  "5": 0.3333333333333333,
+                  "7": 0.3333333333333333
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4895833333333333,
+                  "0.01": 0.4320833333333333,
+                  "0.05": 0.20208333333333328,
+                  "0.1": -0.08541666666666675
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.2916666666666667,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2916666666666667,
+                  "0.01": 0.2316666666666667,
+                  "0.05": -0.00833333333333336,
+                  "0.1": -0.3083333333333334
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.2916666666666667,
+                "halt_exact_accuracy": 0.03125,
+                "stop_reject_accuracy": 0.010416666666666666,
+                "premature_rate": 0.4895833333333333,
+                "extra_steps": 1.0,
+                "mean_updates": 5.958333333333333,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.041666666666666664,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 16,
+                    "7": 3,
+                    "5": 5
+                  },
+                  "5": {
+                    "6": 18,
+                    "5": 2,
+                    "7": 4
+                  },
+                  "7": {
+                    "5": 6,
+                    "7": 1,
+                    "6": 17
+                  },
+                  "8": {
+                    "6": 15,
+                    "7": 5,
+                    "5": 4
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2916666666666667,
+                  "0.01": 0.23208333333333336,
+                  "0.05": -0.006249999999999978,
+                  "0.1": -0.30416666666666664
+                }
+              }
+            }
+          }
+        }
+      ],
+      "training_final": {
+        "learned": {
+          "n": 96,
+          "task_accuracy": 0.4270833333333333,
+          "halt_exact_accuracy": 0.10416666666666667,
+          "stop_reject_accuracy": 0.03125,
+          "premature_rate": 0.3854166666666667,
+          "extra_steps": 1.2083333333333333,
+          "mean_updates": 5.520833333333333,
+          "reject_n": 24,
+          "reject_accuracy": 0.0,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.0,
+            "6": 0.125
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "6": 7,
+              "5": 17
+            },
+            "4": {
+              "5": 12,
+              "6": 12
+            },
+            "6": {
+              "5": 13,
+              "6": 10,
+              "7": 1
+            },
+            "8": {
+              "6": 13,
+              "5": 8,
+              "7": 3
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.4270833333333333,
+            "0.01": 0.37187499999999996,
+            "0.05": 0.15104166666666663,
+            "0.1": -0.12500000000000006
+          }
+        },
+        "minimum": {
+          "n": 96,
+          "task_accuracy": 0.3645833333333333,
+          "halt_exact_accuracy": 0.0,
+          "stop_reject_accuracy": 0.0,
+          "premature_rate": 1.0,
+          "extra_steps": 0.0,
+          "mean_updates": 1.0,
+          "reject_n": 24,
+          "reject_accuracy": 0.0,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.0,
+            "6": 0.0
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "1": 24
+            },
+            "4": {
+              "1": 24
+            },
+            "6": {
+              "1": 24
+            },
+            "8": {
+              "1": 24
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.3645833333333333,
+            "0.01": 0.3545833333333333,
+            "0.05": 0.3145833333333333,
+            "0.1": 0.2645833333333333
+          }
+        },
+        "fixed": {
+          "n": 96,
+          "task_accuracy": 0.40625,
+          "halt_exact_accuracy": 0.25,
+          "stop_reject_accuracy": 0.09375,
+          "premature_rate": 0.0,
+          "extra_steps": 3.0,
+          "mean_updates": 8.0,
+          "reject_n": 24,
+          "reject_accuracy": 0.375,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.0,
+            "6": 0.0
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "8": 24
+            },
+            "4": {
+              "8": 24
+            },
+            "6": {
+              "8": 24
+            },
+            "8": {
+              "8": 24
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.40625,
+            "0.01": 0.32625,
+            "0.05": 0.006249999999999978,
+            "0.1": -0.39375000000000004
+          }
+        },
+        "oracle": {
+          "n": 96,
+          "task_accuracy": 0.5,
+          "halt_exact_accuracy": 1.0,
+          "stop_reject_accuracy": 0.5,
+          "premature_rate": 0.0,
+          "extra_steps": 0.0,
+          "mean_updates": 5.0,
+          "reject_n": 24,
+          "reject_accuracy": 0.375,
+          "arrival_accuracy": {
+            "2": 0.625,
+            "4": 0.625,
+            "6": 0.375
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "2": 24
+            },
+            "4": {
+              "4": 24
+            },
+            "6": {
+              "6": 24
+            },
+            "8": {
+              "8": 24
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.5,
+            "0.01": 0.45,
+            "0.05": 0.25,
+            "0.1": 0.0
+          }
+        },
+        "soft_timing_bias": {
+          "n": 96,
+          "task_accuracy": 0.4270833333333333,
+          "halt_exact_accuracy": 0.25,
+          "stop_reject_accuracy": 0.09375,
+          "premature_rate": 0.25,
+          "extra_steps": 1.5,
+          "mean_updates": 6.0,
+          "reject_n": 24,
+          "reject_accuracy": 0.0,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.0,
+            "6": 0.375
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "6": 24
+            },
+            "4": {
+              "6": 24
+            },
+            "6": {
+              "6": 24
+            },
+            "8": {
+              "6": 24
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.4270833333333333,
+            "0.01": 0.3670833333333333,
+            "0.05": 0.12708333333333327,
+            "0.1": -0.17291666666666677
+          }
+        },
+        "learned_soft_bias": {
+          "n": 96,
+          "task_accuracy": 0.4270833333333333,
+          "halt_exact_accuracy": 0.125,
+          "stop_reject_accuracy": 0.041666666666666664,
+          "premature_rate": 0.3645833333333333,
+          "extra_steps": 1.28125,
+          "mean_updates": 5.635416666666667,
+          "reject_n": 24,
+          "reject_accuracy": 0.0,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.0,
+            "6": 0.16666666666666666
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "6": 13,
+              "5": 11
+            },
+            "4": {
+              "5": 11,
+              "6": 13
+            },
+            "6": {
+              "5": 11,
+              "6": 12,
+              "7": 1
+            },
+            "8": {
+              "6": 13,
+              "5": 7,
+              "7": 4
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.4270833333333333,
+            "0.01": 0.37072916666666667,
+            "0.05": 0.14531249999999996,
+            "0.1": -0.1364583333333334
+          }
+        }
+      },
+      "loss_first": {
+        "step": 1,
+        "task": 7.099616527557373,
+        "halt": 1.622643232345581
+      },
+      "loss_last": {
+        "step": 200,
+        "task": 0.6995908617973328,
+        "halt": 0.530092716217041
+      }
+    },
+    {
+      "seed": 2,
+      "curves": [
+        {
+          "step": 0,
+          "examples_seen": 0,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.3958333333333333,
+                "halt_exact_accuracy": 0.07291666666666667,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.7291666666666666,
+                "extra_steps": 0.5104166666666666,
+                "mean_updates": 2.8958333333333335,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 20,
+                    "8": 4
+                  },
+                  "5": {
+                    "1": 17,
+                    "8": 7
+                  },
+                  "7": {
+                    "8": 8,
+                    "1": 16
+                  },
+                  "8": {
+                    "8": 7,
+                    "1": 17
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3958333333333333,
+                  "0.01": 0.36687499999999995,
+                  "0.05": 0.2510416666666666,
+                  "0.1": 0.10624999999999996
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.3645833333333333,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3645833333333333,
+                  "0.01": 0.3545833333333333,
+                  "0.05": 0.3145833333333333,
+                  "0.1": 0.2645833333333333
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.4270833333333333,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4270833333333333,
+                  "0.01": 0.3470833333333333,
+                  "0.05": 0.027083333333333293,
+                  "0.1": -0.37291666666666673
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.4375,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.4375,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.5833333333333334,
+                  "5": 0.5,
+                  "7": 0.6666666666666666
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4375,
+                  "0.01": 0.38,
+                  "0.05": 0.14999999999999997,
+                  "0.1": -0.13750000000000007
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.4270833333333333,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4270833333333333,
+                  "0.01": 0.3670833333333333,
+                  "0.05": 0.12708333333333327,
+                  "0.1": -0.17291666666666677
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.4270833333333333,
+                "halt_exact_accuracy": 0.20833333333333334,
+                "stop_reject_accuracy": 0.03125,
+                "premature_rate": 0.28125,
+                "extra_steps": 1.46875,
+                "mean_updates": 6.489583333333333,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.08333333333333333,
+                  "5": 0.041666666666666664,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 11,
+                    "2": 7,
+                    "7": 2,
+                    "3": 2,
+                    "6": 1,
+                    "5": 1
+                  },
+                  "5": {
+                    "8": 19,
+                    "5": 1,
+                    "3": 3,
+                    "7": 1
+                  },
+                  "7": {
+                    "8": 14,
+                    "5": 2,
+                    "6": 2,
+                    "2": 2,
+                    "4": 3,
+                    "3": 1
+                  },
+                  "8": {
+                    "8": 17,
+                    "7": 1,
+                    "2": 3,
+                    "4": 1,
+                    "6": 1,
+                    "5": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4270833333333333,
+                  "0.01": 0.3621875,
+                  "0.05": 0.10260416666666666,
+                  "0.1": -0.221875
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 50,
+          "examples_seen": 1200,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.34375,
+                "halt_exact_accuracy": 0.03125,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.71875,
+                "extra_steps": 0.2916666666666667,
+                "mean_updates": 4.1875,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 20,
+                    "5": 4
+                  },
+                  "5": {
+                    "4": 21,
+                    "5": 3
+                  },
+                  "7": {
+                    "4": 15,
+                    "5": 9
+                  },
+                  "8": {
+                    "4": 22,
+                    "5": 2
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.34375,
+                  "0.01": 0.301875,
+                  "0.05": 0.134375,
+                  "0.1": -0.07500000000000001
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.3854166666666667,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3854166666666667,
+                  "0.01": 0.3754166666666667,
+                  "0.05": 0.3354166666666667,
+                  "0.1": 0.28541666666666665
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.40625,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.010416666666666666,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.041666666666666664,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.40625,
+                  "0.01": 0.32625,
+                  "0.05": 0.006249999999999978,
+                  "0.1": -0.39375000000000004
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.3854166666666667,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.3854166666666667,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.041666666666666664,
+                "arrival_accuracy": {
+                  "3": 0.5416666666666666,
+                  "5": 0.3333333333333333,
+                  "7": 0.625
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3854166666666667,
+                  "0.01": 0.3279166666666667,
+                  "0.05": 0.09791666666666665,
+                  "0.1": -0.18958333333333338
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.3854166666666667,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3854166666666667,
+                  "0.01": 0.3254166666666667,
+                  "0.05": 0.08541666666666664,
+                  "0.1": -0.2145833333333334
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.34375,
+                "halt_exact_accuracy": 0.041666666666666664,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.7083333333333334,
+                "extra_steps": 0.3020833333333333,
+                "mean_updates": 4.239583333333333,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 19,
+                    "5": 5
+                  },
+                  "5": {
+                    "4": 20,
+                    "5": 4
+                  },
+                  "7": {
+                    "5": 10,
+                    "4": 14
+                  },
+                  "8": {
+                    "4": 20,
+                    "5": 4
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.34375,
+                  "0.01": 0.30135416666666665,
+                  "0.05": 0.13177083333333334,
+                  "0.1": -0.08020833333333333
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 100,
+          "examples_seen": 2400,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.3333333333333333,
+                "halt_exact_accuracy": 0.041666666666666664,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.7083333333333334,
+                "extra_steps": 0.3333333333333333,
+                "mean_updates": 4.270833333333333,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 16,
+                    "5": 8
+                  },
+                  "5": {
+                    "4": 20,
+                    "5": 4
+                  },
+                  "7": {
+                    "5": 10,
+                    "4": 14
+                  },
+                  "8": {
+                    "4": 20,
+                    "5": 4
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3333333333333333,
+                  "0.01": 0.29062499999999997,
+                  "0.05": 0.11979166666666666,
+                  "0.1": -0.09375
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.3333333333333333,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3333333333333333,
+                  "0.01": 0.3233333333333333,
+                  "0.05": 0.2833333333333333,
+                  "0.1": 0.2333333333333333
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.3229166666666667,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3229166666666667,
+                  "0.01": 0.24291666666666667,
+                  "0.05": -0.07708333333333334,
+                  "0.1": -0.47708333333333336
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.3229166666666667,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.3229166666666667,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.4583333333333333,
+                  "5": 0.3333333333333333,
+                  "7": 0.5
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3229166666666667,
+                  "0.01": 0.2654166666666667,
+                  "0.05": 0.03541666666666665,
+                  "0.1": -0.2520833333333334
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.3333333333333333,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3333333333333333,
+                  "0.01": 0.2733333333333333,
+                  "0.05": 0.03333333333333327,
+                  "0.1": -0.2666666666666668
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.3333333333333333,
+                "halt_exact_accuracy": 0.052083333333333336,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.6979166666666666,
+                "extra_steps": 0.34375,
+                "mean_updates": 4.302083333333333,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 15,
+                    "5": 9
+                  },
+                  "5": {
+                    "4": 19,
+                    "5": 5
+                  },
+                  "7": {
+                    "5": 10,
+                    "4": 14
+                  },
+                  "8": {
+                    "4": 19,
+                    "5": 5
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3333333333333333,
+                  "0.01": 0.2903125,
+                  "0.05": 0.11822916666666666,
+                  "0.1": -0.09687499999999999
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 150,
+          "examples_seen": 3600,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.3333333333333333,
+                "halt_exact_accuracy": 0.125,
+                "stop_reject_accuracy": 0.03125,
+                "premature_rate": 0.625,
+                "extra_steps": 0.4375,
+                "mean_updates": 4.708333333333333,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.125,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 7,
+                    "5": 16,
+                    "6": 1
+                  },
+                  "5": {
+                    "4": 12,
+                    "5": 12
+                  },
+                  "7": {
+                    "5": 13,
+                    "6": 5,
+                    "4": 6
+                  },
+                  "8": {
+                    "4": 10,
+                    "5": 13,
+                    "6": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3333333333333333,
+                  "0.01": 0.28625,
+                  "0.05": 0.09791666666666665,
+                  "0.1": -0.1375
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.2708333333333333,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2708333333333333,
+                  "0.01": 0.2608333333333333,
+                  "0.05": 0.22083333333333333,
+                  "0.1": 0.1708333333333333
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.2604166666666667,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.15625,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.625,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2604166666666667,
+                  "0.01": 0.18041666666666667,
+                  "0.05": -0.13958333333333334,
+                  "0.1": -0.5395833333333333
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.46875,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.46875,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.625,
+                "arrival_accuracy": {
+                  "3": 0.4166666666666667,
+                  "5": 0.4583333333333333,
+                  "7": 0.375
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.46875,
+                  "0.01": 0.41125,
+                  "0.05": 0.18124999999999997,
+                  "0.1": -0.10625000000000007
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.2708333333333333,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.2708333333333333,
+                  "0.01": 0.21083333333333332,
+                  "0.05": -0.02916666666666673,
+                  "0.1": -0.3291666666666668
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.3333333333333333,
+                "halt_exact_accuracy": 0.125,
+                "stop_reject_accuracy": 0.03125,
+                "premature_rate": 0.6145833333333334,
+                "extra_steps": 0.46875,
+                "mean_updates": 4.770833333333333,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.125,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 5,
+                    "5": 18,
+                    "6": 1
+                  },
+                  "5": {
+                    "4": 11,
+                    "5": 12,
+                    "6": 1
+                  },
+                  "7": {
+                    "5": 14,
+                    "6": 5,
+                    "4": 5
+                  },
+                  "8": {
+                    "4": 9,
+                    "5": 14,
+                    "6": 1
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3333333333333333,
+                  "0.01": 0.28562499999999996,
+                  "0.05": 0.09479166666666666,
+                  "0.1": -0.14375
+                }
+              }
+            }
+          }
+        },
+        {
+          "step": 200,
+          "examples_seen": 4800,
+          "metrics": {
+            "validation": {
+              "learned": {
+                "n": 96,
+                "task_accuracy": 0.3541666666666667,
+                "halt_exact_accuracy": 0.08333333333333333,
+                "stop_reject_accuracy": 0.03125,
+                "premature_rate": 0.6354166666666666,
+                "extra_steps": 0.5625,
+                "mean_updates": 4.90625,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.125,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 2,
+                    "6": 5,
+                    "5": 17
+                  },
+                  "5": {
+                    "4": 13,
+                    "6": 3,
+                    "5": 8
+                  },
+                  "7": {
+                    "5": 9,
+                    "6": 9,
+                    "4": 6
+                  },
+                  "8": {
+                    "4": 7,
+                    "5": 15,
+                    "6": 2
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3541666666666667,
+                  "0.01": 0.3051041666666667,
+                  "0.05": 0.10885416666666667,
+                  "0.1": -0.13645833333333335
+                }
+              },
+              "minimum": {
+                "n": 96,
+                "task_accuracy": 0.3020833333333333,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 1.0,
+                "extra_steps": 0.0,
+                "mean_updates": 1.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "1": 24
+                  },
+                  "5": {
+                    "1": 24
+                  },
+                  "7": {
+                    "1": 24
+                  },
+                  "8": {
+                    "1": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3020833333333333,
+                  "0.01": 0.2920833333333333,
+                  "0.05": 0.2520833333333333,
+                  "0.1": 0.2020833333333333
+                }
+              },
+              "fixed": {
+                "n": 96,
+                "task_accuracy": 0.4166666666666667,
+                "halt_exact_accuracy": 0.25,
+                "stop_reject_accuracy": 0.020833333333333332,
+                "premature_rate": 0.0,
+                "extra_steps": 2.25,
+                "mean_updates": 8.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.08333333333333333,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "8": 24
+                  },
+                  "5": {
+                    "8": 24
+                  },
+                  "7": {
+                    "8": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.4166666666666667,
+                  "0.01": 0.33666666666666667,
+                  "0.05": 0.016666666666666663,
+                  "0.1": -0.38333333333333336
+                }
+              },
+              "oracle": {
+                "n": 96,
+                "task_accuracy": 0.3020833333333333,
+                "halt_exact_accuracy": 1.0,
+                "stop_reject_accuracy": 0.3020833333333333,
+                "premature_rate": 0.0,
+                "extra_steps": 0.0,
+                "mean_updates": 5.75,
+                "reject_n": 24,
+                "reject_accuracy": 0.08333333333333333,
+                "arrival_accuracy": {
+                  "3": 0.375,
+                  "5": 0.4166666666666667,
+                  "7": 0.3333333333333333
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "3": 24
+                  },
+                  "5": {
+                    "5": 24
+                  },
+                  "7": {
+                    "7": 24
+                  },
+                  "8": {
+                    "8": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.3020833333333333,
+                  "0.01": 0.24458333333333332,
+                  "0.05": 0.014583333333333282,
+                  "0.1": -0.27291666666666675
+                }
+              },
+              "soft_timing_bias": {
+                "n": 96,
+                "task_accuracy": 0.34375,
+                "halt_exact_accuracy": 0.0,
+                "stop_reject_accuracy": 0.0,
+                "premature_rate": 0.5,
+                "extra_steps": 1.0,
+                "mean_updates": 6.0,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.0,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "6": 24
+                  },
+                  "5": {
+                    "6": 24
+                  },
+                  "7": {
+                    "6": 24
+                  },
+                  "8": {
+                    "6": 24
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.34375,
+                  "0.01": 0.28375,
+                  "0.05": 0.043749999999999956,
+                  "0.1": -0.2562500000000001
+                }
+              },
+              "learned_soft_bias": {
+                "n": 96,
+                "task_accuracy": 0.34375,
+                "halt_exact_accuracy": 0.10416666666666667,
+                "stop_reject_accuracy": 0.041666666666666664,
+                "premature_rate": 0.6145833333333334,
+                "extra_steps": 0.5833333333333334,
+                "mean_updates": 4.96875,
+                "reject_n": 24,
+                "reject_accuracy": 0.0,
+                "arrival_accuracy": {
+                  "3": 0.0,
+                  "5": 0.16666666666666666,
+                  "7": 0.0
+                },
+                "arrival_n": {
+                  "3": 24,
+                  "5": 24,
+                  "7": 24,
+                  "8": 24
+                },
+                "microsteps_by_arrival": {
+                  "3": {
+                    "4": 2,
+                    "6": 7,
+                    "5": 15
+                  },
+                  "5": {
+                    "4": 11,
+                    "6": 3,
+                    "5": 10
+                  },
+                  "7": {
+                    "5": 11,
+                    "6": 9,
+                    "4": 4
+                  },
+                  "8": {
+                    "4": 7,
+                    "5": 15,
+                    "6": 2
+                  }
+                },
+                "cost_scores": {
+                  "0.0": 0.34375,
+                  "0.01": 0.2940625,
+                  "0.05": 0.0953125,
+                  "0.1": -0.153125
+                }
+              }
+            }
+          }
+        }
+      ],
+      "training_final": {
+        "learned": {
+          "n": 96,
+          "task_accuracy": 0.5520833333333334,
+          "halt_exact_accuracy": 0.09375,
+          "stop_reject_accuracy": 0.07291666666666667,
+          "premature_rate": 0.4375,
+          "extra_steps": 0.9583333333333334,
+          "mean_updates": 5.0,
+          "reject_n": 24,
+          "reject_accuracy": 0.0,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.041666666666666664,
+            "6": 0.25
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "5": 16,
+              "4": 7,
+              "6": 1
+            },
+            "4": {
+              "5": 16,
+              "4": 3,
+              "6": 5
+            },
+            "6": {
+              "5": 15,
+              "6": 6,
+              "4": 3
+            },
+            "8": {
+              "5": 21,
+              "4": 1,
+              "6": 2
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.5520833333333334,
+            "0.01": 0.5020833333333333,
+            "0.05": 0.30208333333333337,
+            "0.1": 0.05208333333333337
+          }
+        },
+        "minimum": {
+          "n": 96,
+          "task_accuracy": 0.4895833333333333,
+          "halt_exact_accuracy": 0.0,
+          "stop_reject_accuracy": 0.0,
+          "premature_rate": 1.0,
+          "extra_steps": 0.0,
+          "mean_updates": 1.0,
+          "reject_n": 24,
+          "reject_accuracy": 0.0,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.0,
+            "6": 0.0
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "1": 24
+            },
+            "4": {
+              "1": 24
+            },
+            "6": {
+              "1": 24
+            },
+            "8": {
+              "1": 24
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.4895833333333333,
+            "0.01": 0.4795833333333333,
+            "0.05": 0.4395833333333333,
+            "0.1": 0.3895833333333333
+          }
+        },
+        "fixed": {
+          "n": 96,
+          "task_accuracy": 0.6041666666666666,
+          "halt_exact_accuracy": 0.25,
+          "stop_reject_accuracy": 0.07291666666666667,
+          "premature_rate": 0.0,
+          "extra_steps": 3.0,
+          "mean_updates": 8.0,
+          "reject_n": 24,
+          "reject_accuracy": 0.2916666666666667,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.0,
+            "6": 0.0
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "8": 24
+            },
+            "4": {
+              "8": 24
+            },
+            "6": {
+              "8": 24
+            },
+            "8": {
+              "8": 24
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.6041666666666666,
+            "0.01": 0.5241666666666667,
+            "0.05": 0.2041666666666666,
+            "0.1": -0.19583333333333341
+          }
+        },
+        "oracle": {
+          "n": 96,
+          "task_accuracy": 0.6145833333333334,
+          "halt_exact_accuracy": 1.0,
+          "stop_reject_accuracy": 0.6145833333333334,
+          "premature_rate": 0.0,
+          "extra_steps": 0.0,
+          "mean_updates": 5.0,
+          "reject_n": 24,
+          "reject_accuracy": 0.2916666666666667,
+          "arrival_accuracy": {
+            "2": 0.75,
+            "4": 0.6666666666666666,
+            "6": 0.75
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "2": 24
+            },
+            "4": {
+              "4": 24
+            },
+            "6": {
+              "6": 24
+            },
+            "8": {
+              "8": 24
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.6145833333333334,
+            "0.01": 0.5645833333333333,
+            "0.05": 0.36458333333333337,
+            "0.1": 0.11458333333333337
+          }
+        },
+        "soft_timing_bias": {
+          "n": 96,
+          "task_accuracy": 0.6458333333333334,
+          "halt_exact_accuracy": 0.25,
+          "stop_reject_accuracy": 0.1875,
+          "premature_rate": 0.25,
+          "extra_steps": 1.5,
+          "mean_updates": 6.0,
+          "reject_n": 24,
+          "reject_accuracy": 0.0,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.0,
+            "6": 0.75
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "6": 24
+            },
+            "4": {
+              "6": 24
+            },
+            "6": {
+              "6": 24
+            },
+            "8": {
+              "6": 24
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.6458333333333334,
+            "0.01": 0.5858333333333334,
+            "0.05": 0.3458333333333333,
+            "0.1": 0.04583333333333328
+          }
+        },
+        "learned_soft_bias": {
+          "n": 96,
+          "task_accuracy": 0.5625,
+          "halt_exact_accuracy": 0.08333333333333333,
+          "stop_reject_accuracy": 0.07291666666666667,
+          "premature_rate": 0.4375,
+          "extra_steps": 0.9791666666666666,
+          "mean_updates": 5.041666666666667,
+          "reject_n": 24,
+          "reject_accuracy": 0.0,
+          "arrival_accuracy": {
+            "2": 0.0,
+            "4": 0.041666666666666664,
+            "6": 0.25
+          },
+          "arrival_n": {
+            "2": 24,
+            "4": 24,
+            "6": 24,
+            "8": 24
+          },
+          "microsteps_by_arrival": {
+            "2": {
+              "5": 17,
+              "4": 6,
+              "6": 1
+            },
+            "4": {
+              "5": 17,
+              "4": 2,
+              "6": 5
+            },
+            "6": {
+              "5": 16,
+              "6": 6,
+              "4": 2
+            },
+            "8": {
+              "5": 20,
+              "4": 1,
+              "6": 3
+            }
+          },
+          "cost_scores": {
+            "0.0": 0.5625,
+            "0.01": 0.5120833333333333,
+            "0.05": 0.3104166666666666,
+            "0.1": 0.05833333333333324
+          }
+        }
+      },
+      "loss_first": {
+        "step": 1,
+        "task": 1.5918699502944946,
+        "halt": 1.079526424407959
+      },
+      "loss_last": {
+        "step": 200,
+        "task": 0.3757077753543854,
+        "halt": 0.44611209630966187
+      }
+    }
+  ]
+}
