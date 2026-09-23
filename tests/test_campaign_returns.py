@@ -73,3 +73,15 @@ def test_balanced_grid_uses_observed_typed_values_without_relabeling():
     pairs=torch.stack([batch['targets']['type'][ids],batch['targets']['value'][ids]],1)
     assert torch.unique(pairs,dim=0,return_counts=True)[1].tolist()==[2]*52
     assert torch.equal(batch['targets']['value'][ids],(2*batch['public']['event']['values'][ids,0]+16).long())
+
+
+def test_balanced_grid_preserves_exact_primitive_witnesses():
+    import torch
+    from topoformer.retention_data import make_batch
+    from topoformer.campaign_returns_balanced import balanced_indices
+    batch=make_batch(987612,1024,distractors=0)
+    ids=balanced_indices(batch,2); event=batch['public']['event']
+    op=event['operations'][ids,0];args=event['operand_values'][ids,0];value=event['values'][ids,0]
+    computed=torch.stack([args[:,0]+args[:,1],args[:,0]-args[:,1],args[:,0]*args[:,1],-args[:,0],(args[:,0]<args[:,1]).float()],1)
+    assert torch.equal(computed.gather(1,op[:,None])[:,0],value)
+    assert torch.equal(event['argument_mask'][ids,0,1],op!=3)
