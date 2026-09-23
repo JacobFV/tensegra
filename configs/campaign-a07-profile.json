@@ -1,0 +1,46 @@
+{
+  "seed": 709,
+  "width": 1024,
+  "mode": "records",
+  "steps": 12,
+  "batch": 16,
+  "nodes": 32,
+  "groups": 4,
+  "lr": 0.0003,
+  "train_seed": 174000000,
+  "eval_seed": 175000000,
+  "eval_examples": 64,
+  "eval_batch": 32,
+  "generator": "block_permutation_v2",
+  "checkpoints": [
+    0,
+    12
+  ],
+  "curve_eval_seed": 176000000,
+  "curve_examples": 64,
+  "curve_conditions": [
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0
+    },
+    {
+      "nodes": 64,
+      "depth": 8,
+      "data_group": 1
+    }
+  ],
+  "conditions": [
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0
+    },
+    {
+      "nodes": 128,
+      "depth": 32,
+      "groups": 8,
+      "data_group": 1
+    }
+  ]
+}
