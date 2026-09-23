@@ -19,3 +19,11 @@
 
 - R03 exactlyreplays900updates; longerfits improveTRAINbutnotreliablyfreshvalidation. Keepselected900 andconfirmdata-poolintervention withlarger4096-eventheldouts, notanotherheadchange.
 - S01N1024 gainsfreshcopy72.44% versus46.97% atN128 under matched65536presentations, butexactgraphsremain0. CompleteN8192thenchooseextensionfromregisteredcurves.
+
+## Diversity ladder and post-confirmation branches
+
+S01 N8192 finalcopy95.77%,orderedF1.854 versus midpoint82.76%/.715 meets registered extension rule. S03 continues same optimizer/data/objective to131072presentations; no architecture change. Full parent prediction and firstbatch RNG replay required. S02 edge-head diagnostic remains independent.
+
+A03 three-seed clean results reproduce finite-bias dilution and its stronger-bias repair; strong context/message/hard remain equally accurate. Promote A04 CPU implementation of content-dependent multi-neighbor selection, where learned QK matching has a nontrivial role. Competitive dynamic neighbor attention and exact-address-gather ceiling retained. GPU profiling requires separate release.
+
+R04 runs frozen selected readout recipe with fresh3backbone data and separate balanced typed-value cells. No composition or further tuning until audit.
