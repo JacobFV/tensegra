@@ -364,44 +364,64 @@
     {
       "id": "E08",
       "phase": 2,
-      "status": "running",
+      "status": "completed",
       "hypothesis": "PBT finalist has higher sealed verified utility than matched multistart and single learner.",
       "intervention": "PBT selection/inheritance/mutation of (lr, entropy, KL) over actor-critic v2 from a shared supervised bank",
       "comparator": "independent multistart (best DEV), single learner with all updates",
       "split": "DEV 128 per replicate for selection; sealed 70M+ for evaluation",
       "protocol": "phase2/E08-protocol.md",
-      "replicates": 3
+      "replicates": 3,
+      "result": "PBT advantage not supported (pooled PBT-multistart -0.0097 [-0.012,-0.007]); single best 3/3; PBT populations converge tool-first"
     },
     {
       "id": "E09",
       "phase": 2,
-      "status": "registered",
+      "status": "completed",
       "hypothesis": "Sealed IID/transfer/intervention evaluation of frozen finalists vs references",
-      "conditions": "research/tools/campaign02_e09_config.py (8 IID, 10 transfer, 8 intervention)"
+      "conditions": "research/tools/campaign02_e09_config.py (8 IID, 10 transfer, 8 intervention)",
+      "result": "26 conditions x 256 sealed worlds; v1 attempt failed on config typing bug (charged); v2 complete; independently audited"
     },
     {
       "id": "E11",
       "phase": 2,
-      "status": "running",
+      "status": "completed",
       "hypothesis": "Recurrent workspace earns its 12x parameters under RL.",
       "intervention": "single-learner RL from E07 v2 bootstraps, identical streams",
-      "limits": "one seed per family; exploratory"
+      "limits": "one seed per family; exploratory",
+      "result": "lightweight RL 0.943 IID; recurrent RL collapses to never calling tools 0.771"
     },
     {
       "id": "E12",
       "phase": 2,
-      "status": "running",
+      "status": "completed",
       "hypothesis": "Adaptive curriculum (PBT-mutated training mixture weights) beats fixed curriculum.",
       "comparator": "E08 PBT per replicate",
-      "limits": "round-0 component realization differs from E08 (different hash), distributionally equal"
+      "limits": "round-0 component realization differs from E08 (different hash), distributionally equal",
+      "result": "no advantage over fixed curriculum; also converges tool-first"
     },
     {
       "id": "RL02",
       "phase": 2,
-      "status": "running",
+      "status": "completed_failed_promotion",
       "hypothesis": "Pointer/common-address node addressing repairs omitted 3x4 relation generation.",
       "protocol": "semantics/RL02-design.md",
-      "comparator": "RL01 all-record recipe re-run under same source"
+      "comparator": "RL01 all-record recipe re-run under same source",
+      "result": "omitted 0/512; duplicate-address failure"
+    },
+    {
+      "id": "E13",
+      "phase": 2,
+      "status": "completed",
+      "hypothesis": "Robustness-inclusive selection fitness preserves direct-first mode",
+      "protocol": "phase2/E13-protocol.md",
+      "result": "rule formally met (2/3), but populations flipped to tool-avoidance (IID 0.834/0.792/0.813); combined policy not found"
+    },
+    {
+      "id": "E14",
+      "phase": 2,
+      "status": "running",
+      "hypothesis": "Prospective confirmation of single-lineage combined policy on fresh lineages and fresh sealed seeds (80M+)",
+      "protocol": "phase2/E14-protocol.md"
     }
   ],
   "closure": "User requested closure before main population, memory acquisition, and confirmation; no unrun study is promoted."
