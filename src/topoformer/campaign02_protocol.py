@@ -261,6 +261,16 @@ Does NOT certify infeasibility/optimality or correctness of a world reduction.
 """
     try:
         _validate(call)
+        if type(result) is not Result or result.api_version != call.api_version:
+            return False
+        if result.status not in STATUSES or type(result.work_units) is not int or not 0 <= result.work_units <= call.budget.work_units:
+            return False
+        if type(result.cpu_seconds) not in (int, float) or not math.isfinite(result.cpu_seconds) or result.cpu_seconds < 0:
+            return False
+        if type(result.certificate) is not tuple:
+            return False
+        # Resource fields are checked for validity, not independently measured.
+        # Actual outer-process accounting remains authoritative.
         if (result.primitive, result.source_version, result.caller) != (call.primitive, call.source_version, call.caller): return False
         if result.status not in ("success", "timeout") or result.payload is None: return False
         p, a, out = call.primitive, call.arguments, result.payload

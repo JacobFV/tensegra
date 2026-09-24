@@ -56,3 +56,20 @@ def test_constrained_selection():
 def test_isolated():
     c=Call('add',(2,4)); r=execute_isolated(c)
     assert r.status=='success' and r.payload==6
+
+
+def test_result_envelope_rejection():
+    c = Call("add", (2, 3), budget=Budget(10))
+    r = execute(c)
+    assert not validate_result(c, None)
+    assert not validate_result(c, {"payload": 5})
+    for bad in (
+        replace(r, api_version="2"), replace(r, status="invented"),
+        replace(r, work_units=-1), replace(r, work_units=11),
+        replace(r, work_units=True), replace(r, cpu_seconds=-1),
+        replace(r, cpu_seconds=float("nan")),
+        replace(r, cpu_seconds=float("inf")), replace(r, cpu_seconds=True),
+        replace(r, certificate=[]),
+    ):
+        assert not validate_result(c, bad)
+    assert validate_result(c, r)
