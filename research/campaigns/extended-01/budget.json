@@ -10,7 +10,7 @@
     "attention": 10800,
     "adaptive_flex": 5760
   },
-  "charged_seconds": 11028.170226510165,
+  "charged_seconds": 11727.333369309164,
   "reserved_running_seconds": 800.0,
   "jobs": [
     {
@@ -685,6 +685,28 @@
       "seconds": 72.5391916949,
       "receipt": "research/results/campaign-01/composition/c03-development/roles/occupancy.json",
       "recorded_utc": "2026-09-24T00:14:11.108948+00:00"
+    },
+    {
+      "id": "S12-constant-701",
+      "kind": "confirmation",
+      "source": "dbd3575",
+      "cap_seconds": 800.0,
+      "released_utc": "2026-09-24T00:14:11.130738+00:00",
+      "status": "completed",
+      "seconds": 639.163142799,
+      "receipt": "research/results/campaign-01/semantics/s12-constant-701/s12-constant-701.occupancy.json",
+      "recorded_utc": "2026-09-24T00:25:37.304164+00:00"
+    },
+    {
+      "id": "A08-profile",
+      "kind": "exploration",
+      "source": "e789147",
+      "cap_seconds": 60.0,
+      "released_utc": "2026-09-24T00:25:37.337767+00:00",
+      "status": "completed",
+      "seconds": 60.0,
+      "receipt": "research/results/campaign-01/attention/a08-profile/process.json",
+      "recorded_utc": "2026-09-24T04:50:29.860202+00:00"
     }
   ],
   "cpu_audit_seconds": 2736.5984232169035,
@@ -728,6 +750,12 @@
       "id": "s10-copy-contract",
       "seconds": 2.76,
       "receipt": "research/results/campaign-01/semantics/s10-copy-contract/process.json"
+    },
+    {
+      "id": "S13-cache",
+      "seconds": 131.58,
+      "receipt": "research/results/campaign-01/semantics/s13-multisurface-cache/process.json",
+      "note": "129.76 full +1.82 profile; CPU only"
     }
   ],
   "projection_detail": {
@@ -736,5 +764,11 @@
     "A09": 180,
     "C04": "not yet frozen",
     "S13": "CPU cache only; no GPU allocation"
+  },
+  "interruption": {
+    "reason": "usage credits exhausted; user recharged and requested continuation",
+    "last_active_utc": "2026-09-24T00:26:00Z",
+    "reconciled_utc": "2026-09-24T04:48:22Z",
+    "note": "No running experiment at reconciliation. Deadline unchanged; idle interval not GPU occupancy. A08 profile full outer timing missing: charged conservative60-second cap."
   }
 }
