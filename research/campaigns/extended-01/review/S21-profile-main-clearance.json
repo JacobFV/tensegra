@@ -1,0 +1,175 @@
+{
+  "status": "pass_profile_and_prospective_main_freeze",
+  "input_sha256": {
+    "configs/campaign-s21-main-frozen-v1.json": "5a13908ec22e9ad47350d7d85433b46291dada4552a474300fcef57871f30db3",
+    "research/campaigns/extended-01/semantics/S21-main-outer-command.json": "1e5f9194594c99383a3ee528320850f6f3140858b6cf40d9bfdf1083e6f4e551",
+    "research/campaigns/extended-01/semantics/S21-measured-main-cost.json": "422be8e6aed1f719a50bb2a67b74eca59260467823e4b21e4944ab390c1681ba",
+    "research/campaigns/extended-01/semantics/S21-measured-main-cost.md": "4c62a25859897be9d99dfdbf14bfd68fb3c441f73b85808b68bf0855a85919f5",
+    "research/campaigns/extended-01/semantics/S21-cost-extrapolation.md": "073f2768a70d52185633d8a7e905049d33a14977bcff0791b9f7f2418c42dd75"
+  },
+  "profile_receipt": "S21-profile-raw-state-audit.json",
+  "profile_commit": "b4ad6074",
+  "cost_commit": "2cf24ff3",
+  "mainfreeze_commit": "ca206232",
+  "config_sha256": "5a13908ec22e9ad47350d7d85433b46291dada4552a474300fcef57871f30db3",
+  "argv_sha256": "e54dfed9fdbb6951845b9fb7f28997079fb956a094160691ba3a6073a3fb9b31",
+  "cost_verified": {
+    "scope": "Timing-only full two-arm/four-curve/seven-cell main estimate; no profile efficacy selection. Engineering allowances are not deterministic bounds.",
+    "profile_manifest_sha256": "527a3f914a6c24757454545e88d854a439c2222f27381449c565c7d887e0b03b",
+    "profile_charge_seconds": 29.54,
+    "arms": {
+      "original": {
+        "measured_stress_seconds": 0.8325187172740698,
+        "stress_public_lengths": [
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64
+        ],
+        "profile_sums": {
+          "train": {
+            "teacher_forced_seconds": 0.27835011621937156,
+            "free_running_seconds": 1.2433292134664953,
+            "export_seconds": 0.2664663512259722,
+            "total_seconds": 2.696422551292926,
+            "residual_seconds": 0.9082768703810871
+          },
+          "development": {
+            "teacher_forced_seconds": 0.17774368030950427,
+            "free_running_seconds": 1.2076522028073668,
+            "export_seconds": 0.2385547673329711,
+            "total_seconds": 2.380337854847312,
+            "residual_seconds": 0.7563872043974698
+          }
+        },
+        "main_terms_seconds": {
+          "optimizer_204_8_times": 233.61205081939698,
+          "greedy464_batches_max_measured_stress": 386.2886848151684,
+          "teacher_forced_train2_dev64": 11.932295772247016,
+          "export_scaled_then2x": 31.60087562352419,
+          "evaluation_residual_scaled_then2x": 100.45066964440048,
+          "checkpoint_c0_plus3c20": 7.008625438902527,
+          "setup_fixed": 0.950328956823796
+        },
+        "subtotal_seconds": 771.8435310704633
+      },
+      "broad": {
+        "measured_stress_seconds": 0.4064930989407003,
+        "stress_public_lengths": [
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74,
+          74
+        ],
+        "profile_sums": {
+          "train": {
+            "teacher_forced_seconds": 0.21784598985686898,
+            "free_running_seconds": 1.2347520282492042,
+            "export_seconds": 0.27093321830034256,
+            "total_seconds": 2.520672595128417,
+            "residual_seconds": 0.7971413587220013
+          },
+          "development": {
+            "teacher_forced_seconds": 0.1256900066509843,
+            "free_running_seconds": 1.187082833610475,
+            "export_seconds": 0.2328008944168687,
+            "total_seconds": 2.276557808741927,
+            "residual_seconds": 0.7309840740635991
+          }
+        },
+        "main_terms_seconds": {
+          "optimizer_204_8_times": 209.73719606399538,
+          "greedy464_batches_max_measured_stress": 386.2886848151684,
+          "teacher_forced_train2_dev64": 8.479852405376732,
+          "export_scaled_then2x": 30.882247358560562,
+          "evaluation_residual_scaled_then2x": 96.75452691502869,
+          "checkpoint_c0_plus3c20": 6.353888340294361,
+          "setup_fixed": 0.660677732899785
+        },
+        "subtotal_seconds": 739.1570736313239
+      }
+    },
+    "shared_worst_measured_stress_seconds": 0.8325187172740698,
+    "main_subtotal_seconds": 1511.0006047017873,
+    "outer_residual_seconds": 5.030966604091226,
+    "preflight2x_seconds": 7.966817730106413,
+    "additional_preparation_process_reserve_seconds": 200,
+    "planning_total_seconds": 1723.998389035985,
+    "proposed_main_cap_seconds": 1770,
+    "margin_after_reserve_seconds": 46.00161096401507,
+    "profile_plus_main_cap_seconds": 1799.54,
+    "remaining_branch_envelope_seconds": 0.46
+  },
+  "main_binding_checks": {
+    "scientific_sources": 19,
+    "input_hashes": 6,
+    "identical_profile_recipe_and_sources": true,
+    "readonly": true,
+    "unused_prefix": true,
+    "outer_GNU_time_KILL1770_wrapper1770": true,
+    "utilities_verified": true
+  },
+  "scope": "Profile timings and mechanics only; no efficacy-based choice. Two unchanged4096-update arms,4curves,TRAIN128+DEV3584 each, no confirmation. Root alone releases. Profile29.54+maincap1770=1799.54 inside1800.",
+  "limitations": [
+    "1723.998389 forecast includes200s explicit engineering reserve,46.001611s remaining margin; not a rigorous latency bound. Timeout remains incomplete evidence, no automatic extension/support reduction.",
+    "Original stress batch16length74+16length64, broad32length74; both padded to74, larger measured original stress used for both arms.",
+    "No model forwards in independent audit; TF logitsums source-bound, support/arithmetic and raw output scoring independently reconstructed."
+  ],
+  "cpu_wall_seconds": 11.93665396765573
+}
