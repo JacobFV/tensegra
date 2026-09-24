@@ -84,6 +84,21 @@ def extract(root, c04_audit=None, c04_provisional=None):
             for arm in ('constant','decay'):
                 add('semantic_confirmation',source,seed=seed,policy=policy,arm=arm,split='confirmation',
                     correct=counts[arm],total=m['examples'],threshold=m['decay_competence_threshold'])
+    source=review+'S12-final-aggregate-audit.json'
+    if (root/source).exists():
+        audit=read(source)
+        assert audit['status']=='independently_audited' and audit['all_six_actual_targets_and_order_exact']
+        for path,digest in audit['input_sha256'].items():
+            assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'S12 aggregate binding mismatch: {path}'
+            inputs[path]=digest
+        for field,result in audit['results'].items():
+            policy=field.removesuffix('_metrics')
+            for pair in result['pairs']:
+                for arm in ('constant','decay'):
+                    match=[r for r in rows if r['panel']=='semantic_confirmation' and r['policy']==policy and r['seed']==pair['seed'] and r['arm']==arm]
+                    assert len(match)==1 and match[0]['correct']==pair[arm] and match[0]['total']==pair['support']
+            add('semantic_confirmation_uncertainty',source,policy=policy,**result)
+        status.append(dict(experiment='S12',status='three paired seeds audited; directional advantage passes; all-seed competence fails'))
     for directory in ('s10-schema-decode-compact','s10-reuse-s11'):
         source=base+'semantics/'+directory+'/summary.json'
         for c in read(source)['summary']:
@@ -234,7 +249,7 @@ def extract(root, c04_audit=None, c04_provisional=None):
         if row['panel']=='attention_final' and row['condition'] not in conditions:
             conditions.append(row['condition'])
     return dict(schema_version=1,inputs=inputs,rows=rows,status=status,attention_condition_index=conditions,
-                uncertainty='Seed traces are not confidence intervals. No pooled seed/event intervals are computed. Return Wilson intervals retained in data only; repeated delays are not independent.')
+                uncertainty='Seed traces are not confidence intervals. S12 audited shared-event bootstrap intervals condition on fixed fitted seeds and are not seed-population intervals. Return Wilson intervals retained in data only; repeated delays are not independent.')
 
 
 def render(data, output):
@@ -277,6 +292,24 @@ def render(data, output):
         ax.plot(range(len(ss)),[r['correct'] for r in ss],'o-',label=arm)
     ax.set(title='S10 supplied decoding: development/calibrated',xticks=range(len(checkpoints)),xticklabels=checkpoints,ylabel='Complete graphs / 512');ax.legend(fontsize=7)
     finish(fig,'semantic','Learned acquisition and supplied decoding are separate. S04 / S11 share exposure at 196,608 presentations.\nConfirmation threshold = 103/1024; pending seeds are absent, never zero. No event uncertainty is plotted.')
+    if select('semantic_confirmation_uncertainty'):
+        fig,axes=plt.subplots(2,2,figsize=(11,7.5))
+        for col,policy in enumerate(('raw','calibrated')):
+            row=select('semantic_confirmation_uncertainty',policy=policy)[0]
+            ax=axes[0,col]
+            for i,pair in enumerate(row['pairs']):
+                ax.plot([0,1],[pair['constant'],pair['decay']],'o-',color=f'C{i}',label=str(pair['seed']))
+                ax.annotate(str(pair['decay']),(1,pair['decay']),xytext=(5,0),textcoords='offset points',fontsize=8,color=f'C{i}')
+            threshold=select('semantic_confirmation',policy=policy)[0]['threshold']
+            if policy=='calibrated': ax.axhline(threshold,color='.5',ls=':',label=f'Competence = {threshold}/1024')
+            ax.set(title=f'S12 {policy}: paired complete graphs',xticks=[0,1],xticklabels=['Constant','Decay'],ylabel='Correct / 1024');ax.legend(fontsize=7)
+            ax=axes[1,col];interval=row['interval']
+            for i,(pair,mean,ci) in enumerate(zip(row['pairs'],interval['per_seed_mean'],interval['per_seed_interval'])):
+                ax.errorbar(100*mean,i,xerr=[[100*(mean-ci[0])],[100*(ci[1]-mean)]],fmt='o',color=f'C{i}',capsize=3)
+            mean=interval['mean_paired_gain'];ci=interval['shared_event_mean_interval']
+            ax.errorbar(100*mean,3,xerr=[[100*(mean-ci[0])],[100*(ci[1]-mean)]],fmt='D',color='black',capsize=4)
+            ax.set(title=f'{policy}: decay − constant gain',yticks=[0,1,2,3],yticklabels=[str(p['seed']) for p in row['pairs']]+['Fixed-seed mean'],xlabel='Paired gain (percentage points)');ax.invert_yaxis();ax.axvline(0,color='.8',lw=.7)
+        finish(fig,'semantic-confirmation','Directional advantage passes across all three pairs; all-seed calibrated competence fails (seed 701 below 103/1024).\n95% intervals jointly resample shared events, conditional on these fixed fitted seeds; they are not seed-population intervals. Raw is secondary; calibrated is primary.')
     fig,axes=plt.subplots(1,3,figsize=(13,4.7));colors=dict(none='C0',soft='C1',hard='C2',context='C3')
     for ax,group in zip(axes[:2],(0,3)):
         for arm in colors:

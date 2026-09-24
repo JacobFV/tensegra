@@ -11,8 +11,11 @@
     "research/campaigns/extended-01/review/C04-lineage-2-audit.json": "23b2dbf7f9ae7db379f9b9fa48bcb613ce1c3e719538103b83bd6789799ad757",
     "research/campaigns/extended-01/review/R04-uncertainty.json": "203a05dec0c1668c4b891fb9523fd62cf062a94928e48f4bfd41865358abae29",
     "research/campaigns/extended-01/review/R05-confirmation-uncertainty.json": "5c31f4fe282c9795cad437d3acb0b0accdd1810a9172ba3c53b954bb794d62ac",
+    "research/campaigns/extended-01/review/S12-final-aggregate-audit.json": "7d35a13e4460fd82a291588ad06bff6f4563caadf20331ba7b4ad1d6f8be1bd0",
     "research/campaigns/extended-01/review/S12-pair-701-audit.json": "a36ac19bbbbdf8e724f3b3b3d2f7c7e317d974332accce6f1e54fc0500af1bf2",
     "research/campaigns/extended-01/review/S12-pair-702-audit.json": "23e4b20f0276793dac4a6ed772f8c42a2a354cec8445e847ba6e86e6310ad1c4",
+    "research/campaigns/extended-01/review/S12-pair-703-audit.json": "96063a7e588750c548e62b47b15391de062c297e072d26f60a2cc699d4d91e09",
+    "research/campaigns/extended-01/semantics/S12-report.md": "dd57d7ba8dfcf3dbe13f816c6ebe33fab510469af96578f0066e59ec0f0bc854",
     "research/results/campaign-01/attention/a06/601/context/config.json": "d8f8d1f47b1e5ff7580f4585de020a5afd2ad78ef89d2045c97c2e0112768993",
     "research/results/campaign-01/attention/a06/601/context/eval-00000.json": "c81a6b8affa3fa662a10906434866b64d61ed2ad2d077c92d29e4074c6fe0345",
     "research/results/campaign-01/attention/a06/601/context/eval-00010.json": "94a8ed70b361b207279977bcb886b427c920b1fa739c8131508a4a5ab9449517",
@@ -194,7 +197,14 @@
     "research/results/campaign-01/semantics/s04-current-n8192-262k-dev201/manifest.json.gz": "8d2ac33c18b2a5ad2b086dc60d4ab0194cdb2e302589dac6d7ace873d4269c3a",
     "research/results/campaign-01/semantics/s10-reuse-s11/summary.json": "fefddbe0745d2c1c23a51ec353e3ebec4859fe5925d08bcf0b7204a2247f98a5",
     "research/results/campaign-01/semantics/s10-schema-decode-compact/summary.json": "cd4b8f42b27083dde39ae8ab3a8e9fc1bce92ebd26a806a4cf80e33afc921f63",
-    "research/results/campaign-01/semantics/s11-lr-decay-n8192-196k-dev201/manifest.json.gz": "2d643d9ee37fe04cc316a28bec3c72cf515d4aa238a5fd9233002982b895006c"
+    "research/results/campaign-01/semantics/s11-lr-decay-n8192-196k-dev201/manifest.json.gz": "2d643d9ee37fe04cc316a28bec3c72cf515d4aa238a5fd9233002982b895006c",
+    "research/results/campaign-01/semantics/s12-confirmation-summary.json": "a5a6204102fab6b58af87edefb7f4ef09ffd998b983aa686cf265c6d10552b5d",
+    "research/results/campaign-01/semantics/s12-constant-701/evaluation-u24576.json.gz": "17c26430a37cea505a378a4e1c10925704b78ef17cf893c2257acb877ee7c81d",
+    "research/results/campaign-01/semantics/s12-constant-702/evaluation-u24576.json.gz": "0aafa76a7d500c7182903e485da5996e09bef25d9c30288251d666942b648e16",
+    "research/results/campaign-01/semantics/s12-constant-703/evaluation-u24576.json.gz": "0729c8a5dfafa472ba356ef085c4039ddd7f65ae881c986b25b5df6233378337",
+    "research/results/campaign-01/semantics/s12-decay-701/evaluation-u24576.json.gz": "9e9a29a76a343cb20d9bc5d9aaa172c394874234ac950ed4aa8aa79dc73ebb98",
+    "research/results/campaign-01/semantics/s12-decay-702/evaluation-u24576.json.gz": "eba2a0f8f1e12621f9f6ad3028be5202cdc5e6e6d45ce272de1ea27e9026fcdf",
+    "research/results/campaign-01/semantics/s12-decay-703/evaluation-u24576.json.gz": "dd9718270c7c48b22a4d528f644e41fd42ddf0f6b9ab414e6af8ccde92423511"
   },
   "panel_rows": {
     "a12_counts": 36,
@@ -218,11 +228,12 @@
     "return_margin": 17538,
     "return_recovery": 234,
     "return_use": 78,
-    "semantic_confirmation": 8,
+    "semantic_confirmation": 12,
+    "semantic_confirmation_uncertainty": 2,
     "semantic_learning": 36,
     "semantic_supplied": 32
   },
-  "rows": 20686,
+  "rows": 20692,
   "schema_version": 1,
   "status": [
     {
@@ -231,8 +242,7 @@
     },
     {
       "experiment": "S12",
-      "seed": 703,
-      "status": "pending audit"
+      "status": "three paired seeds audited; directional advantage passes; all-seed competence fails"
     },
     {
       "experiment": "A13",
@@ -244,7 +254,7 @@
     }
   ],
   "table": "plotted-data.json.gz",
-  "table_sha256": "aae708063ea00aff205a8974443035a2929d8a6eff123754d73e03a642069fff",
-  "uncertainty": "Seed traces are not confidence intervals. No pooled seed/event intervals are computed. Return Wilson intervals retained in data only; repeated delays are not independent.",
-  "uncompressed_sha256": "6fcccb20a51600f38ab99b7caebae8d5785c4b6b57926a98345f0f70b3a361ff"
+  "table_sha256": "b73c6eccc5195d0ab4b8db50a4c544643ca03ac90fe78bb9ac55b310b69fee57",
+  "uncertainty": "Seed traces are not confidence intervals. S12 audited shared-event bootstrap intervals condition on fixed fitted seeds and are not seed-population intervals. Return Wilson intervals retained in data only; repeated delays are not independent.",
+  "uncompressed_sha256": "fbb4ae589fea05812ab92c213cd64091e79a2227312ea2c7dd01d9e579f13ae2"
 }
