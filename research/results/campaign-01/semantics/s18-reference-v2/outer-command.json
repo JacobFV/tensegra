@@ -1,0 +1,39 @@
+{
+  "cwd": "/home/brandonin/topoformer-campaign01-semantics/s18-source-9d39d00e",
+  "argv": [
+    "/usr/bin/time",
+    "-f",
+    "elapsed_seconds=%e\nexit_code=%x\nmaxrss_kib=%M",
+    "-o",
+    "/home/brandonin/topoformer-campaign01-semantics/results/s18-reference-v2-launch.outer.txt",
+    "/usr/bin/timeout",
+    "--signal=KILL",
+    "240s",
+    "/home/brandonin/topoformer-stage8-cuda/bin/python",
+    "src/topoformer/campaign_semantics_s18_launch.py",
+    "configs/campaign-s18-reference-frozen-v2.json",
+    "--cap",
+    "240",
+    "--python",
+    "/home/brandonin/topoformer-stage8-cuda/bin/python",
+    "--prefix",
+    "/home/brandonin/topoformer-campaign01-semantics/results/s18-reference-v2-launch"
+  ],
+  "argv_json_sha256": "fe262eefdaa4965131b1da66b33ac12d5d0e789b9b3a7036b73a303f198babd7",
+  "cap_seconds": 240,
+  "scope": "GNU timeout default process group; KILL at cap; GNUtime outside records full elapsed and exit; no grace period",
+  "config_sha256": "e99ee70e99d92e921765bf8c7f8eea2064f78f869b3c9157f890b7322f937cab",
+  "source_manifest_path": "/home/brandonin/topoformer-campaign01-semantics/s18-source-9d39d00e/configs/campaign-s18-reference-frozen-v2.json",
+  "source_tar_sha256": "cba5bbc1df66199a1bd524154046d7625c8fdc9321a70019c93e65d7380bc188",
+  "utilities": {
+    "/usr/bin/timeout": {
+      "sha256": "52c67910ffecb65d1d5172e01720145c54941aff91e7b3a11ab222c86fb425a8",
+      "version": "GNU coreutils9.4"
+    },
+    "/usr/bin/time": {
+      "sha256": "4a445f72fefaf4127931df2b799aa885e27553b5a55e104a329d41fc8dc83083",
+      "version": "GNU Time UNKNOWN"
+    }
+  },
+  "launch_authority": "separate root GPU release required"
+}
