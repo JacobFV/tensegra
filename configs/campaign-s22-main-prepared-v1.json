@@ -1,0 +1,72 @@
+{
+  "job": "main",
+  "budget_status": "prepared",
+  "cap_seconds": null,
+  "output_dir": "results/s22-main-v1",
+  "arms": [
+    "original",
+    "broad"
+  ],
+  "policies": [
+    "oracle_node_count",
+    "oracle_node_kinds",
+    "oracle_node_prefix"
+  ],
+  "dev_per_cell": 512,
+  "width": 1024,
+  "heads": 8,
+  "capacity": 128,
+  "max_records": 160,
+  "max_slot": 32,
+  "batch_size": 32,
+  "autocast_dtype": "bfloat16",
+  "device": "cuda",
+  "worst_case_profile": false,
+  "no_optimizer_or_training": true,
+  "calibration": "none",
+  "privilege": "explicit_named_NODE_boundary_only",
+  "checkpoint_update": 4096,
+  "launch_authority": "Separate explicit root GPU release required",
+  "inputs": {
+    "development": {
+      "path": "data/s21-six-motif-v1/development.jsonl.gz",
+      "sha256": "07df44cdadcb9a697b723b9292dd9b1234f7311680e20074b5aea624a7648b29"
+    },
+    "vocabulary_audit": {
+      "path": "data/s01/audit.json",
+      "sha256": "2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1"
+    }
+  },
+  "checkpoints": {
+    "original": {
+      "checkpoint": {
+        "path": "results/s21-main-v1/original/model-u4096.pt",
+        "sha256": "b1b9445f21f7d6e3856e13e6edad0aa1265114098d8c622b744666ed6efe609b"
+      },
+      "model_state_sha256": "3d81794fa49cae0f41e09c3e799f7f5085e54e4b7594d07a891c220b97e53cfc",
+      "manifest": {
+        "path": "results/s21-main-v1/original/manifest.json.gz",
+        "sha256": "2446f1bb72e537510fd9132407d3233dcd40204bce0288b49b3f0a8167868afe"
+      },
+      "public_reference": {
+        "path": "results/s21-main-v1/original/development-u4096.json.gz",
+        "sha256": "a74aa350c6790ad12fa431f51ae6fbdfc1a253712875956beb5ed1963945e2f3"
+      }
+    },
+    "broad": {
+      "checkpoint": {
+        "path": "results/s21-main-v1/broad/model-u4096.pt",
+        "sha256": "a5ad0f6d4fba9804a0ae3ed1ef8dd7b399ed2037dc89acd7b28c07f3bfc56af8"
+      },
+      "model_state_sha256": "2d1267174e4f7fbd93ebd77da36bec0748e74f5c412cc0144b56cf64925d683e",
+      "manifest": {
+        "path": "results/s21-main-v1/broad/manifest.json.gz",
+        "sha256": "face2f00331e1b2cddcccc2f64b8fdf6f9355bcd9f5955b861ea38a498783a8e"
+      },
+      "public_reference": {
+        "path": "results/s21-main-v1/broad/development-u4096.json.gz",
+        "sha256": "15777b9714c648144304e36041ed419eb11bceeffe92ef0063da9a2229573502"
+      }
+    }
+  }
+}
