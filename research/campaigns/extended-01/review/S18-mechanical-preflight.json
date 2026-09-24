@@ -1,0 +1,45 @@
+{
+  "independent_public_lengths_schedule_and_MAC_totals": true,
+  "control_microsteps": 10,
+  "control_vs_context_ratio": 1.0382361235804138,
+  "mapping": {
+    "parent_sha256": "3799ade595500a083b9a558b6a5bc97c5cbc1b8bdce6e7e4b86d97b937ea373e",
+    "parameters": 57853781,
+    "named_parameter_count": 98,
+    "optimizer_group_count": 1,
+    "optimizer_slot_count": 98,
+    "vocabulary_size": 4,
+    "all_three_ordered_parameter_and_optimizer_shapes_match": true,
+    "numerical_adamw_replay": "separate width16 mechanical test",
+    "model_forwards": 0,
+    "device": "meta (CPU-only deserialization)"
+  },
+  "cpu_audit_wall_seconds": 0.927104557864368,
+  "scope": "CPU public text/analytic multiply-accumulate bookkeeping and saved metadata only; no acquired behavior, timing/FLOP equality, threshold choice or training authorization.",
+  "source_ref": "bbbda45d",
+  "cpu_tests": {
+    "passed": 18,
+    "seconds": 1.49,
+    "CUDA_hidden": true,
+    "threads": 2
+  },
+  "findings": [
+    "Additive adapter dispatches unchanged S09 read; original/context/workspace arms introduce zero new learned parameters. Contextoff exact output/gradient/inheritedAdamW nextstep replay verified on width16; actual width1024 parent ordered shapes/98slots verified onmeta, not numeric fullwidth replay.",
+    "Existing public-only forward uses learned copysoftmax to read contextual tokens; no parser, target identity, graph, labels or answer enters routing. Context edge-only loss reaches copyquery/key and contextual stream; original edge loss does not.",
+    "Counted block MACs independently decomposed into self/cross projections, attention products and FF plus cross sentinel; existing read reuses decoder maps. Global10 recurrence minimizes totals over actual4096batch schedule, no per-input adaptation.",
+    "Equal parameters do not imply equal FLOPs/walltime; counted MAC budget excludes unchanged heads/feature/node decoder, elementwise/softmax/backward/AdamW. Actual profiles and full prospective recipe/negativeRNG/calibration/data controls remain required."
+  ],
+  "status": "Mechanical/source preparation passes; no trainer, calibration choice, profile or model-training release authorized.",
+  "input_sha256": {
+    "src/topoformer/campaign_semantics_s18_actor.py": "7562746da3ccff3b6a1ac6874871c40f0a3f76051977639eebece40dc1435de3",
+    "src/topoformer/campaign_semantics_s18_compute.py": "fbbca955e9ee5f6a45d9522dc6e7a99fd2f1b899ab559facd0a6cb0aa3cb51c6",
+    "src/topoformer/campaign_semantics_grounded_actor.py": "b8351a392d9928876d7a82f8cb32386df91356f561b5fb62b1dc4432feb4adfe",
+    "tests/test_campaign_semantics_s18.py": "e149d3989d59b2b257df2e517fc5a754097803d4c89142676786c35acfdf4747",
+    "tests/test_campaign_semantics_grounded_actor.py": "8fb855aceaa876f769f2bdb7d4cce83d7578af92e72ee174a71d8db673fa7b8d",
+    "research/campaigns/extended-01/semantics/S18-compute-plan.json": "4e0a1fc075f17456814a1371700002a3e7e208b17179b7282d1d35e607f78e3e",
+    "research/campaigns/extended-01/semantics/S18-parent-mapping.json": "32e0b6a1a53082eef460c683ce7b95f08e378557ec2f0aad6c0237684cdcf388",
+    "research/campaigns/extended-01/semantics/S18-mechanical-preparation.md": "5e2c341659d9adfa4b9046e87804148533b4a64d9ffdf01174db305d0c763d05"
+  },
+  "source_archive_sha256": "47b90d5a9db03e4adc7b172fff5cb676bf8938f4db33f6c8daf5299b542e0d74",
+  "historical_source_files_unchanged": true
+}
