@@ -126,6 +126,22 @@
       "contract": "Every decay seed >=103/1024 complete graphs",
       "result": "Seed70166/1024 fails;702131/1024 and703139/1024 pass individually",
       "audit": "review/S12-final-aggregate-audit.json"
+    },
+    {
+      "id": "R10-balanced-development",
+      "status": "failed",
+      "contract": "All mixture calibration>=98%, worst balanced stratum>=122/128, minimum gain>=4/128",
+      "result": "Mixture passes, worst115\u2192118/128 fails absolute and gain screens; fresh worst108\u2192116 descriptive",
+      "audit": "review/R10-development-audit.json; review/R10-development-summary-audit.json",
+      "next": "R11 exact-replay optimizer-only diagnostic, not confirmation or automatic replacement"
+    },
+    {
+      "id": "S14-unseen-motif",
+      "status": "diagnostic_only",
+      "contract": "Fixed six checkpoint evaluation on1024 fresh arity3 constructions, two previously unseen ordered motifs",
+      "result": "All six raw and inherited-calibration complete recovery0/1024; nonzero component scores",
+      "audit": "review/S14-main-audit.json",
+      "limitation": "No broad semantic-transfer claim; binary pass not prospectively defined for this diagnostic"
     }
   ]
 }
