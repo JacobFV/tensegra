@@ -128,3 +128,6 @@ S18-reference soleGPU cap240 started10:16:15PID3941545, immutable00a79951/ref944
 
 ## 2026-09-24T10:23:14.371728+00:00
 S18referencev1failedzipordering63.93charged; independent5e9f4794→a5ce0acd confirmed2048unique/samepop/allrawtargetsmetrics exactbyID. Minimalkeyedverifier9d39d00e→441d0087+regression, v2readonlysnapshot outer277f6fa3→143fcaef, reviewb206035f→e136a3f4passed. **S18-reference-v2 soleGPU** cap240 started10:22:44PID3948415, refe99ee70e. Maincfe0359c unchanged4000cap/outputstill s18-main-v1, NOTautochain. Full3reference rerun simple/disclosed duplicatedfirstcheckpoint. Analysispin7bc2b1fc→346ae0a8 matchesv2configs explicitpaths. Sourcec129b674 fullCPU755tests26subtests13.26s;3953historicalentriesunchanged, knownverifierregressionaddedafter. Rootqueue soleauthority.
+
+## 2026-09-24T10:26:33.946806+00:00
+S18referencev2success155.10charged all3rawtargetreplaypassed, archivecoming s18-reference-v2/s18-reference-v2-launch.occupancy.json. **S18-main-v2 soleGPUrelease4000** source9d39d00e/mainconfigcfe0359c, outputstill s18-main-v1, exactreadonlyKILL4000command. Workercomposition_live launching afterrootreleased, noautomaticextension/selection. Botharms4096/all4curves/twocalpolicies; semanalysisawaitfullbotharms. ReviewerCPUauditsreferencewhilemainruns. Rootreserved4000, pendingprojectionscleared. Pushneeded afterlatestcommits.
