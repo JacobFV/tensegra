@@ -172,6 +172,22 @@
       "contract": ">=98%IID,95%moderate,98%joint each fixed seed",
       "result": "Joint176/187/177 of1024; no retroactive learned-soft pass",
       "audit": "review/A14-final-aggregate-audit.json"
+    },
+    {
+      "id": "R11-balanced-development",
+      "status": "failed",
+      "contract": "Fixed7200 endpoint:allmixturecal>=98%, worstbalancedcal>=122/128, fitd16>=99.8%",
+      "result": "Constantworst87;decay120/128fails. Decayfitting65433/65536passes; reusedvalidation122cannotreplacecalibration",
+      "audit": "review/R11-development-summary-audit.json",
+      "next": "Localtailrecipe search closed"
+    },
+    {
+      "id": "S13-bilingual-development",
+      "status": "failed",
+      "contract": "Spanish>=52/512 andgain>=26 overEnglishcontrol; Englishloss<=26; extensiononlylateSpanishgain>=13",
+      "result": "Spanish0both, English135control\u219218mixed; all3criteriafail, lateSpanishgain0. Spanishcopy.897 andorderedF1.781 arepartiallearning",
+      "audit": "review/S13-main-pair-audit.json",
+      "next": "No automaticextension orconfirmation under this protocol"
     }
   ]
 }

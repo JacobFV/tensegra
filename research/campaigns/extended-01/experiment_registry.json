@@ -565,7 +565,7 @@
     },
     {
       "id": "S13",
-      "status": "profiles_audited_main_ready",
+      "status": "completed_independently_audited_failed_screen",
       "hypothesis": "Unchanged actor can acquire a second renderer with paired surfaces",
       "intervention": "English-only versus alternatingEnglish/Spanish continuation of fixedS11checkpoint",
       "comparators": [
@@ -577,8 +577,9 @@
       "source": "e28c9934",
       "selection": "Fixed4096 endpoint; sharedEnglishTRAIN128thresholdpolicy, newDEV512",
       "budget": "English55.8614s/mixed68.9601s profiles; main600s perarm allocated from measured308/318s training plus eval/export",
-      "next_branch": "Profile only after completeS12; no unseenlanguage transferclaim",
-      "audit": "review/S13-paired-profile-audit.json"
+      "next_branch": "No furtherS13extension; independentS15structural-diversity study",
+      "audit": "review/S13-main-pair-audit.json",
+      "result": "Spanish0/512both; English135\u219218calibrated; partialSpanishcopy.897/orderF1.781. Extensiontrigger0<13 fails."
     },
     {
       "id": "S12-rename",
@@ -699,7 +700,7 @@
     },
     {
       "id": "R11",
-      "status": "completed_failed_screen_audit_pending",
+      "status": "completed_independently_audited_failed_screen_closed",
       "hypothesis": "Remaining fixed-feature scalar errors partly reflect incomplete optimizer acquisition rather than missing scalar information",
       "intervention": "Exact replay R10 3600 AdamW steps, then matched3600-step constant.003 versus decayed.0003 forks",
       "comparator": "Unchanged3600 reference and same-exposure constant fork",
@@ -710,22 +711,22 @@
       "selection": "Fixed7200endpoint; reused development calibration only; all mixture>=98%, worstgrid>=122/128 and fittingd16>=99.8%; fresh confirmation required for promotion",
       "budget": "Successful exact profile4.30s charged4.31; main estimate70\u2013120/cap180 allocated subject to independent profile audit",
       "next_branch": "Close bounded local readout-recipe search; optimizer sensitivity and residual balanced tails reported separately from acquired original-mixture interface",
-      "audit": "review/R11-preflight.json",
+      "audit": "review/R11-development-audit.json;review/R11-development-cache-audit.json;review/R11-development-summary-audit.json",
       "result": "Both7200 endpoints fail: constantworstcal87/128,decay120/128<122. Decayfitting65433/65536passes99.8%; reusedvalidationworst122/128; no confirmation."
     },
     {
       "id": "S15",
-      "status": "paired_profiles_completed_audit_pending_main_freeze",
+      "status": "control_main_running_after_audited_profiles",
       "hypothesis": "Training on a new arity while retaining known fact counts improves new-shape acquisition and possibly held-out arity/fact-count recombination",
       "intervention": "4096 English graphs/arm:common2048 arity4 plus2048 morearity4(control) or2048arity3/threefact(mixed)",
       "comparator": "Same fixed S11development201 model/AdamW, same4096-update construction exposure, arm-independent per-presentation pair sampling",
       "observable_inputs": "Public English text and copy inventory; unchanged learned graph decoder",
       "privileged_targets": "Canonical graph components during supervised training; no gold forward inputs",
       "protocol": "semantics/S15-v2-protocol.md",
-      "source": "34e27d86 prepared, freeze pending",
+      "source": "34e27d86+790bdb75; separately frozen1100cap configs2b54b57c",
       "population": "512freshDEV and512reservedconfirmation per4arity/fact cells; v1unused preserved; alpha-disjoint fromhistorical/S13/S14",
       "selection": "Fixed4096endpoint, new-shape52/512 andgain26; arity4retention103/1024 andloss<=51; heldout52/512 andgain26. One symmetric extra4096 only if acquisition/retention pass andrecombinationfails",
-      "budget": "Profiles21.818004280+22.744951478s completed; paired conservative estimates578/568s support800cap each allocated conditional on independent timing/raw audit. Fixed4096updates unchanged.",
+      "budget": "Pairedprofiles44.562955758s; eachmaincap1100 prospectively raised fromunused800freeze afterreviewof evaluationtiming uncertainty; source/exposure/data unchanged",
       "next_branch": "Profile; acquisition before transfer; conditional contextual-read alternative separately considered if newshape acquired but recombinationfails",
       "limitations": "Matched construction count, unequal tokens/nodes/compute; narrow3trainedmotifs and1heldoutcombination, not broad newlanguage or arbitrarytrees",
       "audit": "review/S15-v2-population-audit.json;review/S15-v2-packing-audit.json;review/S15-v2-trainer-preflight.json"
