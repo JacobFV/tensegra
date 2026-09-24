@@ -13,7 +13,39 @@ import time
 from pathlib import Path
 
 
-def extract(root):
+def composition_rows(summary, source):
+    """Lossless count adapter; caller must verify a summary's audit/hash first."""
+    rows=[]
+    cfg=summary['config']; lineage=cfg['data']['train']['seed']//1000000
+    common=dict(source=source,lineage=lineage,replicate=cfg['replicate'],seed=cfg['seed'])
+    def emit(panel,metric,counts,**keys):
+        assert 0 <= counts['correct'] <= counts['total']
+        rows.append(dict(common,panel=panel,metric=metric,**counts,**keys))
+    if summary.get('phase')=='hybrid':
+        for cell in summary['cells']:
+            keys={k:cell[k] for k in ('view','distractors','path','delay')}
+            for metric in ('original','supplied','changed_original','changed_supplied','joint'):
+                if metric in cell: emit('c04_hybrid',metric,cell[metric],**keys)
+            emit('c04_hybrid','refused',dict(correct=cell['refused'],total=cell['original']['total']),**keys)
+        for view in summary['causal']:
+            for cell in view['cells']:
+                keys=dict(view=view['view'],path=cell['path'],delay=cell['delay'],intervention=cell['kind'])
+                for metric in ('original','supplied','changed_original','changed_supplied'):
+                    emit('c04_causal',metric,cell[metric],**keys)
+                emit('c04_causal','refused',dict(correct=cell['refused'],total=cell['original']['total']),**keys)
+    else:
+        for endpoint,results in summary['results'].items():
+            for split in ('validation','validation_reversed'):
+                for target in ('supplied',) if split.endswith('_reversed') else ('original',):
+                    cell=results[split][target] if split.endswith('_reversed') else results[split]
+                    for metric in ('answer','value'):
+                        emit('c04_neural',metric,cell[metric],arm=summary['arm'],endpoint=endpoint,target=target,
+                             step=summary['primary_endpoint_step'] if endpoint=='endpoint' else summary['selected_step'],
+                             view='reversed' if split.endswith('_reversed') else 'clean')
+    return rows
+
+
+def extract(root, c04_audit=None):
     rows, inputs, status = [], {}, []
     def read(path):
         p = root / path
@@ -100,14 +132,51 @@ def extract(root):
                 add('records_'+population,source,seed=config['seed'],arm='records',condition=c['condition'],
                     presentations=int(f.stem.split('-')[1])*config['batch'],
                     correct=round(c['task']*c['examples']),total=c['examples'])
+    for experiment in ('a10','a11'):
+        audit_source=review+experiment.upper()+'-development-audit.json'
+        if not (root/audit_source).exists():
+            status.append(dict(experiment=experiment.upper(),status='pending audited eval bindings'));continue
+        audit=read(audit_source);bindings=audit.get('input_sha256',{})
+        source=base+f'attention/{experiment}/results/config.json'
+        if source not in bindings:
+            status.append(dict(experiment=experiment.upper(),status='pending audited config binding'));continue
+        config=read(source);assert inputs[source]==bindings[source]
+        for f in sorted((root/(base+f'attention/{experiment}/results')).glob('eval-*.json')):
+            source=str(f.relative_to(root))
+            if source not in bindings: continue
+            m=read(source);assert inputs[source]==bindings[source]
+            assert m['eval_seed'] in (config['curve_eval_seed'],config['eval_seed'])
+            population='curve' if m['eval_seed']==config['curve_eval_seed'] else 'final'
+            for c in m['rows']:
+                add('records_'+population,source,experiment=experiment.upper(),seed=config['seed'],arm='records',condition=c['condition'],
+                    presentations=int(f.stem.split('-')[1])*config['batch'],correct=round(c['task']*c['examples']),total=c['examples'])
     for seed in (10,11,12):
         source=base+f'returns/r05-confirmation/{seed}/decision-margin-groups.json'
         for c in read(source):
             for margin,counts in c['signed_value_minus_threshold'].items():
                 add('return_margin',source,seed=seed,arm=c['arm'],key=c['key'],delay=c['delay'],
                     signed_value_minus_threshold=float(margin),**counts)
-    for experiment in ('C04',):
-        status.append(dict(experiment=experiment,status='pending figure adapter and final audit'))
+    if c04_audit:
+        # An explicit final audit index binds each approved summary byte-for-byte.
+        # Shape: {"input_sha256": {"repository/relative/path": "sha256"}}.
+        bindings={}
+        for audit_path in c04_audit:
+            receipt=read(str(audit_path))
+            for path,digest in receipt['input_sha256'].items():
+                if path.startswith(base+'composition/c04-confirmation/') and path.endswith('/summary.json') and path.split('/')[-2] in ('hybrid','n1_static','n1_roles','n2_rekey'):
+                    assert path not in bindings or bindings[path]==digest
+                    bindings[path]=digest
+        assert bindings, 'empty C04 audit summary bindings'
+        for source,digest in sorted(bindings.items()):
+            assert source.startswith(base+'composition/c04-confirmation/') and source.endswith('/summary.json')
+            summary=read(source)
+            assert inputs[source]==digest, f'Unaudited C04 summary bytes: {source}'
+            rows.extend(composition_rows(summary,source))
+        completed={r['lineage'] for r in rows if r['panel']=='c04_hybrid'}
+        for lineage in (560,561,562):
+            if lineage not in completed: status.append(dict(experiment='C04',lineage=lineage,status='pending audited summary'))
+    else:
+        status.append(dict(experiment='C04',status='pending explicit audited-summary hash index'))
     status.append(dict(experiment='S13',status='cache/protocol only; no model outcome plotted'))
     conditions=[]
     for row in rows:
@@ -180,7 +249,7 @@ def render(data, output):
         ax.plot([r['presentations'] for r in ss],[100*r['correct']/r['total'] for r in ss],'.-',label=f"Group {group} (curve)")
         ss=[r for r in select('records_final') if r['condition']==dict(nodes=32 if group==0 else 64,depth=4 if group==0 else 8,data_group=group)]
         ax.scatter([r['presentations'] for r in ss],[100*r['correct']/r['total'] for r in ss],marker='x',s=55,color=f'C{group}',label=f'Group {group} (final)')
-    ax.set(title='A09 graph-record learning · development',xlabel='Optimizer presentations',ylabel='Task correct (%)',ylim=(-2,102));ax.legend(fontsize=7)
+    ax.set(title='Graph-record learning · development',xlabel='Optimizer presentations',ylabel='Task correct (%)',ylim=(-2,102));ax.legend(fontsize=7)
     for ax,group in zip(axes[1:],(0,1)):
         for arm in ('soft','hard','context'):
             for target,style in [('original','-'),('supplied','--')]:
@@ -188,7 +257,7 @@ def render(data, output):
                     ss=sorted([r for r in select('attention_corruption',arm=arm,target=target,seed=seed) if r['condition']['data_group']==group],key=lambda r:r['condition']['fraction'])
                     ax.plot([r['condition']['fraction'] for r in ss],[100*r['correct']/r['total'] for r in ss],style,color=colors[arm],alpha=.55,label=f'{arm} / {target}' if seed==601 else None)
         ax.set(title=f'A08 corruption · condition {group}',xlabel='Changed-edge fraction',ylabel='Task correct (%)',ylim=(-2,102));ax.legend(fontsize=6)
-    finish(fig,'attention-controls','A09: one development seed; final-population crosses are unconnected to curve events. Group 0 = 32 nodes / depth 4; group 1 = 64 / 8.\nA08: three seed traces per arm; solid = original target, dashed = supplied target. Conditions: 64 nodes / depth 8 and 128 / 32.')
+    finish(fig,'attention-controls','A09+audited continuations: one seed; final crosses are unconnected to curve events. Group 0 = 32 nodes / depth 4; group 1 = 64 / 8.\nA08: three seed traces per arm; solid = original target, dashed = supplied target. Conditions: 64 nodes / depth 8 and 128 / 32.')
     fig,axes=plt.subplots(2,2,figsize=(11,7))
     for ax,panel,title in [(axes[0,0],'return_recovery','R04 scalar recovery'),(axes[0,1],'return_use','R05 downstream decision')]:
         arms=('unchanged','ce_16384') if panel=='return_recovery' else (None,)
@@ -211,17 +280,49 @@ def render(data, output):
     ax.set(title='C03 fixed endpoint · development',xticks=[0,1],xticklabels=['Clean','Roles reversed'],ylabel='Correct (%)');ax.legend(fontsize=7)
     finish(fig,'returns-composition','Restricted original mixture / finite domain. Seed traces are separate; repeated delays share events.\nC03 is one development initialization with supplied scheduling. C04 confirmation is pending; no confirmation values imputed.')
 
+    if select('c04_hybrid'):
+        fig,axes=plt.subplots(2,2,figsize=(12,8))
+        for ax,view in zip(axes[0],('clean','reversed')):
+            for ai,path in enumerate(('workspace','supplied_copy')):
+                for lineage in (560,561,562):
+                    ss=select('c04_hybrid',view=view,path=path,lineage=lineage,metric='joint',distractors=8)
+                    ss.sort(key=lambda r:-1 if r['delay'] is None else r['delay'])
+                    ax.plot([0 if r['delay'] is None else r['delay'] for r in ss],[100*r['correct']/r['total'] for r in ss],'.-' if path=='workspace' else 's',color=f'C{ai}',alpha=.65,label=path if lineage==560 else None)
+            for ai,arm in enumerate(('n1_static','n1_roles','n2_rekey'),2):
+                for endpoint,marker in [('endpoint','x'),('selected','+')]:
+                    for lineage in (560,561,562):
+                        ss=select('c04_neural',view=view,arm=arm,endpoint=endpoint,lineage=lineage,metric='answer',target='supplied' if view=='reversed' else 'original')
+                        ax.scatter([18+ai for r in ss],[100*r['correct']/r['total'] for r in ss],marker=marker,color=f'C{ai}',label=f'{arm} {endpoint}' if lineage==560 else None)
+            ax.set(title=f'C04 {view}: joint hybrid / neural answer',xlabel='Workspace delay; neural markers at right',ylabel='Correct (%)');ax.legend(fontsize=6)
+        ax=axes[1,0]
+        for ai,intervention in enumerate(('wrong','swap')):
+            for lineage in (560,561,562):
+                ss=select('c04_causal',view='clean',path='workspace',lineage=lineage,metric='changed_supplied',intervention=intervention)
+                ss=[r for r in ss if r['total']];ss.sort(key=lambda r:r['delay'])
+                ax.plot([r['delay'] for r in ss],[100*r['correct']/r['total'] for r in ss],'.-',color=f'C{ai}',alpha=.65,label=intervention if lineage==560 else None)
+        ax.set(title='C04 changed-fact gates · clean view',xlabel='Workspace delay',ylabel='Supplied-target correct on changed facts (%)');ax.legend(fontsize=7)
+        ax=axes[1,1]
+        for ai,metric in enumerate(('original','joint','refused')):
+            for lineage in (560,561,562):
+                ss=select('c04_hybrid',view='reversed',path='workspace',lineage=lineage,metric=metric,distractors=8)
+                ss.sort(key=lambda r:r['delay'])
+                ax.plot([r['delay'] for r in ss],[100*r['correct']/r['total'] for r in ss],'.-',color=f'C{ai}',alpha=.65,label=metric if lineage==560 else None)
+        ax.set(title='C04 reversed: answer / joint / refusal',xlabel='Workspace delay',ylabel='Count / total (%)');ax.legend(fontsize=7)
+        finish(fig,'composition-confirmation','Each trace/marker is one lineage (560/561/562); missing audited lineages remain absent. Shared views/delays are not independent.\nNeural x = fixed 4000 primary; + = selected secondary. Supplied-copy is a sole-return reference. Finite numeric train/test overlap; supplied scheduling.')
+
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--root',type=Path,default=Path('.'));p.add_argument('--output',type=Path)
-    p.add_argument('--extract-only',action='store_true');p.add_argument('--render-data',type=Path);a=p.parse_args()
+    p.add_argument('--extract-only',action='store_true');p.add_argument('--render-data',type=Path)
+    p.add_argument('--c04-audit',type=Path,action='append',help='Repeatable repository-relative input_sha256 audit receipt; never infer audit from presence alone')
+    a=p.parse_args()
     output=a.output or a.root/'research/campaigns/extended-01/figures';output.mkdir(parents=True,exist_ok=True)
     start=time.perf_counter()
     if a.render_data:
         with (gzip.open(a.render_data,'rt') if a.render_data.suffix=='.gz' else a.render_data.open()) as f:
             data=json.load(f)
     else:
-        data=extract(a.root.resolve())
+        data=extract(a.root.resolve(),a.c04_audit)
     # Stable bytes: sorted compact JSON, mtime=0, no embedded source filename.
     encoded=(json.dumps(data,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
     compressed=gzip.compress(encoded,mtime=0)
