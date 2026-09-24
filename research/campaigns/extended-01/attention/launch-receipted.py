@@ -13,6 +13,11 @@ import subprocess
 import time
 
 JOBS = {
+    "a14-profile": ("67dc519", "campaign-a14-profile.json", "040c663b647a6f281f1e607c87554289c925c1237c4c57ba33cb45826dc2c1d2", "campaign_attention_confirmation_study", 60),
+    "a14-1401": ("67dc519", "campaign-a14-confirm-1401.json", "432037e227e9bb7447150503450e535df82e5f31e190d4555cd5e4fc605112fd", "campaign_attention_confirmation_study", 480),
+    "a14-1402": ("67dc519", "campaign-a14-confirm-1402.json", "b0acfcab1028a14836cfd02aeba79fb226a1e96315a3775fddf2623e2e3802b7", "campaign_attention_confirmation_study", 480),
+    "a14-1403": ("67dc519", "campaign-a14-confirm-1403.json", "c666b0c599ce639fe4d18ab4dd28875b35df50bbf08ca5c1a232f0359c7cbe45", "campaign_attention_confirmation_study", 480),
+    "a14-references": ("67dc519", "campaign-a14-engineering-references.json", "e41acf2fb2995e82600d7bd54e83952501c25a0985c9618383af7d2ea76b2919", "campaign_attention_confirmation_study", 120),
     "a13-profile": ("53bdfed", "campaign-a13-profile.json", "e04a027cb2d8d9118285f236da62763022fc9189a0ed96df546707f4efe4eb99", "campaign_attention_shared_address_study", 60),
     "a13-main": ("53bdfed", "campaign-a13-shared-address.json", "ec442effb25da9871da8e3932f3c079d40e974f94b66f9cd6feaf99a05be6f44", "campaign_attention_shared_address_study", 180),
     "a12-profile": ("71f1971", "campaign-a12-profile.json", "ad409bea603954ec8603487af0940a48369a6bd261856bbc3ec5303f7d296e83", "campaign_attention_record_diagnostic_study", 60),
