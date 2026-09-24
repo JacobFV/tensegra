@@ -82,3 +82,6 @@ CPU review of R06–R09: balanced fitting improves late tails but near-perfect f
 
 ## 2026-09-24: A14 main allocation after measured profile
 Independent profile audit verifies source/state/public pairing and five read policies. Measured training93.59s plus largest-shape inference248.46s supports360–400s expected per seed; allocate480s each for1401/1402/1403 plus120s for frozen engineering references (1,560s total future allocation). Every source/config/policy/endpoint remains frozen, no profile outcome selection. Root releases serially after the final semantic fork. Reference cap remains based on historical same-model evaluation timing and is disclosed separately.
+
+## 2026-09-24: profile next independent branches
+All six semantic forks are complete and endpoint-audited. Allocate R10profile60 seconds after source/population/driver preflight. Allocate S13English/mixed profiles90seconds each (estimated40–55s plus measured5.23s six-checkpoint guard and startup margin), and S14motif/S12rename profiles60seconds each. These are fixed mechanical recipes; no main outcome selection or automatic launch. Original S12 thresholds and every checkpoint remain fixed. Main budgets follow actual training/inference/export profiles.
