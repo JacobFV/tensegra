@@ -1,0 +1,134 @@
+{
+  "status": "protocol_metadata_clear",
+  "seconds": 0.0004041760112158954,
+  "protocol": {
+    "status": "prospective_proposal_requires_independent_review_and_root_registration",
+    "seeds": [
+      701,
+      702,
+      703
+    ],
+    "arms": [
+      "original",
+      "context",
+      "record"
+    ],
+    "parents": {
+      "701": {
+        "checkpoint_path": "/home/brandonin/topoformer-campaign01-semantics/results/s12-decay-701/model-u24576.pt",
+        "checkpoint_sha256": "f419fe818626fc23b98f8e0bb7a89491ff5e015e529b5facb68ee5281d2e808a",
+        "manifest_sha256": "bfd24b660c3a4a28577fc1d6cc7bcbdcf3f6ba138907d2660298b89e78c6112a",
+        "update": 24576,
+        "presentations": 196608,
+        "parameters": 57853781
+      },
+      "702": {
+        "checkpoint_path": "/home/brandonin/topoformer-campaign01-semantics/results/s12-decay-702/model-u24576.pt",
+        "checkpoint_sha256": "64b3b035c386982d3f9563ff7e24bbd459fba8432cadaa60ffc89bf4c5d8261f",
+        "manifest_sha256": "c3501de19812fa454ed2015df65728fe442b7268dea52d1ec2b1e5a3a0eaf3b2",
+        "update": 24576,
+        "presentations": 196608,
+        "parameters": 57853781
+      },
+      "703": {
+        "checkpoint_path": "/home/brandonin/topoformer-campaign01-semantics/results/s12-decay-703/model-u24576.pt",
+        "checkpoint_sha256": "be5c324a24d5a0741b4c66159e46a92f32b8d1691c51df887a17402ccb3267a2",
+        "manifest_sha256": "9917ac55ece4df83970bc46474bd62938e3e549fe8322d2d8cd782c41a3b6416",
+        "update": 24576,
+        "presentations": 196608,
+        "parameters": 57853781
+      }
+    },
+    "scratch_initialization_seed": "same numeric lineage seed",
+    "updates": 4096,
+    "batch_size": 8,
+    "schedule_seed": 15115,
+    "construction_sequence_sha256": "85054bf25e3a3e2a5a9a932b441d6413fd0d7ad827df79e1583268aaddf5acd9",
+    "baseline_presentation_seed_base": 150150000,
+    "train_sha256": "8ddbd15bea881c13bfd24554ada9293082fcef7b616f6eeb3dad78a4bfa662d2",
+    "selection_sha256": "5b8091e73320c5ef87bee39189933e6f3aa856c98ac07d93c6cb90d8d1c13172",
+    "confirmation": {
+      "path": "data/s15-shape-v2/confirmation.jsonl.gz",
+      "sha256": "2710e5e1b6fffab6fa33d56105de13e49d46d64c63d81f61c6ea331347229d32",
+      "cells": {
+        "3x3": 512,
+        "3x4": 512,
+        "4x3": 512,
+        "4x4": 512
+      }
+    },
+    "final_only": true,
+    "baseline_policy": "one global actualTRAIN128 calibration per endpoint; raw retained",
+    "positive_known_claim": {
+      "all_three_seeds": true,
+      "known_cell_minimum_complete": 410,
+      "known_sum_minimum_complete": 1383,
+      "macro_superiority_vs_each_baseline": true,
+      "conditional_paired_ci95_lower_above_zero_vs_each_baseline": true
+    },
+    "positive_heldout_claim": {
+      "all_three_seeds_minimum_complete": 52,
+      "independent_of_known_claim": true
+    },
+    "bootstrap": {
+      "draws": 10000,
+      "seed": 20020,
+      "stratify_known_cells": true,
+      "share_event_draws_across_lineages_and_comparators": true,
+      "scope": "event uncertainty conditional on three fixed trained lineages; not seed population uncertainty"
+    },
+    "profile": {
+      "seed": 701,
+      "updates_per_arm": 20,
+      "train_panel": 128,
+      "dev_per_cell": 16,
+      "final_evaluation_only": true,
+      "confirmation_access": false,
+      "record_forced160_step_batch32": true
+    },
+    "planning_envelope_seconds": 5000,
+    "main_cap_seconds": null,
+    "profile_cap_seconds": null
+  },
+  "input_sha256": {
+    "research/campaigns/extended-01/semantics/S20-protocol-proposal.json": "a2e4c91c219c16b4d6a3b2746055d6ce541d1323bd998b5516fb297a46b39d09",
+    "research/campaigns/extended-01/semantics/S20-protocol-proposal.md": "237077c6a3063cf02cfe01b58c285a82b10049a050d5136f6cbd63f06199034b",
+    "research/campaigns/extended-01/semantics/S18-confirmation-inventory.json": "d60c93ae6953d10b44b4eb1116821f3b62c6b7d92fdf4054c00b287a2a383746",
+    "research/campaigns/extended-01/review/S15-v2-population-audit.json": "167fe207f4daf3650d547bff96de237dd5425af7b22e5a711140fce20a9dc2f5",
+    "research/results/campaign-01/semantics/s15-shape-cache-v2/audit.json": "f8099bbb918997fdc84622f218e466f73b40933412aae7e14403566acb75ecb4",
+    "research/tools/campaign_semantic_shape_population_audit.py": "2220a01fdb1d579c5466d0a364d72968f6d9a8873ca8a2e94c06d5f1410127d9",
+    "research/campaigns/extended-01/review/S12-pair-701-checkpoints.json": "41ef3158fa3e3ec6ed75263291d37a2987925339360e130d739fd417b4442460",
+    "research/campaigns/extended-01/review/S12-pair-702-checkpoints.json": "9172404c5c639f0f9da75003626523a46147066ba31928c4d6577a26c79aa895",
+    "research/campaigns/extended-01/review/S12-pair-703-checkpoints.json": "8f30d0ef7406579915c196283fda7d46a791abbccbec503ce5fc944a67bf9916"
+  },
+  "inherited_train_exclusion": {
+    "sha256": "9c86e311b7f58587918cb314ae9ba7fbc749c062c71829023135c86e568c0710",
+    "rows": 8192
+  },
+  "scope": "Reused independently recomputed alpha exclusion proof; no confirmation records/targets opened. All3parent model/AdamW audits reused by checkpoint hash.",
+  "remote_hash_check": {
+    "status": "pass",
+    "seconds": 1.2881411500275135,
+    "verified_sha256": {
+      "/home/brandonin/topoformer-campaign01-semantics/results/s12-decay-701/model-u24576.pt": "f419fe818626fc23b98f8e0bb7a89491ff5e015e529b5facb68ee5281d2e808a",
+      "/home/brandonin/topoformer-campaign01-semantics/results/s12-decay-701/manifest.json.gz": "bfd24b660c3a4a28577fc1d6cc7bcbdcf3f6ba138907d2660298b89e78c6112a",
+      "/home/brandonin/topoformer-campaign01-semantics/results/s12-decay-702/model-u24576.pt": "64b3b035c386982d3f9563ff7e24bbd459fba8432cadaa60ffc89bf4c5d8261f",
+      "/home/brandonin/topoformer-campaign01-semantics/results/s12-decay-702/manifest.json.gz": "c3501de19812fa454ed2015df65728fe442b7268dea52d1ec2b1e5a3a0eaf3b2",
+      "/home/brandonin/topoformer-campaign01-semantics/results/s12-decay-703/model-u24576.pt": "be5c324a24d5a0741b4c66159e46a92f32b8d1691c51df887a17402ccb3267a2",
+      "/home/brandonin/topoformer-campaign01-semantics/results/s12-decay-703/manifest.json.gz": "9917ac55ece4df83970bc46474bd62938e3e549fe8322d2d8cd782c41a3b6416",
+      "/home/brandonin/topoformer-campaign01-semantics/data/s15-shape-v2/confirmation.jsonl.gz": "2710e5e1b6fffab6fa33d56105de13e49d46d64c63d81f61c6ea331347229d32",
+      "/home/brandonin/topoformer-campaign01-semantics/data/s01/train.jsonl.gz": "9c86e311b7f58587918cb314ae9ba7fbc749c062c71829023135c86e568c0710"
+    },
+    "scope": "File bytes hashed only, no decompression or model loading."
+  },
+  "total_seconds": 1.2885453260387294,
+  "findings": [
+    "All nine fixed arms retain lineages701/702/703, including prior701 weakness; original/context share each corresponding parent but different lineages have independently trained parents.",
+    "Original/context restore24576-step model+AdamW,196608inheritedpresentations; scratch uses same numericseed but different state/history/objective. No architecture-only causal claim.",
+    "InheritedS01TRAIN8192 exclusion explicitly covered by prior independent alpha recomputation against union of excluded sources. Confirmation bytes2710e5e1 unchanged; no records decompressed during this review.",
+    "Fixed32,768incrementalpresentations/schedule15115 and baseline per-presentation RNG; finalonly TRAIN128 global calibration with rawretained, no confirmation fitting/selection.",
+    "ceil90%*1536=1383 andceil80%*512=410, heldoutceil10%*512=52; allseed competence and superiority against both matchedreferences required.",
+    "10kstratified shared-event draws conditional on fixedmodels, no seed-population uncertainty claim; deterministic sortedsemanticID ordering requested for sourceanalysis.",
+    "ProfileDEVonly20updates each701, fullLRschedule/freshmainreset; main/profile caps unset and allninecompletionrequired before aggregate. Source/codec/calibration/cache equivalence and immutable operational launch remain pending."
+  ]
+}
