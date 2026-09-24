@@ -1,0 +1,139 @@
+{
+  "address_namespace": "e08-profile-v1",
+  "development_examples": 64,
+  "development_seed_start": 489000000,
+  "initialization_seeds": [
+    8000,
+    8001,
+    8002,
+    8003,
+    8004,
+    8005
+  ],
+  "member_hyperparameters": [
+    {
+      "entropy_weight": 0.01,
+      "learning_rate": 0.0003
+    },
+    {
+      "entropy_weight": 0.003,
+      "learning_rate": 0.0001
+    },
+    {
+      "entropy_weight": 0.03,
+      "learning_rate": 0.001
+    },
+    {
+      "entropy_weight": 0.001,
+      "learning_rate": 5e-05
+    },
+    {
+      "entropy_weight": 0.1,
+      "learning_rate": 0.002
+    },
+    {
+      "entropy_weight": 0.3,
+      "learning_rate": 0.0006
+    }
+  ],
+  "methods": [
+    "supervised",
+    "supervised",
+    "actor_critic",
+    "actor_critic"
+  ],
+  "mode": "pbt",
+  "optimizer_policy": "inherit",
+  "policy": {
+    "feature_version": "v2",
+    "interface": "legacy"
+  },
+  "population_seed": 800,
+  "population_size": 6,
+  "rounds": 4,
+  "teacher": "cheap_first_fallback_v2",
+  "threads": 1,
+  "train": {
+    "batch_size": 8,
+    "device": "cuda",
+    "evaluation_batch": 32,
+    "family": "lightweight",
+    "learning_rate": 0.0003,
+    "max_steps": 48,
+    "policy_loss_reduction": "episode_mean",
+    "rollout_mode": "batched",
+    "width": 1024
+  },
+  "training_seed_start": 480000000,
+  "training_seed_stride": 1000000,
+  "updates_per_slot": 50,
+  "world_mix": [
+    {
+      "categories": 2,
+      "choices": 2,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 5,
+      "step_limit": 48
+    },
+    {
+      "categories": 2,
+      "choices": 2,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 5,
+      "step_limit": 48
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "step_limit": 48
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "step_limit": 48
+    },
+    {
+      "categories": 4,
+      "choices": 4,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 9,
+      "step_limit": 48
+    },
+    {
+      "categories": 4,
+      "choices": 4,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 9,
+      "step_limit": 48,
+      "work_limit": 128
+    },
+    {
+      "categories": 4,
+      "choices": 4,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 9,
+      "step_limit": 48,
+      "work_price": 0.002
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "obstacle": true,
+      "step_limit": 48
+    }
+  ]
+}

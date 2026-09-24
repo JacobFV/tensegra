@@ -1,0 +1,111 @@
+{
+  "address_namespace": "e05-acquisition-v1",
+  "development_examples": 128,
+  "development_seed_start": 391000000,
+  "initialization_seeds": [
+    5100,
+    5101,
+    5102,
+    5103,
+    5104,
+    5105
+  ],
+  "member_hyperparameters": [],
+  "methods": [
+    "supervised"
+  ],
+  "mode": "single",
+  "optimizer_policy": "inherit",
+  "policy": {
+    "feature_version": "v2",
+    "interface": "legacy"
+  },
+  "population_seed": 510,
+  "population_size": 6,
+  "rounds": 1,
+  "teacher": "cheap_first_fallback_v2",
+  "threads": 1,
+  "train": {
+    "batch_size": 8,
+    "device": "cuda",
+    "evaluation_batch": 32,
+    "family": "lightweight",
+    "learning_rate": 0.0003,
+    "max_steps": 48,
+    "policy_loss_reduction": "episode_mean",
+    "rollout_mode": "batched",
+    "width": 1024
+  },
+  "training_seed_start": 310000000,
+  "training_seed_stride": 1000000,
+  "updates_per_slot": 100,
+  "world_mix": [
+    {
+      "categories": 2,
+      "choices": 2,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 5,
+      "step_limit": 48
+    },
+    {
+      "categories": 2,
+      "choices": 2,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 5,
+      "step_limit": 48
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "step_limit": 48
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "step_limit": 48
+    },
+    {
+      "categories": 4,
+      "choices": 4,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 9,
+      "step_limit": 48
+    },
+    {
+      "categories": 4,
+      "choices": 4,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 9,
+      "step_limit": 48,
+      "work_limit": 128
+    },
+    {
+      "categories": 4,
+      "choices": 4,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 9,
+      "step_limit": 48,
+      "work_price": 0.002
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "obstacle": true,
+      "step_limit": 48
+    }
+  ]
+}
