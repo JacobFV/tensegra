@@ -59,3 +59,6 @@ Alloldagentsgone; rootreusedsamecoordinatorworktree/branch. Newworkers resume_se
 
 ### 2026-09-24 05:06 UTC autonomous resumption
 Integrated decay701/audits/cache audit and C04 profile launch contracts. S12decay701 charged637.652931855s. A09 now owns GPU cap180 via durable launcher2123996, source0880c64. Next A08cap300, C04profiles420, then S12parent702/forks and703/forks. No recipes altered after first confirmation failure. User reiterated full autonomy; current filesystem/network permissions unrestricted and approval never.
+
+### 05:16 UTC queue boundary
+A08 completed206.166659217s and independently audited all72cells. C04 five profiles completed21.218453886s; source8a92869, all pass. Root adopts caps900/180/180/600/120 perlineage×3=5940, scientificprotocol unchanged; worker freezesbeforeanymain. S12parent702 nowGPUowner source dbd3575 cap1400. A10 savedstate2000→3000 cap120 awaitingpreflight. S13 CPUready, noGPU untilfullS12matrix. Figures worker builds reproducibleplots, reviewer runsnewsourceCPUintegration.
