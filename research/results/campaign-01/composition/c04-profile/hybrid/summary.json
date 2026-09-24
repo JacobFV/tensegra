@@ -1,0 +1,9231 @@
+{
+  "phase": "hybrid",
+  "config": {
+    "hidden": 1024,
+    "key_dim": 32,
+    "batch_size": 256,
+    "capture_batch_size": 64,
+    "updates": 16,
+    "checkpoints": [
+      0,
+      16
+    ],
+    "delays": [
+      0,
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "intervention_delays": [
+      0,
+      1,
+      16
+    ],
+    "eval_distractors": [
+      2,
+      8
+    ],
+    "causal_size": 16,
+    "version": "c04-v1-mechanical-profile",
+    "replicate": 1,
+    "seed": 1699,
+    "learning_rate": 0.0003,
+    "sample_seed": 569000100,
+    "role_seed": 569000101,
+    "rekey_seed": 569000102,
+    "control_seed": 569000200,
+    "swap_seed": 569000300,
+    "interfaces": {
+      "lowerer": "/home/brandonin/topoformer-campaign-01/composition/p01-confirmation-303/selected.pt",
+      "lowerer_sha256": "1f4e141180ec60ddadab10b079fb3595f6aed610b16e57a1ab7d6b82839dcb9e",
+      "backbone": "/home/brandonin/topoformer-stage11/returns/main/11-wide_continue.pt",
+      "backbone_sha256": "00e122c8cfe655dc9a8f801b48c5b5092db6caf8909479f2c3ac3910f0b7a077",
+      "accessor": "/home/brandonin/topoformer-campaign-01/returns/r04-confirmation/11/ce-16384.pt",
+      "accessor_sha256": "8543047e604b80df4313d85ead8cf4ed6ff16fbcf1894a24789b4a35cfc04be5",
+      "consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/11/learned.pt",
+      "consumer_sha256": "9d35ee64eeadac0a663a4389d860cfe69ae410da993b6f1668d3e98313681281",
+      "oracle_consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/11/oracle.pt",
+      "oracle_consumer_sha256": "736bf270831da6f95a7056eb1022a752a116a72b81b09eaf250dd04a5b5edb32",
+      "query_consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/11/query_only.pt",
+      "query_consumer_sha256": "02dd304c938e1d97ae4fb67e95b83cbef70c9f93b85a6f447a0f0ef3ac2c246f"
+    },
+    "public_controls": [
+      "record_order",
+      "inventory_order",
+      "unrelated_instructions",
+      "fresh_names"
+    ],
+    "data": {
+      "train": {
+        "seed": 569000001,
+        "count": 32
+      },
+      "calibration": {
+        "seed": 569000002,
+        "count": 16
+      },
+      "validation": {
+        "seed": 569000003,
+        "count": 16
+      }
+    },
+    "status": "CPU source preflight; main caps await profile; no confirmation run authorized",
+    "requested_phase_caps_seconds": {
+      "hybrid": 120,
+      "n1_static": 60,
+      "n1_roles": 60,
+      "n2_rekey": 60,
+      "timing": 120
+    },
+    "timing_examples": 16,
+    "timing_batch_sizes": [
+      1,
+      64
+    ],
+    "timing_delays": [
+      0,
+      16
+    ],
+    "timing_repeats": 1,
+    "warmup_examples": 2
+  },
+  "config_sha256": "e863d5f9f37a54fc0a06e14e23851a80001ad361a5cc01c89997b0393baeedcd",
+  "data": [
+    {
+      "view": "clean",
+      "distractors": 2,
+      "public_sha256": "526ef8dfdcfda408143da908f31ed57cbf4c5bd89c10af1f42c6fd3738240dba",
+      "labels_sha256": "bfbb0cce8fff52c0ffc78c84dd860b0c7f8fe2df1e6b890e3d0655eb903a9ba4"
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "public_sha256": "4bcf4bf98a3b7441d7bf980716dd5cf96fc83a09c855604ff29a8b3714cc0200",
+      "labels_sha256": "b44a4231dc72418d59b608a94351a51c379b48dfd76844f45ed60b37578f64b7"
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "public_sha256": "526ef8dfdcfda408143da908f31ed57cbf4c5bd89c10af1f42c6fd3738240dba",
+      "labels_sha256": "bfbb0cce8fff52c0ffc78c84dd860b0c7f8fe2df1e6b890e3d0655eb903a9ba4"
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "public_sha256": "4bcf4bf98a3b7441d7bf980716dd5cf96fc83a09c855604ff29a8b3714cc0200",
+      "labels_sha256": "b44a4231dc72418d59b608a94351a51c379b48dfd76844f45ed60b37578f64b7"
+    }
+  ],
+  "cells": [
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "workspace",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "workspace",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "workspace",
+      "delay": 2,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "workspace",
+      "delay": 4,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "workspace",
+      "delay": 8,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "workspace",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "supplied_copy",
+      "delay": null,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "oracle_lowering",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "oracle_lowering",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "oracle_lowering",
+      "delay": 2,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "oracle_lowering",
+      "delay": 4,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "oracle_lowering",
+      "delay": 8,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "oracle_lowering",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "oracle_return",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "oracle_return",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "oracle_return",
+      "delay": 2,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "oracle_return",
+      "delay": 4,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "oracle_return",
+      "delay": 8,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 2,
+      "path": "oracle_return",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "workspace",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "workspace",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "workspace",
+      "delay": 2,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "workspace",
+      "delay": 4,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "workspace",
+      "delay": 8,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "workspace",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "supplied_copy",
+      "delay": null,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "oracle_lowering",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "oracle_lowering",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "oracle_lowering",
+      "delay": 2,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "oracle_lowering",
+      "delay": 4,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "oracle_lowering",
+      "delay": 8,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "oracle_lowering",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "oracle_return",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "oracle_return",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "oracle_return",
+      "delay": 2,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "oracle_return",
+      "delay": 4,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "oracle_return",
+      "delay": 8,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 2,
+      "path": "oracle_return",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "workspace",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "workspace",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "workspace",
+      "delay": 2,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "workspace",
+      "delay": 4,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "workspace",
+      "delay": 8,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "workspace",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "supplied_copy",
+      "delay": null,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "oracle_lowering",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "oracle_lowering",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "oracle_lowering",
+      "delay": 2,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "oracle_lowering",
+      "delay": 4,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "oracle_lowering",
+      "delay": 8,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "oracle_lowering",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "oracle_return",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "oracle_return",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "oracle_return",
+      "delay": 2,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "oracle_return",
+      "delay": 4,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "oracle_return",
+      "delay": 8,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "clean",
+      "distractors": 8,
+      "path": "oracle_return",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "workspace",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "workspace",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "workspace",
+      "delay": 2,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "workspace",
+      "delay": 4,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "workspace",
+      "delay": 8,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "workspace",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "supplied_copy",
+      "delay": null,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "oracle_lowering",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "oracle_lowering",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "oracle_lowering",
+      "delay": 2,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "oracle_lowering",
+      "delay": 4,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "oracle_lowering",
+      "delay": 8,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "oracle_lowering",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "oracle_return",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "oracle_return",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "oracle_return",
+      "delay": 2,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "oracle_return",
+      "delay": 4,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "oracle_return",
+      "delay": 8,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    },
+    {
+      "view": "reversed",
+      "distractors": 8,
+      "path": "oracle_return",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0
+    }
+  ],
+  "controls": [
+    {
+      "view": "clean",
+      "control": "record_order",
+      "path": "workspace",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "record_order",
+      "path": "workspace",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "record_order",
+      "path": "workspace",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "record_order",
+      "path": "supplied_copy",
+      "delay": null,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "inventory_order",
+      "path": "workspace",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "inventory_order",
+      "path": "workspace",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "inventory_order",
+      "path": "workspace",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "inventory_order",
+      "path": "supplied_copy",
+      "delay": null,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "unrelated_instructions",
+      "path": "workspace",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "unrelated_instructions",
+      "path": "workspace",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "unrelated_instructions",
+      "path": "workspace",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "unrelated_instructions",
+      "path": "supplied_copy",
+      "delay": null,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "fresh_names",
+      "path": "workspace",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "fresh_names",
+      "path": "workspace",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "fresh_names",
+      "path": "workspace",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "clean",
+      "control": "fresh_names",
+      "path": "supplied_copy",
+      "delay": null,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/13": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/20": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/26": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 1,
+          "total": 1
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "record_order",
+      "path": "workspace",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "record_order",
+      "path": "workspace",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "record_order",
+      "path": "workspace",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "record_order",
+      "path": "supplied_copy",
+      "delay": null,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "inventory_order",
+      "path": "workspace",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "inventory_order",
+      "path": "workspace",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "inventory_order",
+      "path": "workspace",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "inventory_order",
+      "path": "supplied_copy",
+      "delay": null,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "unrelated_instructions",
+      "path": "workspace",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "unrelated_instructions",
+      "path": "workspace",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "unrelated_instructions",
+      "path": "workspace",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "unrelated_instructions",
+      "path": "supplied_copy",
+      "delay": null,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "fresh_names",
+      "path": "workspace",
+      "delay": 0,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "fresh_names",
+      "path": "workspace",
+      "delay": 1,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "fresh_names",
+      "path": "workspace",
+      "delay": 16,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    },
+    {
+      "view": "reversed",
+      "control": "fresh_names",
+      "path": "supplied_copy",
+      "delay": null,
+      "original": {
+        "correct": 16,
+        "total": 16
+      },
+      "supplied": {
+        "correct": 16,
+        "total": 16
+      },
+      "changed_original": {
+        "correct": 0,
+        "total": 0
+      },
+      "changed_supplied": {
+        "correct": 0,
+        "total": 0
+      },
+      "refused": 0,
+      "supplied_absent": 0,
+      "joint": {
+        "correct": 16,
+        "total": 16
+      },
+      "groups": {
+        "type/0": {
+          "correct": 10,
+          "total": 10
+        },
+        "type/1": {
+          "correct": 6,
+          "total": 6
+        },
+        "value/0": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/6": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/9": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/10": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/12": {
+          "correct": 3,
+          "total": 3
+        },
+        "value/16": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/19": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/21": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/24": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/28": {
+          "correct": 2,
+          "total": 2
+        },
+        "value/30": {
+          "correct": 1,
+          "total": 1
+        },
+        "value/32": {
+          "correct": 2,
+          "total": 2
+        },
+        "primitive/0": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/1": {
+          "correct": 5,
+          "total": 5
+        },
+        "primitive/2": {
+          "correct": 4,
+          "total": 4
+        },
+        "primitive/3": {
+          "correct": 2,
+          "total": 2
+        },
+        "absolute_query_gap/0.0": {
+          "correct": 1,
+          "total": 1
+        },
+        "absolute_query_gap/0.5": {
+          "correct": 0,
+          "total": 0
+        },
+        "absolute_query_gap/1.0": {
+          "correct": 0,
+          "total": 0
+        }
+      }
+    }
+  ],
+  "causal": [
+    {
+      "view": "clean",
+      "cells": [
+        {
+          "path": "workspace",
+          "kind": "correct",
+          "delay": 0,
+          "original": {
+            "correct": 16,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 16,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "correct",
+          "delay": 1,
+          "original": {
+            "correct": 16,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 16,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "correct",
+          "delay": 16,
+          "original": {
+            "correct": 16,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 16,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "supplied_copy",
+          "kind": "correct",
+          "delay": null,
+          "original": {
+            "correct": 16,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 16,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "drop",
+          "delay": 0,
+          "original": {
+            "correct": 12,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 16
+        },
+        {
+          "path": "workspace",
+          "kind": "drop",
+          "delay": 1,
+          "original": {
+            "correct": 13,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 16
+        },
+        {
+          "path": "workspace",
+          "kind": "drop",
+          "delay": 16,
+          "original": {
+            "correct": 13,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 16
+        },
+        {
+          "path": "supplied_copy",
+          "kind": "drop",
+          "delay": null,
+          "original": {
+            "correct": 13,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 16
+        },
+        {
+          "path": "workspace",
+          "kind": "wrong",
+          "delay": 0,
+          "original": {
+            "correct": 6,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 15,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 9
+          },
+          "changed_supplied": {
+            "correct": 9,
+            "total": 9
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "wrong",
+          "delay": 1,
+          "original": {
+            "correct": 6,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 15,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 9
+          },
+          "changed_supplied": {
+            "correct": 9,
+            "total": 9
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "wrong",
+          "delay": 16,
+          "original": {
+            "correct": 6,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 15,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 9
+          },
+          "changed_supplied": {
+            "correct": 9,
+            "total": 9
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "supplied_copy",
+          "kind": "wrong",
+          "delay": null,
+          "original": {
+            "correct": 6,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 15,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 9
+          },
+          "changed_supplied": {
+            "correct": 9,
+            "total": 9
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "swap",
+          "delay": 0,
+          "original": {
+            "correct": 9,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 16,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 7
+          },
+          "changed_supplied": {
+            "correct": 7,
+            "total": 7
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "swap",
+          "delay": 1,
+          "original": {
+            "correct": 9,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 16,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 7
+          },
+          "changed_supplied": {
+            "correct": 7,
+            "total": 7
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "swap",
+          "delay": 16,
+          "original": {
+            "correct": 9,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 16,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 7
+          },
+          "changed_supplied": {
+            "correct": 7,
+            "total": 7
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "supplied_copy",
+          "kind": "swap",
+          "delay": null,
+          "original": {
+            "correct": 9,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 16,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 7
+          },
+          "changed_supplied": {
+            "correct": 7,
+            "total": 7
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        }
+      ],
+      "checks": [
+        {
+          "path": "workspace",
+          "delay": 0,
+          "attempted": 16,
+          "clean_accuracy": 1.0,
+          "drop_accuracy": 0.75,
+          "query_accuracy": 0.75,
+          "copy_accuracy": 1.0,
+          "clean_minus_drop": 0.25,
+          "normalized_gain": 1.0,
+          "changed_supplied": {
+            "wrong": {
+              "correct": 9,
+              "total": 9
+            },
+            "swap": {
+              "correct": 7,
+              "total": 7
+            }
+          },
+          "passed": false,
+          "scope": "fixed inherited consumer robustness, not newly optimal Bayes ceilings"
+        },
+        {
+          "path": "workspace",
+          "delay": 1,
+          "attempted": 16,
+          "clean_accuracy": 1.0,
+          "drop_accuracy": 0.8125,
+          "query_accuracy": 0.75,
+          "copy_accuracy": 1.0,
+          "clean_minus_drop": 0.1875,
+          "normalized_gain": 1.0,
+          "changed_supplied": {
+            "wrong": {
+              "correct": 9,
+              "total": 9
+            },
+            "swap": {
+              "correct": 7,
+              "total": 7
+            }
+          },
+          "passed": false,
+          "scope": "fixed inherited consumer robustness, not newly optimal Bayes ceilings"
+        },
+        {
+          "path": "workspace",
+          "delay": 16,
+          "attempted": 16,
+          "clean_accuracy": 1.0,
+          "drop_accuracy": 0.8125,
+          "query_accuracy": 0.75,
+          "copy_accuracy": 1.0,
+          "clean_minus_drop": 0.1875,
+          "normalized_gain": 1.0,
+          "changed_supplied": {
+            "wrong": {
+              "correct": 9,
+              "total": 9
+            },
+            "swap": {
+              "correct": 7,
+              "total": 7
+            }
+          },
+          "passed": false,
+          "scope": "fixed inherited consumer robustness, not newly optimal Bayes ceilings"
+        },
+        {
+          "path": "supplied_copy",
+          "delay": null,
+          "attempted": 16,
+          "clean_accuracy": 1.0,
+          "drop_accuracy": 0.8125,
+          "query_accuracy": 0.75,
+          "copy_accuracy": 1.0,
+          "clean_minus_drop": 0.1875,
+          "normalized_gain": 1.0,
+          "changed_supplied": {
+            "wrong": {
+              "correct": 9,
+              "total": 9
+            },
+            "swap": {
+              "correct": 7,
+              "total": 7
+            }
+          },
+          "passed": false,
+          "scope": "fixed inherited consumer robustness, not newly optimal Bayes ceilings"
+        }
+      ]
+    },
+    {
+      "view": "reversed",
+      "cells": [
+        {
+          "path": "workspace",
+          "kind": "correct",
+          "delay": 0,
+          "original": {
+            "correct": 16,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 16,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "correct",
+          "delay": 1,
+          "original": {
+            "correct": 16,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 16,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "correct",
+          "delay": 16,
+          "original": {
+            "correct": 16,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 16,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "supplied_copy",
+          "kind": "correct",
+          "delay": null,
+          "original": {
+            "correct": 16,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 16,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "drop",
+          "delay": 0,
+          "original": {
+            "correct": 14,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 16
+        },
+        {
+          "path": "workspace",
+          "kind": "drop",
+          "delay": 1,
+          "original": {
+            "correct": 13,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 16
+        },
+        {
+          "path": "workspace",
+          "kind": "drop",
+          "delay": 16,
+          "original": {
+            "correct": 13,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 16
+        },
+        {
+          "path": "supplied_copy",
+          "kind": "drop",
+          "delay": null,
+          "original": {
+            "correct": 13,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 0
+          },
+          "changed_supplied": {
+            "correct": 0,
+            "total": 0
+          },
+          "refused": 0,
+          "supplied_absent": 16
+        },
+        {
+          "path": "workspace",
+          "kind": "wrong",
+          "delay": 0,
+          "original": {
+            "correct": 6,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 15,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 9
+          },
+          "changed_supplied": {
+            "correct": 9,
+            "total": 9
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "wrong",
+          "delay": 1,
+          "original": {
+            "correct": 6,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 15,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 9
+          },
+          "changed_supplied": {
+            "correct": 9,
+            "total": 9
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "wrong",
+          "delay": 16,
+          "original": {
+            "correct": 6,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 15,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 9
+          },
+          "changed_supplied": {
+            "correct": 9,
+            "total": 9
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "supplied_copy",
+          "kind": "wrong",
+          "delay": null,
+          "original": {
+            "correct": 6,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 15,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 9
+          },
+          "changed_supplied": {
+            "correct": 9,
+            "total": 9
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "swap",
+          "delay": 0,
+          "original": {
+            "correct": 8,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 15,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 7
+          },
+          "changed_supplied": {
+            "correct": 7,
+            "total": 7
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "swap",
+          "delay": 1,
+          "original": {
+            "correct": 8,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 15,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 7
+          },
+          "changed_supplied": {
+            "correct": 7,
+            "total": 7
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "workspace",
+          "kind": "swap",
+          "delay": 16,
+          "original": {
+            "correct": 8,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 15,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 7
+          },
+          "changed_supplied": {
+            "correct": 7,
+            "total": 7
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        },
+        {
+          "path": "supplied_copy",
+          "kind": "swap",
+          "delay": null,
+          "original": {
+            "correct": 8,
+            "total": 16
+          },
+          "supplied": {
+            "correct": 15,
+            "total": 16
+          },
+          "changed_original": {
+            "correct": 0,
+            "total": 7
+          },
+          "changed_supplied": {
+            "correct": 7,
+            "total": 7
+          },
+          "refused": 0,
+          "supplied_absent": 0
+        }
+      ],
+      "checks": [
+        {
+          "path": "workspace",
+          "delay": 0,
+          "attempted": 16,
+          "clean_accuracy": 1.0,
+          "drop_accuracy": 0.875,
+          "query_accuracy": 0.875,
+          "copy_accuracy": 1.0,
+          "clean_minus_drop": 0.125,
+          "normalized_gain": 1.0,
+          "changed_supplied": {
+            "wrong": {
+              "correct": 9,
+              "total": 9
+            },
+            "swap": {
+              "correct": 7,
+              "total": 7
+            }
+          },
+          "passed": false,
+          "scope": "fixed inherited consumer robustness, not newly optimal Bayes ceilings"
+        },
+        {
+          "path": "workspace",
+          "delay": 1,
+          "attempted": 16,
+          "clean_accuracy": 1.0,
+          "drop_accuracy": 0.8125,
+          "query_accuracy": 0.875,
+          "copy_accuracy": 1.0,
+          "clean_minus_drop": 0.1875,
+          "normalized_gain": 1.0,
+          "changed_supplied": {
+            "wrong": {
+              "correct": 9,
+              "total": 9
+            },
+            "swap": {
+              "correct": 7,
+              "total": 7
+            }
+          },
+          "passed": false,
+          "scope": "fixed inherited consumer robustness, not newly optimal Bayes ceilings"
+        },
+        {
+          "path": "workspace",
+          "delay": 16,
+          "attempted": 16,
+          "clean_accuracy": 1.0,
+          "drop_accuracy": 0.8125,
+          "query_accuracy": 0.875,
+          "copy_accuracy": 1.0,
+          "clean_minus_drop": 0.1875,
+          "normalized_gain": 1.0,
+          "changed_supplied": {
+            "wrong": {
+              "correct": 9,
+              "total": 9
+            },
+            "swap": {
+              "correct": 7,
+              "total": 7
+            }
+          },
+          "passed": false,
+          "scope": "fixed inherited consumer robustness, not newly optimal Bayes ceilings"
+        },
+        {
+          "path": "supplied_copy",
+          "delay": null,
+          "attempted": 16,
+          "clean_accuracy": 1.0,
+          "drop_accuracy": 0.8125,
+          "query_accuracy": 0.875,
+          "copy_accuracy": 1.0,
+          "clean_minus_drop": 0.1875,
+          "normalized_gain": 1.0,
+          "changed_supplied": {
+            "wrong": {
+              "correct": 9,
+              "total": 9
+            },
+            "swap": {
+              "correct": 7,
+              "total": 7
+            }
+          },
+          "passed": false,
+          "scope": "fixed inherited consumer robustness, not newly optimal Bayes ceilings"
+        }
+      ]
+    }
+  ],
+  "accuracy_gates": {
+    "workspace": true,
+    "supplied_copy": true
+  },
+  "frozen_state": {
+    "before": {
+      "lowerer": "4735ada63e08b746208f22e332d103dacc7130e8194faca144fc9a487eac1d78",
+      "backbone": "61993fc3328ef7a8ec898acf8aa0dfe25226bb287f3c1f8d30e3c89daa6e09c0",
+      "accessor": "924e1de107ae1de089983127f1a6eef9aefb63a806e9cb16cab6157d3aa6b9c9",
+      "mean": "3ff35f96568d7c4e5163d61da93b34f8ea9ae6e32ede834688ed666cbb009fc7",
+      "scale": "193f21cdd58cbf3951c1f9e03f60b5126a39c0106650daf9006fa95271b04a0f",
+      "consumer": "b7e2d76921f19532ba3fcf5bb558339f3b0b7fecd8f363bedf76b00433dcd2ae",
+      "oracle": "a9ee7e1976e4e27f8a806369faadecc34953791c59abcd5d5fa7eeb50884f119",
+      "query_only": "dae562977f5a08e223d7980a9e53ba0e4fb37a4c940b490d6b821d3033b45fdd"
+    },
+    "after": {
+      "lowerer": "4735ada63e08b746208f22e332d103dacc7130e8194faca144fc9a487eac1d78",
+      "backbone": "61993fc3328ef7a8ec898acf8aa0dfe25226bb287f3c1f8d30e3c89daa6e09c0",
+      "accessor": "924e1de107ae1de089983127f1a6eef9aefb63a806e9cb16cab6157d3aa6b9c9",
+      "mean": "3ff35f96568d7c4e5163d61da93b34f8ea9ae6e32ede834688ed666cbb009fc7",
+      "scale": "193f21cdd58cbf3951c1f9e03f60b5126a39c0106650daf9006fa95271b04a0f",
+      "consumer": "b7e2d76921f19532ba3fcf5bb558339f3b0b7fecd8f363bedf76b00433dcd2ae",
+      "oracle": "a9ee7e1976e4e27f8a806369faadecc34953791c59abcd5d5fa7eeb50884f119",
+      "query_only": "dae562977f5a08e223d7980a9e53ba0e4fb37a4c940b490d6b821d3033b45fdd"
+    },
+    "unchanged": true
+  },
+  "parameters": {
+    "lowerer": 142341,
+    "backbone": 55854360,
+    "accessor": 33825,
+    "consumer": 38914,
+    "oracle": 38914,
+    "query_only": 38914
+  },
+  "source_sha256": {
+    "campaign_composition_confirm_hybrid.py": "30457783207993eb79cbb3b2a97ef66be5fcabd70939b077f84f4200868c2239",
+    "campaign_composition_confirm_data.py": "2b4b5bd52babe98c5c3bf40993293b0f6adc50017f90888515e119dfbd8f8e88",
+    "campaign_composition.py": "a10b6f1ac5341408dbbf0499a13ff921cdb9f713c4d691427fe6c896fb4d9733",
+    "campaign_composition_acquire.py": "cad67b5f5bb8e1f6e09bfea4ff2cdc4c3c3a46fc15d0e12f5ee418820a78f243",
+    "campaign_composition_runtime.py": "a67cd75462155625f07be99c9253c03ed4ee79f05d231cc0d7746d0cf5b6f6c3",
+    "campaign_composition_study.py": "3c10975dbe1be2910226152cfb470b543a51062b9b6588c150c90ab9b6c13eb8",
+    "campaign_returns_use.py": "feadaca1579ee6ad316683e23b7a7418b9a31d2ece5e583c152975c7aad60758",
+    "campaign_returns.py": "4756b233ddf1d2504bc39ee958ba6da1148e5c9ff16bc7b65f69ce442b5bda90",
+    "campaign_returns_balanced.py": "dc1dc2b06c599ae9db622cce120dc807e383652c3e43476cf1411e3b346e7b87",
+    "interface_proposals.py": "d6dd0639fe7726e382268eea13825ba7a78b2fb234d8acc6ed4fa9ae05d16458",
+    "thinking_runtime.py": "42058f3bc523d43d169bd8520f7a4411c4849ee2f571621fc6e313683e59dad8",
+    "retention_data.py": "1e980177c4e9344c8824ef3b13e2afdca4499778f9efe027d122695a847585b5",
+    "return_memory.py": "cbf4d732520673039e5db403dfb57979b2d3492063a82bbd1376793d9103e037",
+    "return_crossdelay.py": "6c66bfd368cec5725d8cf60aa6fc74b1fdee068c6a49b9fdf993040c410358cb",
+    "return_memory_study.py": "ad92e75945c0eff5e0157c71286070e4f181cd38eef63813d3bad4aa1fbc89a9",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+    "retention.py": "b1ad203826719839d0ddf402c61c67e16548253dbc6b497a77ad68b0189d0f80",
+    "return_diagnostics_probe.py": "d89799f7812b39c67670eb57009d058602633a880a67440a84e60aa8a4e0ded7"
+  },
+  "elapsed_seconds": 5.575219008605927,
+  "peak_cuda_bytes": 447417856,
+  "claim": "one of three fresh finite-domain replicates; no pooled pass or efficiency claim"
+}

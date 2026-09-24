@@ -1,0 +1,411 @@
+{
+  "config": {
+    "hidden": 1024,
+    "key_dim": 32,
+    "batch_size": 256,
+    "capture_batch_size": 64,
+    "updates": 16,
+    "checkpoints": [
+      0,
+      16
+    ],
+    "delays": [
+      0,
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "intervention_delays": [
+      0,
+      1,
+      16
+    ],
+    "eval_distractors": [
+      2,
+      8
+    ],
+    "causal_size": 16,
+    "version": "c04-v1-mechanical-profile",
+    "replicate": 1,
+    "seed": 1699,
+    "learning_rate": 0.0003,
+    "sample_seed": 569000100,
+    "role_seed": 569000101,
+    "rekey_seed": 569000102,
+    "control_seed": 569000200,
+    "swap_seed": 569000300,
+    "interfaces": {
+      "lowerer": "/home/brandonin/topoformer-campaign-01/composition/p01-confirmation-303/selected.pt",
+      "lowerer_sha256": "1f4e141180ec60ddadab10b079fb3595f6aed610b16e57a1ab7d6b82839dcb9e",
+      "backbone": "/home/brandonin/topoformer-stage11/returns/main/11-wide_continue.pt",
+      "backbone_sha256": "00e122c8cfe655dc9a8f801b48c5b5092db6caf8909479f2c3ac3910f0b7a077",
+      "accessor": "/home/brandonin/topoformer-campaign-01/returns/r04-confirmation/11/ce-16384.pt",
+      "accessor_sha256": "8543047e604b80df4313d85ead8cf4ed6ff16fbcf1894a24789b4a35cfc04be5",
+      "consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/11/learned.pt",
+      "consumer_sha256": "9d35ee64eeadac0a663a4389d860cfe69ae410da993b6f1668d3e98313681281",
+      "oracle_consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/11/oracle.pt",
+      "oracle_consumer_sha256": "736bf270831da6f95a7056eb1022a752a116a72b81b09eaf250dd04a5b5edb32",
+      "query_consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/11/query_only.pt",
+      "query_consumer_sha256": "02dd304c938e1d97ae4fb67e95b83cbef70c9f93b85a6f447a0f0ef3ac2c246f"
+    },
+    "public_controls": [
+      "record_order",
+      "inventory_order",
+      "unrelated_instructions",
+      "fresh_names"
+    ],
+    "data": {
+      "train": {
+        "seed": 569000001,
+        "count": 32
+      },
+      "calibration": {
+        "seed": 569000002,
+        "count": 16
+      },
+      "validation": {
+        "seed": 569000003,
+        "count": 16
+      }
+    },
+    "status": "CPU source preflight; main caps await profile; no confirmation run authorized",
+    "requested_phase_caps_seconds": {
+      "hybrid": 120,
+      "n1_static": 60,
+      "n1_roles": 60,
+      "n2_rekey": 60,
+      "timing": 120
+    },
+    "timing_examples": 16,
+    "timing_batch_sizes": [
+      1,
+      64
+    ],
+    "timing_delays": [
+      0,
+      16
+    ],
+    "timing_repeats": 1,
+    "warmup_examples": 2,
+    "neural_checkpoints": {
+      "n1_static": {
+        "path": "/home/brandonin/topoformer-campaign-01/composition/c04-profile-n1_static/endpoint.pt",
+        "sha256": "32ea692152cf7946b936778c9f32ecb84094962a7f5b91904b06fcc75296ebf3"
+      },
+      "n1_roles": {
+        "path": "/home/brandonin/topoformer-campaign-01/composition/c04-profile-n1_roles/endpoint.pt",
+        "sha256": "95b8b9cfb75d38e4cd2e71d5dd9a5f3d29bcd204586bd38f7be0b642a64a0a52"
+      },
+      "n2_rekey": {
+        "path": "/home/brandonin/topoformer-campaign-01/composition/c04-profile-n2_rekey/endpoint.pt",
+        "sha256": "c8e6b53f9d156f043bceaf4ac8f66240c4b8fd246c7a727b609789e23ae94468"
+      }
+    }
+  },
+  "setup_seconds": 0.7857994823716581,
+  "neural_loads": {
+    "n1_static": {
+      "load_seconds": 0.00764332665130496,
+      "parameters": 1246248
+    },
+    "n1_roles": {
+      "load_seconds": 0.007584015838801861,
+      "parameters": 1246248
+    },
+    "n2_rekey": {
+      "load_seconds": 0.0906246630474925,
+      "parameters": 17028136
+    }
+  },
+  "components": {
+    "lowerer": 142341,
+    "backbone": 55854360,
+    "accessor": 33825,
+    "consumer": 38914,
+    "oracle": 38914,
+    "query_only": 38914
+  },
+  "resident_parameters": 75667900,
+  "cells": [
+    {
+      "path": "workspace",
+      "batch": 1,
+      "delay": 0,
+      "executed_parameters": 56069440,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.018930269870907068,
+          "attempted": 16,
+          "correct": 16,
+          "refused": 0,
+          "seconds_per_attempt": 0.0011831418669316918,
+          "seconds_per_correct": 0.0011831418669316918,
+          "examples_per_second": 845.2071792483822,
+          "peak_cuda_bytes": 336434176
+        }
+      ],
+      "median_seconds": 0.018930269870907068,
+      "min_seconds": 0.018930269870907068,
+      "max_seconds": 0.018930269870907068
+    },
+    {
+      "path": "workspace",
+      "batch": 1,
+      "delay": 16,
+      "executed_parameters": 56069440,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.3892394369468093,
+          "attempted": 16,
+          "correct": 16,
+          "refused": 0,
+          "seconds_per_attempt": 0.02432746480917558,
+          "seconds_per_correct": 0.02432746480917558,
+          "examples_per_second": 41.10580398919456,
+          "peak_cuda_bytes": 336854528
+        }
+      ],
+      "median_seconds": 0.3892394369468093,
+      "min_seconds": 0.3892394369468093,
+      "max_seconds": 0.3892394369468093
+    },
+    {
+      "path": "workspace",
+      "batch": 64,
+      "delay": 0,
+      "executed_parameters": 56069440,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.010649614967405796,
+          "attempted": 16,
+          "correct": 16,
+          "refused": 0,
+          "seconds_per_attempt": 0.0006656009354628623,
+          "seconds_per_correct": 0.0006656009354628623,
+          "examples_per_second": 1502.4017346138419,
+          "peak_cuda_bytes": 339179008
+        }
+      ],
+      "median_seconds": 0.010649614967405796,
+      "min_seconds": 0.010649614967405796,
+      "max_seconds": 0.010649614967405796
+    },
+    {
+      "path": "workspace",
+      "batch": 64,
+      "delay": 16,
+      "executed_parameters": 56069440,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.08235952816903591,
+          "attempted": 16,
+          "correct": 16,
+          "refused": 0,
+          "seconds_per_attempt": 0.0051474705105647445,
+          "seconds_per_correct": 0.0051474705105647445,
+          "examples_per_second": 194.27017560325703,
+          "peak_cuda_bytes": 345856000
+        }
+      ],
+      "median_seconds": 0.08235952816903591,
+      "min_seconds": 0.08235952816903591,
+      "max_seconds": 0.08235952816903591
+    },
+    {
+      "path": "supplied_copy",
+      "batch": 1,
+      "delay": null,
+      "executed_parameters": 181255,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.011505710892379284,
+          "attempted": 16,
+          "correct": 16,
+          "refused": 0,
+          "seconds_per_attempt": 0.0007191069307737052,
+          "seconds_per_correct": 0.0007191069307737052,
+          "examples_per_second": 1390.6137699494495,
+          "peak_cuda_bytes": 336314368
+        }
+      ],
+      "median_seconds": 0.011505710892379284,
+      "min_seconds": 0.011505710892379284,
+      "max_seconds": 0.011505710892379284
+    },
+    {
+      "path": "supplied_copy",
+      "batch": 64,
+      "delay": null,
+      "executed_parameters": 181255,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.004656094592064619,
+          "attempted": 16,
+          "correct": 16,
+          "refused": 0,
+          "seconds_per_attempt": 0.0002910059120040387,
+          "seconds_per_correct": 0.0002910059120040387,
+          "examples_per_second": 3436.3563032565526,
+          "peak_cuda_bytes": 337233920
+        }
+      ],
+      "median_seconds": 0.004656094592064619,
+      "min_seconds": 0.004656094592064619,
+      "max_seconds": 0.004656094592064619
+    },
+    {
+      "path": "n1_static",
+      "batch": 1,
+      "delay": null,
+      "executed_parameters": 1246248,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.00878644734621048,
+          "attempted": 16,
+          "correct": 9,
+          "refused": 0,
+          "seconds_per_attempt": 0.000549152959138155,
+          "seconds_per_correct": 0.00097627192735672,
+          "examples_per_second": 1820.9862723300407,
+          "peak_cuda_bytes": 336314368
+        }
+      ],
+      "median_seconds": 0.00878644734621048,
+      "min_seconds": 0.00878644734621048,
+      "max_seconds": 0.00878644734621048
+    },
+    {
+      "path": "n1_static",
+      "batch": 64,
+      "delay": null,
+      "executed_parameters": 1246248,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.0023263036273419857,
+          "attempted": 16,
+          "correct": 9,
+          "refused": 0,
+          "seconds_per_attempt": 0.0001453939767088741,
+          "seconds_per_correct": 0.00025847818081577617,
+          "examples_per_second": 6877.864012223315,
+          "peak_cuda_bytes": 337233920
+        }
+      ],
+      "median_seconds": 0.0023263036273419857,
+      "min_seconds": 0.0023263036273419857,
+      "max_seconds": 0.0023263036273419857
+    },
+    {
+      "path": "n1_roles",
+      "batch": 1,
+      "delay": null,
+      "executed_parameters": 1246248,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.008374142926186323,
+          "attempted": 16,
+          "correct": 9,
+          "refused": 0,
+          "seconds_per_attempt": 0.0005233839328866452,
+          "seconds_per_correct": 0.0009304603251318136,
+          "examples_per_second": 1910.643291024718,
+          "peak_cuda_bytes": 336314368
+        }
+      ],
+      "median_seconds": 0.008374142926186323,
+      "min_seconds": 0.008374142926186323,
+      "max_seconds": 0.008374142926186323
+    },
+    {
+      "path": "n1_roles",
+      "batch": 64,
+      "delay": null,
+      "executed_parameters": 1246248,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.002259856089949608,
+          "attempted": 16,
+          "correct": 9,
+          "refused": 0,
+          "seconds_per_attempt": 0.0001412410056218505,
+          "seconds_per_correct": 0.00025109512110551197,
+          "examples_per_second": 7080.096857121898,
+          "peak_cuda_bytes": 337233920
+        }
+      ],
+      "median_seconds": 0.002259856089949608,
+      "min_seconds": 0.002259856089949608,
+      "max_seconds": 0.002259856089949608
+    },
+    {
+      "path": "n2_rekey",
+      "batch": 1,
+      "delay": null,
+      "executed_parameters": 17028136,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.0150603661313653,
+          "attempted": 16,
+          "correct": 11,
+          "refused": 0,
+          "seconds_per_attempt": 0.0009412728832103312,
+          "seconds_per_correct": 0.0013691241937604818,
+          "examples_per_second": 1062.3911703366748,
+          "peak_cuda_bytes": 336783872
+        }
+      ],
+      "median_seconds": 0.0150603661313653,
+      "min_seconds": 0.0150603661313653,
+      "max_seconds": 0.0150603661313653
+    },
+    {
+      "path": "n2_rekey",
+      "batch": 64,
+      "delay": null,
+      "executed_parameters": 17028136,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.0034384001046419144,
+          "attempted": 16,
+          "correct": 11,
+          "refused": 0,
+          "seconds_per_attempt": 0.00021490000654011965,
+          "seconds_per_correct": 0.0003125818276947195,
+          "examples_per_second": 4653.32698728099,
+          "peak_cuda_bytes": 344750080
+        }
+      ],
+      "median_seconds": 0.0034384001046419144,
+      "min_seconds": 0.0034384001046419144,
+      "max_seconds": 0.0034384001046419144
+    }
+  ],
+  "frozen_interfaces_unchanged": true,
+  "scope": "clean first fixed test-prefix; full independent paths include input preparation/transfers/CPU runtime; disk loading excluded; role accuracy reported separately",
+  "source_sha256": {
+    "campaign_composition_confirm_timing.py": "62906b3aa172a8ea95646118a4f05ee4cf406c422856ac1c0e1b43c13dd7e994",
+    "campaign_composition.py": "a10b6f1ac5341408dbbf0499a13ff921cdb9f713c4d691427fe6c896fb4d9733",
+    "campaign_composition_runtime.py": "a67cd75462155625f07be99c9253c03ed4ee79f05d231cc0d7746d0cf5b6f6c3",
+    "campaign_composition_models.py": "acb9e9eef078f441c88d63e695de086241b04b01f242f36a7eb969087e83b997",
+    "campaign_returns_use.py": "feadaca1579ee6ad316683e23b7a7418b9a31d2ece5e583c152975c7aad60758",
+    "return_memory.py": "cbf4d732520673039e5db403dfb57979b2d3492063a82bbd1376793d9103e037",
+    "return_crossdelay.py": "6c66bfd368cec5725d8cf60aa6fc74b1fdee068c6a49b9fdf993040c410358cb",
+    "return_memory_study.py": "ad92e75945c0eff5e0157c71286070e4f181cd38eef63813d3bad4aa1fbc89a9",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+    "thinking_runtime.py": "42058f3bc523d43d169bd8520f7a4411c4849ee2f571621fc6e313683e59dad8"
+  }
+}
