@@ -1,0 +1,435 @@
+{
+  "version": "e02-relation-v1",
+  "config": {
+    "status": "registered_generation",
+    "source_sha256": {
+      "campaign02_relation.py": "0a50b800d997eeffa216e21c5d3a228a907aa6cf4fefbc38b18c1e2e0ad8c9a0",
+      "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+      "campaign_semantics_continue.py": "6d5a8f4ae5143bdfc93f589fa3c189966a787e0fc6a83dc6bc06382c14ac8585",
+      "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+      "campaign_semantics_s19.py": "a42035daaf563d4aa63e7ded5bd949a646c77fd85ed86804ff396b4ac82c0407",
+      "campaign_semantics_s19_actor.py": "b84dc10df3a34fdc3662730cbcdb88012ccb9f8ffcead4b4eebfe2588549ba17",
+      "campaign_semantics_s19_codec.py": "88b0606914dd4585f1715900263de16712fed78743938c3c135d89f7c9180cad",
+      "campaign_semantics_s21_data.py": "1fd8ce1b807877b2f8e84ceb42138003ce6c00740276d11ec3f8c591861f6ab5",
+      "campaign_semantics_s22_controller.py": "5c173bff31f21a0a63404c8145ef8d52b6b8168f253db9d75d744ef57966c959",
+      "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+      "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+      "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+      "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670"
+    },
+    "output_dir": "/home/brandonin/topoformer-campaign02/data/rl01-v1",
+    "first_seed": 302100000,
+    "shuffle_seed": 20202202,
+    "cpu_cap_seconds": 3600,
+    "exclusion_inventory": {
+      "path": "/home/brandonin/topoformer-campaign01-semantics/data/s21-exclusion-inventory/s21-prior-alpha-exclusions.json.gz",
+      "sha256": "8c707067b1248095be8b2d426da7c930d4e650c9866008cf262b032cac8d9349"
+    },
+    "exclusion_inventory_metadata": {
+      "path": "/home/brandonin/topoformer-campaign01-semantics/data/s21-exclusion-inventory/s21-exclusion-inventory.json",
+      "sha256": "5d7643d55dc4305a6feb70e9b8d15369c85562ffd9b4301d3cc984916fc827e4"
+    },
+    "exclusion_sources": [
+      {
+        "path": "/home/brandonin/topoformer-campaign01-semantics/data/s21-six-motif-v1/train_broad.jsonl.gz",
+        "sha256": "1e60754580fac9c02767f074fa7b1445cbf4b7c50a2bf0f5dac734f707097689",
+        "role": "all S21 train_broad rows alpha-only exclusion, no model outcomes"
+      },
+      {
+        "path": "/home/brandonin/topoformer-campaign01-semantics/data/s21-six-motif-v1/development.jsonl.gz",
+        "sha256": "07df44cdadcb9a697b723b9292dd9b1234f7311680e20074b5aea624a7648b29",
+        "role": "all S21 development rows alpha-only exclusion, no model outcomes"
+      },
+      {
+        "path": "/home/brandonin/topoformer-campaign01-semantics/data/s21-six-motif-v1/confirmation.jsonl.gz",
+        "sha256": "15491a12b7e508c3997531a4f69a0e68ac97a0c5c4165b977158928bf037824e",
+        "role": "all S21 confirmation rows alpha-only exclusion, no model outcomes"
+      }
+    ]
+  },
+  "generator_commit": "018c9ce9286fa4961292fe1e024b49fcd7e2dd7f",
+  "generated": {
+    "train": {
+      "path": "/home/brandonin/topoformer-campaign02/data/rl01-v1/train.jsonl.gz",
+      "sha256": "f4cced241c895f961c53415edd7a60ff9f45f692bd46253ba77669357e988e1d",
+      "rows": 1024,
+      "unique_alpha": 1024,
+      "cells": {
+        "2x4": 128,
+        "5x3": 192,
+        "4x3": 128,
+        "5x4": 192,
+        "3x3": 256,
+        "4x4": 128
+      }
+    },
+    "known": {
+      "path": "/home/brandonin/topoformer-campaign02/data/rl01-v1/known.jsonl.gz",
+      "sha256": "9a0636bca4e699e21da419403e5a497c1e79474e5eed29ac14c9aab6b0b5d543",
+      "rows": 512,
+      "unique_alpha": 512,
+      "cells": {
+        "4x4": 64,
+        "5x4": 96,
+        "2x4": 64,
+        "3x3": 128,
+        "4x3": 64,
+        "5x3": 96
+      }
+    },
+    "heldout": {
+      "path": "/home/brandonin/topoformer-campaign02/data/rl01-v1/heldout.jsonl.gz",
+      "sha256": "e1b6bc544e04c4a8b476a23eb12d9273d014f067926b6476fa52b3d14800f84c",
+      "rows": 512,
+      "unique_alpha": 512,
+      "cells": {
+        "3x4": 512
+      }
+    }
+  },
+  "exclusions": [
+    {
+      "path": "/home/brandonin/topoformer-campaign01-semantics/data/s21-exclusion-inventory/s21-prior-alpha-exclusions.json.gz",
+      "sha256": "8c707067b1248095be8b2d426da7c930d4e650c9866008cf262b032cac8d9349",
+      "unique_alpha": 41638
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign01-semantics/data/s21-six-motif-v1/train_broad.jsonl.gz",
+      "sha256": "1e60754580fac9c02767f074fa7b1445cbf4b7c50a2bf0f5dac734f707097689",
+      "role": "all S21 train_broad rows alpha-only exclusion, no model outcomes",
+      "rows": 4096,
+      "unique_alpha": 4096
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign01-semantics/data/s21-six-motif-v1/development.jsonl.gz",
+      "sha256": "07df44cdadcb9a697b723b9292dd9b1234f7311680e20074b5aea624a7648b29",
+      "role": "all S21 development rows alpha-only exclusion, no model outcomes",
+      "rows": 3584,
+      "unique_alpha": 3584
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign01-semantics/data/s21-six-motif-v1/confirmation.jsonl.gz",
+      "sha256": "15491a12b7e508c3997531a4f69a0e68ac97a0c5c4165b977158928bf037824e",
+      "role": "all S21 confirmation rows alpha-only exclusion, no model outcomes",
+      "rows": 3584,
+      "unique_alpha": 3584
+    }
+  ],
+  "initial_unique_exclusions": 48806,
+  "attempts": {
+    "train:(2, 4)": {
+      "attempts": 312,
+      "other_fact_count": 159,
+      "excluded_or_duplicate": 25,
+      "requested": 128,
+      "accepted": 128
+    },
+    "train:(3, 3)": {
+      "attempts": 1314,
+      "other_fact_count": 671,
+      "excluded_or_duplicate": 387,
+      "requested": 256,
+      "accepted": 256
+    },
+    "train:(4, 3)": {
+      "attempts": 400,
+      "other_fact_count": 203,
+      "excluded_or_duplicate": 69,
+      "requested": 128,
+      "accepted": 128
+    },
+    "train:(4, 4)": {
+      "attempts": 242,
+      "other_fact_count": 114,
+      "requested": 128,
+      "accepted": 128
+    },
+    "train:(5, 3)": {
+      "attempts": 375,
+      "other_fact_count": 182,
+      "excluded_or_duplicate": 1,
+      "requested": 192,
+      "accepted": 192
+    },
+    "train:(5, 4)": {
+      "attempts": 385,
+      "other_fact_count": 191,
+      "excluded_or_duplicate": 2,
+      "requested": 192,
+      "accepted": 192
+    },
+    "known:(2, 4)": {
+      "attempts": 158,
+      "other_fact_count": 79,
+      "excluded_or_duplicate": 15,
+      "requested": 64,
+      "accepted": 64
+    },
+    "known:(3, 3)": {
+      "attempts": 693,
+      "other_fact_count": 354,
+      "excluded_or_duplicate": 211,
+      "requested": 128,
+      "accepted": 128
+    },
+    "known:(4, 3)": {
+      "attempts": 191,
+      "other_fact_count": 89,
+      "excluded_or_duplicate": 38,
+      "requested": 64,
+      "accepted": 64
+    },
+    "known:(4, 4)": {
+      "attempts": 152,
+      "other_fact_count": 87,
+      "excluded_or_duplicate": 1,
+      "requested": 64,
+      "accepted": 64
+    },
+    "known:(5, 3)": {
+      "attempts": 194,
+      "other_fact_count": 96,
+      "excluded_or_duplicate": 2,
+      "requested": 96,
+      "accepted": 96
+    },
+    "known:(5, 4)": {
+      "attempts": 207,
+      "other_fact_count": 111,
+      "requested": 96,
+      "accepted": 96
+    },
+    "heldout:(3, 4)": {
+      "attempts": 1053,
+      "other_fact_count": 540,
+      "excluded_or_duplicate": 1,
+      "requested": 512,
+      "accepted": 512
+    }
+  },
+  "historical_coverage": {
+    "scope": "Conservative exclusion inventory, no scientific predictions consumed. Complete Stage7/8 corpus digests verified; some tiny configured ranges overexcluded. Reused S15TRAIN/DEV require explicit reuse exceptions.",
+    "source_sha256": "b519ead6f305416ca6c35e53f8c8568640e39c5c482ec0865d3fdea6bb553045",
+    "sources": [
+      {
+        "path": "research/results/campaign-01/semantics/s01-data/train.jsonl.gz",
+        "sha256": "9c86e311b7f58587918cb314ae9ba7fbc749c062c71829023135c86e568c0710",
+        "rows": 8192,
+        "unique_alpha": 8192,
+        "new_union": 8192,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s01-data/development.jsonl.gz",
+        "sha256": "c15bb600e5e02f8e4fd9e4e9a86ca3f1fe8328d071535c817f733a8caa9f8b62",
+        "rows": 512,
+        "unique_alpha": 512,
+        "new_union": 512,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s01-data/reserved_confirmation.jsonl.gz",
+        "sha256": "fc85da89fe4e1a522d1e0256fc1e58f8afb279494cb1af7ee4ac7235403a43f8",
+        "rows": 1024,
+        "unique_alpha": 1024,
+        "new_union": 1024,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s13-multisurface-cache/train.jsonl.gz",
+        "sha256": "3c19320cc6c41b23639c07d396a92b81b69d5b6d8ee6eafdf171e56cf37ed4fb",
+        "rows": 8192,
+        "unique_alpha": 8192,
+        "new_union": 0,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s13-multisurface-cache/development.jsonl.gz",
+        "sha256": "87e2be4290b26a174875491d6a15534529e49c2900177ccae0f8f458f48add22",
+        "rows": 512,
+        "unique_alpha": 512,
+        "new_union": 512,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s13-cache-profile/train-prefix.jsonl.gz",
+        "sha256": "dbb9dabb7ea1dee0e1c452667976ab34a7db46ebf79833fe9aaf4a582dd7ce82",
+        "rows": 64,
+        "unique_alpha": 64,
+        "new_union": 0,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s12-rename-case-audit/renamed_confirmation.jsonl.gz",
+        "sha256": "a3f3bc5ed3d6fb188f5fb787d079af532cc67ec170a6b89937ea1d0f7777a4fb",
+        "rows": 1024,
+        "unique_alpha": 1024,
+        "new_union": 0,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s14-arity3-cache/diagnostic.jsonl.gz",
+        "sha256": "8b75c555e33ea69e3cc15a1ed7a922acd5b631294a0b1c57ccd9429711eea4d5",
+        "rows": 1024,
+        "unique_alpha": 1024,
+        "new_union": 1024,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s15-shape-cache/train_mixed.jsonl.gz",
+        "sha256": "a8fbb797cc1c0caf5419afdcb50c89d20e10923fe1db33ba2783c0df39217e84",
+        "rows": 4096,
+        "unique_alpha": 4096,
+        "new_union": 4096,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s15-shape-cache/train_control.jsonl.gz",
+        "sha256": "7ff48c06f2a2119ec479891c4b420eaf1fae7cae6717e7a4333b54ec2c5fb696",
+        "rows": 4096,
+        "unique_alpha": 4096,
+        "new_union": 2048,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s15-shape-cache/development.jsonl.gz",
+        "sha256": "878a308cb367c0112eaf977202577e3f74790f940000333dccd7d18f5b23a07d",
+        "rows": 1024,
+        "unique_alpha": 1024,
+        "new_union": 1024,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s15-shape-cache/confirmation.jsonl.gz",
+        "sha256": "2710e5e1b6fffab6fa33d56105de13e49d46d64c63d81f61c6ea331347229d32",
+        "rows": 2048,
+        "unique_alpha": 2048,
+        "new_union": 2048,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s15-shape-cache-v2/train_mixed.jsonl.gz",
+        "sha256": "8ddbd15bea881c13bfd24554ada9293082fcef7b616f6eeb3dad78a4bfa662d2",
+        "rows": 4096,
+        "unique_alpha": 4096,
+        "new_union": 103,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s15-shape-cache-v2/train_control.jsonl.gz",
+        "sha256": "a67ee925c8e6d2e8eaa704171e4758fdd17fb32211d09dc8e829b35ed9283c5e",
+        "rows": 4096,
+        "unique_alpha": 4096,
+        "new_union": 15,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s15-shape-cache-v2/development.jsonl.gz",
+        "sha256": "25522313035e646cfca4bf0efb1ae550c295cb55ddf6057558d03c42f2239dc3",
+        "rows": 2048,
+        "unique_alpha": 2048,
+        "new_union": 906,
+        "use": "metadata_only_split_exclusion"
+      },
+      {
+        "path": "research/results/campaign-01/semantics/s15-shape-cache-v2/confirmation.jsonl.gz",
+        "sha256": "2710e5e1b6fffab6fa33d56105de13e49d46d64c63d81f61c6ea331347229d32",
+        "rows": 2048,
+        "unique_alpha": 2048,
+        "new_union": 0,
+        "use": "metadata_only_split_exclusion"
+      }
+    ],
+    "regenerations": [
+      {
+        "path": "stage7-semantic/scaling-corrected-10000",
+        "manifest_sha256": "e81916ec24a1eb18c44fbcf074c10ce3af922144d219997dacebde5afecefc9f",
+        "corpus_sha256": "83c3a1ca6c6f6a510d986536155f72ef3c542c26444504b9e6256dcb2d52373e",
+        "attempts": 30491,
+        "exact_dataset_digest_verified": true,
+        "unique_unification_alpha": 9916,
+        "new_union": 9183,
+        "cpu_wall_seconds": 18.09814620000543
+      },
+      {
+        "path": "stage8/semantic-main-n10000",
+        "manifest_sha256": "617ecfc4aa9e13e6cb77eca9f8defea2a29191d3ea18a5c0670a495f0682f921",
+        "corpus_sha256": "9210691702b83d5a1c169e1252b077d23cbf57496c68009a242e49fad3fdce85",
+        "attempts": 30674,
+        "exact_dataset_digest_verified": true,
+        "unique_unification_alpha": 9980,
+        "new_union": 8839,
+        "cpu_wall_seconds": 18.201679260993842
+      },
+      {
+        "path": "stage6_configured_max_candidates",
+        "first_seed": 610001,
+        "count": 1920,
+        "stride": 3,
+        "difficulty": 0.5,
+        "conservative_overexclusion": true,
+        "unique_alpha": 1911,
+        "new_union": 1629
+      },
+      {
+        "path": "stage9_fixture_superset",
+        "first_seed": 9000001,
+        "count": 34,
+        "stride": 3,
+        "difficulty": 0.5,
+        "conservative_overexclusion": true,
+        "unique_alpha": 34,
+        "new_union": 27
+      },
+      {
+        "path": "stage10_fixture_superset",
+        "first_seed": 9001001,
+        "count": 34,
+        "stride": 3,
+        "difficulty": 0.5,
+        "conservative_overexclusion": true,
+        "unique_alpha": 34,
+        "new_union": 27
+      },
+      {
+        "path": "stage11_fixed_superset",
+        "first_seed": 11000000,
+        "count": 16,
+        "stride": 1,
+        "difficulty": 0.5,
+        "conservative_overexclusion": true,
+        "unique_alpha": 16,
+        "new_union": 12
+      },
+      {
+        "path": "research/results/stage11/semantic-text/fresh-observability.json",
+        "sha256": "f9c93f9a5429df2f5d02c1dc9f2473e743dfe0547d1dbf0bf7e155b738796b44",
+        "rows": 512,
+        "all_graph_hashes_verified": true,
+        "unique_alpha": 512,
+        "new_union": 417
+      }
+    ],
+    "unique_alpha": 41638,
+    "alpha_artifact": "research/results/campaign-01/semantics/s21-prior-alpha-exclusions.json.gz",
+    "alpha_sha256": "8c707067b1248095be8b2d426da7c930d4e650c9866008cf262b032cac8d9349",
+    "gaps": [
+      "Unarchived or undocumented ad-hoc constructions cannot be certified absent. Generator-only feasibility probes are not learned/confirmation populations and are not reserved datasets."
+    ],
+    "cpu_wall_seconds": 39.90311480499804
+  },
+  "public_feature_audit": {
+    "rows": 2048,
+    "max_tokens": 74,
+    "feature_target_collisions": 0,
+    "lexical_collisions": 0,
+    "unique_feature_sequences": {
+      "float32": 2048,
+      "bfloat16": 2048
+    },
+    "scope": "Exact public input sequences at FP32/BF16 before learned projection"
+  },
+  "process_seconds": 12.550080046057701,
+  "cpu_seconds": 12.545181168,
+  "scope": "Fresh alpha-disjoint exploratory TRAIN1024/known512/omitted3x4-512. No confirmation."
+}
