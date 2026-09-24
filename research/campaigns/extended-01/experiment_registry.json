@@ -716,7 +716,7 @@
     },
     {
       "id": "S15",
-      "status": "control_main_running_after_audited_profiles",
+      "status": "completed_failed_development_pending_final_audit",
       "hypothesis": "Training on a new arity while retaining known fact counts improves new-shape acquisition and possibly held-out arity/fact-count recombination",
       "intervention": "4096 English graphs/arm:common2048 arity4 plus2048 morearity4(control) or2048arity3/threefact(mixed)",
       "comparator": "Same fixed S11development201 model/AdamW, same4096-update construction exposure, arm-independent per-presentation pair sampling",
@@ -727,24 +727,26 @@
       "population": "512freshDEV and512reservedconfirmation per4arity/fact cells; v1unused preserved; alpha-disjoint fromhistorical/S13/S14",
       "selection": "Fixed4096endpoint, new-shape52/512 andgain26; arity4retention103/1024 andloss<=51; heldout52/512 andgain26. One symmetric extra4096 only if acquisition/retention pass andrecombinationfails",
       "budget": "Pairedprofiles44.562955758s; eachmaincap1100 prospectively raised fromunused800freeze afterreviewof evaluationtiming uncertainty; source/exposure/data unchanged",
-      "next_branch": "Profile; acquisition before transfer; conditional contextual-read alternative separately considered if newshape acquired but recombinationfails",
+      "next_branch": "Archived component localization before a separately registered minimal successor",
       "limitations": "Matched construction count, unequal tokens/nodes/compute; narrow3trainedmotifs and1heldoutcombination, not broad newlanguage or arbitrarytrees",
-      "audit": "review/S15-v2-population-audit.json;review/S15-v2-packing-audit.json;review/S15-v2-trainer-preflight.json"
+      "audit": "review/S15-v2-population-audit.json;review/S15-v2-packing-audit.json;review/S15-v2-trainer-preflight.json",
+      "result": "Calibrated control0/0/231/45 vs mixed1/0/80/10 per512 across3x3/3x4/4x3/4x4. All fixed criteria fail; no extension or confirmation.",
+      "evidence": "semantics/S15-report.md;research/results/campaign-01/semantics/s15-paired-analysis.json"
     },
     {
       "id": "S16",
-      "status": "public_mechanics_complete_review_pending_runner_not_yet_implemented",
+      "status": "runner_prepared_independent_preflight_pending",
       "hypothesis": "Public identifier normalization can supply spelling invariance without requiring the graph model to learn irrelevant lexical correlations",
       "intervention": "Narrow publicEnglishrenderer parser plus first-occurrence namespace canonicalization into fixedknowntraininglexemes; restorecopyviaoriginaltokenindex",
       "comparator": "Allsix unchangedS12 original versus normalizedoriginal; normalizedrenamed fullinput equivalence separately established mechanically",
       "observable_inputs": "Publictext only; actorcopyinventory alltokens, so opaqueIDspan recognition is explicitly supplied by parser/case convention",
       "privileged_targets": "None in normalization/forward; existingcanonicaltargets usedonlyforscoring prospectivefrozeninference",
-      "source": "8e88bd92 additive mechanics",
+      "source": "8e88bd92 mechanics+bcc1119c frozen runner",
       "protocol": "semantics/S16-feasibility-and-protocol.md",
       "population": "1024 existingoriginal/renamed S12diagnosticpairs, arity4/facts3or4; alreadyinspectedfailure motivates study",
       "selection": "Singlefixedmapping,all6checkpoints/originalthresholds,no tuning/retraining; no automaticaccuracygate",
       "budget": "2.190096249s measuredCPUmechanics; GPUunallocated/profile60tentativeafterreview/sourcefreeze",
-      "next_branch": "Review parser boundary, then implement/profile immutable frozen-model diagnostic if sound",
+      "next_branch": "Independent runner review, then timing-only60s profile under root release; main cap derived afterward",
       "limitations": "Suppliedparserandknownvocabulary prior, notlearnedlanguage; no broadsyntax/identitycapacity/case-changing rename claim"
     }
   ],
