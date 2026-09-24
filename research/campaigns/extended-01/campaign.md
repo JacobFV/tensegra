@@ -16,14 +16,14 @@ Pursue reliable scalar consumption, public-text semantic generalization, direct 
 
 Belief research stays frozen. Each branch may advance independently. A narrow value interface can authorize a narrow composition only under a newly declared >=98% three-seed fresh-validation contract; it cannot pass historical six-field reconstruction.
 
-## Current state — 2026-09-24 05:06 UTC
+## Current state — 2026-09-24 05:53 UTC
 
-Returns R04/R05 are confirmed restricted original-mixture interfaces; balanced tails remain and historical gates are unchanged. The return track is closed pending bounded composition, not another decoder search.
+**Returns:** R04/R05 confirm restricted original-mixture scalar access and causal finite-domain decision use across three lineages. Balanced value/type tails remain; historical gates are unchanged. The return track now feeds a narrowly authorized composition rather than more decoder searches.
 
-Semantic S12 seed701 confirmation is independently audited: constant LR yields0/1024 complete graphs; decay yields66 calibrated and2 raw. This is a positive paired gain but fails the predeclared103/1024 competence threshold. The other two parents and all four forks remain mandatory under the frozen protocol. S13 bilingual cache passed independent target/feature/split reconstruction; model work is CPU preparation only, pending S12 and profiling.
+**Semantics:** S12 seed701 confirmation gives0→66/1024 calibrated complete graphs (raw0→2) under LR reduction: a positive paired result, but below103 competence. Parent702 completed and audited; constant702 is running. All remaining forks and seed703 are unchanged. S13 bilingual cache/trainer and S14 unseen-arity3 population/evaluator are independently checked, with model runs pending the complete S12 matrix. Renaming, new motifs, multilingual acquisition and depth remain distinct claims.
 
-Attention A09 is running under a180-second cap to test whether additional exposure improves the all-edge-record baseline. A08 frozen corruption evaluation follows. Earlier strong sharpened context/message-passing/structural-attention interfaces tied; no unique structural-attention advantage is established.
+**Attention:** Strong sharpened structural attention, keyed context and message-passing references tie on clean routing and exactly follow the supplied corrupted graph in A08; no unique soft-attention advantage. The broader graph-record baseline improves under exposure, reaching99.22% IID but91.21% moderate and19.73% joint at6000updates. Its combined competence gate fails. Stop that exposure branch; A12 will diagnose its two soft reads with frozen, model-score-only hardening, not new training or gold routing.
 
-Composition C04 source and CPU boundaries are reviewed. Five bounded mechanical profiles precede frozen main budgets and three-seed confirmation. Strong static and role-augmented neural baselines remain in the comparison. The supplied schedule, finite domain, exact runtime, and inherited interface training are explicit.
+**Composition:** C04 lineage0 completed648.317s, initial counts pass24 workspace jointcells and causal controls. Strong role-augmented N1 also passes both primary answer cells narrowly; secondary selected results remain separate. Two lineages remain mandatory and unchanged; independent raw audit pending. Supplied-copy means copying the sole runtime return, not learned multi-return addressing. The schedule, finite numerical domain and exact executor remain supplied.
 
-Root owns the serial GPU queue. Charged GPU occupancy is3.435hours before A09; the12-hour ceiling and24-hour deadline remain unchanged. The credit interruption is elapsed time, not GPU use. Queue/budget JSON are authoritative. No routine permission requests are needed.
+Root owns the serial GB10 queue. Completed GPU-process occupancy is about4.08hours of12; current reservations and exact values are in budget.json. The24-hour deadline remains2026-09-24T19:50:55Z. Source/protocol milestones and compact raw artifacts are pushed to campaign/extended-01. Historical source/results/gates remain immutable; no autonomous planning or general-language claim is established.
