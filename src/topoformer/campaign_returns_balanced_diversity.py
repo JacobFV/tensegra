@@ -36,7 +36,7 @@ def subset(batch,indices):
 
 
 def run(cfg,out):
-    torch.set_num_threads(2);torch.manual_seed(cfg['head_seed']);device=cfg['device'];out=Path(out);out.mkdir(parents=True,exist_ok=True)
+    torch.set_num_threads(2);torch.manual_seed(cfg['head_seed']);device=cfg['device'];out=Path(out);out.mkdir(parents=True,exist_ok=False)
     started=time.monotonic();timings={};torch.cuda.reset_peak_memory_stats();assert 32 not in cfg['delays'] and 32 not in cfg['grid_delays']
     path=Path(cfg['checkpoint']);assert sha(path)==cfg['checkpoint_sha256']
     model=ReturnMemoryModel(width=1024,encoding='factorized').to(device).eval();model.load_state_dict(torch.load(path,map_location=device,weights_only=True));model.requires_grad_(False)
@@ -53,6 +53,10 @@ def run(cfg,out):
     for split,spec in cfg['grids'].items():
         cache[f'{split}/8']=capture_balanced(model,spec['seed'],spec['pool_size'],spec['per_cell'],8,cfg['grid_delays'],cfg['batch_size'],device)
     torch.cuda.synchronize();timings['evaluation_capture_seconds']=time.monotonic()-tick;tick=time.monotonic()
+    for split in cfg['data']:
+        reference=cache[f'{split}/2']['event_row_hashes']
+        for distractors in cfg['eval_distractors']:
+            assert cache[f'{split}/{distractors}']['event_row_hashes']==reference
     train_sets=[set(cache['train/2']['event_row_hashes'][:n]) for n in cfg['fit_sizes']]
     heldout=[set(cache[f'{split}/2']['event_row_hashes']) for split in cfg['data']]+[set(cache[f'{split}/8']['event_row_hashes']) for split in cfg['grids']]
     assert all(not(a&b) for a in train_sets for b in heldout)
@@ -74,7 +78,9 @@ def run(cfg,out):
                 for arm,scores in outputs.items():
                     row=prediction_record(cfg['backbone_seed'],arm,key.split('/')[0],delay,batch['distractors'],batch,scores.argmax(-1).cpu());row['groups']=group_counts(row)
                     if key=='train/2' and arm!='unchanged':
-                        n=int(arm.split('_')[1]);row['in_pool_value']=dict(correct=int((scores.argmax(-1).cpu()[:n]==batch['labels'][:n]).sum()),total=n)
+                        n=int(arm.split('_')[1]);pred=scores.argmax(-1).cpu()
+                        row['in_pool_value']=dict(correct=int((pred[:n]==batch['labels'][:n]).sum()),total=n)
+                        if n<len(pred):row['heldout_prefix_tail_value']=dict(correct=int((pred[n:]==batch['labels'][n:]).sum()),total=len(pred)-n)
                     rows.append(row);logits[f'{key}/{delay}/{arm}']=scores.cpu()
     torch.cuda.synchronize();timings['readout_evaluation_seconds']=time.monotonic()-tick
     assert tensor_hash(model.state_dict())==initial
