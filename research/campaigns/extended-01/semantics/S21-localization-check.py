@@ -45,6 +45,8 @@ class Tests(unittest.TestCase):
   t=dict(slots=[[-1]],edges=dict(shape=[1,1,1],bitorder='little',packed_b64=base64.b64encode(b'\x02').decode()));self.assertRaises(ValueError,m.target_edges,t)
  def test_nonsquare(self):
   r=row();r['target']['edges']['shape']=[2,1,2];self.assertRaises(ValueError,m.target_edges,r['target'])
+ def test_impossible_tag(self):
+  r=row();r['records'][0][0]=0;self.assertRaises(ValueError,self.describe,r)
  def test_post_eos(self):
   r=row();r['records'].append([1,5,-1,0,-1]);self.assertRaises(ValueError,self.describe,r)
  def test_bad_eos_payload(self):

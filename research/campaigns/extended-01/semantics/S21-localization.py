@@ -57,7 +57,7 @@ def canonical_records(records,tokens):
  result=[];ended=False
  for raw in records:
   require(not ended,'records after terminal EOS')
-  require(len(raw)==5 and all(type(x)is int for x in raw),'malformed raw record container');x=list(raw)
+  require(len(raw)==5 and all(type(x)is int for x in raw),'malformed raw record container');x=list(raw);require(x[0] in (1,2,3),'impossible generated tag')
   if x[0]==1 and 0<=x[3]<len(tokens):x[3]=tokens.index(tokens[x[3]])
   if x[0]==3:
    require(x[1:]==[-1,-1,-1,-1],'terminal EOS payload');ended=True
