@@ -183,7 +183,8 @@ def main():
     import torch
     from topoformer.campaign02_policy import CandidatePolicy, PolicyConfig
     from topoformer.campaign02_protocol import BoundedSolver
-    from topoformer.campaign02_references import ReferencePolicy, run_episode
+    from topoformer.campaign02_references import make_reference, run_episode
+    from topoformer.campaign02_population import build_policy
     from topoformer.campaign02_training import TrainConfig, batched_episodes, independent_address_seed
     from topoformer.campaign02_world import Workshop, generate_world, protocol_executor
     from topoformer.campaign02_interventions import FaultedWorkshop
@@ -204,7 +205,7 @@ def main():
     torch.set_num_threads(args.threads)
     sources = {"evaluator": file_hash(__file__)}
     import topoformer.campaign02_training as training
-    for name in ("training", "policy", "protocol", "world", "references", "interventions"):
+    for name in ("training", "policy", "protocol", "world", "references", "interventions", "population", "memory", "memory_policy"):
         sources[name] = file_hash(Path(training.__file__).with_name(f"campaign02_{name}.py"))
     bindings = []
     for binding in cfg["checkpoints"]:
@@ -244,9 +245,9 @@ def main():
             by_arm = {}
             for binding in bindings:
                 checkpoint = torch.load(binding["path"], map_location="cpu", weights_only=False)
-                policy_cfg = PolicyConfig(**checkpoint["policy_config"])
                 train_cfg = TrainConfig(**checkpoint["config"])
-                policy = CandidatePolicy(policy_cfg).to(args.device)
+                policy = build_policy(checkpoint["policy_config"]).to(args.device)
+                policy_cfg = policy.config
                 policy.load_state_dict(checkpoint["model"], strict=True)
                 policy.eval()
                 rows = []
@@ -273,7 +274,7 @@ def main():
             for mode in cfg.get("references", ["cheap", "always_tool", "cheap_first"]):
                 rows = []
                 for i, seed in enumerate(seeds):
-                    outcome = run_episode(factory(i), ReferencePolicy(mode), cfg.get("reference_compute_tariff", 0.0))
+                    outcome = run_episode(factory(i), make_reference(mode), cfg.get("reference_compute_tariff", 0.0))
                     outcome.pop("trace", None)  # Same information retained once in exact history.
                     rows.append({"seed": seed, "spec_hash": world_rows[i]["spec_hash"], "semantic_spec_hash":world_rows[i]["semantic_spec_hash"], "outcome": outcome,
                                  "counts": episode_counts(outcome), "truncated": False})
