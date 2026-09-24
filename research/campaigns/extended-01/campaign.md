@@ -16,9 +16,9 @@ Pursue reliable scalar consumption, public-text semantic generalization, direct 
 
 Belief research stays frozen. Each branch may advance independently. A narrow value interface can authorize a narrow composition only under a newly declared >=98% three-seed fresh-validation contract; it cannot pass historical six-field reconstruction.
 
-## Current state — scientific runs closed, final verification
+## Current state — campaign complete
 
-The campaign stops at the convergence described in [closeout-decision.md](closeout-decision.md), with no further GPU jobs scheduled. See the [final report](campaign-report.md), [claim map](claim-map.md), and [evidence index](evidence-index.md) for audited scope and references.
+The campaign stops at the convergence described in [closeout-decision.md](closeout-decision.md), with no further GPU jobs scheduled. Final independent claims/accounting verification passed. See the [final report](campaign-report.md), [claim map](claim-map.md), and [evidence index](evidence-index.md) for audited scope and references.
 
 **Returns and composition:** R04/R05 establish restricted original-mixture scalar access and causal finite-domain use. C04's two-operation interface passes across three lineages, but the strong role-trained neural and supplied-copy alternatives also pass and are substantially faster. Balanced value/type tails survive R10/R11; neither numerical-range reliability nor necessity of the workspace follows.
 
