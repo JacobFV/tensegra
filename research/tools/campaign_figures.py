@@ -276,6 +276,23 @@ def extract(root, c04_audit=None, c04_provisional=None):
                         add('s13_learning',source,arm=arm,surface=surface,policy=policy,added_update=curve['added_update'],
                             total=sum(v['examples'] for v in counts['by_node_count'].values()),**counts)
         add('s13_paired',source,paired_endpoint=summary['paired_endpoint'],promotion_criteria=summary['promotion_criteria'],promotion_pass=summary['promotion_pass'])
+    audit_path=review+'S15-main-pair-audit.json'
+    if (root/audit_path).exists():
+        for name in ('S15-main-pair-audit.json','S15-control-main-audit.json','S15-mixed-main-audit.json'):
+            receipt=read(review+name)
+            for path,digest in receipt['input_sha256'].items():
+                assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'S15 binding mismatch: {path}'
+                inputs[path]=digest
+        pair_audit=read(audit_path)
+        assert pair_audit['all_curve_components_verified'] and pair_audit['independent_event_multiplicity_intervals_exact']
+        source=base+'semantics/s15-paired-analysis.json';summary=read(source)
+        assert summary['paired']==pair_audit['paired'] and summary['criteria']==pair_audit['criteria']
+        for arm,result in summary['results'].items():
+            for curve in result['curves']:
+                for shape,policies in curve['cells'].items():
+                    for policy,counts in policies.items():
+                        add('s15_learning',source,arm=arm,shape=shape,policy=policy,added_update=curve['added_update'],**counts)
+        add('s15_paired',source,paired=summary['paired'],criteria=summary['criteria'],confirmation_eligible=summary['confirmation_eligible'],one_paired_extension_eligible=summary['one_paired_extension_eligible'])
     if c04_audit:
         # An explicit final audit index binds each approved summary byte-for-byte.
         # Shape: {"input_sha256": {"repository/relative/path": "sha256"}}.
@@ -542,6 +559,28 @@ def render(data, output):
         english_end=max(select('s13_learning',arm='english',surface='english',policy='calibrated'),key=lambda r:r['added_update'])
         mixed_end=max(select('s13_learning',arm='mixed',surface='english',policy='calibrated'),key=lambda r:r['added_update'])
         finish(fig,'semantic-bilingual-development',f'S13: one paired development parent; all promotion criteria fail. Spanish complete graphs remain zero despite partial copy/order acquisition.\nEnglish calibrated endpoint falls from English-only {english_end["exact"]:g} to mixed {mixed_end["exact"]:g} /{mixed_end["total"]}. Token/compute exposure differs; these are not confirmation curves or broad multilingual competence.')
+    if select('s15_learning'):
+        fig,axes=plt.subplots(2,3,figsize=(14,8))
+        titles={'3x3':'3×3 · new trained motif','3x4':'3×4 · held-out combination','4x3':'4×3 · known motif retention','4x4':'4×4 · known motif retention'}
+        for ax,shape in zip((axes[0,0],axes[0,1],axes[1,0],axes[1,1]),titles):
+            for i,arm in enumerate(('control','mixed')):
+                for policy,style in [('raw','--'),('calibrated','-')]:
+                    ss=select('s15_learning',shape=shape,arm=arm,policy=policy);ss.sort(key=lambda r:r['added_update'])
+                    ax.plot([r['added_update'] for r in ss],[r['exact'] for r in ss],style,marker='o',color=f'C{i}',label=f'{arm} / {policy}')
+                    if policy=='calibrated':
+                        ax.annotate(f"{ss[-1]['exact']:g}",(ss[-1]['added_update'],ss[-1]['exact']),xytext=(5,6+i*10 if shape in ('3x3','3x4') else (i-.5)*10),textcoords='offset points',fontsize=8,color=f'C{i}')
+            if shape in ('3x3','3x4'):ax.axhline(52,color='.6',ls=':',lw=.8)
+            ax.set(title=titles[shape],xlabel='Added optimizer updates',ylabel='Complete graphs / 512',ylim=(-3,250));ax.legend(fontsize=6)
+        for ax,shape in zip(axes[:,2],('3x3','3x4')):
+            for i,arm in enumerate(('control','mixed')):
+                ss=select('s15_learning',shape=shape,arm=arm,policy='calibrated');ss.sort(key=lambda r:r['added_update'])
+                for metric,style in [('copy','-'),('ordered F1','--')]:
+                    values=[r['mean_copy'] if metric=='copy' else r['edges']['ordered_edge']['f1'] for r in ss]
+                    ax.plot([r['added_update'] for r in ss],values,style,marker='o',color=f'C{i}',label=f'{arm} / {metric}')
+            ax.set(title=titles[shape]+' · components',xlabel='Added optimizer updates',ylabel='Component score',ylim=(-.02,1.02));ax.legend(fontsize=6)
+        criteria=select('s15_paired')[0]['criteria']
+        failed=', '.join(k for k in ('acquisition','retention','recombination') if not criteria[k])
+        finish(fig,'semantic-shape-development',f'S15: one S14-informed development pair; failed gates: {failed}. No confirmation or symmetric extension eligible.\nFixed historical TRAIN128 calibration. Construction exposure matched; tokens/graph sizes differ. Component learning does not establish complete acquisition or isolate recombination.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')=='independently_audited'})
