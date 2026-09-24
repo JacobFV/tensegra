@@ -819,7 +819,7 @@
       "recorded_utc": "2026-09-24T06:07:07.216215+00:00"
     }
   ],
-  "cpu_audit_seconds": 2804.688541346138,
+  "cpu_audit_seconds": 2914.6496863443144,
   "accounting": "Monotonic process occupancy includes initialization/training/evaluation/failed runs/export; profiles charged. Serial GPU only. Unmeasured failures receive conservative charges.",
   "projected_ready_caps_seconds": 6160,
   "accounting_notes": "Ready caps are estimates, not completed charges or concurrent reservations. Only queue.running may use GPU.",
@@ -889,12 +889,12 @@
     }
   ],
   "projection_detail": {
-    "S12_running_constant702_cap": 800,
-    "S12_remaining_excluding_running_cap": 3800,
+    "S12_running_decay702_cap": 800,
+    "S12_remaining_excluding_running_cap": 3000,
     "C04_remaining_two_lineages_cap": 3960,
-    "A12": "CPU preparation, GPU profile/main caps not frozen",
-    "S12_rename_S14": "Source/cache reviewed, no GPU allocation until all-six checkpoint availability",
-    "S13": "CPU ready; GPU allocation pending complete S12/profile"
+    "A12_main_cap": 180,
+    "S12_rename_S14": "Profile after all-six checkpoints; no main allocation yet",
+    "S13": "Paired development profile after complete S12; no main allocation yet"
   },
   "interruption": {
     "reason": "usage credits exhausted; user recharged and requested continuation",
@@ -902,5 +902,5 @@
     "reconciled_utc": "2026-09-24T04:48:22Z",
     "note": "No running experiment at reconciliation. Deadline unchanged; idle interval not GPU occupancy. A08 profile full outer timing missing: charged conservative60-second cap."
   },
-  "projected_pending_cap_seconds": 8560
+  "projected_pending_cap_seconds": 7140
 }
