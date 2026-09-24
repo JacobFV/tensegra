@@ -1,0 +1,89 @@
+{
+  "hidden": 1024,
+  "key_dim": 32,
+  "batch_size": 256,
+  "capture_batch_size": 64,
+  "updates": 4000,
+  "checkpoints": [
+    0,
+    250,
+    500,
+    1000,
+    2000,
+    3000,
+    4000
+  ],
+  "delays": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "intervention_delays": [
+    0,
+    1,
+    16
+  ],
+  "eval_distractors": [
+    2,
+    8
+  ],
+  "causal_size": 2048,
+  "version": "c04-v1-prospective-confirmation",
+  "replicate": 1,
+  "seed": 1602,
+  "learning_rate": 0.0003,
+  "sample_seed": 561000100,
+  "role_seed": 561000101,
+  "rekey_seed": 561000102,
+  "control_seed": 561000200,
+  "swap_seed": 561000300,
+  "interfaces": {
+    "lowerer": "/home/brandonin/topoformer-campaign-01/composition/p01-confirmation-303/selected.pt",
+    "lowerer_sha256": "1f4e141180ec60ddadab10b079fb3595f6aed610b16e57a1ab7d6b82839dcb9e",
+    "backbone": "/home/brandonin/topoformer-stage11/returns/main/11-wide_continue.pt",
+    "backbone_sha256": "00e122c8cfe655dc9a8f801b48c5b5092db6caf8909479f2c3ac3910f0b7a077",
+    "accessor": "/home/brandonin/topoformer-campaign-01/returns/r04-confirmation/11/ce-16384.pt",
+    "accessor_sha256": "8543047e604b80df4313d85ead8cf4ed6ff16fbcf1894a24789b4a35cfc04be5",
+    "consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/11/learned.pt",
+    "consumer_sha256": "9d35ee64eeadac0a663a4389d860cfe69ae410da993b6f1668d3e98313681281",
+    "oracle_consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/11/oracle.pt",
+    "oracle_consumer_sha256": "736bf270831da6f95a7056eb1022a752a116a72b81b09eaf250dd04a5b5edb32",
+    "query_consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/11/query_only.pt",
+    "query_consumer_sha256": "02dd304c938e1d97ae4fb67e95b83cbef70c9f93b85a6f447a0f0ef3ac2c246f"
+  },
+  "public_controls": [
+    "record_order",
+    "inventory_order",
+    "unrelated_instructions",
+    "fresh_names"
+  ],
+  "data": {
+    "train": {
+      "seed": 561000001,
+      "count": 16384
+    },
+    "calibration": {
+      "seed": 561000002,
+      "count": 2048
+    },
+    "validation": {
+      "seed": 561000003,
+      "count": 4096
+    }
+  },
+  "status": "CPU source preflight; main caps await profile; no confirmation run authorized",
+  "timing_examples": 256,
+  "timing_batch_sizes": [
+    1,
+    64
+  ],
+  "timing_delays": [
+    0,
+    16
+  ],
+  "timing_repeats": 3,
+  "warmup_examples": 8
+}

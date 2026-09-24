@@ -1,0 +1,11 @@
+# C04 source preflight
+
+CPU-only implementation check, before confirmation generation or model outcomes. All primary workspaces remain width1024; the mechanical population has16 events from569000001/2/3, separate from560/561/562 confirmation namespaces. The final profile configuration uses independent model/view RNG1699/5690001xx. Main caps remain unset pending measured GPU profiling and coordinator release.
+
+The new modules implement paired N1 static/role and N2 rekey fitting; frozen actual-lowering workspace and supplied-copy paths; full-denominator causal checks; private ordered typed-numeric overlap/visitation accounting; and separately scheduled full-path synchronized timing. Fixed4000 remains primary; earliest best CLEAN calibration remains secondary. Confirmation test labels are scoring/private audit targets, never forward arguments. Numeric signatures never influence sampling, selection or inference.
+
+Mechanical validation: local compile succeeds; four CPU tensor/causal/actual-runtime contract tests pass (0.89s pytest time). A16-event full hybrid CPU smoke finished in100.322s with CUDA hidden, peak GPU allocation0,76 primary/oracle cells,32 public-control cells and two causal-view groups. Every frozen component and scalar normalization tensor retained identical before/after hashes. This is software-path verification, not an acquisition/gate result. No confirmation outcomes were generated. CPU smoke artifacts remain `/tmp/c04-cpu-hybrid-smoke` on GB10; future GPU profile will provide immutable measured resource receipts.
+
+The profile configuration was revised before any GPU profile to isolate all model/sampling/view seeds and include16-example timing fields. The CPU hybrid smoke uses the prior mechanical config's public data and existing frozen interfaces; its unused model/sampling seeds do not affect this inference-only path.
+
+Pending: independent source review; representative GPU profile under sole coordinator scheduling; freeze main caps/config/source hashes; timing configs reference the resulting fixed endpoint checkpoints by hash after training, without using their scores to alter policy. Timing may need more than the preliminary180s because batch1 includes actual CPU runtime and repeated16-update workspace execution. No launch authority is implied by these source files.
