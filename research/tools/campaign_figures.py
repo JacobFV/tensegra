@@ -21,7 +21,12 @@ def composition_rows(summary, source):
     def emit(panel,metric,counts,**keys):
         assert 0 <= counts['correct'] <= counts['total']
         rows.append(dict(common,panel=panel,metric=metric,**counts,**keys))
-    if summary.get('phase')=='hybrid':
+    if 'components' in summary and 'neural_loads' in summary:
+        for cell in summary['cells']:
+            attempts={p['attempted'] for p in cell['passes']};assert len(attempts)==1
+            rows.append(dict(common,panel='c04_timing',path=cell['path'],batch=cell['batch'],delay=cell['delay'],
+                             median_seconds=cell['median_seconds'],attempted=next(iter(attempts)),passes=cell['passes']))
+    elif summary.get('phase')=='hybrid':
         for cell in summary['cells']:
             keys={k:cell[k] for k in ('view','distractors','path','delay')}
             for metric in ('original','supplied','changed_original','changed_supplied','joint'):
@@ -45,7 +50,7 @@ def composition_rows(summary, source):
     return rows
 
 
-def extract(root, c04_audit=None):
+def extract(root, c04_audit=None, c04_provisional=None):
     rows, inputs, status = [], {}, []
     def read(path):
         p = root / path
@@ -201,7 +206,7 @@ def extract(root, c04_audit=None):
         for audit_path in c04_audit:
             receipt=read(str(audit_path))
             for path,digest in receipt['input_sha256'].items():
-                if path.startswith(base+'composition/c04-confirmation/') and path.endswith('/summary.json') and path.split('/')[-2] in ('hybrid','n1_static','n1_roles','n2_rekey'):
+                if path.startswith(base+'composition/c04-confirmation/') and path.endswith('/summary.json') and path.split('/')[-2] in ('hybrid','n1_static','n1_roles','n2_rekey','timing'):
                     assert path not in bindings or bindings[path]==digest
                     bindings[path]=digest
         assert bindings, 'empty C04 audit summary bindings'
@@ -209,12 +214,20 @@ def extract(root, c04_audit=None):
             assert source.startswith(base+'composition/c04-confirmation/') and source.endswith('/summary.json')
             summary=read(source)
             assert inputs[source]==digest, f'Unaudited C04 summary bytes: {source}'
-            rows.extend(composition_rows(summary,source))
+            rows.extend(dict(row,audit_status='independently_audited') for row in composition_rows(summary,source))
         completed={r['lineage'] for r in rows if r['panel']=='c04_hybrid'}
         for lineage in (560,561,562):
             if lineage not in completed: status.append(dict(experiment='C04',lineage=lineage,status='pending audited summary'))
     else:
         status.append(dict(experiment='C04',status='pending explicit audited-summary hash index'))
+    for replicate in c04_provisional or []:
+        lineage=560+replicate
+        assert not any(r.get('lineage')==lineage and r['panel'].startswith('c04_') for r in rows), 'duplicate audited/provisional lineage'
+        for arm in ('hybrid','n1_static','n1_roles','n2_rekey','timing'):
+            source=base+f'composition/c04-confirmation/{replicate}/{arm}/summary.json'
+            rows.extend(dict(row,audit_status='independent_final_audit_pending') for row in composition_rows(read(source),source))
+        status[:]=[entry for entry in status if not (entry.get('experiment')=='C04' and entry.get('lineage')==lineage)]
+        status.append(dict(experiment='C04',lineage=lineage,status='completed worker results; independent final audit pending'))
     status.append(dict(experiment='S13',status='cache/protocol only; no model outcome plotted'))
     conditions=[]
     for row in rows:
@@ -366,8 +379,9 @@ def render(data, output):
         finish(fig,'attention-common-route','A13: one frozen checkpoint, paired events, zero updates; no seed replication. Nonoracle mean routes are exactly equal across policies.\nCommon hard is engineered; oracle uses privileged routes. Queried heads share event support (8 heads/event); full all-node suffix counts remain separate in the data.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
-        audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid')})
-        pending_lineages=[n for n in (560,561,562) if n not in audited_lineages]
+        audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')=='independently_audited'})
+        provisional_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')!='independently_audited'})
+        pending_lineages=[n for n in (560,561,562) if n not in audited_lineages and n not in provisional_lineages]
         for ax,view in zip(axes[0],('clean','reversed')):
             for ai,path in enumerate(('workspace','supplied_copy')):
                 for lineage in (560,561,562):
@@ -394,13 +408,30 @@ def render(data, output):
                 ss.sort(key=lambda r:r['delay'])
                 ax.plot([r['delay'] for r in ss],[100*r['correct']/r['total'] for r in ss],'.-',color=f'C{ai}',alpha=.65,label=metric if lineage==560 else None)
         ax.set(title='C04 reversed: answer / joint / refusal',xlabel='Workspace delay',ylabel='Count / total (%)');ax.legend(fontsize=7)
-        finish(fig,'composition-confirmation',f"Audited lineages: {audited_lineages}; pending: {pending_lineages}. Each trace is a lineage; shared views/delays are not independent.\nNeural x = fixed 4000 primary; + = selected secondary. Supplied-copy is a sole-return reference. Finite numeric train/test overlap; supplied scheduling.")
+        finish(fig,'composition-confirmation',f"Audited: {audited_lineages}; completed / independent final audit pending: {provisional_lineages}; missing: {pending_lineages}. Each trace is a lineage; shared views/delays are not independent.\nNeural x = fixed 4000 primary; + = selected secondary. Supplied-copy is a sole-return reference. Finite numeric train/test overlap; supplied scheduling.")
+
+        if select('c04_timing'):
+            fig,axes=plt.subplots(1,3,figsize=(13,4.8))
+            for ai,arm in enumerate(('n1_roles','workspace','supplied_copy')):
+                for lineage in (560,561,562):
+                    ss=select('c04_neural',arm=arm,endpoint='endpoint',lineage=lineage,metric='answer') if arm=='n1_roles' else select('c04_hybrid',path=arm,lineage=lineage,metric='joint',distractors=8)
+                    if arm!='n1_roles': ss=[r for r in ss if r['delay'] in (None,16)]
+                    ss.sort(key=lambda r:r['view'])
+                    axes[0].plot([0 if r['view']=='clean' else 1 for r in ss],[100*r['correct']/r['total'] for r in ss],'.-',color=f'C{ai}',alpha=.65,label=arm if lineage==560 else None)
+            axes[0].set(title='Primary fixed roles vs interfaces',xticks=[0,1],xticklabels=['Clean','Reversed'],ylabel='Correct (%)');axes[0].legend(fontsize=7)
+            for ax,batch in zip(axes[1:],(1,64)):
+                for ai,arm in enumerate(('n1_roles','workspace','supplied_copy')):
+                    ss=[r for r in select('c04_timing',path=arm,batch=batch) if r['delay'] in (None,16)]
+                    ax.scatter([ai+(r['lineage']-561)*.07 for r in ss],[1000*r['median_seconds']/r['attempted'] for r in ss],s=25,label=arm)
+                ax.set(title=f'Measured execution · batch {batch}',xticks=[0,1,2],xticklabels=['Fixed roles','Workspace d16','Supplied copy'],ylabel='Median ms / attempted example',yscale='log');ax.tick_params(axis='x',labelrotation=15)
+            finish(fig,'composition-accuracy-timing',f'Completed three-lineage worker results; independent final audit pending: {provisional_lineages}. Accuracy: neural answer; hybrid joint lowering + answer.\nEach dot/trace is one lineage; timing uses median of recorded repeats, excludes setup, and does not measure training or prove a deployment speedup.')
 
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--root',type=Path,default=Path('.'));p.add_argument('--output',type=Path)
     p.add_argument('--extract-only',action='store_true');p.add_argument('--render-data',type=Path)
     p.add_argument('--c04-audit',type=Path,action='append',help='Repeatable repository-relative input_sha256 audit receipt; never infer audit from presence alone')
+    p.add_argument('--c04-provisional',type=int,choices=(0,1,2),action='append',help='Explicit completed lineage pending independent audit; visibly labeled provisional')
     a=p.parse_args()
     output=a.output or a.root/'research/campaigns/extended-01/figures';output.mkdir(parents=True,exist_ok=True)
     start=time.perf_counter()
@@ -408,7 +439,7 @@ def main():
         with (gzip.open(a.render_data,'rt') if a.render_data.suffix=='.gz' else a.render_data.open()) as f:
             data=json.load(f)
     else:
-        data=extract(a.root.resolve(),a.c04_audit)
+        data=extract(a.root.resolve(),a.c04_audit,a.c04_provisional)
     # Stable bytes: sorted compact JSON, mtime=0, no embedded source filename.
     encoded=(json.dumps(data,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
     compressed=gzip.compress(encoded,mtime=0)
