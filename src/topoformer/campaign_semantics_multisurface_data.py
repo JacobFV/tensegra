@@ -56,7 +56,8 @@ def make_record(example,vocab,seen_public,seen_features=None):
     # Compact target conversion must preserve the audited compiler path.
     for language in RENDERERS:
         gold=targets(graph,public_view(record,language),128,vocab,language=language)
-        if any(not torch.equal(gold[k],target(record,vocab,language)[k]) for k in gold):raise ValueError('compact multilingual target mismatch')
+        compact=target(record,vocab,language)
+        if any(not torch.equal(gold[k],compact[k]) for k in gold):raise ValueError('compact multilingual target mismatch')
     return record
 
 
@@ -110,7 +111,7 @@ def run(config):
         if len(development)==512:break
     if len(development)!=512:raise ValueError('declared fresh semantic-support budget exhausted')
     for name,rows in [('train',train),('development',development)]:write_rows(out/(name+'.jsonl.gz'),rows)
-    result=dict(cache_version=CACHE_VERSION,source_commit=SOURCE_COMMIT,renderer_version=RENDERER_VERSION,config=config,train_unique_graphs=len(train),development_unique_graphs=len(development),surfaces_per_graph=2,train_surface_count=2*len(train),development_surface_count=2*len(development),old_excluded_counts=old_counts,duplicate_semantic_keys_skipped=duplicates,development_attempts=attempt+1,all_surfaces_grouped_by_construction=True,train_regeneration_exact=True,per_renderer_copy_injectivity_validated=True,public_target_consistency_validated=True,actor_feature_target_consistency_validated=True,feature_precision_audits=['float32','bfloat16'],distinct_feature_sequences=len(seen_features)//2,value_vocabulary=vocab,cpu_seconds=time.monotonic()-tick,cache_sha256={n:digest(out/(n+'.jsonl.gz')) for n in ('train','development')},source_sha256={n:digest(Path(__file__).with_name(n)) for n in ('campaign_semantics_multisurface_data.py','campaign_semantics_surface_contract.py','campaign_semantics_data.py','semantic_scaling.py','tcn_data.py','semantic_graph.py')})
+    result=dict(cache_version=CACHE_VERSION,source_commit=SOURCE_COMMIT,renderer_version=RENDERER_VERSION,config=config,train_unique_graphs=len(train),development_unique_graphs=len(development),surfaces_per_graph=2,train_surface_count=2*len(train),development_surface_count=2*len(development),old_excluded_counts=old_counts,duplicate_semantic_keys_skipped=duplicates,development_attempts=attempt+1,all_surfaces_grouped_by_construction=True,train_regeneration_exact=True,per_renderer_copy_injectivity_validated=True,public_target_consistency_validated=True,actor_feature_target_consistency_validated=True,feature_precision_audits=['float32','bfloat16'],distinct_feature_sequences={name:sum(k.startswith(name+':') for k in seen_features) for name in ('float32','bfloat16')},value_vocabulary=vocab,cpu_seconds=time.monotonic()-tick,cache_sha256={n:digest(out/(n+'.jsonl.gz')) for n in ('train','development')},source_sha256={n:digest(Path(__file__).with_name(n)) for n in ('campaign_semantics_multisurface_data.py','campaign_semantics_surface_contract.py','campaign_semantics_data.py','semantic_scaling.py','tcn_data.py','semantic_graph.py')})
     (out/'audit.json').write_text(json.dumps(result,indent=2)+'\n');return result
 
 if __name__=='__main__':
