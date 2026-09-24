@@ -4,7 +4,7 @@
 
 S18 fails its fixed acquisition, retention and recombination criteria. Even its fitted TRAIN panel contains only10/128 complete contextual outputs, with most remaining errors in edges. Close that workspace-family calibration/exposure search. S19 tests a different learned interface: can an ordinary contextual text encoder and causal, variable-length record decoder acquire complete graphs from the same public text? This is a strong alternative learner, not an isolated attribution to one layer or a new cognitive/runtime capability.
 
-The preliminary record-contract audit finds84–125 target records for S15 TRAIN. The full scored graph, including directed relation labels and ordered slots, is predicted. No term-to-graph compiler, public-text parser, supplied node counts, gold alignment, graph schema expansion or exact equality solver may provide inference targets.
+The preliminary record-contract audit finds82–123 target records (including EOS; the earlier84–125 estimate included separate phase markers that this record format does not use) for S15 TRAIN. The full scored graph, including directed relation labels and ordered slots, is predicted. No term-to-graph compiler, public-text parser, supplied node counts, gold alignment, graph schema expansion or exact equality solver may provide inference targets.
 
 ## Supplied and learned
 
@@ -33,3 +33,11 @@ Invalid references, duplicate/conflicting records, output overflow, missing EOS 
 Before any GPU release: independent codec/public-boundary review, causal/cache/gradient/padding tests, parameter count, source/config/data hashes and representative profiling of training **and worst-case free-running evaluation/export**. Proposed profile ceiling180seconds; the main budget is unset until measured. Planning envelope for this development branch is at most3,600GPU seconds including profiling and any separately registered extension; a profile showing that meaningful full evaluation cannot fit triggers redesign or deferral, not a silent width/data reduction. Root retains sole scheduling authority and approximately8,640seconds for confirmation within the remaining campaign budget.
 
 If promotion is earned, freeze the selected recipe and run at least three independent initialization seeds with all fresh required confirmation cells≥512 and matched alternatives where practical. Existing S15 reserved confirmation remains untouched until then. No current S19 competence, timing or generalization result exists.
+
+## Pre-freeze details
+
+The codec represents five integers per record: type plus four payload positions, with type-specific meaning. NODE carries(kind,value,copy,-1), EDGE carries(source,target,role,slot), and unused positions are-1. BOS/PAD are input/control tokens, never legitimate generated graph records. Typed syntax is public; any additional inference masks must be declared and cannot depend on gold counts or targets.
+
+Loss is the arithmetic mean of eight field losses: type over every nonpadding target record including EOS; kind over NODE; value over nonlexical NODE; copy over lexical NODE; source, target, role and slot separately over EDGE. Each loss averages over its applicable records across the batch. An absent family contributes differentiable zero, keeping the fixed denominator8. Unordered slot is an explicit class. Log field loss sums and support counts. The extension mixture is .5×3×3 accuracy +.25×4×3 +.25×4×4, fixed from TRAIN proportions.
+
+Use the exact S17 mixed TRAIN128 indices and hashes, with no new panel selection. Greedy evaluation batch32 is fixed for cache efficiency; inherited evaluations used a different batch size, so per-example throughput is not a matched latency comparison. Training remains batch8. Proposed profile:20updates, evaluations at0/20 on TRAIN128 and16DEV examples per cell, plus one separately labeled forced160-step batch32 timing stress. Profile efficacy does not select the main recipe; real evaluation stops at predicted EOS and never uses gold lengths. The180-second whole-process profile ceiling remains a proposal until source and launch bindings are frozen and reviewed.
