@@ -1,0 +1,35 @@
+{
+  "kind": "train_confirm",
+  "steps": 6000,
+  "monitor_steps": [
+    1000,
+    3000,
+    6000
+  ],
+  "monitor_examples": 256,
+  "monitor_order_seed": 263000000,
+  "examples": 1024,
+  "batch": 16,
+  "data_seed": 271000000,
+  "order_seed": 272000000,
+  "benchmark_seed": 283000000,
+  "benchmark": false,
+  "conditions": [
+    {
+      "nodes": 32,
+      "depth": 4,
+      "groups": 4
+    },
+    {
+      "nodes": 64,
+      "depth": 8,
+      "groups": 4
+    },
+    {
+      "nodes": 128,
+      "depth": 32,
+      "groups": 8
+    }
+  ],
+  "seed": 1403
+}
