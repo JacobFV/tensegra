@@ -87,17 +87,54 @@ def collate(frames: list[Frame], device="cpu"):
             torch.tensor([f.target for f in frames], device=device))
 
 
-def collect_teacher(env, teacher, max_steps=64):
+class PublicInterfaceCapacityError(ValueError):
+    """Declared actor representation capacity exceeded; never silently truncate."""
+
+
+def prepare_active(model, observations, unsupported):
+    active, public = [], []
+    for index, observation in enumerate(observations):
+        if observation.done or index in unsupported:
+            continue
+        try:
+            frame = prepare_frame(observation, model)
+        except PublicInterfaceCapacityError as exc:
+            unsupported[index] = str(exc)
+            continue
+        active.append(index)
+        public.append(frame)
+    return active, public
+
+
+def prepare_frame(observation, model=None):
+    actions, obs, features = public_frame(observation)
+    frame = Frame(obs, features, 0)
+    if model is not None and hasattr(model, "prepare_public_frame"):
+        frame = model.prepare_public_frame(observation, actions, frame)
+    return actions, frame
+
+
+def policy_batch(model, frames, device):
+    return model.collate_public_frames(frames, device) if hasattr(model, "collate_public_frames") else collate(frames, device)
+
+
+def score_batch(model, batch, hidden=None):
+    extra = {"memory": batch[4]} if len(batch) == 5 else {}
+    return model.score(batch[0], batch[1], hidden, batch[2], **extra)
+
+
+def collect_teacher(env, teacher, max_steps=64, model=None):
     """Environment and teacher are separate objects; no evaluator feeds teacher."""
     frames, trace = [], []
     observation = env.observe()
     for _ in range(max_steps):
         if observation.done:
             break
-        actions, obs, features = public_frame(observation)
+        actions, frame = prepare_frame(observation, model)
         action = teacher.choose(observation, actions)
         index = actions.index(action)  # Never silently repair a teacher proposal.
-        frames.append(Frame(obs, features, index))
+        frame.target = index
+        frames.append(frame)
         trace.append({"observation_hash": digest(observation.to_dict()), "action": asdict(action), "index": index})
         observation = env.step(action)
     return frames, {"steps": trace, "outcome": env.evaluate(), "truncated": not observation.done}
@@ -108,9 +145,9 @@ def supervised_loss(model, trajectories: list[list[Frame]], device="cpu", bptt_s
         raise ValueError("Empty teacher trajectory")
     if model.config.family == "lightweight":
         frames = [f for t in trajectories for f in t]
-        obs, candidates, mask, targets = collate(frames, device)
-        logits, _, _ = model.score(obs, candidates, mask=mask)
-        return nn.functional.cross_entropy(logits, targets), len(frames)
+        batch = policy_batch(model, frames, device)
+        logits, _, _ = score_batch(model, batch)
+        return nn.functional.cross_entropy(logits, batch[3]), len(frames)
     # Preserve the full supplied observation sequence; no randomly reset hidden
     # state in the middle of a teacher episode. Padding rows do not enter loss.
     hidden = None
@@ -120,9 +157,9 @@ def supervised_loss(model, trajectories: list[list[Frame]], device="cpu", bptt_s
             hidden = hidden.detach()
         live = [step < len(t) for t in trajectories]
         frames = [t[step] if active else t[-1] for t, active in zip(trajectories, live)]
-        obs, candidates, mask, targets = collate(frames, device)
-        logits, _, hidden = model.score(obs, candidates, hidden, mask)
-        losses.extend(nn.functional.cross_entropy(logits, targets, reduction="none")[torch.tensor(live, device=device)].unbind())
+        batch = policy_batch(model, frames, device)
+        logits, _, hidden = score_batch(model, batch, hidden)
+        losses.extend(nn.functional.cross_entropy(logits, batch[3], reduction="none")[torch.tensor(live, device=device)].unbind())
     return torch.stack(losses).mean(), len(losses)
 
 
@@ -131,16 +168,21 @@ def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradie
     observation, hidden, trace, terms = env.observe(), None, [], []
     cpu_start, wall_start = time.process_time(), time.perf_counter()
     previous_utility = 0.0
+    unsupported = None
     for step in range(max_steps):
         if observation.done:
             break
         if gradients and hidden is not None and step % bptt_steps == 0:
             hidden = hidden.detach()
-        actions, obs, features = public_frame(observation)
+        try:
+            actions, frame = prepare_frame(observation, model)
+        except PublicInterfaceCapacityError as exc:
+            unsupported = str(exc)
+            break
         neural_start = time.perf_counter()
-        batch = collate([Frame(obs, features, 0)], device)
+        batch = policy_batch(model, [frame], device)
         with torch.set_grad_enabled(gradients):
-            logits, value, hidden = model.score(batch[0], batch[1], hidden, batch[2])
+            logits, value, hidden = score_batch(model, batch, hidden)
             distribution = torch.distributions.Categorical(logits=logits[0])
             selected = distribution.sample() if sample else logits[0].argmax()
             index = int(selected.detach().cpu())
@@ -163,6 +205,7 @@ def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradie
                       "feedback": observation.feedback})
     outcome = env.evaluate()
     return {"trace": trace, "outcome": outcome, "truncated": not observation.done,
+            "unsupported_interface": unsupported,
             "episode_process_cpu_seconds": time.process_time()-cpu_start,
             "episode_wall_seconds": time.perf_counter()-wall_start}, terms
 
@@ -171,17 +214,17 @@ def batched_episodes(model, environments, *, device="cpu", max_steps=64, neural_
     """Batch current public states; hidden rows retain their own episode identity."""
     observations = [env.observe() for env in environments]
     traces = [[] for _ in environments]
+    unsupported = {}
     hidden = None
     cpu_start, wall_start = time.process_time(), time.perf_counter()
     for step in range(max_steps):
-        active = [i for i, o in enumerate(observations) if not o.done]
+        active, public = prepare_active(model, observations, unsupported)
         if not active:
             break
-        public = [public_frame(observations[i]) for i in active]
         neural_start = time.perf_counter()
-        batch = collate([Frame(obs, features, 0) for _, obs, features in public], device)
+        batch = policy_batch(model, [frame for _, frame in public], device)
         current_hidden = None if hidden is None else hidden[active]
-        logits, _, next_hidden = model.score(batch[0], batch[1], current_hidden, batch[2])
+        logits, _, next_hidden = score_batch(model, batch, current_hidden)
         # One device synchronization for all choices and probabilities in a step.
         selected = logits.argmax(-1)
         chosen = selected.cpu().tolist()
@@ -210,7 +253,7 @@ def batched_episodes(model, environments, *, device="cpu", max_steps=64, neural_
               "neural_timing_scope": "collate/device transfer + model scoring + synchronized CPU choice/probabilities; allocated equally among active batch, not serial latency"}
     # Batch timing stored once, not repeated as if independent episode work.
     return [{"trace": trace, "outcome": env.evaluate(), "truncated": not obs.done,
-             "timing": timing if i == 0 else None}
+             "timing": timing if i == 0 else None, "unsupported_interface": unsupported.get(i)}
             for i, (trace, env, obs) in enumerate(zip(traces, environments, observations))]
 
 
@@ -226,20 +269,20 @@ def batched_on_policy(model, environments, *, device="cpu", max_steps=64,
     observations = [env.observe() for env in environments]
     traces, terms = [[] for _ in environments], [[] for _ in environments]
     previous_utilities = [0.0 for _ in environments]
+    unsupported = {}
     hidden = None
     cpu_start, wall_start = time.process_time(), time.perf_counter()
     for step in range(max_steps):
-        active = [i for i, observation in enumerate(observations) if not observation.done]
+        active, public = prepare_active(model, observations, unsupported)
         if not active:
             break
         if hidden is not None and step % bptt_steps == 0:
             hidden = hidden.detach()
-        public = [public_frame(observations[i]) for i in active]
         neural_start = time.perf_counter()
-        batch = collate([Frame(obs, features, 0) for _, obs, features in public], device)
+        batch = policy_batch(model, [frame for _, frame in public], device)
         indices = torch.tensor(active, device=device)
         current_hidden = None if hidden is None else hidden.index_select(0, indices)
-        logits, values, next_hidden = model.score(batch[0], batch[1], current_hidden, batch[2])
+        logits, values, next_hidden = score_batch(model, batch, current_hidden)
         distribution = torch.distributions.Categorical(logits=logits)
         selected = distribution.sample() if sample else logits.argmax(-1)
         logp, entropy = distribution.log_prob(selected), distribution.entropy()
@@ -269,7 +312,7 @@ def batched_on_policy(model, environments, *, device="cpu", max_steps=64,
               "batch_wall_seconds": time.perf_counter()-wall_start, "batch_size": len(environments),
               "neural_timing_scope": "collate/device+model+CPU sampling sync; equally allocated, not serial latency"}
     results = [{"trace": trace, "outcome": env.evaluate(), "truncated": not observation.done,
-                "timing": timing if i == 0 else None}
+                "timing": timing if i == 0 else None, "unsupported_interface": unsupported.get(i)}
                for i, (trace, env, observation) in enumerate(zip(traces, environments, observations))]
     return results, terms
 
@@ -351,7 +394,7 @@ class Learner:
                     if cfg.method == "supervised":
                         if teacher_factory is None:
                             raise ValueError("Supervised bootstrap needs an explicit public teacher")
-                        frames, result = collect_teacher(env, teacher_factory(), cfg.max_steps)
+                        frames, result = collect_teacher(env, teacher_factory(), cfg.max_steps, self.model)
                         trajectories.append(frames)
                         self.data_hash.update(json.dumps(result["steps"], sort_keys=True).encode())
                     else:
@@ -361,13 +404,19 @@ class Learner:
                         rollout_episodes.append(episode_terms)
                         self.data_hash.update(json.dumps(result["trace"], sort_keys=True).encode())
                     outcomes.append(result["outcome"])
+            self.optimizer.zero_grad(set_to_none=True)
+            gradients_ready = False
             if cfg.method == "supervised":
-                loss, count = supervised_loss(self.model, trajectories, cfg.device, cfg.bptt_steps)
+                if hasattr(self.model, "backward_supervised"):
+                    loss, count = self.model.backward_supervised(trajectories, cfg.device, cfg.bptt_steps)
+                    gradients_ready = True
+                else:
+                    loss, count = supervised_loss(self.model, trajectories, cfg.device, cfg.bptt_steps)
             else:
                 loss, objective_parts = actor_critic_objective(rollout_episodes, cfg)
                 count = sum(map(len, rollout_episodes))
-            self.optimizer.zero_grad(set_to_none=True)
-            loss.backward()
+            if not gradients_ready:
+                loss.backward()
             norm = nn.utils.clip_grad_norm_(self.model.parameters(), cfg.gradient_clip)
             self.optimizer.step()
             self.updates += 1
@@ -409,6 +458,7 @@ class Learner:
         return {"examples": n, "success": sum(r["outcome"]["verified_success"] for r in rows)/n,
                 "utility": sum(r["outcome"]["utility"] for r in rows)/n,
                 "cost": sum(r["outcome"]["cost"] for r in rows)/n,
+                "unsupported_interface_count": sum(r.get("unsupported_interface") is not None for r in rows),
                 "seeds_hash": digest([r["seed"] for r in rows])}
 
     def save(self, path: Path, metadata=None):
