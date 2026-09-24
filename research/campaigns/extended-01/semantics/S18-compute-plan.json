@@ -1,0 +1,29 @@
+{
+  "cache_sha256": "8ddbd15bea881c13bfd24554ada9293082fcef7b616f6eeb3dad78a4bfa662d2",
+  "torch_version": "2.14.0+cpu",
+  "schedule_seed": 15115,
+  "updates": 4096,
+  "batch_size": 8,
+  "unique_examples": 4096,
+  "presentations": 32768,
+  "public_length_counts": {
+    "46": 2048,
+    "54": 1024,
+    "64": 1024
+  },
+  "padded_batch_length_counts": {
+    "46": 20,
+    "54": 418,
+    "64": 3658
+  },
+  "sequence_sha256": "85054bf25e3a3e2a5a9a932b441d6413fd0d7ad827df79e1583268aaddf5acd9",
+  "control_microsteps": 10,
+  "context_macs": 276544914718720,
+  "original_macs": 57423784050688,
+  "control_macs": 287118920253440,
+  "control_vs_context_ratio": 1.0382361235804138,
+  "per_batch_ratio_min": 1.0327092090179595,
+  "per_batch_ratio_max": 1.1508697597169875,
+  "rule": "one nearest-total-MAC integer over fixed full training batch schedule; lower wins ties",
+  "exclusions": "unchanged feature encoder/node decoder/graph heads; elementwise work, masking, normalization, softmax, backward and optimizer; not measured FLOPs or wall time"
+}
