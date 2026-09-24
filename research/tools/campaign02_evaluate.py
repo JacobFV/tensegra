@@ -17,13 +17,6 @@ from pathlib import Path
 import resource
 import time
 
-import torch
-
-from topoformer.campaign02_policy import CandidatePolicy, PolicyConfig
-from topoformer.campaign02_protocol import BoundedSolver
-from topoformer.campaign02_references import ReferencePolicy, run_episode
-from topoformer.campaign02_training import TrainConfig, batched_episodes, independent_address_seed
-from topoformer.campaign02_world import Workshop, generate_world, protocol_executor
 
 
 def file_hash(path):
@@ -80,6 +73,24 @@ def episode_counts(outcome):
     counts["reductions"] = len(reductions)
     counts["correct_reductions"] = sum(bool(row["correct"]) for row in reductions)
     counts["certificate_valid_reductions"] = sum(bool(row["certificate_valid"]) for row in reductions)
+    audits = outcome.get("return_fault_audit", [])
+    counts["fault_target_groups"] = len(audits)
+    counts["fault_applied_groups"] = sum(r.get("status")=="applied" for r in audits)
+    changed = {h for r in audits for h,c in zip(r["handles"],r.get("changed",[])) if c}
+    targets = {h for r in audits for h in r["handles"]}
+    counts["fault_changed_records"] = len(changed)
+    for event in outcome["history"]:
+        action,feedback = event["action"],event["feedback"]
+        handle = action["arguments"].get("handle")
+        if action["kind"]=="retrieve" and handle in changed:
+            counts["fault_changed_retrieve_attempts"] += 1
+            counts["fault_changed_retrieval_success"] += int("record" in feedback)
+        if action["kind"]=="use_return":
+            counts["fault_target_use_attempts"] += int(handle in targets)
+            counts["fault_changed_use_attempts"] += int(handle in changed)
+            if handle in changed:
+                counts["fault_changed_application_success"] += int(feedback.get("status")=="success")
+                counts["fault_changed_application_rejected"] += int(feedback.get("status") in {"rejected","invalid_input"})
     return dict(counts)
 
 
@@ -92,7 +103,17 @@ def summarize(rows):
     cost = sum(row["outcome"]["cost"] for row in rows)
     fields = ("utility", "cost", "steps", "observations", "work_units", "travel_distance",
               "compute_units", "modeled_compute_cost", "solver_cpu_seconds")
-    return {"examples": count, "success_count": successes, "success": successes/count,
+    causal_supports = {}
+    for label,predicate in (
+        ("target_available",lambda r:r["counts"].get("fault_target_groups",0)>0),
+        ("fault_applied",lambda r:r["counts"].get("fault_applied_groups",0)>0),
+        ("record_changed",lambda r:r["counts"].get("fault_changed_records",0)>0),
+        ("changed_return_used",lambda r:r["counts"].get("fault_changed_use_attempts",0)>0)):
+        subset = [r for r in rows if predicate(r)]
+        successes_subset = sum(bool(r["outcome"]["verified_success"]) for r in subset)
+        causal_supports[label] = {"support":len(subset),"successes":successes_subset,
+            "success":successes_subset/len(subset) if subset else None}
+    return {"examples": count,"intervention_supports":causal_supports, "success_count": successes, "success": successes/count,
             "means": {field: sum(row["outcome"].get(field, 0) for row in rows)/count for field in fields},
             "cost_per_success_including_failures": cost/successes if successes else None,
             "counts": dict(totals), "truncated": sum(bool(row.get("truncated", False)) for row in rows),
@@ -100,7 +121,73 @@ def summarize(rows):
                                                        for step in row.get("trace", [])) for row in rows)}
 
 
+def condition_faults(condition):
+    """Normalize only explicit config descriptors; never infer fault targets."""
+    from topoformer.campaign02_interventions import ReturnFault
+    if "fault" in condition and "return_faults" in condition:
+        raise ValueError("Use either fault or return_faults, not both")
+    descriptors = condition.get("return_faults",[condition["fault"]] if "fault" in condition else [])
+    if not isinstance(descriptors,list):
+        raise ValueError("return_faults must be a list")
+    normalized = []
+    for descriptor in descriptors:
+        values = dict(descriptor)
+        if "payload_path" in values:
+            values["payload_path"] = tuple(values["payload_path"])
+        normalized.append(ReturnFault(**values))
+    return tuple(normalized)
+
+
+def semantic_spec_hash(spec):
+    # Public resource interventions may differ; physical facts/goals may not.
+    resources = {"step_limit","work_limit","observation_price","action_price","work_price",
+                 "travel_price","travel_limit","compute_price","call_budgets","include_remaining_budget"}
+    return canonical_hash({k:v for k,v in spec.items() if k not in resources})
+
+
+def paired_condition_outcomes(control, intervention):
+    """Paired total-effect summaries, plus descriptive post-treatment supports."""
+    if len(control)!=len(intervention) or not control:
+        raise ValueError("Paired conditions require equal nonempty support")
+    support = len(control)
+    control = {row["seed"]:row for row in control}
+    intervention = {row["seed"]:row for row in intervention}
+    if len(control)!=support or len(intervention)!=support or set(control)!=set(intervention):
+        raise ValueError("Paired condition seeds differ or duplicate")
+    transitions = Counter()
+    changed = used = correct_then_wrong_changed = 0
+    utility = 0.0
+    for seed,a in control.items():
+        b = intervention[seed]
+        if a["semantic_spec_hash"]!=b["semantic_spec_hash"]:
+            raise ValueError("Paired conditions change physical semantics")
+        before,after = bool(a["outcome"]["verified_success"]),bool(b["outcome"]["verified_success"])
+        transitions[f"{int(before)}->{int(after)}"] += 1
+        has_change = b["counts"].get("fault_changed_records",0)>0
+        changed += has_change
+        used += b["counts"].get("fault_changed_use_attempts",0)>0
+        correct_then_wrong_changed += bool(before and not after and has_change)
+        utility += b["outcome"]["utility"]-a["outcome"]["utility"]
+    return {"support":len(control),"success_transitions_control_to_intervention":dict(transitions),
+            "mean_utility_difference":utility/len(control),"changed_record_support":changed,
+            "changed_return_used_support":used,"control_success_to_failure_with_changed_record":correct_then_wrong_changed,
+            "scope":"paired task outcomes; changed/used subsets are descriptive post-treatment supports, not independent causal estimates"}
+
+
+def read_rows(path):
+    with gzip.open(path,"rt") as stream:
+        return [json.loads(line) for line in stream]
+
+
 def main():
+    import torch
+    from topoformer.campaign02_policy import CandidatePolicy, PolicyConfig
+    from topoformer.campaign02_protocol import BoundedSolver
+    from topoformer.campaign02_references import ReferencePolicy, run_episode
+    from topoformer.campaign02_training import TrainConfig, batched_episodes, independent_address_seed
+    from topoformer.campaign02_world import Workshop, generate_world, protocol_executor
+    from topoformer.campaign02_interventions import FaultedWorkshop
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("config", type=Path)
     parser.add_argument("--output", type=Path, required=True)
@@ -117,7 +204,7 @@ def main():
     torch.set_num_threads(args.threads)
     sources = {"evaluator": file_hash(__file__)}
     import topoformer.campaign02_training as training
-    for name in ("training", "policy", "protocol", "world", "references"):
+    for name in ("training", "policy", "protocol", "world", "references", "interventions"):
         sources[name] = file_hash(Path(training.__file__).with_name(f"campaign02_{name}.py"))
     bindings = []
     for binding in cfg["checkpoints"]:
@@ -127,9 +214,10 @@ def main():
         bindings.append({**binding, "sha256": actual})
     start_wall, start_cpu = time.perf_counter(), time.process_time()
     summary = {"config": cfg, "config_sha256": file_hash(args.config), "sources": sources,
-               "checkpoints": bindings, "profile_limit": args.limit, "results": [], "paired": [],
+               "checkpoints": bindings, "profile_limit": args.limit, "results": [], "paired": [], "paired_conditions": [],
                "policy_input_scope": "public observation/candidate encodings only; no teacher at evaluation",
-               "address_metric_scope": "role/status/retrieval/provenance validity among extant returned records, not optimal-return oracle",
+               "address_metric_scope": "claimed role/status/retrieval/provenance validity, not independent validity of faulted payloads or task relevance",
+               "intervention_scope": "explicit public-ordinal post-validation return faults; canonical records and actual-world validators unchanged",
                "selection_rule": "frozen supplied checkpoint, no selection", "no_training": True}
     if torch.device(args.device).type == "cuda":
         torch.cuda.reset_peak_memory_stats(torch.device(args.device))
@@ -143,13 +231,15 @@ def main():
             seeds = list(range(condition["seed_start"], condition["seed_start"]+n))
             specs = [generate_world(seed, **condition.get("world", {})) for seed in seeds]
             namespace = condition.get("address_namespace", cfg.get("address_namespace", "extended-02-frozen-eval-v1"))
+            faults = condition_faults(condition)
             def factory(index):
-                return Workshop(specs[index], executor=executor,
-                    address_seed=independent_address_seed(seeds[index], namespace))
+                kwargs = {"executor":executor,"address_seed":independent_address_seed(seeds[index],namespace)}
+                return FaultedWorkshop(specs[index],**kwargs,faults=faults) if faults else Workshop(specs[index],**kwargs)
             folder = args.output/name
             folder.mkdir()
             world_rows = [{"seed": seed, "spec": asdict(spec), "spec_hash": canonical_hash(asdict(spec)),
-                           "address_seed": independent_address_seed(seed, namespace)} for seed, spec in zip(seeds, specs)]
+                           "address_seed": independent_address_seed(seed, namespace),
+                           "semantic_spec_hash":semantic_spec_hash(asdict(spec))} for seed, spec in zip(seeds, specs)]
             write_rows(folder/"worlds.jsonl.gz", world_rows)
             by_arm = {}
             for binding in bindings:
@@ -169,7 +259,7 @@ def main():
                         outputs = batched_episodes(policy, [factory(i) for i in indices], device=args.device,
                             max_steps=train_cfg.max_steps, neural_work_per_forward=train_cfg.neural_work_per_forward)
                         for i, result in zip(indices, outputs):
-                            rows.append({"seed": seeds[i], "spec_hash": world_rows[i]["spec_hash"], **result,
+                            rows.append({"seed": seeds[i], "spec_hash": world_rows[i]["spec_hash"], "semantic_spec_hash":world_rows[i]["semantic_spec_hash"], **result,
                                          "counts": episode_counts(result["outcome"])})
                 artifact = folder/f"{binding['name']}.jsonl.gz"
                 write_rows(artifact, rows)
@@ -185,7 +275,7 @@ def main():
                 for i, seed in enumerate(seeds):
                     outcome = run_episode(factory(i), ReferencePolicy(mode), cfg.get("reference_compute_tariff", 0.0))
                     outcome.pop("trace", None)  # Same information retained once in exact history.
-                    rows.append({"seed": seed, "spec_hash": world_rows[i]["spec_hash"], "outcome": outcome,
+                    rows.append({"seed": seed, "spec_hash": world_rows[i]["spec_hash"], "semantic_spec_hash":world_rows[i]["semantic_spec_hash"], "outcome": outcome,
                                  "counts": episode_counts(outcome), "truncated": False})
                 artifact = folder/f"reference-{mode}.jsonl.gz"
                 write_rows(artifact, rows)
@@ -204,6 +294,19 @@ def main():
                         "success_transitions_comparator_to_learned": dict(transitions), "support": n,
                         "mean_utility_difference": sum(x["outcome"]["utility"]-y["outcome"]["utility"] for x,y in zip(a,b))/n})
             (args.output/"summary.partial.json").write_text(json.dumps(summary, indent=2))
+        for condition in cfg["conditions"]:
+            if "paired_control" not in condition:
+                continue
+            control_name = condition["paired_control"]
+            available = {(r["condition"],r["arm"]):r for r in summary["results"]}
+            for result in [r for r in summary["results"] if r["condition"]==condition["name"]]:
+                key = (control_name,result["arm"])
+                if key not in available:
+                    raise ValueError(f"Missing paired control {key}")
+                a = read_rows(args.output/available[key]["artifact"])
+                b = read_rows(args.output/result["artifact"])
+                summary["paired_conditions"].append({"control":control_name,"intervention":condition["name"],
+                    "arm":result["arm"],**paired_condition_outcomes(a,b)})
         summary["solver"] = {"executor_version": solver.executor_version,
             "startup_wall_seconds": solver.startup_wall_seconds, "startup_child_cpu_seconds": solver.startup_child_cpu_seconds,
             "call_wall_seconds": solver.call_wall_seconds, "restarts": solver.restarts}
