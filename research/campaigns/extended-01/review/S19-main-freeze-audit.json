@@ -1,0 +1,154 @@
+{
+  "status": "pass",
+  "seconds": 0.0066682700999081135,
+  "config_sha256": "07ccff2ddb6d345355ea0b443dd93000d5296e7afeebd6fe2998ab826b645e9b",
+  "outer_binding": {
+    "cwd": "/home/brandonin/topoformer-campaign01-semantics",
+    "argv": [
+      "/usr/bin/time",
+      "-f",
+      "elapsed_seconds=%e\nexit_code=%x\nmaxrss_kib=%M",
+      "-o",
+      "/home/brandonin/topoformer-campaign01-semantics/results/s19-main-launch.outer.txt",
+      "/usr/bin/timeout",
+      "--signal=KILL",
+      "1000s",
+      "/home/brandonin/topoformer-stage8-cuda/bin/python",
+      "/home/brandonin/topoformer-campaign01-semantics/s19-main-source-178de154/src/topoformer/campaign_semantics_s19_launch.py",
+      "/home/brandonin/topoformer-campaign01-semantics/s19-main-source-178de154/configs/campaign-s19-main-frozen-v1.json",
+      "--cap",
+      "1000",
+      "--python",
+      "/home/brandonin/topoformer-stage8-cuda/bin/python",
+      "--prefix",
+      "/home/brandonin/topoformer-campaign01-semantics/results/s19-main-launch"
+    ],
+    "argv_json_sha256": "8a6aa8d00522c82d92d2ed39a790a8cd36734dba1ff4808c8bfd72c9fa1cfc14",
+    "cap_seconds": 1000,
+    "config_sha256": "07ccff2ddb6d345355ea0b443dd93000d5296e7afeebd6fe2998ab826b645e9b",
+    "source_commit": "178de154e88d1278bc11b86adc042763f819ec62",
+    "source_tar_sha256": "b8850d70e249a9f1533356b24bd0607185368c52af6f8b0829abb35d80895554",
+    "source_manifest_path": "/home/brandonin/topoformer-campaign01-semantics/s19-main-source-178de154/configs/campaign-s19-main-frozen-v1.json",
+    "launch_authority": "Separate explicit root GPU release required",
+    "scope": "GNU timeout default process group, KILL at1000s without grace; GNU time outside wrapper and timeout; cwd preserves fixed relative data/output namespace, launcher child PYTHONPATH resolves immutable own source",
+    "utilities": {
+      "/usr/bin/time": {
+        "sha256": "4a445f72fefaf4127931df2b799aa885e27553b5a55e104a329d41fc8dc83083",
+        "version": "GNU Time UNKNOWN"
+      },
+      "/usr/bin/timeout": {
+        "sha256": "52c67910ffecb65d1d5172e01720145c54941aff91e7b3a11ab222c86fb425a8",
+        "version": "GNU coreutils9.4"
+      }
+    },
+    "allocation_condition": "Root prospective1000 cap contingent on reviewed main cost estimate <=800 seconds; separate explicit release still required",
+    "profile_manifest_sha256": "668c4ed217dd654638ae9a7a02180de26a70a43a5ae1a56add868d501413ebc2"
+  },
+  "source_equal_profile": true,
+  "readonly": true,
+  "unused_output_and_prefix": true,
+  "scope": "Independent timing-only S19 main proposal and immutable operational freeze review; no new model/GPU run.",
+  "cost_source_commit": "2f07c6aa",
+  "main_freeze_commit": "4c6fcc1c",
+  "cost_proposal": {
+    "scope": "Timing-only proposal; no profile quality or confirmation used. Scaling and reserves are estimates, not deterministic bounds or allocation.",
+    "profile_manifest_sha256": "668c4ed217dd654638ae9a7a02180de26a70a43a5ae1a56add868d501413ebc2",
+    "profile_config_sha256": "d9f853f7e9d4943ced1dbe2d378648608d2117ef99b8a08710ded2abb253d492",
+    "profile_charge_seconds": 14.18,
+    "profile_inner_seconds": 14.140743273310363,
+    "profile_process_seconds": 12.83881376311183,
+    "profile_training_seconds": 1.1488949400372803,
+    "profile_stress": {
+      "seconds": 0.7917597717605531,
+      "batch_size": 32,
+      "steps": 160,
+      "scope": "Timing-only own-prediction rollout ignores EOS/invalid stop, no gold prefix/count. Not an evaluated prediction or quality result.",
+      "train_indices": [
+        0,
+        4,
+        5,
+        6,
+        14,
+        17,
+        18,
+        20,
+        24,
+        26,
+        30,
+        41,
+        42,
+        46,
+        53,
+        54,
+        55,
+        58,
+        63,
+        64,
+        81,
+        85,
+        90,
+        93,
+        102,
+        106,
+        113,
+        114,
+        117,
+        122,
+        125,
+        137
+      ],
+      "artifact": "worst-case-profile.json.gz",
+      "sha256": "5b730b6ce6cb2117aaa17353905a3f42c3313449bf9e82cc6da86fcab42efaa3",
+      "export_seconds": 0.0029448186978697777
+    },
+    "profile_splits": {
+      "train": {
+        "teacher_forced_seconds": 0.2780431844294071,
+        "free_running_seconds": 1.2398184831254184,
+        "export_seconds": 0.2643307908438146,
+        "total_seconds": 2.7019233996979892,
+        "residual_seconds": 0.9197309412993491
+      },
+      "development": {
+        "teacher_forced_seconds": 0.1106081111356616,
+        "free_running_seconds": 0.62904780684039,
+        "export_seconds": 0.13085517659783363,
+        "total_seconds": 1.5338685438036919,
+        "residual_seconds": 0.6633574492298067
+      }
+    },
+    "profile_known_seconds": 11.103105884976685,
+    "profile_outer_unallocated_residual_seconds": 3.0768941150233147,
+    "main_terms_seconds": {
+      "training_204_8_times": 235.29368371963503,
+      "teacher_forced_train_2_times": 0.5560863688588142,
+      "teacher_forced_dev_64_times": 7.0789191126823425,
+      "greedy_worst_case_272_batches": 215.35865791887045,
+      "export_scaled_then_2x_payload_allowance": 17.806785767897964,
+      "eval_residual_scaled_then_2x_valid_graph_allowance": 88.58867726661265,
+      "checkpoint_c0_plus_3c20": 5.4114961246959865,
+      "preflight_2x_allowance": 3.654578249901533,
+      "setup_fixed": 0.8238314790651202,
+      "outer_unallocated_residual_fixed": 3.0768941150233147,
+      "additional_training_preparation_and_process_reserve": 200
+    },
+    "main_subtotal_before_extra_reserve_seconds": 577.6496101232432,
+    "main_planning_seconds": 777.6496101232432,
+    "proposed_main_cap_seconds": 1000,
+    "margin_seconds": 222.35038987675682,
+    "profile_plus_main_hard_allocation_seconds": 1014.18,
+    "remaining_branch_envelope_after_proposed_cap_seconds": 2585.82
+  },
+  "clearance": "Main fixed recipe under1000-second whole-process cap clears review; root alone releases. No extension authorized.",
+  "limitations": [
+    "777.649610-second planning estimate includes explicit200-second preparation/process reserve and doubled valid-output export/scoring allowances; not a mathematical runtime bound.",
+    "All profile natural outputs invalid; forecast uses272full160-step batches and separately budgets teacher forcing, threefullAdamW checkpoints and wholeprocess overhead.",
+    "Scientific source/input hashes identical to independently audited profile; fixed4096updates/fullfourcurves unchanged."
+  ],
+  "input_sha256": {
+    "research/campaigns/extended-01/semantics/S19-measured-main-cost.json": "172b040fff5edb6cffbc3dbcc27ee49346f165f620b1790c97a21c757fd17df2",
+    "research/campaigns/extended-01/semantics/S19-measured-main-cost.md": "5bf7ab6aec9e968d1cf8fe96acd89918c0dd2255f4dfcc3ab6b3e4caaabca294",
+    "configs/campaign-s19-main-frozen-v1.json": "07ccff2ddb6d345355ea0b443dd93000d5296e7afeebd6fe2998ab826b645e9b"
+  },
+  "cost_check_seconds": 0.0006424179882742465
+}
