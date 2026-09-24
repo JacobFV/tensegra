@@ -1,0 +1,105 @@
+{
+  "checkpoints": [
+    {
+      "name": "lightweight",
+      "path": "/home/brandonin/topoformer-campaign02/results/e03-acquire-lightweight/checkpoint.pt",
+      "sha256": "fe31cc203c80a628d9da8a1e07b37ef21785468277324775f8c0fd7853739d08"
+    },
+    {
+      "name": "recurrent",
+      "path": "/home/brandonin/topoformer-campaign02/results/e03-acquire-recurrent/checkpoint.pt",
+      "sha256": "22af1d12760f6ad5502e2a8a34737e7e36a98d82b66e09b1bb7f44818aa8e0d0"
+    }
+  ],
+  "evaluation_batch": 32,
+  "references": [
+    "cheap",
+    "always_tool",
+    "cheap_first"
+  ],
+  "reference_compute_tariff": 0,
+  "address_namespace": "extended-02-e04-development-v1",
+  "conditions": [
+    {
+      "name": "easy",
+      "seed_start": 26000000,
+      "examples": 512,
+      "world": {
+        "categories": 2,
+        "choices": 2,
+        "locations": 5,
+        "step_limit": 48
+      }
+    },
+    {
+      "name": "medium",
+      "seed_start": 26010000,
+      "examples": 512,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "step_limit": 48
+      }
+    },
+    {
+      "name": "hard_feasible",
+      "seed_start": 26020000,
+      "examples": 512,
+      "world": {
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "step_limit": 48
+      }
+    },
+    {
+      "name": "work_tight",
+      "seed_start": 26030000,
+      "examples": 512,
+      "world": {
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "step_limit": 48,
+        "work_limit": 128
+      }
+    },
+    {
+      "name": "expensive_tools",
+      "seed_start": 26040000,
+      "examples": 512,
+      "world": {
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "step_limit": 48,
+        "work_price": 0.002
+      }
+    },
+    {
+      "name": "expensive_travel",
+      "seed_start": 26050000,
+      "examples": 512,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 9,
+        "step_limit": 48,
+        "travel_price": 0.04
+      }
+    },
+    {
+      "name": "obstacle",
+      "seed_start": 26060000,
+      "examples": 512,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "step_limit": 48,
+        "obstacle": true
+      }
+    }
+  ]
+}
