@@ -1,0 +1,93 @@
+{
+  "source_ref": "71f1971",
+  "cells": [
+    {
+      "policy": "unchanged",
+      "condition": {
+        "nodes": 128,
+        "depth": 32,
+        "groups": 8
+      },
+      "examples": 32,
+      "task_correct": 7,
+      "path_correct": 32,
+      "suffix_correct": 0,
+      "instrumented_forward_seconds": 1.7706135511398315
+    },
+    {
+      "policy": "record_hard",
+      "condition": {
+        "nodes": 128,
+        "depth": 32,
+        "groups": 8
+      },
+      "examples": 32,
+      "task_correct": 8,
+      "path_correct": 29,
+      "suffix_correct": 0,
+      "instrumented_forward_seconds": 1.7892514122650027
+    },
+    {
+      "policy": "destination_hard",
+      "condition": {
+        "nodes": 128,
+        "depth": 32,
+        "groups": 8
+      },
+      "examples": 32,
+      "task_correct": 7,
+      "path_correct": 29,
+      "suffix_correct": 0,
+      "instrumented_forward_seconds": 1.4776398036628962
+    },
+    {
+      "policy": "both_hard",
+      "condition": {
+        "nodes": 128,
+        "depth": 32,
+        "groups": 8
+      },
+      "examples": 32,
+      "task_correct": 7,
+      "path_correct": 29,
+      "suffix_correct": 0,
+      "instrumented_forward_seconds": 1.7793531301431358
+    }
+  ],
+  "diagnostic_cells_checked": 72,
+  "shared_targets_reconstructed_from_initial_values": true,
+  "hardening_own_argmax_zero_distortion": true,
+  "frozen_checkpoint_sha256": "f78aa380ddb2bb7e18234f73c5de751f5ebea2d457211ccc35591c62dd48609f",
+  "initial_final_tensor_sha256": "ae43f4a8d86b1c491f5719f0fe7a08efada6adf8e446a674cfd50e4eabefc2ee",
+  "zero_updates": true,
+  "instrumented_forward_seconds": 6.816857897210866,
+  "cpu_audit_wall_seconds": 0.04771122499369085,
+  "scope": "Task/path/full suffix labels independently reconstructed; diagnostic means/bounds/shapes/hardening identities checked. Full weights/current hidden payloads absent, so diagnostic MSE/oracle accuracy derivations rely on reviewed source and mechanical tests. No policy selection or model inference.",
+  "profile_process_seconds": 8.497985095251352,
+  "largest_shape_forward_projection_seconds": 109.06972635537386,
+  "main_cost_review": {
+    "expected_seconds": [
+      120,
+      145
+    ],
+    "hard_cap_seconds": 180,
+    "supported_for_separate_release": true,
+    "scope": "Largest-shape32\u2192512 fixed-batch projection about109.07s; smaller shapes/export/startup require remaining margin. Cap is prospective safety bound, not guaranteed throughput or scientific efficiency claim."
+  },
+  "input_sha256": {
+    "research/results/campaign-01/attention/a12-profile/receipt.json": "473174fb2480d44a53599effbda0abd7fb5bc57af1fb3436c0b6ab896c462b46",
+    "research/results/campaign-01/attention/a12-profile/process.log": "f8792b3760957be2daf12e703d398baa62c6b43f41e375c51a1fa2a7c0380222",
+    "research/results/campaign-01/attention/a12-profile/results/config.json": "ad409bea603954ec8603487af0940a48369a6bd261856bbc3ec5303f7d296e83",
+    "research/results/campaign-01/attention/a12-profile/results/record_hard.json": "fa4a7d1d80802fb91e89b9e35acb40dcfd71619d67f9848cc96242f51ec9b01a",
+    "research/results/campaign-01/attention/a12-profile/results/manifest.json": "ae5be4abcf5476c413996b15516ec5a04ee399648cf5bd49e8d4dfd793dadcf5",
+    "research/results/campaign-01/attention/a12-profile/results/public.npz": "9f909c06fbd11504f16ff3b0e543fb62daf3a7e0b81729eda390e3aac731847b",
+    "research/results/campaign-01/attention/a12-profile/results/unchanged.npz": "a89302c0bd0e8e55e118a28137a5a600c11270d6148f9870ff1c835b43cc1c1d",
+    "research/results/campaign-01/attention/a12-profile/results/source.json": "117d2de93681bf9329ed00b25d16b1c0bad73d996d56239c06fc392bac0c9c31",
+    "research/results/campaign-01/attention/a12-profile/results/unchanged.json": "e9fbcc7692720777ebe4906f25ee8c506d63327e56f9f7599115fe082aab10a7",
+    "research/results/campaign-01/attention/a12-profile/results/both_hard.json": "a9ea494c7b86ee7894377b85ad79d697445b45e60b37aff675d58c19f15608dc",
+    "research/results/campaign-01/attention/a12-profile/results/destination_hard.npz": "42b92f72b03f51f04ed64ff0d8d32480add043d6d932971e11208c74f0b977c9",
+    "research/results/campaign-01/attention/a12-profile/results/destination_hard.json": "d10f4fa9ecc5413823a9af22de6bf5fd417eee03ec45e23267740f7124cdc03e",
+    "research/results/campaign-01/attention/a12-profile/results/both_hard.npz": "3a001ee4560e504133f7644b89067e27018da36df2fa8ce168e70535eb09b3b9",
+    "research/results/campaign-01/attention/a12-profile/results/record_hard.npz": "6920c49c5e81d8976f7ba3584e6379d860d80419e61513a36874155031ece9ee"
+  }
+}
