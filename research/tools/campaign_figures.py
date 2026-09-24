@@ -367,6 +367,30 @@ def extract(root, c04_audit=None, c04_provisional=None):
         add('s19_summary',source,scope=summary['scope'],paired=summary['endpoint_paired'],decisions=summary['decisions'],costs=summary['costs'])
     else:
         status.append(dict(experiment='S19',status='Explicit independent analysis hash binding pending; omitted'))
+    # S20 is final-only: never inspect arm archives or an unbound interim aggregate.
+    audit_path=review+'S20-final-analysis-audit.json'
+    source=base+'semantics/s20-analysis.json'
+    if (root/audit_path).exists():
+        receipt=read(audit_path)
+        assert source in receipt.get('input_sha256',{}), 'S20 requires final independent aggregate hash binding'
+        for path,digest in receipt['input_sha256'].items():
+            assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'S20 binding mismatch: {path}'
+            inputs[path]=digest
+        summary=read(source)
+        assert set(summary['counts'])=={'701','702','703'}, 'S20 requires every registered seed'
+        assert set(summary['paired'])=={'701','702','703'}, 'S20 requires complete paired matrix'
+        for seed,comparisons in summary['paired'].items():
+            assert set(comparisons)=={'original/raw','original/matched','context/raw','context/matched'}
+            for comparison,paired in comparisons.items():
+                assert set(paired['cells'])=={'3x3','3x4','4x3','4x4'}
+                for shape,cell in paired['cells'].items():
+                    assert cell['examples']==512
+                    assert cell['record_complete']==summary['counts'][seed][shape]
+                add('s20_paired',source,seed=int(seed),comparison=comparison,**paired)
+            add('s20_endpoint',source,seed=int(seed),counts=summary['counts'][seed])
+        add('s20_summary',source,scope=summary['scope'],decisions=summary['decisions'],bootstrap=summary['bootstrap'],mean_ci95=summary['three_fixed_lineage_mean_conditional_ci95_percentage_points'],arms=summary['arms'],process_seconds=summary['process_seconds'])
+    else:
+        status.append(dict(experiment='S20',status='Final closed independently audited aggregate pending; no interim outcomes read'))
     if c04_audit:
         # An explicit final audit index binds each approved summary byte-for-byte.
         # Shape: {"input_sha256": {"repository/relative/path": "sha256"}}.
@@ -715,6 +739,33 @@ def render(data, output):
         for i,shape in enumerate(shapes):axes[1].annotate(str(ss[-1]['cells'][shape]['complete']),(i,ss[-1]['cells'][shape]['complete']),xytext=(4,4),textcoords='offset points',fontsize=8)
         axes[1].set(title='Fixed endpoint · same DEV events',xticks=range(4),xticklabels=['3×3 trained','3×4 held out','4×3 trained','4×4 trained'],ylabel='Complete graphs / 512',ylim=(-10,555));axes[1].legend(fontsize=6)
         finish(fig,'semantic-sequential-development','Known-motif acquisition passes; held-out combination fails. One inspected development seed; no confirmation.\nS19: 62,677,315 parameters, scratch; S18: 57,853,781 parameters, inherited training. Same incremental construction stream, different objectives/interfaces.\nNo parameter/FLOP/history match or isolated architecture claim. Gold-prefix diagnostics are not generated-graph accuracy.')
+    if select('s20_endpoint'):
+        shapes=('3x3','3x4','4x3','4x4')
+        fig,axes=plt.subplots(1,3,figsize=(13,5.1),sharey=True)
+        for ax,seed in zip(axes,(701,702,703)):
+            record=select('s20_endpoint',seed=seed)[0]['counts']
+            ax.plot(range(4),[record[s] for s in shapes],'ko-',label='Record / categorical')
+            for arm,color in [('original','C0'),('context','C1')]:
+                for policy,style in [('raw',':'),('matched','--')]:
+                    row=select('s20_paired',seed=seed,comparison=f'{arm}/{policy}')[0]
+                    ax.plot(range(4),[row['cells'][s]['baseline_complete'] for s in shapes],style,marker='.',color=color,label=f'{arm} / {policy}')
+            ax.set(title=f'S20 lineage {seed}',xticks=range(4),xticklabels=['3×3','3×4\nheld out','4×3','4×4'],ylim=(-10,530),ylabel='Complete confirmation graphs / 512');ax.legend(fontsize=6)
+        finish(fig,'semantic-confirmation-shapes','Fixed endpoints; known motifs and held-out 3×4 have separate all-seed competence gates. Record is categorical, without edge calibration.\nRecord: scratch, 62,677,315 parameters; workspace: inherited parents, 57,853,781 parameters. Same incremental stream; different objectives/history/arithmetic.\nNo isolated architecture or matched-FLOP claim. TRAIN fitting/calibration overlap is separate from fresh confirmation.')
+        fig,axes=plt.subplots(1,2,figsize=(12,5.1),sharey=True)
+        summary=select('s20_summary')[0]
+        for ax,arm in zip(axes,('original','context')):
+            for policy,color,offset in [('raw','C0',-.10),('matched','C1',.10)]:
+                ss=[select('s20_paired',seed=seed,comparison=f'{arm}/{policy}')[0] for seed in (701,702,703)]
+                centers=[r['known_macro_delta_percentage_points'] for r in ss]
+                intervals=[r['conditional_event_ci95_percentage_points'] for r in ss]
+                centers.append(sum(centers)/3)
+                intervals.append(summary['mean_ci95'][f'{arm}/{policy}'])
+                x=[i+offset for i in range(4)]
+                ax.vlines(x,[c[0] for c in intervals],[c[1] for c in intervals],color=color)
+                ax.plot(x,centers,'o',color=color,label=f'Record minus {arm} / {policy}')
+            ax.axhline(0,color='gray',linewidth=.8)
+            ax.set(title=f'Known-motif difference versus {arm}',xticks=range(4),xticklabels=['701','702','703','Fixed-model mean'],ylabel='Paired macro difference (percentage points)');ax.legend(fontsize=7)
+        finish(fig,'semantic-confirmation-differences','95% paired event-bootstrap intervals use shared draws within the three known cells across all fixed models and policies.\nIntervals condition on these trained models; the fixed-model mean is not seed-population uncertainty. Both baselines and all seeds retained.\nHeld-out competence is separate; positive direction alone does not establish the registered all-seed acquisition claim.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')=='independently_audited'})
