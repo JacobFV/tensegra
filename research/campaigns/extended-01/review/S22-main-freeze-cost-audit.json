@@ -1,0 +1,48 @@
+{
+  "status": "PASS_MAIN_FREEZE_AND_COST",
+  "freeze_commit": "9b3422b7",
+  "source_commit": "7a4c2923",
+  "input_sha256": {
+    "configs/campaign-s22-main-frozen-v1.json": "911a70787dfd31bd1225c04cc2d7c4c2a8b9d721396c12a754d47f1cacfb910e",
+    "research/campaigns/extended-01/semantics/S22-main-outer-command.json": "098d5e53b4af190a14f0c99abf7d94d64a1a3e312a9d2b8f7672b727bf2348e6",
+    "research/campaigns/extended-01/semantics/S22-measured-main-cost.json": "3c5a04e0597b5f70b36aac06befb78ea0eed0a5bbfe1b5faa950ea434ff5b0d3",
+    "research/campaigns/extended-01/semantics/S22-measured-main-cost.md": "cdb5a689884688878fd8340f18f90c1f274aa626ee0aa231f141ed9b0728d441",
+    "research/campaigns/extended-01/semantics/S22-analysis.py": "7ad77fa0b671238382d994f44b3edcdbe2f2cec05eff9cb77d650c7939f63ff3",
+    "research/campaigns/extended-01/semantics/S22-analysis-check.py": "d841a33317f2c16b58cd1c9f10ab3e4d257936c7a17375381e53565669193f76"
+  },
+  "profile_audit": "research/campaigns/extended-01/review/S22-profile-raw-audit.json",
+  "config_sha256": "911a70787dfd31bd1225c04cc2d7c4c2a8b9d721396c12a754d47f1cacfb910e",
+  "argv_sha256": "d6ff5ee5dca989960ee628e78763feb209715613ed88e64cc27f8b6ba87b9a34",
+  "checks": {
+    "unchanged_source_hashes": 20,
+    "unchanged_inputs": 2,
+    "unchanged_checkpoint_reference_manifest_bindings": 6,
+    "readonly": true,
+    "unused_prefix": true,
+    "outer": "GNUtime / GNUtimeout --signal=KILL 1160s / own-source immutable wrapper cap1160",
+    "full_matrix": "2 backbones x3 policies x7 DEV512; no calibration/training/confirmation",
+    "analysis_pin_exact": true,
+    "analysis_fixtures_passed": 6
+  },
+  "cost": {
+    "main_batches": 672,
+    "worst160step_padded74token_batch_seconds": 1.0950036449357867,
+    "decode_seconds": 735.8424493968487,
+    "controller_allowance_seconds": 73.58424493968487,
+    "exports_scaled32_then_doubled": 85.40505310893059,
+    "metric_residual_scaled32": 156.5377465635538,
+    "planning_total_seconds": 1121.763600536771,
+    "main_cap_seconds": 1160,
+    "profile_charge_seconds": 34.29,
+    "total_profile_plus_cap": 1194.29,
+    "branch_envelope_seconds": 1200,
+    "forecast_is_not_a_runtime_bound": true
+  },
+  "cpu_wall_seconds": 1.1708537200465798,
+  "harness_notes": [
+    "Initial cost residual assertion used printed outer34.28; corrected to conservative charged34.29 matching producer formula. No numerical producer change.",
+    "Requested prose decode sum corrected to809.427; JSON total unchanged.",
+    "Six fixture timing rounded below0.001s, not separately recorded."
+  ],
+  "authority": "Cleared for root separate release; reviewer made no GPU calls or launch."
+}
