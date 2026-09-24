@@ -110,3 +110,6 @@ SoleGPU S15-mixed-main v3 cap1100 source34e27d86+790bdb75/config42216efd, PID387
 
 ## 2026-09-24 09:15 UTC
 S15 mixed completed484.141407571s, archived6c602eb5→c02da9cf, GPU idle verified. Both paired mains finished; fixed CPU analysis reports acquisition/retention/recombination fail, no registered extension. Worker preparing report and archived component localization. S16 public-only normalization runner bcc1119c→59e6a2a7 CPU-preflight ready; reviewer clearance pending before60s timing profile. Separate immutable remote S16 snapshot; no shared sources overwritten. Budget charged23932.12882392448s (6.648h),5.352h remains. Root sole scheduler.
+
+## 2026-09-24 09:30 UTC
+S16-main is sole released GPU job, cap480, immutable1683e657/frozenSHA1e95311a..., reviewerab1efcf8→dc662969cleared. Workercomposition_live runsall6x1024 exactrecipe; noextension. Profile25.28chargedandarchived. S15allgatesfailed/audited; localization455/512newshape failuresedgesonly. S17fixedendpointsactualTRAIN128calibration prepared dccdb661 plusguards926b68eb, profiling90proposed notallocated; timings/CPUguardsreview underway. Noautonomouscompositionnewwork. Integrated154a5de1CPU735tests26subtests,3953historicalentriesunchanged. Pushed2371a0a3 after transientDNSretry; newerrootcommitsneedpush.
