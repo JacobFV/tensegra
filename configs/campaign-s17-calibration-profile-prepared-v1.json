@@ -1,0 +1,60 @@
+{
+  "budget_status": "prepared",
+  "job": "profile",
+  "output_dir": "results/s17-train-calibration-profile-v1",
+  "device": "cuda",
+  "dev_per_cell": 16,
+  "calibration_count": 128,
+  "data_dir": "data/s15-shape-v2",
+  "cache_sha256": {
+    "development": "25522313035e646cfca4bf0efb1ae550c295cb55ddf6057558d03c42f2239dc3",
+    "confirmation": "2710e5e1b6fffab6fa33d56105de13e49d46d64c63d81f61c6ea331347229d32",
+    "train_control": "a67ee925c8e6d2e8eaa704171e4758fdd17fb32211d09dc8e829b35ed9283c5e",
+    "train_mixed": "8ddbd15bea881c13bfd24554ada9293082fcef7b616f6eeb3dad78a4bfa662d2"
+  },
+  "data_audit": "data/s01/audit.json",
+  "data_audit_sha256": "2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1",
+  "selection": "data/s17-calibration-selection-v1/selection.json",
+  "selection_sha256": "5b8091e73320c5ef87bee39189933e6f3aa856c98ac07d93c6cb90d8d1c13172",
+  "selection_audit": "data/s17-calibration-selection-v1/audit.json",
+  "selection_audit_sha256": "275cb00bcacbe13f08b468b774325624839561b238b1be17fce9769b9ff5522b",
+  "runs": [
+    {
+      "arm": "control",
+      "checkpoint": "results/s15-control-main-v3/model-u28672.pt",
+      "checkpoint_sha256": "ddcfb33aff295e53cde8f7cc8b3071db050b72e950f4a3d11fddc0a48cbe9633",
+      "evaluation": "results/s15-control-main-v3/evaluation-u28672.json.gz",
+      "evaluation_sha256": "7b996b521b00e07fd91d540685e5b7e37b02bbc798aa151bcc1112c0403ad5f3",
+      "manifest": "results/s15-control-main-v3/manifest.json.gz",
+      "manifest_sha256": "91e0ff9158ef673e2547d2a93ca8ad12470daf0fd7db109b97d0f494a715af61",
+      "model_state_sha256": "36fa23bed67d800bbf2456f1ad3ef289b8d23e74a58494bb308f6ebdf9d9e509"
+    },
+    {
+      "arm": "mixed",
+      "checkpoint": "results/s15-mixed-main-v3/model-u28672.pt",
+      "checkpoint_sha256": "f1b3b16f41e9d96d3b110f48f5b08fbb96f7fb347b0793ca360e7d07e25fe578",
+      "evaluation": "results/s15-mixed-main-v3/evaluation-u28672.json.gz",
+      "evaluation_sha256": "ad383c0f5d39a21de1f09dd8cf6b7b59a1e7265d119f4a705824fa15a7eed790",
+      "manifest": "results/s15-mixed-main-v3/manifest.json.gz",
+      "manifest_sha256": "8e4ab8105d5e8bfc0212c6a95a09e65cbb1dbd98f9c8b33362ea5c710278a67b",
+      "model_state_sha256": "5ee1dac6710e164875ded5f05b8478db48a4cf7958cfc59ea040e3ea1a570021"
+    }
+  ],
+  "source_sha256": {
+    "campaign_semantics_shape_train.py": "bc7812834dffde6e0061b1590c51a2b70c06ddb57d84644c9b4fd396d2e49c36",
+    "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+    "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+    "campaign_semantics_continue.py": "6d5a8f4ae5143bdfc93f589fa3c189966a787e0fc6a83dc6bc06382c14ac8585",
+    "campaign_semantics_lr.py": "37382d47849c29f15b407dd9b4b7aa9d66e041ede7ba7477d016e4aa3711dd9a",
+    "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+    "semantic_text_acquisition.py": "e67269012f0ef6e30b78c0265ab007f72f3278310dfad8fad526d60a38001d59",
+    "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+    "semantic_contracts.py": "914a12a24a14434918412f2ad71368f51085bd248c7398164b0c2b1c9a0e215f",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+    "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+    "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "campaign_semantics_recalibrate.py": "db41ade07f60d0ccae31d6b81f4593bcae700a266384c549b85320abc1367c4f"
+  },
+  "launch_authority": "CPU preparation only; independent review, cap freeze and explicit root release required"
+}
