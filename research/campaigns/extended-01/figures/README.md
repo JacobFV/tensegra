@@ -3,7 +3,7 @@
 Reproduce extraction from repository root:
 
 ```sh
-python3 research/tools/campaign_figures.py --root . --extract-only --c04-audit research/campaigns/extended-01/review/C04-lineage-0-audit.json
+python3 research/tools/campaign_figures.py --root . --extract-only --c04-audit research/campaigns/extended-01/review/C04-lineage-0-audit.json --c04-audit research/campaigns/extended-01/review/C04-lineage-1-audit.json
 ```
 
 Render with an existing matplotlib environment (no torch or GPU required):
@@ -31,3 +31,5 @@ Prepared final-refresh adapters (source only; current rendered snapshot unchange
 Interim refresh from coordinator root `0111237`: 19,142 unique rows / 149 SHA256-bound inputs. All current input hashes rechecked. A10/A11 continuations now included through their audited eval bindings. C04 source uses independently audited lineage0 receipt; no cross-lineage interval or completed-matrix claim. Remote CPU render with CUDA hidden took 2.305 seconds (first draft 2.520 seconds); five figure layouts checked. No GPU work.
 
 A12 frozen read-localization refresh: `attention-read-localization` shows all four policies and three shapes, with paired fixed/rebroken counts. Solid unchanged is the learned baseline; dashed hardening policies are engineered frozen interventions. Event-level path correctness and destination-head diagnostic use separate axes and supports; their numerical gap does not identify query-head failures. Exact task/path/full-suffix counts, paired-policy contingency counts, and every weighted diagnostic step remain in the table. All A12 audit input bindings verified before extraction. 19,370 unique rows / 166 hashed inputs; CPU-only six-figure render 3.117 seconds. C04 lineage1 remains excluded until its audit is available. No profile efficacy figure or final promotion.
+
+Latest A13/C04 interim refresh: `attention-common-route` uses independently audited four-policy/three-shape counts, actual task/route joint contingency counts and exact conditional denominators, plus original/used queried head paths on the same event support. Every paired cell and all-node suffix outcome remain in the compact table. Common-hard is an engineered frozen policy, oracle is privileged, and there is one checkpoint rather than seed replication. Nonoracle mean-route equality is asserted from the audit. C04 now includes independently audited lineages 560/561; 562 is pending. 20,058 unique rows / 187 hashed inputs; seven-figure CPU render 3.581 seconds. A13 and refreshed C04 layouts visually inspected. No GPU work or profile efficacy plotting.
