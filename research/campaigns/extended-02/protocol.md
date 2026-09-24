@@ -69,3 +69,26 @@ negative weights, timeout versus infeasible, and one isolated spawn. Parent CPU
 pytest/torch, so this initial check loaded the module using a package stub to
 avoid unrelated package imports. Standard pytest remains required in the
 configured project environment. No GPU work or new dependency installation.
+
+## Optional persistent executor v1
+
+`with BoundedSolver(startup_seconds=10) as solver: solver.execute(call)` reuses
+one spawned fixed-code worker. This is an explicitly selected executor policy;
+`execute_isolated` remains unchanged as the per-call isolation reference.
+Startup wall time and child startup CPU are recorded separately. Per-call result
+CPU measures execution delta, while coordinator accounting must charge full
+worker and transport overhead. Every call retains validation, size/work caps and
+its public wall deadline; transport send/receive are included in that deadline.
+Timeout/failure kills and reaps the worker, discards partial state and starts a
+fresh process for a later call. Memory remains capped at 2 GiB. Persistent mode
+uses the per-call parent wall watchdog rather than a cumulative OS CPU limit:
+cumulative CPU limits would eventually kill healthy long-lived workers. Since
+only fixed sequential executor code runs, the wall limit bounds its call CPU.
+No resumable state is implied. The startup limit is independently bounded.
+
+Lifecycle tests cover repeated calls, malformed arguments, dead-worker recovery
+and explicit close. Fixed-code transport uses a deadline-covered thread to avoid
+blocking forever on a partial pipe message. This is process isolation for public
+data, not a security boundary for arbitrary actor Python. Profiling must compare
+persistent and isolated latency, startup costs and full child CPU rather than
+crediting a reduction in imports as learned resource allocation.

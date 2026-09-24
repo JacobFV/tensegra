@@ -333,3 +333,120 @@ must charge process launch/validation overhead separately from solver CPU.
     finally:
         if process.is_alive(): process.terminate()
         process.join(); parent.close()
+
+
+def _persistent_child(conn):
+    """Trusted fixed-code worker; only validated frozen calls cross this pipe."""
+    import resource
+    resource.setrlimit(resource.RLIMIT_AS, (2 * 1024**3, 2 * 1024**3))
+    usage = resource.getrusage(resource.RUSAGE_SELF)
+    conn.send(("ready", usage.ru_utime + usage.ru_stime))
+    try:
+        while True:
+            call = conn.recv()
+            if call is None:
+                return
+            conn.send(execute(call))
+    except (EOFError, BrokenPipeError):
+        return
+    finally:
+        conn.close()
+
+
+class BoundedSolver:
+    """Optional versioned persistent data-only executor, never implicit default.
+
+    Startup is separately timed. Each call has a hard parent wall deadline; a
+    missing response kills/reaps the worker. The next call starts a fresh worker.
+    Result CPU is per-call execution CPU, excluding serialization and startup;
+    outer process accounting is still required. This class is sequential, not
+    thread-safe. At most one trusted worker exists per instance.
+    """
+    executor_version = "persistent-v1"
+
+    def __init__(self, startup_seconds=10.0):
+        if type(startup_seconds) not in (int, float) or not math.isfinite(startup_seconds) or not 0 < startup_seconds <= 60:
+            raise ValueError("startup deadline must be in (0,60]")
+        self.startup_seconds = startup_seconds
+        self.startup_wall_seconds = 0.0
+        self.startup_child_cpu_seconds = 0.0
+        self.call_wall_seconds = 0.0
+        self.restarts = 0
+        self._process = self._conn = None
+        self._closed = False
+
+    def _stop(self):
+        if self._process is not None:
+            if self._process.is_alive(): self._process.terminate()
+            self._process.join(timeout=1)
+            if self._process.is_alive():
+                self._process.kill(); self._process.join()
+        if self._conn is not None: self._conn.close()
+        self._process = self._conn = None
+
+    def _start(self):
+        start = time.monotonic()
+        ctx = mp.get_context("spawn")
+        parent, child = ctx.Pipe()
+        self._conn = parent
+        self._process = ctx.Process(target=_persistent_child, args=(child,))
+        try:
+            self._process.start(); child.close()
+            if not parent.poll(self.startup_seconds): raise TimeoutError("solver startup deadline")
+            ready, cpu = parent.recv()
+            if ready != "ready": raise RuntimeError("worker handshake")
+            self.startup_child_cpu_seconds += cpu
+        except BaseException:
+            child.close(); self._stop(); raise
+        finally:
+            self.startup_wall_seconds += time.monotonic() - start
+
+    def execute(self, call):
+        if self._closed: raise RuntimeError("solver closed")
+        try: _validate(call)
+        except (ValueError, TypeError, IndexError, KeyError): return execute(call)
+        if call.primitive not in DESCRIPTORS or call.api_version != "1": return execute(call)
+        if self._process is None:
+            self._start()
+        start = time.monotonic()
+        # A transport thread places both send and recv under the same deadline;
+        # poll followed by recv alone can block on a partially written message.
+        import queue
+        import threading
+        replies = queue.Queue(maxsize=1)
+        conn = self._conn
+        def exchange():
+            try:
+                conn.send(call)
+                replies.put(conn.recv())
+            except (BrokenPipeError, EOFError, OSError):
+                replies.put(None)
+        thread = threading.Thread(target=exchange, daemon=True)
+        thread.start()
+        try:
+            try:
+                reply = replies.get(timeout=max(0.0, call.budget.wall_seconds - (time.monotonic()-start)))
+            except queue.Empty:
+                reply = "deadline"
+            if type(reply) is Result:
+                thread.join()
+                return reply
+            self.restarts += 1
+            self._stop()
+            thread.join(timeout=1)
+            return Result("timeout" if reply == "deadline" else "unknown", None,
+                          call.source_version, call.caller, call.primitive,
+                          call.budget.work_units, 0.0,
+                          (("process_killed_or_no_result", True),
+                           ("cpu_seconds_unknown", True),
+                           ("work_units_are_upper_bound", True)))
+        finally:
+            self.call_wall_seconds += time.monotonic()-start
+
+    def close(self):
+        self._closed = True
+        self._stop()
+
+    def __enter__(self): return self
+
+    def __exit__(self, *_): self.close()

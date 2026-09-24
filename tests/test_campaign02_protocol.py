@@ -73,3 +73,26 @@ def test_result_envelope_rejection():
     ):
         assert not validate_result(c, bad)
     assert validate_result(c, r)
+
+
+def test_persistent_solver_lifecycle():
+    from topoformer.campaign02_protocol import BoundedSolver
+    with BoundedSolver() as solver:
+        for i in range(3):
+            result = solver.execute(Call('add', (i, 2)))
+            assert result.status == 'success' and result.payload == i + 2
+        assert solver.startup_wall_seconds > 0
+        assert solver.startup_child_cpu_seconds >= 0
+        assert solver.execute(Call('add', (True, 2))).status == 'invalid'
+        pid = solver._process.pid
+        solver._process.terminate(); solver._process.join()
+        # A dead transport must not hang; its successor is a fresh worker.
+        assert solver.execute(Call('add', (1, 2))).status in ('unknown', 'timeout')
+        assert solver.execute(Call('add', (1, 2))).payload == 3
+        assert solver._process.pid != pid
+    assert solver._process is None and solver._conn is None
+    try:
+        solver.execute(Call('add', (1, 2)))
+        assert False
+    except RuntimeError:
+        pass
