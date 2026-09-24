@@ -735,19 +735,20 @@
     },
     {
       "id": "S16",
-      "status": "runner_prepared_independent_preflight_pending",
+      "status": "profile_running",
       "hypothesis": "Public identifier normalization can supply spelling invariance without requiring the graph model to learn irrelevant lexical correlations",
       "intervention": "Narrow publicEnglishrenderer parser plus first-occurrence namespace canonicalization into fixedknowntraininglexemes; restorecopyviaoriginaltokenindex",
       "comparator": "Allsix unchangedS12 original versus normalizedoriginal; normalizedrenamed fullinput equivalence separately established mechanically",
       "observable_inputs": "Publictext only; actorcopyinventory alltokens, so opaqueIDspan recognition is explicitly supplied by parser/case convention",
       "privileged_targets": "None in normalization/forward; existingcanonicaltargets usedonlyforscoring prospectivefrozeninference",
-      "source": "8e88bd92 mechanics+bcc1119c frozen runner",
+      "source": "c63c4d6c",
       "protocol": "semantics/S16-feasibility-and-protocol.md",
       "population": "1024 existingoriginal/renamed S12diagnosticpairs, arity4/facts3or4; alreadyinspectedfailure motivates study",
       "selection": "Singlefixedmapping,all6checkpoints/originalthresholds,no tuning/retraining; no automaticaccuracygate",
-      "budget": "2.190096249s measuredCPUmechanics; GPUunallocated/profile60tentativeafterreview/sourcefreeze",
+      "budget": "60s profilecap;mainunallocated",
       "next_branch": "Independent runner review, then timing-only60s profile under root release; main cap derived afterward",
-      "limitations": "Suppliedparserandknownvocabulary prior, notlearnedlanguage; no broadsyntax/identitycapacity/case-changing rename claim"
+      "limitations": "Suppliedparserandknownvocabulary prior, notlearnedlanguage; no broadsyntax/identitycapacity/case-changing rename claim",
+      "audit": "review/S16-runner-preflight.json"
     }
   ],
   "policy": {
