@@ -460,7 +460,7 @@
     },
     {
       "id": "S12",
-      "status": "frozen_confirmation_running",
+      "status": "two_pairs_completed_audited_third_pending",
       "kind": "confirmation",
       "hypothesis": "LRreduction improvesfreshcanonicalgraphrecovery underunchangedarchitecture",
       "intervention": "Threeindependent131072-presentationparents, eachforkconstant1e-4/decay1e-5 to196608",
@@ -476,7 +476,8 @@
       "budget": "Expected7500\u20138100s, cap9000 total (3\u00d71400parents+6\u00d7800forks)",
       "secondary": "FrozenS10suppliedschema raw/cal separate; frequencycontrol",
       "next_branch": "Three independent parents and paired LR forks; no architecture selection from confirmation.",
-      "interim": "Seed701 constant0 vsdecay66/1024calibrated(raw0vs2), fails103competence; parent702running. Allremainingpairsunchanged."
+      "interim": "Seed701 constant0 vsdecay66/1024calibrated(raw0vs2), fails103competence; parent702running. Allremainingpairsunchanged.",
+      "result": "Calibrated constant/decay:701=0/66,702=0/131 of1024; firstseed competence failed; no allseed claim"
     },
     {
       "id": "A07",
@@ -537,7 +538,7 @@
     },
     {
       "id": "C04",
-      "status": "frozen_confirmation_running_lineage0",
+      "status": "lineage0_audited_lineage1_running_lineage2_pending",
       "hypothesis": "Competent restricted interfaces compose under a supplied schedule and compare with strengthened neural baselines",
       "intervention": "P01 lowering\u2192existing exactruntime\u2192R04/R05 consumption",
       "comparators": [
@@ -607,7 +608,7 @@
     },
     {
       "id": "A11",
-      "status": "frozen_reviewed_ready",
+      "status": "completed_audited",
       "hypothesis": "A larger bounded exposure increase tests remaining global-record acquisition gap",
       "intervention": "Saved3000\u21926000 unchangedmodel/AdamW/hyperparams",
       "comparators": [
@@ -619,7 +620,37 @@
       "source": "b02f3b6",
       "selection": "Fixed6000,fresh211M512/cell; no automatic extension",
       "budget": "180s cap",
-      "next_branch": "Consider replicated recordbaseline only after acquired IID/moderate gate; otherwiselocalize"
+      "next_branch": "A12 frozen read localization, followed by separately registered A13 shared-address diagnostic",
+      "result": "IID508/512,moderate467/512,joint101/512; moderate gate failed, exposure stopped"
+    },
+    {
+      "id": "A12",
+      "status": "completed_audited",
+      "hypothesis": "Record-key and destination-payload mixing contribute to deep traversal errors",
+      "intervention": "Frozen per-head record/destination argmax 2x2",
+      "comparator": "Unchanged same checkpoint",
+      "observable_inputs": "Public records/keys/instructions; hard indices from model scores",
+      "privileged_targets": "Posthoc target/path diagnostics only",
+      "protocol": "attention/a12-protocol.md",
+      "source": "71f1971",
+      "selection": "All4policies on512paired fresh events per3shapes; no tuning",
+      "budget": "8.497985095s profile +114.503450415s main",
+      "result": "Joint79/82/115/124 of512; hardening not full repair; unequal path/head metric supports disclosed",
+      "next_branch": "A13 common-address intervention with matched queried-trajectory diagnostics"
+    },
+    {
+      "id": "A13",
+      "status": "cpu_prepared_review_pending",
+      "hypothesis": "Inconsistent head addresses limit complete payload transport despite good aggregate routing",
+      "intervention": "Original vs shared mean destination probabilities vs shared mean argmax vs explicitly privileged oracle common successor",
+      "comparator": "Same frozen A11 model; original record stage/residual/readout unchanged",
+      "observable_inputs": "Original public records/keys/instructions for3nonoracle policies",
+      "privileged_targets": "Fourth oracle arm uses gold successor; other3only posthoc metrics",
+      "protocol": "attention/a13-protocol.md",
+      "source": "53bdfed",
+      "selection": "Fixed4policies, fresh512x3shapes; no tuning; separate32joint profile",
+      "budget": "Provisional60profile/180main, independentreview and profile before main",
+      "next_branch": "Attribute outcomes before any replication or new training"
     }
   ],
   "policy": {
