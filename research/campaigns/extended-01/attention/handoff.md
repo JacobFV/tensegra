@@ -29,3 +29,7 @@ A08 source b5a4a91 plus disjoint profile namespace afe82d9. Degree-preserving de
 A07 profile4.86s+main50.29s complete source d685448. Raw/report77a51dd, independent21cellaudit complete. Underacquired IID40.82%,N64D8 18.95%,joint10.35%; route errors differ fromA06. Root authorized registered extension onlyif exactmonitoring trigger passes. CPUreevaluation of173Mmonitor at1000 yields43.75/18.75 vs50022.66/11.72, andloss24.8%decline; triggerpasses.
 
 A09 source/config0880c64 staged /tmp/campaign-a09-source-0880c64. Replays2000updatesfromsameinit, exact1000prefix tensorhash and side-by-side checkpointlogit guard abortonmismatch. Savesoptimizer/RNG1000/1500/2000. Newfinal191Mdevpopulation, noarchitecture/scalechange. FiveCPUtestspass1.34s. Reviewerpreflightrequested; cap180 pendingrootrelease. Do notlaunchautomatically. A08profile e789147 remainsqueued, notrun. Attentionoccupancy945.65seconds throughA07.
+
+## Credit-resume recovery
+
+A08 profile e789147 actually completed before interruption; recovered raw/manifest show 2.573s internal wall, tensor immutability, no updates. Outer receipt unavailable; conservatively charge reserved60s with explicit uncertainty. A08 main estimate150–220s/cap300 and A09 replay-extension cap180 ready, neither launched without root release. Profile archive and report now preserved locally.
