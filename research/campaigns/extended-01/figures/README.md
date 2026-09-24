@@ -3,7 +3,7 @@
 Reproduce extraction from repository root:
 
 ```sh
-python3 research/tools/campaign_figures.py --root . --extract-only
+python3 research/tools/campaign_figures.py --root . --extract-only --c04-audit research/campaigns/extended-01/review/C04-lineage-0-audit.json
 ```
 
 Render with an existing matplotlib environment (no torch or GPU required):
@@ -17,12 +17,15 @@ CUDA_VISIBLE_DEVICES='' OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS
 - `semantic`: separate raw/calibrated learning, fresh paired S12 confirmation, and S10 supplied decoding. Only audited S12 seeds appear. Threshold comes from the audit receipt.
 - `attention`: A06 curve population and final population are separate. Original-target scores appear in the final panel; supplied-target counts remain in the table. Condition order is recorded explicitly. No full attention tensor reconstruction is claimed.
 - `attention-controls`: A09 graph-record learning and distinct final endpoints, plus A08 corruption with original/supplied targets on separate line styles.
+- `composition-confirmation`: audited lineage 560 only; 561/562 pending. Fixed4000 neural x markers are primary and selected + markers secondary. Joint hybrid success, answer-only success, refusals, sole-return supplied-copy, and changed-fact gates remain distinct.
 - `returns-composition`: R04 scalar recovery and R05 use are separate; test/8-distractor views and changed-fact gates are shown. C03 uses the fixed endpoint, fresh clean/reversed development views, with answer and scalar metrics separate.
 
-This is an intermediate snapshot, not a final campaign report. C04 confirmation and remaining S12 seeds need final refresh. A07 is represented by the replayed A09 prefix, not a separate plot. R05 signed decision-margin strata are retained in the machine-readable table. Consult the current experiment registry for execution status. S13 has no plotted model outcome. The return plots cover the restricted original mixture, not balanced tails or historical six-field reconstruction. C03 remains one development initialization with supplied scheduling; it is not three-seed confirmation.
+This is an intermediate snapshot, not a final campaign report. C04 lineages 561/562 and S12 seeds 702/703 remain pending audit in this snapshot; only C04 lineage 560 and S12 seed 701 are plotted. A07 is represented by the replayed A09 prefix, not a separate plot. R05 signed decision-margin strata are retained in the machine-readable table. Consult the current experiment registry for execution status. S13 has no plotted model outcome. The return plots cover the restricted original mixture, not balanced tails or historical six-field reconstruction. C03 remains one development initialization with supplied scheduling; it is not three-seed confirmation.
 
 Validation: stdlib extraction completed with 18,530 rows / 135 hashed files; integer attention counts checked; paired S12 population receipt asserted. Script compiled and all four figure layouts visually inspected. Matplotlib 3.11.2 rendered PNG/SVG/PDF on `gb10-direct` pilot venv with CUDA hidden and BLAS/OpenMP threads limited to two: 2.042 seconds wall time on current render (earlier drafts 1.506 and 1.531 seconds). No dependencies installed, upgraded, or GPU work performed.
 
 Lossless table compaction checked against the previous JSON: all 18,530 rows equal, no duplicate complete rows, deterministic gzip round trip byte-identical. The table shrank from 5,981,884 to 121,726 bytes. Rendering accepts both legacy JSON and gzip inputs; extraction writes gzip plus the small manifest. Figures require no regeneration for this encoding change.
 
 Prepared final-refresh adapters (source only; current rendered snapshot unchanged): repeated `--c04-audit research/campaigns/extended-01/review/C04-lineage-N-audit.json` arguments enable only C04 summaries explicitly bound by each receipt's `input_sha256` mapping. Hash mismatches fail extraction; no receipt leaves C04 pending. Timing-only summaries are excluded. C04 table distinguishes lineage, neural fixed endpoint versus selected checkpoint, workspace versus supplied-copy, original/supplied targets, joint success, refused outcomes and changed-fact denominators. Zero-denominator intervention cells remain counts only and are never plotted as zero accuracy. A10/A11 continuation inputs likewise require exact config/eval hash bindings in their development audit receipts. Default-pending behavior and C04 schema extraction (592 unique lineage-560 rows, unpublished) checked locally; final C04 rendering awaits the audited refresh.
+
+Interim refresh from coordinator root `0111237`: 19,142 unique rows / 149 SHA256-bound inputs. All current input hashes rechecked. A10/A11 continuations now included through their audited eval bindings. C04 source uses independently audited lineage0 receipt; no cross-lineage interval or completed-matrix claim. Remote CPU render with CUDA hidden took 2.305 seconds (first draft 2.520 seconds); five figure layouts checked. No GPU work.
