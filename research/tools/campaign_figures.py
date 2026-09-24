@@ -46,11 +46,12 @@ def extract(root):
             for arm in ('constant','decay'):
                 add('semantic_confirmation',source,seed=seed,policy=policy,arm=arm,split='confirmation',
                     correct=counts[arm],total=m['examples'],threshold=m['decay_competence_threshold'])
-    source=base+'semantics/s10-schema-decode-compact/summary.json'
-    for c in read(source)['summary']:
-        if c['split']=='development':
-            add('semantic_supplied',source,checkpoint=c['checkpoint'],policy=c['policy'],arm=c['variant'],
-                correct=int(c['exact']),total=c['examples'])
+    for directory in ('s10-schema-decode-compact','s10-reuse-s11'):
+        source=base+'semantics/'+directory+'/summary.json'
+        for c in read(source)['summary']:
+            if c['split']=='development':
+                add('semantic_supplied',source,checkpoint=c['checkpoint'],policy=c['policy'],arm=c['variant'],
+                    correct=int(c['exact']),total=c['examples'])
     for p in sorted((root/(base+'attention/a06')).glob('*/*/config.json')):
         source=str(p.relative_to(root)); config=read(source)
         for f in sorted(p.parent.glob('eval-*.json')):
@@ -81,7 +82,30 @@ def extract(root):
             total=sum(c[k] for k in ('both_correct','static_only','roles_only','both_wrong'))
             for arm in ('static','roles'):
                 add('composition',source,arm=arm,split=c['split'],metric=c['field'],correct=c[arm],total=total)
-    for experiment in ('A08','C04'):
+    source=review+'A08-main-audit.json'
+    if (root/source).exists():
+        for c in read(source)['cells']:
+            seed,arm=c['model'].split('-')
+            for target in ('original','supplied'):
+                add('attention_corruption',source,seed=int(seed),arm=arm,target=target,
+                    condition=c['condition'],correct=c[target+'_correct'],total=c['examples'])
+    source=base+'attention/a09/results/config.json'
+    if (root/source).exists():
+        config=read(source)
+        for f in sorted((root/(base+'attention/a09/results')).glob('eval-*.json')):
+            source=str(f.relative_to(root)); m=read(source)
+            population='curve' if m['eval_seed']==config['curve_eval_seed'] else 'final'
+            for c in m['rows']:
+                add('records_'+population,source,seed=config['seed'],arm='records',condition=c['condition'],
+                    presentations=int(f.stem.split('-')[1])*config['batch'],
+                    correct=round(c['task']*c['examples']),total=c['examples'])
+    for seed in (10,11,12):
+        source=base+f'returns/r05-confirmation/{seed}/decision-margin-groups.json'
+        for c in read(source):
+            for margin,counts in c['signed_value_minus_threshold'].items():
+                add('return_margin',source,seed=seed,arm=c['arm'],key=c['key'],delay=c['delay'],
+                    signed_value_minus_threshold=float(margin),**counts)
+    for experiment in ('C04',):
         status.append(dict(experiment=experiment,status='pending figure adapter and final audit'))
     status.append(dict(experiment='S13',status='cache/protocol only; no model outcome plotted'))
     conditions=[]
@@ -148,6 +172,22 @@ def render(data, output):
             ax.scatter([conditions.index(r['condition'])+(ai-1.5)*.14 for r in ss], [100*r['correct']/r['total'] for r in ss],s=9,color=colors[arm],alpha=.65)
     ax.set(title='A06 final population: original target',xlabel='Condition index (see plotted data)',ylabel='Task correct (%)',ylim=(-2,102),xticks=range(0,len(conditions),2))
     finish(fig,'attention','Each trace/dot is one fitted seed. Final events are separate from curve events; endpoints are not joined.\nHard/soft receive topology; context receives explicit edge context. Supplied-target counts are retained in plotted data.')
+    fig,axes=plt.subplots(1,3,figsize=(13,4.7))
+    ax=axes[0]
+    for group in (0,1):
+        ss=sorted([r for r in select('records_curve') if r['condition']['data_group']==group],key=lambda r:r['presentations'])
+        ax.plot([r['presentations'] for r in ss],[100*r['correct']/r['total'] for r in ss],'.-',label=f"Group {group} (curve)")
+        ss=[r for r in select('records_final') if r['condition']==dict(nodes=32 if group==0 else 64,depth=4 if group==0 else 8,data_group=group)]
+        ax.scatter([r['presentations'] for r in ss],[100*r['correct']/r['total'] for r in ss],marker='x',s=55,color=f'C{group}',label=f'Group {group} (final)')
+    ax.set(title='A09 graph-record learning · development',xlabel='Optimizer presentations',ylabel='Task correct (%)',ylim=(-2,102));ax.legend(fontsize=7)
+    for ax,group in zip(axes[1:],(0,1)):
+        for arm in ('soft','hard','context'):
+            for target,style in [('original','-'),('supplied','--')]:
+                for seed in (601,602,603):
+                    ss=sorted([r for r in select('attention_corruption',arm=arm,target=target,seed=seed) if r['condition']['data_group']==group],key=lambda r:r['condition']['fraction'])
+                    ax.plot([r['condition']['fraction'] for r in ss],[100*r['correct']/r['total'] for r in ss],style,color=colors[arm],alpha=.55,label=f'{arm} / {target}' if seed==601 else None)
+        ax.set(title=f'A08 corruption · condition {group}',xlabel='Changed-edge fraction',ylabel='Task correct (%)',ylim=(-2,102));ax.legend(fontsize=6)
+    finish(fig,'attention-controls','A09: one development seed; final-population crosses are unconnected to curve events. Group 0 = 32 nodes / depth 4; group 1 = 64 / 8.\nA08: three seed traces per arm; solid = original target, dashed = supplied target. Conditions: 64 nodes / depth 8 and 128 / 32.')
     fig,axes=plt.subplots(2,2,figsize=(11,7))
     for ax,panel,title in [(axes[0,0],'return_recovery','R04 scalar recovery'),(axes[0,1],'return_use','R05 downstream decision')]:
         arms=('unchanged','ce_16384') if panel=='return_recovery' else (None,)
