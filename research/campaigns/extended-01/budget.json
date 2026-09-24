@@ -11,7 +11,7 @@
     "adaptive_flex": 5760
   },
   "charged_seconds": 24285.07882392448,
-  "reserved_running_seconds": 0,
+  "reserved_running_seconds": 240.0,
   "jobs": [
     {
       "id": "R01-profile",
@@ -1216,9 +1216,9 @@
       "recorded_utc": "2026-09-24T10:08:55.156073+00:00"
     }
   ],
-  "cpu_audit_seconds": 4190.876738746003,
+  "cpu_audit_seconds": 4243.6814202536225,
   "accounting": "Monotonic process occupancy includes initialization/training/evaluation/failed runs/export; profiles charged. Serial GPU only. Unmeasured failures receive conservative charges.",
-  "projected_ready_caps_seconds": 0,
+  "projected_ready_caps_seconds": 4000,
   "accounting_notes": "Ready caps are estimates, not completed charges or concurrent reservations. Only queue.running may use GPU.",
   "cpu_integration_test_seconds": 202.73000000000002,
   "cpu_experiments": [
@@ -1377,8 +1377,7 @@
     }
   ],
   "projection_detail": {
-    "S18-main": 4000,
-    "S18-reference": 240
+    "S18-main": 4000
   },
   "interruption": {
     "reason": "usage credits exhausted; user recharged and requested continuation",
@@ -1386,5 +1385,5 @@
     "reconciled_utc": "2026-09-24T04:48:22Z",
     "note": "No running experiment at reconciliation. Deadline unchanged; idle interval not GPU occupancy. A08 profile full outer timing missing: charged conservative60-second cap."
   },
-  "projected_pending_cap_seconds": 4240
+  "projected_pending_cap_seconds": 0
 }

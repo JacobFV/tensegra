@@ -122,3 +122,6 @@ GPUidle. S17fullrun100.74charged, raw34bd859c→8382e647/report3df6a291→5b6f42
 
 ## 2026-09-24T10:07:08.674847+00:00
 S18-profile soleGPU release180hardcap, workercomposition_live, frozen35e94fce/config418864b3/readonlys18-source-35e94fce/exactouterargv6d8d9456 GNUtime-timeoutKILL180. Finalreviewcleared19sourcebindings/realrefs/modes; receiptcommitpending. Newcontextand10passcontrol20updatesbothpolicies. Profileonly, main/referencebudgetsunallocated. BaselineS15mixed exactreuseauditc8242530→deee2de0+runnerbd885c16→9193b243. S18analysis6ffd1baf→c9de2f66 prospective, reviewpending. Main2newarms potentially4096updates each, preserve~2.4hconfirmationreserve, targetdev<=1.5h; profilefirst. NootherGPUjobs.
+
+## 2026-09-24T10:17:34.703177+00:00
+S18-reference soleGPU cap240 started10:16:15PID3941545, immutable00a79951/ref944b342c exactKILLcommand; main4000readyfrozen4ffecfea afterreferencecompletiononly. Fullprofileauditacaec5ed→c129b674passed estimates3454main/185ref, actualprofile86.53charged. Actor/optimizer/dataequivalenceaudited. Analysispin4ef23e39→acf78382exacthashes, reviewerchecking. FullintegratedCPUtest c129b674 runningexecsession27431 CUDAhidden; completearchivehash7e02f0da1530c82207802de8b6a923e230f64f135bf511d4b8091c11fa15e930. Rootqueueowneronly; jobcompletionbeforemainrelease.
