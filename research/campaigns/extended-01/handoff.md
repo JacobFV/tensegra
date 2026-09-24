@@ -65,3 +65,6 @@ A08 completed206.166659217s and independently audited all72cells. C04 five profi
 
 ### 05:29 UTC durable checkpoint
 Parent702 soleGPUowner, ~11776/16384 at900s/cap1400, healthy. Next root schedule: A10cap120 then C04lineage0cap1980, then remainingS12forks702 andparent/forks703 interleavedC04lineages1/2. A10preflightpassed; C04source c34effb and3configsfullyfrozen/profileaudited; perlineage5phasebatch. S13 source/cacheaudited butunreleased untilS12complete. S14arity3cache1024 audited; compactall6evaluator/source830e77a reviewed, configsnotreleased. Lexicaldiagnosticalsoall6afterS12. Figures source/gziptable integrated744fd13; refreshafterconfirmations. All3953baselineblobsremainunchanged atlastcheck. CurrentGPUcharged12652.768s excludesrunningparent.
+
+### 2026-09-24 06:06 UTC reconciliation
+Constant702 completed639.029482550s, raw/cal0/1024, archive c0891ef. A12 profile soleGPUowner source71f1971 cap60 after independent preflight17d8b76; main contingent profile. C04lineage0 independent audit ba9d877 passes165hashes/212cells/actualruntime and causal checks; remaininglineages mandatory. Charged15317.629s beforeA12. Next paireddecay702cap800 source dbd3575 config606bd998, then A12main ifprofile supports, C04lineage1, parent703/lineage2/forks703. No confirmation selection changes. Approvalnever/fullautonomy applies; older sandbox notes obsolete.
