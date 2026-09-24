@@ -168,6 +168,8 @@ def build(config):
     if config.get('generation_status')!='root_and_reviewer_authorized_cpu_only':
         raise ValueError('explicit data-contract clearance required')
     if not verify_vendor_manifest(): raise ValueError('vendor integrity failed')
+    if config.get('source_sha256')!=sha(__file__): raise ValueError('builder source changed')
+    if config.get('cell_index_order')!=[list(c) for c in CELLS]: raise ValueError('cell map changed')
     tick=time.monotonic();out=Path(config['output_dir']);out.mkdir(parents=True,exist_ok=False)
     baseline=list(read_rows(pinned_path(config['baseline_train'])))
     development=list(read_rows(pinned_path(config['existing_development'])))
@@ -199,6 +201,10 @@ def build(config):
         if row['alpha_sha256']!=alpha(row['nodes'],row['edges']): raise ValueError('inherited alpha metadata mismatch')
     required={alpha(r['nodes'],r['edges']) for r in baseline+development}
     if not required<=seen: raise ValueError('exclusion inventory omits inherited TRAIN/DEV')
+    original_panel=json.loads(pinned_path(config['original_panel']).read_text())['mixed']
+    if len(original_panel)!=128: raise ValueError('original TRAIN panel count')
+    for item in original_panel:
+        if any(baseline[item['index']][k]!=item[k] for k in ('seed','semantic_sha256','alpha_sha256')): raise ValueError('original TRAIN panel binding')
     old_indices=select_indices(baseline,OLD_COUNTS,210021)
     broad=[baseline[i] for i in old_indices];texts={}
     for row in baseline+development:
@@ -213,6 +219,8 @@ def build(config):
             if len(rows)!=count: blocked.append(f'{split}:{motif[0]}x{motif[1]}')
     random.Random(210022).shuffle(broad)
     panel=select_indices(broad,PANEL_COUNTS,210023) if not blocked else []
+    panels=dict(original=original_panel,broad=[dict(index=i,**{k:broad[i][k] for k in ('seed','semantic_sha256','alpha_sha256')}) for i in panel])
+    (out/'panels.json').write_text(json.dumps(panels,indent=2)+'\n')
     summaries={};hashes={};features=PublicFeatureAudit()
     for split,rows in records.items():
         for row in rows: features.add(row)
@@ -229,7 +237,7 @@ def build(config):
             if a<b and sets[a]&sets[b]: raise ValueError('new split overlap')
     result=dict(version=VERSION,config=config,source_sha256=sha(__file__),generator_commit=SOURCE_COMMIT,
         status='blocked_support_shortfall' if blocked else 'complete_pending_independent_audit',blocked_cells=blocked,
-        cache_sha256=hashes,summaries=summaries,reservation_statistics=stats,excluded_sources=sources,exclusion_inventory_coverage=inventory_coverage,
+        cache_sha256=hashes,panels_sha256=sha(out/'panels.json'),summaries=summaries,reservation_statistics=stats,excluded_sources=sources,exclusion_inventory_coverage=inventory_coverage,
         cell_index_order=CELLS,value_vocabulary=VOCAB,broad_old_original_indices=old_indices,
         broad_train_panel_indices=panel,overlap_with_baseline=len(sets['train_broad']&{r['alpha_sha256'] for r in baseline}),
         planned_training_exposure=dict(updates=4096,batch_size=8,presentations=32768,visits_per_construction=8),
