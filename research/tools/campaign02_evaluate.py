@@ -46,11 +46,12 @@ def episode_counts(outcome):
         kind, args = action["kind"], action["arguments"]
         counts[f"action/{kind}"] += 1
         counts[f"status/{feedback.get('status', 'missing')}"] += 1
-        if kind in {"start_subset", "build_route"} and feedback.get("status") == "success":
-            problem_types[args["handle"]] = "constrained_subset" if kind == "start_subset" else "shortest_path"
+        if kind in {"start_subset", "build_route", "start_assign"} and feedback.get("status") == "success":
+            problem_types[args["handle"]] = {"start_subset": "constrained_subset", "build_route": "shortest_path",
+                                             "start_assign": "csp"}[kind]
         if kind == "call" and "return" in feedback:
             returns[feedback["return"]] = {"primitive": problem_types.get(args["problem"]),
-                                          "version": event["state_version"]}
+                                          "version": event.get("state_version", event.get("stage"))}
         if kind == "retrieve" and "record" in feedback:
             record = feedback["record"]
             retrieved[args["handle"]] = record
@@ -59,7 +60,8 @@ def episode_counts(outcome):
             multiple = len(returns) >= 2
             counts["multiple_return_use_attempts"] += int(multiple)
             record = retrieved.get(args["handle"], {})
-            expected = {"subset": "constrained_subset", "route": "shortest_path"}.get(args.get("as"))
+            expected = {"subset": "constrained_subset", "select": "constrained_subset", "route": "shortest_path",
+                        "assign": "csp"}.get(args.get("as"))
             # Route execution itself may discover an obstacle and advance version.
             stale = feedback.get("reason") == "stale_result"
             valid = (bool(record) and record.get("primitive") == expected and not stale
@@ -238,11 +240,22 @@ def main():
             if n < 1 or Path(name).name != name:
                 raise ValueError("Invalid condition name or support")
             seeds = list(range(condition["seed_start"], condition["seed_start"]+n))
-            specs = [generate_world(seed, **world_kwargs(condition.get("world", {}))) for seed in seeds]
+            modular = condition.get("world_family", cfg.get("world_family", "workshop")) == "modular"
+            if modular:
+                from topoformer.campaign02_modular import ModularWorkshop, generate_modular, modular_executor
+                condition_executor = partial(modular_executor, execute_call=solver.execute)
+                specs = [generate_modular(seed, **world_kwargs(condition.get("world", {}))) for seed in seeds]
+            else:
+                condition_executor = executor
+                specs = [generate_world(seed, **world_kwargs(condition.get("world", {}))) for seed in seeds]
             namespace = condition.get("address_namespace", cfg.get("address_namespace", "extended-02-frozen-eval-v1"))
             faults = condition_faults(condition)
             def factory(index):
-                kwargs = {"executor":executor,"address_seed":independent_address_seed(seeds[index],namespace)}
+                kwargs = {"executor":condition_executor,"address_seed":independent_address_seed(seeds[index],namespace)}
+                if modular:
+                    if faults:
+                        raise ValueError("Return faults are defined for workshop-v1 only")
+                    return ModularWorkshop(specs[index],**kwargs)
                 return FaultedWorkshop(specs[index],**kwargs,faults=faults) if faults else Workshop(specs[index],**kwargs)
             folder = args.output/name
             folder.mkdir()

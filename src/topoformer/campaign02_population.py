@@ -68,6 +68,8 @@ class PopulationConfig:
     # SUPPLIED behavioral niche (greedy-first rate on public DEV trajectories).
     halving_survivors: tuple[int, ...] = ()
     niche_protection: bool = False
+    # World family: historical workshop-v1 or the modular staged workshop.
+    world_family: str = "workshop"
 
     def __post_init__(self):
         if self.mode not in {"pbt", "multistart", "single", "halving"}:
@@ -99,6 +101,8 @@ class PopulationConfig:
         if self.member_hyperparameters and (len(self.member_hyperparameters) != 6 or any(
                 set(h) - {"learning_rate", "entropy_weight", "kl_weight"} for h in self.member_hyperparameters)):
             raise ValueError("Member hyperparameters need six {learning_rate, entropy_weight} rows")
+        if self.world_family not in {"workshop", "modular"}:
+            raise ValueError("Unknown world family")
         if self.mode == "halving":
             k = self.halving_survivors
             if len(k) != self.rounds or k[0] != 6 or any(6 % x for x in k) or any(b > a for a, b in zip(k, k[1:])):
@@ -315,7 +319,7 @@ class PopulationRun:
         self.sources = {name: sha256(Path(__file__).with_name(name)) for name in (
             "campaign02_population.py", "campaign02_training.py", "campaign02_policy.py",
             "campaign02_world.py", "campaign02_protocol.py", "campaign02_references.py",
-            "campaign02_memory.py", "campaign02_memory_policy.py")}
+            "campaign02_memory.py", "campaign02_memory_policy.py", "campaign02_modular.py")}
         if self.state_path.exists():
             self.state = json.loads(self.state_path.read_text())
             if self.state["source_hashes"] != self.sources:
@@ -600,8 +604,13 @@ def main():
     from .campaign02_world import Workshop, generate_world, protocol_executor
     with BoundedSolver() as solver:
         executor = partial(protocol_executor, execute_call=solver.execute)
+        make_world, make_env = generate_world, Workshop
+        if config.world_family == "modular":
+            from .campaign02_modular import ModularWorkshop, generate_modular, modular_executor
+            make_world, make_env = generate_modular, ModularWorkshop
+            executor = partial(modular_executor, execute_call=solver.execute)
         def component_factory(seed, index):
-            return Workshop(generate_world(seed, **config.world_mix[index]), executor=executor,
+            return make_env(make_world(seed, **config.world_mix[index]), executor=executor,
                 address_seed=independent_address_seed(seed, config.address_namespace))
         def factory(seed):
             return component_factory(seed, mix_index(seed, len(config.world_mix)))
@@ -609,7 +618,7 @@ def main():
         if config.development_world_mix:
             def development_factory(seed):
                 kwargs = config.development_world_mix[mix_index(seed, len(config.development_world_mix))]
-                return Workshop(generate_world(seed, **kwargs), executor=executor,
+                return make_env(make_world(seed, **kwargs), executor=executor,
                     address_seed=independent_address_seed(seed, config.address_namespace))
         run = PopulationRun(config, args.output, factory, lambda: make_reference(config.teacher),
                             component_factory=component_factory, development_factory=development_factory)

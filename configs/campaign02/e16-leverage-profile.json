@@ -1,0 +1,373 @@
+{
+  "checkpoints": [],
+  "evaluation_batch": 32,
+  "references": [
+    "modular_cheap",
+    "modular_always_tool",
+    "modular_cheap_first"
+  ],
+  "reference_compute_tariff": 1.0,
+  "world_family": "modular",
+  "address_namespace": "e16-modular-460000000",
+  "conditions": [
+    {
+      "name": "iid_S",
+      "world_family": "modular",
+      "seed_start": 460000000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select"
+        ]
+      }
+    },
+    {
+      "name": "iid_R",
+      "world_family": "modular",
+      "seed_start": 460010000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route"
+        ]
+      }
+    },
+    {
+      "name": "iid_A",
+      "world_family": "modular",
+      "seed_start": 460020000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign"
+        ]
+      }
+    },
+    {
+      "name": "iid_S-R",
+      "world_family": "modular",
+      "seed_start": 460030000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "route"
+        ]
+      }
+    },
+    {
+      "name": "iid_S-A",
+      "world_family": "modular",
+      "seed_start": 460040000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "assign"
+        ]
+      }
+    },
+    {
+      "name": "iid_A-R",
+      "world_family": "modular",
+      "seed_start": 460050000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "route"
+        ]
+      }
+    },
+    {
+      "name": "heldpair_R-S",
+      "world_family": "modular",
+      "seed_start": 461000000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "select"
+        ]
+      }
+    },
+    {
+      "name": "heldpair_A-S",
+      "world_family": "modular",
+      "seed_start": 461010000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "select"
+        ]
+      }
+    },
+    {
+      "name": "heldpair_R-A",
+      "world_family": "modular",
+      "seed_start": 461020000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "assign"
+        ]
+      }
+    },
+    {
+      "name": "triple_S-R-A",
+      "world_family": "modular",
+      "seed_start": 462000000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "route",
+          "assign"
+        ]
+      }
+    },
+    {
+      "name": "triple_S-A-R",
+      "world_family": "modular",
+      "seed_start": 462010000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "assign",
+          "route"
+        ]
+      }
+    },
+    {
+      "name": "triple_R-S-A",
+      "world_family": "modular",
+      "seed_start": 462020000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "select",
+          "assign"
+        ]
+      }
+    },
+    {
+      "name": "triple_R-A-S",
+      "world_family": "modular",
+      "seed_start": 462030000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "assign",
+          "select"
+        ]
+      }
+    },
+    {
+      "name": "triple_A-S-R",
+      "world_family": "modular",
+      "seed_start": 462040000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "select",
+          "route"
+        ]
+      }
+    },
+    {
+      "name": "triple_A-R-S",
+      "world_family": "modular",
+      "seed_start": 462050000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "route",
+          "select"
+        ]
+      }
+    },
+    {
+      "name": "hardassign_A",
+      "world_family": "modular",
+      "seed_start": 464000000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 6,
+        "slots": 4,
+        "forbid": 0.35,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign"
+        ]
+      }
+    },
+    {
+      "name": "hardassign_S-A",
+      "world_family": "modular",
+      "seed_start": 464010000,
+      "examples": 128,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 6,
+        "slots": 4,
+        "forbid": 0.35,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "assign"
+        ]
+      }
+    }
+  ]
+}

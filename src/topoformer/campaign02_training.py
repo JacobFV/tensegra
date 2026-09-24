@@ -76,6 +76,13 @@ class Frame:
 
 
 def public_frame(observation, feature_version="v1"):
+    if feature_version == "m1" or getattr(observation, "version", "") == "workshop-modular-v1":
+        from .campaign02_modular import action_catalog as modular_catalog, encode_public as modular_encode
+        if feature_version != "m1":
+            raise ValueError("Modular workshop observations require public feature version m1")
+        actions = modular_catalog(observation)
+        obs, features = modular_encode(observation, actions)
+        return actions, obs, features
     from .campaign02_world import action_catalog, encode_public
     actions = action_catalog(observation)
     obs, features = encode_public(observation, actions, feature_version)

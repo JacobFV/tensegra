@@ -163,6 +163,9 @@ class FallbackReferencePolicy(ReferencePolicy):
 
 
 def make_reference(name):
+    if name.startswith("modular_"):
+        from .campaign02_modular import ModularReference
+        return ModularReference(name.removeprefix("modular_"))
     suffix = "_fallback_v2"
     if name.endswith(suffix):
         return FallbackReferencePolicy(name[:-len(suffix)])
