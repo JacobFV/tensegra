@@ -156,6 +156,22 @@ def extract(root, c04_audit=None):
             for margin,counts in c['signed_value_minus_threshold'].items():
                 add('return_margin',source,seed=seed,arm=c['arm'],key=c['key'],delay=c['delay'],
                     signed_value_minus_threshold=float(margin),**counts)
+    source=review+'A12-main-audit.json'
+    if (root/source).exists():
+        audit=read(source)
+        assert audit['zero_updates'] and audit['profile_and_main_frozen_binding_verified']
+        for path,digest in audit['input_sha256'].items():
+            assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'A12 audit binding mismatch: {path}'
+            inputs[path]=digest
+        for cell in audit['cells']:
+            for metric in ('task','path','suffix'):
+                add('a12_counts',source,policy=cell['policy'],condition=cell['condition'],metric=metric,
+                    correct=cell[metric+'_correct'],total=cell['examples'])
+        for cell in audit['paired_policy_counts']:
+            add('a12_paired',source,**cell)
+        for cell in audit['weighted_diagnostics']:
+            for step in cell['by_reverse_execution_step']:
+                add('a12_diagnostic',source,policy=cell['policy'],condition=cell['condition'],**step)
     if c04_audit:
         # An explicit final audit index binds each approved summary byte-for-byte.
         # Shape: {"input_sha256": {"repository/relative/path": "sha256"}}.
@@ -280,6 +296,30 @@ def render(data, output):
     ax.set(title='C03 fixed endpoint · development',xticks=[0,1],xticklabels=['Clean','Roles reversed'],ylabel='Correct (%)');ax.legend(fontsize=7)
     finish(fig,'returns-composition','Restricted original mixture / finite domain. Seed traces are separate; repeated delays share events.\nC03 is one development initialization with supplied scheduling. C04 appears separately when audited; incomplete lineages are never imputed.')
 
+    if select('a12_counts'):
+        fig,axes=plt.subplots(2,2,figsize=(12,8))
+        policies=('unchanged','record_hard','destination_hard','both_hard')
+        shapes=sorted({tuple(r['condition'][k] for k in ('nodes','depth','groups')) for r in select('a12_counts')})
+        labels=[f'{n} nodes / depth {d}' for n,d,g in shapes]
+        for ax,metric in zip(axes[0],('task','path')):
+            for i,policy in enumerate(policies):
+                ss=select('a12_counts',policy=policy,metric=metric)
+                ss.sort(key=lambda r:r['condition']['nodes'])
+                ax.plot(range(len(shapes)),[r['correct'] for r in ss],'o-' if policy=='unchanged' else 'o--',color=f'C{i}',label=policy)
+            ax.set(title=f'A12 event-level exact {metric}',xticks=range(len(shapes)),xticklabels=labels,ylabel='Correct events / 512',ylim=(-8,525));ax.legend(fontsize=7)
+        ax=axes[1,0]
+        for i,policy in enumerate(policies):
+            ss=select('a12_paired',policy=policy);ss.sort(key=lambda r:r['condition']['nodes'])
+            ax.plot(range(len(shapes)),[r['fixed'] for r in ss],'o-',color=f'C{i}',label=f'{policy}: fixed')
+            ax.plot(range(len(shapes)),[-r['rebroken'] for r in ss],'x:',color=f'C{i}',label=f'{policy}: -rebroken')
+        ax.axhline(0,color='.6',lw=.7);ax.set(title='Paired task changes relative to unchanged',xticks=range(len(shapes)),xticklabels=labels,ylabel='Events fixed (+) / rebroken (-)');ax.legend(fontsize=6)
+        ax=axes[1,1]
+        for i,policy in enumerate(policies):
+            ss=[r for r in select('a12_diagnostic',policy=policy) if r['condition']['nodes']==128]
+            ss.sort(key=lambda r:r['reverse_execution_step'])
+            ax.plot([r['reverse_execution_step'] for r in ss],[100*r['destination_argmax_correct'] for r in ss],'-' if policy=='unchanged' else '--',color=f'C{i}',label=policy)
+        ax.set(title='128 / 32: destination-head argmax diagnostic',xlabel='Reverse execution step',ylabel='Correct across instrumented node/head entries (%)');ax.legend(fontsize=7)
+        finish(fig,'attention-read-localization','A12: one frozen model, zero optimizer updates. Dashed policies are engineered hardening, not newly learned interfaces.\nPath counts use events; head diagnostics use instrumented node/head entries. Their gap does not identify query-head failures. Paired events, not independent policies.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid')})
