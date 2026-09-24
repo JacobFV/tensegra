@@ -13,7 +13,7 @@ if output.exists() or receipt.exists():raise SystemExit('Immutable output/receip
 manifest=json.loads((root/'snapshot.json').read_text())
 for name,digest in manifest['files'].items():
     if hashlib.sha256((root/name).read_bytes()).hexdigest()!=digest:raise SystemExit('Frozen source mismatch: '+name)
-config=root/'configs/campaign-r10-profile.json';cfg=json.loads(config.read_text())
+config=root/manifest.get('config_path','configs/campaign-r10-profile.json');cfg=json.loads(config.read_text())
 checkpoint=Path(cfg['checkpoint'])
 if hashlib.sha256(checkpoint.read_bytes()).hexdigest()!=cfg['checkpoint_sha256']:raise SystemExit('Checkpoint mismatch')
 active=subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader'],text=True).strip()
