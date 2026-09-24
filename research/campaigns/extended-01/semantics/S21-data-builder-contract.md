@@ -1,0 +1,13 @@
+# S21 data builder preflight
+
+Source: `campaign_semantics_s21_data.py`. Version `s21-six-motif-v1`. This file records implementation before generation; no new cache exists yet and no GPU/model outcomes were inspected.
+
+All selection, panel, and generation offsets use the global cell map:2x4→0,3x3→1,3x4→2,4x3→3,4x4→4,5x3→5,5x4→6. Old TRAIN selection uses210021+index, broad shuffle210022, panel210023+index. Generation uses210000000/211000000/212000000 plus100000×index, with at most20000 attempts per cell. Shortfalls are retained with `blocked_support_shortfall`; no bound is enlarged.
+
+Hash-pinned inputs are the exact S15 mixed TRAIN4096, existing DEV2048, and explicit historical exclusion sources or an independently constructed alpha-only exclusion inventory. The inventory may be JSON/gzip with `alpha_sha256` list and `coverage` metadata. Prior confirmation content is used solely to derive opaque exclusion hashes; logs disclose no examples/answers. Inventory coverage is copied into the audit rather than claiming unverified exhaustive history. Reused TRAIN2048 and DEV2048 are explicit reuse; only new rows must avoid every prior split. All new splits exclude one another.
+
+The builder retains S15 compact row schema, uses unchanged vendor generator/English renderer, verifies answer by a separate compact-graph matcher, validates exact record/copy/value/slot contracts, checks depth and capacities, and preserves fixed vocabulary. Public text plus node/edge target signatures reject conflicting public inputs. Accepted rows are additionally checked for FP32/BF16 feature-sequence target collisions, lexical-feature collisions and truncation. Those checks establish finite public observability, not neural learnability. All seven DEV/confirmation motif counts and tree/token/node/edge/record exposures are reported; confirmation is sealed and not for selection.
+
+Builder output: `train_broad.jsonl.gz`, `development.jsonl.gz`, `confirmation.jsonl.gz`, `audit.json`. Deterministic gzip excludes timestamp and filename. The baseline remains the immutable S15 cache. The audit contains original selected indices, broad TRAIN128 panel indices, source/cache hashes, cell support attempts, exposures, overlap counts and CPU wall time. Exact cached rows are not rewritten after freezing.
+
+Mechanical tests:7 passed in0.003 seconds with CUDA hidden and2 CPU threads. Tests cover global seed indexing, alpha equality/order, deterministic source-index selection, bounded support shortfalls, public collisions, clearance refusal and independent matching. Generation requires explicit `root_and_reviewer_authorized_cpu_only` status and remains pending independent preflight approval.
