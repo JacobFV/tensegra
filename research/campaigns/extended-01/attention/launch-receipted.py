@@ -13,6 +13,8 @@ import subprocess
 import time
 
 JOBS = {
+    "a13-profile": ("53bdfed", "campaign-a13-profile.json", "e04a027cb2d8d9118285f236da62763022fc9189a0ed96df546707f4efe4eb99", "campaign_attention_shared_address_study", 60),
+    "a13-main": ("53bdfed", "campaign-a13-shared-address.json", "ec442effb25da9871da8e3932f3c079d40e974f94b66f9cd6feaf99a05be6f44", "campaign_attention_shared_address_study", 180),
     "a12-profile": ("71f1971", "campaign-a12-profile.json", "ad409bea603954ec8603487af0940a48369a6bd261856bbc3ec5303f7d296e83", "campaign_attention_record_diagnostic_study", 60),
     "a12-main": ("71f1971", "campaign-a12-read-localization.json", "b62eae8650a9f8d1e813edf3c09ad2c73d96ef7bd30b512f93d60334a8aa0518", "campaign_attention_record_diagnostic_study", 180),
     "a11": ("b02f3b6", "campaign-a11-record-continuation.json", "696319d7298d04132fc2f7ac30d4490dcfc501efd1ffbcedec7e6d1269cd0b99", "campaign_attention_records_study", 180),
