@@ -84,3 +84,39 @@ Reproduce with `research/tools/campaign02_e05_budget_audit.py`. The compact rece
 binds frozen source bytes and both raw archives, stores exact frequencies and
 examples, and records0.882 process-CPU seconds. Git subprocess CPU is not included
 in that process-only number; no GPU, solver, or model inference was used.
+
+## Addendum: actual training exposure now reconstructed
+
+The coordinator subsequently replayed the exact frozen teacher stream. Its final
+hash, `e8d029c5eeb2f39d8d6ce354e8f97cf8c50d5bfd5346ab597b302561370cb462`,
+matches the trained checkpoint. This resolves the earlier missing training-label
+counts without replacing the original actor-state diagnostic.
+
+Across 4,800 training episodes and 100,952 teacher decisions, the teacher solved
+4,783 episodes and abstained in 17. There were 6,354 call targets:
+
+| Budget | Targets |
+|---:|---:|
+| 16 | 3,597 |
+| 128 | 2,297 |
+| 112 | 421 |
+| 1,024 | 21 |
+| 96 | 18 |
+
+All 3,597 initial calls requested 16. The remaining **2,757 calls followed a
+timeout and escalated**: 43.39% of call targets, but only 2.73% of all teacher
+decisions. Calls as a whole account for 6.29% of decisions. Escalation was
+therefore present substantially within call supervision; it was not an unseen
+label or an exceptionally rare class conditional on calling. Its smaller share
+of the full decision loss still makes objective weighting a plausible diagnostic,
+not an established explanation. Weighting every call would also amplify the
+3,597 initial-budget targets.
+
+Combined with the distinguishable encoded budgets and prior-timeout metadata,
+this supports a localized acquisition/conditioning question rather than missing
+escalation examples. It does not identify normalization, gradients, class balance,
+or a particular repair as the cause. The separate missing-relation counterexamples
+remain valid. The replay consumed 18.836 CPU-core seconds, with no neural inference
+or gradient training; its costs are recorded by the coordinator.
+
+Source receipt: `research/results/campaign-02/e05-teacher-replay/summary.json`.
