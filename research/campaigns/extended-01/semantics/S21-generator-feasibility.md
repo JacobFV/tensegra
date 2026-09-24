@@ -15,7 +15,7 @@ Each feasible cell received a separate fresh namespace and exactly256 generator 
 | 4×3 | 137 | 136 | 137 | 1 | 54 | 30–32 | 100–104 |
 | 4×4 | 129 | 129 | 129 | 0 | 64 | 35–37 | 119–123 |
 
-All observed examples fit the unchanged128-node/160-record codec. The existing generator's worst bound over arity≤4/facts≤4 is at most41nodes and131records:30 term occurrences plus at most10 identities plus scope, with29 tree edges,30 contains,21 refers_to and10 declares. The measured maximum is37nodes/123records. This mechanical capacity is not an acquisition result.
+All observed examples fit the unchanged128-node/160-record codec. The existing generator's worst bound over arity≤4/facts≤4 is at most41nodes and132records:30 term occurrences plus at most10 identities plus scope, with29 tree edges,30 contains,21 refers_to and10 declares. The measured maximum is37nodes/123records. This mechanical capacity is not an acquisition result.
 
 The only equal-length overlap in these six cells is **3×4 versus4×3 (54 tokens)**. Newly added arity-two cells are lengths30/34, not counterexamples at54. Broader training may help compositionality, but this specific diversity extension does not independently break the length-to-shape association for the held-out54-token cell.
 
