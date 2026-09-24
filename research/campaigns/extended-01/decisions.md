@@ -97,3 +97,6 @@ R10 increases balanced-context diversity at matched updates but misses both wors
 
 ### R11 fixed optimizer endpoint (08:38 UTC)
 Both fixed7200 arms fail the prospective balanced-tail calibration screen. Decay improves worstcal118→120/128 and reaches99.8% fitting accuracy; constant drops to87/128. Reused validation favors decay but cannot replace the calibration decision. Close this local optimizer/decoder search after independent audit: no extra learning-rate grid or exposure extension is justified by this bounded protocol. The previously confirmed R04/R05 original-mixture and C04 composition contracts stay separate and unchanged. Further semantic acquisition has independent prerequisites and continues.
+
+### S15 prospective occupancy revision (08:51 UTC)
+Independent review clarified that578/568second forecasts extrapolate combined calibration/evaluation at average per-example cost; they do not measure the fixed calibration component separately. Assigning every profile evaluation second to DEV yields a more conservative933/972second estimate. Before any main run, increase caps800→1100seconds per arm, preserving unused800 freezes and creating separately versioned cap configs. No scientific recipe, exposure, population or selection rule changes. The resource envelope covers2200reserved seconds; actual process occupancy is charged.
