@@ -1,6 +1,6 @@
-# Campaign report — draft, S20 confirmation running
+# Campaign report — draft, S20 confirmed; S21 pending
 
-This draft summarizes independently audited, closed R04/R05, R10/R11, C04, A14 and S12–S19 evidence. S19 is complete and independently audited as a single-seed development result. S20 fresh confirmation is running under a frozen nine-arm protocol; outcomes remain unread until the matrix closes. This is not the final campaign report: confirmation and the final allocation assessment remain open. Historical failures and prospective gates are preserved; a new restricted pass does not overwrite them.
+This draft summarizes independently audited closed evidence through S20. S20 confirms known-motif acquisition across three lineages and fails held-out transfer. S21 outcomes remain pending in separate broader-corpus development. This is not the final campaign assessment; historical failures and prospective gates are preserved.
 
 The [claim map](claim-map.md) defines each interface and promotion boundary. The [evidence index](evidence-index.md) and [figure guide](figures/README.md) provide the fuller navigation and reproducibility record. Some archived reports retain their original audit-pending language; the linked independent receipts establish subsequent verification.
 
@@ -48,9 +48,13 @@ All nine A06 engineering references achieve perfect observed task and suffix sco
 
 The [final analysis audit](review/S19-final-analysis-audit.json) and [strict raw replay](review/S19-main-raw-audit.json) verify the archived outcomes. The [learning and endpoint figure](figures/semantic-sequential-development.svg) compares identical DEV events against S18 raw and matched-calibration endpoints. S19 changes parameters, objective, contextual encoder, sequential output interface and inherited-training history together. It has 62,677,315 parameters and starts from scratch; S18 has 57,853,781 parameters and inherited training. Equal incremental construction exposure is not matched FLOPs or an isolated architecture intervention. This is a substantially stronger known-motif learner on one inspected development seed, not confirmation or broad structural generalization.
 
+## S20: known-motif acquisition replicates; held-out transfer fails
+
+The [S20 report](semantics/S20-report.md) and [final independent audit](review/S20-final-confirmation-audit.json) establish the registered all-seed known-motif claim. Record macro accuracy is 95.898%, 94.727% and 94.857% for seeds 701/702/703. Every seed exceeds both competence thresholds and both original/contextual matched baselines with positive paired lower bounds. Every arm and seed remains 0/512 on held-out 3×4. [Per-seed shape endpoints](figures/semantic-confirmation-shapes.svg) preserve raw and matched baselines; [paired differences](figures/semantic-confirmation-differences.svg) show all seeds and comparators. Conditional intervals resample shared events across the fixed models, not a population of initialization seeds.
+
+All arms receive 32,768 incremental presentations. Workspace learners inherit 196,608 presentations and have 57,853,781 parameters; record starts from scratch with 62,677,315. Objectives and execution work differ. Thus this confirms a fixed-learner acquisition comparison, not isolated architectural causation or matched compute. S20 main charged 2,992.72 seconds; with profile, total charged occupancy is 3,026.55 seconds. Actual TRAIN record fit is perfect in each seed, while matched workspace TRAIN diagnostics overlap calibration fitting. No criterion or historical result is replaced.
+
 ## Pending decisions before final assessment
 
-- **S20 confirmation:** running with three paired lineages and original/contextual/sequential learners, fixed final-only evaluation on 512 fresh constructions per cell. The full protocol and analysis are frozen; all nine arms must close before efficacy analysis. Known-motif acquisition and held-out transfer remain separate criteria.
-- **Comparison boundary:** S19 changes the output/optimization interface and starts from scratch. Account for parameter, inherited-training and execution differences before interpreting it against S18; it is not a pure architectural causal test.
-- **Next allocation:** S19 extension eligibility does not mandate more same-seed exposure. S20 is the running discriminating replication. S21 independently tests broader motif exposure with the unchanged sequential learner; its design predates S20 outcomes, CPU generation is complete, and population audits must clear before training. No confirmation result or gate relaxation is implied by this draft.
-- **Final synthesis and cost:** reconcile the authoritative budget/receipts after active work closes. Shared-event intervals remain conditional on fixed seeds; repeated policies, delays and cells do not create independent replication.
+- **S21:** broader-corpus development was planned before S20 outcomes. S21 outcomes remain pending; this is separate broader-corpus development.
+- **Final synthesis and cost:** reconcile the authoritative budget/receipts after active work closes. Known-motif acquisition and held-out transfer remain separate. No automatic extension or gate relaxation follows from S20.
