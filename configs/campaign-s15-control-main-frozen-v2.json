@@ -1,0 +1,56 @@
+{
+  "budget_status": "frozen",
+  "job": "main",
+  "arm": "control",
+  "output_dir": "results/s15-control-main-v2",
+  "data_dir": "data/s15-shape-v2",
+  "audit_sha256": "f8099bbb918997fdc84622f218e466f73b40933412aae7e14403566acb75ecb4",
+  "cache_sha256": {
+    "development": "25522313035e646cfca4bf0efb1ae550c295cb55ddf6057558d03c42f2239dc3",
+    "confirmation": "2710e5e1b6fffab6fa33d56105de13e49d46d64c63d81f61c6ea331347229d32",
+    "train_control": "a67ee925c8e6d2e8eaa704171e4758fdd17fb32211d09dc8e829b35ed9283c5e",
+    "train_mixed": "8ddbd15bea881c13bfd24554ada9293082fcef7b616f6eeb3dad78a4bfa662d2"
+  },
+  "calibration_cache": "data/s01/train.jsonl.gz",
+  "calibration_cache_sha256": "9c86e311b7f58587918cb314ae9ba7fbc749c062c71829023135c86e568c0710",
+  "data_audit": "data/s01/audit.json",
+  "data_audit_sha256": "2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1",
+  "parent_checkpoint": "results/s11-lr-decay-n8192-196k-dev201/model-u24576.pt",
+  "parent_checkpoint_sha256": "3799ade595500a083b9a558b6a5bc97c5cbc1b8bdce6e7e4b86d97b937ea373e",
+  "parent_evaluation": "results/s11-lr-decay-n8192-196k-dev201/evaluation-u24576.json.gz",
+  "parent_evaluation_sha256": "3fc5a8c7e00cd582e0717468b0f21c376de4585884a03f79596466e5ab9ae869",
+  "device": "cuda",
+  "batch_size": 8,
+  "negative_pairs": 128,
+  "schedule_seed": 15115,
+  "learning_rate": 1e-05,
+  "added_updates": 4096,
+  "checkpoints": [
+    0,
+    1024,
+    2048,
+    4096
+  ],
+  "source_sha256": {
+    "campaign_semantics_shape_train.py": "bc7812834dffde6e0061b1590c51a2b70c06ddb57d84644c9b4fd396d2e49c36",
+    "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+    "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+    "campaign_semantics_continue.py": "6d5a8f4ae5143bdfc93f589fa3c189966a787e0fc6a83dc6bc06382c14ac8585",
+    "campaign_semantics_lr.py": "37382d47849c29f15b407dd9b4b7aa9d66e041ede7ba7477d016e4aa3711dd9a",
+    "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+    "semantic_text_acquisition.py": "e67269012f0ef6e30b78c0265ab007f72f3278310dfad8fad526d60a38001d59",
+    "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+    "semantic_contracts.py": "914a12a24a14434918412f2ad71368f51085bd248c7398164b0c2b1c9a0e215f",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+    "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+    "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670"
+  },
+  "launch_authority": "Requires separate explicit root GPU release; freeze is not launch permission",
+  "prepared_sha256": "51004b0c636a7136c7a859e953a50eb3ad92a3107ac9c34a655afe3324f68b5a",
+  "cap_seconds": 800,
+  "launch_source_sha256": {
+    "campaign_semantics_shape_freeze.py": "aabf128649cf752231f4ffb64c87e49d34252e1b91784ceb45a7eb58c306da39",
+    "campaign_semantics_shape_launch.py": "8a7bee9f7cdcb20bd1110c46bd18ff4ec07cebce171a184e07b6c4335ab0c7ef"
+  }
+}
