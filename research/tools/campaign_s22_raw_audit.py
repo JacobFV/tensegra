@@ -16,16 +16,18 @@ assert c['arms']==['original','broad'] and c['policies']==['oracle_node_count','
 for v in c['inputs'].values():assert digest(a.base/v['path'])==v['sha256']
 vocab=json.loads((a.base/c['inputs']['vocabulary_audit']['path']).read_text())['value_vocabulary'];dev=load_cache(a.base/c['inputs']['development']['path'])
 cells=[(2,4),(3,3),(3,4),(4,3),(4,4),(5,3),(5,4)];chosen=[r for cell in cells for r in [r for r in dev if (r['arity'],r['facts'])==cell][:c['dev_per_cell']]]
-assert [r['arm'] for r in m['results']]==c['arms'];reports=[];graphs=0
+assert [r['arm'] for r in m['results']]==c['arms'];reports=[];graphs=0;flags={};summaries={};baseline={}
 for result in m['results']:
  arm=result['arm'];bind=c['checkpoints'][arm];folder=a.run/arm;assert read(folder/'manifest.json.gz')==result
  assert result['no_optimizer_or_training'] and result['parameters']==62677315 and result['model_state_sha256']==bind['model_state_sha256'] and result['checkpoint_sha256']==bind['checkpoint']['sha256']
  for key in ('checkpoint','manifest','public_reference'):assert digest(a.base/bind[key]['path'])==bind[key]['sha256']
- reference={r['semantic_sha256']:r for r in read(a.base/bind['public_reference']['path'])['rows']}
+ reference={r['semantic_sha256']:r for r in read(a.base/bind['public_reference']['path'])['rows']};flags[arm]={};summaries[arm]={};baseline[arm]={}
+ for cell in cells:
+  label=f'{cell[0]}x{cell[1]}';rr=[r for r in chosen if (r['arity'],r['facts'])==cell];baseline[arm][label]={r['semantic_sha256']:reference[r['semantic_sha256']]['complete'] for r in rr}
  assert [e['policy'] for e in result['policies']]==c['policies']
  for entry in result['policies']:
   policy=entry['policy'];path=folder/entry['artifact'];assert digest(path)==entry['sha256'];d=read(path);assert d['policy']==policy and len(d['rows'])==len(chosen)==entry['examples']
-  stats=collections.Counter();valid=exact=0;invalid=collections.Counter();cc={}
+  stats=collections.Counter();valid=exact=0;invalid=collections.Counter();cc={};ff={}
   for raw,row in zip(d['rows'],chosen,strict=True):
    vi,ex,reason=score(raw,row,vocab);graphs+=1;valid+=vi;exact+=ex
    if not vi:invalid[reason]+=1
@@ -41,10 +43,12 @@ for result in m['results']:
    if kinds:assert [r[1] for r in records[:n]]==[r[1] for r in nodes]
    if prefix:assert records[:n]==nodes
    stats.update({k:v for k,v in s.items() if k!='policy'});comp=raw['exact_components'];assert raw['exact_nodes']==all(comp[k] for k in ('presence','kind','value','copy')) and raw['exact_relations']==(comp['edges'] and comp['slots'])
-   cell=f"{row['arity']}x{row['facts']}";v=cc.setdefault(cell,dict(examples=0,valid=0,complete=0,exact_nodes=0,exact_relations=0))
+   cell=f"{row['arity']}x{row['facts']}";ff.setdefault(cell,{})[row['semantic_sha256']]=bool(ex);v=cc.setdefault(cell,dict(examples=0,valid=0,complete=0,exact_nodes=0,exact_relations=0))
    for k in v:v[k]+=1 if k=='examples' else int(raw[k])
   assert entry['valid']==valid and entry['complete']==exact and entry['invalid_reasons']==dict(invalid) and entry['cells']==cc and entry['controller_stats']==dict(stats)
+  flags[arm][policy]=ff
+  summaries[arm][policy]=dict(examples=len(chosen),valid=valid,complete=exact,cells=cc,controller_stats=dict(stats),invalid_reasons=dict(invalid))
   assert entry['model_state_sha256']==bind['model_state_sha256'];reports.append(dict(arm=arm,policy=policy,examples=len(chosen),artifact_sha256=digest(path),decode_seconds=entry['decode_seconds'],export_seconds=entry['export_seconds'],total_seconds=entry['total_seconds']))
 assert graphs==len(chosen)*6
-out=dict(status='PASS',graphs=graphs,policies=6,cpu_wall_seconds=time.monotonic()-start,manifest_sha256=digest(a.run/'manifest.json.gz'),receipt_sha256=digest(a.receipt),reports=reports,scope='Every generated record/strict invalid/target/component/metric, supplied NODE boundary, aggregate counter and checkpoint file binding. No actor or forward. Replacement counters only source-bound plus bounds, since unforced logits are not archived.')
-a.output.write_text(json.dumps(out,indent=2)+'\n');print(json.dumps({k:v for k,v in out.items() if k!='reports'}))
+out=dict(status='PASS',graphs=graphs,policies=6,cpu_wall_seconds=time.monotonic()-start,manifest_sha256=digest(a.run/'manifest.json.gz'),receipt_sha256=digest(a.receipt),reports=reports,flags=flags,baseline=baseline,summaries=summaries,scope='Every generated record/strict invalid/target/component/metric, supplied NODE boundary, aggregate counter and checkpoint file binding. No actor or forward. Replacement counters only source-bound plus bounds, since unforced logits are not archived.')
+a.output.write_text(json.dumps(out,indent=2)+'\n');print(json.dumps({k:v for k,v in out.items() if k not in ('reports','flags','baseline','summaries')}))
