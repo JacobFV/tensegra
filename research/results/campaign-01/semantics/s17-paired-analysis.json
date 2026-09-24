@@ -1,0 +1,2812 @@
+{
+  "scope": "Exploratory S15-informed calibration diagnostic. No new gate, confirmation, checkpoint selection, further fitting or DEV fitting in this analysis, or retrospective S15 promotion. The declared TRAIN128 alternative was fitted by S17. Mean F1 metrics are macro averages across graphs. Signed errors: negative means fewer errors. Components reconstructed from complete packed labels.",
+  "source_sha256": "13a8c12a014f97b95b65b221457ade75be318c0cb2f76e24234c8391e12d8355",
+  "endpoint_artifacts": {
+    "control": {
+      "new": "9a1b13f28bbce276dfe63d4153b331ee6c814f7a38c07743c9ed306ac6cc20bf",
+      "old": "7b996b521b00e07fd91d540685e5b7e37b02bbc798aa151bcc1112c0403ad5f3"
+    },
+    "mixed": {
+      "new": "f5ad28c8d1dbee1b973baf00d2be3a56700b7b0c650c0798ae99b019fb337d4c",
+      "old": "ad383c0f5d39a21de1f09dd8cf6b7b59a1e7265d119f4a705824fa15a7eed790"
+    }
+  },
+  "calibration_metadata": [
+    {
+      "arm": "control",
+      "artifact": "control/evaluation-u28672.json.gz",
+      "artifact_sha256": "9a1b13f28bbce276dfe63d4153b331ee6c814f7a38c07743c9ed306ac6cc20bf",
+      "calibration_npz": "control/calibration-u28672.npz",
+      "calibration_npz_sha256": "ad43befd4d157420f45e5b14c062a7d6c47f7ae5712be2704c9a912f5b3db92f",
+      "calibration_cells": {
+        "4x4": 64,
+        "4x3": 64
+      },
+      "calibration_gold_relation_counts": {
+        "contains": 3392,
+        "declares": 798,
+        "refers_to": 2432,
+        "argument": 2432,
+        "item": 448,
+        "binds": 0,
+        "binding_scope": 0,
+        "field:query": 128,
+        "field:substitution": 0,
+        "field:pattern": 128,
+        "field:fact": 0,
+        "field:facts": 128,
+        "field:scene": 0
+      },
+      "calibration_absent_relations": [
+        "binds",
+        "binding_scope",
+        "field:substitution",
+        "field:fact",
+        "field:scene"
+      ],
+      "original_thresholds": [
+        3.21875,
+        1.78125,
+        5.4375,
+        5.6875,
+        4.875,
+        -45.25,
+        -53.75,
+        -26.125,
+        -45.0,
+        -23.125,
+        -48.75,
+        -40.75,
+        -54.0
+      ],
+      "new_thresholds": [
+        4.78125,
+        1.515625,
+        5.0,
+        5.4375,
+        15.125,
+        -53.75,
+        -54.75,
+        2.359375,
+        -47.75,
+        -18.125,
+        -55.5,
+        -41.0,
+        -48.0
+      ],
+      "original_evaluation_sha256": "7b996b521b00e07fd91d540685e5b7e37b02bbc798aa151bcc1112c0403ad5f3",
+      "checkpoint_sha256": "ddcfb33aff295e53cde8f7cc8b3071db050b72e950f4a3d11fddc0a48cbe9633",
+      "model_state_sha256": "36fa23bed67d800bbf2456f1ad3ef289b8d23e74a58494bb308f6ebdf9d9e509",
+      "raw_target_replay_exact": true,
+      "examples": 2048,
+      "setup_seconds": 4.0308143040165305,
+      "phase_timing": {
+        "calibration_forward_fit_train_pack_seconds": 4.628374931868166,
+        "dev_forward_metrics_pack_seconds": 25.906769446097314,
+        "export_and_summary_seconds": 12.146163712255657,
+        "total_seconds": 42.68130809022114
+      },
+      "verification_seconds": 3.5325913154520094,
+      "seconds": 50.244729549158365
+    },
+    {
+      "arm": "mixed",
+      "artifact": "mixed/evaluation-u28672.json.gz",
+      "artifact_sha256": "f5ad28c8d1dbee1b973baf00d2be3a56700b7b0c650c0798ae99b019fb337d4c",
+      "calibration_npz": "mixed/calibration-u28672.npz",
+      "calibration_npz_sha256": "f8ff5ac88ec9beb01e879af773ef77abed929af9477d0aa4f462747ade4761b0",
+      "calibration_cells": {
+        "4x4": 32,
+        "3x3": 64,
+        "4x3": 32
+      },
+      "calibration_gold_relation_counts": {
+        "contains": 2976,
+        "declares": 748,
+        "refers_to": 2048,
+        "argument": 2048,
+        "item": 416,
+        "binds": 0,
+        "binding_scope": 0,
+        "field:query": 128,
+        "field:substitution": 0,
+        "field:pattern": 128,
+        "field:fact": 0,
+        "field:facts": 128,
+        "field:scene": 0
+      },
+      "calibration_absent_relations": [
+        "binds",
+        "binding_scope",
+        "field:substitution",
+        "field:fact",
+        "field:scene"
+      ],
+      "original_thresholds": [
+        2.578125,
+        3.796875,
+        7.125,
+        6.0625,
+        14.5625,
+        -31.875,
+        -37.75,
+        4.0,
+        -45.25,
+        -0.033203125,
+        -48.0,
+        -27.75,
+        -35.5
+      ],
+      "new_thresholds": [
+        2.484375,
+        2.046875,
+        5.625,
+        4.65625,
+        13.875,
+        -26.875,
+        -30.75,
+        1.3671875,
+        -28.25,
+        -8.1875,
+        -24.75,
+        -5.375,
+        -31.25
+      ],
+      "original_evaluation_sha256": "ad383c0f5d39a21de1f09dd8cf6b7b59a1e7265d119f4a705824fa15a7eed790",
+      "checkpoint_sha256": "f1b3b16f41e9d96d3b110f48f5b08fbb96f7fb347b0793ca360e7d07e25fe578",
+      "model_state_sha256": "5ee1dac6710e164875ded5f05b8478db48a4cf7958cfc59ea040e3ea1a570021",
+      "raw_target_replay_exact": true,
+      "examples": 2048,
+      "setup_seconds": 4.327904672827572,
+      "phase_timing": {
+        "calibration_forward_fit_train_pack_seconds": 2.606712184846401,
+        "dev_forward_metrics_pack_seconds": 23.80105559108779,
+        "export_and_summary_seconds": 12.047931904904544,
+        "total_seconds": 38.455699680838734
+      },
+      "verification_seconds": 3.9376940559595823,
+      "seconds": 46.721312841866165
+    }
+  ],
+  "results": {
+    "control": {
+      "3x3": {
+        "examples": 512,
+        "policies": {
+          "raw": {
+            "complete": 0,
+            "exact_components": {},
+            "mean_metrics": {
+              "node_f1": 0.92460956876179,
+              "typed_edge_f1": 0.5082573823549396,
+              "ordered_edge_f1": 0.22874269360838975,
+              "node_type_accuracy": 0.6409669958520681,
+              "identity_copy_accuracy": 0.5834574318723753,
+              "entity_equivalence": 0.7630325822392479
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 3202,
+                "false_negative": 425,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 741,
+                "false_negative": 1200,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 4974,
+                "false_negative": 4176,
+                "wrong_slots_on_present_gold": 1
+              },
+              "argument": {
+                "false_positive": 8152,
+                "false_negative": 5124,
+                "wrong_slots_on_present_gold": 1
+              },
+              "item": {
+                "false_positive": 1118,
+                "false_negative": 1019,
+                "wrong_slots_on_present_gold": 1
+              },
+              "binds": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 397,
+                "false_negative": 512,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 563,
+                "false_negative": 512,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "historical": {
+            "complete": 0,
+            "exact_components": {},
+            "mean_metrics": {
+              "node_f1": 0.92460956876179,
+              "typed_edge_f1": 0.5252181995009871,
+              "ordered_edge_f1": 0.23797088536867006,
+              "node_type_accuracy": 0.6409669958520681,
+              "identity_copy_accuracy": 0.5834574318723753,
+              "entity_equivalence": 0.7630325822392479
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 3114,
+                "false_negative": 554,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 655,
+                "false_negative": 1229,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 1641,
+                "false_negative": 4875,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 6574,
+                "false_negative": 5182,
+                "wrong_slots_on_present_gold": 0
+              },
+              "item": {
+                "false_positive": 1081,
+                "false_negative": 1026,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 10,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 32,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 496,
+                "false_negative": 512,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 10,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 738,
+                "false_negative": 512,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 14,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 42,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 45,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "matched": {
+            "complete": 0,
+            "exact_components": {},
+            "mean_metrics": {
+              "node_f1": 0.92460956876179,
+              "typed_edge_f1": 0.5250975748880021,
+              "ordered_edge_f1": 0.238122227748464,
+              "node_type_accuracy": 0.6409669958520681,
+              "identity_copy_accuracy": 0.5834574318723753,
+              "entity_equivalence": 0.7630325822392479
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 3073,
+                "false_negative": 623,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 667,
+                "false_negative": 1223,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 1811,
+                "false_negative": 4806,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 6656,
+                "false_negative": 5179,
+                "wrong_slots_on_present_gold": 0
+              },
+              "item": {
+                "false_positive": 1012,
+                "false_negative": 1041,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 47,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 32,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 382,
+                "false_negative": 512,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 18,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 661,
+                "false_negative": 512,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 44,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 42,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 10,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          }
+        },
+        "historical_to_matched_complete": {
+          "0->0": 512
+        },
+        "signed_matched_minus_historical": {
+          "contains": {
+            "false_positive": -41,
+            "false_negative": 69,
+            "wrong_slots_on_present_gold": 0
+          },
+          "declares": {
+            "false_positive": 12,
+            "false_negative": -6,
+            "wrong_slots_on_present_gold": 0
+          },
+          "refers_to": {
+            "false_positive": 170,
+            "false_negative": -69,
+            "wrong_slots_on_present_gold": 0
+          },
+          "argument": {
+            "false_positive": 82,
+            "false_negative": -3,
+            "wrong_slots_on_present_gold": 0
+          },
+          "item": {
+            "false_positive": -69,
+            "false_negative": 15,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binds": {
+            "false_positive": 37,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binding_scope": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:query": {
+            "false_positive": -114,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:substitution": {
+            "false_positive": 8,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:pattern": {
+            "false_positive": -77,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:fact": {
+            "false_positive": 30,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:facts": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:scene": {
+            "false_positive": -35,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          }
+        }
+      },
+      "3x4": {
+        "examples": 512,
+        "policies": {
+          "raw": {
+            "complete": 0,
+            "exact_components": {
+              "presence": 505,
+              "value": 493,
+              "copy": 1
+            },
+            "mean_metrics": {
+              "node_f1": 0.9997682733050847,
+              "typed_edge_f1": 0.6302934133860649,
+              "ordered_edge_f1": 0.2924348411204531,
+              "node_type_accuracy": 0.7171512909699231,
+              "identity_copy_accuracy": 0.779654894315172,
+              "entity_equivalence": 0.8727081042015925
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 848,
+                "false_negative": 295,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 385,
+                "false_negative": 747,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 2704,
+                "false_negative": 3845,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 7594,
+                "false_negative": 6140,
+                "wrong_slots_on_present_gold": 3
+              },
+              "item": {
+                "false_positive": 1121,
+                "false_negative": 1535,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 7,
+                "false_negative": 7,
+                "wrong_slots_on_present_gold": 1
+              },
+              "field:substitution": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 504,
+                "false_negative": 504,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 0,
+                "false_negative": 1,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "historical": {
+            "complete": 0,
+            "exact_components": {
+              "presence": 505,
+              "value": 493,
+              "copy": 1
+            },
+            "mean_metrics": {
+              "node_f1": 0.9997682733050847,
+              "typed_edge_f1": 0.6271943309069817,
+              "ordered_edge_f1": 0.3043006377013052,
+              "node_type_accuracy": 0.7171512909699231,
+              "identity_copy_accuracy": 0.779654894315172,
+              "entity_equivalence": 0.8727081042015925
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 762,
+                "false_negative": 387,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 339,
+                "false_negative": 773,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 818,
+                "false_negative": 5246,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 6538,
+                "false_negative": 6154,
+                "wrong_slots_on_present_gold": 2
+              },
+              "item": {
+                "false_positive": 1089,
+                "false_negative": 1535,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 3,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 5,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 22,
+                "false_negative": 4,
+                "wrong_slots_on_present_gold": 4
+              },
+              "field:substitution": {
+                "false_positive": 3,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 522,
+                "false_negative": 504,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 2,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 12,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 10,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "matched": {
+            "complete": 0,
+            "exact_components": {
+              "presence": 505,
+              "value": 493,
+              "copy": 1
+            },
+            "mean_metrics": {
+              "node_f1": 0.9997682733050847,
+              "typed_edge_f1": 0.6288006536672617,
+              "ordered_edge_f1": 0.3051144350951361,
+              "node_type_accuracy": 0.7171512909699231,
+              "identity_copy_accuracy": 0.779654894315172,
+              "entity_equivalence": 0.8727081042015925
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 746,
+                "false_negative": 434,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 345,
+                "false_negative": 768,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 890,
+                "false_negative": 5118,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 6590,
+                "false_negative": 6152,
+                "wrong_slots_on_present_gold": 2
+              },
+              "item": {
+                "false_positive": 999,
+                "false_negative": 1536,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 4,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 6,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 7,
+                "false_negative": 8,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 4,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 511,
+                "false_negative": 504,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 11,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 13,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 2,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          }
+        },
+        "historical_to_matched_complete": {
+          "0->0": 512
+        },
+        "signed_matched_minus_historical": {
+          "contains": {
+            "false_positive": -16,
+            "false_negative": 47,
+            "wrong_slots_on_present_gold": 0
+          },
+          "declares": {
+            "false_positive": 6,
+            "false_negative": -5,
+            "wrong_slots_on_present_gold": 0
+          },
+          "refers_to": {
+            "false_positive": 72,
+            "false_negative": -128,
+            "wrong_slots_on_present_gold": 0
+          },
+          "argument": {
+            "false_positive": 52,
+            "false_negative": -2,
+            "wrong_slots_on_present_gold": 0
+          },
+          "item": {
+            "false_positive": -90,
+            "false_negative": 1,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binds": {
+            "false_positive": 1,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binding_scope": {
+            "false_positive": 1,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:query": {
+            "false_positive": -15,
+            "false_negative": 4,
+            "wrong_slots_on_present_gold": -4
+          },
+          "field:substitution": {
+            "false_positive": 1,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:pattern": {
+            "false_positive": -11,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:fact": {
+            "false_positive": 9,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:facts": {
+            "false_positive": 1,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:scene": {
+            "false_positive": -8,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          }
+        }
+      },
+      "4x3": {
+        "examples": 512,
+        "policies": {
+          "raw": {
+            "complete": 109,
+            "exact_components": {
+              "presence": 512,
+              "kind": 505,
+              "value": 512,
+              "copy": 509,
+              "edges": 109,
+              "slots": 512
+            },
+            "mean_metrics": {
+              "node_f1": 1.0,
+              "typed_edge_f1": 0.9810581189712505,
+              "ordered_edge_f1": 0.991068235346811,
+              "node_type_accuracy": 0.9994896670104936,
+              "identity_copy_accuracy": 0.9997449228540063,
+              "entity_equivalence": 0.9997911967802793
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 12,
+                "false_negative": 4,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 15,
+                "false_negative": 2,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 1214,
+                "false_negative": 12,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 147,
+                "false_negative": 2,
+                "wrong_slots_on_present_gold": 0
+              },
+              "item": {
+                "false_positive": 6,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "historical": {
+            "complete": 231,
+            "exact_components": {
+              "presence": 512,
+              "kind": 505,
+              "value": 512,
+              "copy": 509,
+              "slots": 512,
+              "edges": 231
+            },
+            "mean_metrics": {
+              "node_f1": 1.0,
+              "typed_edge_f1": 0.9927734767816996,
+              "ordered_edge_f1": 0.9972480972881883,
+              "node_type_accuracy": 0.9994896670104936,
+              "identity_copy_accuracy": 0.9997449228540063,
+              "entity_equivalence": 0.9997911967802793
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 4,
+                "false_negative": 10,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 10,
+                "false_negative": 3,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 154,
+                "false_negative": 266,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 22,
+                "false_negative": 30,
+                "wrong_slots_on_present_gold": 0
+              },
+              "item": {
+                "false_positive": 2,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 2,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 9,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 4,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "matched": {
+            "complete": 249,
+            "exact_components": {
+              "presence": 512,
+              "kind": 505,
+              "value": 512,
+              "copy": 509,
+              "slots": 512,
+              "edges": 250
+            },
+            "mean_metrics": {
+              "node_f1": 1.0,
+              "typed_edge_f1": 0.9935230037347215,
+              "ordered_edge_f1": 0.997327515136888,
+              "node_type_accuracy": 0.9994896670104936,
+              "identity_copy_accuracy": 0.9997449228540063,
+              "entity_equivalence": 0.9997911967802793
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 3,
+                "false_negative": 12,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 10,
+                "false_negative": 2,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 175,
+                "false_negative": 199,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 26,
+                "false_negative": 27,
+                "wrong_slots_on_present_gold": 0
+              },
+              "item": {
+                "false_positive": 0,
+                "false_negative": 2,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 2,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 3,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 2,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          }
+        },
+        "historical_to_matched_complete": {
+          "0->0": 251,
+          "1->1": 219,
+          "0->1": 30,
+          "1->0": 12
+        },
+        "signed_matched_minus_historical": {
+          "contains": {
+            "false_positive": -1,
+            "false_negative": 2,
+            "wrong_slots_on_present_gold": 0
+          },
+          "declares": {
+            "false_positive": 0,
+            "false_negative": -1,
+            "wrong_slots_on_present_gold": 0
+          },
+          "refers_to": {
+            "false_positive": 21,
+            "false_negative": -67,
+            "wrong_slots_on_present_gold": 0
+          },
+          "argument": {
+            "false_positive": 4,
+            "false_negative": -3,
+            "wrong_slots_on_present_gold": 0
+          },
+          "item": {
+            "false_positive": -2,
+            "false_negative": 2,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binds": {
+            "false_positive": 1,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binding_scope": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:query": {
+            "false_positive": -2,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:substitution": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:pattern": {
+            "false_positive": -8,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:fact": {
+            "false_positive": 3,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:facts": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:scene": {
+            "false_positive": -2,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          }
+        }
+      },
+      "4x4": {
+        "examples": 512,
+        "policies": {
+          "raw": {
+            "complete": 3,
+            "exact_components": {
+              "presence": 512,
+              "kind": 466,
+              "value": 512,
+              "copy": 464,
+              "slots": 504,
+              "edges": 3
+            },
+            "mean_metrics": {
+              "node_f1": 1.0,
+              "typed_edge_f1": 0.9332701473739534,
+              "ordered_edge_f1": 0.965626504338327,
+              "node_type_accuracy": 0.9971051682950929,
+              "identity_copy_accuracy": 0.9959921997506171,
+              "entity_equivalence": 0.9973138690693304
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 98,
+                "false_negative": 12,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 66,
+                "false_negative": 20,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 5271,
+                "false_negative": 31,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 799,
+                "false_negative": 5,
+                "wrong_slots_on_present_gold": 8
+              },
+              "item": {
+                "false_positive": 27,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "historical": {
+            "complete": 45,
+            "exact_components": {
+              "presence": 512,
+              "kind": 466,
+              "value": 512,
+              "copy": 464,
+              "slots": 504,
+              "edges": 46
+            },
+            "mean_metrics": {
+              "node_f1": 1.0,
+              "typed_edge_f1": 0.976670604167295,
+              "ordered_edge_f1": 0.98744651245632,
+              "node_type_accuracy": 0.9971051682950929,
+              "identity_copy_accuracy": 0.9959921997506171,
+              "entity_equivalence": 0.9973138690693304
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 46,
+                "false_negative": 32,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 42,
+                "false_negative": 30,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 953,
+                "false_negative": 551,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 169,
+                "false_negative": 69,
+                "wrong_slots_on_present_gold": 8
+              },
+              "item": {
+                "false_positive": 13,
+                "false_negative": 1,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 12,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 19,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 26,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 19,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 24,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 10,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 15,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 43,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "matched": {
+            "complete": 43,
+            "exact_components": {
+              "presence": 512,
+              "kind": 466,
+              "value": 512,
+              "copy": 464,
+              "slots": 504,
+              "edges": 44
+            },
+            "mean_metrics": {
+              "node_f1": 1.0,
+              "typed_edge_f1": 0.9761955735123073,
+              "ordered_edge_f1": 0.9868214381676484,
+              "node_type_accuracy": 0.9971051682950929,
+              "identity_copy_accuracy": 0.9959921997506171,
+              "entity_equivalence": 0.9973138690693304
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 30,
+                "false_negative": 45,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 46,
+                "false_negative": 30,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 1086,
+                "false_negative": 430,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 183,
+                "false_negative": 62,
+                "wrong_slots_on_present_gold": 8
+              },
+              "item": {
+                "false_positive": 2,
+                "false_negative": 6,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 48,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 25,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 30,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 6,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 57,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 18,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 18,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          }
+        },
+        "historical_to_matched_complete": {
+          "0->0": 459,
+          "1->0": 10,
+          "1->1": 35,
+          "0->1": 8
+        },
+        "signed_matched_minus_historical": {
+          "contains": {
+            "false_positive": -16,
+            "false_negative": 13,
+            "wrong_slots_on_present_gold": 0
+          },
+          "declares": {
+            "false_positive": 4,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "refers_to": {
+            "false_positive": 133,
+            "false_negative": -121,
+            "wrong_slots_on_present_gold": 0
+          },
+          "argument": {
+            "false_positive": 14,
+            "false_negative": -7,
+            "wrong_slots_on_present_gold": 0
+          },
+          "item": {
+            "false_positive": -11,
+            "false_negative": 5,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binds": {
+            "false_positive": 36,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binding_scope": {
+            "false_positive": 6,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:query": {
+            "false_positive": -25,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:substitution": {
+            "false_positive": 11,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:pattern": {
+            "false_positive": -18,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:fact": {
+            "false_positive": 47,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:facts": {
+            "false_positive": 3,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:scene": {
+            "false_positive": -25,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          }
+        }
+      }
+    },
+    "mixed": {
+      "3x3": {
+        "examples": 512,
+        "policies": {
+          "raw": {
+            "complete": 1,
+            "exact_components": {
+              "presence": 512,
+              "kind": 478,
+              "value": 512,
+              "copy": 477,
+              "slots": 507,
+              "edges": 1
+            },
+            "mean_metrics": {
+              "node_f1": 1.0,
+              "typed_edge_f1": 0.8970085992776851,
+              "ordered_edge_f1": 0.9431952790041298,
+              "node_type_accuracy": 0.9966126511571929,
+              "identity_copy_accuracy": 0.9950971989892423,
+              "entity_equivalence": 0.9958783569745719
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 79,
+                "false_negative": 10,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 80,
+                "false_negative": 11,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 5745,
+                "false_negative": 34,
+                "wrong_slots_on_present_gold": 2
+              },
+              "argument": {
+                "false_positive": 1000,
+                "false_negative": 1,
+                "wrong_slots_on_present_gold": 4
+              },
+              "item": {
+                "false_positive": 13,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 3,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "historical": {
+            "complete": 1,
+            "exact_components": {
+              "presence": 512,
+              "kind": 478,
+              "value": 512,
+              "copy": 477,
+              "slots": 507,
+              "edges": 1
+            },
+            "mean_metrics": {
+              "node_f1": 1.0,
+              "typed_edge_f1": 0.9218595249908732,
+              "ordered_edge_f1": 0.9389131794268623,
+              "node_type_accuracy": 0.9966126511571929,
+              "identity_copy_accuracy": 0.9950971989892423,
+              "entity_equivalence": 0.9958783569745719
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 34,
+                "false_negative": 22,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 22,
+                "false_negative": 44,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 228,
+                "false_negative": 1844,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 262,
+                "false_negative": 435,
+                "wrong_slots_on_present_gold": 2
+              },
+              "item": {
+                "false_positive": 2,
+                "false_negative": 11,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 50,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 102,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 376,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 1182,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 396,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 31,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "matched": {
+            "complete": 22,
+            "exact_components": {
+              "presence": 512,
+              "kind": 478,
+              "value": 512,
+              "copy": 477,
+              "slots": 507,
+              "edges": 22
+            },
+            "mean_metrics": {
+              "node_f1": 1.0,
+              "typed_edge_f1": 0.9639840765094266,
+              "ordered_edge_f1": 0.972036853287204,
+              "node_type_accuracy": 0.9966126511571929,
+              "identity_copy_accuracy": 0.9950971989892423,
+              "entity_equivalence": 0.9958783569745719
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 34,
+                "false_negative": 22,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 41,
+                "false_negative": 23,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 468,
+                "false_negative": 965,
+                "wrong_slots_on_present_gold": 1
+              },
+              "argument": {
+                "false_positive": 318,
+                "false_negative": 169,
+                "wrong_slots_on_present_gold": 3
+              },
+              "item": {
+                "false_positive": 2,
+                "false_negative": 8,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 14,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 18,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 4,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 17,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 11,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 9,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          }
+        },
+        "historical_to_matched_complete": {
+          "0->0": 490,
+          "0->1": 21,
+          "1->1": 1
+        },
+        "signed_matched_minus_historical": {
+          "contains": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "declares": {
+            "false_positive": 19,
+            "false_negative": -21,
+            "wrong_slots_on_present_gold": 0
+          },
+          "refers_to": {
+            "false_positive": 240,
+            "false_negative": -879,
+            "wrong_slots_on_present_gold": 1
+          },
+          "argument": {
+            "false_positive": 56,
+            "false_negative": -266,
+            "wrong_slots_on_present_gold": 1
+          },
+          "item": {
+            "false_positive": 0,
+            "false_negative": -3,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binds": {
+            "false_positive": -36,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binding_scope": {
+            "false_positive": -84,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:query": {
+            "false_positive": 1,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:substitution": {
+            "false_positive": -372,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:pattern": {
+            "false_positive": 16,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:fact": {
+            "false_positive": -1171,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:facts": {
+            "false_positive": -396,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:scene": {
+            "false_positive": -22,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          }
+        }
+      },
+      "3x4": {
+        "examples": 512,
+        "policies": {
+          "raw": {
+            "complete": 0,
+            "exact_components": {
+              "presence": 506,
+              "value": 511
+            },
+            "mean_metrics": {
+              "node_f1": 0.9996995413846325,
+              "typed_edge_f1": 0.61682755546519,
+              "ordered_edge_f1": 0.28093959627840887,
+              "node_type_accuracy": 0.7204839271726087,
+              "identity_copy_accuracy": 0.8127986473264173,
+              "entity_equivalence": 0.887969414703548
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 1038,
+                "false_negative": 224,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 342,
+                "false_negative": 839,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 3806,
+                "false_negative": 3654,
+                "wrong_slots_on_present_gold": 13
+              },
+              "argument": {
+                "false_positive": 8492,
+                "false_negative": 6087,
+                "wrong_slots_on_present_gold": 41
+              },
+              "item": {
+                "false_positive": 1139,
+                "false_negative": 1494,
+                "wrong_slots_on_present_gold": 3
+              },
+              "binds": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 8,
+                "false_negative": 12,
+                "wrong_slots_on_present_gold": 58
+              },
+              "field:substitution": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 506,
+                "false_negative": 507,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "historical": {
+            "complete": 0,
+            "exact_components": {
+              "presence": 506,
+              "value": 511
+            },
+            "mean_metrics": {
+              "node_f1": 0.9996995413846325,
+              "typed_edge_f1": 0.626369227340924,
+              "ordered_edge_f1": 0.30273027861171303,
+              "node_type_accuracy": 0.7204839271726087,
+              "identity_copy_accuracy": 0.8127986473264173,
+              "entity_equivalence": 0.887969414703548
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 910,
+                "false_negative": 289,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 229,
+                "false_negative": 914,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 762,
+                "false_negative": 5375,
+                "wrong_slots_on_present_gold": 3
+              },
+              "argument": {
+                "false_positive": 6414,
+                "false_negative": 6148,
+                "wrong_slots_on_present_gold": 7
+              },
+              "item": {
+                "false_positive": 941,
+                "false_negative": 1531,
+                "wrong_slots_on_present_gold": 2
+              },
+              "binds": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 17,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 8,
+                "false_negative": 13,
+                "wrong_slots_on_present_gold": 57
+              },
+              "field:substitution": {
+                "false_positive": 7,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 506,
+                "false_negative": 507,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 8,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 18,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "matched": {
+            "complete": 0,
+            "exact_components": {
+              "presence": 506,
+              "value": 511
+            },
+            "mean_metrics": {
+              "node_f1": 0.9996995413846325,
+              "typed_edge_f1": 0.628593146130798,
+              "ordered_edge_f1": 0.2984097021959706,
+              "node_type_accuracy": 0.7204839271726087,
+              "identity_copy_accuracy": 0.8127986473264173,
+              "entity_equivalence": 0.887969414703548
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 917,
+                "false_negative": 287,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 279,
+                "false_negative": 875,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 1043,
+                "false_negative": 4983,
+                "wrong_slots_on_present_gold": 4
+              },
+              "argument": {
+                "false_positive": 6840,
+                "false_negative": 6133,
+                "wrong_slots_on_present_gold": 8
+              },
+              "item": {
+                "false_positive": 952,
+                "false_negative": 1530,
+                "wrong_slots_on_present_gold": 2
+              },
+              "binds": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 7,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 8,
+                "false_negative": 12,
+                "wrong_slots_on_present_gold": 58
+              },
+              "field:substitution": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 527,
+                "false_negative": 506,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          }
+        },
+        "historical_to_matched_complete": {
+          "0->0": 512
+        },
+        "signed_matched_minus_historical": {
+          "contains": {
+            "false_positive": 7,
+            "false_negative": -2,
+            "wrong_slots_on_present_gold": 0
+          },
+          "declares": {
+            "false_positive": 50,
+            "false_negative": -39,
+            "wrong_slots_on_present_gold": 0
+          },
+          "refers_to": {
+            "false_positive": 281,
+            "false_negative": -392,
+            "wrong_slots_on_present_gold": 1
+          },
+          "argument": {
+            "false_positive": 426,
+            "false_negative": -15,
+            "wrong_slots_on_present_gold": 1
+          },
+          "item": {
+            "false_positive": 11,
+            "false_negative": -1,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binds": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binding_scope": {
+            "false_positive": -10,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:query": {
+            "false_positive": 0,
+            "false_negative": -1,
+            "wrong_slots_on_present_gold": 1
+          },
+          "field:substitution": {
+            "false_positive": -7,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:pattern": {
+            "false_positive": 21,
+            "false_negative": -1,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:fact": {
+            "false_positive": -8,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:facts": {
+            "false_positive": -18,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:scene": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          }
+        }
+      },
+      "4x3": {
+        "examples": 512,
+        "policies": {
+          "raw": {
+            "complete": 7,
+            "exact_components": {
+              "presence": 511,
+              "kind": 498,
+              "value": 512,
+              "copy": 500,
+              "slots": 507,
+              "edges": 7
+            },
+            "mean_metrics": {
+              "node_f1": 0.999968998015873,
+              "typed_edge_f1": 0.9496765681446825,
+              "ordered_edge_f1": 0.9670220721841348,
+              "node_type_accuracy": 0.9990483759902418,
+              "identity_copy_accuracy": 0.9988986329408363,
+              "entity_equivalence": 0.9991903722984716
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 33,
+                "false_negative": 5,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 17,
+                "false_negative": 6,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 3101,
+                "false_negative": 28,
+                "wrong_slots_on_present_gold": 1
+              },
+              "argument": {
+                "false_positive": 643,
+                "false_negative": 5,
+                "wrong_slots_on_present_gold": 4
+              },
+              "item": {
+                "false_positive": 40,
+                "false_negative": 1,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 2,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "historical": {
+            "complete": 80,
+            "exact_components": {
+              "presence": 511,
+              "kind": 498,
+              "value": 512,
+              "copy": 500,
+              "slots": 507,
+              "edges": 80
+            },
+            "mean_metrics": {
+              "node_f1": 0.999968998015873,
+              "typed_edge_f1": 0.9826392389419213,
+              "ordered_edge_f1": 0.9900869682874514,
+              "node_type_accuracy": 0.9990483759902418,
+              "identity_copy_accuracy": 0.9988986329408363,
+              "entity_equivalence": 0.9991903722984716
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 20,
+                "false_negative": 8,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 8,
+                "false_negative": 16,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 344,
+                "false_negative": 637,
+                "wrong_slots_on_present_gold": 1
+              },
+              "argument": {
+                "false_positive": 109,
+                "false_negative": 72,
+                "wrong_slots_on_present_gold": 4
+              },
+              "item": {
+                "false_positive": 3,
+                "false_negative": 4,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 6,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 2,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 3,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 4,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "matched": {
+            "complete": 109,
+            "exact_components": {
+              "presence": 511,
+              "kind": 498,
+              "value": 512,
+              "copy": 500,
+              "edges": 109,
+              "slots": 507
+            },
+            "mean_metrics": {
+              "node_f1": 0.999968998015873,
+              "typed_edge_f1": 0.9839130495758541,
+              "ordered_edge_f1": 0.98922738861848,
+              "node_type_accuracy": 0.9990483759902418,
+              "identity_copy_accuracy": 0.9988986329408363,
+              "entity_equivalence": 0.9991903722984716
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 20,
+                "false_negative": 8,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 13,
+                "false_negative": 9,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 540,
+                "false_negative": 355,
+                "wrong_slots_on_present_gold": 1
+              },
+              "argument": {
+                "false_positive": 164,
+                "false_negative": 35,
+                "wrong_slots_on_present_gold": 4
+              },
+              "item": {
+                "false_positive": 3,
+                "false_negative": 4,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 2,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 10,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          }
+        },
+        "historical_to_matched_complete": {
+          "0->1": 47,
+          "1->1": 62,
+          "0->0": 385,
+          "1->0": 18
+        },
+        "signed_matched_minus_historical": {
+          "contains": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "declares": {
+            "false_positive": 5,
+            "false_negative": -7,
+            "wrong_slots_on_present_gold": 0
+          },
+          "refers_to": {
+            "false_positive": 196,
+            "false_negative": -282,
+            "wrong_slots_on_present_gold": 0
+          },
+          "argument": {
+            "false_positive": 55,
+            "false_negative": -37,
+            "wrong_slots_on_present_gold": 0
+          },
+          "item": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binds": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binding_scope": {
+            "false_positive": -5,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:query": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:substitution": {
+            "false_positive": -3,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:pattern": {
+            "false_positive": 9,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:fact": {
+            "false_positive": -1,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:facts": {
+            "false_positive": -4,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:scene": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          }
+        }
+      },
+      "4x4": {
+        "examples": 512,
+        "policies": {
+          "raw": {
+            "complete": 0,
+            "exact_components": {
+              "presence": 511,
+              "kind": 456,
+              "value": 512,
+              "copy": 453,
+              "slots": 496
+            },
+            "mean_metrics": {
+              "node_f1": 0.9999716938405797,
+              "typed_edge_f1": 0.8991650781244109,
+              "ordered_edge_f1": 0.9351345933171564,
+              "node_type_accuracy": 0.9958382765762508,
+              "identity_copy_accuracy": 0.995058165746741,
+              "entity_equivalence": 0.9966897274134681
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 135,
+                "false_negative": 21,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 97,
+                "false_negative": 28,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 7783,
+                "false_negative": 64,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 1714,
+                "false_negative": 2,
+                "wrong_slots_on_present_gold": 17
+              },
+              "item": {
+                "false_positive": 70,
+                "false_negative": 2,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 1,
+                "false_negative": 2,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 3,
+                "false_negative": 1,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 0,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "historical": {
+            "complete": 10,
+            "exact_components": {
+              "presence": 511,
+              "kind": 456,
+              "value": 512,
+              "copy": 453,
+              "slots": 496,
+              "edges": 11
+            },
+            "mean_metrics": {
+              "node_f1": 0.9999716938405797,
+              "typed_edge_f1": 0.9651410915584038,
+              "ordered_edge_f1": 0.9753025421525362,
+              "node_type_accuracy": 0.9958382765762508,
+              "identity_copy_accuracy": 0.995058165746741,
+              "entity_equivalence": 0.9966897274134681
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 66,
+                "false_negative": 39,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 40,
+                "false_negative": 71,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 1096,
+                "false_negative": 1029,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 369,
+                "false_negative": 192,
+                "wrong_slots_on_present_gold": 16
+              },
+              "item": {
+                "false_positive": 7,
+                "false_negative": 26,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 2,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 13,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 0,
+                "false_negative": 3,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 41,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 3,
+                "false_negative": 1,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 29,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 12,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 8,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          },
+          "matched": {
+            "complete": 10,
+            "exact_components": {
+              "presence": 511,
+              "kind": 456,
+              "value": 512,
+              "copy": 453,
+              "slots": 496,
+              "edges": 10
+            },
+            "mean_metrics": {
+              "node_f1": 0.9999716938405797,
+              "typed_edge_f1": 0.9640347109411407,
+              "ordered_edge_f1": 0.9747868496583985,
+              "node_type_accuracy": 0.9958382765762508,
+              "identity_copy_accuracy": 0.995058165746741,
+              "entity_equivalence": 0.9966897274134681
+            },
+            "relations": {
+              "contains": {
+                "false_positive": 68,
+                "false_negative": 39,
+                "wrong_slots_on_present_gold": 0
+              },
+              "declares": {
+                "false_positive": 64,
+                "false_negative": 53,
+                "wrong_slots_on_present_gold": 0
+              },
+              "refers_to": {
+                "false_positive": 1707,
+                "false_negative": 606,
+                "wrong_slots_on_present_gold": 0
+              },
+              "argument": {
+                "false_positive": 517,
+                "false_negative": 84,
+                "wrong_slots_on_present_gold": 17
+              },
+              "item": {
+                "false_positive": 8,
+                "false_negative": 24,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binds": {
+                "false_positive": 2,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "binding_scope": {
+                "false_positive": 2,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:query": {
+                "false_positive": 1,
+                "false_negative": 2,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:substitution": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:pattern": {
+                "false_positive": 14,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:fact": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:facts": {
+                "false_positive": 1,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              },
+              "field:scene": {
+                "false_positive": 5,
+                "false_negative": 0,
+                "wrong_slots_on_present_gold": 0
+              }
+            }
+          }
+        },
+        "historical_to_matched_complete": {
+          "0->0": 497,
+          "1->1": 5,
+          "1->0": 5,
+          "0->1": 5
+        },
+        "signed_matched_minus_historical": {
+          "contains": {
+            "false_positive": 2,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "declares": {
+            "false_positive": 24,
+            "false_negative": -18,
+            "wrong_slots_on_present_gold": 0
+          },
+          "refers_to": {
+            "false_positive": 611,
+            "false_negative": -423,
+            "wrong_slots_on_present_gold": 0
+          },
+          "argument": {
+            "false_positive": 148,
+            "false_negative": -108,
+            "wrong_slots_on_present_gold": 1
+          },
+          "item": {
+            "false_positive": 1,
+            "false_negative": -2,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binds": {
+            "false_positive": 0,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "binding_scope": {
+            "false_positive": -11,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:query": {
+            "false_positive": 1,
+            "false_negative": -1,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:substitution": {
+            "false_positive": -40,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:pattern": {
+            "false_positive": 11,
+            "false_negative": -1,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:fact": {
+            "false_positive": -28,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:facts": {
+            "false_positive": -11,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          },
+          "field:scene": {
+            "false_positive": -3,
+            "false_negative": 0,
+            "wrong_slots_on_present_gold": 0
+          }
+        }
+      }
+    }
+  }
+}
