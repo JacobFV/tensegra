@@ -108,7 +108,7 @@ class ReferencePolicy:
                    r.get("primitive") == primitive and r["state_version"] == o.state_version]
         if records:
             last = records[-1]
-            if last.get("status") == "success":
+            if last.get("status") in {"success", "timeout"} and last.get("certificate_valid", False):
                 if last["handle"] not in o.retrieved:
                     return pick("retrieve", handle=last["handle"])
                 return pick("use_return", handle=last["handle"], **{"as":role})
@@ -143,17 +143,21 @@ class ReferencePolicy:
         return tuple(selected)
 
 
-def run_episode(world, policy) -> dict[str, Any]:
+def run_episode(world, policy, model_compute_tariff: float = 0.0) -> dict[str, Any]:
     """Harness receives environment; policy only receives copied observations.
 
     Actual policy CPU is separate from deterministic solver work units. Initial
     harness construction/generation is outside this function and must be timed
     by the experiment runner. No experiment launch occurs on import.
     """
+    if model_compute_tariff < 0:
+        raise ValueError("compute tariff must be nonnegative")
     cpu_start, wall_start = time.process_time(), time.monotonic()
     controller_cpu, trace = 0.0, []
     observation = world.observe()
     while not observation.done:
+        if model_compute_tariff:
+            world.charge_compute(model_compute_tariff)
         start = time.process_time()
         action = policy.choose(observation)
         controller_cpu += time.process_time()-start
@@ -163,5 +167,5 @@ def run_episode(world, policy) -> dict[str, Any]:
     result.update(controller_cpu_seconds=controller_cpu,
                   episode_cpu_seconds=time.process_time()-cpu_start,
                   episode_wall_seconds=time.monotonic()-wall_start,
-                  reference=policy.mode, trace=trace)
+                  reference=policy.mode, model_compute_tariff=model_compute_tariff, trace=trace)
     return result

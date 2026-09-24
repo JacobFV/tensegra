@@ -9,10 +9,13 @@ replace existing outputs. Root coordinator owns launch and resource scheduling.
 from __future__ import annotations
 import argparse
 from dataclasses import asdict
+from contextlib import nullcontext
+from functools import partial
 import gzip
 import hashlib
 import inspect
 import json
+import os
 from pathlib import Path
 import resource
 import time
@@ -22,9 +25,19 @@ from topoformer.campaign02_references import ReferencePolicy, run_episode
 from topoformer.campaign02_world import Workshop, generate_world, protocol_executor
 
 
-def cpu_seconds():
+def cpu_seconds(owner=None):
     parts = [resource.getrusage(k) for k in (resource.RUSAGE_SELF,resource.RUSAGE_CHILDREN)]
-    return sum(p.ru_utime+p.ru_stime for p in parts)
+    total = sum(p.ru_utime+p.ru_stime for p in parts)
+    process = getattr(owner,'_process',None)
+    if process is not None and process.is_alive():
+        # Linux coordinator accounting only; never enters actor observations.
+        # Child is not yet included in RUSAGE_CHILDREN until joined.
+        try:
+            fields = Path(f'/proc/{process.pid}/stat').read_text().rsplit(')',1)[1].split()
+            total += (int(fields[11])+int(fields[12]))/os.sysconf('SC_CLK_TCK')
+        except FileNotFoundError:
+            pass  # Final close/join makes completed child usage authoritative.
+    return total
 
 
 def profile(config, output):
@@ -38,24 +51,38 @@ def profile(config, output):
         raise ValueError('bounded episode count required')
     limit = config.get('cpu_limit_seconds',120)
     stopped = False
-    for ci, condition in enumerate(config['conditions']):
-        kwargs = {k:v for k,v in condition.items() if k!='name'}
-        if kwargs.get('categories',2)*kwargs.get('choices',3)>20:
-            raise ValueError('maximum20 inventory items')
-        kwargs.setdefault('step_limit',64)
-        for i in range(count):
-            if cpu_seconds()-cpu >= limit:
-                stopped = True
+    executor_kind = config.get('executor', 'isolated')
+    if executor_kind not in ('isolated','persistent'):
+        raise ValueError('executor must be isolated or persistent')
+    owner = campaign02_protocol.BoundedSolver() if executor_kind=='persistent' else None
+    context = owner if owner is not None else nullcontext()
+    executor = partial(protocol_executor,execute_call=owner.execute) if owner else protocol_executor
+    executor_stats = {'kind':executor_kind}
+    with context:
+        for ci, condition in enumerate(config['conditions']):
+            kwargs = {k:v for k,v in condition.items() if k!='name'}
+            if kwargs.get('categories',2)*kwargs.get('choices',3)>20:
+                raise ValueError('maximum20 inventory items')
+            kwargs.setdefault('step_limit',64)
+            for i in range(count):
+                if cpu_seconds(owner)-cpu >= limit:
+                    stopped = True
+                    break
+                seed = config.get('seed_start',200000)+ci*10000+i
+                spec = generate_world(seed,**kwargs)
+                semantic_hash = hashlib.sha256(json.dumps(asdict(spec),sort_keys=True).encode()).hexdigest()
+                for mode in modes:
+                    address_seed = config.get('address_seed_start',70000000)+ci*10000+i
+                    result = run_episode(Workshop(spec,executor,address_seed=address_seed),ReferencePolicy(mode),
+                                         model_compute_tariff=config.get('model_compute_tariff',0.0))
+                    records.append(dict(condition=condition['name'],seed=seed,address_seed=address_seed,mode=mode,
+                                        world_sha256=semantic_hash,**result))
+            if stopped:
                 break
-            seed = config.get('seed_start',200000)+ci*10000+i
-            spec = generate_world(seed,**kwargs)
-            semantic_hash = hashlib.sha256(json.dumps(asdict(spec),sort_keys=True).encode()).hexdigest()
-            for mode in modes:
-                result = run_episode(Workshop(spec,protocol_executor),ReferencePolicy(mode))
-                records.append(dict(condition=condition['name'],seed=seed,mode=mode,
-                                    world_sha256=semantic_hash,**result))
-        if stopped:
-            break
+    if owner is not None:
+        executor_stats.update(startup_wall_seconds=owner.startup_wall_seconds,
+                              startup_child_cpu_seconds=owner.startup_child_cpu_seconds,
+                              call_wall_seconds=owner.call_wall_seconds,restarts=owner.restarts)
     for condition in config['conditions']:
         for mode in modes:
             rows = [r for r in records if r['condition']==condition['name'] and r['mode']==mode]
@@ -70,10 +97,11 @@ def profile(config, output):
             cells.append(summary)
     sources = {Path(inspect.getfile(module)).name: hashlib.sha256(Path(inspect.getfile(module)).read_bytes()).hexdigest()
                for module in (campaign02_references,campaign02_world,campaign02_protocol)}
+    sources[Path(__file__).name] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     with gzip.open(output/'episodes.jsonl.gz','wt') as file:
         for row in records:
             file.write(json.dumps({k:v for k,v in row.items() if k!='trace'},separators=(',',':'))+'\n')
-    result = dict(config=config,source_sha256=sources,cells=cells,stopped_cpu_limit=stopped,
+    result = dict(config=config,executor=executor_stats,source_sha256=sources,cells=cells,stopped_cpu_limit=stopped,
                   cpu_core_seconds=cpu_seconds()-cpu,wall_seconds=time.monotonic()-wall,
                   accounting='self+reaped children CPU; includes generation, policy, solver, serialization')
     (output/'summary.json').write_text(json.dumps(result,indent=2)+'\n')

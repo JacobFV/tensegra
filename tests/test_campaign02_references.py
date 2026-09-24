@@ -1,11 +1,17 @@
 """Mechanical public-interface fixtures, not reference benchmark results."""
 import inspect
+from functools import partial
 import unittest
 from dataclasses import replace
 
 from topoformer.campaign02_references import ReferencePolicy, run_episode
 from topoformer.campaign02_world import (Action, Item, Workshop, WorldSpec,
     action_catalog, protocol_executor)
+from topoformer.campaign02_protocol import execute
+
+# Mechanical fixtures isolate policy contracts; process isolation is separately
+# tested by protocol tests. No empirical workload uses this direct executor.
+protocol_executor = partial(protocol_executor, execute_call=execute)
 
 
 def fixture(obstacle=False, work_limit=4096):
@@ -69,6 +75,30 @@ class ReferencesTest(unittest.TestCase):
         self.assertTrue(result['verified_success'])
         self.assertEqual(result['work_units'],0)
         self.assertEqual(result['travel_distance'],2)
+
+    def test_verified_timeout_incumbent_is_used(self):
+        world = Workshop(fixture(),protocol_executor)
+        policy = ReferencePolicy('always_tool')
+        o = world.observe()
+        while not any(r.get('primitive')=='constrained_subset' for r in o.records):
+            o = world.step(policy.choose(o))
+        records = tuple({**r,'status':'timeout','feasible_incumbent':True}
+                        if r.get('primitive')=='constrained_subset' else r for r in o.records)
+        o = replace(o,records=records)
+        action = policy.choose(o)
+        self.assertEqual(action.kind,'retrieve')
+        retrieved = dict(o.retrieved)
+        retrieved[action.arguments['handle']] = {'payload':'opaque'}
+        o = replace(o,retrieved=retrieved)
+        self.assertEqual(policy.choose(o).kind,'use_return')
+        # A timeout without validated incumbent is not treated as success.
+        invalid = tuple({**r,'certificate_valid':False} if r.get('primitive')=='constrained_subset' else r
+                        for r in records)
+        self.assertNotEqual(policy.choose(replace(o,records=invalid)).kind,'use_return')
+
+    def test_reference_compute_tariff(self):
+        result = run_episode(Workshop(fixture(),protocol_executor),ReferencePolicy('cheap'),2.5)
+        self.assertEqual(result['compute_units'],result['steps']*2.5)
 
     def test_bad_mode(self):
         with self.assertRaises(ValueError):

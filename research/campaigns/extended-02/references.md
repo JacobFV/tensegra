@@ -36,9 +36,8 @@ only test API mechanics and are not empirical evidence of a leverage region.
 
 Known scope: these heuristics inspect all items; they are not optimal observation
 policies. Largest-budget means largest currently offered catalogue budget. Calls
-restart after timeout; there is no implicit resumed solver state. Partial feasible
-incumbents are not consumed by this reference until the typed world contract
-explicitly supports them. No empirical leverage claim is made before the paired
+restart after timeout; there is no implicit resumed solver state. Validated timeout incumbents are consumed for the feasibility task; their
+certificate must pass the executor validator. They never establish optimality. No empirical leverage claim is made before the paired
 reference experiment.
 
 ## Travel-cost update
@@ -63,3 +62,23 @@ paired world hashes, raw costs/CPU, cell summaries, and source/config hashes.
 The coordinator freezes conditions and runs it; no profile has been launched
 by this worker. Generation and serialization are included in self-plus-child
 CPU accounting. No GPU is used.
+
+## Persistent execution and feasibility update
+
+Profiler configuration explicitly selects `executor: isolated` (historical
+per-call process) or `persistent` (one owned data-only `BoundedSolver` context).
+The persistent context closes before final CPU accounting. Child startup,
+transport/solve wall time and restart counts are recorded. Live child CPU is
+read from Linux process accounting for the between-episode budget check; final
+self-plus-reaped-child CPU remains authoritative. The runner never reuses solver
+solutions or world state between episodes.
+
+Result addresses use a separately configured `address_seed_start` stream, varied
+per paired episode and identical across comparison modes. Handles do not encode
+semantic difficulty. `model_compute_tariff` defaults to zero for reference
+heuristics; a nonzero fixed harness tariff is charged before each decision and
+reported separately from measured CPU. It is not inferred from neural width.
+
+Timeout returns are usable only when their public certificate-valid flag is
+true; exact-access remains required. This respects feasibility versus optimality
+and avoids wasting restarts on an already verified feasible incumbent.
