@@ -1,0 +1,36 @@
+{
+  "status": "PASS_PROFILE_ONLY",
+  "source_clearance_commit": "68e0a2dc",
+  "freeze_commit": "370ee83e",
+  "config_sha256": "2e827db9ab7b827d12119ad981a09edf5a19432047999185db835c4708affa2b",
+  "input_sha256": {
+    "configs/campaign-s22-profile-frozen-v1.json": "2e827db9ab7b827d12119ad981a09edf5a19432047999185db835c4708affa2b",
+    "research/campaigns/extended-01/semantics/S22-profile-outer-command.json": "7939e6d543ecc460b0276b8914a2bf5d40c048610c624e10fbb421e90a488511",
+    "research/campaigns/extended-01/semantics/S22-analysis.py": "9942d4989364b1857f1b2cbb329f77fb6421bfa7b2472157f1081f60bdc7a953",
+    "research/campaigns/extended-01/semantics/S22-analysis-check.py": "95b0d42532eecd669415c167eb63e14c3cc537013c0a6ed252b62b1295b0b242",
+    "research/campaigns/extended-01/semantics/S22-cost-extrapolation.md": "20cc8319b17e225260f3b2b9ccb96056c40228eacc40980a093d3436ffa70084"
+  },
+  "checks": {
+    "staged_source_hashes": 20,
+    "data_hashes": 2,
+    "checkpoint_reference_manifest_hashes": 6,
+    "readonly": true,
+    "unused_prefix": true,
+    "utility_hashes": true,
+    "exact_argv_sha256": "dc6585548e70e9a1af27dc8af90bad291710ac923dc350e2e4a17f3ed6a36bd1",
+    "outer": "GNU time outside GNU timeout --signal=KILL 180s outside immutable absolute launcher with wrapper cap180",
+    "child_source": "Own resolved immutable src"
+  },
+  "prospective_analysis": {
+    "fixtures": 6,
+    "passed": true,
+    "main_pin": null,
+    "scope": "All six policies/backbones and seven cells required; strict privilege counters, typed terminals, reference/target identities and packed components; strict raw codec and checkpoint audit separate; descriptive shared-event CIs only, no acquisition gate."
+  },
+  "cost_contract": "672 full batch32 stress calls for main; compare against policy-specific natural decoding projection, explicit controller/export/preparation reserves. No main cap until measured profile.",
+  "cpu_wall_seconds": 1.1911845542490482,
+  "harness_notes": [
+    "Initial local command-index assertion used incorrect array positions; corrected to locate named arguments. Exact argv hash passed unchanged; no source failure. Six fixture CPU time rounded below 0.001s, not separately measured."
+  ],
+  "scope": "CPU-only operational review. No model forwards or GPU. Root explicit profile release remains required."
+}
