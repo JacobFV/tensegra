@@ -119,7 +119,7 @@ def supervised_loss(model, trajectories: list[list[Frame]], device="cpu", bptt_s
     return torch.stack(losses).mean(), len(losses)
 
 
-def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradients=False, neural_work_per_forward=1.0):
+def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradients=False, neural_work_per_forward=1.0, bptt_steps=8):
     """All choices are learned. Exact actor-visible observations retained for replay."""
     observation, hidden, trace, terms = env.observe(), None, [], []
     cpu_start, wall_start = time.process_time(), time.perf_counter()
@@ -127,6 +127,8 @@ def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradie
     for step in range(max_steps):
         if observation.done:
             break
+        if gradients and hidden is not None and step % bptt_steps == 0:
+            hidden = hidden.detach()
         actions, obs, features = public_frame(observation)
         neural_start = time.perf_counter()
         batch = collate([Frame(obs, features, 0)], device)
@@ -233,7 +235,7 @@ class Learner:
                     self.data_hash.update(json.dumps(result["steps"], sort_keys=True).encode())
                 else:
                     result, episode_terms = live_episode(self.model, env, device=cfg.device,
-                        max_steps=cfg.max_steps, sample=True, gradients=True, neural_work_per_forward=cfg.neural_work_per_forward)
+                        max_steps=cfg.max_steps, sample=True, gradients=True, neural_work_per_forward=cfg.neural_work_per_forward, bptt_steps=cfg.bptt_steps)
                     future_reward = 0.0
                     for logp, value, entropy, reward_delta in reversed(episode_terms):
                         future_reward += reward_delta
