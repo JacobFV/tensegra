@@ -1,24 +1,10 @@
 {
   "owner": "/root",
   "machine": "gb10-direct / promaxgb10-4dfb",
-  "running": {
-    "id": "S18-reference",
-    "kind": "frozen_diagnostic",
-    "source": "00a79951",
-    "cap_seconds": 240.0,
-    "released_utc": "2026-09-24T10:15:48.167451+00:00"
-  },
-  "ready": [
-    {
-      "id": "S18-main",
-      "cap_seconds": 4000,
-      "source": "00a79951",
-      "kind": "exploration",
-      "status": "frozen_reviewed_waiting_for_reference_gpu_completion"
-    }
-  ],
+  "running": null,
+  "ready": [],
   "planning": [
-    "S18 fixedmain afterreference; finalanalysisonlyaftercompleteallarms/noendpointselection"
+    "S18 keyed reference-verifier v2 fix after preserved row-order failure; oldmain unlaunched; same scientificrecipe/caps, review/refreeze before anyGPU"
   ],
   "blocked": [],
   "completed": [
@@ -1221,6 +1207,17 @@
       "seconds": 86.53,
       "receipt": "research/results/campaign-01/semantics/s18-profile/s18-profile-launch.occupancy.json",
       "recorded_utc": "2026-09-24T10:08:55.156073+00:00"
+    },
+    {
+      "id": "S18-reference",
+      "kind": "frozen_diagnostic",
+      "source": "00a79951",
+      "cap_seconds": 240.0,
+      "released_utc": "2026-09-24T10:15:48.167451+00:00",
+      "status": "failed",
+      "seconds": 63.93,
+      "receipt": "research/results/campaign-01/semantics/s18-reference-failed-v1/s18-reference-launch.occupancy.json",
+      "recorded_utc": "2026-09-24T10:18:34.015687+00:00"
     }
   ],
   "rejected": [

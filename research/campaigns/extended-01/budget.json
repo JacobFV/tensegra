@@ -10,8 +10,8 @@
     "attention": 10800,
     "adaptive_flex": 5760
   },
-  "charged_seconds": 24285.07882392448,
-  "reserved_running_seconds": 240.0,
+  "charged_seconds": 24349.00882392448,
+  "reserved_running_seconds": 0,
   "jobs": [
     {
       "id": "R01-profile",
@@ -1214,11 +1214,22 @@
       "seconds": 86.53,
       "receipt": "research/results/campaign-01/semantics/s18-profile/s18-profile-launch.occupancy.json",
       "recorded_utc": "2026-09-24T10:08:55.156073+00:00"
+    },
+    {
+      "id": "S18-reference",
+      "kind": "frozen_diagnostic",
+      "source": "00a79951",
+      "cap_seconds": 240.0,
+      "released_utc": "2026-09-24T10:15:48.167451+00:00",
+      "status": "failed",
+      "seconds": 63.93,
+      "receipt": "research/results/campaign-01/semantics/s18-reference-failed-v1/s18-reference-launch.occupancy.json",
+      "recorded_utc": "2026-09-24T10:18:34.015687+00:00"
     }
   ],
   "cpu_audit_seconds": 4243.6814202536225,
   "accounting": "Monotonic process occupancy includes initialization/training/evaluation/failed runs/export; profiles charged. Serial GPU only. Unmeasured failures receive conservative charges.",
-  "projected_ready_caps_seconds": 4000,
+  "projected_ready_caps_seconds": 0,
   "accounting_notes": "Ready caps are estimates, not completed charges or concurrent reservations. Only queue.running may use GPU.",
   "cpu_integration_test_seconds": 202.73000000000002,
   "cpu_experiments": [
@@ -1377,7 +1388,8 @@
     }
   ],
   "projection_detail": {
-    "S18-main": 4000
+    "S18-main-v2": 4000,
+    "S18-reference-v2": 240
   },
   "interruption": {
     "reason": "usage credits exhausted; user recharged and requested continuation",
@@ -1385,5 +1397,5 @@
     "reconciled_utc": "2026-09-24T04:48:22Z",
     "note": "No running experiment at reconciliation. Deadline unchanged; idle interval not GPU occupancy. A08 profile full outer timing missing: charged conservative60-second cap."
   },
-  "projected_pending_cap_seconds": 0
+  "projected_pending_cap_seconds": 4240
 }
