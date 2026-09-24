@@ -327,3 +327,5 @@ S18 profile saved-state audit passes4.243597s CPU: both initial model/fullAdamW 
 S18 analysis metadata guards a0d2dfb0 pass independent ten synthetic tests0.008s. Complete source set/wrapper, final-state, evaluation summaries, threshold-NPZ identity and artifact inventory added with no formula change; final config pins intentionally reject until prospective allocation/freeze. No outcomes inspected.
 
 S18 profile37ed11f4 passes independent1536graphs/104cutoffs/TRAIN masks/raw-policy replay and archive hashes39.961916s; saved-state audit reused. Recomputed main3454.347/reference185.734s planning estimates support4000/240 caps, slow exports retained, no outcome selection. Final prospective00a79951/711a27ec remote freeze passes3.306110s: exact same source/calpolicy/recipe, read-only stage, all references and cost evidence, unused outputs, GNUtime outside KILL caps. Root separately releases each job.
+
+S18 analysis final pin-only4ef23e39 reviewed: exact main4ffecfea/reference944b342c hashes match independently cleared freeze and actual configs. Ten synthetic tests0.007s; no outcomes read/formula changes.
