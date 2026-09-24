@@ -1,0 +1,144 @@
+{
+  "preflight_seconds": 1.1164076761342585,
+  "process_seconds": 31.515923412982374,
+  "peak_cuda_allocated": 472326656,
+  "process_maxrss_kib": 5394628,
+  "arms": [
+    {
+      "arm": "original",
+      "parameters": 62677315,
+      "setup_seconds": 0.5528886169195175,
+      "worst_case_timing": {
+        "seconds": 1.0950036449357867,
+        "batch_size": 32,
+        "steps": 160,
+        "scope": "Timing-only own-prediction rollout ignores EOS/invalid stop, no gold prefix/count. Not an evaluated prediction or quality result.",
+        "example_indices": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79
+        ],
+        "artifact": "worst-case-profile.json.gz",
+        "sha256": "d064a78299b24741123b8e6a4c922bc283e2090b2aef564ac5cdd3633575ac75",
+        "export_seconds": 0.00459137000143528
+      },
+      "policies": [
+        {
+          "policy": "oracle_node_count",
+          "decode_seconds": 1.4279772588051856,
+          "export_seconds": 0.22679885989055037,
+          "total_seconds": 2.2727673007175326
+        },
+        {
+          "policy": "oracle_node_kinds",
+          "decode_seconds": 1.0125462096184492,
+          "export_seconds": 0.2195900110527873,
+          "total_seconds": 1.8051646766252816
+        },
+        {
+          "policy": "oracle_node_prefix",
+          "decode_seconds": 1.0443594418466091,
+          "export_seconds": 0.20680691115558147,
+          "total_seconds": 2.0645525408908725
+        }
+      ]
+    },
+    {
+      "arm": "broad",
+      "parameters": 62677315,
+      "setup_seconds": 0.35301140090450644,
+      "worst_case_timing": {
+        "seconds": 1.0695204520598054,
+        "batch_size": 32,
+        "steps": 160,
+        "scope": "Timing-only own-prediction rollout ignores EOS/invalid stop, no gold prefix/count. Not an evaluated prediction or quality result.",
+        "example_indices": [
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79
+        ],
+        "artifact": "worst-case-profile.json.gz",
+        "sha256": "e09e30f263d0387f113ae4d958c37af466ec290cc212f56a2131b8c7b3040b0b",
+        "export_seconds": 0.004834633786231279
+      },
+      "policies": [
+        {
+          "policy": "oracle_node_count",
+          "decode_seconds": 1.045239404309541,
+          "export_seconds": 0.2271499098278582,
+          "total_seconds": 2.274195631965995
+        },
+        {
+          "policy": "oracle_node_kinds",
+          "decode_seconds": 1.04161132639274,
+          "export_seconds": 0.22837098315358162,
+          "total_seconds": 2.238295065239072
+        },
+        {
+          "policy": "oracle_node_prefix",
+          "decode_seconds": 1.0403588716872036,
+          "export_seconds": 0.22573727974668145,
+          "total_seconds": 2.183375832159072
+        }
+      ]
+    }
+  ]
+}
