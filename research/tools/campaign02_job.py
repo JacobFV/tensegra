@@ -5,7 +5,7 @@ per child process; aggregate caps additionally monitor Linux /proc descendants.
 Experiment children must not daemonize; the session is killed on cap/timeout.
 """
 from __future__ import annotations
-import argparse, hashlib, json, os, resource, signal, subprocess, time
+import argparse, ctypes, hashlib, json, os, resource, signal, subprocess, time
 from pathlib import Path
 
 def process_group_cpu(pgid: int) -> float:
@@ -31,6 +31,9 @@ def run(command, output, wall_cap, cpu_cap, memory_gib=None):
               'cpu_cap_seconds':cpu_cap,'started_unix':time.time(),
               'environment':{k:os.environ.get(k) for k in ['OMP_NUM_THREADS','MKL_NUM_THREADS','OPENBLAS_NUM_THREADS','PYTHONPATH']}}
     (output/'launch.json').write_text(json.dumps(launch,indent=2)+'\n')
+    # Linux subreaper retains orphan descendants for complete termination/accounting.
+    if ctypes.CDLL(None, use_errno=True).prctl(36, 1, 0, 0, 0) != 0:
+        raise OSError(ctypes.get_errno(), 'cannot enable child subreaper')
     start = time.monotonic(); own = time.process_time()
     before = resource.getrusage(resource.RUSAGE_CHILDREN)
     def limits():
@@ -52,6 +55,13 @@ def run(command, output, wall_cap, cpu_cap, memory_gib=None):
                 break
             time.sleep(.2)
         exit_code=proc.wait()
+        # A leader exit never authorizes a surviving solver worker. Reap adopted
+        # descendants so their CPU remains in this inclusive job receipt.
+        try: os.killpg(proc.pid,signal.SIGKILL)
+        except ProcessLookupError: pass
+        while True:
+            try: os.waitpid(-1,0)
+            except ChildProcessError: break
     after=resource.getrusage(resource.RUSAGE_CHILDREN)
     cpu=(after.ru_utime+after.ru_stime)-(before.ru_utime+before.ru_stime)+time.process_time()-own
     receipt={'exit_code':exit_code,'stop_reason':reason,'wall_seconds':time.monotonic()-start,
