@@ -1,0 +1,64 @@
+{
+  "budget_status": "prepared",
+  "seed": 1901,
+  "schedule_seed": 15115,
+  "width": 1024,
+  "encoder_layers": 2,
+  "decoder_layers": 2,
+  "heads": 8,
+  "ffn_width": 4096,
+  "dropout": 0,
+  "capacity": 128,
+  "max_records": 160,
+  "max_slot": 32,
+  "batch_size": 8,
+  "evaluation_batch_size": 32,
+  "train_panel_count": 128,
+  "learning_rate": 0.0003,
+  "final_learning_rate": 3e-05,
+  "warmup_updates": 128,
+  "weight_decay": 0.01,
+  "gradient_clip": 1.0,
+  "loss_policy": "equal_mean_of_eight_applicable_field_means_absent_zero",
+  "autocast_dtype": "bfloat16",
+  "device": "cuda",
+  "optimizer_betas": [
+    0.9,
+    0.999
+  ],
+  "optimizer_eps": 1e-08,
+  "initialization": "scratch_no_inherited_weights",
+  "calibration": "none",
+  "cap_seconds": null,
+  "launch_authority": "Separate root allocation, source freeze, independent review and explicit GPU release required",
+  "inputs": {
+    "train": {
+      "path": "data/s15-shape-v2/train_mixed.jsonl.gz",
+      "sha256": "8ddbd15bea881c13bfd24554ada9293082fcef7b616f6eeb3dad78a4bfa662d2"
+    },
+    "development": {
+      "path": "data/s15-shape-v2/development.jsonl.gz",
+      "sha256": "25522313035e646cfca4bf0efb1ae550c295cb55ddf6057558d03c42f2239dc3"
+    },
+    "selection": {
+      "path": "data/s17-calibration-selection-v1/selection.json",
+      "sha256": "5b8091e73320c5ef87bee39189933e6f3aa856c98ac07d93c6cb90d8d1c13172"
+    },
+    "vocabulary_audit": {
+      "path": "data/s01/audit.json",
+      "sha256": "2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1"
+    }
+  },
+  "job": "main",
+  "updates": 4096,
+  "checkpoints": [
+    0,
+    1024,
+    2048,
+    4096
+  ],
+  "dev_per_cell": 512,
+  "worst_case_profile": false,
+  "output_dir": "results/s19-main-v1",
+  "expected_construction_sequence_sha256": "85054bf25e3a3e2a5a9a932b441d6413fd0d7ad827df79e1583268aaddf5acd9"
+}
