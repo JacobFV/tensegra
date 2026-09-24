@@ -1,4 +1,4 @@
-"""S19 width16 CPU mechanics; primary width1024 counted on meta only."""
+"""S19 width16 CPU mechanics; plus bounded synthetic width1024 prefix checks."""
 import copy
 import pytest
 import torch
@@ -46,7 +46,7 @@ def test_padding_batch_invariance_and_public_copy_mask():
     for k in alone:
         b=batch[k][:1,:,:alone[k].shape[-1]]
         assert torch.allclose(alone[k],b,atol=4e-6,rtol=4e-6),k
-    assert torch.isneginf(batch['copy'][0,:,4:]).all()
+    assert torch.isneginf(batch['copy'][0,:,3:]).all()
     padded=torch.cat((previous,torch.tensor([[[PAD,-1,-1,-1,-1]]])),1)
     out=m([public],padded)
     for k in alone:assert torch.allclose(out[k][:,:4],alone[k],atol=3e-6,rtol=3e-6)
@@ -82,7 +82,8 @@ def test_greedy_public_only_eos_and_malformed_failures():
     force(m,type=0,kind=KINDS.index('record'),value=1)
     result=m.greedy([public])[0];assert result['status']=='node_capacity_overflow' and result['node_count']==8
     force(m,value=0)
-    assert m.greedy([public])[0]['status']=='missing_node_value'
+    assert m.greedy([public])[0]['records'][0][2]==0
+    assert m.value_head.out_features==4 and not hasattr(m,'copy_none')
     with pytest.raises(TypeError):m.greedy([{'text':'alice','graph':'poison'}])
     with pytest.raises(TypeError):m.greedy([public],gold_count=1)
 
@@ -103,7 +104,7 @@ def test_primary_dimensions_parameter_count_without_model_forward():
         assert all(l.attention.heads==8 for l in m.encoder)
         assert all(l.ff[0].out_features==4096 for l in [*m.encoder,*m.decoder])
         assert not any(isinstance(l,torch.nn.Dropout) for l in m.modules())
-        assert m.parameter_count==sum(p.numel() for p in m.parameters())
+        assert m.parameter_count==62_677_315==sum(p.numel() for p in m.parameters())
 
 
 def test_batched_early_eos_matches_individual_greedy(monkeypatch):
@@ -137,3 +138,54 @@ def test_incremental_reuses_encoder_cross_and_copy_projections():
     for t in range(previous.shape[1]):_,cache=m.step(previous[:,t],cache)
     for h in handles:h.remove()
     assert set(counts.values())=={1}
+
+
+@pytest.mark.parametrize('dtype,tol',[(None,4e-6),('bfloat16',.035)])
+@pytest.mark.parametrize('width,heads',[(16,4),(1024,8)])
+@torch.no_grad()
+def test_cached_prefix_argmax_parity_with_mixed_eos_padding(dtype,tol,width,heads):
+    torch.manual_seed(1901)
+    m=TypedRecordActor(value_count=4,width=width,heads=heads,autocast_dtype=dtype).eval()
+    publics=[ActorInput('alice bob',()),ActorInput('alice bob carol dave',())]
+    previous=torch.tensor([[[BOS,-1,-1,-1,-1],[EOS,-1,-1,-1,-1],[PAD,-1,-1,-1,-1]],
+        [[BOS,-1,-1,-1,-1],[NODE,KINDS.index('ident'),-1,2,-1],[NODE,KINDS.index('record'),0,-1,-1]]])
+    full=m(publics,previous);cache=m.begin(publics)
+    for t in range(previous.shape[1]):
+        out,cache=m.step(previous[:,t],cache)
+        for key in full:
+            assert torch.allclose(full[key][:,t],out[key],atol=tol,rtol=tol),key
+            assert torch.equal(full[key][:,t].argmax(-1),out[key].argmax(-1)),(width,dtype,t,key)
+
+
+@torch.no_grad()
+def test_public_step_supports_forced_160_step_timing_without_gold_length():
+    m=actor().eval();m.max_records=160
+    cache=m.begin([ActorInput('alice bob',())])
+    previous=torch.tensor([[BOS,-1,-1,-1,-1]])
+    for _ in range(160):
+        out,cache=m.step(previous,cache)
+        # Feed predicted records even past EOS/invalid graph references for timing.
+        # No targets, graph sizes, or gold lengths enter this API.
+        tag=int(out['type'].argmax(-1))+1
+        if tag==NODE:
+            kind=int(out['kind'].argmax(-1));lexical=kind in {KINDS.index('ident'),KINDS.index('entity')}
+            record=[NODE,kind,-1 if lexical else int(out['value'].argmax(-1)),int(out['copy'].argmax(-1)) if lexical else -1,-1]
+        elif tag==EDGE:record=[EDGE,int(out['source'].argmax(-1)),int(out['target'].argmax(-1)),int(out['role'].argmax(-1)),int(out['slot'].argmax(-1))-1]
+        else:record=[EOS,-1,-1,-1,-1]
+        previous=torch.tensor([record])
+    assert cache.position==160
+
+
+@pytest.mark.parametrize('dtype',[None,'bfloat16'])
+@torch.no_grad()
+def test_greedy_cached_equals_full_prefix_recomputation(dtype,monkeypatch):
+    m=actor(autocast_dtype=dtype).eval()
+    publics=[ActorInput('alice bob',()),ActorInput('alice bob carol dave',())]
+    cached=m.greedy(publics);history=[];step=m._step
+    def full_prefix(previous,cache,*,validate):
+        history.append(previous.clone())
+        full=m(publics,torch.stack(history,1))
+        _,updated=step(previous,cache,validate=validate)
+        return {key:value[:,-1] for key,value in full.items()},updated
+    monkeypatch.setattr(m,'_step',full_prefix)
+    assert m.greedy(publics)==cached
