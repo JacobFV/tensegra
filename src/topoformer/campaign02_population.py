@@ -43,6 +43,12 @@ class PopulationConfig:
     train: dict[str, Any] = field(default_factory=lambda: {"width": 1024, "device": "cpu"})
     world_mix: tuple[dict[str, Any], ...] = ({},)
     threads: int = 1
+    # Input contract shared by all members: legacy summaries or public-tree memory,
+    # with public feature version v1 (historical) or v2 (supplied relations).
+    policy: dict[str, Any] = field(default_factory=dict)
+    # Optional per-slot initial {learning_rate, entropy_weight}; identical across
+    # search modes so PBT/multistart/single start from the same initial bank.
+    member_hyperparameters: tuple[dict[str, Any], ...] = ()
 
     def __post_init__(self):
         if self.mode not in {"pbt", "multistart", "single"}:
@@ -67,6 +73,13 @@ class PopulationConfig:
             raise ValueError("Training and development seed ranges overlap")
         if len(set(self.initialization_seeds)) != 6:
             raise ValueError("Independent initializations required")
+        if set(self.policy) - {"interface", "feature_version", "zero_memory"}:
+            raise ValueError("Unknown policy interface option")
+        if self.policy.get("interface", "legacy") not in {"legacy", "memory"}:
+            raise ValueError("Unknown policy interface")
+        if self.member_hyperparameters and (len(self.member_hyperparameters) != 6 or any(
+                set(h) - {"learning_rate", "entropy_weight"} for h in self.member_hyperparameters)):
+            raise ValueError("Member hyperparameters need six {learning_rate, entropy_weight} rows")
         for kwargs in self.world_mix:
             if "seed" in kwargs:
                 raise ValueError("World mixture cannot override episode seed")
@@ -74,7 +87,7 @@ class PopulationConfig:
     @classmethod
     def from_json(cls, raw):
         raw = dict(raw)
-        for key in ("initialization_seeds", "methods", "world_mix"):
+        for key in ("initialization_seeds", "methods", "world_mix", "member_hyperparameters"):
             if key in raw:
                 raw[key] = tuple(raw[key])
         return cls(**raw)
@@ -97,6 +110,26 @@ def selection_pairs(scores: list[dict]) -> list[tuple[int, int]]:
     ordered = sorted(scores, key=lambda s: (-s["utility"], s["slot"]))
     donors, recipients = ordered[:2], list(reversed(ordered[-2:]))
     return [(d["slot"], r["slot"]) for d, r in zip(donors, recipients) if d["utility"] > r["utility"]]
+
+
+def build_policy(policy_config: dict):
+    """Rebuild either registered public-input family from a checkpoint config."""
+    if "memory_dim" in policy_config:
+        from .campaign02_memory_policy import MemoryCandidatePolicy, MemoryPolicyConfig
+        return MemoryCandidatePolicy(MemoryPolicyConfig(**policy_config))
+    return CandidatePolicy(PolicyConfig(**policy_config))
+
+
+def new_policy(options: dict, obs_dim: int, candidate_dim: int, width: int, family: str):
+    version = options.get("feature_version", "v1")
+    if options.get("interface", "legacy") == "memory":
+        from .campaign02_memory import ROW_DIM
+        from .campaign02_memory_policy import MemoryCandidatePolicy, MemoryPolicyConfig
+        return MemoryCandidatePolicy(MemoryPolicyConfig(obs_dim, candidate_dim, width=width, family=family,
+            feature_version=version, memory_dim=ROW_DIM, zero_memory=bool(options.get("zero_memory", False))))
+    if options.get("zero_memory"):
+        raise ValueError("zero_memory applies only to the memory interface")
+    return CandidatePolicy(PolicyConfig(obs_dim, candidate_dim, width=width, family=family, feature_version=version))
 
 
 def mix_index(seed: int, size: int) -> int:
@@ -183,7 +216,8 @@ class PopulationRun:
         self.mutation_rng = random.Random(config.population_seed)
         self.sources = {name: sha256(Path(__file__).with_name(name)) for name in (
             "campaign02_population.py", "campaign02_training.py", "campaign02_policy.py",
-            "campaign02_world.py", "campaign02_protocol.py", "campaign02_references.py")}
+            "campaign02_world.py", "campaign02_protocol.py", "campaign02_references.py",
+            "campaign02_memory.py", "campaign02_memory_policy.py")}
         if self.state_path.exists():
             self.state = json.loads(self.state_path.read_text())
             if self.state["source_hashes"] != self.sources:
@@ -224,7 +258,8 @@ class PopulationRun:
 
     def _initialize(self):
         cfg = self.config
-        _, obs, candidates = public_frame(self.factory(cfg.training_seed_start).observe())
+        _, obs, candidates = public_frame(self.factory(cfg.training_seed_start).observe(),
+                                          cfg.policy.get("feature_version", "v1"))
         self.state["feature_dimensions"] = [len(obs), len(candidates[0])]
         start = usage()
         for slot, seed in enumerate(cfg.initialization_seeds):
@@ -232,9 +267,10 @@ class PopulationRun:
                 continue
             torch.manual_seed(seed)
             random.seed(seed)
-            train = TrainConfig(**{**cfg.train, "seed": seed, "device": "cpu",
+            hyper = cfg.member_hyperparameters[slot] if cfg.member_hyperparameters else {}
+            train = TrainConfig(**{**cfg.train, **hyper, "seed": seed, "device": "cpu",
                 "training_seed_start": cfg.training_seed_start + slot * cfg.training_seed_stride})
-            model = CandidatePolicy(PolicyConfig(len(obs), len(candidates[0]), width=train.width, family=train.family))
+            model = new_policy(cfg.policy, len(obs), len(candidates[0]), train.width, train.family)
             learner = Learner(model, train)
             path = self.output / "initial_bank" / f"member-{slot}.pt"
             if path.exists():
@@ -267,7 +303,7 @@ class PopulationRun:
         saved = self._checkpoint(member)
         method = self.config.methods[round_index] if self.config.methods else self.config.train.get("method", "supervised")
         train = TrainConfig(**{**saved["config"], "device": self.config.train.get("device", "cpu"), "method": method})
-        model = CandidatePolicy(PolicyConfig(**saved["policy_config"]))
+        model = build_policy(saved["policy_config"])
         learner = Learner(model, train)
         learner.load(self.output / member["checkpoint"], allow_config_changes=True)
         return learner

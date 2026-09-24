@@ -68,10 +68,16 @@ class Frame:
     target: int
 
 
-def public_frame(observation):
-    from .campaign02_world import action_catalog, encode_action, encode_observation
+def public_frame(observation, feature_version="v1"):
+    from .campaign02_world import action_catalog, encode_public
     actions = action_catalog(observation)
-    return actions, encode_observation(observation), [encode_action(observation, a) for a in actions]
+    obs, features = encode_public(observation, actions, feature_version)
+    return actions, obs, features
+
+
+def normalized_policy_config(raw: dict) -> dict:
+    """Checkpoints predating feature versioning used public features v1."""
+    return {"feature_version": "v1", **raw}
 
 
 def collate(frames: list[Frame], device="cpu"):
@@ -107,7 +113,8 @@ def prepare_active(model, observations, unsupported):
 
 
 def prepare_frame(observation, model=None):
-    actions, obs, features = public_frame(observation)
+    version = getattr(getattr(model, "config", None), "feature_version", "v1")
+    actions, obs, features = public_frame(observation, version)
     frame = Frame(obs, features, 0)
     if model is not None and hasattr(model, "prepare_public_frame"):
         frame = model.prepare_public_frame(observation, actions, frame)
@@ -474,7 +481,7 @@ class Learner:
 
     def load(self, path: Path, *, allow_config_changes=False, reset_learning_rate=False):
         checkpoint = torch.load(path, map_location=self.config.device, weights_only=False)
-        if checkpoint["policy_config"] != asdict(self.model.config):
+        if normalized_policy_config(checkpoint["policy_config"]) != asdict(self.model.config):
             raise ValueError("Checkpoint architecture mismatch")
         current = asdict(self.config)
         differences = {k: {"checkpoint": checkpoint["config"].get(k), "requested": v}

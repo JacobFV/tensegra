@@ -23,8 +23,11 @@ class PolicyConfig:
     family: Literal["lightweight", "recurrent"] = "lightweight"
     workspace_rows: int = 4
     heads: int = 8
+    feature_version: str = "v1"
 
     def __post_init__(self):
+        if self.feature_version not in {"v1", "v2"}:
+            raise ValueError("Unknown public feature version")
         if min(self.observation_dim, self.candidate_dim, self.width, self.workspace_rows, self.heads) < 1:
             raise ValueError("Dimensions must be positive")
         if self.family not in {"lightweight", "recurrent"}:
@@ -173,7 +176,7 @@ def clone_checkpoint(model: CandidatePolicy, optimizer: torch.optim.Optimizer,
 
 def restore_checkpoint(snapshot: dict, model: CandidatePolicy, optimizer: torch.optim.Optimizer,
                        *, learning_rate: float) -> None:
-    if snapshot["format_version"] != 1 or snapshot["config"] != asdict(model.config):
+    if snapshot["format_version"] != 1 or {"feature_version": "v1", **snapshot["config"]} != asdict(model.config):
         raise ValueError("Incompatible checkpoint architecture")
     if learning_rate <= 0:
         raise ValueError("Learning rate must be positive")

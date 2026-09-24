@@ -528,6 +528,78 @@ def encode_action(o: Observation, action: Action) -> list[float]:
     return out
 
 
+FEATURE_VERSIONS = ("v1", "v2")
+
+
+def _log_scale(x: float, top: float = 12.0) -> float:
+    return math.log2(1+max(0.0, float(x)))/top
+
+
+def encode_observation_v2(o: Observation) -> list[float]:
+    """v1 summary plus log-scaled resource state. Public quantities only."""
+    timeouts = sum(r.get("status") == "timeout" for r in o.records)
+    return encode_observation(o) + [
+        _log_scale(o.remaining_work), _log_scale(o.remaining_steps, 7), _log_scale(o.remaining_travel, 7),
+        _log_scale(len(o.item_inventory), 6), _log_scale(len(o.incompatible), 6), timeouts/8,
+        float(o.state_version > 0)]
+
+
+def encode_action_v2(o: Observation, action: Action) -> list[float]:
+    """v1 candidate vector plus supplied public relational facts.
+
+    Budget facts compare a call's requested work with public earlier attempts on
+    the same current draft (log scale). Item facts count public incompatibilities,
+    including those with non-pending items. Move facts expose the destination's
+    known outgoing edges one step ahead. None of these is a solved subset,
+    shortest path, feasibility label, or teacher decision. They are an explicit
+    input-contract repair and must be disclosed as supplied relational features.
+    """
+    a = action.arguments
+    out = encode_action(o, action)
+    budget = a.get("budget", 0) if action.kind == "call" else 0
+    problem = o.problems.get(a.get("problem")) if action.kind == "call" else None
+    tried = [r for r in o.records if problem is not None and r.get("problem") == a.get("problem")
+             and r.get("problem_snapshot") == problem]
+    timed_out = [r.get("budget", 0) for r in tried if r.get("status") == "timeout"]
+    most = max((r.get("work_units", 0) for r in tried), default=0)
+    out += [_log_scale(budget), float(budget > most) if action.kind == "call" else 0.0,
+            float(any(b >= budget for b in timed_out)) if action.kind == "call" else 0.0,
+            float(action.kind == "call" and budget == o.remaining_work),
+            float(action.kind == "call" and budget <= o.remaining_work/2),
+            len(timed_out)/4, _log_scale(most),
+            _log_scale(len(problem.get("problem", {}).get("items", []))) if problem else 0.0]
+    h = a.get("item", a.get("target"))
+    row = next((r for r in o.item_inventory if r["handle"] == h), None)
+    if row is not None:
+        conflicts = [y if x == h else x for x, y in o.incompatible if h in (x, y)]
+        other = [r["handle"] for r in o.item_inventory if r["category"] != row["category"]]
+        category = [r["handle"] for r in o.item_inventory if r["category"] == row["category"]]
+        known = o.known_items.get(h, {})
+        peers = [o.known_items[x]["weight"]+o.known_items[x]["price"] for x in category if x in o.known_items]
+        rank = sum(p < known["weight"]+known["price"] for p in peers) if known else 0
+        out += [len(conflicts)/8, len(conflicts)/max(1, len(other)), float(len(category) == 1),
+                len(category)/8, rank/8, float(bool(known) and rank == 0)]
+    else:
+        out += [0.0]*6
+    if action.kind == "move" and o.known_edges is not None:
+        v = a["destination"]
+        ahead = [w for x, y, w in o.known_edges if x == v]
+        direct = next((w for x, y, w in o.known_edges if x == v and y == o.goal["destination"]), None)
+        out += [float(v == o.goal["destination"]), min(ahead, default=0)/32, len(ahead)/8,
+                float(direct is not None), (direct or 0)/32]
+    else:
+        out += [0.0]*5
+    return out
+
+
+def encode_public(o: Observation, actions: list[Action], version: str = "v1"):
+    if version == "v1":
+        return encode_observation(o), [encode_action(o, x) for x in actions]
+    if version == "v2":
+        return encode_observation_v2(o), [encode_action_v2(o, x) for x in actions]
+    raise ValueError(f"unknown public feature version {version}")
+
+
 def reduction_matches_world(spec: WorldSpec, primitive: str, problem: dict[str,Any],
                             edges: Mapping[tuple[int,int],int], position: int) -> bool:
     try:
