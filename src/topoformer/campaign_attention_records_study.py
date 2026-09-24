@@ -23,13 +23,35 @@ def run(cfg,out):
     model=RecordAttention(width=cfg['width']).to(device)
     tensor_hash=lambda:hashlib.sha256(b''.join(t.detach().cpu().numpy().tobytes() for t in model.state_dict().values())).hexdigest()
     initial=tensor_hash();optimizer=torch.optim.AdamW(model.parameters(),lr=cfg['lr'],weight_decay=1e-4)
-    start=time.monotonic();curves=[];losses=[];node_steps=0
+    start=time.monotonic();curves=[];losses=[];node_steps=0;replay=None
     for step in range(cfg['steps']+1):
+        if step==cfg.get('prefix_steps',-1):
+            reference=Path(cfg['prefix_checkpoint'])
+            if hashlib.sha256(reference.read_bytes()).hexdigest()!=cfg['prefix_checkpoint_sha256']:
+                raise ValueError('Prefix checkpoint SHA mismatch')
+            actual=tensor_hash()
+            if actual!=cfg['prefix_tensor_sha256']:
+                raise RuntimeError('Exact prefix replay failed before extension')
+            devices=[torch.cuda.current_device()] if str(device).startswith('cuda') else []
+            with torch.random.fork_rng(devices=devices),torch.no_grad():
+                reference_model=RecordAttention(width=cfg['width']).to(device)
+                reference_model.load_state_dict(torch.load(reference,map_location=device,weights_only=True))
+                fixture=generate(4,32,4,groups=4,seed=177000000,device=device,balanced=True)
+                torch.manual_seed(901);left=model(fixture)['logits']
+                torch.manual_seed(901);right=reference_model(fixture)['logits']
+                if not torch.equal(left,right):raise RuntimeError('Prefix checkpoint logit replay failed')
+                replay=dict(step=step,tensor_sha256=actual,logits_exact=True,max_logit_error=float((left-right).abs().max()))
+                del reference_model
+            write(out/'prefix-replay.json',replay)
         if step in cfg['checkpoints']:
             ecfg=dict(cfg)
             if step!=cfg['steps'] and 'curve_conditions' in cfg:
                 ecfg.update(conditions=cfg['curve_conditions'],eval_seed=cfg['curve_eval_seed'],eval_examples=cfg['curve_examples'])
             curves.append(evaluate(model,ecfg,out,step,device))
+            if cfg.get('save_training_state') and step in cfg.get('state_checkpoints',[cfg['steps']]):
+                torch.save(dict(model=model.state_dict(),optimizer=optimizer.state_dict(),step=step,
+                                cpu_rng=torch.get_rng_state(),cuda_rng=torch.cuda.get_rng_state_all() if str(device).startswith('cuda') else [],
+                                config=cfg),out/f'training-state-{step:05d}.pt')
         if step==cfg['steps']:break
         depth=1+step%4
         batch=generate(cfg['batch'],cfg['nodes'],depth,groups=cfg['groups'],seed=cfg['train_seed']+step,device=device,train=True,balanced=True)
@@ -43,7 +65,7 @@ def run(cfg,out):
          config_sha256=hashlib.sha256(json.dumps(cfg,sort_keys=True).encode()).hexdigest(),
          presentations=cfg['steps']*cfg['batch'],generated_graph_draws=cfg['steps']*cfg['batch'],unique_canonical_graphs=None,
          node_microsteps=node_steps,edge_tokens_per_training_graph=3*cfg['nodes']*cfg['groups'],
-         curves=curves,losses=torch.stack(losses).cpu().tolist() if losses else [],
+         prefix_replay=replay,curves=curves,losses=torch.stack(losses).cpu().tolist() if losses else [],
          wall_seconds_including_eval_export=time.monotonic()-start,
          cuda_peak_allocated_bytes=torch.cuda.max_memory_allocated() if str(device).startswith('cuda') else 0,
          process_peak_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
