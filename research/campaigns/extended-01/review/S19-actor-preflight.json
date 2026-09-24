@@ -1,0 +1,36 @@
+{
+  "source_ref": "e3d8a1be",
+  "actor_mechanical_clearance": "pass",
+  "cpu_tests": 27,
+  "subtests": 14,
+  "skipped": 1,
+  "skip_scope": "Optional actualTRAINcodec audit already independently passed4096rows; not rerun",
+  "cpu_audit_wall_seconds": 1.9,
+  "parameter_count": 62677315,
+  "width": 1024,
+  "encoder_layers": 2,
+  "decoder_layers": 2,
+  "heads": 8,
+  "feedforward_width": 4096,
+  "dropout": 0,
+  "checks": [
+    "current/future target perturbations cannot change earlier teacher-forced logits",
+    "internal previous-record shift and public-only greedy signature",
+    "FP32/BF16 cached/full prefix logits close and everyheadargmax exact on synthetic width16/1024 mixedEOS/padding fixtures",
+    "width16 full-prefix andcachedgreedy identical for FP32/BF16 fixedsynthetic publics",
+    "publiccopy padding masked and previouscopy cannot point into padding",
+    "encoder/decoder/pointer/previouscopy gradient paths and distinctlayer parameters",
+    "generated node/reference/EOS/overflow statuses, no gold count or target-conditioned stop",
+    "cached encoder/crossKV/copy projections computedonce",
+    "forced160-step public predictedrecord mechanics without goldlength",
+    "value/copy direct requiredfield classes; inactive precedingembeddings remainnullable, slotNONE remainsvalid"
+  ],
+  "input_sha256": {
+    "src/topoformer/campaign_semantics_s19_actor.py": "b84dc10df3a34fdc3662730cbcdb88012ccb9f8ffcead4b4eebfe2588549ba17",
+    "tests/test_campaign_semantics_s19_actor.py": "642503c2d0da3ac9829e2f691ebcb54effacea864e8fdad708bbd9ab07bb2831",
+    "src/topoformer/campaign_semantics_s19_codec.py": "88b0606914dd4585f1715900263de16712fed78743938c3c135d89f7c9180cad",
+    "tests/test_campaign_semantics_s19_codec.py": "06ef1e28262a90cff951efa5e0d4c9d261135facea58fe1ce42987345cc3a57c"
+  },
+  "archive_sha256": "df7c10271a74e6a99af09eeff5ea44689046f0db7f7ad620305f31f06371c03f",
+  "scope": "CUDAhidden2threads bounded synthetic CPUtests; actualwidth1024 prefix only, not real-corpus acquisition or universal floatingpoint bitidentity. No GPU. From-scratch stronger alternative, not pretraining/parameter/FLOP-matched causal architecture study. Runner must enforce codec/records_to_targets invalidfailure even for syntacticEOS; training loss/sourcefreeze/profile/budget remain separately pending."
+}
