@@ -4,7 +4,7 @@ from pathlib import Path
 from .campaign_semantics_s19_freeze import SOURCES as S19_SOURCES
 SOURCES=tuple(sorted(set(S19_SOURCES+('campaign_semantics_s21.py','campaign_semantics_s21_freeze.py','campaign_semantics_s21_launch.py'))))
 CELLS=((2,4),(3,3),(3,4),(4,3),(4,4),(5,3),(5,4))
-DATA_BINDINGS=None # Set after independently audited S21 cache freeze, before any inference.
+DATA_BINDINGS={'train_original': '8ddbd15bea881c13bfd24554ada9293082fcef7b616f6eeb3dad78a4bfa662d2', 'train_broad': '1e60754580fac9c02767f074fa7b1445cbf4b7c50a2bf0f5dac734f707097689', 'development': '07df44cdadcb9a697b723b9292dd9b1234f7311680e20074b5aea624a7648b29', 'panels': 'c1abc21807d07bbb336b87278926d5a3f052e0470373ba265edf336b3dd02736', 'audit': '8cb6a99f717d82c64864a92ac2934effb0ba00e05575e31c9f299e62ddf46469', 'vocabulary_audit': '2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1'} # Prospective cache pins; separate audit/allocation required before freeze.
 STREAM='85054bf25e3a3e2a5a9a932b441d6413fd0d7ad827df79e1583268aaddf5acd9'
 def digest(path):
  with Path(path).open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
