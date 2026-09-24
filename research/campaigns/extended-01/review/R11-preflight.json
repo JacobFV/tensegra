@@ -1,0 +1,49 @@
+{
+  "source_ref": "a7f99f05",
+  "driver_ref": "636f2557",
+  "cpu_only": true,
+  "cuda_visible_devices": "",
+  "threads": 2,
+  "tests": {
+    "command": "python -m pytest -q tests/test_campaign_returns_linear_continuation.py tests/test_campaign_return_continuation_summary.py",
+    "passed": 7,
+    "seconds": 1.23,
+    "isolated_export": "/tmp/r11-independent-preflight"
+  },
+  "bindings": {
+    "profile": {
+      "config_sha256": "169ccf3b88398f0b701560372e732c86116d490d8a00bfc8a8cabc8565514b25",
+      "historical_source_and_population_bound": true,
+      "replay_updates": 100,
+      "additional_updates_per_fork": 100
+    },
+    "development": {
+      "config_sha256": "953e3a0996280b544e4457c034c17a0507cabf42c5a08507e17d9f17609505b3",
+      "historical_source_and_population_bound": true,
+      "replay_updates": 3600,
+      "additional_updates_per_fork": 3600
+    }
+  },
+  "input_sha256": {
+    "src/topoformer/campaign_returns_linear_continuation.py": "0538c21ae44790fa8f908de8eeacaadba7434b146475779c463657fede49887f",
+    "research/tools/campaign_return_continuation_summary.py": "07d9807d002a77fe39c9ede983d0992b36ed2425a8ede96f055808c53fbabc57",
+    "research/tools/campaign_return_profile_driver.py": "3389aa9ac6ea0dd29a9b5d6c2caf42c296adac648021c43c3faf925f5ecb4c33",
+    "research/campaigns/extended-01/returns/R11-protocol.md": "9220418f1e19c2e76abb758d5a573119b9206747224e6246ccdcaa34b74e1b6d",
+    "tests/test_campaign_returns_linear_continuation.py": "603863561f26fb210302459d04ef30c2bfa450da45368759c3ef9db38dda9df4",
+    "tests/test_campaign_return_continuation_summary.py": "4cf06349a29a97be8e62c7c726e6939e6451981b5fcff8e01765369f3c9a9444",
+    "configs/campaign-r11-development.json": "953e3a0996280b544e4457c034c17a0507cabf42c5a08507e17d9f17609505b3",
+    "configs/campaign-r11-profile.json": "169ccf3b88398f0b701560372e732c86116d490d8a00bfc8a8cabc8565514b25"
+  },
+  "findings": [
+    "Frozen R10 features, labels, normalization and original head; no new architecture or phase-conditioned prediction.",
+    "Historical weight/bias, mean/scale, loss list and visitation membership must replay exactly before either optimizer fork; deterministic sampler recipe retained. Historical sampled-order hash was not archived and is not falsely claimed.",
+    "Both forks restore reconstructed AdamW moments/steps and sampling RNG; streaming index-order hashes, membership and final RNG hashes must agree. Full endpoint states persist.",
+    "No calibration/validation labels enter gradient loss. Calibration is monitored but only fixed7200 endpoint selects; previously inspected validation is reused descriptive data.",
+    "Complete108-cell support guard retained; calibration grid122/128, mixture98%, train16 scalar65405/65536 required. Constant wins exact calibration ties, lower-LR attribution additionally requires4/128.",
+    "Frozen reference predictions/targets/event hashes must reproduce old R10 exactly at final archive; all nonvalue outputs remain frozen.",
+    "Driver permits only manifest-frozen R10/R11 modules, with GNU outer timeout accounting inherited."
+  ],
+  "status": "Clears separately authorized 60-second mechanical profile; 180-second main cap remains provisional pending measured phases and exact-replay outcome.",
+  "scope": "Optimization diagnostic on reused development. Fluctuating losses and fitting errors motivate this test but do not establish excessive LR, information loss, or broad tail underfitting. No confirmation authorization.",
+  "cpu_audit_wall_seconds": 1.23
+}
