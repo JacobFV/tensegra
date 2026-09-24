@@ -51,4 +51,6 @@ def test_monitor_does_not_change_training_and_reference_public_pairing(tmp_path)
         for field,tensor in value.items():assert torch.equal(tensor,sb['optimizer']['state'][key][field])
     reference=SelectorModel(width=1024);ref=evaluate(reference,cfg,tmp_path/'reference','cpu','soft')
     assert ref['public_sha256']==a['confirmation']['public_sha256']
+    assert all(f'c0_input_{name}' in ref['public_sha256'] for name in ['keys','attributes','instructions','adjacency'])
+    assert a['confirmation']['record_order_sha256']==b['confirmation']['record_order_sha256']
     assert a['confirmation']['initial_tensor_sha256']==a['confirmation']['final_tensor_sha256']

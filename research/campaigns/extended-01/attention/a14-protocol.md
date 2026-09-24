@@ -12,6 +12,8 @@ Development curves only at1000/3000/6000, on173M IID/moderate populations256even
 
 Confirmation uses1024 fresh events per core shape N32/D4/K4, N64/D8/K4, N128/D32/K8. Namespaces271M+shape×100k+offset for data and272M+shape×100k+offset for record order; batch16. All five policies and all three seeds see identical heldout graphs/records/labels. No single-axis expansion. Compare exact decompressed public-array hashes across all seeds and references before pooling. No heldout outcome changes training or policies.
 
+Public pairing hashes include full keys, attributes, instructions and adjacency, as well as gold/successor/start/relation/value arrays. Stream the large public tensors into hashes rather than duplicating them in every archive. Record-order hashes are additionally compared across all three trained seeds; supplied-neighborhood references do not consume record order and therefore omit that separate field.
+
 ## Five fixed policies per frozen model
 
 1. Original learned soft record and per-head destination reads.
