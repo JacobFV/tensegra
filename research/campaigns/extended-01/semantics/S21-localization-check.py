@@ -52,7 +52,7 @@ class Tests(unittest.TestCase):
  def test_bad_eos_payload(self):
   r=row();r['records'][-1][1]=0;self.assertRaises(ValueError,self.describe,r)
  def test_nonleading_nodes_retained(self):
-  r=row();r['records'].insert(3,[1,5,-1,0,-1]);r.update(valid=False,complete=False,reason='node_after_edge');d=self.describe(r);self.assertEqual(d['nonleading_node_records'],1);self.assertEqual(d['generated_leading_nodes'],2)
+  r=row();r['records'].insert(3,[1,5,-1,0,-1]);r.update(valid=False,complete=False,reason='node_after_edge');d=self.describe(r);self.assertEqual(d['nonleading_node_records'],1);self.assertEqual(d['generated_leading_nodes'],2);self.assertTrue(d['leading_nodes_correct']);self.assertFalse(d['all_nodes_correct']);self.assertFalse(d['edges_correct_after_nodes']);self.assertEqual(d['category'],'node:nonleading_node')
  def test_entry_counts(self):
   r=row();fields={k:dict(count=1,correct=1,loss_sum=.5,mean_loss=.5,accuracy=1.) for k in ('type','kind','value','copy','source','target','role','slot')};d=dict(rows=[r],teacher_forced=fields,teacher_forced_loss=.5);entry=dict(examples=1,teacher_forced=fields,teacher_forced_loss=.5,complete=1,valid=1,invalid_reasons={},cells={'3x3':dict(examples=1,complete=1)});m.entry_guard(entry,d);entry['cells']['3x3']['complete']=0;self.assertRaises(ValueError,m.entry_guard,entry,d)
 if __name__=='__main__':
