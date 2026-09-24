@@ -85,3 +85,6 @@ Independent profile audit verifies source/state/public pairing and five read pol
 
 ## 2026-09-24: profile next independent branches
 All six semantic forks are complete and endpoint-audited. Allocate R10profile60 seconds after source/population/driver preflight. Allocate S13English/mixed profiles90seconds each (estimated40–55s plus measured5.23s six-checkpoint guard and startup margin), and S14motif/S12rename profiles60seconds each. These are fixed mechanical recipes; no main outcome selection or automatic launch. Original S12 thresholds and every checkpoint remain fixed. Main budgets follow actual training/inference/export profiles.
+
+## 2026-09-24: R10 fixed development budget after audited profile
+Profile13.44s includes full driver/serialization; independently replayed108 readouts and2,880 generated events. Measured phase scaling supports320–450s for the nested16k/64k, fixed3,600-update comparison; allocate600s once, sourcec0c5aca1/config803221f4. No representation or recipe change from profile and no delay32 selection. This remains development; its fixed calibration gain rule decides confirmation. Root serial release follows pending attention work.
