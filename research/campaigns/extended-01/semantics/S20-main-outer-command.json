@@ -1,0 +1,44 @@
+{
+  "cwd": "/home/brandonin/topoformer-campaign01-semantics",
+  "argv": [
+    "/usr/bin/time",
+    "-f",
+    "elapsed_seconds=%e\nexit_code=%x\nmaxrss_kib=%M",
+    "-o",
+    "/home/brandonin/topoformer-campaign01-semantics/results/s20-main-launch.outer.txt",
+    "/usr/bin/timeout",
+    "--signal=KILL",
+    "4300s",
+    "/home/brandonin/topoformer-stage8-cuda/bin/python",
+    "/home/brandonin/topoformer-campaign01-semantics/s20-main-source-a7345916/src/topoformer/campaign_semantics_s20_launch.py",
+    "/home/brandonin/topoformer-campaign01-semantics/s20-main-source-a7345916/configs/campaign-s20-main-frozen-v1.json",
+    "--cap",
+    "4300",
+    "--python",
+    "/home/brandonin/topoformer-stage8-cuda/bin/python",
+    "--prefix",
+    "/home/brandonin/topoformer-campaign01-semantics/results/s20-main-launch"
+  ],
+  "argv_json_sha256": "739a93eed37c48d34151dc588c792bfc5864cf5cf8056c3afbbb445d9493052b",
+  "cap_seconds": 4300,
+  "config_sha256": "4e648a9a274a7cabcbb84c0b2e6e6a2dcbf37925e2146b0758702086245f6c8b",
+  "source_commit": "a7345916",
+  "source_tar_sha256": "3d3d0e9b876cb935416c708113f73151871378285023a81955404757ffcf2fa2",
+  "source_manifest_path": "/home/brandonin/topoformer-campaign01-semantics/s20-main-source-a7345916/configs/campaign-s20-main-frozen-v1.json",
+  "launch_authority": "Separate explicit root GPU release required",
+  "scope": "GNU timeout default process group, KILL at4300s without grace; GNU time outside wrapper and timeout; cwd preserves fixed relative data/output namespace, launcher child PYTHONPATH resolves immutable own source",
+  "utilities": {
+    "/usr/bin/time": {
+      "sha256": "4a445f72fefaf4127931df2b799aa885e27553b5a55e104a329d41fc8dc83083",
+      "version": "GNU Time UNKNOWN"
+    },
+    "/usr/bin/timeout": {
+      "sha256": "52c67910ffecb65d1d5172e01720145c54941aff91e7b3a11ab222c86fb425a8",
+      "version": "GNU coreutils9.4"
+    }
+  },
+  "profile_manifest_sha256": "54533444357774858d69b8b86b91b6f6be3864a4163e78bf448094c6ca122fec",
+  "cost_evidence_commit": "aa4e9697",
+  "cost_planning_estimate_seconds": 3891.056,
+  "allocation_scope": "all nine fixed endpoints; no early quality selection or automatic extension"
+}
