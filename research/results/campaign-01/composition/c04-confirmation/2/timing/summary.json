@@ -1,0 +1,680 @@
+{
+  "config": {
+    "hidden": 1024,
+    "key_dim": 32,
+    "batch_size": 256,
+    "capture_batch_size": 64,
+    "updates": 4000,
+    "checkpoints": [
+      0,
+      250,
+      500,
+      1000,
+      2000,
+      3000,
+      4000
+    ],
+    "delays": [
+      0,
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "intervention_delays": [
+      0,
+      1,
+      16
+    ],
+    "eval_distractors": [
+      2,
+      8
+    ],
+    "causal_size": 2048,
+    "version": "c04-v1-prospective-confirmation",
+    "replicate": 2,
+    "seed": 1603,
+    "learning_rate": 0.0003,
+    "sample_seed": 562000100,
+    "role_seed": 562000101,
+    "rekey_seed": 562000102,
+    "control_seed": 562000200,
+    "swap_seed": 562000300,
+    "interfaces": {
+      "lowerer": "/home/brandonin/topoformer-campaign-01/composition/p01-confirmation-304/selected.pt",
+      "lowerer_sha256": "e6f4940b64c424acca0ddf975e32a4592a0741f2604925a0779c09019a499372",
+      "backbone": "/home/brandonin/topoformer-stage11/returns/main/12-wide_continue.pt",
+      "backbone_sha256": "80f209e48d95efd18637658c8250dbd4d47870b36c05b358db554442127c0dc0",
+      "accessor": "/home/brandonin/topoformer-campaign-01/returns/r04-confirmation/12/ce-16384.pt",
+      "accessor_sha256": "fff51123913cf1a76d1eab8b40d2b29061b328068d857c8938745e6f70db89b7",
+      "consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/12/learned.pt",
+      "consumer_sha256": "459d35f71c119d3d6cc360a4d3f338a12342a1ad7be4ae3c7b976715d0fba0f8",
+      "oracle_consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/12/oracle.pt",
+      "oracle_consumer_sha256": "8bb80c9d7ecc907dc5847b5862ec482440d138071b07d24ef642e3663165abcd",
+      "query_consumer": "/home/brandonin/topoformer-campaign-01/returns/r05-confirmation/12/query_only.pt",
+      "query_consumer_sha256": "7a7d2f6848908dddd2517d35ea498da933796b8c1733d8ebce119e54a6ba8688"
+    },
+    "public_controls": [
+      "record_order",
+      "inventory_order",
+      "unrelated_instructions",
+      "fresh_names"
+    ],
+    "data": {
+      "train": {
+        "seed": 562000001,
+        "count": 16384
+      },
+      "calibration": {
+        "seed": 562000002,
+        "count": 2048
+      },
+      "validation": {
+        "seed": 562000003,
+        "count": 4096
+      }
+    },
+    "status": "Frozen prospective C04 confirmation; requires coordinator per-lineage GPU release",
+    "timing_examples": 256,
+    "timing_batch_sizes": [
+      1,
+      64
+    ],
+    "timing_delays": [
+      0,
+      16
+    ],
+    "timing_repeats": 3,
+    "warmup_examples": 8,
+    "requested_phase_caps_seconds": {
+      "hybrid": 900,
+      "n1_static": 180,
+      "n1_roles": 180,
+      "n2_rekey": 600,
+      "timing": 120
+    },
+    "neural_checkpoints": {
+      "n1_static": {
+        "path": "/home/brandonin/topoformer-campaign-01/composition/c04-confirmation-2-n1_static/endpoint.pt",
+        "sha256": "34bf0820b7b12ee83c0f32b1b394e39be0e5970daf0ef5e6802849ea2b7fec71"
+      },
+      "n1_roles": {
+        "path": "/home/brandonin/topoformer-campaign-01/composition/c04-confirmation-2-n1_roles/endpoint.pt",
+        "sha256": "b591bcdcaf1aa3ef4f420a95336be9aaa8af6e6220345e240c97892bb6e2a9f4"
+      },
+      "n2_rekey": {
+        "path": "/home/brandonin/topoformer-campaign-01/composition/c04-confirmation-2-n2_rekey/endpoint.pt",
+        "sha256": "0e054785b5e83b54661ec3de8e596c57fd6db58c21c2c2e6f80f5787803b8516"
+      }
+    }
+  },
+  "setup_seconds": 1.8566432469524443,
+  "neural_loads": {
+    "n1_static": {
+      "load_seconds": 0.008500313386321068,
+      "parameters": 1246248
+    },
+    "n1_roles": {
+      "load_seconds": 0.008276343811303377,
+      "parameters": 1246248
+    },
+    "n2_rekey": {
+      "load_seconds": 0.12167098186910152,
+      "parameters": 17028136
+    }
+  },
+  "components": {
+    "lowerer": 142341,
+    "backbone": 55854360,
+    "accessor": 33825,
+    "consumer": 38914,
+    "oracle": 38914,
+    "query_only": 38914
+  },
+  "resident_parameters": 75667900,
+  "cells": [
+    {
+      "path": "workspace",
+      "batch": 1,
+      "delay": 0,
+      "executed_parameters": 56069440,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.29699481232091784,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0011601359856285853,
+          "seconds_per_correct": 0.0011601359856285853,
+          "examples_per_second": 861.9679178886772,
+          "peak_cuda_bytes": 336434176
+        },
+        {
+          "repeat": 1,
+          "seconds": 0.2863522619009018,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0011185635230503976,
+          "seconds_per_correct": 0.0011185635230503976,
+          "examples_per_second": 894.0037641071408,
+          "peak_cuda_bytes": 336434176
+        },
+        {
+          "repeat": 2,
+          "seconds": 0.28407904831692576,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0011096837824879913,
+          "seconds_per_correct": 0.0011096837824879913,
+          "examples_per_second": 901.1576232626629,
+          "peak_cuda_bytes": 336434176
+        }
+      ],
+      "median_seconds": 0.2863522619009018,
+      "min_seconds": 0.28407904831692576,
+      "max_seconds": 0.29699481232091784
+    },
+    {
+      "path": "workspace",
+      "batch": 1,
+      "delay": 16,
+      "executed_parameters": 56069440,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 6.165114494040608,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.024082478492346127,
+          "seconds_per_correct": 0.024082478492346127,
+          "examples_per_second": 41.5239652479216,
+          "peak_cuda_bytes": 336854528
+        },
+        {
+          "repeat": 1,
+          "seconds": 6.158904741983861,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.024058221648374456,
+          "seconds_per_correct": 0.024058221648374456,
+          "examples_per_second": 41.56583203096257,
+          "peak_cuda_bytes": 336854528
+        },
+        {
+          "repeat": 2,
+          "seconds": 6.168968671001494,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.024097533871099586,
+          "seconds_per_correct": 0.024097533871099586,
+          "examples_per_second": 41.49802238474328,
+          "peak_cuda_bytes": 336854528
+        }
+      ],
+      "median_seconds": 6.165114494040608,
+      "min_seconds": 6.158904741983861,
+      "max_seconds": 6.168968671001494
+    },
+    {
+      "path": "workspace",
+      "batch": 64,
+      "delay": 0,
+      "executed_parameters": 56069440,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.08978006988763809,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0003507033979985863,
+          "seconds_per_correct": 0.0003507033979985863,
+          "examples_per_second": 2851.4123493152783,
+          "peak_cuda_bytes": 347964928
+        },
+        {
+          "repeat": 1,
+          "seconds": 0.07289674039930105,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.00028475289218476973,
+          "seconds_per_correct": 0.00028475289218476973,
+          "examples_per_second": 3511.816832930085,
+          "peak_cuda_bytes": 347964928
+        },
+        {
+          "repeat": 2,
+          "seconds": 0.07286806777119637,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0002846408897312358,
+          "seconds_per_correct": 0.0002846408897312358,
+          "examples_per_second": 3513.1986867530595,
+          "peak_cuda_bytes": 347964928
+        }
+      ],
+      "median_seconds": 0.07289674039930105,
+      "min_seconds": 0.07286806777119637,
+      "max_seconds": 0.08978006988763809
+    },
+    {
+      "path": "workspace",
+      "batch": 64,
+      "delay": 16,
+      "executed_parameters": 56069440,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.5440279836766422,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0021251093112368835,
+          "seconds_per_correct": 0.0021251093112368835,
+          "examples_per_second": 470.56402920655745,
+          "peak_cuda_bytes": 375718400
+        },
+        {
+          "repeat": 1,
+          "seconds": 0.5387855567969382,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0021046310812380398,
+          "seconds_per_correct": 0.0021046310812380398,
+          "examples_per_second": 475.14265512593045,
+          "peak_cuda_bytes": 375718400
+        },
+        {
+          "repeat": 2,
+          "seconds": 0.5386418621055782,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0021040697738499148,
+          "seconds_per_correct": 0.0021040697738499148,
+          "examples_per_second": 475.2694099921664,
+          "peak_cuda_bytes": 375718400
+        }
+      ],
+      "median_seconds": 0.5387855567969382,
+      "min_seconds": 0.5386418621055782,
+      "max_seconds": 0.5440279836766422
+    },
+    {
+      "path": "supplied_copy",
+      "batch": 1,
+      "delay": null,
+      "executed_parameters": 181255,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.17789292614907026,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0006948942427698057,
+          "seconds_per_correct": 0.0006948942427698057,
+          "examples_per_second": 1439.0679019213937,
+          "peak_cuda_bytes": 336314368
+        },
+        {
+          "repeat": 1,
+          "seconds": 0.17665398307144642,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0006900546213728376,
+          "seconds_per_correct": 0.0006900546213728376,
+          "examples_per_second": 1449.1606447190193,
+          "peak_cuda_bytes": 336314368
+        },
+        {
+          "repeat": 2,
+          "seconds": 0.17730567883700132,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0006926003079570364,
+          "seconds_per_correct": 0.0006926003079570364,
+          "examples_per_second": 1443.8341833108632,
+          "peak_cuda_bytes": 336314368
+        }
+      ],
+      "median_seconds": 0.17730567883700132,
+      "min_seconds": 0.17665398307144642,
+      "max_seconds": 0.17789292614907026
+    },
+    {
+      "path": "supplied_copy",
+      "batch": 64,
+      "delay": null,
+      "executed_parameters": 181255,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.07177773304283619,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.00028038176969857886,
+          "seconds_per_correct": 0.00028038176969857886,
+          "examples_per_second": 3566.5656903265794,
+          "peak_cuda_bytes": 340183040
+        },
+        {
+          "repeat": 1,
+          "seconds": 0.06800685590133071,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0002656517808645731,
+          "seconds_per_correct": 0.0002656517808645731,
+          "examples_per_second": 3764.326355146067,
+          "peak_cuda_bytes": 340183040
+        },
+        {
+          "repeat": 2,
+          "seconds": 0.06822908017784357,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.00026651984444470145,
+          "seconds_per_correct": 0.00026651984444470145,
+          "examples_per_second": 3752.065824905146,
+          "peak_cuda_bytes": 340183040
+        }
+      ],
+      "median_seconds": 0.06822908017784357,
+      "min_seconds": 0.06800685590133071,
+      "max_seconds": 0.07177773304283619
+    },
+    {
+      "path": "n1_static",
+      "batch": 1,
+      "delay": null,
+      "executed_parameters": 1246248,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.13187848404049873,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0005151503282831982,
+          "seconds_per_correct": 0.0005151503282831982,
+          "examples_per_second": 1941.1809429154844,
+          "peak_cuda_bytes": 336314368
+        },
+        {
+          "repeat": 1,
+          "seconds": 0.1316607240587473,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0005142997033544816,
+          "seconds_per_correct": 0.0005142997033544816,
+          "examples_per_second": 1944.3915551138261,
+          "peak_cuda_bytes": 336314368
+        },
+        {
+          "repeat": 2,
+          "seconds": 0.13154414808377624,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0005138443284522509,
+          "seconds_per_correct": 0.0005138443284522509,
+          "examples_per_second": 1946.1146978348427,
+          "peak_cuda_bytes": 336314368
+        }
+      ],
+      "median_seconds": 0.1316607240587473,
+      "min_seconds": 0.13154414808377624,
+      "max_seconds": 0.13187848404049873
+    },
+    {
+      "path": "n1_static",
+      "batch": 64,
+      "delay": null,
+      "executed_parameters": 1246248,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.030278502963483334,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.00011827540220110677,
+          "seconds_per_correct": 0.00011827540220110677,
+          "examples_per_second": 8454.843368866112,
+          "peak_cuda_bytes": 340183040
+        },
+        {
+          "repeat": 1,
+          "seconds": 0.030137670692056417,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.00011772527614084538,
+          "seconds_per_correct": 0.00011772527614084538,
+          "examples_per_second": 8494.35255351289,
+          "peak_cuda_bytes": 340183040
+        },
+        {
+          "repeat": 2,
+          "seconds": 0.03023381531238556,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.00011810084106400609,
+          "seconds_per_correct": 0.00011810084106400609,
+          "examples_per_second": 8467.34020681562,
+          "peak_cuda_bytes": 340183040
+        }
+      ],
+      "median_seconds": 0.03023381531238556,
+      "min_seconds": 0.030137670692056417,
+      "max_seconds": 0.030278502963483334
+    },
+    {
+      "path": "n1_roles",
+      "batch": 1,
+      "delay": null,
+      "executed_parameters": 1246248,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.13050322234630585,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0005097782122902572,
+          "seconds_per_correct": 0.0005097782122902572,
+          "examples_per_second": 1961.6373863985787,
+          "peak_cuda_bytes": 336314368
+        },
+        {
+          "repeat": 1,
+          "seconds": 0.13092200504615903,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0005114140822115587,
+          "seconds_per_correct": 0.0005114140822115587,
+          "examples_per_second": 1955.362659697599,
+          "peak_cuda_bytes": 336314368
+        },
+        {
+          "repeat": 2,
+          "seconds": 0.13057211693376303,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.0005100473317725118,
+          "seconds_per_correct": 0.0005100473317725118,
+          "examples_per_second": 1960.6023553241796,
+          "peak_cuda_bytes": 336314368
+        }
+      ],
+      "median_seconds": 0.13057211693376303,
+      "min_seconds": 0.13050322234630585,
+      "max_seconds": 0.13092200504615903
+    },
+    {
+      "path": "n1_roles",
+      "batch": 64,
+      "delay": null,
+      "executed_parameters": 1246248,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.03007047064602375,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.00011746277596103027,
+          "seconds_per_correct": 0.00011746277596103027,
+          "examples_per_second": 8513.335325326912,
+          "peak_cuda_bytes": 340183040
+        },
+        {
+          "repeat": 1,
+          "seconds": 0.03009591205045581,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.000117562156447093,
+          "seconds_per_correct": 0.000117562156447093,
+          "examples_per_second": 8506.13862676153,
+          "peak_cuda_bytes": 340183040
+        },
+        {
+          "repeat": 2,
+          "seconds": 0.030184119939804077,
+          "attempted": 256,
+          "correct": 256,
+          "refused": 0,
+          "seconds_per_attempt": 0.00011790671851485968,
+          "seconds_per_correct": 0.00011790671851485968,
+          "examples_per_second": 8481.280902359867,
+          "peak_cuda_bytes": 340183040
+        }
+      ],
+      "median_seconds": 0.03009591205045581,
+      "min_seconds": 0.03007047064602375,
+      "max_seconds": 0.030184119939804077
+    },
+    {
+      "path": "n2_rekey",
+      "batch": 1,
+      "delay": null,
+      "executed_parameters": 17028136,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.2353206081315875,
+          "attempted": 256,
+          "correct": 241,
+          "refused": 0,
+          "seconds_per_attempt": 0.0009192211255140137,
+          "seconds_per_correct": 0.0009764340586372926,
+          "examples_per_second": 1087.8775217886948,
+          "peak_cuda_bytes": 336783872
+        },
+        {
+          "repeat": 1,
+          "seconds": 0.2321878271177411,
+          "attempted": 256,
+          "correct": 241,
+          "refused": 0,
+          "seconds_per_attempt": 0.0009069836996786762,
+          "seconds_per_correct": 0.0009634349672935316,
+          "examples_per_second": 1102.5556472010217,
+          "peak_cuda_bytes": 336783872
+        },
+        {
+          "repeat": 2,
+          "seconds": 0.23241561884060502,
+          "attempted": 256,
+          "correct": 241,
+          "refused": 0,
+          "seconds_per_attempt": 0.0009078735110961134,
+          "seconds_per_correct": 0.0009643801611643361,
+          "examples_per_second": 1101.4750268378891,
+          "peak_cuda_bytes": 336783872
+        }
+      ],
+      "median_seconds": 0.23241561884060502,
+      "min_seconds": 0.2321878271177411,
+      "max_seconds": 0.2353206081315875
+    },
+    {
+      "path": "n2_rekey",
+      "batch": 64,
+      "delay": null,
+      "executed_parameters": 17028136,
+      "passes": [
+        {
+          "repeat": 0,
+          "seconds": 0.04267918085679412,
+          "attempted": 256,
+          "correct": 241,
+          "refused": 0,
+          "seconds_per_attempt": 0.00016671555022185203,
+          "seconds_per_correct": 0.00017709203675018306,
+          "examples_per_second": 5998.240708016007,
+          "peak_cuda_bytes": 370246144
+        },
+        {
+          "repeat": 1,
+          "seconds": 0.04289916530251503,
+          "attempted": 256,
+          "correct": 241,
+          "refused": 0,
+          "seconds_per_attempt": 0.00016757486446294934,
+          "seconds_per_correct": 0.00017800483528014534,
+          "examples_per_second": 5967.4820755776245,
+          "peak_cuda_bytes": 370246144
+        },
+        {
+          "repeat": 2,
+          "seconds": 0.04302577255293727,
+          "attempted": 256,
+          "correct": 241,
+          "refused": 0,
+          "seconds_per_attempt": 0.0001680694240349112,
+          "seconds_per_correct": 0.00017853017656820443,
+          "examples_per_second": 5949.922216620918,
+          "peak_cuda_bytes": 370246144
+        }
+      ],
+      "median_seconds": 0.04289916530251503,
+      "min_seconds": 0.04267918085679412,
+      "max_seconds": 0.04302577255293727
+    }
+  ],
+  "frozen_interfaces_unchanged": true,
+  "scope": "clean first fixed test-prefix; full independent paths include input preparation/transfers/CPU runtime; disk loading excluded; role accuracy reported separately",
+  "source_sha256": {
+    "campaign_composition_confirm_timing.py": "62906b3aa172a8ea95646118a4f05ee4cf406c422856ac1c0e1b43c13dd7e994",
+    "campaign_composition.py": "a10b6f1ac5341408dbbf0499a13ff921cdb9f713c4d691427fe6c896fb4d9733",
+    "campaign_composition_runtime.py": "a67cd75462155625f07be99c9253c03ed4ee79f05d231cc0d7746d0cf5b6f6c3",
+    "campaign_composition_models.py": "acb9e9eef078f441c88d63e695de086241b04b01f242f36a7eb969087e83b997",
+    "campaign_returns_use.py": "feadaca1579ee6ad316683e23b7a7418b9a31d2ece5e583c152975c7aad60758",
+    "return_memory.py": "cbf4d732520673039e5db403dfb57979b2d3492063a82bbd1376793d9103e037",
+    "return_crossdelay.py": "6c66bfd368cec5725d8cf60aa6fc74b1fdee068c6a49b9fdf993040c410358cb",
+    "return_memory_study.py": "ad92e75945c0eff5e0157c71286070e4f181cd38eef63813d3bad4aa1fbc89a9",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+    "thinking_runtime.py": "42058f3bc523d43d169bd8520f7a4411c4849ee2f571621fc6e313683e59dad8"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/usr/bin/time",
+    "--format={\"outer_driver_wall_seconds\": %e, \"exit_code\": %x}",
+    "--output=/home/brandonin/topoformer-campaign-01/composition/c04-lineage2-driver-time.json",
+    "/home/brandonin/topoformer-stage8-cuda/bin/python",
+    "-m",
+    "topoformer.campaign_composition_confirm_batch",
+    "--config",
+    "configs/campaign-c04-confirmation-2.json",
+    "--prefix",
+    "/home/brandonin/topoformer-campaign-01/composition/c04-confirmation-2",
+    "--released-replicate",
+    "2"
+  ],
+  "command_json_sha256": "bb11ad218e0715c5a5bcdd638adda3db542c55e3ab9a21dcb9d474e9755bd316",
+  "cwd": "/home/brandonin/topoformer-campaign-01/composition/c04-source-c34effb",
+  "environment_overrides": {
+    "PYTHONPATH": "src"
+  },
+  "time_binary_sha256": "4a445f72fefaf4127931df2b799aa885e27553b5a55e104a329d41fc8dc83083",
+  "batch_source_sha256": "7f550c3aaa10b179b08fda88e4463b8ddae078874703f601092c7f8f683ab0f1",
+  "config_sha256": "197c12657b776adff66ec06c6a9259374f557afd6bbbc5e067bfa71aa4db01ef",
+  "precision_seconds": 0.01,
+  "scope": "GNU time elapsed wall includes entire batch Python process through exit; child phase sums retained separately; add one centisecond for conservative rounding bound"
+}
