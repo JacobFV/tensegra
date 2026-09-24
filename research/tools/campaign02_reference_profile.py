@@ -70,15 +70,16 @@ def profile(config, output):
                 if cpu_seconds(owner)-cpu >= limit:
                     stopped = True
                     break
-                seed = config.get('seed_start',200000)+ci*10000+i
+                seed_offset = 0 if config.get('shared_condition_seeds',False) else ci*10000
+                seed = config.get('seed_start',200000)+seed_offset+i
                 spec = generate_world(seed,**kwargs)
                 semantic_hash = hashlib.sha256(json.dumps(asdict(spec),sort_keys=True).encode()).hexdigest()
                 for mode in modes:
-                    address_seed = config.get('address_seed_start',70000000)+ci*10000+i
+                    address_seed = config.get('address_seed_start',70000000)+seed_offset+i
                     result = run_episode(Workshop(spec,executor,address_seed=address_seed),make_reference(mode),
                                          model_compute_tariff=config.get('model_compute_tariff',0.0))
                     records.append(dict(condition=condition['name'],seed=seed,address_seed=address_seed,mode=mode,
-                                        world_sha256=semantic_hash,**result))
+                                        world_sha256=semantic_hash,instance_key=str(seed),**result))
             if stopped:
                 break
     if owner is not None:
@@ -97,13 +98,33 @@ def profile(config, output):
                 summary['mean_'+key] = sum(r.get(key,0) for r in rows)/len(rows)
             summary['solver_calls'] = sum(sum(t['action']['kind']=='call' for t in r['trace']) for r in rows)
             cells.append(summary)
+    paired = []
+    by_cell = {}
+    for row in records:
+        by_cell.setdefault((row['condition'],row['mode']),{})[row['instance_key']] = row
+    keys = list(by_cell)
+    for ai,a in enumerate(keys):
+        for b in keys[ai+1:]:
+            common = sorted(by_cell[a].keys() & by_cell[b].keys())
+            if not common:
+                continue
+            counts = {'both_correct':0,'a_only':0,'b_only':0,'both_wrong':0}
+            for key in common:
+                x,y = bool(by_cell[a][key]['verified_success']),bool(by_cell[b][key]['verified_success'])
+                counts['both_correct' if x and y else 'a_only' if x else 'b_only' if y else 'both_wrong'] += 1
+            paired.append(dict(a=list(a),b=list(b),paired_instances=len(common),outcomes=counts,
+                               success_difference_b_minus_a=(counts['b_only']-counts['a_only'])/len(common)))
     sources = {Path(inspect.getfile(module)).name: hashlib.sha256(Path(inspect.getfile(module)).read_bytes()).hexdigest()
                for module in (campaign02_references,campaign02_world,campaign02_protocol)}
     sources[Path(__file__).name] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     with gzip.open(output/'episodes.jsonl.gz','wt') as file:
         for row in records:
             file.write(json.dumps({k:v for k,v in row.items() if k!='trace'},separators=(',',':'))+'\n')
-    result = dict(config=config,executor=executor_stats,source_sha256=sources,cells=cells,stopped_cpu_limit=stopped,
+    result = dict(config=config,executor=executor_stats,source_sha256=sources,cells=cells,
+                  paired_success=paired,unique_seed_instances=len({r['seed'] for r in records}),
+                  support_note='Same seed across policies/conditions is paired support, not independent episodes. '
+                  'Shared-condition seeds equate hidden worlds only when generator parameters agree; public catalogue metadata may differ.',
+                  stopped_cpu_limit=stopped,
                   cpu_core_seconds=cpu_seconds()-cpu,wall_seconds=time.monotonic()-wall,
                   accounting='self+reaped children CPU; includes generation, policy, solver, serialization')
     (output/'summary.json').write_text(json.dumps(result,indent=2)+'\n')

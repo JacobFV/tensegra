@@ -48,3 +48,14 @@ or evolutionary claim follows from improving a supplied reference.
 Audit work: two local archive scans used approximately0.545 CPU seconds total;
 the saved reconstruction pass records0.272 seconds. Ten mechanical API fixtures
 passed in0.004 seconds. No new environment experiment was launched by this worker.
+
+Profiler `shared_condition_seeds=true` now explicitly pairs conditions on the
+same base-plus-index generation seed and separate address seed. The default
+remains false. This option is profiler metadata, never a WorldSpec field.
+For the proposed catalogue-only comparison, identical generation arguments
+except public budget metadata preserve the same hidden world. Arbitrarily
+changing generator size with the same seed would not establish identical worlds.
+Raw world hashes may differ because they include the public catalogue contract;
+`instance_key` records the generation seed. Summary paired2×2 outcomes retain
+both-correct, each-arm-only and both-wrong counts. Repeated policies/conditions
+are not counted as independent support; `unique_seed_instances` is explicit.
