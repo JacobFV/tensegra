@@ -19,7 +19,7 @@ The normalizer makes original and consistently renamed inputs identical, but it 
 | 703 | decay | raw | 11 | 12 | 11 | 10 | 0.994505 | 0.994422 |
 | 703 | decay | calibrated | 139 | 120 | 64 | 83 | 0.994505 | 0.994422 |
 
-Each repair/regression is paired on the same original semantic instance, with frozen raw-original reference predictions. There are1,024 distinct instances, reused across models;6,144 model-instance cells are not independent population samples. Constants remain0/1,024 for both policies. Across the three decay checkpoints, calibrated exact model-instance counts change336→271 (151 repairs,216 regressions); raw19→16 (15 repairs,18 regressions). These aggregate counts are descriptive only, and seed variation is retained above.
+Each repair/regression is paired on the same original semantic instance, with frozen original predictions under the corresponding raw or calibrated policy. There are1,024 distinct instances, reused across models;6,144 model-instance cells are not independent population samples. Constants remain0/1,024 for both policies. Across the three decay checkpoints, calibrated exact model-instance counts change336→271 (151 repairs,216 regressions); raw19→16 (15 repairs,18 regressions). These aggregate counts are descriptive only, and seed variation is retained above.
 
 | Seed | Arm | Policy | Typed-edge micro-F1 original→normalized | Ordered-edge micro-F1 original→normalized |
 |---|---|---|---|---|
@@ -40,4 +40,4 @@ Node presence/count/F1, node-type accuracy, identity-equivalence accuracy, copy 
 
 No normalized-renamed forwards were run. Their prediction implications follow from the audited full FP32/BF16 actor-input equality, preserved token positions/equality classes, and restoration through original public-token indices. They must be labeled a programmed invariance consequence under this restricted renderer and public case convention. The study does not show that the frozen model itself learned arbitrary identifier handling, nor that canonicalization repairs its graph semantics. Selection among endpoints, threshold retuning and further training are outside this diagnostic.
 
-Timing: all-six preflight14.342909s; forward/decode38.614227s; scoring/reconstruction40.571447s; export1.903061s. The480s cap was unchanged; full duration114.73s lies below cap and prospective conservative bound.
+Timing: all-six preflight14.342909s; forward/decode38.614227s; scoring/reconstruction40.571447s; export1.903061s. The480s cap was unchanged; full duration114.73s lies below cap and prospective conservative planning estimate.
