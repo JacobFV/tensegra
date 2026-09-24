@@ -17,3 +17,10 @@ E05 final recurrent46/128 versus lightweight57/128. Independent raw audit finds 
 
 ## Closure at user request
 Stop new experiments to conserve credits. Complete source fixes, collect receipts, render existing curves, run bounded CPU verification and independent closure review. Defer E06 acquisition/main populations/confirmation explicitly; do not label them failed or passed.
+
+## Continuation (phase 2) — 2026-09-24, resumed by user instruction after closure
+- User instructed resumption "to completion" after the credit-conservation closure. The original budget window (start 16:13:17Z, deadline 2026-09-25T16:13:17Z) and ceilings stay in force; spent GPU/CPU carries over. Verified 18:28Z: no campaign processes on gb10-direct, GPU idle, tree clean at 49cece64; 90 tests pass on GB10.
+- Closed phase-1 results are not rewritten. Phase-2 experiments are E07+ with new output roots.
+- E07 (input contract, 2x2): exact E05 recipe/seeds/DEV panel; only interface varies: {legacy summaries, public-tree memory} x {features v1, v2}. v2 = v1 prefix + supplied public relational facts (log budgets, budget vs. prior attempts on the same draft, timeout dominance, item conflict counts incl. non-pending, within-category public cost rank, one-step route lookahead). No solved subset/path/feasibility label or teacher action. Disclosed as a supplied input repair, not learned relation discovery.
+- E07 legacy-v1 reproduced E05 exactly (57/128 final) under the new source: determinism check for the v1 path.
+- E08 design profile (not evidence): small PBT, 2 supervised + 2 actor-critic rounds, six diverse initial (lr, entropy) rows, to check whether RL fine-tuning helps or collapses before registering the main population comparison.
