@@ -18,7 +18,7 @@ def test_generation_feasible_and_private():
         assert obs.known_items == {} and obs.known_edges is None
         assert all(set(x)=={'handle','category'} for x in obs.item_inventory)
         assert 'seed' not in obs.to_dict()
-        assert len(encode_observation(obs))==24
+        assert len(encode_observation(obs))==26
         assert len({len(encode_action(obs,a)) for a in action_catalog(obs)})==1
 
 
@@ -47,7 +47,7 @@ def test_explicit_constraints_not_completed():
     calls=[]
     def executor(primitive,problem,budget):
         calls.append((primitive,problem,budget))
-        return {'status':'unknown','payload':None,'work_units':1}
+        return {'status':'unknown','payload':None,'work_units':1,'certificate_valid':True}
     env=Workshop(generate_world(2),executor)
     env.step(Action('inspect',{'target':env.observe().item_inventory[0]['handle']}))
     env.step(Action('start_subset',{'handle':'p'}))
@@ -73,7 +73,7 @@ def test_commit_validator_and_obstacle_feedback():
 
 
 def test_work_budget_and_stale_problem():
-    env=Workshop(generate_world(4,obstacle=True),lambda *args: {'status':'success','payload':None,'work_units':1})
+    env=Workshop(generate_world(4,obstacle=True),lambda *args: {'status':'success','payload':None,'work_units':1,'certificate_valid':True})
     env.step(Action('inspect',{'target':'map'}))
     env.step(Action('build_route',{'handle':'route','start':0,'goal':env.observe().goal['destination']}))
     assert env.step(Action('call',{'problem':'route','budget':99999})).feedback['status']=='unavailable_resource'
@@ -83,7 +83,7 @@ def test_work_budget_and_stale_problem():
 
 
 def test_invalid_returns_cannot_teleport():
-    env=Workshop(generate_world(6),lambda *a:{'status':'success','payload':((0,),1,1,1),'work_units':1})
+    env=Workshop(generate_world(6),lambda *a:{'status':'success','payload':((0,),1,1,1),'work_units':1,'certificate_valid':True})
     env.step(Action('inspect',{'target':env.observe().item_inventory[0]['handle']}))
     env.step(Action('start_subset',{'handle':'p'}))
     handle=env.step(Action('call',{'problem':'p','budget':16})).feedback['return']
@@ -91,3 +91,40 @@ def test_invalid_returns_cannot_teleport():
     env.step(Action('retrieve',{'handle':handle}))
     assert env.step(Action('use_return',{'handle':handle,'as':'route'})).feedback['status']=='invalid_input'
     assert not env.observe().delivered
+
+
+def test_immutable_call_snapshot_and_result_features():
+    env=Workshop(generate_world(7),lambda *a:{'status':'success','payload':((0,),1,2,3),'work_units':1,'certificate_valid':True})
+    env.step(Action('inspect',{'target':env.observe().item_inventory[0]['handle']}))
+    env.step(Action('start_subset',{'handle':'p'}))
+    h=env.step(Action('call',{'problem':'p','budget':16})).feedback['return']
+    before=env.observe().records[-1]['problem_snapshot']
+    env.step(Action('add_constraint',{'problem':'p','constraint':'funds'}))
+    assert env.observe().records[-1]['problem_snapshot']==before
+    assert before['problem']['constraints']==[]
+    action=Action('use_return',{'handle':h,'as':'subset'})
+    old=encode_action(env.observe(),action)
+    env.step(Action('retrieve',{'handle':h}))
+    assert encode_action(env.observe(),action)!=old
+
+
+def test_move_travel_cost_and_exhaustion():
+    spec=generate_world(8,travel_limit=0)
+    env=Workshop(spec)
+    assert env.step(Action('move',{'destination':1})).feedback['reason']=='travel_budget'
+    env=Workshop(replace(spec,travel_limit=64))
+    env.step(Action('move',{'destination':1}))
+    assert env.observe().position==1
+    assert env.evaluate()['travel_distance']>0
+    assert env.evaluate()['cost']>spec.action_price
+
+
+def test_address_renaming_changes_only_spelling():
+    spec=generate_world(9)
+    a,b=Workshop(spec,address_seed=1),Workshop(spec,address_seed=2)
+    action=Action('inspect',{'target':'map'})
+    x,y=a.step(action),b.step(action)
+    assert x.feedback['return'] != y.feedback['return']
+    assert encode_observation(x)==encode_observation(y)
+    ax=Action('retrieve',{'handle':x.feedback['return']});ay=Action('retrieve',{'handle':y.feedback['return']})
+    assert encode_action(x,ax)==encode_action(y,ay)

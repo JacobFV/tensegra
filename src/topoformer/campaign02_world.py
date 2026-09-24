@@ -38,6 +38,8 @@ class WorldSpec:
     observation_price: float = .001
     action_price: float = .001
     work_price: float = .00001
+    travel_price: float = .001
+    travel_limit: int = 64
 
 
 @dataclass(frozen=True)
@@ -65,6 +67,7 @@ class Observation:
     verified: bool
     done: bool
     remaining_steps: int
+    remaining_travel: int
     remaining_work: int
     prices: dict[str, float]
     feedback: dict[str, Any]
@@ -97,7 +100,8 @@ def generate_world(seed: int, categories: int = 2, choices: int = 3,
                          and rng.random() < .18)
     # Chain remains open after optional shortcut obstruction.
     edges = {(i, i+1): rng.randint(1, 4) for i in range(locations-1)}
-    edges[(0, locations-1)] = rng.randint(2, 6)
+    if obstacle or rng.random() < .75:
+        edges[(0, locations-1)] = rng.randint(2, 18)
     for i in range(locations):
         for j in range(i+2, locations):
             if rng.random() < .25:
@@ -140,7 +144,7 @@ class Workshop:
     Required result fields: status, payload, work_units. CPU cost measured here.
     The harness must supply bounded executors; policies cannot supply callbacks.
     """
-    def __init__(self, spec: WorldSpec, executor: Callable | None = None):
+    def __init__(self, spec: WorldSpec, executor: Callable | None = None, address_seed: int = 0):
         self._spec, self._executor = spec, executor
         self._items: dict[str, dict[str, Any]] = {}
         self._edges = {(a,b):w for a,b,w in spec.edges}
@@ -154,10 +158,12 @@ class Workshop:
         self._delivered = self._verified = self._done = False
         self._steps = self._work = self._observations = 0
         self._solver_cpu = 0.0
+        self._reductions: list[dict[str, Any]] = []
+        self._travel = 0
         self._feedback: dict[str,Any] = {"status":"ready"}
         self._history: list[dict[str,Any]] = []
         self._pending: dict[int,str] = {}
-        self._handle_rng = random.Random("|".join(x.handle for x in spec.items))
+        self._handle_rng = random.Random(address_seed)
 
     def observe(self) -> Observation:
         s = self._spec
@@ -170,8 +176,8 @@ class Workshop:
             s.incompatible,
             tuple({k:deepcopy(v) for k,v in r.items() if k != "payload"} for r in self._records.values()),
             deepcopy(self._retrieved),deepcopy(self._problems),tuple(self._pending.values()),self._selected,self._position,self._delivered,self._verified,self._done,
-            max(0,s.step_limit-self._steps), max(0,s.work_limit-self._work),
-            {"observation":s.observation_price,"action":s.action_price,"work":s.work_price},
+            max(0,s.step_limit-self._steps), max(0,s.travel_limit-self._travel), max(0,s.work_limit-self._work),
+            {"observation":s.observation_price,"action":s.action_price,"work":s.work_price,"travel":s.travel_price},
             deepcopy(self._feedback))
 
     def _record(self, kind: str, payload: Any, **metadata: Any) -> str:
@@ -266,7 +272,9 @@ class Workshop:
             record = self._records[a["handle"]]
             if record.get("primitive") == "shortest_path" and record["state_version"] != self._version:
                 return {"status":"invalid_input","reason":"stale_result"}
-            if record.get("status") != "success":
+            if record.get("status") not in ("success","timeout") or not record.get("certificate_valid"):
+                return {"status":"invalid_input","reason":"no_valid_feasible_payload"}
+            if record.get("payload") is None:
                 return {"status":"invalid_input","reason":"not_success_result"}
             if a["handle"] not in self._retrieved:
                 return {"status":"invalid_input","reason":"retrieve_required"}
@@ -274,7 +282,7 @@ class Workshop:
             if a["as"] == "subset":
                 if record.get("primitive") != "constrained_subset":
                     raise ValueError("return type mismatch")
-                p = self._problems[record["problem"]]["problem"]
+                p = record["problem_snapshot"]["problem"]
                 return self._apply(Action("commit_subset",{"items":[p["handles"][i] for i in payload[0]]}))
             if a["as"] == "route":
                 if record.get("primitive") != "shortest_path":
@@ -292,13 +300,21 @@ class Workshop:
                 return {"status":"unavailable_resource"}
             start = time.process_time()
             result = self._executor(entry["primitive"],deepcopy(entry["problem"]),budget)
-            self._solver_cpu += time.process_time()-start
+            measured_cpu = time.process_time()-start
+            self._solver_cpu += measured_cpu + float(result.get("child_cpu_seconds",0))
+            self._reductions.append({"primitive":entry["primitive"],"problem":a["problem"],
+                "certificate_valid":result.get("certificate_valid"),
+                "correct":reduction_matches_world(self._spec,entry["primitive"],entry["problem"],
+                    self._edges,self._position),"work_budget":budget})
             used = result["work_units"]
             if not isinstance(used,int) or used < 0 or used > budget:
                 raise RuntimeError("executor violated work contract")
             self._work += used
             handle = self._record("computation",result.get("payload"),primitive=entry["primitive"],
-                                  problem=a["problem"],status=result["status"],work_units=used)
+                                  problem=a["problem"],status=result["status"],work_units=used,budget=budget,
+                                  problem_snapshot=deepcopy(entry),call_position=self._position,
+                                  certificate_valid=bool(result.get("certificate_valid",False)),
+                                  feasible_incumbent=bool(result.get("status")=="timeout" and result.get("certificate_valid")))
             return {"status":result["status"],"return":handle}
         if kind == "retrieve":
             record = self._records[a["handle"]]
@@ -312,6 +328,8 @@ class Workshop:
                 return {"status":"rejected","reason":reason}
             self._selected = tuple(handles)
             return {"status":"success","selected":list(handles)}
+        if kind == "move":
+            return self._walk([self._position,a["destination"]])
         if kind == "deliver":
             if not self._selected:
                 return {"status":"rejected","reason":"no_selection"}
@@ -320,17 +338,7 @@ class Workshop:
                 raise ValueError("route must start at current position")
             if path[-1] != self._spec.destination:
                 return {"status":"rejected","reason":"wrong_destination"}
-            # No teleportation/partial movement on malformed path.
-            if any((u,v) not in self._edges for u,v in zip(path,path[1:])):
-                return {"status":"rejected","reason":"missing_edge"}
-            for u,v in zip(path,path[1:]):
-                if (u,v) == self._spec.blocked_edge:
-                    del self._edges[(u,v)]
-                    self._version += 1
-                    return {"status":"obstacle","edge":[u,v],"position":self._position}
-                self._position = v
-            self._delivered = True
-            return {"status":"success","delivered":True}
+            return self._walk(path)
         if kind == "verify":
             valid,_ = validate_subset(self._spec,self._selected)
             self._verified = bool(valid and self._delivered and self._position == self._spec.destination)
@@ -344,17 +352,36 @@ class Workshop:
             return {"status":"unknown"}
         raise ValueError("unknown action")
 
+    def _walk(self, path: Any) -> dict[str, Any]:
+        if not isinstance(path,(list,tuple)) or len(path)<2 or path[0]!=self._position:
+            raise ValueError("path starts at current location")
+        if any((u,v) not in self._edges for u,v in zip(path,path[1:])):
+            return {"status":"rejected","reason":"missing_edge"}
+        for u,v in zip(path,path[1:]):
+            if (u,v)==self._spec.blocked_edge:
+                del self._edges[(u,v)]
+                self._version += 1
+                return {"status":"obstacle","edge":[u,v],"position":self._position}
+            distance = self._edges[(u,v)]
+            if distance > self._spec.travel_limit-self._travel:
+                return {"status":"unavailable_resource","reason":"travel_budget","position":self._position}
+            self._travel += distance
+            self._position = v
+        self._delivered = bool(self._selected and self._position==self._spec.destination)
+        return {"status":"success","delivered":self._delivered,"position":self._position}
+
     def evaluate(self) -> dict[str,Any]:
         """Evaluator-only summary, never returned to actor during an episode."""
         s = self._spec
-        cost = self._steps*s.action_price+self._observations*s.observation_price+self._work*s.work_price
+        cost = self._steps*s.action_price+self._travel*s.travel_price+self._observations*s.observation_price+self._work*s.work_price
         return {"verified_success":self._verified,"delivered":self._delivered,"utility":float(self._verified)-cost,
                 "steps":self._steps,"observations":self._observations,"work_units":self._work,
-                "solver_cpu_seconds":self._solver_cpu,"cost":cost,"history":deepcopy(self._history)}
+                "solver_cpu_seconds":self._solver_cpu,"travel_distance":self._travel,"cost":cost,
+                "reductions":deepcopy(self._reductions),"history":deepcopy(self._history)}
 
 
 ACTION_KINDS = ("inspect","start_subset","add_constraint","build_route","call","retrieve",
-                "choose_item","commit_pending","use_return","deliver","verify","think","abstain")
+                "choose_item","commit_pending","use_return","deliver","move","verify","think","abstain")
 CONSTRAINTS = ("capacity","funds","incompatibility")
 
 
@@ -376,6 +403,7 @@ def action_catalog(observation: Observation, budgets: tuple[int,...] = (16,128,1
     if o.known_items:
         actions.append(Action("start_subset",{"handle":name}))
     if o.known_edges is not None:
+        actions += [Action("move",{"destination":v}) for u,v,w in o.known_edges if u==o.position]
         actions.append(Action("build_route",{"handle":name,"start":o.position,"goal":o.goal["destination"]}))
         if any(u == o.position and v == o.goal["destination"] for u,v,_ in o.known_edges):
             actions.append(Action("deliver",{"path":[o.position,o.goal["destination"]]}))
@@ -404,7 +432,7 @@ def encode_observation(o: Observation) -> list[float]:
             o.remaining_steps/64,o.remaining_work/4096,o.state_version/8,
             o.prices["observation"],o.prices["action"],o.prices["work"],
             float(o.feedback.get("status")=="success"),float(o.feedback.get("status")=="rejected"),
-            float(o.feedback.get("status")=="obstacle"),float(o.feedback.get("status")=="timeout")]
+            float(o.feedback.get("status")=="obstacle"),float(o.feedback.get("status")=="timeout"),o.remaining_travel/64,o.prices["travel"]]
 
 
 def encode_action(o: Observation, action: Action) -> list[float]:
@@ -417,7 +445,7 @@ def encode_action(o: Observation, action: Action) -> list[float]:
     p = o.problems.get(a.get("problem"),{})
     record = next((r for r in o.records if r["handle"]==a.get("handle")),{})
     if record:
-        p = o.problems.get(record.get("problem"),{})
+        p = record.get("problem_snapshot",{})
     constraints = p.get("problem",{}).get("constraints",[])
     out += [row.get("category",-1)/8,float(bool(known)),known.get("weight",0)/16,
             known.get("price",0)/16,float(h in o.pending),float(h in o.selected),
@@ -426,12 +454,64 @@ def encode_action(o: Observation, action: Action) -> list[float]:
     out += [float(c in constraints) for c in CONSTRAINTS]
     out += [float(a.get("constraint")==c) for c in CONSTRAINTS]
     out += [float(record.get("status")==s) for s in ("success","timeout","infeasible","invalid_input","unknown")]
-    out += [float(bool(record) and record.get("state_version") != o.state_version),
+    out += [float(record.get("primitive")=="shortest_path" and record.get("state_version") != o.state_version),
             float(a.get("as")=="subset"),float(a.get("as")=="route"),
             float(record.get("primitive")=="constrained_subset"),float(record.get("primitive")=="shortest_path"),
             len(p.get("problem",{}).get("items",[]))/32,
             float(a.get("handle") in o.retrieved)]
+    pending_rows = [o.known_items.get(h,{}) for h in o.pending]
+    pending_categories = {r["category"] for r in o.item_inventory if r["handle"] in o.pending}
+    selected_categories = {r["category"] for r in o.item_inventory if r["handle"] in o.selected}
+    linked = [r for r in o.records if r.get("problem")==a.get("problem")]
+    current = [r for r in linked if r.get("problem_snapshot")==p and
+               (r.get("primitive")!="shortest_path" or r.get("state_version")==o.state_version)]
+    conflicts = {frozenset(pair) for pair in o.incompatible}
+    weight = sum(r.get("weight",0) for r in pending_rows)
+    price = sum(r.get("price",0) for r in pending_rows)
+    out += [float(row.get("category") in pending_categories),float(row.get("category") in selected_categories),
+            float(not any(frozenset((h,x)) in conflicts for x in o.pending)),
+            weight/64,price/64,(o.goal["capacity"]-weight)/64,(o.goal["funds"]-price)/64,
+            len(current)/16,float(any(r.get("status")=="success" for r in current)),
+            float(any(r.get("status")=="timeout" for r in current)),
+            current[-1].get("budget",0)/4096 if current else 0,
+            len(pending_rows)/8,float(all(bool(r) for r in pending_rows))]
+    out += [a.get("destination",-1)/32,
+            next((w/32 for u,v,w in (o.known_edges or ()) if u==o.position and v==a.get("destination")),0)]
+    retrieved = o.retrieved.get(a.get("handle"),{})
+    payload = retrieved.get("payload")
+    scalar_features = [0.0]*8
+    if payload and retrieved.get("primitive")=="constrained_subset":
+        indices,value,weight,cost = payload
+        scalar_features = [len(indices)/16,value/64,weight/64,cost/64,0,0,0,0]
+    elif payload and retrieved.get("primitive")=="shortest_path":
+        path,distance = payload
+        scalar_features = [0,0,0,0,len(path)/32,distance/64,
+                           float(bool(path) and path[0]==o.position),
+                           float(bool(path) and path[-1]==o.goal["destination"])]
+    out += scalar_features + [float(record.get("certificate_valid",False)),float(record.get("feasible_incumbent",False))]
     return out
+
+
+def reduction_matches_world(spec: WorldSpec, primitive: str, problem: dict[str,Any],
+                            edges: Mapping[tuple[int,int],int], position: int) -> bool:
+    """Privileged evaluator-only exact semantic-reduction audit, never a mask."""
+    if primitive == "constrained_subset":
+        actual = {x.handle:(x.category,x.weight,x.price,1) for x in spec.items}
+        handles = problem.get("handles",[])
+        rows = problem.get("items",[])
+        if len(handles)!=len(actual) or len(set(handles))!=len(handles) or set(handles)!=set(actual):
+            return False
+        if len(rows)!=len(handles) or any(tuple(r)!=actual[h] for h,r in zip(handles,rows)):
+            return False
+        expected = {frozenset((handles.index(a),handles.index(b))) for a,b in spec.incompatible}
+        supplied = {frozenset(pair) for pair in problem.get("forbidden_pairs",[])}
+        return (problem.get("capacity")==spec.capacity and problem.get("max_cost")==spec.funds
+                and supplied==expected)
+    if primitive == "shortest_path":
+        supplied = {(a,b):w for a,b,w in problem.get("edges",[])}
+        return (supplied==dict(edges) and problem.get("start")==position
+                and problem.get("goal")==spec.destination)
+    return False
 
 
 def protocol_executor(primitive: str, problem: dict[str, Any], max_work: int) -> dict[str, Any]:
@@ -440,7 +520,7 @@ def protocol_executor(primitive: str, problem: dict[str, Any], max_work: int) ->
     Missing constraints remain unconstrained; missing items remain missing.
     This compiler does not inspect the world, complete constraints, or solve.
     """
-    from .campaign02_protocol import Budget, Call, execute
+    from .campaign02_protocol import Budget, Call, execute_isolated, validate_result
     if primitive == "constrained_subset":
         rows = tuple(tuple(row) for row in problem["items"])
         args = (rows,problem.get("capacity",sum(row[1] for row in rows)),
@@ -450,6 +530,8 @@ def protocol_executor(primitive: str, problem: dict[str, Any], max_work: int) ->
         args = (problem["n"],tuple(tuple(edge) for edge in problem["edges"]),problem["start"],problem["goal"])
     else:
         args = tuple(problem.get("arguments",()))
-    result = execute(Call(primitive,args,budget=Budget(max_work)))
+    call = Call(primitive,args,budget=Budget(max_work))
+    result = execute_isolated(call)
     return {"status":result.status,"payload":result.payload,"work_units":result.work_units,
-            "cpu_seconds":result.cpu_seconds,"certificate":result.certificate}
+            "cpu_seconds":result.cpu_seconds,"child_cpu_seconds":result.cpu_seconds,"certificate":result.certificate,
+            "certificate_valid":validate_result(call,result)}
