@@ -38,6 +38,7 @@
     "research/campaigns/extended-01/review/S18-main-train-panel-audit.json": "a14e545ea318bccf9136f23c0ad5db6ae64617d71a2e96cda876867deea3b2ce",
     "research/campaigns/extended-01/review/S18-reference-v2-audit.json": "0c6be9301abb637dae5b6bb81ace078892fba2ef6b28a5ad87ab60e94a33a263",
     "research/campaigns/extended-01/review/S18-train-ranking-audit.json": "ffdf98f72b6d87c585b8d243bcfb98b718b00824e9a5bfd465d546a361fa68cc",
+    "research/campaigns/extended-01/review/S19-final-analysis-audit.json": "9461b549f1d5be7eb39aa87ca06bbce7657f6b43e2c924f03f144f8f7dd5fd39",
     "research/campaigns/extended-01/semantics/S12-report.md": "dd57d7ba8dfcf3dbe13f816c6ebe33fab510469af96578f0066e59ec0f0bc854",
     "research/campaigns/extended-01/semantics/S13-report.md": "2ccd311cac0e40691be485d5b8cbca79b33aae50e39dd97b1b21b4254b51eccb",
     "research/campaigns/extended-01/semantics/S15-analyze.py": "32e10235a0216f17c0fbd33efe4615907c290542b23eb6ffa88bcab56a4f13e8",
@@ -48,6 +49,7 @@
     "research/campaigns/extended-01/semantics/S17-report.md": "b16d464e9675e97ddbe81c07f74c5e66cfabd11385678e43f37fde7cc63f85fd",
     "research/campaigns/extended-01/semantics/S18-train-ranking-report.md": "5bd4d70b7912f4e6951f204692993b1ae1ba776031f88bdd1bfe382ebe8eea39",
     "research/campaigns/extended-01/semantics/S18-train-ranking.py": "55c238cf2f65777e92074af2d56fba2c4aa5013c887eea4672a5505b2da241eb",
+    "research/campaigns/extended-01/semantics/S19-report.md": "c3e2514db517969e60be3219f67c8b247eddc30f0e67ce441691417d7ba394a0",
     "research/results/campaign-01/attention/a06/601/context/config.json": "d8f8d1f47b1e5ff7580f4585de020a5afd2ad78ef89d2045c97c2e0112768993",
     "research/results/campaign-01/attention/a06/601/context/eval-00000.json": "c81a6b8affa3fa662a10906434866b64d61ed2ad2d077c92d29e4074c6fe0345",
     "research/results/campaign-01/attention/a06/601/context/eval-00010.json": "94a8ed70b361b207279977bcb886b427c920b1fa739c8131508a4a5ab9449517",
@@ -486,7 +488,16 @@
     "research/results/campaign-01/semantics/s18-reference-v2/s18-reference-v2/u25600/evaluation-u25600.json.gz": "46beb0d7825e6dc704fd7c71b7bc3913c5baf9acfee7a1e0039854f9db15b669",
     "research/results/campaign-01/semantics/s18-reference-v2/s18-reference-v2/u26624/calibration-u26624.npz": "3eea6073921f781b54b0a86e9898f390012628bfb6fa1c7fc447ab85f38e2b24",
     "research/results/campaign-01/semantics/s18-reference-v2/s18-reference-v2/u26624/evaluation-u26624.json.gz": "28ff62dfd9f04c3a2130ec1c0d7d3616833e2f6cfc935fc62fafd3e34a9f13a1",
-    "research/results/campaign-01/semantics/s18-train-ranking.json": "92dfd7f4ab1b98d18be695d17ab26346bd9aad1c6e0cf409098378e1ecc3401a"
+    "research/results/campaign-01/semantics/s18-train-ranking.json": "92dfd7f4ab1b98d18be695d17ab26346bd9aad1c6e0cf409098378e1ecc3401a",
+    "research/results/campaign-01/semantics/s19-analysis.json": "3cbee1fe688e2f6e73e1890b94cd2001cfbe9776129772b1499f3ef947206cde",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/development-u0.json.gz": "bb6281371712426555da13bd9aed12562faa62e020e38c9aa342aa26dfffbf4e",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/development-u1024.json.gz": "978802a954dfea0fd2b0333113bbcff6e8380c9bdff472b0d2958f321960bf5f",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/development-u2048.json.gz": "2e8773f13be20eb314fa5bc1a6b578e0cc24de8a7711a1a764d7d3f891c71ff4",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/development-u4096.json.gz": "7011b1354e8c987cd2d6287341c65e0c211b7ae269283e8edb1e7c8e4aac61d1",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/train-u0.json.gz": "2f01b8ba9ceb959b036429f3fe9b7ae5c8e1d59e4a147ce415f61f764131abe0",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/train-u1024.json.gz": "69a2e43b092fe94f7c0d4b1c7fc337e86803b0a716d151e45e2f0b9020d3cebe",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/train-u2048.json.gz": "ca58ba826bfbc9733548244335be05dbc9de6c5404dc4774962c29e60497bb64",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/train-u4096.json.gz": "d98b88e50e6c9099f34ece2bcf486c971f96622a06521ce4636771fcc55d0b5f"
   },
   "panel_rows": {
     "a12_counts": 36,
@@ -528,12 +539,14 @@
     "s18_paired": 1,
     "s18_rank": 1,
     "s18_train": 96,
+    "s19_learning": 8,
+    "s19_summary": 1,
     "semantic_confirmation": 12,
     "semantic_confirmation_uncertainty": 2,
     "semantic_learning": 36,
     "semantic_supplied": 32
   },
-  "rows": 23396,
+  "rows": 23405,
   "schema_version": 1,
   "status": [
     {
@@ -554,7 +567,7 @@
     }
   ],
   "table": "plotted-data.json.gz",
-  "table_sha256": "ed9b405482522c3dc06f8e3205b2899a2f882309325ba9aa064dc2fa15b7d497",
+  "table_sha256": "016561d3f78e3a63651f928f723f5d685a1bfc3cdc17531b039f0256d675a1bd",
   "uncertainty": "Seed traces are not confidence intervals. S12 audited shared-event bootstrap intervals condition on fixed fitted seeds and are not seed-population intervals. Return Wilson intervals retained in data only; repeated delays are not independent.",
-  "uncompressed_sha256": "945ef1064440c2757941fc7180dc1144e94ddc5cef13c1116ab1b0ba7e64e36c"
+  "uncompressed_sha256": "535a669d2de972a2025f8e3628926fafe78ed66d5f8c87828a35f36b80234a06"
 }
