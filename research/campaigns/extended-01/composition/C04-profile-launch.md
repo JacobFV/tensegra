@@ -2,12 +2,12 @@
 
 Prepared before GPU profile outcomes. Coordinator alone releases the slot. This sheet does not authorize launch. Main confirmation caps remain unset.
 
-The clean composition worktree contains no abandoned uncommitted changes. Commit `09724b2` adds the previous worker's CPU neural smoke receipt to the ledger; it changes no executable source. The staged executable source remains `5847a5e` at `/home/brandonin/topoformer-campaign-01/composition/c04-source-5847a5e` on `gb10-direct`.
+The clean composition worktree contains no abandoned uncommitted changes. Commit `09724b2` adds the previous worker's CPU neural smoke receipt to the ledger; it changes no executable source. The staged executable source is `8a92869` at `/home/brandonin/topoformer-campaign-01/composition/c04-source-8a92869` on `gb10-direct`. This supersedes `5847a5e` only to publish complete occupancy receipts atomically with file and directory fsync; model code and profile configuration are unchanged.
 
 Local and staged SHA256 checks agree:
 
 - `configs/campaign-c04-profile.json`: `1ce378c705a59cc11ebc6ec045e3066f717b959811dc2835ab392dfc9fb3a932`
-- `src/topoformer/campaign_composition_confirm_launch.py`: `6025379a21628a5c8f9f512c7d29bfdca17d4d4db584c69c874c07fe4679dea7`
+- `src/topoformer/campaign_composition_confirm_launch.py`: `9f60532e8bfd2ed332bbfdda63d0d434b85d382544d31c76458bd2c0ea6031e1`
 
 The existing CUDA Python is `/home/brandonin/topoformer-stage8-cuda/bin/python`. Profile-only namespaces are 569000001/2/3, with independent initialization1699 and view RNGs5690001xx/2xx/3xx. Requested caps are hybrid120, N1static60, N1roles60, N2rekey60, timing120 seconds: total420. Every phase uses an immutable output and external subprocess occupancy receipt, checks the GPU is idle, and aborts if it exceeds its cap. Stop on any failure and report the receipt; no automatic retry or increased cap.
 
