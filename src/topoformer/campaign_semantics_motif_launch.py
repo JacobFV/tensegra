@@ -1,5 +1,5 @@
 """Queue-authorized semantic process wrapper with complete occupancy accounting."""
-import argparse,datetime,hashlib,json,os,subprocess,time
+import argparse,datetime,hashlib,json,os,subprocess,time,sys
 from pathlib import Path
 
 def persist(path,record):
@@ -13,6 +13,12 @@ def persist(path,record):
 
 
 p=argparse.ArgumentParser();p.add_argument('config');p.add_argument('--cap',type=float,required=True);p.add_argument('--python',required=True);p.add_argument('--prefix',required=True);a=p.parse_args()
+config=json.loads(Path(a.config).read_text())
+if config.get('job')=='profile':
+    sys.path.insert(0,str(Path(__file__).parent))
+    from campaign_semantics_profile_freeze import verify_profile_source,require_complete_matrix
+    verify_profile_source(config,Path(__file__).parent)
+    require_complete_matrix()
 if subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader'],text=True).strip():raise RuntimeError('GPU occupied; coordinator must release an idle slot')
 receipt=Path(a.prefix+'.occupancy.json');log=Path(a.prefix+'.log');started_receipt=Path(a.prefix+'.started.json')
 if receipt.exists() or log.exists() or started_receipt.exists():raise RuntimeError('immutable launch prefix already exists')
