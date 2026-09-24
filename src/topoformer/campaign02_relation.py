@@ -26,7 +26,7 @@ from .campaign_semantics_s19_actor import TypedRecordActor
 from .campaign_semantics_s19_codec import EDGE, EOS, NODE, PAD, encode_row
 from .campaign_semantics_s21_data import (
     CELLS, VOCAB, PublicFeatureAudit, alpha, cell, pinned_path, read_rows,
-    reserve, write_rows,
+    reserve, write_rows, select_indices,
 )
 from .campaign_semantics_s22_controller import NodePrefix, decode
 from .semantic_scaling import tokens
@@ -123,7 +123,12 @@ def build_data(c):
     inventory_path = pinned_path(c['exclusion_inventory'])
     with gzip.open(inventory_path, 'rt') if inventory_path.suffix == '.gz' else inventory_path.open() as f:
         inventory = json.load(f)
+    metadata = json.loads(pinned_path(c['exclusion_inventory_metadata']).read_text())
+    if metadata['alpha_sha256'] != c['exclusion_inventory']['sha256']:
+        raise ValueError('historical inventory metadata mismatch')
     seen = set(inventory if isinstance(inventory, list) else inventory['alpha_sha256'])
+    if len(seen) != metadata['unique_alpha']:
+        raise ValueError('historical inventory count mismatch')
     if not seen or any(not isinstance(k, str) or len(k) != 64 for k in seen):
         raise ValueError('invalid historical alpha inventory')
     exclusions = [dict(**c['exclusion_inventory'], unique_alpha=len(seen))]
@@ -159,7 +164,7 @@ def build_data(c):
             cells=dict(collections.Counter(f"{r['arity']}x{r['facts']}" for r in rows)))
     manifest = dict(version=VERSION, config=c, generator_commit=SOURCE_COMMIT,
         generated=generated, exclusions=exclusions, initial_unique_exclusions=initial_exclusions,
-        attempts=attempts, public_feature_audit=features.summary(),
+        attempts=attempts, historical_coverage=metadata, public_feature_audit=features.summary(),
         process_seconds=time.monotonic()-started, cpu_seconds=time.process_time()-cpu_start,
         scope='Fresh alpha-disjoint exploratory TRAIN1024/known512/omitted3x4-512. No confirmation.')
     (out / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
@@ -186,9 +191,12 @@ def prepare(c):
             result.append(dict(row=r, public=ActorInput(r['text'], ()), records=records,
                                prefix=node_prefix(records), gold=target(r, VOCAB)))
         data[split] = result
+    panel_counts = {motif: count // 8 for motif, count in TRAIN_COUNTS.items()}
+    panel_ids = select_indices([x['row'] for x in data['train']], panel_counts, 20202201)
+    data['train_panel'] = [data['train'][i] for i in panel_ids]
     if c['job'] == 'profile':
         # Public length only selects the expensive profile; no evaluation tuning.
-        for split in ('known', 'heldout'):
+        for split in ('train_panel', 'known', 'heldout'):
             data[split] = sorted(data[split], key=lambda x: -len(tokens(x['public'])))[:c['profile_examples']]
     return data
 
@@ -281,7 +289,7 @@ def run(c):
                 if time.monotonic()-started > c['cap_seconds']:
                     raise TimeoutError('root-authorized process budget reached')
                 if update in c['checkpoints']:
-                    metrics = {split: evaluate(model, data[split], arm, folder, split, update, c['eval_batch_size']) for split in ('known', 'heldout')}
+                    metrics = {split: evaluate(model, data[split], arm, folder, split, update, c['eval_batch_size']) for split in ('train_panel', 'known', 'heldout')}
                     path = folder / f'model-u{update}.pt'
                     torch.save(dict(model=model.state_dict(), optimizer=optimizer.state_dict(), update=update,
                         arm=arm, seed=c['seed'], order=order, position=position, schedule=scheduler.get_state(), visits=visits), path)

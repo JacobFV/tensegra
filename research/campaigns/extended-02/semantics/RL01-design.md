@@ -64,3 +64,19 @@ PYTHONPATH=src python -m pytest -q tests/test_campaign02_relation.py
 ```
 
 The source-binding command emits the dictionary to insert into each configuration. Data config requires pinned exclusion inventory/sources, unique `first_seed`, `shuffle_seed`, output directory, and CPU cap. Runner config requires pinned `train`/`known`/`heldout` under `inputs`, pinned `parent`, fixed parent state hash, width1024, batch8, eval batch32, paired arm list, device, learning rate, update/checkpoint settings, seed/schedule seed, output directory and process cap. A profile may use a short update count and a public-length-selected `profile_examples` subset; main always evaluates all 512 per population.
+
+## Prepared execution inputs and acquisition panel
+
+`RL01-data-prepared.json` resolves and pins the historical inventory plus **all three** S21 split files (train_broad, development, confirmation). Read-only GB10 SHA256 checks on 2026-09-25 matched every declared exclusion input and the 752,293,177-byte parent checkpoint. The metadata inventory count is 41,638 historical alpha constructions; later S21 exclusions are added before reserving any new split. The metadata receipt's unknown unarchived-data caveat is retained in the new manifest.
+
+A deterministic stratified TRAIN128 panel now accompanies every checkpoint: 3×3:32; 4×3:16; 4×4:16; 2×4:16; 5×3:24; 5×4:24, selected with fixed seed 20202201. It receives the same local/free metrics but is explicitly training-exposed, never a generalization score. The profile samples public-long examples from this panel too. This adds 768 decoded training examples across the paired main run.
+
+Prepared source hashes bind this implementation but become authorized only after independent review. Root then copies/freezes the configs, fills runner data hashes from the generated manifest, and profiles. Suggested caps are profile120 + main780 seconds, **not a guarantee that 1024 updates fit**. If projected work exceeds the joint900-second allocation, stop before main and register a revised exposure rather than silently changing it. Example commands after source packaging:
+
+```
+PYTHONPATH=<snapshot>/src <CPU-python> -m topoformer.campaign02_relation build-data <snapshot>/research/campaigns/extended-02/semantics/RL01-data-prepared.json
+PYTHONPATH=<snapshot>/src <CUDA-python> -m topoformer.campaign02_relation run <resolved-profile.json>
+PYTHONPATH=<snapshot>/src <CUDA-python> -m topoformer.campaign02_relation run <resolved-main.json>
+```
+
+`RL01-profile-template.json` and `RL01-main-template.json` deliberately contain non-runnable dataset-hash placeholders until generation succeeds. No experiment was launched while resolving these paths.
