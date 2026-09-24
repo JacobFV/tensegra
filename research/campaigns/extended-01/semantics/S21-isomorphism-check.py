@@ -11,6 +11,8 @@ class Tests(unittest.TestCase):
  def test_copied_identity(self):g=fixture();g.nodes[1]['attribute']=('ident','public_identity','carol');self.assertEqual(m.compare(fixture(),g)[0],'non_isomorphic')
  def test_type(self):g=fixture();g.nodes[0]['attribute']=('record','finite_json','"parent"');self.assertEqual(m.compare(fixture(),g)[0],'non_isomorphic')
  def test_value(self):g=fixture();g.nodes[0]['attribute']=('pred','finite_json','"unify"');self.assertEqual(m.compare(fixture(),g)[0],'non_isomorphic')
+ def test_scalar_value(self):
+  a=m.nx.MultiDiGraph();a.add_node(0,attribute=('num','finite_json','1'));b=a.copy();b.nodes[0]['attribute']=('num','finite_json','2');self.assertEqual(m.compare(a,b)[0],'non_isomorphic')
  def test_direction(self):g=fixture();g.remove_edge(0,1);g.add_edge(1,0,relation='argument',slot=0);self.assertEqual(m.compare(fixture(),g)[0],'non_isomorphic')
  def test_slots(self):g=fixture();g[0][1][0]['slot']=1;g[0][2][0]['slot']=0;self.assertEqual(m.compare(fixture(),g)[0],'non_isomorphic')
  def test_relation(self):g=fixture();g[0][1][0]['relation']='item';self.assertEqual(m.compare(fixture(),g)[0],'non_isomorphic')
