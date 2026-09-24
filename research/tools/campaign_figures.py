@@ -382,6 +382,7 @@ def render(data, output):
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')=='independently_audited'})
         provisional_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')!='independently_audited'})
         pending_lineages=[n for n in (560,561,562) if n not in audited_lineages and n not in provisional_lineages]
+        matrix_label='All three lineages independently audited.' if len(audited_lineages)==3 else f'Audited: {audited_lineages}; independent audit pending: {provisional_lineages}; missing: {pending_lineages}.'
         for ax,view in zip(axes[0],('clean','reversed')):
             for ai,path in enumerate(('workspace','supplied_copy')):
                 for lineage in (560,561,562):
@@ -408,7 +409,7 @@ def render(data, output):
                 ss.sort(key=lambda r:r['delay'])
                 ax.plot([r['delay'] for r in ss],[100*r['correct']/r['total'] for r in ss],'.-',color=f'C{ai}',alpha=.65,label=metric if lineage==560 else None)
         ax.set(title='C04 reversed: answer / joint / refusal',xlabel='Workspace delay',ylabel='Count / total (%)');ax.legend(fontsize=7)
-        finish(fig,'composition-confirmation',f"Audited: {audited_lineages}; completed / independent final audit pending: {provisional_lineages}; missing: {pending_lineages}. Each trace is a lineage; shared views/delays are not independent.\nNeural x = fixed 4000 primary; + = selected secondary. Supplied-copy is a sole-return reference. Finite numeric train/test overlap; supplied scheduling.")
+        finish(fig,'composition-confirmation',f"{matrix_label} Each trace is a lineage; shared views/delays are not independent.\nNeural x = fixed 4000 primary; + = selected secondary. Supplied-copy is a sole-return reference. Finite numeric train/test overlap; supplied scheduling.")
 
         if select('c04_timing'):
             fig,axes=plt.subplots(1,3,figsize=(13,4.8))
@@ -424,7 +425,7 @@ def render(data, output):
                     ss=[r for r in select('c04_timing',path=arm,batch=batch) if r['delay'] in (None,16)]
                     ax.scatter([ai+(r['lineage']-561)*.07 for r in ss],[1000*r['median_seconds']/r['attempted'] for r in ss],s=25,label=arm)
                 ax.set(title=f'Measured execution · batch {batch}',xticks=[0,1,2],xticklabels=['Fixed roles','Workspace d16','Supplied copy'],ylabel='Median ms / attempted example',yscale='log');ax.tick_params(axis='x',labelrotation=15)
-            finish(fig,'composition-accuracy-timing',f'Completed three-lineage worker results; independent final audit pending: {provisional_lineages}. Accuracy: neural answer; hybrid joint lowering + answer.\nEach dot/trace is one lineage; timing uses median of recorded repeats, excludes setup, and does not measure training or prove a deployment speedup.')
+            finish(fig,'composition-accuracy-timing',f'{matrix_label} Accuracy: neural answer; hybrid joint lowering + answer.\nEach dot/trace is one lineage; timing uses median of recorded repeats, excludes setup, and does not measure training or prove a deployment speedup.')
 
 
 def main():
