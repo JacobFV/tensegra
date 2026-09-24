@@ -19,3 +19,5 @@ Semantic coverage caveat: the 8,192 training constructions have distinct equalit
 S12 constant702 also has zero raw/calibrated exact graphs; its paired decay fork is running. The first-seed gain is still not a replicated result. C04 lineage0 raw/provenance/runtime/causal/timing audit is complete (`review/C04-lineage-0-audit.json`); finite numerical overlap is high and the role-augmented neural baseline passes this first lineage. Full comparison remains pending.
 
 A11 longer exposure achieves508/512 IID,467/512 moderate and101/512 joint-depth/size task accuracy despite near-perfect mean routing. A12 is an inference-only frozen-checkpoint diagnostic of record versus destination mixing. Model-score argmax hardening is an engineered read policy, not a learned-soft gate pass. Its timing profile passed; main cap180 seconds remains separate from confirmation.
+
+S12 second paired endpoint (audit pending): constant0→decay131/1024 calibrated, raw0→6. This clears the second seed threshold; first-seed66/1024 failure still prevents the all-seed competence claim. Third seed remains pending with unchanged recipe.

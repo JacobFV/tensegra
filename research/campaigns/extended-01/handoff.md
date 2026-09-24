@@ -68,3 +68,6 @@ Parent702 soleGPUowner, ~11776/16384 at900s/cap1400, healthy. Next root schedule
 
 ### 2026-09-24 06:06 UTC reconciliation
 Constant702 completed639.029482550s, raw/cal0/1024, archive c0891ef. A12 profile soleGPUowner source71f1971 cap60 after independent preflight17d8b76; main contingent profile. C04lineage0 independent audit ba9d877 passes165hashes/212cells/actualruntime and causal checks; remaininglineages mandatory. Charged15317.629s beforeA12. Next paireddecay702cap800 source dbd3575 config606bd998, then A12main ifprofile supports, C04lineage1, parent703/lineage2/forks703. No confirmation selection changes. Approvalnever/fullautonomy applies; older sandbox notes obsolete.
+
+### 06:20 UTC paired endpoint
+S12decay702 completed641.981826689s, raw6/cal131 of1024 versus constant0/0. Archive9143b96; independent audit pending. Seed702 passesindividual103criterion,70166failureunchanged;703all3jobsremainmandatory. A12main nowsoleGPUowner source71f1971 cap180 afterauditedprofile, expected120–145s. Next C04lineage1cap1980, S12parent703cap1400, C04lineage2cap1980, S12forks703800each; allunchanged. FullCPUintegration32fe72f686tests+10subtests14.93s and3953historicalblobs preserved. Latestplots624129c partialmatrixexplicit. Latestpushb7afbbf, newercommitsneedmilestonepush.
