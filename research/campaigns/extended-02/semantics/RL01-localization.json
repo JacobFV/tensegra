@@ -1,0 +1,4156 @@
+{
+  "scope": "Raw prediction/count reconstruction and failure localization, not inference rerun. Dense gold edge tensors independently checked for 1024 final heldout graphs. Existing strict validity flags retained; codec itself not independently reimplemented.",
+  "bindings": {
+    "all_records/train_panel-u0.json.gz": "8027cc5ccf9fa0ee74ffbd9b62095cdede3e7ef7af0a77666a6deabfa40ba923",
+    "all_records/known-u0.json.gz": "ffd9f1d77b19aa6500f936bfc0eb5c518c987c43fdd769b90007bd10d752afdb",
+    "all_records/heldout-u0.json.gz": "4b06ef830dcc6b8588db806af1bf2a3550589eacdb918366557c6f3c2d5ba2c3",
+    "all_records/train_panel-u256.json.gz": "f18c9a737736d315897f6880bc2243df4f26d811aebf1fa861a5776a06332468",
+    "all_records/known-u256.json.gz": "d97cf152c4287308fae6a6c1e35effc7f9d69efb85a33bf64979d52b35baa10c",
+    "all_records/heldout-u256.json.gz": "cbc288d9c404ecf20b8daf427612b091019cab4129cfb9866d4879f555afb27b",
+    "all_records/train_panel-u1024.json.gz": "e5712f6a2dbc67d30a2786a19561d6e8be7c7030984d574a5e820b7ac031046c",
+    "all_records/known-u1024.json.gz": "8ae198132ebbffc0e244deb7caaa3551af009add3cd985c9366232a7f1819a86",
+    "all_records/heldout-u1024.json.gz": "5c9477176101895c9641a622c539756362465905dd30fb6d3e7186c6438e287c",
+    "relation_only/train_panel-u0.json.gz": "8ce3471cb1ec50db228566e9cc215f5e9cbe0274983e0ecba8861db5857847ab",
+    "relation_only/known-u0.json.gz": "7ce6d5db189f1469076222e9f2965a8598b742cab1511a0983dce364b9697d19",
+    "relation_only/heldout-u0.json.gz": "62f94d752db848abc2f8c9314e80c62470f53253a560dd7a8554cfdd47e24db1",
+    "relation_only/train_panel-u256.json.gz": "8d3f63fbca2952ad3f0b0f833522c25c4cb9d4b3247bf7098c0cc9038e3e97cb",
+    "relation_only/known-u256.json.gz": "0a4d724b53c5c19d00e9812c5e209acdba9bcca143df0799ab6f088f30dcef5e",
+    "relation_only/heldout-u256.json.gz": "01adbd26343035b8ee4c0a9d09380140fecabc0fed5f6b0318e9f7794d8ae9dc",
+    "relation_only/train_panel-u1024.json.gz": "326b942f60f0d41bc2cdc31c180f9ad8bda88463680c32a4abbc17a965f8d7ac",
+    "relation_only/known-u1024.json.gz": "945e184ae820da56426fccaf34f2cf585f6df68daf8b0b4e594c7c1147606d65",
+    "relation_only/heldout-u1024.json.gz": "57b5a1cdb30bfa8726863b908695de411e73615d7712b49e54a1f6035d6d9160"
+  },
+  "results": {
+    "all_records": {
+      "train_panel-u0": {
+        "counts": {
+          "examples": 128,
+          "complete": 128,
+          "exact_relations": 128,
+          "valid": 128,
+          "teacher_edge_count": 9549,
+          "teacher_edge_correct": 9549,
+          "teacher_premature_eos": 0,
+          "teacher_eos_count": 128,
+          "teacher_eos_correct": 128,
+          "gold_edges": 9549,
+          "emitted_edges": 9549,
+          "correct_emitted_edges": 9549,
+          "missing_edges": 0,
+          "spurious_edges": 0,
+          "ended_eos": 128,
+          "eos_before_gold_edge_count": 0,
+          "eos_equal_gold_edge_count": 128,
+          "eos_after_gold_edge_count": 0
+        },
+        "teacher_field_correct": {
+          "tag_correct": 9549,
+          "source_correct": 9549,
+          "target_correct": 9549,
+          "role_correct": 9549,
+          "slot_correct": 9549
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 3280,
+            "tuple_correct": 3280,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 789,
+            "tuple_correct": 789,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:pattern": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 440,
+            "tuple_correct": 440,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "argument": {
+            "count": 2328,
+            "tuple_correct": 2328,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "refers_to": {
+            "count": 2328,
+            "tuple_correct": 2328,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          }
+        },
+        "invalid_reasons": {},
+        "failure_examples": []
+      },
+      "known-u0": {
+        "counts": {
+          "examples": 512,
+          "complete": 496,
+          "exact_relations": 496,
+          "valid": 511,
+          "teacher_edge_count": 38145,
+          "teacher_edge_correct": 38127,
+          "teacher_premature_eos": 0,
+          "teacher_eos_count": 512,
+          "teacher_eos_correct": 512,
+          "gold_edges": 38145,
+          "emitted_edges": 38144,
+          "correct_emitted_edges": 38109,
+          "missing_edges": 36,
+          "spurious_edges": 35,
+          "ended_eos": 511,
+          "eos_before_gold_edge_count": 0,
+          "eos_equal_gold_edge_count": 511,
+          "eos_after_gold_edge_count": 0
+        },
+        "teacher_field_correct": {
+          "tag_correct": 38145,
+          "source_correct": 38145,
+          "target_correct": 38127,
+          "role_correct": 38145,
+          "slot_correct": 38145
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 13120,
+            "tuple_correct": 13120,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 3105,
+            "tuple_correct": 3105,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:pattern": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 1760,
+            "tuple_correct": 1759,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 1,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "argument": {
+            "count": 9312,
+            "tuple_correct": 9312,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "refers_to": {
+            "count": 9312,
+            "tuple_correct": 9295,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 17,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          }
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 1
+        },
+        "failure_examples": [
+          {
+            "semantic_sha256": "e95107f1243217bf08a9cb2445e9f008685d6c54698ad639d55e5f9ec1ffb481",
+            "reason": null,
+            "emitted_edges": 84,
+            "gold_edges": 84,
+            "missing": [
+              [
+                2,
+                22,
+                19,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                22,
+                21,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "f1acc6678a26fb180e059b9bfd541a97f75d0fa659d19d3f41314f760c32be59",
+            "reason": null,
+            "emitted_edges": 85,
+            "gold_edges": 85,
+            "missing": [
+              [
+                2,
+                2,
+                22,
+                4,
+                3
+              ],
+              [
+                2,
+                34,
+                16,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                2,
+                23,
+                4,
+                3
+              ],
+              [
+                2,
+                34,
+                17,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "2ace532d3090520e7163527d799f23e459db9349e3ee9a5f16d9c91278fb3f0e",
+            "reason": null,
+            "emitted_edges": 99,
+            "gold_edges": 99,
+            "missing": [
+              [
+                2,
+                29,
+                24,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                29,
+                25,
+                2,
+                -1
+              ]
+            ]
+          }
+        ]
+      },
+      "heldout-u0": {
+        "counts": {
+          "examples": 512,
+          "complete": 0,
+          "exact_relations": 0,
+          "valid": 352,
+          "teacher_edge_count": 35396,
+          "teacher_edge_correct": 27597,
+          "teacher_premature_eos": 3,
+          "teacher_eos_count": 512,
+          "teacher_eos_correct": 509,
+          "gold_edges": 35396,
+          "emitted_edges": 35393,
+          "correct_emitted_edges": 23664,
+          "missing_edges": 11732,
+          "spurious_edges": 11728,
+          "ended_eos": 354,
+          "eos_before_gold_edge_count": 59,
+          "eos_equal_gold_edge_count": 110,
+          "eos_after_gold_edge_count": 185
+        },
+        "teacher_field_correct": {
+          "tag_correct": 35393,
+          "source_correct": 32379,
+          "target_correct": 30325,
+          "role_correct": 29795,
+          "slot_correct": 29867
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 12288,
+            "tuple_correct": 12288,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 3140,
+            "tuple_correct": 3139,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 1,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 512,
+            "tuple_correct": 509,
+            "tag_wrong": 0,
+            "source_wrong": 3,
+            "target_wrong": 3,
+            "role_wrong": 3,
+            "slot_wrong": 3
+          },
+          "field:pattern": {
+            "count": 512,
+            "tuple_correct": 3,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 509,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 512,
+            "tuple_correct": 17,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 495,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 2048,
+            "tuple_correct": 789,
+            "tag_wrong": 0,
+            "source_wrong": 512,
+            "target_wrong": 1259,
+            "role_wrong": 512,
+            "slot_wrong": 512
+          },
+          "argument": {
+            "count": 8192,
+            "tuple_correct": 5471,
+            "tag_wrong": 3,
+            "source_wrong": 271,
+            "target_wrong": 66,
+            "role_wrong": 2523,
+            "slot_wrong": 2451
+          },
+          "refers_to": {
+            "count": 8192,
+            "tuple_correct": 5381,
+            "tag_wrong": 0,
+            "source_wrong": 2231,
+            "target_wrong": 2739,
+            "role_wrong": 2562,
+            "slot_wrong": 2563
+          }
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 157,
+          "historical metric cannot express multiple pair-slot labels": 2,
+          "duplicate_edge": 1
+        },
+        "failure_examples": [
+          {
+            "semantic_sha256": "28145882cf6485cf8583f321f545951d08e1f0240ee2f5f042a3336328ebcbd2",
+            "reason": null,
+            "emitted_edges": 71,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                9,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                15,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                20,
+                4,
+                3
+              ],
+              [
+                2,
+                9,
+                10,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                18,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                9,
+                3,
+                3
+              ],
+              [
+                2,
+                9,
+                5,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "00f07508f278c095db2956d3032d5d1cb49fec549dff635281cb1c1ea414f84a",
+            "reason": null,
+            "emitted_edges": 70,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                15,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                20,
+                4,
+                3
+              ],
+              [
+                2,
+                10,
+                11,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                11,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                17,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                10,
+                3,
+                3
+              ],
+              [
+                2,
+                10,
+                5,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "6d8cf0b742eaabf2eb9ff60f6a0274279b49a0f53eca42cbe808971fe24ebc52",
+            "reason": null,
+            "emitted_edges": 70,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                9,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                14,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                19,
+                4,
+                3
+              ],
+              [
+                2,
+                9,
+                10,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                18,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                9,
+                3,
+                3
+              ],
+              [
+                2,
+                9,
+                7,
+                2,
+                -1
+              ]
+            ]
+          }
+        ]
+      },
+      "train_panel-u256": {
+        "counts": {
+          "examples": 128,
+          "complete": 127,
+          "exact_relations": 127,
+          "valid": 128,
+          "teacher_edge_count": 9549,
+          "teacher_edge_correct": 9548,
+          "teacher_premature_eos": 0,
+          "teacher_eos_count": 128,
+          "teacher_eos_correct": 128,
+          "gold_edges": 9549,
+          "emitted_edges": 9549,
+          "correct_emitted_edges": 9546,
+          "missing_edges": 3,
+          "spurious_edges": 3,
+          "ended_eos": 128,
+          "eos_before_gold_edge_count": 0,
+          "eos_equal_gold_edge_count": 128,
+          "eos_after_gold_edge_count": 0
+        },
+        "teacher_field_correct": {
+          "tag_correct": 9549,
+          "source_correct": 9549,
+          "target_correct": 9549,
+          "role_correct": 9548,
+          "slot_correct": 9549
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 3280,
+            "tuple_correct": 3279,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 1,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 789,
+            "tuple_correct": 789,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:pattern": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 440,
+            "tuple_correct": 440,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "argument": {
+            "count": 2328,
+            "tuple_correct": 2328,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "refers_to": {
+            "count": 2328,
+            "tuple_correct": 2328,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          }
+        },
+        "invalid_reasons": {},
+        "failure_examples": [
+          {
+            "semantic_sha256": "c2494e1a0f06c0a03b92c67e6c58a220ff873b882268beee06f1b91f715e84f7",
+            "reason": null,
+            "emitted_edges": 83,
+            "gold_edges": 83,
+            "missing": [
+              [
+                2,
+                0,
+                31,
+                0,
+                -1
+              ],
+              [
+                2,
+                0,
+                32,
+                1,
+                -1
+              ],
+              [
+                2,
+                27,
+                33,
+                3,
+                4
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                0,
+                31,
+                1,
+                -1
+              ],
+              [
+                2,
+                0,
+                32,
+                0,
+                -1
+              ],
+              [
+                2,
+                27,
+                32,
+                3,
+                4
+              ]
+            ]
+          }
+        ]
+      },
+      "known-u256": {
+        "counts": {
+          "examples": 512,
+          "complete": 489,
+          "exact_relations": 489,
+          "valid": 510,
+          "teacher_edge_count": 38145,
+          "teacher_edge_correct": 38118,
+          "teacher_premature_eos": 0,
+          "teacher_eos_count": 512,
+          "teacher_eos_correct": 512,
+          "gold_edges": 38145,
+          "emitted_edges": 38145,
+          "correct_emitted_edges": 38109,
+          "missing_edges": 36,
+          "spurious_edges": 36,
+          "ended_eos": 510,
+          "eos_before_gold_edge_count": 0,
+          "eos_equal_gold_edge_count": 508,
+          "eos_after_gold_edge_count": 2
+        },
+        "teacher_field_correct": {
+          "tag_correct": 38145,
+          "source_correct": 38145,
+          "target_correct": 38120,
+          "role_correct": 38143,
+          "slot_correct": 38145
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 13120,
+            "tuple_correct": 13118,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 2,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 3105,
+            "tuple_correct": 3105,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:pattern": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 1760,
+            "tuple_correct": 1758,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 2,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "argument": {
+            "count": 9312,
+            "tuple_correct": 9312,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "refers_to": {
+            "count": 9312,
+            "tuple_correct": 9289,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 23,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          }
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 2
+        },
+        "failure_examples": [
+          {
+            "semantic_sha256": "21789f0b9bad46b87e843c41cd08b54aac5b5c23f60f011b42bb5376ea14cced",
+            "reason": null,
+            "emitted_edges": 99,
+            "gold_edges": 99,
+            "missing": [
+              [
+                2,
+                2,
+                26,
+                4,
+                3
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                2,
+                24,
+                4,
+                3
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "e95107f1243217bf08a9cb2445e9f008685d6c54698ad639d55e5f9ec1ffb481",
+            "reason": null,
+            "emitted_edges": 84,
+            "gold_edges": 84,
+            "missing": [
+              [
+                2,
+                22,
+                19,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                22,
+                13,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "f1acc6678a26fb180e059b9bfd541a97f75d0fa659d19d3f41314f760c32be59",
+            "reason": null,
+            "emitted_edges": 85,
+            "gold_edges": 85,
+            "missing": [
+              [
+                2,
+                2,
+                22,
+                4,
+                3
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                2,
+                23,
+                4,
+                3
+              ]
+            ]
+          }
+        ]
+      },
+      "heldout-u256": {
+        "counts": {
+          "examples": 512,
+          "complete": 0,
+          "exact_relations": 0,
+          "valid": 374,
+          "teacher_edge_count": 35396,
+          "teacher_edge_correct": 27600,
+          "teacher_premature_eos": 3,
+          "teacher_eos_count": 512,
+          "teacher_eos_correct": 509,
+          "gold_edges": 35396,
+          "emitted_edges": 35520,
+          "correct_emitted_edges": 23557,
+          "missing_edges": 11839,
+          "spurious_edges": 11961,
+          "ended_eos": 377,
+          "eos_before_gold_edge_count": 36,
+          "eos_equal_gold_edge_count": 115,
+          "eos_after_gold_edge_count": 226
+        },
+        "teacher_field_correct": {
+          "tag_correct": 35393,
+          "source_correct": 32370,
+          "target_correct": 30242,
+          "role_correct": 29862,
+          "slot_correct": 29926
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 12288,
+            "tuple_correct": 12286,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 2,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 3140,
+            "tuple_correct": 3140,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 512,
+            "tuple_correct": 509,
+            "tag_wrong": 0,
+            "source_wrong": 3,
+            "target_wrong": 3,
+            "role_wrong": 3,
+            "slot_wrong": 3
+          },
+          "field:pattern": {
+            "count": 512,
+            "tuple_correct": 3,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 509,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 512,
+            "tuple_correct": 0,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 512,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 2048,
+            "tuple_correct": 733,
+            "tag_wrong": 0,
+            "source_wrong": 512,
+            "target_wrong": 1315,
+            "role_wrong": 512,
+            "slot_wrong": 512
+          },
+          "argument": {
+            "count": 8192,
+            "tuple_correct": 5508,
+            "tag_wrong": 3,
+            "source_wrong": 285,
+            "target_wrong": 118,
+            "role_wrong": 2456,
+            "slot_wrong": 2392
+          },
+          "refers_to": {
+            "count": 8192,
+            "tuple_correct": 5421,
+            "tag_wrong": 0,
+            "source_wrong": 2226,
+            "target_wrong": 2697,
+            "role_wrong": 2561,
+            "slot_wrong": 2563
+          }
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 133,
+          "historical metric cannot express multiple pair-slot labels": 3,
+          "duplicate_edge": 2
+        },
+        "failure_examples": [
+          {
+            "semantic_sha256": "28145882cf6485cf8583f321f545951d08e1f0240ee2f5f042a3336328ebcbd2",
+            "reason": null,
+            "emitted_edges": 71,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                9,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                15,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                20,
+                4,
+                3
+              ],
+              [
+                2,
+                9,
+                10,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                18,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                9,
+                3,
+                3
+              ],
+              [
+                2,
+                9,
+                5,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "00f07508f278c095db2956d3032d5d1cb49fec549dff635281cb1c1ea414f84a",
+            "reason": null,
+            "emitted_edges": 70,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                15,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                20,
+                4,
+                3
+              ],
+              [
+                2,
+                10,
+                11,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                11,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                17,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                10,
+                3,
+                3
+              ],
+              [
+                2,
+                10,
+                5,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "6d8cf0b742eaabf2eb9ff60f6a0274279b49a0f53eca42cbe808971fe24ebc52",
+            "reason": "invalid_generated_node_reference",
+            "emitted_edges": 72,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                9,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                14,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                19,
+                4,
+                3
+              ],
+              [
+                2,
+                9,
+                10,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                18,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                9,
+                3,
+                3
+              ],
+              [
+                2,
+                9,
+                7,
+                2,
+                -1
+              ]
+            ]
+          }
+        ]
+      },
+      "train_panel-u1024": {
+        "counts": {
+          "examples": 128,
+          "complete": 127,
+          "exact_relations": 127,
+          "valid": 127,
+          "teacher_edge_count": 9549,
+          "teacher_edge_correct": 9548,
+          "teacher_premature_eos": 0,
+          "teacher_eos_count": 128,
+          "teacher_eos_correct": 128,
+          "gold_edges": 9549,
+          "emitted_edges": 9547,
+          "correct_emitted_edges": 9532,
+          "missing_edges": 17,
+          "spurious_edges": 15,
+          "ended_eos": 127,
+          "eos_before_gold_edge_count": 0,
+          "eos_equal_gold_edge_count": 127,
+          "eos_after_gold_edge_count": 0
+        },
+        "teacher_field_correct": {
+          "tag_correct": 9549,
+          "source_correct": 9549,
+          "target_correct": 9549,
+          "role_correct": 9548,
+          "slot_correct": 9549
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 3280,
+            "tuple_correct": 3279,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 1,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 789,
+            "tuple_correct": 789,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:pattern": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 440,
+            "tuple_correct": 440,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "argument": {
+            "count": 2328,
+            "tuple_correct": 2328,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "refers_to": {
+            "count": 2328,
+            "tuple_correct": 2328,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          }
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 1
+        },
+        "failure_examples": [
+          {
+            "semantic_sha256": "db765254136132ed79ea7c462985c41ea0698ea5340959d5796d3353e5f92c93",
+            "reason": "invalid_generated_node_reference",
+            "emitted_edges": 51,
+            "gold_edges": 53,
+            "missing": [
+              [
+                2,
+                0,
+                10,
+                0,
+                -1
+              ],
+              [
+                2,
+                0,
+                11,
+                1,
+                -1
+              ],
+              [
+                2,
+                8,
+                10,
+                3,
+                1
+              ],
+              [
+                2,
+                9,
+                7,
+                2,
+                -1
+              ],
+              [
+                2,
+                10,
+                11,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                0,
+                10,
+                1,
+                -1
+              ],
+              [
+                2,
+                0,
+                11,
+                0,
+                -1
+              ],
+              [
+                2,
+                8,
+                11,
+                3,
+                1
+              ],
+              [
+                2,
+                9,
+                10,
+                2,
+                -1
+              ],
+              [
+                2,
+                11,
+                12,
+                2,
+                -1
+              ]
+            ]
+          }
+        ]
+      },
+      "known-u1024": {
+        "counts": {
+          "examples": 512,
+          "complete": 484,
+          "exact_relations": 484,
+          "valid": 510,
+          "teacher_edge_count": 38145,
+          "teacher_edge_correct": 38113,
+          "teacher_premature_eos": 0,
+          "teacher_eos_count": 512,
+          "teacher_eos_correct": 512,
+          "gold_edges": 38145,
+          "emitted_edges": 38143,
+          "correct_emitted_edges": 38088,
+          "missing_edges": 57,
+          "spurious_edges": 55,
+          "ended_eos": 510,
+          "eos_before_gold_edge_count": 0,
+          "eos_equal_gold_edge_count": 509,
+          "eos_after_gold_edge_count": 1
+        },
+        "teacher_field_correct": {
+          "tag_correct": 38145,
+          "source_correct": 38145,
+          "target_correct": 38116,
+          "role_correct": 38142,
+          "slot_correct": 38145
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 13120,
+            "tuple_correct": 13117,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 3,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 3105,
+            "tuple_correct": 3105,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:pattern": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 1760,
+            "tuple_correct": 1758,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 2,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "argument": {
+            "count": 9312,
+            "tuple_correct": 9312,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "refers_to": {
+            "count": 9312,
+            "tuple_correct": 9285,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 27,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          }
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 2
+        },
+        "failure_examples": [
+          {
+            "semantic_sha256": "21789f0b9bad46b87e843c41cd08b54aac5b5c23f60f011b42bb5376ea14cced",
+            "reason": null,
+            "emitted_edges": 99,
+            "gold_edges": 99,
+            "missing": [
+              [
+                2,
+                2,
+                26,
+                4,
+                3
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                2,
+                24,
+                4,
+                3
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "e95107f1243217bf08a9cb2445e9f008685d6c54698ad639d55e5f9ec1ffb481",
+            "reason": null,
+            "emitted_edges": 84,
+            "gold_edges": 84,
+            "missing": [
+              [
+                2,
+                22,
+                19,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                22,
+                21,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "f1acc6678a26fb180e059b9bfd541a97f75d0fa659d19d3f41314f760c32be59",
+            "reason": null,
+            "emitted_edges": 86,
+            "gold_edges": 85,
+            "missing": [
+              [
+                2,
+                2,
+                22,
+                4,
+                3
+              ],
+              [
+                2,
+                23,
+                24,
+                2,
+                -1
+              ],
+              [
+                2,
+                34,
+                16,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                2,
+                23,
+                4,
+                3
+              ],
+              [
+                2,
+                23,
+                5,
+                2,
+                -1
+              ],
+              [
+                2,
+                24,
+                7,
+                2,
+                -1
+              ],
+              [
+                2,
+                34,
+                14,
+                2,
+                -1
+              ]
+            ]
+          }
+        ]
+      },
+      "heldout-u1024": {
+        "counts": {
+          "examples": 512,
+          "complete": 0,
+          "exact_relations": 0,
+          "valid": 389,
+          "teacher_edge_count": 35396,
+          "teacher_edge_correct": 27535,
+          "teacher_premature_eos": 3,
+          "teacher_eos_count": 512,
+          "teacher_eos_correct": 509,
+          "gold_edges": 35396,
+          "emitted_edges": 35605,
+          "correct_emitted_edges": 23581,
+          "missing_edges": 11815,
+          "spurious_edges": 12023,
+          "ended_eos": 389,
+          "eos_before_gold_edge_count": 29,
+          "eos_equal_gold_edge_count": 107,
+          "eos_after_gold_edge_count": 253
+        },
+        "teacher_field_correct": {
+          "tag_correct": 35393,
+          "source_correct": 32381,
+          "target_correct": 30184,
+          "role_correct": 29907,
+          "slot_correct": 29896
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 12288,
+            "tuple_correct": 12275,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 12,
+            "slot_wrong": 1
+          },
+          "declares": {
+            "count": 3140,
+            "tuple_correct": 3139,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 1,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 512,
+            "tuple_correct": 509,
+            "tag_wrong": 0,
+            "source_wrong": 3,
+            "target_wrong": 3,
+            "role_wrong": 3,
+            "slot_wrong": 3
+          },
+          "field:pattern": {
+            "count": 512,
+            "tuple_correct": 3,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 509,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 512,
+            "tuple_correct": 4,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 508,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 2048,
+            "tuple_correct": 662,
+            "tag_wrong": 0,
+            "source_wrong": 512,
+            "target_wrong": 1386,
+            "role_wrong": 512,
+            "slot_wrong": 512
+          },
+          "argument": {
+            "count": 8192,
+            "tuple_correct": 5552,
+            "tag_wrong": 3,
+            "source_wrong": 277,
+            "target_wrong": 97,
+            "role_wrong": 2425,
+            "slot_wrong": 2426
+          },
+          "refers_to": {
+            "count": 8192,
+            "tuple_correct": 5391,
+            "tag_wrong": 0,
+            "source_wrong": 2223,
+            "target_wrong": 2709,
+            "role_wrong": 2536,
+            "slot_wrong": 2558
+          }
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 122,
+          "duplicate_edge": 1
+        },
+        "failure_examples": [
+          {
+            "semantic_sha256": "28145882cf6485cf8583f321f545951d08e1f0240ee2f5f042a3336328ebcbd2",
+            "reason": null,
+            "emitted_edges": 71,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                9,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                15,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                20,
+                4,
+                3
+              ],
+              [
+                2,
+                9,
+                10,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                18,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                9,
+                3,
+                3
+              ],
+              [
+                2,
+                9,
+                5,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "00f07508f278c095db2956d3032d5d1cb49fec549dff635281cb1c1ea414f84a",
+            "reason": null,
+            "emitted_edges": 70,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                15,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                20,
+                4,
+                3
+              ],
+              [
+                2,
+                10,
+                11,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                11,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                17,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                10,
+                3,
+                3
+              ],
+              [
+                2,
+                10,
+                5,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "6d8cf0b742eaabf2eb9ff60f6a0274279b49a0f53eca42cbe808971fe24ebc52",
+            "reason": "invalid_generated_node_reference",
+            "emitted_edges": 71,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                9,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                14,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                19,
+                4,
+                3
+              ],
+              [
+                2,
+                9,
+                10,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                16,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                9,
+                3,
+                3
+              ],
+              [
+                2,
+                9,
+                7,
+                2,
+                -1
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "relation_only": {
+      "train_panel-u0": {
+        "counts": {
+          "examples": 128,
+          "complete": 128,
+          "exact_relations": 128,
+          "valid": 128,
+          "teacher_edge_count": 9549,
+          "teacher_edge_correct": 9549,
+          "teacher_premature_eos": 0,
+          "teacher_eos_count": 128,
+          "teacher_eos_correct": 128,
+          "gold_edges": 9549,
+          "emitted_edges": 9549,
+          "correct_emitted_edges": 9549,
+          "missing_edges": 0,
+          "spurious_edges": 0,
+          "ended_eos": 128,
+          "eos_before_gold_edge_count": 0,
+          "eos_equal_gold_edge_count": 128,
+          "eos_after_gold_edge_count": 0
+        },
+        "teacher_field_correct": {
+          "tag_correct": 9549,
+          "source_correct": 9549,
+          "target_correct": 9549,
+          "role_correct": 9549,
+          "slot_correct": 9549
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 3280,
+            "tuple_correct": 3280,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 789,
+            "tuple_correct": 789,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:pattern": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 440,
+            "tuple_correct": 440,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "argument": {
+            "count": 2328,
+            "tuple_correct": 2328,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "refers_to": {
+            "count": 2328,
+            "tuple_correct": 2328,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          }
+        },
+        "invalid_reasons": {},
+        "failure_examples": []
+      },
+      "known-u0": {
+        "counts": {
+          "examples": 512,
+          "complete": 496,
+          "exact_relations": 496,
+          "valid": 511,
+          "teacher_edge_count": 38145,
+          "teacher_edge_correct": 38127,
+          "teacher_premature_eos": 0,
+          "teacher_eos_count": 512,
+          "teacher_eos_correct": 512,
+          "gold_edges": 38145,
+          "emitted_edges": 38144,
+          "correct_emitted_edges": 38109,
+          "missing_edges": 36,
+          "spurious_edges": 35,
+          "ended_eos": 511,
+          "eos_before_gold_edge_count": 0,
+          "eos_equal_gold_edge_count": 511,
+          "eos_after_gold_edge_count": 0
+        },
+        "teacher_field_correct": {
+          "tag_correct": 38145,
+          "source_correct": 38145,
+          "target_correct": 38127,
+          "role_correct": 38145,
+          "slot_correct": 38145
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 13120,
+            "tuple_correct": 13120,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 3105,
+            "tuple_correct": 3105,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:pattern": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 1760,
+            "tuple_correct": 1759,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 1,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "argument": {
+            "count": 9312,
+            "tuple_correct": 9312,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "refers_to": {
+            "count": 9312,
+            "tuple_correct": 9295,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 17,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          }
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 1
+        },
+        "failure_examples": [
+          {
+            "semantic_sha256": "e95107f1243217bf08a9cb2445e9f008685d6c54698ad639d55e5f9ec1ffb481",
+            "reason": null,
+            "emitted_edges": 84,
+            "gold_edges": 84,
+            "missing": [
+              [
+                2,
+                22,
+                19,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                22,
+                21,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "f1acc6678a26fb180e059b9bfd541a97f75d0fa659d19d3f41314f760c32be59",
+            "reason": null,
+            "emitted_edges": 85,
+            "gold_edges": 85,
+            "missing": [
+              [
+                2,
+                2,
+                22,
+                4,
+                3
+              ],
+              [
+                2,
+                34,
+                16,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                2,
+                23,
+                4,
+                3
+              ],
+              [
+                2,
+                34,
+                17,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "2ace532d3090520e7163527d799f23e459db9349e3ee9a5f16d9c91278fb3f0e",
+            "reason": null,
+            "emitted_edges": 99,
+            "gold_edges": 99,
+            "missing": [
+              [
+                2,
+                29,
+                24,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                29,
+                25,
+                2,
+                -1
+              ]
+            ]
+          }
+        ]
+      },
+      "heldout-u0": {
+        "counts": {
+          "examples": 512,
+          "complete": 0,
+          "exact_relations": 0,
+          "valid": 352,
+          "teacher_edge_count": 35396,
+          "teacher_edge_correct": 27597,
+          "teacher_premature_eos": 3,
+          "teacher_eos_count": 512,
+          "teacher_eos_correct": 509,
+          "gold_edges": 35396,
+          "emitted_edges": 35393,
+          "correct_emitted_edges": 23664,
+          "missing_edges": 11732,
+          "spurious_edges": 11728,
+          "ended_eos": 354,
+          "eos_before_gold_edge_count": 59,
+          "eos_equal_gold_edge_count": 110,
+          "eos_after_gold_edge_count": 185
+        },
+        "teacher_field_correct": {
+          "tag_correct": 35393,
+          "source_correct": 32379,
+          "target_correct": 30325,
+          "role_correct": 29795,
+          "slot_correct": 29867
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 12288,
+            "tuple_correct": 12288,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 3140,
+            "tuple_correct": 3139,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 1,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 512,
+            "tuple_correct": 509,
+            "tag_wrong": 0,
+            "source_wrong": 3,
+            "target_wrong": 3,
+            "role_wrong": 3,
+            "slot_wrong": 3
+          },
+          "field:pattern": {
+            "count": 512,
+            "tuple_correct": 3,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 509,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 512,
+            "tuple_correct": 17,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 495,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 2048,
+            "tuple_correct": 789,
+            "tag_wrong": 0,
+            "source_wrong": 512,
+            "target_wrong": 1259,
+            "role_wrong": 512,
+            "slot_wrong": 512
+          },
+          "argument": {
+            "count": 8192,
+            "tuple_correct": 5471,
+            "tag_wrong": 3,
+            "source_wrong": 271,
+            "target_wrong": 66,
+            "role_wrong": 2523,
+            "slot_wrong": 2451
+          },
+          "refers_to": {
+            "count": 8192,
+            "tuple_correct": 5381,
+            "tag_wrong": 0,
+            "source_wrong": 2231,
+            "target_wrong": 2739,
+            "role_wrong": 2562,
+            "slot_wrong": 2563
+          }
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 157,
+          "historical metric cannot express multiple pair-slot labels": 2,
+          "duplicate_edge": 1
+        },
+        "failure_examples": [
+          {
+            "semantic_sha256": "28145882cf6485cf8583f321f545951d08e1f0240ee2f5f042a3336328ebcbd2",
+            "reason": null,
+            "emitted_edges": 71,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                9,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                15,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                20,
+                4,
+                3
+              ],
+              [
+                2,
+                9,
+                10,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                18,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                9,
+                3,
+                3
+              ],
+              [
+                2,
+                9,
+                5,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "00f07508f278c095db2956d3032d5d1cb49fec549dff635281cb1c1ea414f84a",
+            "reason": null,
+            "emitted_edges": 70,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                15,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                20,
+                4,
+                3
+              ],
+              [
+                2,
+                10,
+                11,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                11,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                17,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                10,
+                3,
+                3
+              ],
+              [
+                2,
+                10,
+                5,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "6d8cf0b742eaabf2eb9ff60f6a0274279b49a0f53eca42cbe808971fe24ebc52",
+            "reason": null,
+            "emitted_edges": 70,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                9,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                14,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                19,
+                4,
+                3
+              ],
+              [
+                2,
+                9,
+                10,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                18,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                9,
+                3,
+                3
+              ],
+              [
+                2,
+                9,
+                7,
+                2,
+                -1
+              ]
+            ]
+          }
+        ]
+      },
+      "train_panel-u256": {
+        "counts": {
+          "examples": 128,
+          "complete": 128,
+          "exact_relations": 128,
+          "valid": 128,
+          "teacher_edge_count": 9549,
+          "teacher_edge_correct": 9549,
+          "teacher_premature_eos": 0,
+          "teacher_eos_count": 128,
+          "teacher_eos_correct": 128,
+          "gold_edges": 9549,
+          "emitted_edges": 9549,
+          "correct_emitted_edges": 9549,
+          "missing_edges": 0,
+          "spurious_edges": 0,
+          "ended_eos": 128,
+          "eos_before_gold_edge_count": 0,
+          "eos_equal_gold_edge_count": 128,
+          "eos_after_gold_edge_count": 0
+        },
+        "teacher_field_correct": {
+          "tag_correct": 9549,
+          "source_correct": 9549,
+          "target_correct": 9549,
+          "role_correct": 9549,
+          "slot_correct": 9549
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 3280,
+            "tuple_correct": 3280,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 789,
+            "tuple_correct": 789,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:pattern": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 440,
+            "tuple_correct": 440,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "argument": {
+            "count": 2328,
+            "tuple_correct": 2328,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "refers_to": {
+            "count": 2328,
+            "tuple_correct": 2328,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          }
+        },
+        "invalid_reasons": {},
+        "failure_examples": []
+      },
+      "known-u256": {
+        "counts": {
+          "examples": 512,
+          "complete": 488,
+          "exact_relations": 488,
+          "valid": 512,
+          "teacher_edge_count": 38145,
+          "teacher_edge_correct": 38118,
+          "teacher_premature_eos": 0,
+          "teacher_eos_count": 512,
+          "teacher_eos_correct": 512,
+          "gold_edges": 38145,
+          "emitted_edges": 38149,
+          "correct_emitted_edges": 38107,
+          "missing_edges": 38,
+          "spurious_edges": 42,
+          "ended_eos": 512,
+          "eos_before_gold_edge_count": 0,
+          "eos_equal_gold_edge_count": 508,
+          "eos_after_gold_edge_count": 4
+        },
+        "teacher_field_correct": {
+          "tag_correct": 38145,
+          "source_correct": 38145,
+          "target_correct": 38118,
+          "role_correct": 38145,
+          "slot_correct": 38145
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 13120,
+            "tuple_correct": 13120,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 3105,
+            "tuple_correct": 3105,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:pattern": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 1760,
+            "tuple_correct": 1759,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 1,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "argument": {
+            "count": 9312,
+            "tuple_correct": 9312,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "refers_to": {
+            "count": 9312,
+            "tuple_correct": 9286,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 26,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          }
+        },
+        "invalid_reasons": {},
+        "failure_examples": [
+          {
+            "semantic_sha256": "f1acc6678a26fb180e059b9bfd541a97f75d0fa659d19d3f41314f760c32be59",
+            "reason": null,
+            "emitted_edges": 86,
+            "gold_edges": 85,
+            "missing": [
+              [
+                2,
+                2,
+                22,
+                4,
+                3
+              ],
+              [
+                2,
+                23,
+                24,
+                2,
+                -1
+              ],
+              [
+                2,
+                25,
+                7,
+                2,
+                -1
+              ],
+              [
+                2,
+                26,
+                27,
+                2,
+                -1
+              ],
+              [
+                2,
+                28,
+                16,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                2,
+                23,
+                4,
+                3
+              ],
+              [
+                2,
+                23,
+                5,
+                2,
+                -1
+              ],
+              [
+                2,
+                24,
+                25,
+                2,
+                -1
+              ],
+              [
+                2,
+                26,
+                7,
+                2,
+                -1
+              ],
+              [
+                2,
+                27,
+                28,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "2ace532d3090520e7163527d799f23e459db9349e3ee9a5f16d9c91278fb3f0e",
+            "reason": null,
+            "emitted_edges": 99,
+            "gold_edges": 99,
+            "missing": [
+              [
+                2,
+                29,
+                24,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                29,
+                25,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "8eead55687fb4109a4edeab11243437adeb82052bc3ec90ef3c46b0fa9006c40",
+            "reason": null,
+            "emitted_edges": 71,
+            "gold_edges": 71,
+            "missing": [
+              [
+                2,
+                23,
+                21,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                23,
+                20,
+                2,
+                -1
+              ]
+            ]
+          }
+        ]
+      },
+      "heldout-u256": {
+        "counts": {
+          "examples": 512,
+          "complete": 0,
+          "exact_relations": 0,
+          "valid": 280,
+          "teacher_edge_count": 35396,
+          "teacher_edge_correct": 27636,
+          "teacher_premature_eos": 2,
+          "teacher_eos_count": 512,
+          "teacher_eos_correct": 509,
+          "gold_edges": 35396,
+          "emitted_edges": 35292,
+          "correct_emitted_edges": 23669,
+          "missing_edges": 11727,
+          "spurious_edges": 11618,
+          "ended_eos": 282,
+          "eos_before_gold_edge_count": 57,
+          "eos_equal_gold_edge_count": 72,
+          "eos_after_gold_edge_count": 153
+        },
+        "teacher_field_correct": {
+          "tag_correct": 35394,
+          "source_correct": 32386,
+          "target_correct": 30263,
+          "role_correct": 29803,
+          "slot_correct": 29865
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 12288,
+            "tuple_correct": 12288,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 3140,
+            "tuple_correct": 3139,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 1,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 512,
+            "tuple_correct": 509,
+            "tag_wrong": 0,
+            "source_wrong": 3,
+            "target_wrong": 3,
+            "role_wrong": 3,
+            "slot_wrong": 3
+          },
+          "field:pattern": {
+            "count": 512,
+            "tuple_correct": 3,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 509,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 512,
+            "tuple_correct": 14,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 498,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 2048,
+            "tuple_correct": 773,
+            "tag_wrong": 0,
+            "source_wrong": 512,
+            "target_wrong": 1275,
+            "role_wrong": 512,
+            "slot_wrong": 512
+          },
+          "argument": {
+            "count": 8192,
+            "tuple_correct": 5486,
+            "tag_wrong": 2,
+            "source_wrong": 272,
+            "target_wrong": 154,
+            "role_wrong": 2517,
+            "slot_wrong": 2454
+          },
+          "refers_to": {
+            "count": 8192,
+            "tuple_correct": 5424,
+            "tag_wrong": 0,
+            "source_wrong": 2223,
+            "target_wrong": 2694,
+            "role_wrong": 2560,
+            "slot_wrong": 2562
+          }
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 225,
+          "duplicate_edge": 5,
+          "historical metric cannot express multiple pair-slot labels": 2
+        },
+        "failure_examples": [
+          {
+            "semantic_sha256": "28145882cf6485cf8583f321f545951d08e1f0240ee2f5f042a3336328ebcbd2",
+            "reason": null,
+            "emitted_edges": 71,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                9,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                15,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                20,
+                4,
+                3
+              ],
+              [
+                2,
+                9,
+                10,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                18,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                9,
+                3,
+                3
+              ],
+              [
+                2,
+                9,
+                5,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "00f07508f278c095db2956d3032d5d1cb49fec549dff635281cb1c1ea414f84a",
+            "reason": null,
+            "emitted_edges": 70,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                15,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                20,
+                4,
+                3
+              ],
+              [
+                2,
+                10,
+                11,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                11,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                17,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                10,
+                3,
+                3
+              ],
+              [
+                2,
+                10,
+                5,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "6d8cf0b742eaabf2eb9ff60f6a0274279b49a0f53eca42cbe808971fe24ebc52",
+            "reason": "invalid_generated_node_reference",
+            "emitted_edges": 70,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                9,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                14,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                19,
+                4,
+                3
+              ],
+              [
+                2,
+                9,
+                10,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                16,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                9,
+                3,
+                3
+              ],
+              [
+                2,
+                9,
+                7,
+                2,
+                -1
+              ]
+            ]
+          }
+        ]
+      },
+      "train_panel-u1024": {
+        "counts": {
+          "examples": 128,
+          "complete": 128,
+          "exact_relations": 128,
+          "valid": 128,
+          "teacher_edge_count": 9549,
+          "teacher_edge_correct": 9549,
+          "teacher_premature_eos": 0,
+          "teacher_eos_count": 128,
+          "teacher_eos_correct": 128,
+          "gold_edges": 9549,
+          "emitted_edges": 9549,
+          "correct_emitted_edges": 9549,
+          "missing_edges": 0,
+          "spurious_edges": 0,
+          "ended_eos": 128,
+          "eos_before_gold_edge_count": 0,
+          "eos_equal_gold_edge_count": 128,
+          "eos_after_gold_edge_count": 0
+        },
+        "teacher_field_correct": {
+          "tag_correct": 9549,
+          "source_correct": 9549,
+          "target_correct": 9549,
+          "role_correct": 9549,
+          "slot_correct": 9549
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 3280,
+            "tuple_correct": 3280,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 789,
+            "tuple_correct": 789,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:pattern": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 128,
+            "tuple_correct": 128,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 440,
+            "tuple_correct": 440,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "argument": {
+            "count": 2328,
+            "tuple_correct": 2328,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "refers_to": {
+            "count": 2328,
+            "tuple_correct": 2328,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          }
+        },
+        "invalid_reasons": {},
+        "failure_examples": []
+      },
+      "known-u1024": {
+        "counts": {
+          "examples": 512,
+          "complete": 485,
+          "exact_relations": 485,
+          "valid": 511,
+          "teacher_edge_count": 38145,
+          "teacher_edge_correct": 38117,
+          "teacher_premature_eos": 0,
+          "teacher_eos_count": 512,
+          "teacher_eos_correct": 512,
+          "gold_edges": 38145,
+          "emitted_edges": 38146,
+          "correct_emitted_edges": 38112,
+          "missing_edges": 33,
+          "spurious_edges": 34,
+          "ended_eos": 511,
+          "eos_before_gold_edge_count": 0,
+          "eos_equal_gold_edge_count": 511,
+          "eos_after_gold_edge_count": 0
+        },
+        "teacher_field_correct": {
+          "tag_correct": 38145,
+          "source_correct": 38145,
+          "target_correct": 38117,
+          "role_correct": 38145,
+          "slot_correct": 38145
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 13120,
+            "tuple_correct": 13120,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 3105,
+            "tuple_correct": 3105,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:pattern": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 512,
+            "tuple_correct": 512,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 1760,
+            "tuple_correct": 1760,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "argument": {
+            "count": 9312,
+            "tuple_correct": 9312,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "refers_to": {
+            "count": 9312,
+            "tuple_correct": 9284,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 28,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          }
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 1
+        },
+        "failure_examples": [
+          {
+            "semantic_sha256": "e95107f1243217bf08a9cb2445e9f008685d6c54698ad639d55e5f9ec1ffb481",
+            "reason": null,
+            "emitted_edges": 84,
+            "gold_edges": 84,
+            "missing": [
+              [
+                2,
+                22,
+                19,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                22,
+                20,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "f1acc6678a26fb180e059b9bfd541a97f75d0fa659d19d3f41314f760c32be59",
+            "reason": null,
+            "emitted_edges": 85,
+            "gold_edges": 85,
+            "missing": [
+              [
+                2,
+                34,
+                16,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                34,
+                17,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "2ace532d3090520e7163527d799f23e459db9349e3ee9a5f16d9c91278fb3f0e",
+            "reason": null,
+            "emitted_edges": 99,
+            "gold_edges": 99,
+            "missing": [
+              [
+                2,
+                29,
+                24,
+                2,
+                -1
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                29,
+                25,
+                2,
+                -1
+              ]
+            ]
+          }
+        ]
+      },
+      "heldout-u1024": {
+        "counts": {
+          "examples": 512,
+          "complete": 0,
+          "exact_relations": 0,
+          "valid": 278,
+          "teacher_edge_count": 35396,
+          "teacher_edge_correct": 27549,
+          "teacher_premature_eos": 2,
+          "teacher_eos_count": 512,
+          "teacher_eos_correct": 509,
+          "gold_edges": 35396,
+          "emitted_edges": 35295,
+          "correct_emitted_edges": 23788,
+          "missing_edges": 11608,
+          "spurious_edges": 11500,
+          "ended_eos": 281,
+          "eos_before_gold_edge_count": 48,
+          "eos_equal_gold_edge_count": 71,
+          "eos_after_gold_edge_count": 162
+        },
+        "teacher_field_correct": {
+          "tag_correct": 35394,
+          "source_correct": 32354,
+          "target_correct": 30307,
+          "role_correct": 29819,
+          "slot_correct": 29879
+        },
+        "teacher_by_role": {
+          "contains": {
+            "count": 12288,
+            "tuple_correct": 12288,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "declares": {
+            "count": 3140,
+            "tuple_correct": 3140,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 0,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:facts": {
+            "count": 512,
+            "tuple_correct": 509,
+            "tag_wrong": 0,
+            "source_wrong": 3,
+            "target_wrong": 3,
+            "role_wrong": 3,
+            "slot_wrong": 3
+          },
+          "field:pattern": {
+            "count": 512,
+            "tuple_correct": 3,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 509,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "field:query": {
+            "count": 512,
+            "tuple_correct": 8,
+            "tag_wrong": 0,
+            "source_wrong": 0,
+            "target_wrong": 504,
+            "role_wrong": 0,
+            "slot_wrong": 0
+          },
+          "item": {
+            "count": 2048,
+            "tuple_correct": 716,
+            "tag_wrong": 0,
+            "source_wrong": 512,
+            "target_wrong": 1332,
+            "role_wrong": 512,
+            "slot_wrong": 512
+          },
+          "argument": {
+            "count": 8192,
+            "tuple_correct": 5439,
+            "tag_wrong": 2,
+            "source_wrong": 296,
+            "target_wrong": 67,
+            "role_wrong": 2499,
+            "slot_wrong": 2439
+          },
+          "refers_to": {
+            "count": 8192,
+            "tuple_correct": 5446,
+            "tag_wrong": 0,
+            "source_wrong": 2231,
+            "target_wrong": 2674,
+            "role_wrong": 2563,
+            "slot_wrong": 2563
+          }
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 224,
+          "duplicate_edge": 7,
+          "historical metric cannot express multiple pair-slot labels": 3
+        },
+        "failure_examples": [
+          {
+            "semantic_sha256": "28145882cf6485cf8583f321f545951d08e1f0240ee2f5f042a3336328ebcbd2",
+            "reason": null,
+            "emitted_edges": 70,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                9,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                15,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                20,
+                4,
+                3
+              ],
+              [
+                2,
+                9,
+                10,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                18,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                9,
+                3,
+                3
+              ],
+              [
+                2,
+                9,
+                5,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "00f07508f278c095db2956d3032d5d1cb49fec549dff635281cb1c1ea414f84a",
+            "reason": null,
+            "emitted_edges": 70,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                15,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                20,
+                4,
+                3
+              ],
+              [
+                2,
+                10,
+                11,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                11,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                17,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                10,
+                3,
+                3
+              ],
+              [
+                2,
+                10,
+                5,
+                2,
+                -1
+              ]
+            ]
+          },
+          {
+            "semantic_sha256": "6d8cf0b742eaabf2eb9ff60f6a0274279b49a0f53eca42cbe808971fe24ebc52",
+            "reason": "invalid_generated_node_reference",
+            "emitted_edges": 73,
+            "gold_edges": 69,
+            "missing": [
+              [
+                2,
+                1,
+                24,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                9,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                14,
+                4,
+                2
+              ],
+              [
+                2,
+                2,
+                19,
+                4,
+                3
+              ],
+              [
+                2,
+                9,
+                10,
+                3,
+                0
+              ]
+            ],
+            "spurious": [
+              [
+                2,
+                1,
+                23,
+                9,
+                1
+              ],
+              [
+                2,
+                2,
+                10,
+                4,
+                1
+              ],
+              [
+                2,
+                2,
+                16,
+                4,
+                2
+              ],
+              [
+                2,
+                3,
+                9,
+                3,
+                3
+              ],
+              [
+                2,
+                9,
+                7,
+                2,
+                -1
+              ]
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "paired_complete": {
+    "train_panel-u0": {
+      "both_correct": 128,
+      "all_only": 0,
+      "relation_only": 0,
+      "both_wrong": 0
+    },
+    "known-u0": {
+      "both_correct": 496,
+      "all_only": 0,
+      "relation_only": 0,
+      "both_wrong": 16
+    },
+    "heldout-u0": {
+      "both_correct": 0,
+      "all_only": 0,
+      "relation_only": 0,
+      "both_wrong": 512
+    },
+    "train_panel-u256": {
+      "both_correct": 127,
+      "all_only": 0,
+      "relation_only": 1,
+      "both_wrong": 0
+    },
+    "known-u256": {
+      "both_correct": 482,
+      "all_only": 7,
+      "relation_only": 6,
+      "both_wrong": 17
+    },
+    "heldout-u256": {
+      "both_correct": 0,
+      "all_only": 0,
+      "relation_only": 0,
+      "both_wrong": 512
+    },
+    "train_panel-u1024": {
+      "both_correct": 127,
+      "all_only": 0,
+      "relation_only": 1,
+      "both_wrong": 0
+    },
+    "known-u1024": {
+      "both_correct": 474,
+      "all_only": 10,
+      "relation_only": 11,
+      "both_wrong": 17
+    },
+    "heldout-u1024": {
+      "both_correct": 0,
+      "all_only": 0,
+      "relation_only": 0,
+      "both_wrong": 512
+    }
+  },
+  "paired_equal_stream": true,
+  "parameters": [
+    62677315,
+    62677315
+  ],
+  "process_seconds": 251.84440077794716,
+  "cpu_seconds": 256.34867056,
+  "analysis_wall_seconds": 12.314396618981846,
+  "analysis_cpu_seconds": 12.312861056
+}
