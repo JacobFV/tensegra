@@ -52,6 +52,36 @@
         "reductioncoverage"
       ],
       "next_branch": "repairmechanicalfailures; persistentexecutorcomparison ifspawn dominates; then512referencecells"
+    },
+    {
+      "id": "E03-profile",
+      "status": "registered",
+      "hypothesis": "Width1024 lightweight and recurrent candidate controllers can train/evaluate with public world inputs within predictable resource budgets.",
+      "intervention": "3bootstrapupdates x4freshteacherepisodes,8DEVepisodes,perfamily",
+      "comparator": "samepublicalways-toolteacher/worlds; noarchitecturecompetenceclaim",
+      "observable_inputs": "27publicsummaryfeatures/67actionfeatures pluspubliccandidatecatalog",
+      "privileged_targets": "supplied same-observation heuristic action labels attrainingonly",
+      "split": "mechanical/development; no confirmation",
+      "seeds": [
+        301
+      ],
+      "exposure": 12,
+      "selection_rule": "profilememory/speed,finitegradients and teachercompletion; no promotion fromaccuracy",
+      "budget": {
+        "gpu_seconds": 300,
+        "cpu_core_seconds": 600
+      },
+      "metrics": [
+        "params",
+        "workspacewidth",
+        "peakCUDAallocated",
+        "RSS",
+        "train/evalwall",
+        "actualCPU",
+        "teachercompletion",
+        "validationactions"
+      ],
+      "next_branch": "architectureacquisition atbudgetfixedfromprofile; diagnosefeatures ifteacherchoicesunidentifiable"
     }
   ]
 }
