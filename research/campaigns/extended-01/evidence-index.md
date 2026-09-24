@@ -1,0 +1,35 @@
+# Campaign evidence index — interim
+
+This is a navigation guide to audited evidence, not a final campaign assessment. S18 is still in progress at this snapshot. It adds no measurements or new analysis. Some reports retain earlier “audit pending” wording; the linked independent receipts establish the audit status of the archived results.
+
+Learned interfaces, supplied execution policies and privileged diagnostic controls answer different questions. Shared events, repeated delays and multiple inference policies are paired observations, not extra independent replications. The [figure guide](figures/README.md) and [input-hash manifest](figures/data-manifest.json) document reproducibility and plotting scope.
+
+## Return recovery, use and composition
+
+- **R04 — restricted learned scalar recovery.** The larger-diversity readout passes the original-mixture contract across three historical backbones, while balanced type/value strata retain failures. Its strongest matched comparison is the smaller-pool readout with equal optimizer presentations, alongside the unchanged head. This does not establish uniform scalar precision or repair historical reconstruction gates. [Report](returns/R04-report.md), [population audit](review/R04-population-audit.json), [balanced strata](review/R04-balanced-strata.json), [figure](figures/returns-composition.svg).
+
+- **R05 — learned downstream use of the return.** Fresh consumer fits pass the restricted decision and causal-use checks. Exact-value neural and query-only comparators expose the available ceiling and public prior; wrong/drop/swap interventions test actual return dependence. High decision accuracy does not repair R04 scalar errors or establish learned scheduling. [Report](returns/R05-confirmation-report.md), [audited summary](review/R05-confirmation-summary.json), [uncertainty](review/R05-confirmation-uncertainty.json), [figure](figures/returns-composition.svg).
+
+- **C04 — bounded consumed-interface composition.** Workspace composition, supplied exact-copy and fixed-4000 role-trained neural baselines pass all three lineages' accuracy gates. Static and rekey alternatives remain visible; selected checkpoints are secondary. Supplied scheduling, finite numeric overlap and the workspace's measured execution cost limit necessity and efficiency claims. [Report](composition/C04-confirmation-report.md), [final audit](review/C04-final-aggregate-audit.json), [accuracy and causal figure](figures/composition-confirmation.svg), [strong-baseline and timing figure](figures/composition-accuracy-timing.svg).
+
+- **R10/R11 — tail-development failures.** Diversity and lower-LR continuation improve some scalar outcomes, but both fixed calibration screens fail. Reused validation cannot substitute for the gate. R11 compares decay against constant LR from the shared fork; the inherited reference is not an additional-exposure control at the same initialization. [Closeout](returns/R10-R11-closeout.md), [R10 audit](review/R10-development-summary-audit.json), [R11 audit](review/R11-development-summary-audit.json), [figure](figures/return-tail-development.svg).
+
+## Attention and supplied read policies
+
+- **A06 — learned matching within supplied graph interfaces.** Soft graph bias, exact-gather attention and keyed neighborhood context learn the task, but original soft reads degrade on long paths. Frozen concentration interventions also repair the strong context baseline. This is an engineering-policy tie, not a unique structural-attention advantage. [Report](attention/a06-report.md), [audit](review/A06-confirmation-audit.json), [learning/conditions figure](figures/attention.svg).
+
+- **A14 — replicated supplied-policy improvement.** Common hard reading passes the fresh three-seed gates; unchanged learned soft reading fails. Complete queried routes, payload answers and complete all-node suffixes remain distinct. All nine A06 engineering references achieve perfect observed task/suffix scores on the same fresh graphs, with different interfaces and training histories. Neither parameter/FLOP matching nor architectural superiority is established. [Report](attention/a14-report.md), [final audit](review/A14-final-aggregate-audit.json), [figure](figures/attention-confirmation.svg).
+
+## Semantic acquisition and diagnostic limits
+
+- **S12 — directional learning-rate effect, failed all-seed competence.** Constant/decay forks provide the paired learned comparison: calibrated decay improves all three seeds, but seed 701 fails the fixed competence threshold. Raw results and conditional shared-event intervals remain separate; supplied schema decoding is a separate intervention. [Report](semantics/S12-report.md), [audit](review/S12-final-aggregate-audit.json), [paired figure](figures/semantic-confirmation.svg), [supplied-decoding comparison](figures/semantic.svg).
+
+- **S13 — bilingual development tradeoff.** Mixed training improves Spanish copy/order components without complete Spanish graphs and reduces English exactness relative to English-only continuation. This one-parent pair fails all advancement criteria; construction exposure does not equal token/compute exposure. [Report](semantics/S13-report.md), [audit](review/S13-main-pair-audit.json), [figure](figures/semantic-bilingual-development.svg).
+
+- **S14 — frozen unseen-motif failure.** All six endpoints and the matched frequency baseline fail complete graphs on unseen arity-three motifs. Partial components and privileged replacements localize limitations without demonstrating learned transfer or an achievable oracle intervention. [Report](semantics/S14-report.md), [main audit](review/S14-main-audit.json), [localization audit](review/S14-localization-audit.json). The report's component table is the compact visual reference; no standalone S14 figure is claimed.
+
+- **S15 — acquisition, retention and recombination gates fail.** Mixed exposure is compared with control continuation across a new trained motif, an untrained combination and two known motifs. Component learning and partial recovery do not establish complete acquisition; weak acquisition prevents isolating recombination cleanly. [Report](semantics/S15-report.md), [audit](review/S15-main-pair-audit.json), [figure](figures/semantic-shape-development.svg).
+
+- **S16 — programmed normalization diagnostic.** Original inputs are the paired comparator for six frozen models on the same instances. Calibrated decay exactness falls after normalization. Public-input rename equality is programmed, not acquired semantic invariance. [Report](semantics/S16-results.md), [audit](review/S16-main-audit.json), [figure](figures/semantic-input-diagnostic.svg).
+
+- **S17 — exploratory TRAIN calibration contribution.** Actual-endpoint TRAIN calibration improves some frozen S15 outcomes relative to historical calibration, while raw predictions and targets replay exactly and the held-out combination remains unsuccessful. This diagnostic does not retroactively pass S15 or identify an architectural remedy. [Report](semantics/S17-report.md), [final paired audit](review/S17-main-pair-audit.json), [figure](figures/semantic-calibration-diagnostic.svg).
