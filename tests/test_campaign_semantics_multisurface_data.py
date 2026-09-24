@@ -33,3 +33,17 @@ class MultisurfacePreparationTests(unittest.TestCase):
         b=register_feature_target('alpha    beta','target-a',seen)
         self.assertEqual(a,b)
         with self.assertRaisesRegex(ValueError,'feature sequence'):register_feature_target('alpha    beta','target-b',seen)
+
+    def test_slot_conflict_rejected_before_target_assignment(self):
+        from dataclasses import replace
+        from unittest.mock import patch
+        from topoformer.semantic_graph import SemanticEdge
+        e=build_tcn_example('unification',900100001,difficulty=.5)
+        graph=e.privileged.graph;edge=next(x for x in graph.edges if x.slot is not None)
+        bad=replace(graph,edges=graph.edges+(SemanticEdge(edge.source,edge.target,'item',edge.slot+1),))
+        bad_example=replace(e,privileged=replace(e.privileged,graph=bad))
+        with patch('topoformer.campaign_semantics_multisurface_data.targets',side_effect=AssertionError('target allocation before slot validation')):
+            with self.assertRaisesRegex(ValueError,'multiple slot labels'):make_record(bad_example,self.vocab,{})
+        # Several relation labels with the same slot remain representable.
+        good=replace(graph,edges=graph.edges+(SemanticEdge(edge.source,edge.target,'item',edge.slot),))
+        make_record(replace(e,privileged=replace(e.privileged,graph=good)),self.vocab,{})

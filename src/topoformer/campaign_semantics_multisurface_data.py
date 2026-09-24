@@ -11,6 +11,7 @@ from .campaign_semantics_data import compact_example,load_cache,target as histor
 from .campaign_semantics_surface_contract import register_surface_target
 from .semantic_graph import SemanticGraph,SemanticNode,SemanticEdge
 from .semantic_curriculum import encode_text
+from .semantic_contracts import single_slot_labels
 from .semantic_scaling import surface_input,targets,tokens
 from .tcn_data import build_tcn_example,verify_vendor_manifest,SOURCE_COMMIT,RENDERER_VERSION
 from .thinking_language import ActorInput
@@ -28,6 +29,7 @@ def public_view(row,language):
 def target(row,vocab,language):
     """Privileged training/evaluation labels, never part of public_view."""
     graph=SemanticGraph(tuple(SemanticNode(str(i),kind,value) for i,(kind,value) in enumerate(row['nodes'])),tuple(SemanticEdge(str(i),str(j),role,slot) for i,j,role,slot in row['edges']),())
+    single_slot_labels(graph)
     return targets(graph,public_view(row,language),128,vocab,language=language)
 
 
@@ -45,6 +47,7 @@ def register_feature_target(text,target_sha256,seen_features):
 def make_record(example,vocab,seen_public,seen_features=None):
     if seen_features is None:seen_features={}
     english,_=surface_input(example,'english');record=compact_example(example,english);record['cache_version']=CACHE_VERSION;record['surfaces']={};graph=example.privileged.graph
+    single_slot_labels(graph)  # reject unrepresentable pair slots before target writes
     english_target=targets(graph,english,128,vocab,language='english')
     for language in RENDERERS:
         public,_=surface_input(example,language);gold=targets(graph,public,128,vocab,language=language)
@@ -113,7 +116,7 @@ def run(config):
         if len(development)==512:break
     if len(development)!=512:raise ValueError('declared fresh semantic-support budget exhausted')
     for name,rows in [('train',train),('development',development)]:write_rows(out/(name+'.jsonl.gz'),rows)
-    result=dict(cache_version=CACHE_VERSION,source_commit=SOURCE_COMMIT,renderer_version=RENDERER_VERSION,config=config,train_unique_graphs=len(train),development_unique_graphs=len(development),surfaces_per_graph=2,train_surface_count=2*len(train),development_surface_count=2*len(development),old_excluded_counts=old_counts,duplicate_semantic_keys_skipped=duplicates,development_attempts=attempt+1,all_surfaces_grouped_by_construction=True,train_regeneration_exact=True,per_renderer_copy_injectivity_validated=True,public_target_consistency_validated=True,actor_feature_target_consistency_validated=True,feature_precision_audits=['float32','bfloat16'],distinct_feature_sequences={name:sum(k.startswith(name+':') for k in seen_features) for name in ('float32','bfloat16')},value_vocabulary=vocab,cpu_seconds=time.monotonic()-tick,cache_sha256={n:digest(out/(n+'.jsonl.gz')) for n in ('train','development')},source_sha256={n:digest(Path(__file__).with_name(n)) for n in ('campaign_semantics_multisurface_data.py','campaign_semantics_surface_contract.py','campaign_semantics_data.py','semantic_scaling.py','semantic_curriculum.py','thinking_language.py','tcn_data.py','semantic_graph.py')})
+    result=dict(cache_version=CACHE_VERSION,source_commit=SOURCE_COMMIT,renderer_version=RENDERER_VERSION,config=config,train_unique_graphs=len(train),development_unique_graphs=len(development),surfaces_per_graph=2,train_surface_count=2*len(train),development_surface_count=2*len(development),old_excluded_counts=old_counts,duplicate_semantic_keys_skipped=duplicates,development_attempts=attempt+1,all_surfaces_grouped_by_construction=True,train_regeneration_exact=True,per_renderer_copy_injectivity_validated=True,public_target_consistency_validated=True,actor_feature_target_consistency_validated=True,feature_precision_audits=['float32','bfloat16'],distinct_feature_sequences={name:sum(k.startswith(name+':') for k in seen_features) for name in ('float32','bfloat16')},value_vocabulary=vocab,cpu_seconds=time.monotonic()-tick,cache_sha256={n:digest(out/(n+'.jsonl.gz')) for n in ('train','development')},source_sha256={n:digest(Path(__file__).with_name(n)) for n in ('campaign_semantics_multisurface_data.py','campaign_semantics_surface_contract.py','campaign_semantics_data.py','semantic_scaling.py','semantic_contracts.py','semantic_curriculum.py','thinking_language.py','tcn_data.py','semantic_graph.py')})
     (out/'audit.json').write_text(json.dumps(result,indent=2)+'\n');return result
 
 if __name__=='__main__':
