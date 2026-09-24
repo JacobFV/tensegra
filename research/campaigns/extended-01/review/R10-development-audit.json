@@ -1,0 +1,50 @@
+{
+  "metric_float_tolerance": {
+    "relative": 2e-06,
+    "absolute": 1e-07,
+    "note": "Only MAE and signed-error means; all integer counts exact. Non-power-of-two balanced support has FP32 rounding."
+  },
+  "narrow_scalar_gates": [
+    {
+      "arm": "unchanged",
+      "split": "validation",
+      "minimum_correct": 3648,
+      "support": 4096,
+      "passed": false
+    },
+    {
+      "arm": "balanced_16384",
+      "split": "validation",
+      "minimum_correct": 4076,
+      "support": 4096,
+      "passed": true
+    },
+    {
+      "arm": "balanced_65536",
+      "split": "validation",
+      "minimum_correct": 4070,
+      "support": 4096,
+      "passed": true
+    }
+  ],
+  "rows_verified": 108,
+  "source_ref": "c0c5aca1",
+  "exposure": [
+    {
+      "events": 16384,
+      "rows": 98304,
+      "visited_rows": 98295,
+      "visited_events": 16384,
+      "validation_minimum": 4076
+    },
+    {
+      "events": 65536,
+      "rows": 393216,
+      "visited_rows": 355355,
+      "visited_events": 65536,
+      "validation_minimum": 4070
+    }
+  ],
+  "cpu_audit_wall_seconds": 8.63282692496432,
+  "scope": "Raw metrics, nested populations, visitation bitsets and source hashes. Frozen feature/weight replay remains separate; follow the registered development/confirmation role rather than promoting individual cells."
+}
