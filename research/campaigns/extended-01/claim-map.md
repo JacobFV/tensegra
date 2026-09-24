@@ -1,6 +1,6 @@
 # Campaign claim map
 
-Updated 2026-09-24 09:20 UTC. Historical stages, gates and raw results remain immutable. Each promotion consumes a named interface, not a blanket stage pass.
+Updated 2026-09-24 09:19 UTC. Historical stages, gates and raw results remain immutable. Each promotion consumes a named interface, not a blanket stage pass.
 
 | Claim | Supplied mechanism | Learned mechanism | Current evidence | Next decision |
 |---|---|---|---|---|
