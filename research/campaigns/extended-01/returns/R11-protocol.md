@@ -19,7 +19,7 @@ Save the replayed model, full AdamW state, RNG state and normalization. Fork two
 - constant: LR.003;
 - decay: LR.0003.
 
-Restore identical AdamW moments/step counters and RNG for both. The sole between-fork intervention is learning rate. Additional sampled indices must match exactly. Both receive921,600extra presentations, reaching7,200total updates and1,843,200presentations; the frozen3,600endpoint remains an explicit reference. Save full optimizer/RNG state at every endpoint going forward. The fresh forward output still reconstructs the scalar from workspace features; it is not exact copying.
+Restore identical AdamW moments/step counters and RNG for both. The sole between-fork intervention is learning rate. Additional sampled indices must match exactly; archive the SHA256of the full ordered little-endianint64index stream and final RNGstate for each fork, and require both hashes equal. The new replay index stream is also hashed, but R10did not archive an index-order hash: historical equivalence is verified through exact losses/parameters/normalization/visited membership plus the frozen deterministic sampling recipe, not an independently archived historical order hash. Both receive921,600extra presentations, reaching7,200total updates and1,843,200presentations; the frozen3,600endpoint remains an explicit reference. Save full optimizer/RNG state at every endpoint going forward. The fresh forward output still reconstructs the scalar from workspace features; it is not exact copying.
 
 ## Evaluation and fixed decisions
 

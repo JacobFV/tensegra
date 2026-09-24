@@ -37,12 +37,21 @@ def summarize(rows):
         mixture=min(r['correct']['value']/r['total'] for r in cells if r['head']==name and r['split']=='calibration')
         grid=min(r['correct']['value']/r['total']for r in strata if r['head']==name and r['split']=='calibration_grid')
         train=next(r['correct']['value']for r in cells if r['head']==name and r['split']=='train' and r['target_delay']==16)
-        gates[name]=dict(mixture_minimum=mixture,grid_minimum=grid,training16_correct=train,
-                         advance=mixture>=.98 and grid>=122/128 and train>=65405)
+        gates[name]=endpoint_gate(mixture,grid,train)
+    selection=select_candidate(gates)
+    return dict(cells=cells,strata=strata,paired=paired,gates=gates,**selection)
+
+
+def endpoint_gate(mixture,grid,train):
+    return dict(mixture_minimum=mixture,grid_minimum=grid,training16_correct=train,
+                advance=mixture>=.98 and grid>=122/128 and train>=65405)
+
+
+def select_candidate(gates):
     eligible=[a for a in ('constant','decay')if gates[a]['advance']]
     selected=max(eligible,key=lambda a:(gates[a]['grid_minimum'],gates[a]['mixture_minimum'],a=='constant'))if eligible else None
-    return dict(cells=cells,strata=strata,paired=paired,gates=gates,selected=selected,
-                lower_lr_specific_gain=gates['decay']['grid_minimum']-gates['constant']['grid_minimum']>=4/128)
+    return dict(selected=selected,lower_lr_specific_gain=gates['decay']['grid_minimum']-gates['constant']['grid_minimum']>=4/128)
+
 
 
 if __name__=='__main__':
