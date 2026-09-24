@@ -65,6 +65,15 @@ def make_model(vocab,arm,c):
   value_count=len(vocab),width=1024,capacity=128,workspace_rows=8,autocast_dtype='bfloat16').to(c['device'])
 
 
+def verify_replay(new_rows,old_rows):
+ """Compare complete unique semantic populations, independent of serialization order."""
+ new={r['semantic_sha256']:r for r in new_rows};old={r['semantic_sha256']:r for r in old_rows}
+ if len(new)!=len(new_rows) or len(old)!=len(old_rows) or set(new)!=set(old):
+  raise ValueError('reused baseline event population missing or duplicated')
+ if any(r['raw']!=old[k]['raw'] or r['target']!=old[k]['target'] for k,r in new.items()):
+  raise ValueError('reused baseline raw/target replay mismatch')
+
+
 def reference(c,b,vocab,matched,dev,out):
  records=[]
  for entry in b['checkpoints'][:3]:
@@ -74,7 +83,7 @@ def reference(c,b,vocab,matched,dev,out):
   before=state_hash(model);folder=out/f"u{entry['update']}"
   result=evaluate(model,matched,dev,folder,entry['update'])
   new=json.load(gzip.open(folder/result['artifact']));old=json.load(gzip.open(entry['historical_evaluation']['path']))
-  if len(new['rows'])!=len(old['rows']) or any(a['raw']!=z['raw'] or a['target']!=z['target'] for a,z in zip(new['rows'],old['rows'])):raise ValueError('reused baseline raw/target replay mismatch')
+  verify_replay(new['rows'],old['rows'])
   records.append(dict(added_update=entry['added_update'],checkpoint=entry['checkpoint'],model_state_sha256=before,evaluation=result,seconds=time.monotonic()-tick,raw_target_replay_exact=True))
   del model;print(json.dumps(dict(event='reference_curve',added_update=entry['added_update'],seconds=records[-1]['seconds'])),flush=True)
  return dict(no_optimizer_or_training=True,curves=records,endpoint_reused=b['matched_endpoint'],historical_training_seconds=484.141407571)

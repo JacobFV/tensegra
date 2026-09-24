@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/brandonin/topoformer-campaign01-semantics/s18-source-00a79951/src/topoformer/campaign_semantics_s18.py", line 147, in <module>
+    p=argparse.ArgumentParser();p.add_argument('config');a=p.parse_args();run(json.loads(Path(a.config).read_text()))
+                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/brandonin/topoformer-campaign01-semantics/s18-source-00a79951/src/topoformer/campaign_semantics_s18.py", line 141, in run
+    if c['job']=='reference':results=[reference(c,b,vocab,matched,dev,out)]
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/brandonin/topoformer-campaign01-semantics/s18-source-00a79951/src/topoformer/campaign_semantics_s18.py", line 77, in reference
+    if len(new['rows'])!=len(old['rows']) or any(a['raw']!=z['raw'] or a['target']!=z['target'] for a,z in zip(new['rows'],old['rows'])):raise ValueError('reused baseline raw/target replay mismatch')
+                                                                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: reused baseline raw/target replay mismatch

@@ -82,3 +82,14 @@ def test_atomic_failed_lifecycle_receipt_no_retry(monkeypatch,tmp_path,timeout):
  assert receipt['full_process_state']=='mock full process snapshot'
  assert len(calls)==1 and calls[0][2]=='topoformer.campaign_semantics_s18'
  assert (tmp_path/'attempt.started.json').exists() and not list(tmp_path.glob('*.tmp'))
+
+
+def test_replay_accepts_bijection_and_rejects_population_or_prediction_changes():
+ from topoformer.campaign_semantics_s18 import verify_replay
+ old=[dict(semantic_sha256=str(i),raw={'value':i},target={'value':i+1}) for i in range(4)]
+ verify_replay(old[::-1],old)
+ for wrong in (old[:-1],old+[old[0]],old[:-1]+[old[0]]):
+  with pytest.raises(ValueError,match='population'):verify_replay(wrong,old)
+ for field in ('raw','target'):
+  wrong=copy.deepcopy(old[::-1]);wrong[0][field]={'value':-1}
+  with pytest.raises(ValueError,match='replay mismatch'):verify_replay(wrong,old)
