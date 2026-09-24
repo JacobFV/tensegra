@@ -65,4 +65,4 @@ Stop this frozen diagnostic branch. Do not run the ineligible S21 confirmation, 
 
 ## Bindings
 
-Main config `911a70787dfd31bd1225c04cc2d7c4c2a8b9d721396c12a754d47f1cacfb910e`; manifest `16db751e339d6c19a739c8adaf007bbc11ea7d6579af771c0131d52edd86fc7d`; analysis `7ad77fa0b671238382d994f44b3edcdbe2f2cec05eff9cb77d650c7939f63ff3`. Archive commit `d3ad4396`, scientific source `7a4c2923`, prospective pinned analysis root `83cf2a22`. Full machine-readable summaries and artifact SHA inventory: `research/results/campaign-01/semantics/s22-analysis.json`.
+Main config `911a70787dfd31bd1225c04cc2d7c4c2a8b9d721396c12a754d47f1cacfb910e`; manifest `16db751e339d6c19a739c8adaf007bbc11ea7d6579af771c0131d52edd86fc7d`; analysis source `7ad77fa0b671238382d994f44b3edcdbe2f2cec05eff9cb77d650c7939f63ff3`. Archive commit `d3ad4396`, scientific source `7a4c2923`, prospective pinned analysis root `83cf2a22`. Analysis JSON artifact SHA `b0ad65aa10359e729570321762a4744e00cc3f5843f176680469cc0e938584b0`. Full machine-readable summaries and artifact SHA inventory: `research/results/campaign-01/semantics/s22-analysis.json`.
