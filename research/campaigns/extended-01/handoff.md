@@ -116,3 +116,6 @@ S16-main is sole released GPU job, cap480, immutable1683e657/frozenSHA1e95311a..
 
 ## 2026-09-24T09:45:25.184378+00:00
 S17-main soleGPUrelease300cap, source30d69150/config95d7962b/isolateds17-main-source-v1. Reviewerprofile020736f3→46a9f566 plusfreezeclearance. Profile25.66charged. S16all6finished114.74charged, independentrawaudit140e0f3b→50225f62passed; normalizedcaldecay48/103/120vs66/131/139, suppliedinvariance notaccuracygain. S18CPUactor/mechanicalprep composition_live, noGPUallocation, plan77d2075d; strongercontextpath pluscomputecontrol conditionalonS17. Rootqueuesoleauthority.
+
+## 2026-09-24T09:54:25.372483+00:00
+GPUidle. S17fullrun100.74charged, raw34bd859c→8382e647/report3df6a291→5b6f4222/finalaudit53f4175c→a2687905 complete. Matchedcal control0/0/249/43 andmixed22/0/109/10; oldgatesunchanged. S18nextCPUrunner/protocolownedcomposition_live, actorbbbda45d→b8c7731a+independent032b1d97→7d8867a6passed; exactS09contextvs10passcomputecontrol. ReuseoriginalS15mixedtrajectory exact, finalS17train+DEV exists; only3earlyreferencecheckpoints needmatchedcalinference. Semanticsworkerwritingdurablebaselineequivalence/referencepanel; reviewerwaitsnewrunnersource. NoS18GPUallocationyet, profilecostsrequirefreeze/review. Charged24198.54882392448s,remaining5.278h, retain~2.4hconfirmationreserve. FiguresworkeraddingauditedS16/S17panels.
