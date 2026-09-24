@@ -1,0 +1,50 @@
+# Campaign report — draft, S19 running
+
+This draft summarizes independently audited, closed R04/R05, R10/R11, C04, A14 and S12–S18 evidence. S19 is running and is excluded from the outcome assessment. This is not the final campaign report: its result, independent audit and next allocation decision remain open. Historical failures and prospective gates are preserved; a new restricted pass does not overwrite them.
+
+The [claim map](claim-map.md) defines each interface and promotion boundary. The [evidence index](evidence-index.md) and [figure guide](figures/README.md) provide the fuller navigation and reproducibility record. Some archived reports retain their original audit-pending language; the linked independent receipts establish subsequent verification.
+
+## Claims supported so far
+
+| Branch and bounded claim | Supplied mechanism | Learned contribution | Strongest comparison and outcome |
+|---|---|---|---|
+| R04: original-mixture scalar recovery | Typed event, frozen recurrent backbone and scheduled delay | Refitted scalar decoder | Larger diverse pool passes the restricted contract; equal-presentation smaller-pool comparator remains weaker. Balanced value/type failures survive. |
+| R05: downstream use of a returned scalar | Initial exact return and finite query domain | Scalar access plus fitted binary decision | Learned consumer passes registered use and wrong/drop/swap checks. Exact-value neural and query-only comparators bound interpretation; scalar precision is not repaired. |
+| R10/R11: local tail optimization | Same backbone, finite labels and linear consumer | Larger fitting pool, then optimizer-only continuation | Larger diversity and lower LR help some outcomes, but both studies miss their fixed calibration screens. No confirmation follows. |
+| C04: one operation followed by a learned decision | Primitive semantics, validity and schedule | Proposal lowering and return-conditioned decision | Workspace, fixed-4000 role-trained neural baseline and sole-return supplied copying all pass. Workspace necessity or efficiency is unsupported. |
+| A14: coherent deep-path read policy | Public graph records, source/relation decomposition and engineered shared argmax | Routing and payload scores learned under shallow supervision | Common hard reading passes; original soft reading fails. All nine strong engineering references are perfect on the same fresh graphs. |
+| S12: directional continuation effect | Public copy inventory and canonical graph convention | Text-to-graph decoder with paired LR continuation | Decay improves all three seeds over constant LR; all-seed competence fails. Supplied schema decoding is a distinct intervention. |
+| S13–S18: acquisition and diagnostic limits | Declared text rendering, calibration rules and diagnostic transformations | Bilingual/motif continuation and contextual reading | Partial copy, ordering and relation gains coexist with failed complete-graph promotion. Frozen diagnostics neither supply learned invariance nor retroactively pass earlier gates. |
+
+## Return access, decision use and composition
+
+[R04](returns/R04-report.md) supports fresh-context scalar recovery in its registered mixture across three historical backbones. The matched comparison uses equal optimizer presentations; it is not a general numerical-range result. A balanced diagnostic exposes whole-stratum failure, including float zero, despite aggregate success. [R05](returns/R05-confirmation-report.md) then establishes causal use of that restricted interface. Its binary decision can remain correct when the accessed scalar is wrong, especially away from a decision boundary. Finite-domain decision learning therefore does not demonstrate restored exact information or autonomous scheduling.
+
+The [R04 population audit](review/R04-population-audit.json), [balanced strata](review/R04-balanced-strata.json), [R05 audited summary](review/R05-confirmation-summary.json) and [return curves](figures/returns-composition.svg) retain those distinctions. Historical backbones and development-informed choices are explicit; cells repeated across delays are not independent replications.
+
+The [R10/R11 closeout](returns/R10-R11-closeout.md) closes the local balanced-tail search. Both fixed calibration screens fail even though some reused-validation outcomes improve. R11 isolates decay versus constant LR from the same recovered optimizer fork; the inherited endpoint is not an equal-additional-exposure control. [R10 audit](review/R10-development-summary-audit.json), [R11 audit](review/R11-development-summary-audit.json) and [development curves](figures/return-tail-development.svg) preserve failed endpoints and the frozen criterion.
+
+[C04](composition/C04-confirmation-report.md) establishes a bounded functioning composition interface across three audited lineages. Its strongest alternatives—the primary fixed-4000 role-trained neural model and supplied single-return copy—also pass. Selected neural checkpoints are secondary, not substituted for the primary. Finite numeric overlap and supplied scheduling rule out claims of new arithmetic or autonomous orchestration. The measured workspace delay-16 batch-one path is roughly 47–50 times slower; execution timing excludes setup and training and is not a deployment-wide cost claim. See the [final audit](review/C04-final-aggregate-audit.json), [accuracy/causal results](figures/composition-confirmation.svg) and [strong-baseline/timing comparison](figures/composition-accuracy-timing.svg).
+
+## Attention: a supplied policy succeeds, without a unique architecture win
+
+[A14](attention/a14-report.md) confirms a large improvement from making all value heads read one common model-selected destination. The hardest-condition task counts change from 176/187/177 to 1019/1007/1015 of 1024 across three seeds. This is an engineered inference policy acting on learned scores. It does not establish learned planning or spontaneous acquisition of the policy.
+
+All nine A06 engineering references achieve perfect observed task and suffix scores on the same fresh graphs. Their interfaces and training histories differ; neither parameter/FLOP matching nor a unique attention advantage follows. Complete queried routes, task answers and all-node suffixes remain separate outcomes in the [figure](figures/attention-confirmation.svg) and [aggregate audit](review/A14-final-aggregate-audit.json).
+
+## Semantics: partial learning, narrow gains and failed advancement
+
+[S12](semantics/S12-report.md) confirms a directional LR-decay gain: calibrated complete graphs rise from zero to 66/131/139 of 1024, while raw counts are 2/6/11. Seed 701 misses the fixed competence threshold, so directional improvement is not an all-seed competence pass. The [audit](review/S12-final-aggregate-audit.json) and [paired figure](figures/semantic-confirmation.svg) keep raw/calibrated outcomes separate. Known-renderer constructions do not establish new-motif or language transfer.
+
+[S13](semantics/S13-report.md) improves Spanish components without complete Spanish graphs and reduces English calibrated recovery from 135 to 18 of 512 versus the matched control. [S14](semantics/S14-report.md) finds no complete graphs on unseen-arity motifs. [S15](semantics/S15-report.md) fails trained-shape acquisition, retention and held-out recombination gates. These are acquisition limits, not evidence of no information learned; weak acquisition also prevents cleanly isolating recombination. See [bilingual curves](figures/semantic-bilingual-development.svg), [shape curves](figures/semantic-shape-development.svg) and the [linked audits](evidence-index.md).
+
+[S16](semantics/S16-results.md) programs public spelling invariance while reducing original calibrated accuracy; the model did not learn that invariance. [S17](semantics/S17-report.md) shows that actual-endpoint TRAIN calibration contributes to S15 new-shape recovery, but the held-out combination remains unsuccessful. This exploratory frozen-model diagnostic does not change S15's gate. [Normalization](figures/semantic-input-diagnostic.svg) and [calibration](figures/semantic-calibration-diagnostic.svg) figures retain raw outcomes and paired support.
+
+[S18](semantics/S18-report.md) is complete and independently audited; all promotion gates fail. Contextual matched recovery is 43/0/68/16 versus original 22/0/109/10 and 10-pass 1/0/7/0 across the four cells. All arms share the S11 parent, 57,853,781 parameters and incremental stream; arithmetic/runtime differ, and original training is reused. Actual TRAIN128 calibrated totals are 10 contextual versus 14 original, with calibration overlap making these optimistic fit diagnostics. Strong but imperfect relation ranking coexists with low complete recovery. See the [paired audit](review/S18-main-pair-audit.json), [ranking audit](review/S18-train-ranking-audit.json), [curves](figures/semantic-context-development.svg) and [TRAIN/DEV comparison](figures/semantic-context-train-dev.svg). Scientific failure, not an assumed inability to afford replication, closes this recipe.
+
+## Pending decisions before final assessment
+
+- **S19 outcome:** pending. Fill from the frozen run and independent audit, preserving public-only inference, invalid-output failures and separate TRAIN/DEV acquisition evidence. No efficacy conclusion is entered here.
+- **Comparison boundary:** S19 changes the output/optimization interface and starts from scratch. Account for parameter, inherited-training and execution differences before interpreting it against S18; it is not a pure architectural causal test.
+- **Next allocation:** pending audited S19 outcomes and its declared decision rule. No automatic extension, confirmation or gate relaxation is implied by this draft.
+- **Final synthesis and cost:** reconcile the authoritative budget/receipts after active work closes. Shared-event intervals remain conditional on fixed seeds; repeated policies, delays and cells do not create independent replication.
