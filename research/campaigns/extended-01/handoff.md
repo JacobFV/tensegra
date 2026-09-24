@@ -173,3 +173,6 @@ S20stillsoleGPU6/9closed, final703lineage progressing, no efficacyanalysis until
 
 ## 2026-09-24T13:09:30.765747+00:00
 S20ALL9COMPLETE/GPUFREE exit0 actual2992.71outer conservative2992.72charged; total29806.01882392448s, no scoresreadyet. Operatorarchiving s20-main/fullreceipt. S21PROFILE SOLEGPUrootrelease180 source77683135/config05b2dcee/argvb726b45f cleared4de0d953; operator tolaunch exactstagedmanifest only. Maincapunset. Wake semantics_live/review_live forS20closed9analysis oncearchivecommitted; concurrentCPU allowed. No automaticnextGPU.
+
+## 2026-09-24T13:22:23.149781+00:00
+S20closed/audited ad631d84 all19584graphs9states78cutoffs; recordknown95.898/94.727/94.857%, all3gatespass, heldout0all9. Report40c271ac; figuresworker ownsclaimmap/gates/campaignreport edits. S21PROFILE29.54charged, mainROOTSOLErelease1770 source77683135/config5a13908e/argve54dfed9 stage01a3f798, exactGNUtimeKILL1770. Independentreviewclearedprofile960graphs/4states,cost1723.998incl200reserve,mainfreeze; receiptpendingcommit. Wholebranch1799.54<=1800, noextensions. Operatorcomposition_live mustwakeforlaunch. charged29835.55882392448s beforemain. S21analysisownedsemantics_live,localizationsemantic_decoder_feasibility. FigureS19reporthashguardneedsadditiveaudit for25cc1064 linkwording only; review_livehandlesaftermainclearance.
