@@ -1,0 +1,68 @@
+{
+  "episodes": 512,
+  "seed_start": 22020000,
+  "address_seed_start": 88020000,
+  "cpu_limit_seconds": 240,
+  "executor": "persistent",
+  "model_compute_tariff": 0.0,
+  "modes": [
+    "cheap",
+    "always_tool",
+    "cheap_first"
+  ],
+  "conditions": [
+    {
+      "name": "easy",
+      "categories": 2,
+      "choices": 2,
+      "locations": 5,
+      "step_limit": 64
+    },
+    {
+      "name": "medium",
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "step_limit": 64
+    },
+    {
+      "name": "hard_feasible",
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "step_limit": 64
+    },
+    {
+      "name": "work_tight",
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "step_limit": 64,
+      "work_limit": 128
+    },
+    {
+      "name": "expensive_tools",
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "step_limit": 64,
+      "work_price": 0.002
+    },
+    {
+      "name": "expensive_travel",
+      "categories": 3,
+      "choices": 3,
+      "locations": 9,
+      "step_limit": 64,
+      "travel_price": 0.04
+    },
+    {
+      "name": "obstacle",
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "step_limit": 64,
+      "obstacle": true
+    }
+  ]
+}
