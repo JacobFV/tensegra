@@ -1,0 +1,44 @@
+{
+  "config_sha256": "5f72d0f5dd2f4e07fb7b252dc1055545cf890e98429acc26383a0074e74f39cb",
+  "all_six_preflight": true,
+  "public_pairs": 1024,
+  "actor_constructions": 0,
+  "forwards": 0,
+  "cpu_audit_wall_seconds": 14.509506766218692,
+  "source_ref": "bcc1119c",
+  "mechanical_tests": {
+    "passed": 20,
+    "seconds": 0.64,
+    "cuda_hidden": true,
+    "threads": 2
+  },
+  "status": "Passed for separate root release of frozen first8/all-six profile cap60; main remains unreleased/unallocated.",
+  "findings": [
+    "All six checkpoint/manifest/source/primary-reference hashes and1024 normalized full inputs checked before any actor construction. Sentinel constructor remained uncalled.",
+    "Only normalized ActorInput reaches forward; no gold graph, row metadata or answer path enters model. Target construction and metrics occur after each public forward, main only.",
+    "All six checkpoints and original TRAIN thresholds fixed; no gradients or optimizer, tensor/threshold hashes checked before/after. Profilefirst8 produces only output digests/timing, no score-based policy selection.",
+    "Copy restoration uses original public indices and preserves errors; full equality proof supports normalized-renamed equivalence, not a separate acquired robustness claim.",
+    "Whole wrapper clock begins before idle/source validation and includes child artifact preflight; source-bound immutable outputs and atomic started/completion receipts with failure/timeout tests. Main remains prepared with cap unset.",
+    "Timing-only revision separates preflight, checkpoint/model setup/hash, per-example forward/decode, packing, scoring and export. Scientific runner unchanged; unused v1 retained. Profile omits scoring/main export, so later main forecast must budget those separately."
+  ],
+  "input_sha256": {
+    "src/topoformer/campaign_semantics_s16.py": "48e4b802decdcbcdcae5133df63f49183814d899ad68c9bf0b4791e3f844bb1f",
+    "src/topoformer/campaign_semantics_s16_freeze.py": "e299b9cea9905bd8fe824e2e64f70bf491b58be2adbb44e0e52bd7e64fb3cfd9",
+    "src/topoformer/campaign_semantics_s16_launch.py": "1ae92cf60381040350e22b4440c828a5537edea8b98b9712012d473199b8317e",
+    "tests/test_campaign_semantics_s16.py": "2af7e2aa4643392620a9186cf2c0d37bfa92d0c46e4823b95835c2cad94a3381",
+    "research/campaigns/extended-01/semantics/S16-profile-frozen-v1.json": "5f72d0f5dd2f4e07fb7b252dc1055545cf890e98429acc26383a0074e74f39cb",
+    "research/campaigns/extended-01/semantics/S16-main-prepared.json": "1db465cf6151da6a0bfb54980adcebf58bc3dc4eb1753ef6587dba2fdb990129",
+    "research/campaigns/extended-01/semantics/S16-profile-frozen-v2.json": "8dfb3326c21c410064267fbf9122a3c1e373707f89a5b1dfb838a340f83807d1",
+    "research/campaigns/extended-01/semantics/S16-runner-preflight-and-release-plan.md": "1551856de4ad274bb3f425e7bb61862e696529c22100c2a4cb0b7b43bd157061"
+  },
+  "source_archive_sha256": "ac95361b1800f38301c909df0be2c7d15077f68b015ecff82189969655ac6a44",
+  "timing_revision": "c63c4d6c",
+  "timing_revision_tests": {
+    "passed": 20,
+    "seconds": 0.71,
+    "cuda_hidden": true,
+    "threads": 2
+  },
+  "v2_config_sha256": "8dfb3326c21c410064267fbf9122a3c1e373707f89a5b1dfb838a340f83807d1",
+  "timing_source_archive_sha256": "ff2703b564fa6c580fa51e863194b389444ee637835840f988210954790acf2e"
+}
