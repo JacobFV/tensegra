@@ -1,0 +1,68 @@
+{
+  "status": "pass_source_and_data_contract_profile_freeze_outer_bindings_pending",
+  "commits": [
+    "87f943bc",
+    "8dbb12d0",
+    "77683135"
+  ],
+  "input_sha256": {
+    "src/topoformer/campaign_semantics_s21.py": "5facc7a23dbc938a9dc6e09ab68d8fd11a817c765d7040c3b5d0fa98790a3d34",
+    "src/topoformer/campaign_semantics_s21_freeze.py": "139d3f633c40fae97fa7f6c2360974491a2cfd518e2d0f83df8db8abd7a6f54a",
+    "src/topoformer/campaign_semantics_s21_launch.py": "e24408b937d6fc2e4a3318db71f0ac4f9ae94a09de772bbbdee10a91c1b5a5ae",
+    "tests/test_campaign_semantics_s21.py": "8c9177eebe9ca5d313a2225708032b2945280e3e5f62ce87a3c2be65352a775b",
+    "tests/test_campaign_semantics_s21_cpu.py": "f18b91e93c39076e3bc4df4cb7265eae16edc08ee82c82ca489b9856cfbf1581",
+    "configs/campaign-s21-profile-prepared-v1.json": "c73b0e56c08a207e92db87da5398e18266dca10c3332ff8f90dc477d86833c75",
+    "configs/campaign-s21-main-prepared-v1.json": "87d270243ad4566cffa2ccf5b74c67997550db3705762032a67c75db7f76a104",
+    "research/campaigns/extended-01/semantics/S21-decisions.py": "1ded2fd049cedaad71711b9bde60002e59ac2d4a9cafed62a801b550ec29de30",
+    "research/campaigns/extended-01/semantics/S21-decisions-check.py": "1e47cbeb2ba2282a73db0fed3652af5d35a11c4b2d8e6cb73e9b49ad93867846",
+    "research/campaigns/extended-01/semantics/S21-cost-extrapolation.md": "073f2768a70d52185633d8a7e905049d33a14977bcff0791b9f7f2418c42dd75",
+    "research/campaigns/extended-01/semantics/S21-runner-data-preflight.json": "4ef87da39ef4c632023962303eb24aec3b55e5f391cf7c70dea4fa462fc93e0e"
+  },
+  "tests": {
+    "guards_and_small_differential": 8,
+    "seconds": 2.11,
+    "fixed_gate_fixtures": 2,
+    "gate_reported_seconds_below": 0.001,
+    "fixture_width": 16,
+    "actual_source_width": 1024,
+    "CPU_only": true,
+    "threads": 2
+  },
+  "independent_actual_data_preflight": {
+    "seconds": 5.6967941811308265,
+    "actor_constructor_forbidden": true,
+    "inputs_verified": 6,
+    "train_each": 4096,
+    "panel_each": 128,
+    "profile_dev": 112,
+    "cells": 7,
+    "full_sampler_updates": 4096,
+    "visits_each": 8,
+    "stream_sha256": "85054bf25e3a3e2a5a9a932b441d6413fd0d7ad827df79e1583268aaddf5acd9",
+    "opened_caches": [
+      "development",
+      "train_original",
+      "train_broad"
+    ],
+    "confirmation_opened": false
+  },
+  "findings": [
+    "Same imported S19 actor, equal eight field mean loss, LR schedule, evaluator, codec and cached public stress; scratch2101 reset each arm, no inherited weights.",
+    "One-update actual loop bit-identical model/all AdamW tensors to direct S19 operations, including clipping/LR; paired initialization/sampler/saved counters checked. Small mechanics fixture supplements prior actual-width1024 actor/cache/causal audits.",
+    "Public ActorInput(text,empty options) exclusively enters greedy; teacher-forced gold prefixes are separately labeled diagnostics. Invalid codec output receives no partial graph credit.",
+    "Final curves fixed0/1024/2048/4096, same seven DEV512 and actual TRAIN128 panel; no calibration or best-endpoint selection.",
+    "Audited exact data pins, dynamic per-arm exposures, exact eight visits and source inventory; input key whitelist excludes sealed confirmation. Prepared status/null cap refuse launches.",
+    "Main cost formula includes464 full160-step batches per arm/928pair at74token inputs,204.8 optimizer multiplier,2xTRAIN/64xDEV teacher-forcing/export, C0+3C20 checkpoints, valid-output and wholeprocess reserves. Forecast/cap must fit1800 including profile; no silent recipe reduction.",
+    "Development gate52/+26 heldout, original-known total loss<=76 and all3newcells>=256 is conjunctive, no automatic extension."
+  ],
+  "data_audits_reused": [
+    "S21-builder-inventory-preflight.json",
+    "S21-cache-provenance-audit.json",
+    "independent population ef7b825e"
+  ],
+  "cpu_wall_seconds": 7.806794181130827,
+  "limitations": [
+    "Numerical profile timings and immutable source/config/outer180 binding pending. Root alone schedules GPU.",
+    "Single development seed and previously inspected DEV; corpus replacement changes token/record work as well as motif mixture. No architecture causal or sealed-confirmation claim."
+  ]
+}
