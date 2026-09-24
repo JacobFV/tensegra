@@ -1,0 +1,41 @@
+{
+  "cells_verified": 108,
+  "strata_verified": 936,
+  "paired_reference_tables_verified": 72,
+  "gates": {
+    "reference": {
+      "mixture_minimum": 0.9970703125,
+      "grid_minimum": 0.921875,
+      "training16_correct": 65057,
+      "advance": false
+    },
+    "constant": {
+      "mixture_minimum": 0.990234375,
+      "grid_minimum": 0.6796875,
+      "training16_correct": 64887,
+      "advance": false
+    },
+    "decay": {
+      "mixture_minimum": 0.99609375,
+      "grid_minimum": 0.9375,
+      "training16_correct": 65433,
+      "advance": false
+    }
+  },
+  "selected": null,
+  "lower_lr_specific_gain": true,
+  "validation_grid_minima": {
+    "reference": 116,
+    "constant": 102,
+    "decay": 122
+  },
+  "input_sha256": {
+    "research/results/campaign-01/returns/r11-development/summary.json": "07ce2cf9a6589542db7b069270b1793386dd7cbd5269747e1fe7c6c29b13bafc",
+    "research/results/campaign-01/returns/r11-development/predictions.json.gz": "c399269bc4974f2154f150dfa7841c91cf035f95ac9cf6d3d7bf8705ec688ae9",
+    "research/campaigns/extended-01/returns/R11-development-report.md": "5bca6b6f176462b15ed4b8e48e5785df40d4060da88bb8d7dc0c92cc70d422a9",
+    "research/campaigns/extended-01/returns/R10-R11-closeout.md": "9ba72d472d3fae8898e763b7e83da6235ce32a9d868e4a75067618a69493d7f0"
+  },
+  "cpu_audit_wall_seconds": 1.1514746110187843,
+  "scope": "Both fixed development endpoints fail worst-calibration122/128. Decay improves fitting and reused validation but cannot override failure. Difference from constant supports the registered relative-LR comparison, not broad capacity/information-loss diagnosis. No confirmation or further optimization search.",
+  "report_review": "Corrected chronology05130de0 distinguishes pre-fork weights/norm/loss/membership guard from post-fork endpoint prediction replay. Reused validation, historical-order limitation, failed fixed gate and bounded branch closure preserved."
+}
