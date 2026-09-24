@@ -1,5 +1,7 @@
 ## Current final state
 
+A14seed1401complete67dc519 raw019a790a,355.515602229s/GPUFREE. Fixed6000/96000,strictcontractpasses; jointtask176/257/177/1019/1024 original/both/sharedsoft/sharedhard/oracle,sharedhardconditional1017/1017,jointsuffix964/1024. No3seedconclusion;1402/1403+9refsremainrequired unchanged, separateGPUreleases. Independent21cellauditactivated. RootR10/semanticprofilesownGPU; noattentionlaunch. Cumulative2021.445080390sincludesuncertainA08profile60sbound.
+
 A14profilecompleted67dc519 raw9a42d5db,22.198607951s/GPUFREE. Training100updates1.5599sexcludingmonitor→93.59s/6000; fivejointinstrumented32events7.7645s→248.46s/1024. Mainestimate360–400s/seed retainprovisional480; references45–70cap120. Separatebarewarmups/repeatschargedwithinprofile, notscaledasmain. Params4.575M/2.413Mgradient; frozeninferencehashesmatch. Revieweractivatedforprofileaudit; **mainsnotreleased/nolaunch**. Cumulative1665.929478161sincludesA08profile60suncertainbound.
 
 A14latestfreeze67dc519 supersedes82e94ef beforeanyGPU: fullpublickeys/attributes/instructions/adjacency hashes +recordorderhashes; benchmarksetupincludesgeneration. ThreeCPUtests2.41spass. Policies/configsunchanged; lateststage/tmp/campaign-a14-profile-source-67dc519 andaliases, launcher/tmp/campaign-attention-launch-receipted-a14.py. Reviewerfinishingpreflight; noGPUlaunch.
