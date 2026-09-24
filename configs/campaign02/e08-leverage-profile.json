@@ -1,0 +1,149 @@
+{
+  "checkpoints": [
+    {
+      "name": "bootstrap_e07_legacy_v2",
+      "path": "/home/brandonin/topoformer-campaign02/results/e07-legacy-v2/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "f2b894f6aef9836ab77e329575a2724ec32ec7af344d40ff784072a500427949"
+    },
+    {
+      "name": "rlprofile_slot1",
+      "path": "/home/brandonin/topoformer-campaign02/results/e08-rlprofile-pbt/checkpoints/round-2-slot-1-attempt-13.pt",
+      "sha256": "d1507abcf23399ba6cfd42422960a9f38457249aaa2f325076b83cb8c2e99dea"
+    }
+  ],
+  "evaluation_batch": 32,
+  "references": [
+    "cheap",
+    "always_tool",
+    "cheap_first",
+    "cheap_first_fallback_v2"
+  ],
+  "reference_compute_tariff": 1.0,
+  "address_namespace": "e08-leverage-profile-v1",
+  "conditions": [
+    {
+      "name": "H1_5x5",
+      "seed_start": 450000000,
+      "examples": 128,
+      "world": {
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 5,
+        "choices": 5,
+        "locations": 11,
+        "step_limit": 64
+      }
+    },
+    {
+      "name": "H2_5x5_tight128",
+      "seed_start": 450100000,
+      "examples": 128,
+      "world": {
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 5,
+        "choices": 5,
+        "locations": 11,
+        "step_limit": 64,
+        "work_limit": 128
+      }
+    },
+    {
+      "name": "H3_5x5_expensive_work",
+      "seed_start": 450200000,
+      "examples": 128,
+      "world": {
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 5,
+        "choices": 5,
+        "locations": 11,
+        "step_limit": 64,
+        "work_price": 0.002
+      }
+    },
+    {
+      "name": "H4_4x4_obstacle_tight128",
+      "seed_start": 450300000,
+      "examples": 128,
+      "world": {
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "step_limit": 48,
+        "obstacle": true,
+        "work_limit": 128
+      }
+    },
+    {
+      "name": "H5_4x6",
+      "seed_start": 450400000,
+      "examples": 128,
+      "world": {
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 6,
+        "locations": 9,
+        "step_limit": 64
+      }
+    },
+    {
+      "name": "H6_4x4_tight64",
+      "seed_start": 450500000,
+      "examples": 128,
+      "world": {
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "step_limit": 48,
+        "work_limit": 64
+      }
+    },
+    {
+      "name": "H7_3x3_obstacle_expensive",
+      "seed_start": 450600000,
+      "examples": 128,
+      "world": {
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "step_limit": 48,
+        "obstacle": true,
+        "work_price": 0.002
+      }
+    },
+    {
+      "name": "H8_4x4_steps36",
+      "seed_start": 450700000,
+      "examples": 128,
+      "world": {
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "step_limit": 36
+      }
+    },
+    {
+      "name": "E_4x4",
+      "seed_start": 450800000,
+      "examples": 128,
+      "world": {
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "step_limit": 48
+      }
+    }
+  ]
+}
