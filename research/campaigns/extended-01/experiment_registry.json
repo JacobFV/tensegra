@@ -715,7 +715,7 @@
     },
     {
       "id": "S15",
-      "status": "cpu_audits_passed_profile_freeze_pending",
+      "status": "paired_profiles_completed_audit_pending_main_freeze",
       "hypothesis": "Training on a new arity while retaining known fact counts improves new-shape acquisition and possibly held-out arity/fact-count recombination",
       "intervention": "4096 English graphs/arm:common2048 arity4 plus2048 morearity4(control) or2048arity3/threefact(mixed)",
       "comparator": "Same fixed S11development201 model/AdamW, same4096-update construction exposure, arm-independent per-presentation pair sampling",
@@ -725,7 +725,7 @@
       "source": "34e27d86 prepared, freeze pending",
       "population": "512freshDEV and512reservedconfirmation per4arity/fact cells; v1unused preserved; alpha-disjoint fromhistorical/S13/S14",
       "selection": "Fixed4096endpoint, new-shape52/512 andgain26; arity4retention103/1024 andloss<=51; heldout52/512 andgain26. One symmetric extra4096 only if acquisition/retention pass andrecombinationfails",
-      "budget": "Two90second mechanicalprofiles allocated; exact20updates/64DEV/full128calibration; mainbudgets pending measuredpair",
+      "budget": "Profiles21.818004280+22.744951478s completed; paired conservative estimates578/568s support800cap each allocated conditional on independent timing/raw audit. Fixed4096updates unchanged.",
       "next_branch": "Profile; acquisition before transfer; conditional contextual-read alternative separately considered if newshape acquired but recombinationfails",
       "limitations": "Matched construction count, unequal tokens/nodes/compute; narrow3trainedmotifs and1heldoutcombination, not broad newlanguage or arbitrarytrees",
       "audit": "review/S15-v2-population-audit.json;review/S15-v2-packing-audit.json;review/S15-v2-trainer-preflight.json"
