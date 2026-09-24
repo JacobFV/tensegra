@@ -22,16 +22,19 @@ def tensor_hash(model):
 def evaluate(model,cfg,out,device,reference_mode=None):
     out.mkdir(parents=True,exist_ok=False);model.eval();initial=tensor_hash(model)
     policies=POLICIES if reference_mode is None else ('a06_successful',)
-    public={};raw={p:{} for p in policies};rows={p:[] for p in policies}
+    public={};input_hashes={};order_hashes={};raw={p:{} for p in policies};rows={p:[] for p in policies}
     for ci,c in enumerate(cfg['conditions']):
+        inputs={name:hashlib.sha256() for name in ['keys','attributes','instructions','adjacency']};order_digest=hashlib.sha256()
         collected={p:{} for p in policies};shared={};elapsed={p:0. for p in policies}
         for offset in range(0,cfg['examples'],cfg['batch']):
             count=min(cfg['batch'],cfg['examples']-offset)
             batch=generate(count,c['nodes'],c['depth'],groups=c['groups'],seed=cfg['data_seed']+ci*100000+offset,device=device,balanced=True)
+            for name,digest in inputs.items():digest.update(getattr(batch,name).cpu().numpy().tobytes())
             gold=targets(batch);successor=oracle_successors(batch)
             if reference_mode is None:
                 g=torch.Generator(device=device).manual_seed(cfg['order_seed']+ci*100000+offset)
                 order=torch.rand(count,3*c['nodes']*c['groups'],generator=g,device=device).argsort(-1)
+                order_digest.update(order.cpu().numpy().tobytes())
                 records=tokenize(batch,order)
                 indices=batch.adjacency.bool().nonzero().reshape(count,-1,4)[:,:,1:].gather(1,order[...,None].expand(-1,-1,3))
             for name,value in dict(gold=gold,successor=successor,start=batch.starts,relation=batch.relations,values=batch.values).items():
@@ -47,6 +50,8 @@ def evaluate(model,cfg,out,device,reference_mode=None):
                 for name,value in scores.items():collected[policy].setdefault(name,[]).append(value.cpu().numpy())
                 for name,value in result.get('diagnostics',{}).items():collected[policy].setdefault('diagnostic_'+name,[]).append(value.cpu().numpy())
         for name,pieces in shared.items():public[f'c{ci}_{name}']=np.concatenate(pieces)
+        input_hashes.update({f'c{ci}_input_{name}':digest.hexdigest() for name,digest in inputs.items()})
+        if reference_mode is None:order_hashes[f'c{ci}']=order_digest.hexdigest()
         for policy in policies:
             joined={name:np.concatenate(pieces) for name,pieces in collected[policy].items()}
             raw[policy].update({f'c{ci}_{name}':value for name,value in joined.items()})
@@ -54,20 +59,22 @@ def evaluate(model,cfg,out,device,reference_mode=None):
                 **{name:float(joined[name].mean()) for name in scores},diagnostics={name:float(value.mean()) for name,value in joined.items() if name.startswith('diagnostic_')}))
     # All seeds/references must have identical decompressed public array hashes.
     public_hash={name:hashlib.sha256(value.tobytes()).hexdigest() for name,value in public.items()}
+    public_hash.update(input_hashes)
     if cfg.get('export_public',True):np.savez_compressed(out/'public.npz',**public)
     write(out/'public-sha256.json',public_hash)
     for policy in policies:
         np.savez_compressed(out/f'{policy}.npz',**raw[policy]);write(out/f'{policy}.json',dict(rows=rows[policy]))
     final=tensor_hash(model)
     if final!=initial:raise RuntimeError('Confirmation inference mutated model')
-    return dict(initial_tensor_sha256=initial,final_tensor_sha256=final,policies=list(policies),public_sha256=public_hash,reference_mode=reference_mode)
+    return dict(initial_tensor_sha256=initial,final_tensor_sha256=final,policies=list(policies),public_sha256=public_hash,record_order_sha256=order_hashes,reference_mode=reference_mode)
 
 
 def benchmark(model,cfg,device):
     """Separate uninstrumented profile workload; reports warmup cost explicitly."""
     c=cfg['conditions'][-1];count=cfg['batch']
+    begin=time.monotonic()
     batch=generate(count,c['nodes'],c['depth'],groups=c['groups'],seed=cfg['benchmark_seed'],device=device,balanced=True)
-    begin=time.monotonic();records=tokenize(batch);indices=batch.adjacency.bool().nonzero().reshape(count,-1,4)[:,:,1:];successor=oracle_successors(batch);sync(device)
+    records=tokenize(batch);indices=batch.adjacency.bool().nonzero().reshape(count,-1,4)[:,:,1:];successor=oracle_successors(batch);sync(device)
     preparation=time.monotonic()-begin;result={}
     for policy in POLICIES:
         sync(device);begin=time.monotonic();forward(model,batch,records,indices,successor,policy,instrument=False);sync(device)
