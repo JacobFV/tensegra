@@ -7,22 +7,29 @@ before any finalist is evaluated; checkpoint paths/hashes are bound at freeze.
 import argparse, json
 
 BASE = {"step_limit": 48, "include_remaining_budget": True, "compute_price": 0.0001}
-IID = [  # training-mixture components (fresh worlds)
-    ("iid_2x2", dict(categories=2, choices=2, locations=5)),
+IID = [  # E08 RL/selection mixture components (fresh sealed worlds)
     ("iid_3x3", dict(categories=3, choices=3, locations=7)),
     ("iid_4x4", dict(categories=4, choices=4, locations=9)),
     ("iid_4x4_tight128", dict(categories=4, choices=4, locations=9, work_limit=128)),
     ("iid_4x4_expensive_work", dict(categories=4, choices=4, locations=9, work_price=0.002)),
     ("iid_3x3_obstacle", dict(categories=3, choices=3, locations=7, obstacle=True)),
+    ("iid_4x4_obstacle", dict(categories=4, choices=4, locations=9, obstacle=True)),
+    ("iid_4x5", dict(categories=4, choices=5, locations=9, step_limit=64)),
+    ("iid_4x4_steps36", dict(categories=4, choices=4, locations=9, step_limit=36)),
 ]
-TRANSFER = [  # values or combinations absent from the training mixture
-    ("xfer_5x5_larger", dict(categories=5, choices=5, locations=11, step_limit=64)),
+TRANSFER = [  # values or combinations absent from the E08 RL mixture (bootstrap saw 2x2 and tight128/obstacle singly)
+    ("xfer_2x2_easy", dict(categories=2, choices=2, locations=5)),
+    ("xfer_4x4_tight64", dict(categories=4, choices=4, locations=9, work_limit=64)),
     ("xfer_4x4_work256", dict(categories=4, choices=4, locations=9, work_limit=256)),
     ("xfer_4x4_work_price_mid", dict(categories=4, choices=4, locations=9, work_price=0.0005)),
     ("xfer_4x4_obstacle_tight128", dict(categories=4, choices=4, locations=9, obstacle=True, work_limit=128)),
     ("xfer_3x3_obstacle_expensive_work", dict(categories=3, choices=3, locations=7, obstacle=True, work_price=0.002)),
     ("xfer_3x3_expensive_travel", dict(categories=3, choices=3, locations=7, travel_price=0.01)),
     ("xfer_4x4_budget_menu_32_256_2048", dict(categories=4, choices=4, locations=9, call_budgets=[32, 256, 2048])),
+    ("xfer_5x4_larger", dict(categories=5, choices=4, locations=11, step_limit=64)),
+    # 25 items exceed the declared 20-item subset contract: the solver returns
+    # `invalid`; success requires recognizing tool unavailability and not calling.
+    ("xfer_5x5_subset_tool_invalid", dict(categories=5, choices=5, locations=11, step_limit=64)),
 ]
 INTERVENTIONS = [  # paired with a control of identical physical semantics (same seeds)
     ("int_4x4_control", dict(categories=4, choices=4, locations=9), None, None),

@@ -15,17 +15,19 @@ Per replicate, six members (lightweight, width 1024, legacy interface, public fe
 
 ## Search phase (what is compared)
 Actor-critic v2 has the following settings. Decision-mean policy gradient with per-batch standardized advantages. A KL(round-start policy ‖ current) trust region on on-policy states. Critic weight 0.5, batch 8 sampled episodes, reward = incremental evaluator utility including the modeled 1e-4/decision compute tariff. The optimizer is reset at bank import.
-- Rounds × updates-per-slot are fixed in the configs (`e08-main-*`). Every round has six slots and six development evaluations of 128 fixed development worlds for every mode.
+- Fixed in `configs/campaign02/e08-main-{pbt,multistart,single}-r{0,1,2}.json`: 5 actor-critic rounds × 60 updates per slot (PBT/multistart members get 300 RL updates each; single's member 0 gets 1,800). Every round has six slots and six development evaluations of 128 fixed development worlds (seeds 595,000,000 + 1,000,000·r) for every mode.
+- RL/selection mixture (the measured leverage region, chosen from `e08-leverage-profile` where learned policies trailed the public teacher): 3×3; 4×4; 4×4 work-limit 128; 4×4 work-price 0.002; 3×3 obstacle; 4×4 obstacle; 4×5 (20 items, 64 steps); 4×4 with a 36-step limit. The bootstrap bank was trained on the easier E05 mixture, and that curriculum shift is part of the protocol.
+- Initial RL hyperparameter rows (lr, entropy, KL), shared by all modes: (3e-5, .003, .3) [row 0, also single's], (1e-5, .001, .1), (1e-4, .01, 1), (3e-6, .0003, .03), (3e-4, .001, 3), (1e-4, .03, .1). The rows were informed by the RL design profile, which makes single a tuned conventional baseline (conservative for PBT claims).
 - PBT: after each non-final round, the two highest-utility members replace the two lowest (strictly greater only). Weights and AdamW state are inherited. lr, entropy and KL weights mutate by ×0.8/×1.2 (bounded). Recipients keep their own data streams and ledgers.
 - Multistart: the six members train independently. There is no replacement.
 - Single: bank member 0 with hyperparameter row 0 receives all six slots of every round.
 - Finalist: maximum final-round development utility (slot-index tie break). Single uses its latest checkpoint. There is no historical cherry-pick.
 
 ## Frozen sealed evaluation (E09)
-Finalists are frozen. Each is evaluated once on sealed seeds 70,000,000+ (never used by training, selection or profiling) using `research/tools/campaign02_e09_config.py`: six IID mixture components, seven transfer conditions, and paired interventions. Supplied references (cheap, always_tool, cheap_first, cheap_first_fallback_v2) run on identical worlds with the same modeled per-decision tariff.
+Finalists are frozen. Each is evaluated once on sealed seeds 70,000,000+ (never used by training, selection or profiling) using `research/tools/campaign02_e09_config.py`: eight IID components (the E08 mixture), ten held-out transfer conditions (including a 25-item world whose instances exceed the solver's declared 20-item contract), and paired interventions. Supplied references (cheap, always_tool, cheap_first, cheap_first_fallback_v2) run on identical worlds with the same modeled per-decision tariff.
 
 ## Endpoints
-- **Primary:** mean verified utility over the six IID sealed components (equal weight, 256 worlds each) per finalist. PBT advantage is supported only if PBT > multistart in all three replicate pairs **and** the pooled paired episode-level mean difference has a 95% bootstrap interval excluding zero. Otherwise the claim is not supported. Ties or mixed signs are reported as such. The same rule applies to PBT vs single.
+- **Primary:** mean verified utility over the eight IID sealed components (equal weight, 256 worlds each) per finalist. PBT advantage is supported only if PBT > multistart in all three replicate pairs **and** the pooled paired episode-level mean difference has a 95% bootstrap interval excluding zero. Otherwise the claim is not supported. Ties or mixed signs are reported as such. The same rule applies to PBT vs single.
 - **Secondary:** success and coverage, cost per success, solver calls/escalations, transfer-condition utility, development-to-sealed gap, and actual CPU/GPU/wall per mode (equal updates ≠ equal FLOPs; PBT copying and evaluation overhead are included).
 - **Descriptive:** lineage (parents, mutations, replacements), hyperparameter trajectories, member diversity.
 

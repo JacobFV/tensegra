@@ -15,7 +15,7 @@ import json
 from pathlib import Path
 import random
 
-IID = ["iid_2x2", "iid_3x3", "iid_4x4", "iid_4x4_tight128", "iid_4x4_expensive_work", "iid_3x3_obstacle"]
+IID = ["iid_3x3", "iid_4x4", "iid_4x4_tight128", "iid_4x4_expensive_work", "iid_3x3_obstacle", "iid_4x4_obstacle", "iid_4x5", "iid_4x4_steps36"]
 
 
 def load(root: Path):
