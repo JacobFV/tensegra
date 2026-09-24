@@ -3,7 +3,7 @@ import os,json,gzip,hashlib,time,collections
 from pathlib import Path
 from topoformer.campaign_semantics_s19_codec import (
     BOS,NODE,EDGE,EOS,PAD,EMPTY,KINDS,ROLES,CodecError,decode_records,
-    records_to_targets,canonicalize_public_copies,teacher_forcing_inputs,encode_row)
+    records_to_targets,canonicalize_public_copies,teacher_forcing_inputs,encode_row,canonical_edge_order)
 
 class RecordCodecTests(unittest.TestCase):
     def setUp(self):
@@ -45,10 +45,24 @@ class RecordCodecTests(unittest.TestCase):
             self.nodes+[self.edge,self.nodes[0],(EOS,*EMPTY)],
             [(NODE,5,0,2,-1),(EOS,*EMPTY)],[(NODE,5,-1,4,-1),(EOS,*EMPTY)],
             [(NODE,12,2,-1,-1),(EOS,*EMPTY)],[(EOS,0,-1,-1,-1)],
-            [(NODE,True,0,-1,-1),(EOS,*EMPTY)],
-            self.nodes+[(EDGE,1,0,3,0),self.edge,(EOS,*EMPTY)]]
+            [(NODE,True,0,-1,-1),(EOS,*EMPTY)]]
         for rows in cases:
             with self.subTest(rows=rows),self.assertRaises(CodecError): self.decode(rows)
+    def test_edge_permutation_preserves_semantics_not_argument_slots(self):
+        import torch
+        edges=[self.edge,(EDGE,1,0,3,1)]
+        ordered=self.nodes+edges+[(EOS,*EMPTY)]
+        permuted=self.nodes+edges[::-1]+[(EOS,*EMPTY)]
+        self.assertTrue(canonical_edge_order(ordered))
+        self.assertFalse(canonical_edge_order(permuted))
+        first=records_to_targets(ordered,token_count=4,vocab_size=2)
+        second=records_to_targets(permuted,token_count=4,vocab_size=2)
+        self.assertTrue(all(torch.equal(first[k],second[k]) for k in first))
+        with self.assertRaisesRegex(CodecError,'noncanonical edge order'):
+            self.decode(permuted,require_canonical=True)
+        swapped=self.nodes+[(EDGE,0,1,3,1),(EDGE,1,0,3,0)]+[(EOS,*EMPTY)]
+        third=records_to_targets(swapped,token_count=4,vocab_size=2)
+        self.assertFalse(torch.equal(first['slots'],third['slots']))
     def test_capacity_overflows(self):
         with self.assertRaises(CodecError): self.decode(self.rows,capacity=1)
         with self.assertRaises(CodecError): self.decode(self.rows,max_records=3)

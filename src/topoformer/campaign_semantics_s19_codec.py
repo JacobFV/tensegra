@@ -28,10 +28,11 @@ def _record(row):
 
 
 def decode_records(records, *, token_count, vocab_size, capacity=CAPACITY,
-                   max_records=MAX_RECORDS, require_canonical=True):
+                   max_records=MAX_RECORDS, require_canonical=False):
     """Validate generated records; return lossless integer nodes and edge list.
 
     EOS is mandatory. Optional PAD rows follow EOS only. BOS is input-only.
+    Edge emission order is not graph semantics (canonical ordering is optional).
     Multiple relations/slots on a node pair are retained. Exact duplicate edges
     are rejected. No target node count or gold graph is accepted by this API.
     """
@@ -73,6 +74,12 @@ def decode_records(records, *, token_count, vocab_size, capacity=CAPACITY,
     return {'nodes': nodes, 'edges': edges}
 
 
+def canonical_edge_order(records):
+    """Serialization diagnostic only; argument order is encoded by slot labels."""
+    edges = [tuple(_record(row)[1:]) for row in records if _record(row)[0] == EDGE]
+    return edges == sorted(edges)
+
+
 def encode_row(row, vocab, *, capacity=CAPACITY, max_records=MAX_RECORDS):
     """Training-only lowering of existing compact targets to records.
 
@@ -101,7 +108,7 @@ def encode_row(row, vocab, *, capacity=CAPACITY, max_records=MAX_RECORDS):
         edge_records.append((EDGE,source,target,relation,-1 if slot is None else slot))
     records.extend(sorted(edge_records)); records.append((EOS,*EMPTY))
     decode_records(records,token_count=len(public_tokens),vocab_size=len(vocab),
-                   capacity=capacity,max_records=max_records)
+                   capacity=capacity,max_records=max_records,require_canonical=True)
     return records
 
 
@@ -120,7 +127,7 @@ def canonicalize_public_copies(records, public_tokens):
 
 
 def records_to_targets(records, *, token_count, vocab_size, capacity=CAPACITY,
-                       max_records=MAX_RECORDS, require_canonical=True):
+                       max_records=MAX_RECORDS, require_canonical=False):
     """Historical tensor adapter. Reject unsupported pair-slot multiplicity.
 
     Presence is padded to capacity from GENERATED nodes. Callers must retain
