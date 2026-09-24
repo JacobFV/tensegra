@@ -14,7 +14,7 @@ SOURCES=('campaign_semantics_s18.py','campaign_semantics_s18_freeze.py','campaig
  'campaign_semantics_lr.py','semantic_curriculum.py','semantic_text_acquisition.py','semantic_scaling.py',
  'semantic_contracts.py','thinking.py','thinking_language.py','semantic_graph.py','tcn_data.py')
 # Fill only from prospectively reviewed immutable freezes, before main-result reads.
-PINNED_CONFIG_SHA={'main':'4ffecfea1a6aa3b968a9568b3545c8fba0fe43044e248e821fd6209eead44fdf','reference':'944b342c8a4ae58c3ebce6ba9a4b143f02d9d033eac17875ce0d4557c768a6d6'}
+PINNED_CONFIG_SHA={'main':'cfe0359c80b3ed55a3a643b5dd7f823808eadbf256f50d18610501a5596462e0','reference':'e99ee70e99d92e921765bf8c7f8eea2064f78f869b3c9157f890b7322f937cab'}
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 def load(path):return json.load(gzip.open(path,'rt'))
 def require(condition,message):
