@@ -82,7 +82,9 @@ On sealed control worlds (tools available), each finalist's *greedy-first rate* 
 | Tool-first finalists (all PBT, all PBT+curriculum, multistart-r0/r2, single-r2) | 1.00 | 0.00–0.02 | 0.00–0.01 | 0.38–0.83 | 0.68–0.89 | 0.69–0.84 |
 | Public teacher | 1.00 | 0.84 | 0.88 | 0.94 | 0.95 | 0.91 |
 
-With tools removed, tool-first policies neither find the direct path nor abstain: they run to the 48-step limit. After a corrupted subset return is rejected, they re-apply it ~15 times per episode; direct-first policies and the teacher do so ~1.7 times. The direct-first mode is also cheaper whenever the solver is expensive.
+**Step-cap caveat (found by the independent audit).** Learned arms were evaluated with their training decision cap of 48 steps. Three sealed conditions allow 64 world steps (`iid_4x5`, `xfer_5x4_larger`, `xfer_5x5_subset_tool_invalid`), and references received all 64. This does not affect comparisons among learned arms. It makes learned-vs-teacher comparisons conservative on those conditions. It **confounds the tool-first finalists' 0/256 on the 25-item condition**: 254–256 of those episodes were cut at step 48. That cell shows that these policies do not reach a direct solution within 48 decisions, not that they could never succeed. The no-tools result is not affected, because its world limit is 48.
+
+With tools removed (world limit 48), tool-first policies neither find the direct path nor abstain: they run to the step limit in 251–256 of 256 episodes. Direct-first is not sufficient for coping without tools: multistart-r1 is direct-first yet succeeds on only 0.44. After a corrupted subset return is rejected, they re-apply it ~15 times per episode; direct-first policies and the teacher do so ~1.7 times. The direct-first mode is also cheaper whenever the solver is expensive.
 
 ![Greedy-first dynamics](figures/phase2-greedy-first-dynamics.png)
 
@@ -129,4 +131,12 @@ See [budget.json](budget.json).
 - **GPU accounting convention changed.** Phase 1 charged each GPU process its full wall time. Under that convention, phase 2 alone sums to 24.6 process-hours, because up to 15 small jobs shared one device. **If the ceiling is read per process, it was exceeded.** Device occupancy is reported as the charge, and the per-process sum is reported as the upper bound.
 - **Failures:** failed attempts are charged: two memory arms wall-capped, and four E09 v1 sealed jobs that crashed on a config typing bug before completing.
 
-*(Final numbers, audit verdicts and process status are appended at closure.)*
+## Independent audit
+
+[review/phase2-independent-audit.md](review/phase2-independent-audit.md) contains a separate reconstruction from raw sealed episode rows, using its own code and read-only access.
+- **Confirmed:** every IID mean to 4 decimals; the failed PBT rule (pooled PBT − multistart −0.00975 [−0.0124, −0.0073]); identical worlds across all 598 arm files and six evaluation roots; sealed-seed disjointness against 558 recorded training/development intervals; finalist selection and checkpoint hashes; PBT lineage legality (16 replacements; donors strictly better, top-two/bottom-two, factors ∈ {0.8, 1.2}, none after the final round); ledger arithmetic.
+- **Qualified:** the mechanism claim (multistart-r1, as above).
+- **Raised:** the step-cap asymmetry (disclosed above), and that `cheap_first` and `cheap_first_fallback_v2` are behaviorally identical on all sealed conditions, so they are one baseline, not two.
+- **Cost:** ~201 CPU core-seconds.
+
+*(E13, final resources and process status are appended at closure.)*
