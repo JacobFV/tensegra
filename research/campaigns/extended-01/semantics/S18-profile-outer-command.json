@@ -1,0 +1,27 @@
+{
+  "cwd": "/home/brandonin/topoformer-campaign01-semantics/s18-source-35e94fce",
+  "argv": [
+    "/usr/bin/time",
+    "-f",
+    "elapsed_seconds=%e\nexit_code=%x\nmaxrss_kib=%M",
+    "-o",
+    "/home/brandonin/topoformer-campaign01-semantics/results/s18-profile-launch.outer.txt",
+    "/usr/bin/timeout",
+    "--signal=KILL",
+    "180s",
+    "/home/brandonin/topoformer-stage8-cuda/bin/python",
+    "src/topoformer/campaign_semantics_s18_launch.py",
+    "configs/campaign-s18-profile-frozen-v2.json",
+    "--cap",
+    "180",
+    "--python",
+    "/home/brandonin/topoformer-stage8-cuda/bin/python",
+    "--prefix",
+    "/home/brandonin/topoformer-campaign01-semantics/results/s18-profile-launch"
+  ],
+  "argv_json_sha256": "6d8d9456eae7d64ad8909b757c02dd03bad7bfcab5cabb6474d8dec33225f493",
+  "cap_seconds": 180,
+  "scope": "GNU timeout default process group; KILL at180s; no TERM grace period; GNU time remains outside and records exit and elapsed even if inner final receipt is absent",
+  "config_sha256": "418864b31d66d299b3dd5f6e7470d1dec4aa5304b76856ea7d1098e4b7ebdd08",
+  "launch_authority": "separate root GPU release required"
+}
