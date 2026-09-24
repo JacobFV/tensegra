@@ -56,11 +56,19 @@ class ReferencesTest(unittest.TestCase):
         self.assertEqual(limited['work_units'],0)
 
     def test_obstacle_replanning(self):
-        easy = replace(fixture(obstacle=True), incompatible=())
+        easy = replace(fixture(obstacle=True), incompatible=(),
+                       edges=((0,1,3),(1,2,3),(0,2,1)),travel_price=.01)
         result = run_episode(Workshop(easy,protocol_executor),ReferencePolicy())
         self.assertTrue(result['verified_success'])
         self.assertTrue(any(r['feedback'].get('status')=='obstacle' for r in result['trace']))
-        self.assertTrue(any(r['action']['kind']=='build_route' for r in result['trace']))
+        self.assertTrue(any(r['action']['kind']=='move' for r in result['trace']))
+
+    def test_cheap_multihop_is_available(self):
+        spec = replace(fixture(),incompatible=(),edges=((0,1,1),(1,2,1)))
+        result = run_episode(Workshop(spec,protocol_executor),ReferencePolicy('cheap'))
+        self.assertTrue(result['verified_success'])
+        self.assertEqual(result['work_units'],0)
+        self.assertEqual(result['travel_distance'],2)
 
     def test_bad_mode(self):
         with self.assertRaises(ValueError):

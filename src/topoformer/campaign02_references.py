@@ -55,11 +55,44 @@ class ReferencePolicy:
             return self._solver(o, actions, "constrained_subset", "subset", pick)
         if o.known_edges is None:
             return pick("inspect", target="map")
-        if self.mode != "always_tool" and pick("deliver") is not None:
-            return pick("deliver")
+        move, greedy_distance = self._greedy_route(o, pick)
         if self.mode == "cheap":
-            return pick("abstain")
+            return move or pick("abstain")
+        if self.mode == "cheap_first" and move is not None:
+            # Public lower bound: every route must pay one outgoing edge.
+            # This is a value-of-computation heuristic, not an exact optimum.
+            # Compare possible travel savings with building/calling/retrieving/
+            # applying a route plus an estimated edge scan. All actual work is
+            # still charged; this estimate never silently runs shortest path.
+            lower = min(w for u,v,w in o.known_edges if u == o.position)
+            possible_saving = max(0, greedy_distance-lower)*o.prices["travel"]
+            overhead = 4*o.prices["action"]+len(o.known_edges)*o.prices["work"]
+            if possible_saving <= overhead or o.remaining_work < 16:
+                return move
         return self._solver(o, actions, "shortest_path", "route", pick)
+
+    @staticmethod
+    def _greedy_route(o, pick):
+        """Follow locally cheapest forward edges in the public generated DAG.
+
+        No shortest-path computation/backtracking. Local scans and arithmetic
+        are measured controller CPU; the route is only a heuristic cost bound.
+        """
+        at, distance, first = o.position, 0, None
+        visited = set()
+        while at != o.goal["destination"] and at not in visited:
+            visited.add(at)
+            outgoing = [(w,v) for u,v,w in o.known_edges if u == at and v > at]
+            if not outgoing:
+                return None, 0
+            w,v = min(outgoing, key=lambda pair:(pair[0],-pair[1]))
+            distance += w
+            if first is None:
+                first = v
+            at = v
+        if at != o.goal["destination"] or distance > o.remaining_travel:
+            return None, 0
+        return pick("move", destination=first), distance
 
     def _solver(self, o, actions, primitive, role, pick):
         entries = [(h,p) for h,p in o.problems.items() if p["primitive"] == primitive

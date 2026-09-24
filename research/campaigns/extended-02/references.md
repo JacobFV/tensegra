@@ -7,13 +7,13 @@ a world, generation seed, planted solution, evaluator, or gold action mask.
 
 Three supplied policies establish solvability, not learned orchestration:
 
-- `cheap`: inspect inventory, choose a local greedy item per category, attempt
-  the visible direct route, verify or abstain. No combination search/backtracking.
+- `cheap`: inspect inventory, choose a local greedy item per category, follow
+  locally cheapest forward edges in the visible DAG, verify or abstain. No combination search/backtracking.
 - `always_tool`: inspect, explicitly add capacity/funds/incompatibility
   constraints, call optimization, retrieve its addressed result, commit it,
   inspect map, build/call route, retrieve a distinct result, deliver and verify.
 - `cheap_first`: use greedy when available; otherwise construct the optimization
-  problem, escalate catalogue budgets after timeout, and use routing on obstacle.
+  problem, escalate catalogue budgets after timeout, and consider routing when public travel-cost savings could outweigh call overhead.
 
 The reference chooses result records by public primitive/problem provenance and
 state version, not array position alone. `retrieve` precedes protected exact
@@ -40,3 +40,26 @@ restart after timeout; there is no implicit resumed solver state. Partial feasib
 incumbents are not consumed by this reference until the typed world contract
 explicitly supports them. No empirical leverage claim is made before the paired
 reference experiment.
+
+## Travel-cost update
+
+Cheap routing is a genuine zero-solver-work multihop policy. It locally selects
+the least-cost outgoing forward edge, breaking ties toward greater progress.
+The cheap-first policy scans the resulting greedy path and compares a bound on
+possible travel savings against four action prices plus one estimated edge scan.
+This is a supplied heuristic, not an optimal metareasoning policy. The scan's
+actual controller CPU remains recorded. Public travel budgets constrain it.
+
+Largest-budget calls pay actual expanded work, not allocation size: always-tool
+is not automatically wasteful merely because it requests1024. Its real overhead
+comes from unnecessary solver execution, explicit building/retrieval actions,
+and potentially seeking optimality when a cheap feasible choice already works.
+Small-budget escalation restarts searches; it can therefore cost MORE than one
+large call. These are measured comparisons, not assumed advantages.
+
+`research/tools/campaign02_reference_profile.py` consumes an explicit JSON
+configuration and writes lossless compressed per-episode simulator histories,
+paired world hashes, raw costs/CPU, cell summaries, and source/config hashes.
+The coordinator freezes conditions and runs it; no profile has been launched
+by this worker. Generation and serialization are included in self-plus-child
+CPU accounting. No GPU is used.
