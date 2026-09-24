@@ -1,0 +1,54 @@
+{
+  "calibration_graph_target_masks_verified": 1024,
+  "all_bilingual_curve_components_and_size_counts_verified": true,
+  "paired_initial_predictions_and_sampler_hashes_equal": true,
+  "paired_endpoint": {
+    "english": {
+      "raw": {
+        "transitions": {
+          "0->0": 471,
+          "1->0": 41
+        },
+        "mixed_minus_english": -41
+      },
+      "calibrated": {
+        "transitions": {
+          "1->0": 121,
+          "0->0": 373,
+          "1->1": 14,
+          "0->1": 4
+        },
+        "mixed_minus_english": -117
+      }
+    },
+    "spanish": {
+      "raw": {
+        "transitions": {
+          "0->0": 512
+        },
+        "mixed_minus_english": 0
+      },
+      "calibrated": {
+        "transitions": {
+          "0->0": 512
+        },
+        "mixed_minus_english": 0
+      }
+    }
+  },
+  "promotion_criteria": {
+    "spanish_at_least_52": false,
+    "spanish_gain_at_least_26": false,
+    "english_loss_at_most_26": false
+  },
+  "promotion_pass": false,
+  "spanish_late_gain": 0,
+  "input_sha256": {
+    "research/results/campaign-01/semantics/s13-paired-analysis.json": "ccd5007ab4d3ebdc56e0a92838d0e50bbda1cf1ea663a7be36735536148cfdb6",
+    "research/campaigns/extended-01/semantics/S13-report.md": "2ccd311cac0e40691be485d5b8cbca79b33aae50e39dd97b1b21b4254b51eccb"
+  },
+  "cpu_audit_wall_seconds": 18.002755735011306,
+  "scope": "One fixed development pair: both Spanish exact0/512, mixed English18 calibrated versus English-only135. All three criteria fail and late Spanish gain0; no extension, confirmation or general semantic claim follows.",
+  "extension_trigger_at_least_13": false,
+  "report_review": "All curve/component/size/paired counts verified; partial Spanish acquisition retained, English loss not reduced to copy failure. Single development pair and unequal token/compute exposure explicit."
+}
