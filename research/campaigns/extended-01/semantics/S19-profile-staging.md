@@ -1,0 +1,9 @@
+# S19 prospective profile staging
+
+Source178de154 is staged separately at `/home/brandonin/topoformer-campaign01-semantics/s19-source-178de154`. Source files and frozen config are read-only (444; directories555; zero write-enabled entries). The profile config SHA256 is `d9f853f7e9d4943ced1dbe2d378648608d2117ef99b8a08710ded2abb253d492`. The freezer verified all16 bound source files and all four fixed input hashes without importing the actor or constructing a model.
+
+`S19-profile-outer-command.json` binds exact argv, cwd, source archive and utility hashes. It places GNUtime outside GNUtimeout's default process group KILL180 deadline, outside the wrapper with the same180 cap. Cwd is the campaign base to preserve the prepared relative data/output paths; launcher/config paths are absolute and child PYTHONPATH resolves the immutable launcher's own source. No grace interval, retry, extension, or automatic main launch is authorized. Separate independent clearance and explicit root GPU release remain required.
+
+Existing GB10 environment: Python3.12.3, PyTorch2.14.0+cu130, CUDA build13.0, Linux6.17.0-1008-nvidia/aarch64. GNUtimeout9.4 and GNUtime executable hashes match previous audited releases. Environment inventory used CUDA_VISIBLE_DEVICES empty and no model calls. Disk has approximately300GB free; no compute processes or campaign training jobs were present at preparation. No historical source, environment, dependencies, or checkpoints were modified.
+
+Prospective profile includes20 optimizer updates, natural greedy TRAIN128+DEV64 evaluations at0/20, and forced160-record public predicted-prefix timing at batch32. Main cost is deliberately unset until measured training, natural evaluation, forced worst-case decoding, state/export and lifecycle phases can be projected to all registered curves and full evaluation panels. The180-second ceiling is a hard deadline, not an assertion that the full profile will fit.

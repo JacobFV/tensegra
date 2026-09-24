@@ -1,0 +1,81 @@
+{
+  "budget_status": "frozen",
+  "seed": 1901,
+  "schedule_seed": 15115,
+  "width": 1024,
+  "encoder_layers": 2,
+  "decoder_layers": 2,
+  "heads": 8,
+  "ffn_width": 4096,
+  "dropout": 0,
+  "capacity": 128,
+  "max_records": 160,
+  "max_slot": 32,
+  "batch_size": 8,
+  "evaluation_batch_size": 32,
+  "train_panel_count": 128,
+  "learning_rate": 0.0003,
+  "final_learning_rate": 3e-05,
+  "warmup_updates": 128,
+  "weight_decay": 0.01,
+  "gradient_clip": 1.0,
+  "loss_policy": "equal_mean_of_eight_applicable_field_means_absent_zero",
+  "autocast_dtype": "bfloat16",
+  "device": "cuda",
+  "optimizer_betas": [
+    0.9,
+    0.999
+  ],
+  "optimizer_eps": 1e-08,
+  "initialization": "scratch_no_inherited_weights",
+  "calibration": "none",
+  "cap_seconds": 180.0,
+  "launch_authority": "Separate explicit root GPU release required",
+  "inputs": {
+    "train": {
+      "path": "data/s15-shape-v2/train_mixed.jsonl.gz",
+      "sha256": "8ddbd15bea881c13bfd24554ada9293082fcef7b616f6eeb3dad78a4bfa662d2"
+    },
+    "development": {
+      "path": "data/s15-shape-v2/development.jsonl.gz",
+      "sha256": "25522313035e646cfca4bf0efb1ae550c295cb55ddf6057558d03c42f2239dc3"
+    },
+    "selection": {
+      "path": "data/s17-calibration-selection-v1/selection.json",
+      "sha256": "5b8091e73320c5ef87bee39189933e6f3aa856c98ac07d93c6cb90d8d1c13172"
+    },
+    "vocabulary_audit": {
+      "path": "data/s01/audit.json",
+      "sha256": "2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1"
+    }
+  },
+  "job": "profile",
+  "updates": 20,
+  "checkpoints": [
+    0,
+    20
+  ],
+  "dev_per_cell": 16,
+  "worst_case_profile": true,
+  "output_dir": "results/s19-profile-v1",
+  "expected_construction_sequence_sha256": "85054bf25e3a3e2a5a9a932b441d6413fd0d7ad827df79e1583268aaddf5acd9",
+  "prepared_sha256": "9f2b03ffca73d93ea9d33f6c30d2ef03cff6864908640908a0dba3c7828a1da0",
+  "source_sha256": {
+    "campaign_semantics_s19.py": "a42035daaf563d4aa63e7ded5bd949a646c77fd85ed86804ff396b4ac82c0407",
+    "campaign_semantics_s19_actor.py": "b84dc10df3a34fdc3662730cbcdb88012ccb9f8ffcead4b4eebfe2588549ba17",
+    "campaign_semantics_s19_codec.py": "88b0606914dd4585f1715900263de16712fed78743938c3c135d89f7c9180cad",
+    "campaign_semantics_s19_freeze.py": "f017039010751a7b7bac8b68c8228821f62fc1cc7b9ffcccb3bb4aff0e1bf1df",
+    "campaign_semantics_s19_launch.py": "5d4b197bcdf761e001aeaa6d70d24eaa884778d07a5e3098648154188587291b",
+    "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+    "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+    "campaign_semantics_continue.py": "6d5a8f4ae5143bdfc93f589fa3c189966a787e0fc6a83dc6bc06382c14ac8585",
+    "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+    "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+    "semantic_text_acquisition.py": "e67269012f0ef6e30b78c0265ab007f72f3278310dfad8fad526d60a38001d59",
+    "semantic_contracts.py": "914a12a24a14434918412f2ad71368f51085bd248c7398164b0c2b1c9a0e215f",
+    "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+    "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670"
+  }
+}

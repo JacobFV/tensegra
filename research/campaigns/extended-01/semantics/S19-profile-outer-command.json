@@ -1,0 +1,40 @@
+{
+  "cwd": "/home/brandonin/topoformer-campaign01-semantics",
+  "argv": [
+    "/usr/bin/time",
+    "-f",
+    "elapsed_seconds=%e\nexit_code=%x\nmaxrss_kib=%M",
+    "-o",
+    "/home/brandonin/topoformer-campaign01-semantics/results/s19-profile-launch.outer.txt",
+    "/usr/bin/timeout",
+    "--signal=KILL",
+    "180s",
+    "/home/brandonin/topoformer-stage8-cuda/bin/python",
+    "/home/brandonin/topoformer-campaign01-semantics/s19-source-178de154/src/topoformer/campaign_semantics_s19_launch.py",
+    "/home/brandonin/topoformer-campaign01-semantics/s19-source-178de154/configs/campaign-s19-profile-frozen-v1.json",
+    "--cap",
+    "180",
+    "--python",
+    "/home/brandonin/topoformer-stage8-cuda/bin/python",
+    "--prefix",
+    "/home/brandonin/topoformer-campaign01-semantics/results/s19-profile-launch"
+  ],
+  "argv_json_sha256": "21d3b6538f26c0f8bfc63fffb788fcb4432a99544ce9478f54754060db748513",
+  "cap_seconds": 180,
+  "config_sha256": "d9f853f7e9d4943ced1dbe2d378648608d2117ef99b8a08710ded2abb253d492",
+  "source_commit": "178de154e88d1278bc11b86adc042763f819ec62",
+  "source_tar_sha256": "b8850d70e249a9f1533356b24bd0607185368c52af6f8b0829abb35d80895554",
+  "source_manifest_path": "/home/brandonin/topoformer-campaign01-semantics/s19-source-178de154/configs/campaign-s19-profile-frozen-v1.json",
+  "launch_authority": "Separate explicit root GPU release required",
+  "scope": "GNU timeout default process group, KILL at180s without grace; GNU time outside wrapper and timeout; cwd preserves fixed relative data/output namespace, launcher child PYTHONPATH resolves immutable own source",
+  "utilities": {
+    "/usr/bin/time": {
+      "sha256": "4a445f72fefaf4127931df2b799aa885e27553b5a55e104a329d41fc8dc83083",
+      "version": "GNU Time UNKNOWN"
+    },
+    "/usr/bin/timeout": {
+      "sha256": "52c67910ffecb65d1d5172e01720145c54941aff91e7b3a11ab222c86fb425a8",
+      "version": "GNU coreutils9.4"
+    }
+  }
+}
