@@ -21,6 +21,6 @@ class Checks(unittest.TestCase):
   with self.assertRaises(ValueError):a.identity_guard([{**rows[0],'target':{'x':2}}],expected,targets)
   with self.assertRaises(ValueError):a.identity_guard(rows*2,expected,{})
  def test_unfrozen(self):
-  self.assertIsNone(a.MAIN_CONFIG_SHA)
+  self.assertEqual(a.MAIN_CONFIG_SHA,'4e648a9a274a7cabcbb84c0b2e6e6a2dcbf37925e2146b0758702086245f6c8b')
   with self.assertRaises(ValueError):a.checked(Path(__file__),None)
 if __name__=='__main__':unittest.main()
