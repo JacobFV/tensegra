@@ -15,7 +15,30 @@ def counts(row, indices=None):
     return {'correct': correct, 'total': len(ids)}
 
 
-def summarize(rows):
+def validate_main_contract(rows):
+    heads={'unchanged','balanced_16384','balanced_65536'}
+    delays=(0,1,2,4,8,16)
+    expected={(h,'train',d,2) for h in heads for d in delays}
+    expected|={(h,s,d,k) for h in heads for s in ('calibration','validation') for d in delays for k in (2,8)}
+    expected|={(h,s,d,8) for h in heads for s in ('calibration_grid','validation_grid') for d in (0,1,16)}
+    observed=[(r['head'],r['split'],r['target_delay'],r['distractors']) for r in rows]
+    if len(set(observed))!=len(observed) or set(observed)!=expected:
+        raise ValueError('Incomplete/duplicate main cells; profile is mechanical-only')
+    legal={(t,y) for t,ys in ((0,range(0,33,2)),(1,range(33)),(2,(16,18))) for y in ys}
+    for r in rows:
+        n={'train':65536,'calibration':1024,'validation':4096,'calibration_grid':6656,'validation_grid':6656}[r['split']]
+        if any(len(v)!=n for group in ('targets','predictions') for v in r[group].values()):
+            raise ValueError('Incorrect main support')
+        if set(r['targets'])!={'value','type','operation','argument0','argument1','provenance'} or set(r['predictions'])!=set(r['targets']):
+            raise ValueError('Incomplete semantic fields')
+        if r['split'].endswith('_grid'):
+            from collections import Counter
+            counts=Counter(zip(r['targets']['type'],r['targets']['value']))
+            if set(counts)!=legal or set(counts.values())!={128}:raise ValueError('Incorrect main grid strata/support')
+
+
+def summarize(rows, require_main=True):
+    if require_main:validate_main_contract(rows)
     cells, strata, paired = [], [], []
     by_cell = {}
     for row in rows:
