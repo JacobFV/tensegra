@@ -147,3 +147,32 @@ def test_partial_obstacle_charges_completed_edges():
     obs=env.step(Action('deliver',{'path':list(range(spec.destination+1))}))
     assert obs.feedback['status']=='obstacle' and obs.position==1
     assert env.evaluate()['travel_distance']>before
+
+
+def test_executor_injection_keeps_lowering_and_validation_identical():
+    import sys
+    import types
+    from unittest.mock import patch
+    from topoformer.campaign02_world import protocol_executor
+    calls=[]
+    validators=[]
+    def dispatch(call):
+        calls.append(call)
+        return types.SimpleNamespace(status='success',payload=((0,),1,2,3),
+            work_units=1,cpu_seconds=.02,certificate=())
+    def validate(call,result):
+        validators.append((call,result))
+        return True
+    protocol=types.ModuleType('topoformer.campaign02_protocol')
+    protocol.Budget=lambda work: work
+    protocol.Call=lambda primitive,args,budget: (primitive,args,budget)
+    protocol.execute_isolated=dispatch
+    protocol.validate_result=validate
+    problem={'items':[[0,2,3,1]],'capacity':2,'max_cost':3}
+    with patch.dict(sys.modules,{'topoformer.campaign02_protocol':protocol}):
+        default=protocol_executor('constrained_subset',problem,16)
+        injected=protocol_executor('constrained_subset',problem,16,execute_call=dispatch)
+    assert default==injected
+    assert calls[0]==calls[1]
+    assert len(validators)==2
+    assert injected['child_cpu_seconds']==.02

@@ -301,6 +301,9 @@ class Workshop:
             start = time.process_time()
             result = self._executor(entry["primitive"],deepcopy(entry["problem"]),budget)
             measured_cpu = time.process_time()-start
+            # Diagnostic only: persistent-child CPU does not appear in parent
+            # process_time. The outer harness accounts actual process trees and
+            # must not add this nested diagnostic again to its inclusive charge.
             self._solver_cpu += measured_cpu + float(result.get("child_cpu_seconds",0))
             self._reductions.append({"primitive":entry["primitive"],"problem":a["problem"],
                 "certificate_valid":result.get("certificate_valid"),
@@ -524,11 +527,16 @@ def _reduction_matches_world(spec: WorldSpec, primitive: str, problem: dict[str,
     return False
 
 
-def protocol_executor(primitive: str, problem: dict[str, Any], max_work: int) -> dict[str, Any]:
+def protocol_executor(primitive: str, problem: dict[str, Any], max_work: int,
+                      *, execute_call: Callable | None = None) -> dict[str, Any]:
     """Supplied deterministic lowering of explicit public drafts into protocol.
 
     Missing constraints remain unconstrained; missing items remain missing.
     This compiler does not inspect the world, complete constraints, or solve.
+    An explicitly owned persistent worker may supply execute_call; the default
+    remains one isolated subprocess per call. Lowering and validation are shared.
+    Reported child CPU is a per-call diagnostic, not an additional budget charge
+    on top of the harness's authoritative inclusive process-tree accounting.
     """
     from .campaign02_protocol import Budget, Call, execute_isolated, validate_result
     if primitive == "constrained_subset":
@@ -541,7 +549,7 @@ def protocol_executor(primitive: str, problem: dict[str, Any], max_work: int) ->
     else:
         args = tuple(problem.get("arguments",()))
     call = Call(primitive,args,budget=Budget(max_work))
-    result = execute_isolated(call)
+    result = (execute_isolated if execute_call is None else execute_call)(call)
     return {"status":result.status,"payload":result.payload,"work_units":result.work_units,
             "cpu_seconds":result.cpu_seconds,"child_cpu_seconds":result.cpu_seconds,"certificate":result.certificate,
             "certificate_valid":validate_result(call,result)}
