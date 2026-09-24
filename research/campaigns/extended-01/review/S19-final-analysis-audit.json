@@ -1,0 +1,65 @@
+{
+  "status": "pass",
+  "seconds": 33.306206263951026,
+  "analysis_sha256": "3cbee1fe688e2f6e73e1890b94cd2001cfbe9776129772b1499f3ef947206cde",
+  "final_train": 128,
+  "final_dev": {
+    "3x3": 508,
+    "3x4": 0,
+    "4x3": 507,
+    "4x4": 463
+  },
+  "early_dev": {
+    "3x3": 428,
+    "3x4": 0,
+    "4x3": 357,
+    "4x4": 176
+  },
+  "decisions": {
+    "train_fit": true,
+    "each_trained_cell": true,
+    "promotion": true,
+    "heldout_composition": false,
+    "weighted_trained_accuracy": 0.9697265625,
+    "weighted_gain_since2048": 0.29150390625,
+    "extension_eligible": true,
+    "automatic_extension": false
+  },
+  "paired_comparisons": 36,
+  "input_sha256": {
+    "research/results/campaign-01/semantics/s19-analysis.json": "3cbee1fe688e2f6e73e1890b94cd2001cfbe9776129772b1499f3ef947206cde",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/train-u0.json.gz": "2f01b8ba9ceb959b036429f3fe9b7ae5c8e1d59e4a147ce415f61f764131abe0",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/development-u0.json.gz": "bb6281371712426555da13bd9aed12562faa62e020e38c9aa342aa26dfffbf4e",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/train-u1024.json.gz": "69a2e43b092fe94f7c0d4b1c7fc337e86803b0a716d151e45e2f0b9020d3cebe",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/development-u1024.json.gz": "978802a954dfea0fd2b0333113bbcff6e8380c9bdff472b0d2958f321960bf5f",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/train-u2048.json.gz": "ca58ba826bfbc9733548244335be05dbc9de6c5404dc4774962c29e60497bb64",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/development-u2048.json.gz": "2e8773f13be20eb314fa5bc1a6b578e0cc24de8a7711a1a764d7d3f891c71ff4",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/train-u4096.json.gz": "d98b88e50e6c9099f34ece2bcf486c971f96622a06521ce4636771fcc55d0b5f",
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/development-u4096.json.gz": "7011b1354e8c987cd2d6287341c65e0c211b7ae269283e8edb1e7c8e4aac61d1",
+    "research/results/campaign-01/semantics/s17-calibration-main-v1/mixed/evaluation-u28672.json.gz": "f5ad28c8d1dbee1b973baf00d2be3a56700b7b0c650c0798ae99b019fb337d4c",
+    "research/results/campaign-01/semantics/s15-mixed-main-v3/evaluation-u28672.json.gz": "ad383c0f5d39a21de1f09dd8cf6b7b59a1e7265d119f4a705824fa15a7eed790",
+    "research/results/campaign-01/semantics/s18-main-v2/s18-main-v1/context/matched-u28672/evaluation-u28672.json.gz": "d65cc447aeb853bb794843e185186e0e0623b527734425ffae00cb03abdbbd0a",
+    "research/results/campaign-01/semantics/s18-main-v2/s18-main-v1/context/historical-u28672/evaluation-u28672.json.gz": "1c56e815d41c68dce24d90e0125404455779e73bb5f39ed8f992aee5d0d9970e",
+    "research/results/campaign-01/semantics/s18-main-v2/s18-main-v1/workspace_control/matched-u28672/evaluation-u28672.json.gz": "132260fb1cca52ab2737c607516c370949896f10085402ab223a0944edaa9d40",
+    "research/results/campaign-01/semantics/s18-main-v2/s18-main-v1/workspace_control/historical-u28672/evaluation-u28672.json.gz": "09b4623c7c027cbd32a5172c83a0eb1968ad94e7d24677b1c0e7c70ad076a587",
+    "research/campaigns/extended-01/semantics/S19-report.md": "c3e2514db517969e60be3219f67c8b247eddc30f0e67ce441691417d7ba394a0"
+  },
+  "scope": "Independent allcurve summaries/full-denominator macro F1,36baseline-policy-cell transitions and fixed gates. Tensor/strictrecord reconstruction separately audited.",
+  "report_review": {
+    "status": "pass",
+    "interpretation": "Fixed final known-motif acquisition passes, heldout3x4 fails allcurves. Single scratchseed/inspectedDEV, bundled learner/interface/history changes, no matched causal attribution. Extension eligible but no automatic/released extension.",
+    "cost_seconds": {
+      "profile": 14.18,
+      "main": 321.1,
+      "total": 335.28
+    },
+    "all_final_train_teacher_forced_field_accuracy": 1.0,
+    "numeric_scope": "Allcurve cell/count/component/macro summaries and36paired transitions independently match raw; report counts/costs/scopes checked."
+  },
+  "analysis_guard_review": {
+    "commit": "4b8901fc",
+    "fixtures": 8,
+    "status": "pass",
+    "timing": "unittest reported0.000s; no additional measurable cost claimed"
+  }
+}
