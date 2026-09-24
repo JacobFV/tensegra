@@ -143,6 +143,32 @@ class ReferencePolicy:
         return tuple(selected)
 
 
+class FallbackReferencePolicy(ReferencePolicy):
+    """Version2: route search failure may fall back to a public greedy walk.
+
+    Uses the supplied catalogue unchanged. Optional remaining-budget actions
+    are an independently versioned environment condition, not added here.
+    """
+    def __init__(self, mode="cheap_first", initial_budget=16):
+        super().__init__(mode, initial_budget)
+        self.reference_name = mode + "_fallback_v2"
+
+    def _solver(self, o, actions, primitive, role, pick):
+        action = super()._solver(o, actions, primitive, role, pick)
+        if role == "route" and action.kind == "abstain":
+            move, _ = self._greedy_route(o, pick)
+            if move is not None:
+                return move
+        return action
+
+
+def make_reference(name):
+    suffix = "_fallback_v2"
+    if name.endswith(suffix):
+        return FallbackReferencePolicy(name[:-len(suffix)])
+    return ReferencePolicy(name)
+
+
 def run_episode(world, policy, model_compute_tariff: float = 0.0) -> dict[str, Any]:
     """Harness receives environment; policy only receives copied observations.
 
@@ -167,5 +193,5 @@ def run_episode(world, policy, model_compute_tariff: float = 0.0) -> dict[str, A
     result.update(controller_cpu_seconds=controller_cpu,
                   episode_cpu_seconds=time.process_time()-cpu_start,
                   episode_wall_seconds=time.monotonic()-wall_start,
-                  reference=policy.mode, model_compute_tariff=model_compute_tariff, trace=trace)
+                  reference=getattr(policy,"reference_name",policy.mode), model_compute_tariff=model_compute_tariff, trace=trace)
     return result

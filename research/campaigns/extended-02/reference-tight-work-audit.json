@@ -1,0 +1,358 @@
+{
+  "source_sha256": "acfaa756ad78d72cbf2497d3d092bba83cb1fe02aad0cf18991453ecc403596a",
+  "condition": "work_tight",
+  "counts": {
+    "cheap": {
+      "n": 512,
+      "success": 424,
+      "failed": 88,
+      "last_abstain": 88,
+      "calls_": 88,
+      "subset_not_selected": 88
+    },
+    "always_tool": {
+      "n": 512,
+      "success": 0,
+      "failed": 512,
+      "last_abstain": 512,
+      "calls_128": 512,
+      "subset_selected": 490,
+      "last_call_timeout": 512,
+      "remaining_work_0": 512,
+      "subset_not_selected": 22
+    },
+    "cheap_first": {
+      "n": 512,
+      "success": 158,
+      "failed": 354,
+      "last_abstain": 354,
+      "calls_16": 330,
+      "subset_selected": 298,
+      "last_call_timeout": 354,
+      "remaining_work_112": 330,
+      "subset_not_selected": 56,
+      "calls_16,16": 24,
+      "remaining_work_96": 24
+    }
+  },
+  "examples": {
+    "always_tool_route": {
+      "seed": 22050000,
+      "work_units": 128,
+      "tail": [
+        {
+          "action": {
+            "kind": "use_return",
+            "arguments": {
+              "handle": "r39eea9679ba59e57",
+              "as": "subset"
+            }
+          },
+          "feedback": {
+            "status": "success",
+            "selected": [
+              "i334821",
+              "i559723",
+              "i522507",
+              "i284012"
+            ]
+          },
+          "state_version": 0,
+          "work": 128
+        },
+        {
+          "action": {
+            "kind": "inspect",
+            "arguments": {
+              "target": "map"
+            }
+          },
+          "feedback": {
+            "status": "success",
+            "return": "r2c483a9d895ffb0e"
+          },
+          "state_version": 0,
+          "work": 128
+        },
+        {
+          "action": {
+            "kind": "build_route",
+            "arguments": {
+              "handle": "problem_1",
+              "start": 0,
+              "goal": 8
+            }
+          },
+          "feedback": {
+            "status": "success",
+            "problem": "problem_1"
+          },
+          "state_version": 0,
+          "work": 128
+        },
+        {
+          "action": {
+            "kind": "abstain",
+            "arguments": {}
+          },
+          "feedback": {
+            "status": "unknown"
+          },
+          "state_version": 0,
+          "work": 128
+        }
+      ]
+    },
+    "cheap_first_route": {
+      "seed": 22050001,
+      "work_units": 16,
+      "tail": [
+        {
+          "action": {
+            "kind": "inspect",
+            "arguments": {
+              "target": "map"
+            }
+          },
+          "feedback": {
+            "status": "success",
+            "return": "r74615eaf227df039"
+          },
+          "state_version": 0,
+          "work": 0
+        },
+        {
+          "action": {
+            "kind": "build_route",
+            "arguments": {
+              "handle": "problem_0",
+              "start": 0,
+              "goal": 8
+            }
+          },
+          "feedback": {
+            "status": "success",
+            "problem": "problem_0"
+          },
+          "state_version": 0,
+          "work": 0
+        },
+        {
+          "action": {
+            "kind": "call",
+            "arguments": {
+              "problem": "problem_0",
+              "budget": 16
+            }
+          },
+          "feedback": {
+            "status": "timeout",
+            "return": "r1b2a1a8276102b19"
+          },
+          "state_version": 0,
+          "work": 16
+        },
+        {
+          "action": {
+            "kind": "abstain",
+            "arguments": {}
+          },
+          "feedback": {
+            "status": "unknown"
+          },
+          "state_version": 0,
+          "work": 16
+        }
+      ]
+    },
+    "cheap_selection": {
+      "seed": 22050002,
+      "work_units": 0,
+      "tail": [
+        {
+          "action": {
+            "kind": "inspect",
+            "arguments": {
+              "target": "i967334"
+            }
+          },
+          "feedback": {
+            "status": "success",
+            "return": "r9cddb7aea7034594"
+          },
+          "state_version": 0,
+          "work": 0
+        },
+        {
+          "action": {
+            "kind": "inspect",
+            "arguments": {
+              "target": "i650438"
+            }
+          },
+          "feedback": {
+            "status": "success",
+            "return": "r394082aa788506af"
+          },
+          "state_version": 0,
+          "work": 0
+        },
+        {
+          "action": {
+            "kind": "inspect",
+            "arguments": {
+              "target": "i377799"
+            }
+          },
+          "feedback": {
+            "status": "success",
+            "return": "r334449b07473bfad"
+          },
+          "state_version": 0,
+          "work": 0
+        },
+        {
+          "action": {
+            "kind": "abstain",
+            "arguments": {}
+          },
+          "feedback": {
+            "status": "unknown"
+          },
+          "state_version": 0,
+          "work": 0
+        }
+      ]
+    },
+    "cheap_first_selection": {
+      "seed": 22050002,
+      "work_units": 16,
+      "tail": [
+        {
+          "action": {
+            "kind": "add_constraint",
+            "arguments": {
+              "problem": "problem_0",
+              "constraint": "funds"
+            }
+          },
+          "feedback": {
+            "status": "success",
+            "problem": "problem_0",
+            "constraint": "funds"
+          },
+          "state_version": 0,
+          "work": 0
+        },
+        {
+          "action": {
+            "kind": "add_constraint",
+            "arguments": {
+              "problem": "problem_0",
+              "constraint": "incompatibility"
+            }
+          },
+          "feedback": {
+            "status": "success",
+            "problem": "problem_0",
+            "constraint": "incompatibility"
+          },
+          "state_version": 0,
+          "work": 0
+        },
+        {
+          "action": {
+            "kind": "call",
+            "arguments": {
+              "problem": "problem_0",
+              "budget": 16
+            }
+          },
+          "feedback": {
+            "status": "timeout",
+            "return": "r0a54cd64f9d18202"
+          },
+          "state_version": 0,
+          "work": 16
+        },
+        {
+          "action": {
+            "kind": "abstain",
+            "arguments": {}
+          },
+          "feedback": {
+            "status": "unknown"
+          },
+          "state_version": 0,
+          "work": 16
+        }
+      ]
+    },
+    "always_tool_selection": {
+      "seed": 22050046,
+      "work_units": 128,
+      "tail": [
+        {
+          "action": {
+            "kind": "add_constraint",
+            "arguments": {
+              "problem": "problem_0",
+              "constraint": "funds"
+            }
+          },
+          "feedback": {
+            "status": "success",
+            "problem": "problem_0",
+            "constraint": "funds"
+          },
+          "state_version": 0,
+          "work": 0
+        },
+        {
+          "action": {
+            "kind": "add_constraint",
+            "arguments": {
+              "problem": "problem_0",
+              "constraint": "incompatibility"
+            }
+          },
+          "feedback": {
+            "status": "success",
+            "problem": "problem_0",
+            "constraint": "incompatibility"
+          },
+          "state_version": 0,
+          "work": 0
+        },
+        {
+          "action": {
+            "kind": "call",
+            "arguments": {
+              "problem": "problem_0",
+              "budget": 128
+            }
+          },
+          "feedback": {
+            "status": "timeout",
+            "return": "r4eb8efb0710a2460"
+          },
+          "state_version": 0,
+          "work": 128
+        },
+        {
+          "action": {
+            "kind": "abstain",
+            "arguments": {}
+          },
+          "feedback": {
+            "status": "unknown"
+          },
+          "state_version": 0,
+          "work": 128
+        }
+      ]
+    }
+  },
+  "cpu_seconds": 0.271932976,
+  "scope": "archived trace reconstruction only; no world replay or model inference"
+}

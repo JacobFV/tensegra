@@ -21,7 +21,7 @@ import resource
 import time
 
 from topoformer import campaign02_references, campaign02_world, campaign02_protocol
-from topoformer.campaign02_references import ReferencePolicy, run_episode
+from topoformer.campaign02_references import ReferencePolicy, make_reference, run_episode
 from topoformer.campaign02_world import Workshop, generate_world, protocol_executor
 
 
@@ -64,6 +64,8 @@ def profile(config, output):
             if kwargs.get('categories',2)*kwargs.get('choices',3)>20:
                 raise ValueError('maximum20 inventory items')
             kwargs.setdefault('step_limit',64)
+            if 'call_budgets' in kwargs:
+                kwargs['call_budgets'] = tuple(kwargs['call_budgets'])
             for i in range(count):
                 if cpu_seconds(owner)-cpu >= limit:
                     stopped = True
@@ -73,7 +75,7 @@ def profile(config, output):
                 semantic_hash = hashlib.sha256(json.dumps(asdict(spec),sort_keys=True).encode()).hexdigest()
                 for mode in modes:
                     address_seed = config.get('address_seed_start',70000000)+ci*10000+i
-                    result = run_episode(Workshop(spec,executor,address_seed=address_seed),ReferencePolicy(mode),
+                    result = run_episode(Workshop(spec,executor,address_seed=address_seed),make_reference(mode),
                                          model_compute_tariff=config.get('model_compute_tariff',0.0))
                     records.append(dict(condition=condition['name'],seed=seed,address_seed=address_seed,mode=mode,
                                         world_sha256=semantic_hash,**result))

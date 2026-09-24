@@ -4,7 +4,7 @@ from functools import partial
 import unittest
 from dataclasses import replace
 
-from topoformer.campaign02_references import ReferencePolicy, run_episode
+from topoformer.campaign02_references import ReferencePolicy, FallbackReferencePolicy, make_reference, run_episode
 from topoformer.campaign02_world import (Action, Item, Workshop, WorldSpec,
     action_catalog, protocol_executor)
 from topoformer.campaign02_protocol import execute
@@ -99,6 +99,24 @@ class ReferencesTest(unittest.TestCase):
     def test_reference_compute_tariff(self):
         result = run_episode(Workshop(fixture(),protocol_executor),ReferencePolicy('cheap'),2.5)
         self.assertEqual(result['compute_units'],result['steps']*2.5)
+
+    def test_versioned_route_fallback(self):
+        # Artificial public late state: subset already committed, zero work.
+        world = Workshop(fixture(),protocol_executor)
+        o = world.observe()
+        for row in o.item_inventory:
+            o = world.step(Action('inspect',{'target':row['handle']}))
+        o = world.step(Action('commit_subset',{'items':('c','b')}))
+        o = world.step(Action('inspect',{'target':'map'}))
+        o = replace(o,remaining_work=0)
+        old = ReferencePolicy('always_tool')
+        new = FallbackReferencePolicy('always_tool')
+        # First build remains valid; force public route draft to test no calls.
+        o = world.step(old.choose(o))
+        o = replace(o,remaining_work=0)
+        self.assertEqual(old.choose(o).kind,'abstain')
+        self.assertEqual(new.choose(o).kind,'move')
+        self.assertIsInstance(make_reference('cheap_first_fallback_v2'),FallbackReferencePolicy)
 
     def test_bad_mode(self):
         with self.assertRaises(ValueError):
