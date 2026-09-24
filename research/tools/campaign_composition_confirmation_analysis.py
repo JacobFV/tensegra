@@ -130,9 +130,19 @@ def analyze_lineage(base, replicate, main=True):
             labels_by_view[view] = truth
             for delay in DELAYS:
                 pred = array(cell['result']['cells'][delay]['predictions'])
+                scores = array(cell['result']['cells'][delay]['scores'])
+                supplied_values = array(cell['result']['values'])
+                scalar_valid = np.isfinite(scores).all(axis=1) & np.isfinite(supplied_values)
+                scalar_prediction = np.full(n,-1,dtype=int)
+                scalar_prediction[scalar_valid] = scores[scalar_valid].argmax(axis=1)
+                actual_value_class = np.full(n,-1,dtype=int)
+                actual_value_class[scalar_valid] = (2*supplied_values[scalar_valid]+16).astype(int)
                 joint = int(((pred == truth) & full).sum())
                 result['hybrid_cells'].append(dict(view=view,distractors=distractors,delay=delay,
                     answer=counts(pred,truth), joint_correct=joint, ordered_lowering_correct=int(full.sum()),
+                    scalar=dict(attempted=n,supplied_and_scored=int(scalar_valid.sum()),
+                        correct_actual_return=int(((scalar_prediction==actual_value_class)&scalar_valid).sum()),
+                        correct_requested_value=int((scalar_prediction==array(cell['labels']['value'])).sum())),
                     correct_lowering_answer_correct=joint, correct_lowering_support=int(full.sum()),
                     required_joint_correct=(98*n+99)//100, joint_pass=joint >= (98*n+99)//100))
                 correct[f'workspace/{view}/d{distractors}/t{delay}'] = pred == truth
@@ -209,7 +219,7 @@ def analyze_lineage(base, replicate, main=True):
 
 
 def overlap_report(audits):
-    result={'per_lineage':{},'cross_lineage':[], 'inherited_overlap':'unmeasured; not zero',
+    result={'per_lineage':{},'cross_lineage':[], 'cross_lineage_test_test':[], 'inherited_overlap':'unmeasured; not zero',
         'scope':'typed ordered finite-domain operation/operand signatures, optionally exact query; no OOD claim'}
     for replicate,arms in audits.items():
         result['per_lineage'][replicate]={}
@@ -232,6 +242,11 @@ def overlap_report(audits):
                         result['cross_lineage'].append(dict(test_lineage=replicate,train_lineage=other,arm=arm,
                             signature=kind,view=view,test_events=events,test_distinct=len(test),
                             shared_distinct=len(shared),overlap_events=overlap,overlap_fraction=overlap/events))
+                        other_test=set(other_arms[arm]['audits'][kind]['populations']['validation/'+view]['signature_counts'])
+                        shared_test=set(test)&other_test
+                        result['cross_lineage_test_test'].append(dict(test_lineage=replicate,other_test_lineage=other,
+                            arm=arm,signature=kind,view=view,test_events=events,test_distinct=len(test),
+                            shared_distinct=len(shared_test),overlap_events=sum(test[k] for k in shared_test)))
     return result
 
 
