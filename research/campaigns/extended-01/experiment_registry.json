@@ -698,17 +698,18 @@
     },
     {
       "id": "R11",
-      "status": "prepared_independent_review_pending",
+      "status": "profile_ready_reviewed",
       "hypothesis": "Remaining fixed-feature scalar errors partly reflect incomplete optimizer acquisition rather than missing scalar information",
       "intervention": "Exact replay R10 3600 AdamW steps, then matched3600-step constant.003 versus decayed.0003 forks",
       "comparator": "Unchanged3600 reference and same-exposure constant fork",
       "observable_inputs": "Frozen1024-dimensional workspace features of public typed events; no new phase or runtime information",
       "privileged_targets": "Scalar class training and balanced population selection",
       "protocol": "returns/R11-protocol.md",
-      "source": "8a8cdd0b",
+      "source": "a7f99f05",
       "selection": "Fixed7200endpoint; reused development calibration only; all mixture>=98%, worstgrid>=122/128 and fittingd16>=99.8%; fresh confirmation required for promotion",
-      "budget": "Mechanical60s proposed; main cap180 tentative after measured profile; no release",
-      "next_branch": "Stop after bounded diagnostic or register fresh confirmation if declared screen passes; no historical gate change"
+      "budget": "Profile60 allocated after independent preflight; main cap180 tentative after measured profile",
+      "next_branch": "Stop after bounded diagnostic or register fresh confirmation if declared screen passes; no historical gate change",
+      "audit": "review/R11-preflight.json"
     }
   ],
   "policy": {

@@ -10,8 +10,8 @@
     "attention": 10800,
     "adaptive_flex": 5760
   },
-  "charged_seconds": 21842.150756749,
-  "reserved_running_seconds": 420.0,
+  "charged_seconds": 21982.295713585012,
+  "reserved_running_seconds": 120.0,
   "jobs": [
     {
       "id": "R01-profile",
@@ -1049,11 +1049,22 @@
       "seconds": 336.333546519,
       "receipt": "research/results/campaign-01/attention/a14/1403/receipt.json",
       "recorded_utc": "2026-09-24T08:20:23.950601+00:00"
+    },
+    {
+      "id": "S12-rename",
+      "kind": "frozen_diagnostic",
+      "source": "e28c9934",
+      "cap_seconds": 420.0,
+      "released_utc": "2026-09-24T08:20:23.972031+00:00",
+      "status": "completed",
+      "seconds": 140.14495683601126,
+      "receipt": "research/results/campaign-01/semantics/s12-renamed-inference/s12-renamed-main-v1.occupancy.json",
+      "recorded_utc": "2026-09-24T08:25:01.903968+00:00"
     }
   ],
-  "cpu_audit_seconds": 3298.685683551701,
+  "cpu_audit_seconds": 3301.8090536467316,
   "accounting": "Monotonic process occupancy includes initialization/training/evaluation/failed runs/export; profiles charged. Serial GPU only. Unmeasured failures receive conservative charges.",
-  "projected_ready_caps_seconds": 1740,
+  "projected_ready_caps_seconds": 1260,
   "accounting_notes": "Ready caps are estimates, not completed charges or concurrent reservations. Only queue.running may use GPU.",
   "cpu_integration_test_seconds": 148.05,
   "cpu_experiments": [
@@ -1171,10 +1182,9 @@
     }
   ],
   "projection_detail": {
-    "A14-references": 120,
     "S13-english": 600,
     "S13-mixed": 600,
-    "S12-rename": 420
+    "R11-profile": 60
   },
   "interruption": {
     "reason": "usage credits exhausted; user recharged and requested continuation",
@@ -1182,5 +1192,5 @@
     "reconciled_utc": "2026-09-24T04:48:22Z",
     "note": "No running experiment at reconciliation. Deadline unchanged; idle interval not GPU occupancy. A08 profile full outer timing missing: charged conservative60-second cap."
   },
-  "projected_pending_cap_seconds": 1740
+  "projected_pending_cap_seconds": 1260
 }
