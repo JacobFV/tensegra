@@ -81,3 +81,43 @@ def test_address_stream_independent_and_repeatable():
     from topoformer.campaign02_training import independent_address_seed
     assert independent_address_seed(1, "a") == independent_address_seed(1, "a")
     assert len({independent_address_seed(1, "a"), independent_address_seed(2, "a"), independent_address_seed(1, "b")}) == 3
+
+
+def test_batched_on_policy_hidden_identity_gradients_and_rewards():
+    from topoformer.campaign02_training import batched_on_policy, actor_critic_terms
+    torch.manual_seed(12)
+    def factory(seed):
+        return Workshop(generate_world(seed, choices=1+seed%2, step_limit=2+seed%2))
+    obs = factory(10).observe()
+    model = CandidatePolicy(PolicyConfig(len(encode_observation(obs)),
+        len(encode_action(obs, action_catalog(obs)[0])), width=8, heads=2, family="recurrent"))
+    original = model.score
+    def prefer_verify(*args, **kwargs):
+        logits, value, hidden = original(*args, **kwargs)
+        offset = torch.zeros_like(logits)
+        offset[:, 0] = 100  # Fixture: incomplete verification keeps worlds alive.
+        return logits+offset, value, hidden
+    model.score = prefer_verify
+    batch, terms = batched_on_policy(model, [factory(10), factory(11)], max_steps=4,
+                                    bptt_steps=1, sample=False)
+    assert [len(t) for t in terms] == [2, 3]
+    for i, seed in enumerate((10, 11)):
+        serial, serial_terms = live_episode(model, factory(seed), max_steps=4,
+            sample=False, gradients=True, bptt_steps=1)
+        assert [r["action"] for r in batch[i]["trace"]] == [r["action"] for r in serial["trace"]]
+        assert torch.allclose(torch.stack([r[1] for r in terms[i]]),
+                              torch.stack([r[1] for r in serial_terms]), atol=1e-5)
+        assert sum(r[3] for r in terms[i]) == pytest.approx(batch[i]["outcome"]["utility"])
+    loss = torch.stack([term for episode in terms for term in actor_critic_terms(episode, TrainConfig(width=8))]).mean()
+    loss.backward()
+    assert torch.isfinite(loss)
+    assert model.value[-1].weight.grad.abs().sum() > 0
+    assert all(torch.isfinite(p.grad).all() for p in model.parameters() if p.grad is not None)
+
+
+def test_actor_critic_reward_to_go_not_repeated_total():
+    from topoformer.campaign02_training import actor_critic_terms
+    cfg = TrainConfig(width=8, entropy_weight=0, value_weight=1)
+    terms = [(torch.tensor(0.), torch.tensor(0.), torch.tensor(0.), -.1),
+             (torch.tensor(0.), torch.tensor(0.), torch.tensor(0.), .9)]
+    assert [float(v) for v in actor_critic_terms(terms, cfg)] == pytest.approx([.81, .64])

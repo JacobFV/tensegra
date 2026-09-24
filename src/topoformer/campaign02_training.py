@@ -45,10 +45,13 @@ class TrainConfig:
     evaluation_batch: int = 32
     training_seed_start: int | None = None
     neural_work_per_forward: float = 1.0
+    rollout_mode: str = "serial"
 
     def __post_init__(self):
         if not math.isfinite(self.neural_work_per_forward) or self.neural_work_per_forward < 0:
             raise ValueError("Invalid frozen neural tariff")
+        if self.rollout_mode not in {"serial", "batched"}:
+            raise ValueError("Unknown on-policy rollout mode")
         if self.method not in {"supervised", "actor_critic"}:
             raise ValueError("Unknown learning method")
         if min(self.width, self.batch_size, self.max_steps, self.bptt_steps, self.evaluation_batch) < 1 or self.learning_rate <= 0:
@@ -208,6 +211,76 @@ def batched_episodes(model, environments, *, device="cpu", max_steps=64, neural_
             for i, (trace, env, obs) in enumerate(zip(traces, environments, observations))]
 
 
+def batched_on_policy(model, environments, *, device="cpu", max_steps=64,
+                      neural_work_per_forward=1.0, bptt_steps=8, sample=True):
+    """Differentiable current-state-only rollouts with one RNG draw per batch.
+
+    This is an explicit alternative to serial episode sampling: categorical RNG
+    draws are consumed by time then active episode, so identical seeds do not
+    imply identical sampled trajectories across the two algorithms. Episodes
+    retain independent hidden rows; gradients never cross episode identities.
+    """
+    observations = [env.observe() for env in environments]
+    traces, terms = [[] for _ in environments], [[] for _ in environments]
+    previous_utilities = [0.0 for _ in environments]
+    hidden = None
+    cpu_start, wall_start = time.process_time(), time.perf_counter()
+    for step in range(max_steps):
+        active = [i for i, observation in enumerate(observations) if not observation.done]
+        if not active:
+            break
+        if hidden is not None and step % bptt_steps == 0:
+            hidden = hidden.detach()
+        public = [public_frame(observations[i]) for i in active]
+        neural_start = time.perf_counter()
+        batch = collate([Frame(obs, features, 0) for _, obs, features in public], device)
+        indices = torch.tensor(active, device=device)
+        current_hidden = None if hidden is None else hidden.index_select(0, indices)
+        logits, values, next_hidden = model.score(batch[0], batch[1], current_hidden, batch[2])
+        distribution = torch.distributions.Categorical(logits=logits)
+        selected = distribution.sample() if sample else logits.argmax(-1)
+        logp, entropy = distribution.log_prob(selected), distribution.entropy()
+        chosen = selected.detach().cpu().tolist()
+        probabilities = distribution.probs.gather(1, selected[:, None]).squeeze(1).detach().cpu().tolist()
+        neural_wall = time.perf_counter()-neural_start
+        if next_hidden is not None:
+            if hidden is None:
+                hidden = next_hidden.new_zeros((len(environments), *next_hidden.shape[1:]))
+            # Functional update: do not mutate a tensor saved by autograd.
+            hidden = hidden.index_copy(0, indices, next_hidden)
+        for row, index in enumerate(active):
+            before = observations[index]
+            action = public[row][0][chosen[row]]
+            environments[index].charge_compute(neural_work_per_forward)
+            after = environments[index].step(action)
+            observations[index] = after
+            utility = float(environments[index].evaluate()["utility"])
+            terms[index].append((logp[row], values[row], entropy[row], utility-previous_utilities[index]))
+            previous_utilities[index] = utility
+            traces[index].append({"step": step, "observation": before.to_dict(), "action": asdict(action),
+                "action_index": chosen[row], "candidate_count": len(public[row][0]), "probability": probabilities[row],
+                "neural_work_units": neural_work_per_forward, "neural_forward_wall_seconds_allocated": neural_wall/len(active),
+                "active_batch_size": len(active), "remaining_steps": after.remaining_steps,
+                "remaining_work": after.remaining_work, "feedback": after.feedback})
+    timing = {"batch_process_cpu_seconds": time.process_time()-cpu_start,
+              "batch_wall_seconds": time.perf_counter()-wall_start, "batch_size": len(environments),
+              "neural_timing_scope": "collate/device+model+CPU sampling sync; equally allocated, not serial latency"}
+    results = [{"trace": trace, "outcome": env.evaluate(), "truncated": not observation.done,
+                "timing": timing if i == 0 else None}
+               for i, (trace, env, observation) in enumerate(zip(traces, environments, observations))]
+    return results, terms
+
+
+def actor_critic_terms(episode_terms, config):
+    """Undiscounted return-to-go of incremental utility, not repeated totals."""
+    future_reward, losses = 0.0, []
+    for logp, value, entropy, reward_delta in reversed(episode_terms):
+        future_reward += reward_delta
+        advantage = value.new_tensor(future_reward)-value
+        losses.append(-logp*advantage.detach()+config.value_weight*advantage.square()-config.entropy_weight*entropy)
+    return losses
+
+
 class Learner:
     def __init__(self, model, config: TrainConfig):
         self.model, self.config = model.to(config.device), config
@@ -224,27 +297,34 @@ class Learner:
         start_cpu, start_wall = time.process_time(), time.perf_counter()
         for _ in range(updates):
             trajectories, outcomes, terms = [], [], []
-            for _ in range(cfg.batch_size):
-                seed = self.seed_cursor
-                self.seed_cursor += 1
-                env = world_factory(seed)
-                if cfg.method == "supervised":
-                    if teacher_factory is None:
-                        raise ValueError("Supervised bootstrap needs an explicit public teacher")
-                    frames, result = collect_teacher(env, teacher_factory(), cfg.max_steps)
-                    trajectories.append(frames)
-                    self.data_hash.update(json.dumps(result["steps"], sort_keys=True).encode())
-                else:
-                    result, episode_terms = live_episode(self.model, env, device=cfg.device,
-                        max_steps=cfg.max_steps, sample=True, gradients=True, neural_work_per_forward=cfg.neural_work_per_forward, bptt_steps=cfg.bptt_steps)
-                    future_reward = 0.0
-                    for logp, value, entropy, reward_delta in reversed(episode_terms):
-                        future_reward += reward_delta
-                        advantage = value.new_tensor(future_reward) - value
-                        terms.append(-logp * advantage.detach() + cfg.value_weight * advantage.square()
-                                     - cfg.entropy_weight * entropy)
+            if cfg.method == "actor_critic" and cfg.rollout_mode == "batched":
+                seeds = list(range(self.seed_cursor, self.seed_cursor+cfg.batch_size))
+                self.seed_cursor += cfg.batch_size
+                results, all_terms = batched_on_policy(self.model, [world_factory(seed) for seed in seeds],
+                    device=cfg.device, max_steps=cfg.max_steps, neural_work_per_forward=cfg.neural_work_per_forward,
+                    bptt_steps=cfg.bptt_steps)
+                for result, episode_terms in zip(results, all_terms):
+                    terms.extend(actor_critic_terms(episode_terms, cfg))
                     self.data_hash.update(json.dumps(result["trace"], sort_keys=True).encode())
-                outcomes.append(result["outcome"])
+                    outcomes.append(result["outcome"])
+            else:
+                for _ in range(cfg.batch_size):
+                    seed = self.seed_cursor
+                    self.seed_cursor += 1
+                    env = world_factory(seed)
+                    if cfg.method == "supervised":
+                        if teacher_factory is None:
+                            raise ValueError("Supervised bootstrap needs an explicit public teacher")
+                        frames, result = collect_teacher(env, teacher_factory(), cfg.max_steps)
+                        trajectories.append(frames)
+                        self.data_hash.update(json.dumps(result["steps"], sort_keys=True).encode())
+                    else:
+                        result, episode_terms = live_episode(self.model, env, device=cfg.device,
+                            max_steps=cfg.max_steps, sample=True, gradients=True,
+                            neural_work_per_forward=cfg.neural_work_per_forward, bptt_steps=cfg.bptt_steps)
+                        terms.extend(actor_critic_terms(episode_terms, cfg))
+                        self.data_hash.update(json.dumps(result["trace"], sort_keys=True).encode())
+                    outcomes.append(result["outcome"])
             if cfg.method == "supervised":
                 loss, count = supervised_loss(self.model, trajectories, cfg.device, cfg.bptt_steps)
             else:
@@ -262,6 +342,7 @@ class Learner:
                 "unique_training_episodes": self.episodes, "loss": float(loss.detach()), "gradient_norm": float(norm),
                 "mean_training_utility": sum(o["utility"] for o in outcomes)/len(outcomes),
                 "training_success": sum(o["verified_success"] for o in outcomes)/len(outcomes),
+                "rollout_mode": cfg.rollout_mode if cfg.method == "actor_critic" else None,
                 "behavior_source": "supplied_public_teacher" if cfg.method == "supervised" else "sampled_learned_policy",
                 "training_utility_scope": "teacher world outcome, not learned closed-loop performance" if cfg.method == "supervised" else "learned on-policy outcome including fixed neural tariff",
                 "supervised_target_decisions": count if cfg.method == "supervised" else 0,
@@ -352,6 +433,7 @@ def main():
     parser.add_argument("--width", type=int, default=1024)
     parser.add_argument("--family", choices=("lightweight", "recurrent"), default="lightweight")
     parser.add_argument("--method", choices=("supervised", "actor_critic"), default="supervised")
+    parser.add_argument("--rollout-mode", choices=("serial", "batched"), default="serial")
     parser.add_argument("--teacher", choices=("always_tool", "cheap_first", "cheap", "cheap_first_fallback_v2"), default="always_tool")
     parser.add_argument("--executor", choices=("isolated", "persistent"), default="persistent")
     parser.add_argument("--learning-rate", type=float, default=3e-4)
@@ -379,7 +461,7 @@ def main():
     torch.manual_seed(args.seed)
     cfg = TrainConfig(seed=args.seed, width=args.width, family=args.family, batch_size=args.batch,
         method=args.method, device=args.device, learning_rate=args.learning_rate, max_steps=args.max_steps,
-        bptt_steps=args.bptt_steps, evaluation_batch=args.evaluation_batch, training_seed_start=args.training_seed_start, neural_work_per_forward=args.neural_work_per_forward)
+        bptt_steps=args.bptt_steps, evaluation_batch=args.evaluation_batch, training_seed_start=args.training_seed_start, neural_work_per_forward=args.neural_work_per_forward, rollout_mode=args.rollout_mode)
     world_kwargs = json.loads(args.world_json)
     args.output.mkdir(parents=True, exist_ok=True)
     manager = BoundedSolver() if args.executor == "persistent" else nullcontext(None)
