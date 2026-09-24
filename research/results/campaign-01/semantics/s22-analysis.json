@@ -1,0 +1,2942 @@
+{
+  "scope": "Exploratory privileged NODE-boundary diagnostic on inspected S21 DEV and fixed checkpoints. No training, calibration, promotion gate, or public-only structural-transfer claim. Conditional on supplied count/kinds/full nodes as named. Strict raw codec/checkpoint audit independent.",
+  "analysis_sha256": "7ad77fa0b671238382d994f44b3edcdbe2f2cec05eff9cb77d650c7939f63ff3",
+  "config_sha256": "911a70787dfd31bd1225c04cc2d7c4c2a8b9d721396c12a754d47f1cacfb910e",
+  "manifest_sha256": "16db751e339d6c19a739c8adaf007bbc11ea7d6579af771c0131d52edd86fc7d",
+  "receipt_sha256": "3016fc754a7fe66efa74e9cf972ad54139de79a65e2da957859f39c96bffb984",
+  "artifact_inventory": {
+    "original/public": {
+      "path": "../campaign-s16/research/results/campaign-01/semantics/s21-main/s21-main-v1/original/development-u4096.json.gz",
+      "sha256": "a74aa350c6790ad12fa431f51ae6fbdfc1a253712875956beb5ed1963945e2f3"
+    },
+    "original/oracle_node_count": {
+      "path": "../campaign-s16/research/results/campaign-01/semantics/s22-main/s22-main-v1/original/oracle_node_count.json.gz",
+      "sha256": "de1b863614e1d9ec38aba9f20359b6dbb739f98675df88c7680726ef85bf62de"
+    },
+    "original/oracle_node_kinds": {
+      "path": "../campaign-s16/research/results/campaign-01/semantics/s22-main/s22-main-v1/original/oracle_node_kinds.json.gz",
+      "sha256": "eaaeb19a7c13ba4af9af0457b10722089ecc1270fd8c2073167253737236d068"
+    },
+    "original/oracle_node_prefix": {
+      "path": "../campaign-s16/research/results/campaign-01/semantics/s22-main/s22-main-v1/original/oracle_node_prefix.json.gz",
+      "sha256": "d6fefcff9d00136b446556618d31a655e8f34e9dfb43883a0d89472f9d96318c"
+    },
+    "broad/public": {
+      "path": "../campaign-s16/research/results/campaign-01/semantics/s21-main/s21-main-v1/broad/development-u4096.json.gz",
+      "sha256": "15777b9714c648144304e36041ed419eb11bceeffe92ef0063da9a2229573502"
+    },
+    "broad/oracle_node_count": {
+      "path": "../campaign-s16/research/results/campaign-01/semantics/s22-main/s22-main-v1/broad/oracle_node_count.json.gz",
+      "sha256": "248d5415ac786c3bca1edac7b712a6a2df3449a1399ca95ca99f688431c15b80"
+    },
+    "broad/oracle_node_kinds": {
+      "path": "../campaign-s16/research/results/campaign-01/semantics/s22-main/s22-main-v1/broad/oracle_node_kinds.json.gz",
+      "sha256": "666cf02eab894701d49b133396b0a2fb92c0a69c47c07d1a99771b1dfcded200"
+    },
+    "broad/oracle_node_prefix": {
+      "path": "../campaign-s16/research/results/campaign-01/semantics/s22-main/s22-main-v1/broad/oracle_node_prefix.json.gz",
+      "sha256": "456a3ea3b1e949d3f1b79cb7e8f6fb0beae78710e03a72b2f2d18a279ddd22ef"
+    }
+  },
+  "public_baseline_counts": {
+    "original": {
+      "2x4": 0,
+      "3x3": 507,
+      "3x4": 0,
+      "4x3": 507,
+      "4x4": 455,
+      "5x3": 0,
+      "5x4": 0
+    },
+    "broad": {
+      "2x4": 504,
+      "3x3": 505,
+      "3x4": 0,
+      "4x3": 502,
+      "4x4": 436,
+      "5x3": 504,
+      "5x4": 437
+    }
+  },
+  "results": {
+    "original": {
+      "oracle_node_count": {
+        "examples": 3584,
+        "valid": 3190,
+        "complete": 1469,
+        "exact_nodes": 1509,
+        "exact_relations": 1470,
+        "exact_components": {
+          "presence": 3190,
+          "kind": 1528,
+          "value": 1529,
+          "copy": 1509,
+          "edges": 1470,
+          "slots": 1525
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 276,
+          "duplicate_edge": 96,
+          "historical metric cannot express multiple pair-slot labels": 22
+        },
+        "controller_stats": {
+          "supplied_node_count": 116867,
+          "forced_node_tags": 116867,
+          "tag_replacements": 1506,
+          "forced_node_kinds": 0,
+          "kind_replacements": 0,
+          "supplied_prefix_records": 0,
+          "prefix_value_replacements": 0,
+          "prefix_copy_replacements": 0,
+          "node_suppression_steps": 220324,
+          "node_suppression_replacements": 1096
+        },
+        "macro_graph_f1_invalid_zero": {
+          "node": 0.8900669642857143,
+          "typed_edge": 0.6030091343685561,
+          "ordered_edge": 0.5139172484533996
+        },
+        "first_failed_semantic_id": "00694163272cce478219234470cc78623e54024f5fba24bc7ea2fd3b521fef85",
+        "cells": {
+          "2x4": {
+            "examples": 512,
+            "valid": 401,
+            "complete": 0,
+            "exact_nodes": 0,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 401,
+              "kind": 0,
+              "value": 0,
+              "copy": 0,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 68,
+              "duplicate_edge": 41,
+              "historical metric cannot express multiple pair-slot labels": 2
+            },
+            "controller_stats": {
+              "supplied_node_count": 13194,
+              "forced_node_tags": 13194,
+              "tag_replacements": 53,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 16826,
+              "node_suppression_replacements": 263
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.783203125,
+              "typed_edge": 0.19378890046275493,
+              "ordered_edge": 0.1264336190631421
+            },
+            "first_failed_semantic_id": "01068dbbb282c5ca0bdd4ebbf6c3530f2742870c4fb8b8bd99e998a69e113243"
+          },
+          "3x3": {
+            "examples": 512,
+            "valid": 511,
+            "complete": 507,
+            "exact_nodes": 510,
+            "exact_relations": 507,
+            "exact_components": {
+              "presence": 511,
+              "kind": 510,
+              "value": 510,
+              "copy": 510,
+              "edges": 507,
+              "slots": 510
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 1
+            },
+            "controller_stats": {
+              "supplied_node_count": 13618,
+              "forced_node_tags": 13618,
+              "tag_replacements": 0,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 29945,
+              "node_suppression_replacements": 1
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.998046875,
+              "typed_edge": 0.9959601732084449,
+              "ordered_edge": 0.99609375
+            },
+            "first_failed_semantic_id": "0f0a1c09f6daf0fec3edb7734946734fa225a7893c8a924ae4655d8972c8008c"
+          },
+          "3x4": {
+            "examples": 512,
+            "valid": 452,
+            "complete": 0,
+            "exact_nodes": 0,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 452,
+              "kind": 0,
+              "value": 0,
+              "copy": 0,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 54,
+              "duplicate_edge": 4,
+              "historical metric cannot express multiple pair-slot labels": 2
+            },
+            "controller_stats": {
+              "supplied_node_count": 15930,
+              "forced_node_tags": 15930,
+              "tag_replacements": 153,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 33423,
+              "node_suppression_replacements": 160
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.8828125,
+              "typed_edge": 0.519402446560392,
+              "ordered_edge": 0.24392642277648835
+            },
+            "first_failed_semantic_id": "0075944ca6aca5a658ac70218ad3e34bf5cd1e42eddd1ea7e6d8042947814d04"
+          },
+          "4x3": {
+            "examples": 512,
+            "valid": 511,
+            "complete": 507,
+            "exact_nodes": 510,
+            "exact_relations": 507,
+            "exact_components": {
+              "presence": 511,
+              "kind": 511,
+              "value": 511,
+              "copy": 510,
+              "edges": 507,
+              "slots": 510
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 1
+            },
+            "controller_stats": {
+              "supplied_node_count": 15911,
+              "forced_node_tags": 15911,
+              "tag_replacements": 0,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 36390,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.998046875,
+              "typed_edge": 0.9978224248115505,
+              "ordered_edge": 0.9977921195652174
+            },
+            "first_failed_semantic_id": "20fd628380777f7268eadbf9211884e008014cce62133ace144dac6b86e1ddd0"
+          },
+          "4x4": {
+            "examples": 512,
+            "valid": 509,
+            "complete": 455,
+            "exact_nodes": 489,
+            "exact_relations": 456,
+            "exact_components": {
+              "presence": 509,
+              "kind": 507,
+              "value": 508,
+              "copy": 489,
+              "edges": 456,
+              "slots": 505
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 3
+            },
+            "controller_stats": {
+              "supplied_node_count": 18644,
+              "forced_node_tags": 18644,
+              "tag_replacements": 0,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 43641,
+              "node_suppression_replacements": 1
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.994140625,
+              "typed_edge": 0.9904150697415537,
+              "ordered_edge": 0.9917689732142857
+            },
+            "first_failed_semantic_id": "08a76cedd170d7ccf6333af786efccff7ec478beb029a2d348fdbe7ec335c055"
+          },
+          "5x3": {
+            "examples": 512,
+            "valid": 357,
+            "complete": 0,
+            "exact_nodes": 0,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 357,
+              "kind": 0,
+              "value": 0,
+              "copy": 0,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 149,
+              "duplicate_edge": 6
+            },
+            "controller_stats": {
+              "supplied_node_count": 18216,
+              "forced_node_tags": 18216,
+              "tag_replacements": 266,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 29540,
+              "node_suppression_replacements": 281
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.697265625,
+              "typed_edge": 0.22216455603077973,
+              "ordered_edge": 0.11907739251489251
+            },
+            "first_failed_semantic_id": "00d4560fb04fa27096d9639f0e7337c5704b6b4f25ff319b5e35637fb98d44b2"
+          },
+          "5x4": {
+            "examples": 512,
+            "valid": 449,
+            "complete": 0,
+            "exact_nodes": 0,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 449,
+              "kind": 0,
+              "value": 0,
+              "copy": 0,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "duplicate_edge": 45,
+              "historical metric cannot express multiple pair-slot labels": 18
+            },
+            "controller_stats": {
+              "supplied_node_count": 21354,
+              "forced_node_tags": 21354,
+              "tag_replacements": 1034,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 30559,
+              "node_suppression_replacements": 390
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.876953125,
+              "typed_edge": 0.3015103697644165,
+              "ordered_edge": 0.12232846203977077
+            },
+            "first_failed_semantic_id": "00694163272cce478219234470cc78623e54024f5fba24bc7ea2fd3b521fef85"
+          }
+        }
+      },
+      "oracle_node_kinds": {
+        "examples": 3584,
+        "valid": 2730,
+        "complete": 1469,
+        "exact_nodes": 1509,
+        "exact_relations": 1471,
+        "exact_components": {
+          "presence": 2730,
+          "kind": 2730,
+          "value": 2039,
+          "copy": 1509,
+          "edges": 1471,
+          "slots": 1526
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 776,
+          "duplicate_edge": 71,
+          "historical metric cannot express multiple pair-slot labels": 7
+        },
+        "controller_stats": {
+          "supplied_node_count": 116867,
+          "forced_node_tags": 116867,
+          "tag_replacements": 2083,
+          "forced_node_kinds": 116867,
+          "kind_replacements": 18677,
+          "supplied_prefix_records": 0,
+          "prefix_value_replacements": 0,
+          "prefix_copy_replacements": 0,
+          "node_suppression_steps": 258174,
+          "node_suppression_replacements": 10
+        },
+        "macro_graph_f1_invalid_zero": {
+          "node": 0.76171875,
+          "typed_edge": 0.6090881325655663,
+          "ordered_edge": 0.5153572346283619
+        },
+        "first_failed_semantic_id": "00694163272cce478219234470cc78623e54024f5fba24bc7ea2fd3b521fef85",
+        "cells": {
+          "2x4": {
+            "examples": 512,
+            "valid": 156,
+            "complete": 0,
+            "exact_nodes": 0,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 156,
+              "kind": 156,
+              "value": 144,
+              "copy": 0,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 321,
+              "duplicate_edge": 34,
+              "historical metric cannot express multiple pair-slot labels": 1
+            },
+            "controller_stats": {
+              "supplied_node_count": 13194,
+              "forced_node_tags": 13194,
+              "tag_replacements": 15,
+              "forced_node_kinds": 13194,
+              "kind_replacements": 3814,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 28337,
+              "node_suppression_replacements": 1
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.3046875,
+              "typed_edge": 0.1574153782644155,
+              "ordered_edge": 0.09528590211879305
+            },
+            "first_failed_semantic_id": "01068dbbb282c5ca0bdd4ebbf6c3530f2742870c4fb8b8bd99e998a69e113243"
+          },
+          "3x3": {
+            "examples": 512,
+            "valid": 510,
+            "complete": 507,
+            "exact_nodes": 510,
+            "exact_relations": 507,
+            "exact_components": {
+              "presence": 510,
+              "kind": 510,
+              "value": 510,
+              "copy": 510,
+              "edges": 507,
+              "slots": 510
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 2
+            },
+            "controller_stats": {
+              "supplied_node_count": 13618,
+              "forced_node_tags": 13618,
+              "tag_replacements": 0,
+              "forced_node_kinds": 13618,
+              "kind_replacements": 2,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 29999,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.99609375,
+              "typed_edge": 0.9959601732084449,
+              "ordered_edge": 0.99609375
+            },
+            "first_failed_semantic_id": "0f0a1c09f6daf0fec3edb7734946734fa225a7893c8a924ae4655d8972c8008c"
+          },
+          "3x4": {
+            "examples": 512,
+            "valid": 372,
+            "complete": 0,
+            "exact_nodes": 0,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 372,
+              "kind": 372,
+              "value": 195,
+              "copy": 0,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 138,
+              "historical metric cannot express multiple pair-slot labels": 1,
+              "duplicate_edge": 1
+            },
+            "controller_stats": {
+              "supplied_node_count": 15930,
+              "forced_node_tags": 15930,
+              "tag_replacements": 332,
+              "forced_node_kinds": 15930,
+              "kind_replacements": 3001,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 35315,
+              "node_suppression_replacements": 6
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.7265625,
+              "typed_edge": 0.4468884128916901,
+              "ordered_edge": 0.21224300094142842
+            },
+            "first_failed_semantic_id": "0075944ca6aca5a658ac70218ad3e34bf5cd1e42eddd1ea7e6d8042947814d04"
+          },
+          "4x3": {
+            "examples": 512,
+            "valid": 511,
+            "complete": 507,
+            "exact_nodes": 510,
+            "exact_relations": 507,
+            "exact_components": {
+              "presence": 511,
+              "kind": 511,
+              "value": 511,
+              "copy": 510,
+              "edges": 507,
+              "slots": 510
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 1
+            },
+            "controller_stats": {
+              "supplied_node_count": 15911,
+              "forced_node_tags": 15911,
+              "tag_replacements": 0,
+              "forced_node_kinds": 15911,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 36390,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.998046875,
+              "typed_edge": 0.9978224248115505,
+              "ordered_edge": 0.9977921195652174
+            },
+            "first_failed_semantic_id": "20fd628380777f7268eadbf9211884e008014cce62133ace144dac6b86e1ddd0"
+          },
+          "4x4": {
+            "examples": 512,
+            "valid": 509,
+            "complete": 455,
+            "exact_nodes": 489,
+            "exact_relations": 457,
+            "exact_components": {
+              "presence": 509,
+              "kind": 509,
+              "value": 509,
+              "copy": 489,
+              "edges": 457,
+              "slots": 506
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 3
+            },
+            "controller_stats": {
+              "supplied_node_count": 18644,
+              "forced_node_tags": 18644,
+              "tag_replacements": 0,
+              "forced_node_kinds": 18644,
+              "kind_replacements": 3,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 43725,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.994140625,
+              "typed_edge": 0.9921613932709654,
+              "ordered_edge": 0.9932338169642857
+            },
+            "first_failed_semantic_id": "08a76cedd170d7ccf6333af786efccff7ec478beb029a2d348fdbe7ec335c055"
+          },
+          "5x3": {
+            "examples": 512,
+            "valid": 196,
+            "complete": 0,
+            "exact_nodes": 0,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 196,
+              "kind": 196,
+              "value": 170,
+              "copy": 0,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 311,
+              "duplicate_edge": 4,
+              "historical metric cannot express multiple pair-slot labels": 1
+            },
+            "controller_stats": {
+              "supplied_node_count": 18216,
+              "forced_node_tags": 18216,
+              "tag_replacements": 153,
+              "forced_node_kinds": 18216,
+              "kind_replacements": 4723,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 42169,
+              "node_suppression_replacements": 3
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.3828125,
+              "typed_edge": 0.21265623361055236,
+              "ordered_edge": 0.11784713898801637
+            },
+            "first_failed_semantic_id": "00d4560fb04fa27096d9639f0e7337c5704b6b4f25ff319b5e35637fb98d44b2"
+          },
+          "5x4": {
+            "examples": 512,
+            "valid": 476,
+            "complete": 0,
+            "exact_nodes": 0,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 476,
+              "kind": 476,
+              "value": 0,
+              "copy": 0,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "duplicate_edge": 32,
+              "historical metric cannot express multiple pair-slot labels": 4
+            },
+            "controller_stats": {
+              "supplied_node_count": 21354,
+              "forced_node_tags": 21354,
+              "tag_replacements": 1583,
+              "forced_node_kinds": 21354,
+              "kind_replacements": 7134,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 42239,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.9296875,
+              "typed_edge": 0.4607129119013453,
+              "ordered_edge": 0.1950049138207925
+            },
+            "first_failed_semantic_id": "00694163272cce478219234470cc78623e54024f5fba24bc7ea2fd3b521fef85"
+          }
+        }
+      },
+      "oracle_node_prefix": {
+        "examples": 3584,
+        "valid": 2712,
+        "complete": 1489,
+        "exact_nodes": 2712,
+        "exact_relations": 1489,
+        "exact_components": {
+          "presence": 2712,
+          "kind": 2712,
+          "value": 2712,
+          "copy": 2712,
+          "edges": 1489,
+          "slots": 1528
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 699,
+          "duplicate_edge": 151,
+          "historical metric cannot express multiple pair-slot labels": 22
+        },
+        "controller_stats": {
+          "supplied_node_count": 116867,
+          "forced_node_tags": 116867,
+          "tag_replacements": 6,
+          "forced_node_kinds": 116867,
+          "kind_replacements": 14006,
+          "supplied_prefix_records": 116867,
+          "prefix_value_replacements": 619,
+          "prefix_copy_replacements": 25596,
+          "node_suppression_steps": 257352,
+          "node_suppression_replacements": 50
+        },
+        "macro_graph_f1_invalid_zero": {
+          "node": 0.7566964285714286,
+          "typed_edge": 0.6288040138941108,
+          "ordered_edge": 0.5159132903186198
+        },
+        "first_failed_semantic_id": "00694163272cce478219234470cc78623e54024f5fba24bc7ea2fd3b521fef85",
+        "cells": {
+          "2x4": {
+            "examples": 512,
+            "valid": 81,
+            "complete": 0,
+            "exact_nodes": 81,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 81,
+              "kind": 81,
+              "value": 81,
+              "copy": 81,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 332,
+              "duplicate_edge": 99
+            },
+            "controller_stats": {
+              "supplied_node_count": 13194,
+              "forced_node_tags": 13194,
+              "tag_replacements": 0,
+              "forced_node_kinds": 13194,
+              "kind_replacements": 3742,
+              "supplied_prefix_records": 13194,
+              "prefix_value_replacements": 66,
+              "prefix_copy_replacements": 7411,
+              "node_suppression_steps": 26061,
+              "node_suppression_replacements": 50
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.158203125,
+              "typed_edge": 0.09199406446383462,
+              "ordered_edge": 0.05892211472482654
+            },
+            "first_failed_semantic_id": "01068dbbb282c5ca0bdd4ebbf6c3530f2742870c4fb8b8bd99e998a69e113243"
+          },
+          "3x3": {
+            "examples": 512,
+            "valid": 510,
+            "complete": 507,
+            "exact_nodes": 510,
+            "exact_relations": 507,
+            "exact_components": {
+              "presence": 510,
+              "kind": 510,
+              "value": 510,
+              "copy": 510,
+              "edges": 507,
+              "slots": 510
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 2
+            },
+            "controller_stats": {
+              "supplied_node_count": 13618,
+              "forced_node_tags": 13618,
+              "tag_replacements": 0,
+              "forced_node_kinds": 13618,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 13618,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 2,
+              "node_suppression_steps": 29998,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.99609375,
+              "typed_edge": 0.9959601732084449,
+              "ordered_edge": 0.99609375
+            },
+            "first_failed_semantic_id": "0f0a1c09f6daf0fec3edb7734946734fa225a7893c8a924ae4655d8972c8008c"
+          },
+          "3x4": {
+            "examples": 512,
+            "valid": 421,
+            "complete": 0,
+            "exact_nodes": 421,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 421,
+              "kind": 421,
+              "value": 421,
+              "copy": 421,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 87,
+              "duplicate_edge": 3,
+              "historical metric cannot express multiple pair-slot labels": 1
+            },
+            "controller_stats": {
+              "supplied_node_count": 15930,
+              "forced_node_tags": 15930,
+              "tag_replacements": 0,
+              "forced_node_kinds": 15930,
+              "kind_replacements": 1690,
+              "supplied_prefix_records": 15930,
+              "prefix_value_replacements": 56,
+              "prefix_copy_replacements": 2978,
+              "node_suppression_steps": 35724,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.822265625,
+              "typed_edge": 0.5579569616311767,
+              "ordered_edge": 0.24631461741090532
+            },
+            "first_failed_semantic_id": "0075944ca6aca5a658ac70218ad3e34bf5cd1e42eddd1ea7e6d8042947814d04"
+          },
+          "4x3": {
+            "examples": 512,
+            "valid": 511,
+            "complete": 508,
+            "exact_nodes": 511,
+            "exact_relations": 508,
+            "exact_components": {
+              "presence": 511,
+              "kind": 511,
+              "value": 511,
+              "copy": 511,
+              "edges": 508,
+              "slots": 510
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 1
+            },
+            "controller_stats": {
+              "supplied_node_count": 15911,
+              "forced_node_tags": 15911,
+              "tag_replacements": 0,
+              "forced_node_kinds": 15911,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 15911,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 1,
+              "node_suppression_steps": 36390,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.998046875,
+              "typed_edge": 0.9978503265972648,
+              "ordered_edge": 0.9977921195652174
+            },
+            "first_failed_semantic_id": "20fd628380777f7268eadbf9211884e008014cce62133ace144dac6b86e1ddd0"
+          },
+          "4x4": {
+            "examples": 512,
+            "valid": 510,
+            "complete": 474,
+            "exact_nodes": 510,
+            "exact_relations": 474,
+            "exact_components": {
+              "presence": 510,
+              "kind": 510,
+              "value": 510,
+              "copy": 510,
+              "edges": 474,
+              "slots": 508
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 2
+            },
+            "controller_stats": {
+              "supplied_node_count": 18644,
+              "forced_node_tags": 18644,
+              "tag_replacements": 0,
+              "forced_node_kinds": 18644,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 18644,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 24,
+              "node_suppression_steps": 43727,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.99609375,
+              "typed_edge": 0.9949685317513576,
+              "ordered_edge": 0.9957449776785714
+            },
+            "first_failed_semantic_id": "08a76cedd170d7ccf6333af786efccff7ec478beb029a2d348fdbe7ec335c055"
+          },
+          "5x3": {
+            "examples": 512,
+            "valid": 227,
+            "complete": 0,
+            "exact_nodes": 227,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 227,
+              "kind": 227,
+              "value": 227,
+              "copy": 227,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 275,
+              "historical metric cannot express multiple pair-slot labels": 10
+            },
+            "controller_stats": {
+              "supplied_node_count": 18216,
+              "forced_node_tags": 18216,
+              "tag_replacements": 0,
+              "forced_node_kinds": 18216,
+              "kind_replacements": 3716,
+              "supplied_prefix_records": 18216,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 5907,
+              "node_suppression_steps": 42459,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.443359375,
+              "typed_edge": 0.27905165013561556,
+              "ordered_edge": 0.13360075609117472
+            },
+            "first_failed_semantic_id": "00d4560fb04fa27096d9639f0e7337c5704b6b4f25ff319b5e35637fb98d44b2"
+          },
+          "5x4": {
+            "examples": 512,
+            "valid": 452,
+            "complete": 0,
+            "exact_nodes": 452,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 452,
+              "kind": 452,
+              "value": 452,
+              "copy": 452,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "duplicate_edge": 49,
+              "historical metric cannot express multiple pair-slot labels": 11
+            },
+            "controller_stats": {
+              "supplied_node_count": 21354,
+              "forced_node_tags": 21354,
+              "tag_replacements": 6,
+              "forced_node_kinds": 21354,
+              "kind_replacements": 4858,
+              "supplied_prefix_records": 21354,
+              "prefix_value_replacements": 497,
+              "prefix_copy_replacements": 9273,
+              "node_suppression_steps": 42993,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.8828125,
+              "typed_edge": 0.48384638947108166,
+              "ordered_edge": 0.18292469675964246
+            },
+            "first_failed_semantic_id": "00694163272cce478219234470cc78623e54024f5fba24bc7ea2fd3b521fef85"
+          }
+        }
+      }
+    },
+    "broad": {
+      "oracle_node_count": {
+        "examples": 3584,
+        "valid": 3403,
+        "complete": 2888,
+        "exact_nodes": 2980,
+        "exact_relations": 2888,
+        "exact_components": {
+          "presence": 3403,
+          "kind": 3049,
+          "value": 3050,
+          "copy": 2980,
+          "edges": 2888,
+          "slots": 3042
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 157,
+          "duplicate_edge": 23,
+          "historical metric cannot express multiple pair-slot labels": 1
+        },
+        "controller_stats": {
+          "supplied_node_count": 116867,
+          "forced_node_tags": 116867,
+          "tag_replacements": 153,
+          "forced_node_kinds": 0,
+          "kind_replacements": 0,
+          "supplied_prefix_records": 0,
+          "prefix_value_replacements": 0,
+          "prefix_copy_replacements": 0,
+          "node_suppression_steps": 257527,
+          "node_suppression_replacements": 285
+        },
+        "macro_graph_f1_invalid_zero": {
+          "node": 0.9494977678571429,
+          "typed_edge": 0.8970103614649012,
+          "ordered_edge": 0.8733228932388746
+        },
+        "first_failed_semantic_id": "0075944ca6aca5a658ac70218ad3e34bf5cd1e42eddd1ea7e6d8042947814d04",
+        "cells": {
+          "2x4": {
+            "examples": 512,
+            "valid": 510,
+            "complete": 504,
+            "exact_nodes": 510,
+            "exact_relations": 504,
+            "exact_components": {
+              "presence": 510,
+              "kind": 510,
+              "value": 510,
+              "copy": 510,
+              "edges": 504,
+              "slots": 510
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 2
+            },
+            "controller_stats": {
+              "supplied_node_count": 13194,
+              "forced_node_tags": 13194,
+              "tag_replacements": 0,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 28039,
+              "node_suppression_replacements": 1
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.99609375,
+              "typed_edge": 0.9958349778551724,
+              "ordered_edge": 0.99609375
+            },
+            "first_failed_semantic_id": "1fa3cf93f4e60c79b97b00bcc8b5a49350d37e777d9889f4b93bf2bef6102523"
+          },
+          "3x3": {
+            "examples": 512,
+            "valid": 511,
+            "complete": 505,
+            "exact_nodes": 511,
+            "exact_relations": 505,
+            "exact_components": {
+              "presence": 511,
+              "kind": 511,
+              "value": 511,
+              "copy": 511,
+              "edges": 505,
+              "slots": 511
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 1
+            },
+            "controller_stats": {
+              "supplied_node_count": 13618,
+              "forced_node_tags": 13618,
+              "tag_replacements": 0,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 30000,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.998046875,
+              "typed_edge": 0.9978441345260708,
+              "ordered_edge": 0.998046875
+            },
+            "first_failed_semantic_id": "07768d576c9fe96c9bdb77ee53e057f351fea398af5c7f5d7bddf4f04e043aeb"
+          },
+          "3x4": {
+            "examples": 512,
+            "valid": 346,
+            "complete": 0,
+            "exact_nodes": 0,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 346,
+              "kind": 0,
+              "value": 0,
+              "copy": 0,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 144,
+              "duplicate_edge": 22
+            },
+            "controller_stats": {
+              "supplied_node_count": 15930,
+              "forced_node_tags": 15930,
+              "tag_replacements": 145,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 25403,
+              "node_suppression_replacements": 273
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.67578125,
+              "typed_edge": 0.32075383242345,
+              "ordered_edge": 0.1510333069947941
+            },
+            "first_failed_semantic_id": "0075944ca6aca5a658ac70218ad3e34bf5cd1e42eddd1ea7e6d8042947814d04"
+          },
+          "4x3": {
+            "examples": 512,
+            "valid": 512,
+            "complete": 502,
+            "exact_nodes": 508,
+            "exact_relations": 502,
+            "exact_components": {
+              "presence": 512,
+              "kind": 511,
+              "value": 511,
+              "copy": 508,
+              "edges": 502,
+              "slots": 511
+            },
+            "invalid_reasons": {},
+            "controller_stats": {
+              "supplied_node_count": 15911,
+              "forced_node_tags": 15911,
+              "tag_replacements": 0,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 36391,
+              "node_suppression_replacements": 1
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 1.0,
+              "typed_edge": 0.9995797987654186,
+              "ordered_edge": 0.9998753324468085
+            },
+            "first_failed_semantic_id": "20fd628380777f7268eadbf9211884e008014cce62133ace144dac6b86e1ddd0"
+          },
+          "4x4": {
+            "examples": 512,
+            "valid": 506,
+            "complete": 436,
+            "exact_nodes": 471,
+            "exact_relations": 436,
+            "exact_components": {
+              "presence": 506,
+              "kind": 502,
+              "value": 503,
+              "copy": 471,
+              "edges": 436,
+              "slots": 500
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 6
+            },
+            "controller_stats": {
+              "supplied_node_count": 18644,
+              "forced_node_tags": 18644,
+              "tag_replacements": 4,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 43633,
+              "node_suppression_replacements": 5
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.98828125,
+              "typed_edge": 0.9830076737194672,
+              "ordered_edge": 0.9847237723214286
+            },
+            "first_failed_semantic_id": "047f31cf2cd0af82a2ab5b94665e8716878ca2c004797c6f53388bbe55b56d3f"
+          },
+          "5x3": {
+            "examples": 512,
+            "valid": 510,
+            "complete": 504,
+            "exact_nodes": 507,
+            "exact_relations": 504,
+            "exact_components": {
+              "presence": 510,
+              "kind": 510,
+              "value": 510,
+              "copy": 507,
+              "edges": 504,
+              "slots": 510
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 2
+            },
+            "controller_stats": {
+              "supplied_node_count": 18216,
+              "forced_node_tags": 18216,
+              "tag_replacements": 0,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 42789,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.99609375,
+              "typed_edge": 0.995927593759183,
+              "ordered_edge": 0.99609375
+            },
+            "first_failed_semantic_id": "1faf3752ce18980d4aa3c2eeb8d85124a21cbfdd27837da08adc465ee0b51dea"
+          },
+          "5x4": {
+            "examples": 512,
+            "valid": 508,
+            "complete": 437,
+            "exact_nodes": 473,
+            "exact_relations": 437,
+            "exact_components": {
+              "presence": 508,
+              "kind": 505,
+              "value": 505,
+              "copy": 473,
+              "edges": 437,
+              "slots": 500
+            },
+            "invalid_reasons": {
+              "historical metric cannot express multiple pair-slot labels": 1,
+              "invalid_generated_node_reference": 2,
+              "duplicate_edge": 1
+            },
+            "controller_stats": {
+              "supplied_node_count": 21354,
+              "forced_node_tags": 21354,
+              "tag_replacements": 4,
+              "forced_node_kinds": 0,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 51272,
+              "node_suppression_replacements": 5
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.9921875,
+              "typed_edge": 0.9861245192055464,
+              "ordered_edge": 0.9873934659090909
+            },
+            "first_failed_semantic_id": "0b08cc5c5aaf521a868c2e4c002b10ede47c4642eec3e58989c70a8fc3975543"
+          }
+        }
+      },
+      "oracle_node_kinds": {
+        "examples": 3584,
+        "valid": 3360,
+        "complete": 2890,
+        "exact_nodes": 2986,
+        "exact_relations": 2890,
+        "exact_components": {
+          "presence": 3360,
+          "kind": 3360,
+          "value": 3328,
+          "copy": 2986,
+          "edges": 2890,
+          "slots": 3051
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 220,
+          "duplicate_edge": 2,
+          "historical metric cannot express multiple pair-slot labels": 2
+        },
+        "controller_stats": {
+          "supplied_node_count": 116867,
+          "forced_node_tags": 116867,
+          "tag_replacements": 17,
+          "forced_node_kinds": 116867,
+          "kind_replacements": 2891,
+          "supplied_prefix_records": 0,
+          "prefix_value_replacements": 0,
+          "prefix_copy_replacements": 0,
+          "node_suppression_steps": 267555,
+          "node_suppression_replacements": 27
+        },
+        "macro_graph_f1_invalid_zero": {
+          "node": 0.9375,
+          "typed_edge": 0.9043767137869771,
+          "ordered_edge": 0.8784665408296223
+        },
+        "first_failed_semantic_id": "0075944ca6aca5a658ac70218ad3e34bf5cd1e42eddd1ea7e6d8042947814d04",
+        "cells": {
+          "2x4": {
+            "examples": 512,
+            "valid": 510,
+            "complete": 504,
+            "exact_nodes": 510,
+            "exact_relations": 504,
+            "exact_components": {
+              "presence": 510,
+              "kind": 510,
+              "value": 510,
+              "copy": 510,
+              "edges": 504,
+              "slots": 510
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 2
+            },
+            "controller_stats": {
+              "supplied_node_count": 13194,
+              "forced_node_tags": 13194,
+              "tag_replacements": 0,
+              "forced_node_kinds": 13194,
+              "kind_replacements": 1,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 28041,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.99609375,
+              "typed_edge": 0.9958349778551724,
+              "ordered_edge": 0.99609375
+            },
+            "first_failed_semantic_id": "1fa3cf93f4e60c79b97b00bcc8b5a49350d37e777d9889f4b93bf2bef6102523"
+          },
+          "3x3": {
+            "examples": 512,
+            "valid": 511,
+            "complete": 505,
+            "exact_nodes": 511,
+            "exact_relations": 505,
+            "exact_components": {
+              "presence": 511,
+              "kind": 511,
+              "value": 511,
+              "copy": 511,
+              "edges": 505,
+              "slots": 511
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 1
+            },
+            "controller_stats": {
+              "supplied_node_count": 13618,
+              "forced_node_tags": 13618,
+              "tag_replacements": 0,
+              "forced_node_kinds": 13618,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 30000,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.998046875,
+              "typed_edge": 0.9978441345260708,
+              "ordered_edge": 0.998046875
+            },
+            "first_failed_semantic_id": "07768d576c9fe96c9bdb77ee53e057f351fea398af5c7f5d7bddf4f04e043aeb"
+          },
+          "3x4": {
+            "examples": 512,
+            "valid": 299,
+            "complete": 0,
+            "exact_nodes": 3,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 299,
+              "kind": 299,
+              "value": 267,
+              "copy": 3,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 209,
+              "duplicate_edge": 2,
+              "historical metric cannot express multiple pair-slot labels": 2
+            },
+            "controller_stats": {
+              "supplied_node_count": 15930,
+              "forced_node_tags": 15930,
+              "tag_replacements": 17,
+              "forced_node_kinds": 15930,
+              "kind_replacements": 2876,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 35057,
+              "node_suppression_replacements": 27
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.583984375,
+              "typed_edge": 0.35829951385426906,
+              "ordered_edge": 0.17247499846969308
+            },
+            "first_failed_semantic_id": "0075944ca6aca5a658ac70218ad3e34bf5cd1e42eddd1ea7e6d8042947814d04"
+          },
+          "4x3": {
+            "examples": 512,
+            "valid": 512,
+            "complete": 503,
+            "exact_nodes": 509,
+            "exact_relations": 503,
+            "exact_components": {
+              "presence": 512,
+              "kind": 512,
+              "value": 512,
+              "copy": 509,
+              "edges": 503,
+              "slots": 512
+            },
+            "invalid_reasons": {},
+            "controller_stats": {
+              "supplied_node_count": 15911,
+              "forced_node_tags": 15911,
+              "tag_replacements": 0,
+              "forced_node_kinds": 15911,
+              "kind_replacements": 1,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 36391,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 1.0,
+              "typed_edge": 0.99972132956252,
+              "ordered_edge": 1.0
+            },
+            "first_failed_semantic_id": "20fd628380777f7268eadbf9211884e008014cce62133ace144dac6b86e1ddd0"
+          },
+          "4x4": {
+            "examples": 512,
+            "valid": 508,
+            "complete": 437,
+            "exact_nodes": 472,
+            "exact_relations": 437,
+            "exact_components": {
+              "presence": 508,
+              "kind": 508,
+              "value": 508,
+              "copy": 472,
+              "edges": 437,
+              "slots": 504
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 4
+            },
+            "controller_stats": {
+              "supplied_node_count": 18644,
+              "forced_node_tags": 18644,
+              "tag_replacements": 0,
+              "forced_node_kinds": 18644,
+              "kind_replacements": 6,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 43720,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.9921875,
+              "typed_edge": 0.9893263339960778,
+              "ordered_edge": 0.9913504464285714
+            },
+            "first_failed_semantic_id": "047f31cf2cd0af82a2ab5b94665e8716878ca2c004797c6f53388bbe55b56d3f"
+          },
+          "5x3": {
+            "examples": 512,
+            "valid": 510,
+            "complete": 504,
+            "exact_nodes": 507,
+            "exact_relations": 504,
+            "exact_components": {
+              "presence": 510,
+              "kind": 510,
+              "value": 510,
+              "copy": 507,
+              "edges": 504,
+              "slots": 510
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 2
+            },
+            "controller_stats": {
+              "supplied_node_count": 18216,
+              "forced_node_tags": 18216,
+              "tag_replacements": 0,
+              "forced_node_kinds": 18216,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 42789,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.99609375,
+              "typed_edge": 0.995927593759183,
+              "ordered_edge": 0.99609375
+            },
+            "first_failed_semantic_id": "1faf3752ce18980d4aa3c2eeb8d85124a21cbfdd27837da08adc465ee0b51dea"
+          },
+          "5x4": {
+            "examples": 512,
+            "valid": 510,
+            "complete": 437,
+            "exact_nodes": 474,
+            "exact_relations": 437,
+            "exact_components": {
+              "presence": 510,
+              "kind": 510,
+              "value": 510,
+              "copy": 474,
+              "edges": 437,
+              "slots": 504
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 2
+            },
+            "controller_stats": {
+              "supplied_node_count": 21354,
+              "forced_node_tags": 21354,
+              "tag_replacements": 0,
+              "forced_node_kinds": 21354,
+              "kind_replacements": 7,
+              "supplied_prefix_records": 0,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 51557,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.99609375,
+              "typed_edge": 0.9936831129555465,
+              "ordered_edge": 0.9952059659090909
+            },
+            "first_failed_semantic_id": "0b08cc5c5aaf521a868c2e4c002b10ede47c4642eec3e58989c70a8fc3975543"
+          }
+        }
+      },
+      "oracle_node_prefix": {
+        "examples": 3584,
+        "valid": 3373,
+        "complete": 2964,
+        "exact_nodes": 3373,
+        "exact_relations": 2964,
+        "exact_components": {
+          "presence": 3373,
+          "kind": 3373,
+          "value": 3373,
+          "copy": 3373,
+          "edges": 2964,
+          "slots": 3053
+        },
+        "invalid_reasons": {
+          "invalid_generated_node_reference": 202,
+          "duplicate_edge": 4,
+          "historical metric cannot express multiple pair-slot labels": 5
+        },
+        "controller_stats": {
+          "supplied_node_count": 116867,
+          "forced_node_tags": 116867,
+          "tag_replacements": 0,
+          "forced_node_kinds": 116867,
+          "kind_replacements": 1745,
+          "supplied_prefix_records": 116867,
+          "prefix_value_replacements": 22,
+          "prefix_copy_replacements": 1936,
+          "node_suppression_steps": 267911,
+          "node_suppression_replacements": 0
+        },
+        "macro_graph_f1_invalid_zero": {
+          "node": 0.9411272321428571,
+          "typed_edge": 0.9123271353964365,
+          "ordered_edge": 0.8808548564457553
+        },
+        "first_failed_semantic_id": "0075944ca6aca5a658ac70218ad3e34bf5cd1e42eddd1ea7e6d8042947814d04",
+        "cells": {
+          "2x4": {
+            "examples": 512,
+            "valid": 511,
+            "complete": 504,
+            "exact_nodes": 511,
+            "exact_relations": 504,
+            "exact_components": {
+              "presence": 511,
+              "kind": 511,
+              "value": 511,
+              "copy": 511,
+              "edges": 504,
+              "slots": 511
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 1
+            },
+            "controller_stats": {
+              "supplied_node_count": 13194,
+              "forced_node_tags": 13194,
+              "tag_replacements": 0,
+              "forced_node_kinds": 13194,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 13194,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 1,
+              "node_suppression_steps": 28042,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.998046875,
+              "typed_edge": 0.9977512514400781,
+              "ordered_edge": 0.998046875
+            },
+            "first_failed_semantic_id": "1fa3cf93f4e60c79b97b00bcc8b5a49350d37e777d9889f4b93bf2bef6102523"
+          },
+          "3x3": {
+            "examples": 512,
+            "valid": 511,
+            "complete": 505,
+            "exact_nodes": 511,
+            "exact_relations": 505,
+            "exact_components": {
+              "presence": 511,
+              "kind": 511,
+              "value": 511,
+              "copy": 511,
+              "edges": 505,
+              "slots": 511
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 1
+            },
+            "controller_stats": {
+              "supplied_node_count": 13618,
+              "forced_node_tags": 13618,
+              "tag_replacements": 0,
+              "forced_node_kinds": 13618,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 13618,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 0,
+              "node_suppression_steps": 30000,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.998046875,
+              "typed_edge": 0.9978441345260708,
+              "ordered_edge": 0.998046875
+            },
+            "first_failed_semantic_id": "07768d576c9fe96c9bdb77ee53e057f351fea398af5c7f5d7bddf4f04e043aeb"
+          },
+          "3x4": {
+            "examples": 512,
+            "valid": 311,
+            "complete": 0,
+            "exact_nodes": 311,
+            "exact_relations": 0,
+            "exact_components": {
+              "presence": 311,
+              "kind": 311,
+              "value": 311,
+              "copy": 311,
+              "edges": 0,
+              "slots": 0
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 192,
+              "historical metric cannot express multiple pair-slot labels": 5,
+              "duplicate_edge": 4
+            },
+            "controller_stats": {
+              "supplied_node_count": 15930,
+              "forced_node_tags": 15930,
+              "tag_replacements": 0,
+              "forced_node_kinds": 15930,
+              "kind_replacements": 1741,
+              "supplied_prefix_records": 15930,
+              "prefix_value_replacements": 22,
+              "prefix_copy_replacements": 1852,
+              "node_suppression_steps": 35412,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.607421875,
+              "typed_edge": 0.4094253157130743,
+              "ordered_edge": 0.18717032831833924
+            },
+            "first_failed_semantic_id": "0075944ca6aca5a658ac70218ad3e34bf5cd1e42eddd1ea7e6d8042947814d04"
+          },
+          "4x3": {
+            "examples": 512,
+            "valid": 512,
+            "complete": 506,
+            "exact_nodes": 512,
+            "exact_relations": 506,
+            "exact_components": {
+              "presence": 512,
+              "kind": 512,
+              "value": 512,
+              "copy": 512,
+              "edges": 506,
+              "slots": 512
+            },
+            "invalid_reasons": {},
+            "controller_stats": {
+              "supplied_node_count": 15911,
+              "forced_node_tags": 15911,
+              "tag_replacements": 0,
+              "forced_node_kinds": 15911,
+              "kind_replacements": 1,
+              "supplied_prefix_records": 15911,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 3,
+              "node_suppression_steps": 36391,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 1.0,
+              "typed_edge": 0.9998058436670749,
+              "ordered_edge": 1.0
+            },
+            "first_failed_semantic_id": "20fd628380777f7268eadbf9211884e008014cce62133ace144dac6b86e1ddd0"
+          },
+          "4x4": {
+            "examples": 512,
+            "valid": 508,
+            "complete": 470,
+            "exact_nodes": 508,
+            "exact_relations": 470,
+            "exact_components": {
+              "presence": 508,
+              "kind": 508,
+              "value": 508,
+              "copy": 508,
+              "edges": 470,
+              "slots": 505
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 4
+            },
+            "controller_stats": {
+              "supplied_node_count": 18644,
+              "forced_node_tags": 18644,
+              "tag_replacements": 0,
+              "forced_node_kinds": 18644,
+              "kind_replacements": 2,
+              "supplied_prefix_records": 18644,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 37,
+              "node_suppression_steps": 43720,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.9921875,
+              "typed_edge": 0.9907190009084753,
+              "ordered_edge": 0.9914202008928571
+            },
+            "first_failed_semantic_id": "0b397694ead1279509d01523de300342b8ebfd93fa98c4d55a1f32049e3c7f24"
+          },
+          "5x3": {
+            "examples": 512,
+            "valid": 510,
+            "complete": 507,
+            "exact_nodes": 510,
+            "exact_relations": 507,
+            "exact_components": {
+              "presence": 510,
+              "kind": 510,
+              "value": 510,
+              "copy": 510,
+              "edges": 507,
+              "slots": 510
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 2
+            },
+            "controller_stats": {
+              "supplied_node_count": 18216,
+              "forced_node_tags": 18216,
+              "tag_replacements": 0,
+              "forced_node_kinds": 18216,
+              "kind_replacements": 0,
+              "supplied_prefix_records": 18216,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 3,
+              "node_suppression_steps": 42789,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.99609375,
+              "typed_edge": 0.9960225811783721,
+              "ordered_edge": 0.99609375
+            },
+            "first_failed_semantic_id": "1faf3752ce18980d4aa3c2eeb8d85124a21cbfdd27837da08adc465ee0b51dea"
+          },
+          "5x4": {
+            "examples": 512,
+            "valid": 510,
+            "complete": 472,
+            "exact_nodes": 510,
+            "exact_relations": 472,
+            "exact_components": {
+              "presence": 510,
+              "kind": 510,
+              "value": 510,
+              "copy": 510,
+              "edges": 472,
+              "slots": 504
+            },
+            "invalid_reasons": {
+              "invalid_generated_node_reference": 2
+            },
+            "controller_stats": {
+              "supplied_node_count": 21354,
+              "forced_node_tags": 21354,
+              "tag_replacements": 0,
+              "forced_node_kinds": 21354,
+              "kind_replacements": 1,
+              "supplied_prefix_records": 21354,
+              "prefix_value_replacements": 0,
+              "prefix_copy_replacements": 40,
+              "node_suppression_steps": 51557,
+              "node_suppression_replacements": 0
+            },
+            "macro_graph_f1_invalid_zero": {
+              "node": 0.99609375,
+              "typed_edge": 0.99472182034191,
+              "ordered_edge": 0.9952059659090909
+            },
+            "first_failed_semantic_id": "0b08cc5c5aaf521a868c2e4c002b10ede47c4642eec3e58989c70a8fc3975543"
+          }
+        }
+      }
+    }
+  },
+  "paired": {
+    "original/2x4/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/2x4/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/2x4/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/2x4/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/2x4/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/2x4/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "broad/2x4/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 8,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 504
+      },
+      "delta_complete": 0
+    },
+    "broad/2x4/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 8,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 504
+      },
+      "delta_complete": 0
+    },
+    "broad/2x4/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 8,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 504
+      },
+      "delta_complete": 0
+    },
+    "broad/2x4/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 8,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 504
+      },
+      "delta_complete": 0
+    },
+    "broad/2x4/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 8,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 504
+      },
+      "delta_complete": 0
+    },
+    "broad/2x4/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 8,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 504
+      },
+      "delta_complete": 0
+    },
+    "original/3x3/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 5,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 507
+      },
+      "delta_complete": 0
+    },
+    "original/3x3/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 5,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 507
+      },
+      "delta_complete": 0
+    },
+    "original/3x3/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 5,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 507
+      },
+      "delta_complete": 0
+    },
+    "original/3x3/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 5,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 507
+      },
+      "delta_complete": 0
+    },
+    "original/3x3/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 5,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 507
+      },
+      "delta_complete": 0
+    },
+    "original/3x3/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 5,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 507
+      },
+      "delta_complete": 0
+    },
+    "broad/3x3/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 7,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 505
+      },
+      "delta_complete": 0
+    },
+    "broad/3x3/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 7,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 505
+      },
+      "delta_complete": 0
+    },
+    "broad/3x3/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 7,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 505
+      },
+      "delta_complete": 0
+    },
+    "broad/3x3/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 7,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 505
+      },
+      "delta_complete": 0
+    },
+    "broad/3x3/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 7,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 505
+      },
+      "delta_complete": 0
+    },
+    "broad/3x3/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 7,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 505
+      },
+      "delta_complete": 0
+    },
+    "original/3x4/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/3x4/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/3x4/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/3x4/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/3x4/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/3x4/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "broad/3x4/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "broad/3x4/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "broad/3x4/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "broad/3x4/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "broad/3x4/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "broad/3x4/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/4x3/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 5,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 507
+      },
+      "delta_complete": 0
+    },
+    "original/4x3/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 5,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 507
+      },
+      "delta_complete": 0
+    },
+    "original/4x3/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 5,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 507
+      },
+      "delta_complete": 0
+    },
+    "original/4x3/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 4,
+        "0->1": 1,
+        "1->0": 0,
+        "1->1": 507
+      },
+      "delta_complete": 1
+    },
+    "original/4x3/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 4,
+        "0->1": 1,
+        "1->0": 0,
+        "1->1": 507
+      },
+      "delta_complete": 1
+    },
+    "original/4x3/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 4,
+        "0->1": 1,
+        "1->0": 0,
+        "1->1": 507
+      },
+      "delta_complete": 1
+    },
+    "broad/4x3/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 10,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 502
+      },
+      "delta_complete": 0
+    },
+    "broad/4x3/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 9,
+        "0->1": 1,
+        "1->0": 0,
+        "1->1": 502
+      },
+      "delta_complete": 1
+    },
+    "broad/4x3/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 9,
+        "0->1": 1,
+        "1->0": 0,
+        "1->1": 502
+      },
+      "delta_complete": 1
+    },
+    "broad/4x3/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 6,
+        "0->1": 4,
+        "1->0": 0,
+        "1->1": 502
+      },
+      "delta_complete": 4
+    },
+    "broad/4x3/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 6,
+        "0->1": 4,
+        "1->0": 0,
+        "1->1": 502
+      },
+      "delta_complete": 4
+    },
+    "broad/4x3/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 6,
+        "0->1": 3,
+        "1->0": 0,
+        "1->1": 503
+      },
+      "delta_complete": 3
+    },
+    "original/4x4/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 57,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 455
+      },
+      "delta_complete": 0
+    },
+    "original/4x4/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 57,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 455
+      },
+      "delta_complete": 0
+    },
+    "original/4x4/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 57,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 455
+      },
+      "delta_complete": 0
+    },
+    "original/4x4/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 38,
+        "0->1": 19,
+        "1->0": 0,
+        "1->1": 455
+      },
+      "delta_complete": 19
+    },
+    "original/4x4/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 38,
+        "0->1": 19,
+        "1->0": 0,
+        "1->1": 455
+      },
+      "delta_complete": 19
+    },
+    "original/4x4/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 38,
+        "0->1": 19,
+        "1->0": 0,
+        "1->1": 455
+      },
+      "delta_complete": 19
+    },
+    "broad/4x4/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 76,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 436
+      },
+      "delta_complete": 0
+    },
+    "broad/4x4/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 75,
+        "0->1": 1,
+        "1->0": 0,
+        "1->1": 436
+      },
+      "delta_complete": 1
+    },
+    "broad/4x4/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 75,
+        "0->1": 1,
+        "1->0": 0,
+        "1->1": 436
+      },
+      "delta_complete": 1
+    },
+    "broad/4x4/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 42,
+        "0->1": 34,
+        "1->0": 0,
+        "1->1": 436
+      },
+      "delta_complete": 34
+    },
+    "broad/4x4/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 42,
+        "0->1": 34,
+        "1->0": 0,
+        "1->1": 436
+      },
+      "delta_complete": 34
+    },
+    "broad/4x4/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 42,
+        "0->1": 33,
+        "1->0": 0,
+        "1->1": 437
+      },
+      "delta_complete": 33
+    },
+    "original/5x3/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/5x3/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/5x3/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/5x3/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/5x3/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/5x3/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "broad/5x3/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 8,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 504
+      },
+      "delta_complete": 0
+    },
+    "broad/5x3/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 8,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 504
+      },
+      "delta_complete": 0
+    },
+    "broad/5x3/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 8,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 504
+      },
+      "delta_complete": 0
+    },
+    "broad/5x3/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 5,
+        "0->1": 3,
+        "1->0": 0,
+        "1->1": 504
+      },
+      "delta_complete": 3
+    },
+    "broad/5x3/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 5,
+        "0->1": 3,
+        "1->0": 0,
+        "1->1": 504
+      },
+      "delta_complete": 3
+    },
+    "broad/5x3/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 5,
+        "0->1": 3,
+        "1->0": 0,
+        "1->1": 504
+      },
+      "delta_complete": 3
+    },
+    "original/5x4/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/5x4/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/5x4/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/5x4/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/5x4/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "original/5x4/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 512,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 0
+      },
+      "delta_complete": 0
+    },
+    "broad/5x4/oracle_node_count-minus-public": {
+      "transitions": {
+        "0->0": 75,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 437
+      },
+      "delta_complete": 0
+    },
+    "broad/5x4/oracle_node_kinds-minus-public": {
+      "transitions": {
+        "0->0": 75,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 437
+      },
+      "delta_complete": 0
+    },
+    "broad/5x4/oracle_node_kinds-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 75,
+        "0->1": 0,
+        "1->0": 0,
+        "1->1": 437
+      },
+      "delta_complete": 0
+    },
+    "broad/5x4/oracle_node_prefix-minus-public": {
+      "transitions": {
+        "0->0": 40,
+        "0->1": 35,
+        "1->0": 0,
+        "1->1": 437
+      },
+      "delta_complete": 35
+    },
+    "broad/5x4/oracle_node_prefix-minus-oracle_node_count": {
+      "transitions": {
+        "0->0": 40,
+        "0->1": 35,
+        "1->0": 0,
+        "1->1": 437
+      },
+      "delta_complete": 35
+    },
+    "broad/5x4/oracle_node_prefix-minus-oracle_node_kinds": {
+      "transitions": {
+        "0->0": 40,
+        "0->1": 35,
+        "1->0": 0,
+        "1->1": 437
+      },
+      "delta_complete": 35
+    }
+  },
+  "conditional_event_delta_pp_ci95": {
+    "original/2x4/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/2x4/oracle_node_kinds-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/2x4/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "original/2x4/oracle_node_prefix-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/2x4/oracle_node_prefix-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "original/2x4/oracle_node_prefix-minus-oracle_node_kinds": [
+      0.0,
+      0.0
+    ],
+    "broad/2x4/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/2x4/oracle_node_kinds-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/2x4/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "broad/2x4/oracle_node_prefix-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/2x4/oracle_node_prefix-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "broad/2x4/oracle_node_prefix-minus-oracle_node_kinds": [
+      0.0,
+      0.0
+    ],
+    "original/3x3/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/3x3/oracle_node_kinds-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/3x3/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "original/3x3/oracle_node_prefix-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/3x3/oracle_node_prefix-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "original/3x3/oracle_node_prefix-minus-oracle_node_kinds": [
+      0.0,
+      0.0
+    ],
+    "broad/3x3/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/3x3/oracle_node_kinds-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/3x3/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "broad/3x3/oracle_node_prefix-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/3x3/oracle_node_prefix-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "broad/3x3/oracle_node_prefix-minus-oracle_node_kinds": [
+      0.0,
+      0.0
+    ],
+    "original/3x4/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/3x4/oracle_node_kinds-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/3x4/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "original/3x4/oracle_node_prefix-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/3x4/oracle_node_prefix-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "original/3x4/oracle_node_prefix-minus-oracle_node_kinds": [
+      0.0,
+      0.0
+    ],
+    "broad/3x4/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/3x4/oracle_node_kinds-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/3x4/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "broad/3x4/oracle_node_prefix-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/3x4/oracle_node_prefix-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "broad/3x4/oracle_node_prefix-minus-oracle_node_kinds": [
+      0.0,
+      0.0
+    ],
+    "original/4x3/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/4x3/oracle_node_kinds-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/4x3/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "original/4x3/oracle_node_prefix-minus-public": [
+      0.0,
+      0.5859375
+    ],
+    "original/4x3/oracle_node_prefix-minus-oracle_node_count": [
+      0.0,
+      0.5859375
+    ],
+    "original/4x3/oracle_node_prefix-minus-oracle_node_kinds": [
+      0.0,
+      0.5859375
+    ],
+    "broad/4x3/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/4x3/oracle_node_kinds-minus-public": [
+      0.0,
+      0.5859375
+    ],
+    "broad/4x3/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.5859375
+    ],
+    "broad/4x3/oracle_node_prefix-minus-public": [
+      0.1953125,
+      1.5625
+    ],
+    "broad/4x3/oracle_node_prefix-minus-oracle_node_count": [
+      0.1953125,
+      1.5625
+    ],
+    "broad/4x3/oracle_node_prefix-minus-oracle_node_kinds": [
+      0.0,
+      1.3671875
+    ],
+    "original/4x4/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/4x4/oracle_node_kinds-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/4x4/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "original/4x4/oracle_node_prefix-minus-public": [
+      2.1484375,
+      5.46875
+    ],
+    "original/4x4/oracle_node_prefix-minus-oracle_node_count": [
+      2.1484375,
+      5.46875
+    ],
+    "original/4x4/oracle_node_prefix-minus-oracle_node_kinds": [
+      2.1484375,
+      5.46875
+    ],
+    "broad/4x4/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/4x4/oracle_node_kinds-minus-public": [
+      0.0,
+      0.5859375
+    ],
+    "broad/4x4/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.5859375
+    ],
+    "broad/4x4/oracle_node_prefix-minus-public": [
+      4.4921875,
+      8.984375
+    ],
+    "broad/4x4/oracle_node_prefix-minus-oracle_node_count": [
+      4.4921875,
+      8.984375
+    ],
+    "broad/4x4/oracle_node_prefix-minus-oracle_node_kinds": [
+      4.296875,
+      8.59375
+    ],
+    "original/5x3/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/5x3/oracle_node_kinds-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/5x3/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "original/5x3/oracle_node_prefix-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/5x3/oracle_node_prefix-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "original/5x3/oracle_node_prefix-minus-oracle_node_kinds": [
+      0.0,
+      0.0
+    ],
+    "broad/5x3/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/5x3/oracle_node_kinds-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/5x3/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "broad/5x3/oracle_node_prefix-minus-public": [
+      0.0,
+      1.3671875
+    ],
+    "broad/5x3/oracle_node_prefix-minus-oracle_node_count": [
+      0.0,
+      1.3671875
+    ],
+    "broad/5x3/oracle_node_prefix-minus-oracle_node_kinds": [
+      0.0,
+      1.3671875
+    ],
+    "original/5x4/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/5x4/oracle_node_kinds-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/5x4/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "original/5x4/oracle_node_prefix-minus-public": [
+      0.0,
+      0.0
+    ],
+    "original/5x4/oracle_node_prefix-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "original/5x4/oracle_node_prefix-minus-oracle_node_kinds": [
+      0.0,
+      0.0
+    ],
+    "broad/5x4/oracle_node_count-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/5x4/oracle_node_kinds-minus-public": [
+      0.0,
+      0.0
+    ],
+    "broad/5x4/oracle_node_kinds-minus-oracle_node_count": [
+      0.0,
+      0.0
+    ],
+    "broad/5x4/oracle_node_prefix-minus-public": [
+      4.6875,
+      9.1796875
+    ],
+    "broad/5x4/oracle_node_prefix-minus-oracle_node_count": [
+      4.6875,
+      9.1796875
+    ],
+    "broad/5x4/oracle_node_prefix-minus-oracle_node_kinds": [
+      4.6875,
+      9.1796875
+    ]
+  },
+  "bootstrap": {
+    "seed": 22023,
+    "draws": 10000,
+    "scope": "shared sorted event draws per cell across all arms/policies; descriptive fixed-model uncertainty only"
+  },
+  "no_acquisition_gate": true,
+  "no_automatic_next_run": true,
+  "process_seconds": 370.0941011030227
+}
