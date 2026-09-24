@@ -172,6 +172,28 @@ def extract(root, c04_audit=None):
         for cell in audit['weighted_diagnostics']:
             for step in cell['by_reverse_execution_step']:
                 add('a12_diagnostic',source,policy=cell['policy'],condition=cell['condition'],**step)
+    source=review+'A13-main-audit.json'
+    if (root/source).exists():
+        audit=read(source)
+        assert audit['zero_updates'] and audit['queried_mean_full_path_equals_existing_metric']
+        assert audit['all_nonoracle_allnode_routes_equal']
+        for path,digest in audit['input_sha256'].items():
+            assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'A13 audit binding mismatch: {path}'
+            inputs[path]=digest
+        for cell in audit['cells']:
+            for metric in ('task','path','suffix'):
+                add('a13_counts',source,policy=cell['policy'],condition=cell['condition'],metric=metric,
+                    correct=cell[metric+'_correct'],total=cell['examples'])
+        for cell in audit['paired_queried_route_analysis']:
+            add('a13_paired_query',source,**cell)
+            joint=cell['task_route_joint_counts'];numerator=joint['route_correct_task_correct']
+            denominator=numerator+joint['route_correct_task_wrong']
+            assert abs(numerator/denominator-cell['task_given_route'])<1e-12
+            add('a13_task_given_route',source,policy=cell['policy'],condition=cell['condition'],
+                correct=numerator,total=denominator)
+            for head,counts in cell['head_paths'].items():
+                add('a13_query_heads',source,policy=cell['policy'],condition=cell['condition'],head=head,**counts)
+        status.append(dict(experiment='A13',status='frozen audited checkpoint; nonoracle routes exactly equal; oracle privileged; no seed replication'))
     if c04_audit:
         # An explicit final audit index binds each approved summary byte-for-byte.
         # Shape: {"input_sha256": {"repository/relative/path": "sha256"}}.
@@ -320,6 +342,28 @@ def render(data, output):
             ax.plot([r['reverse_execution_step'] for r in ss],[100*r['destination_argmax_correct'] for r in ss],'-' if policy=='unchanged' else '--',color=f'C{i}',label=policy)
         ax.set(title='128 / 32: destination-head argmax diagnostic',xlabel='Reverse execution step',ylabel='Correct across instrumented node/head entries (%)');ax.legend(fontsize=7)
         finish(fig,'attention-read-localization','A12: one frozen model, zero optimizer updates. Dashed policies are engineered hardening, not newly learned interfaces.\nPath counts use events; head diagnostics use instrumented node/head entries. Their gap does not identify query-head failures. Paired events, not independent policies.')
+    if select('a13_counts'):
+        fig,axes=plt.subplots(2,2,figsize=(12,8))
+        policies=('unchanged','shared_soft','shared_hard','oracle_common')
+        names=('Learned unchanged','Common soft (engineered)','Common hard (engineered)','Common oracle (privileged)')
+        labels=['32 nodes / depth 4','64 nodes / depth 8','128 nodes / depth 32']
+        for ax,panel,metric,title in [(axes[0,0],'a13_counts','task','Task correctness'),(axes[0,1],'a13_counts','path','Queried mean full-route correctness'),(axes[1,0],'a13_task_given_route',None,'Task conditional on correct full query route')]:
+            for i,policy in enumerate(policies):
+                ss=select(panel,policy=policy)
+                if metric: ss=[r for r in ss if r['metric']==metric]
+                ss.sort(key=lambda r:r['condition']['nodes'])
+                ax.plot(range(3),[100*r['correct']/r['total'] for r in ss],['o-','s--','^--','D:'][i],color=f'C{i}',label=names[i])
+                if panel=='a13_task_given_route':
+                    r=ss[-1];ax.annotate(f"{r['correct']}/{r['total']}",(2,100*r['correct']/r['total']),xytext=(5,(i-1.5)*10),textcoords='offset points',fontsize=7,color=f'C{i}')
+            ax.set(title=title,xticks=range(3),xticklabels=labels,ylabel='Correct (%)',ylim=(-3,108));ax.legend(fontsize=6)
+        ax=axes[1,1]
+        for offset,head,name in [(-.18,'original_destination','Original destination'),(.18,'used_destination','Used destination')]:
+            ss=[next(r for r in select('a13_query_heads',policy=policy,head=head) if r['condition']['nodes']==128) for policy in policies]
+            ax.bar([i+offset for i in range(4)],[r['correct_head_paths'] for r in ss],width=.34,label=name)
+            assert len({r['head_path_denominator'] for r in ss})==1
+            denominator=ss[0]['head_path_denominator']
+        ax.set(title='Deep query: individual-head full-route correctness',xticks=range(4),xticklabels=['Unchanged','Common soft','Common hard','Oracle'],ylabel=f'Correct queried head paths / {denominator}');ax.legend(fontsize=7)
+        finish(fig,'attention-common-route','A13: one frozen checkpoint, paired events, zero updates; no seed replication. Nonoracle mean routes are exactly equal across policies.\nCommon hard is engineered; oracle uses privileged routes. Queried heads share event support (8 heads/event); full all-node suffix counts remain separate in the data.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid')})
