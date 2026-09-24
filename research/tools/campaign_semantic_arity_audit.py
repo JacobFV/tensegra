@@ -53,5 +53,14 @@ for r in rows:
  arities=collections.Counter(i for i,j,rel,slot in r['edges'] if rel=='argument' and r['nodes'][i]==['pred','parent']);assert set(arities.values())=={3};maxarity[3]+=1
  e=build_tcn_example('unification',r['seed'],difficulty=1/3,languages=('english',));g=e.privileged.graph;ids={n.id:i for i,n in enumerate(g.nodes)};assert [[n.kind,n.value] for n in g.nodes]==r['nodes'];assert [[ids[x.source],ids[x.target],x.role,x.slot] for x in g.edges]==r['edges'];assert e.public[0].text==r['text'];assert g.digest()==r['graph_sha256'];assert sha(ns['semantic_key'](g).encode())==r['semantic_sha256']
 assert dict(shapes)==meta['tree_shape_counts'];assert 'torch' not in sys.modules
-out=dict(cache_sha256=meta['cache_sha256'],examples=1024,historical_key_and_generator_replays=1024,alpha_overlap_all_excluded=0,unique_without_roots=1024,shapes=dict(shapes),depth=3,all_parent_predicate_arities=3,independent_copy_targets=True,single_slot_pairs=True,feature_precisions=['float32','bfloat16'],feature_and_lexical_conflicts=0,target_sequence_sha256=sha(''.join(targets).encode()),torch_imported=False,cpu_audit_wall_seconds=time.monotonic()-tick,scope='Pinned-generator replay plus independent compact target/copy, alpha-without-roots exclusion, topology/depth and NumPy FP32/BF16 support checks. Features checked against excluded English populations. No actor/model/forward; smaller unseen arity motifs, not deeper or language transfer.')
+byseed={r['seed']:r for r in rows};previous=set();duplicates=0
+for seed in range(meta['config']['first_seed'],max(byseed)+1):
+ if seed in byseed:
+  identity=byseed[seed]['semantic_sha256'];assert identity not in previous;previous.add(identity)
+ else:
+  graph=build_tcn_example('unification',seed,difficulty=1/3,languages=('english',)).privileged.graph
+  assert sha(ns['semantic_key'](graph).encode()) in previous;duplicates+=1
+assert duplicates==meta['duplicates']==15
+assert max(byseed)-meta['config']['first_seed']+1==meta['attempts']==1039
+out=dict(bounded_attempts_reconstructed=1039,rejected_previous_duplicates_replayed=15,cache_sha256=meta['cache_sha256'],examples=1024,historical_key_and_generator_replays=1024,alpha_overlap_all_excluded=0,unique_without_roots=1024,shapes=dict(shapes),depth=3,all_parent_predicate_arities=3,independent_copy_targets=True,single_slot_pairs=True,feature_precisions=['float32','bfloat16'],feature_and_lexical_conflicts=0,target_sequence_sha256=sha(''.join(targets).encode()),torch_imported=False,cpu_audit_wall_seconds=time.monotonic()-tick,scope='Pinned-generator replay plus independent compact target/copy, alpha-without-roots exclusion, topology/depth and NumPy FP32/BF16 support checks. Features checked against excluded English populations. No actor/model/forward; smaller unseen arity motifs, not deeper or language transfer.')
 a.output.write_text(json.dumps(out,indent=2)+'\n');print(out)
