@@ -425,6 +425,28 @@ def extract(root, c04_audit=None, c04_provisional=None):
         add('s21_summary',source,scope=summary['scope'],paired=summary['paired'],ci95=summary['endpoint_delta_pp_conditional_ci95'],endpoint_counts=summary['endpoint_counts'],decisions=summary['decisions'],exposures=summary['exposures'],training_seconds=summary['training_seconds'],process_seconds=summary['process_seconds'],training_loss_curves=summary['training_loss_curves'])
     else:
         status.append(dict(experiment='S21',status='Final independent aggregate audit pending; omitted'))
+    iso_audit=review+'S21-isomorphism-result-audit.json'
+    if (root/iso_audit).exists():
+        receipt=read(iso_audit)
+        for path,digest in receipt['input_sha256'].items():
+            assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'S21 isomorphism binding mismatch: {path}'
+            inputs[path]=digest
+        add('s21_isomorphism',iso_audit,counts=receipt['counts'],scope=receipt['scope'],necessary_joint_node_attribute_mismatch=receipt['necessary_joint_node_attribute_mismatch'],invalid_preserved=receipt['invalid_preserved'])
+    audit_path=review+'S22-final-diagnostic-audit.json'
+    source=base+'semantics/s22-analysis.json'
+    if (root/audit_path).exists():
+        receipt=read(audit_path)
+        assert source in receipt.get('input_sha256',{}), 'S22 requires independent final aggregate binding'
+        for path,digest in receipt['input_sha256'].items():
+            assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'S22 binding mismatch: {path}'
+            inputs[path]=digest
+        summary=read(source)
+        for arm,policies in summary['results'].items():
+            for policy,counts in policies.items():
+                add('s22_oracle',source,arm=arm,policy=policy,**counts)
+        add('s22_summary',source,scope=summary['scope'],public=summary['public_baseline_counts'],paired=summary['paired'],ci95=summary['conditional_event_delta_pp_ci95'],bootstrap=summary['bootstrap'],no_acquisition_gate=summary['no_acquisition_gate'],process_seconds=summary['process_seconds'])
+    else:
+        status.append(dict(experiment='S22',status='Independent final aggregate audit pending; omitted'))
     if c04_audit:
         # An explicit final audit index binds each approved summary byte-for-byte.
         # Shape: {"input_sha256": {"repository/relative/path": "sha256"}}.
@@ -829,6 +851,27 @@ def render(data, output):
         d=summary['decisions'];gate=lambda value:'PASS' if value else 'FAIL'
         caption=f"Held-out gain: {gate(d['heldout_gain'])}; old-known retention: {gate(d['old_known_retention'])} (loss {d['old_known_loss_complete']}); new-motif acquisition: {gate(d['new_motif_acquisition'])}. Joint: {gate(d['advance'])}."
         finish(fig,'semantic-broad-motif-endpoints',caption+' Conditional confirmation: '+('eligible' if d['advance'] else 'INELIGIBLE')+'.\n95% event intervals condition on one paired initialization and inspected DEV; they are not seed uncertainty or gate criteria.\nCanonical exactness is distinct from graph isomorphism; a node-position error alone does not rule out all permutations.')
+    if select('s22_oracle'):
+        fig,axes=plt.subplots(2,2,figsize=(12,8))
+        shapes=('2x4','3x3','3x4','4x3','4x4','5x3','5x4')
+        policies=('oracle_node_count','oracle_node_kinds','oracle_node_prefix')
+        summary=select('s22_summary')[0]
+        for col,arm in enumerate(('original','broad')):
+            ax=axes[0,col]
+            matrix=[[summary['public'][arm][shape] for shape in shapes]]+[[select('s22_oracle',arm=arm,policy=p)[0]['cells'][shape]['complete'] for shape in shapes] for p in policies]
+            ax.imshow(matrix,vmin=0,vmax=512,cmap='Blues',aspect='auto')
+            for i,row in enumerate(matrix):
+                for j,value in enumerate(row):ax.text(j,i,str(value),ha='center',va='center',color='white' if value>280 else 'black',fontsize=8)
+            ax.set(title=f'S22 {arm} · complete graphs / 512',xticks=range(7),xticklabels=['2×4','3×3','3×4\nheld out','4×3','4×4','5×3','5×4'],yticks=range(4),yticklabels=['Public only','Oracle count','Oracle kinds','Full node prefix'])
+            ax=axes[1,col]
+            cells=[select('s22_oracle',arm=arm,policy=p)[0]['cells']['3x4'] for p in policies]
+            for i,(metric,label,color) in enumerate([('exact_nodes','Exact nodes, strict-valid final graph','C0'),('exact_relations','Exact relations','C1'),('complete','Complete graph','C2')]):
+                xs=[j+(i-1)*.15 for j in range(3)];vals=[c[metric] for c in cells]
+                ax.plot(xs,vals,'o',color=color,label=label)
+                for x,v in zip(xs,vals):ax.annotate(str(v),(x,v),xytext=(0,5+i*3),textcoords='offset points',ha='center',fontsize=7,color=color)
+            ax.plot([2],[cells[2]['examples']],'D',mfc='none',mec='black',label='Correct nodes supplied (all prefix events)')
+            ax.set(title=f'{arm} · held-out 3×4 boundary',xticks=range(3),xticklabels=['Oracle count','Oracle kinds','Full node prefix'],ylabel='Graphs / 512',ylim=(-25,560));ax.legend(fontsize=6,loc='center left')
+        finish(fig,'semantic-oracle-boundary','Privileged frozen-model diagnostic: no training, learned repair or promotion. All held-out exact relations and complete graphs remain zero.\nFull prefixes supply correct nodes on all 512 events; strict scored node counts also require final validity. Invalid outputs receive zero component credit.\nSome partial relation overlap remains. A zero empirical difference does not prove population equivalence or a universal capacity limit.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')=='independently_audited'})
