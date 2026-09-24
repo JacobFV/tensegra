@@ -10,8 +10,8 @@
     "attention": 10800,
     "adaptive_flex": 5760
   },
-  "charged_seconds": 9568.207268327966,
-  "reserved_running_seconds": 1400.0,
+  "charged_seconds": 11028.170226510165,
+  "reserved_running_seconds": 800.0,
   "jobs": [
     {
       "id": "R01-profile",
@@ -619,11 +619,77 @@
       "seconds": 286.8835017378,
       "receipt": "research/results/campaign-01/composition/c02-development/rekey/occupancy.json",
       "recorded_utc": "2026-09-23T23:44:06.010348+00:00"
+    },
+    {
+      "id": "S12-parent-701",
+      "kind": "confirmation",
+      "source": "dbd3575",
+      "cap_seconds": 1400.0,
+      "released_utc": "2026-09-23T23:44:06.043800+00:00",
+      "status": "completed",
+      "seconds": 1242.289022353,
+      "receipt": "research/results/campaign-01/semantics/s12-parent-701/s12-parent-701.occupancy.json",
+      "recorded_utc": "2026-09-24T00:06:13.726720+00:00"
+    },
+    {
+      "id": "A07-profile",
+      "kind": "exploration",
+      "source": "d685448",
+      "cap_seconds": 60.0,
+      "released_utc": "2026-09-24T00:06:13.760424+00:00",
+      "status": "completed",
+      "seconds": 4.86,
+      "receipt": "research/results/campaign-01/attention/a07-profile/process.json",
+      "recorded_utc": "2026-09-24T00:07:04.692631+00:00"
+    },
+    {
+      "id": "C03-profiles",
+      "kind": "exploration",
+      "source": "799b198",
+      "cap_seconds": 120.0,
+      "released_utc": "2026-09-24T00:07:04.713919+00:00",
+      "status": "completed",
+      "seconds": 5.615734796,
+      "receipt": "research/results/campaign-01/composition/c03-profile/batch.json",
+      "recorded_utc": "2026-09-24T00:08:00.452179+00:00"
+    },
+    {
+      "id": "A07-development",
+      "kind": "exploration",
+      "source": "d685448",
+      "cap_seconds": 240.0,
+      "released_utc": "2026-09-24T00:08:00.473748+00:00",
+      "status": "completed",
+      "seconds": 50.29,
+      "receipt": "research/results/campaign-01/attention/a07-development/process.json",
+      "recorded_utc": "2026-09-24T00:10:00.454982+00:00"
+    },
+    {
+      "id": "C03-static",
+      "kind": "exploration",
+      "source": "799b198",
+      "cap_seconds": 180.0,
+      "released_utc": "2026-09-24T00:10:00.475006+00:00",
+      "status": "completed",
+      "seconds": 84.3690093383,
+      "receipt": "research/results/campaign-01/composition/c03-development/static/occupancy.json",
+      "recorded_utc": "2026-09-24T00:12:04.338712+00:00"
+    },
+    {
+      "id": "C03-roles",
+      "kind": "exploration",
+      "source": "799b198",
+      "cap_seconds": 180.0,
+      "released_utc": "2026-09-24T00:12:11.412182+00:00",
+      "status": "completed",
+      "seconds": 72.5391916949,
+      "receipt": "research/results/campaign-01/composition/c03-development/roles/occupancy.json",
+      "recorded_utc": "2026-09-24T00:14:11.108948+00:00"
     }
   ],
-  "cpu_audit_seconds": 2692.478534476075,
+  "cpu_audit_seconds": 2736.5984232169035,
   "accounting": "Monotonic process occupancy includes initialization/training/evaluation/failed runs/export; profiles charged. Serial GPU only. Unmeasured failures receive conservative charges.",
-  "projected_ready_caps_seconds": 9600,
+  "projected_ready_caps_seconds": 7340,
   "accounting_notes": "Ready caps are estimates, not completed charges or concurrent reservations. Only queue.running may use GPU.",
   "cpu_integration_test_seconds": 87.22999999999999,
   "cpu_experiments": [
@@ -652,6 +718,23 @@
       "id": "S10-S11-secondary",
       "seconds": 21.41,
       "note": "CPU frozen supplied-schema reuse; no GPU"
+    },
+    {
+      "id": "s10-surface-planning",
+      "seconds": 1.95,
+      "receipt": "research/results/campaign-01/semantics/s10-surface-planning/process.json"
+    },
+    {
+      "id": "s10-copy-contract",
+      "seconds": 2.76,
+      "receipt": "research/results/campaign-01/semantics/s10-copy-contract/process.json"
     }
-  ]
+  ],
+  "projection_detail": {
+    "S12_remaining_excluding_running_constant701": 6800,
+    "A08_profile_and_provisional_main": 360,
+    "A09": 180,
+    "C04": "not yet frozen",
+    "S13": "CPU cache only; no GPU allocation"
+  }
 }
