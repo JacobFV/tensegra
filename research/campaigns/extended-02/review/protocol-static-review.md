@@ -30,3 +30,5 @@ The parent waits wall-budget plus0.25seconds for spawn/import/execution. This is
 - `validate_result` currently assumes a Result-like object: `None` raises AttributeError rather than False. This is not an actor escape under data-only controlled returns, but a cheap strict Result/API-version check would make tampering diagnostics safer. Exclude false-version results when validating provenance.
 
 No new dependency or runtime primitive is recommended. Most remaining risk is at the world/compiler boundary and accounting interpretation, not the small exact algorithms themselves.
+
+Root subsequently reports actual GB10 GPU-disabled pytest **7 passed**, including isolated execution; measured1.655845632CPU-core seconds and1.52444wall seconds (root receipt authoritative). Thus import/memory failure did not occur in that tested environment. This does not remove cold-start overhead or guarantee arbitrary memory layouts; no architecture change is required for the primary trusted bounded executor. Reviewer did not rerun or double-charge these tests.
