@@ -6,7 +6,7 @@ The runner verifies source/config/data/normalizer-proof hashes, rechecks full no
 
 Profile uses exactly first8 rows per model (48 forwards), retaining timing and prediction digests only. No profile correctness summary is emitted and no gold scoring is performed in this lane. Main uses all6×1,024 normalized-original cells, saving compact metric-sufficient raw/calibrated predictions, original-reference hashes, per-row original/normalized metrics and repairs/regressions. Normalized-renamed is labeled an identical-input engineering implication, not an independent forward or repeated statistical sample. Existing raw-original outputs are immutable paired references, not rerun or reselected. Copy errors pointing to structural tokens remain structural-token strings; no gold remapping occurs.
 
-`S16-profile-frozen-v1.json` binds the proposed60s whole-wrapper cap and sources; SHA256 `5f72d0f5dd2f4e07fb7b252dc1055545cf890e98429acc26383a0074e74f39cb`. `S16-main-prepared.json` retains the exact six-model policy but has no main cap and cannot launch. A later profile-based main freeze is required. Freezing this proposal grants no GPU release.
+`S16-profile-frozen-v2.json` binds the proposed60s whole-wrapper cap and sources; SHA256 `8dfb3326c21c410064267fbf9122a3c1e373707f89a5b1dfb838a340f83807d1`. `S16-main-prepared.json` retains the exact six-model policy but has no main cap and cannot launch. A later profile-based main freeze is required. Freezing this proposal grants no GPU release.
 
 Twenty CPU tests pass in0.65s after the final cap guard (earlier runner test pass0.74s retained as development checking). They cover the public-only fake-actor seam, no wrong-copy repair, dtype/shape/tensor mutation hashes, all-six/source/cap/threshold recipe guards, unfrozen-main rejection and atomic failed/timeout lifecycle receipts. These tests instantiate no semantic actor. The all-six real artifact preflight passed with the actor constructor replaced by a raising sentinel:1,024 original/renamed normalized pairs, all six frozen bindings,0 actor constructions and0 forwards,18.344035s CPU preflight time. This validates bytes/pairing only; no normalized predictions exist. The complete source/import/process tail is outside that internal CPU timing and will be included in the real profile's external accounting.
 
@@ -17,9 +17,11 @@ After independent runner review and explicit root profile release, from the immu
 ```sh
 /home/brandonin/topoformer-stage8-cuda/bin/python \
   src/topoformer/campaign_semantics_s16_launch.py \
-  research/campaigns/extended-01/semantics/S16-profile-frozen-v1.json \
+  research/campaigns/extended-01/semantics/S16-profile-frozen-v2.json \
   --cap 60 --python /home/brandonin/topoformer-stage8-cuda/bin/python \
   --prefix /home/brandonin/topoformer-campaign01-semantics/results/s16-profile-launch
 ```
 
 Report GPUFREE, full lifecycle/outer receipts and summed accounting before analyzing even profile timing. A timeout is retained and reported; it does not authorize extension. Main budgeting follows measured setup/per-model costs and stays separate from profile cost. No GPU profile or main run was launched during this preparation.
+
+The unused v1 freeze remains archived. The v2 source change adds timing only: whole all-six public/artifact preflight; per-model checkpoint read/hash, actor setup/load/hash, forward/decode, packing/output hashing, scoring (zero in profile), post-inference tensor hash, checkpoint rehash, and export; final manifest export is in completion.json. Forward/decode transfers outputs to CPU and therefore includes synchronization. Estimate main costs by retaining fixed preflight/setup/hash costs once and scaling per-example forward/packing work; main scoring/export needs a separate allowance because timing-only profile does not score or export predictions. No outcome policy, model, threshold, example count, or cap changed.

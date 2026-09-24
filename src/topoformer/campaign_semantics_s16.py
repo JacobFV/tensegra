@@ -82,6 +82,7 @@ def preflight(config):
 def run(config):
     start=time.monotonic();torch.set_num_threads(2)
     rows,audit,normalized,inherited=preflight(config)
+    preflight_seconds=time.monotonic()-start
     out=Path(config['output_dir']);out.mkdir(parents=True,exist_ok=False)
     profile=config['job']=='profile';count=config['examples'];artifacts=[]
     torch.cuda.reset_peak_memory_stats()
@@ -89,6 +90,8 @@ def run(config):
         tick=time.monotonic()
         state=torch.load(checkpoint,map_location='cpu',weights_only=True)['model']
         expected=tensor_hash(state)
+        checkpoint_read_hash_seconds=time.monotonic()-tick
+        setup_tick=time.monotonic()
         model=SemanticCurriculumActor(value_count=len(audit['value_vocabulary']),width=1024,capacity=128,
             workspace_rows=8,microsteps=2,autocast_dtype='bfloat16')
         model.load_state_dict(state);del state
@@ -96,17 +99,25 @@ def run(config):
         before=tensor_hash(model.state_dict())
         if before!=expected:raise ValueError('loaded tensor bytes differ from checkpoint')
         thresholds=torch.tensor(primary['thresholds']);threshold_before=tensor_hash({'thresholds':thresholds})
+        model_setup_hash_seconds=time.monotonic()-setup_tick
+        forward_decode_seconds=packing_hash_seconds=scoring_seconds=0.
         predictions=[];output_hash=hashlib.sha256()
         with torch.no_grad():
             for index in range(count):
+                stage_tick=time.monotonic()
                 raw,cal,copied=predict_public(model,normalized[index],thresholds)
+                # decode copies every output to CPU, synchronizing the CUDA work.
+                forward_decode_seconds+=time.monotonic()-stage_tick
+                stage_tick=time.monotonic()
                 raw_pack=compact(raw);cal_pack=compact(cal)
                 raw_pairs={(i,j) for i,j,s in raw_pack['slots']}
                 packed=dict(raw=raw_pack,calibrated_edges=cal_pack['edges'],
                     calibrated_extra_slots=[v for v in cal_pack['slots'] if tuple(v[:2]) not in raw_pairs],
                     copied_original_public_tokens=copied)
                 output_hash.update(json.dumps(packed,sort_keys=True).encode())
+                packing_hash_seconds+=time.monotonic()-stage_tick
                 if not profile:
+                    stage_tick=time.monotonic()
                     # Scoring occurs only after public-only forward has completed.
                     row=rows[index];gold=target(row,audit['value_vocabulary'])
                     metrics={policy:base.metrics(graph,gold) for policy,graph in [('raw',raw),('calibrated',cal)]}
@@ -117,11 +128,17 @@ def run(config):
                         metrics=metrics,original_metrics=original,
                         transitions={p:dict(repair=bool(metrics[p]['semantic_equivalence'] and not original[p]['semantic_equivalence']),
                             regression=bool(original[p]['semantic_equivalence'] and not metrics[p]['semantic_equivalence'])) for p in metrics}))
+                    scoring_seconds+=time.monotonic()-stage_tick
+        stage_tick=time.monotonic()
         torch.cuda.synchronize();after=tensor_hash(model.state_dict())
         if after!=before or tensor_hash({'thresholds':thresholds})!=threshold_before:raise RuntimeError('frozen tensor mutation')
+        post_inference_tensor_hash_seconds=time.monotonic()-stage_tick
+        stage_tick=time.monotonic()
         record=dict(**entry,examples=count,checkpoint_sha256=digest(checkpoint),primary_sha256=primary_sha,
             thresholds=primary['thresholds'],tensor_before_sha256=before,tensor_after_sha256=after,
             threshold_tensor_sha256=threshold_before,output_sha256=output_hash.hexdigest(),seconds=time.monotonic()-tick)
+        checkpoint_rehash_seconds=time.monotonic()-stage_tick
+        stage_tick=time.monotonic()
         if not profile:
             result=dict(endpoint=record,rows=predictions,original_reference=primary_path,
                 normalized_renamed='same full actor inputs by public proof; not independently forwarded')
@@ -131,13 +148,21 @@ def run(config):
                 repairs=sum(r['transitions'][p]['repair'] for r in predictions),
                 regressions=sum(r['transitions'][p]['regression'] for r in predictions),
                 copy=sum(r['metrics'][p]['identity_copy_accuracy'] for r in predictions)/count) for p in ('raw','calibrated')})
+        export_seconds=time.monotonic()-stage_tick
+        record['timing']=dict(checkpoint_read_hash_seconds=checkpoint_read_hash_seconds,
+            model_setup_hash_seconds=model_setup_hash_seconds,forward_decode_seconds=forward_decode_seconds,
+            packing_hash_seconds=packing_hash_seconds,scoring_seconds=scoring_seconds,
+            post_inference_tensor_hash_seconds=post_inference_tensor_hash_seconds,
+            checkpoint_rehash_seconds=checkpoint_rehash_seconds,export_seconds=export_seconds)
+        record['seconds']=time.monotonic()-tick
         artifacts.append(record);del model
         print(json.dumps(dict(event='endpoint',seed=entry['seed'],arm=entry['arm'],examples=count,seconds=record['seconds'])),flush=True)
-    manifest=dict(config=config,artifacts=artifacts,process_seconds=time.monotonic()-start,
+    manifest=dict(config=config,artifacts=artifacts,process_seconds=time.monotonic()-start,preflight_seconds=preflight_seconds,
         peak_cuda_allocated=torch.cuda.max_memory_allocated(),process_maxrss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
         scope='supplied public renderer/case/canonical vocabulary prior; no learned rename-invariance claim; profile outcomes hashed only')
-    write_gzip(out/'manifest.json.gz',manifest)
-    (out/'completion.json').write_text(json.dumps(dict(success=True,process_seconds=time.monotonic()-start))+'\n')
+    stage_tick=time.monotonic();write_gzip(out/'manifest.json.gz',manifest)
+    (out/'completion.json').write_text(json.dumps(dict(success=True,process_seconds=time.monotonic()-start,
+        manifest_export_seconds=time.monotonic()-stage_tick))+'\n')
     return manifest
 
 
