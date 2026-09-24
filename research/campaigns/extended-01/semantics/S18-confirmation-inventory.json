@@ -1,0 +1,636 @@
+{
+  "scope": "CPU-only checkpoint deserialization/hash/state inventory. No actor construction, model forward, optimizer step or GPU access. Existing S18 main not inspected.",
+  "entries": [
+    {
+      "name": "s11-lr-decay-n8192-196k-dev201",
+      "seed": 201,
+      "checkpoint_path": "/home/brandonin/topoformer-campaign01-semantics/results/s11-lr-decay-n8192-196k-dev201/model-u24576.pt",
+      "checkpoint_sha256": "3799ade595500a083b9a558b6a5bc97c5cbc1b8bdce6e7e4b86d97b937ea373e",
+      "checkpoint_bytes": 694414587,
+      "manifest_sha256": "2d643d9ee37fe04cc316a28bec3c72cf515d4aa238a5fd9233002982b895006c",
+      "update": 24576,
+      "optimizer_steps": [
+        24576.0
+      ],
+      "optimizer_states": 98,
+      "parameter_tensors": 98,
+      "parameters": 57853781,
+      "optimizer_groups": [
+        {
+          "lr": 1e-05,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        }
+      ],
+      "visit_count": 8192,
+      "visit_min": 24,
+      "visit_max": 24,
+      "presentations": 196608,
+      "sampler_fields_present": true,
+      "cpu_tensor_only": true,
+      "initial_state_sha256": "27ce383eb52b3b35dd934796100c808ebadcbb6479f9454aeaea2c3b8909e5cb",
+      "final_state_sha256": "bb21e8c40a486eeeddd6075e428d6f1a41cbac93eefc72236ec19093bf7c6e6e",
+      "source_sha256": {
+        "campaign_semantics_continue.py": "6d5a8f4ae5143bdfc93f589fa3c189966a787e0fc6a83dc6bc06382c14ac8585",
+        "campaign_semantics_lr.py": "37382d47849c29f15b407dd9b4b7aa9d66e041ede7ba7477d016e4aa3711dd9a",
+        "campaign_semantics_lr_train.py": "00a23d1616106ee2ec069852b2405b62083999274b2bc9940277a9b96fca64fb",
+        "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+        "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+        "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+        "semantic_text_acquisition.py": "e67269012f0ef6e30b78c0265ab007f72f3278310dfad8fad526d60a38001d59",
+        "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+        "semantic_contracts.py": "914a12a24a14434918412f2ad71368f51085bd248c7398164b0c2b1c9a0e215f",
+        "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+        "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+        "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+        "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670"
+      },
+      "data_audit_sha256": "2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1",
+      "parent_checkpoint_sha256": "e54b23dc8362dd4d00381b6fd3115e48eef3942c519d8179e4c4e7b0610732af",
+      "training_config": {
+        "output_dir": "results/s11-lr-decay-n8192-196k-dev201",
+        "data_dir": "data/s01",
+        "seed": 201,
+        "device": "cuda",
+        "batch_size": 8,
+        "updates": 24576,
+        "learning_rate": 1e-05,
+        "negative_pairs": 128,
+        "checkpoints": [
+          16384,
+          20480,
+          24576
+        ],
+        "calibration_count": 128,
+        "evaluation_count": 512,
+        "train_limit": 8192,
+        "parent_checkpoint": "results/s03-current-n8192-131k-dev201/model-u16384.pt",
+        "parent_checkpoint_sha256": "e54b23dc8362dd4d00381b6fd3115e48eef3942c519d8179e4c4e7b0610732af",
+        "parent_evaluation": "results/s03-current-n8192-131k-dev201/evaluation-u16384.json.gz",
+        "parent_evaluation_sha256": "857f7d19193d59359cc717c37e81c13aa0bb2ae7049191a6e10a13142bd2b0ae",
+        "budget_status": "frozen",
+        "intervention": "override_restored_optimizer_lr_only",
+        "comparator_manifest": "results/s04-current-n8192-262k-dev201/manifest.json.gz",
+        "comparator_manifest_sha256": "8d2ac33c18b2a5ad2b086dc60d4ab0194cdb2e302589dac6d7ace873d4269c3a"
+      },
+      "same_ordered_model_shapes_as_s11": true
+    },
+    {
+      "name": "s12-parent-701",
+      "seed": 701,
+      "checkpoint_path": "/home/brandonin/topoformer-campaign01-semantics/results/s12-parent-701/model-u16384.pt",
+      "checkpoint_sha256": "72964b8b0e5bdd84175a56bfb65ca6fe5a033b0f5f47329c74b1b82f83022d59",
+      "checkpoint_bytes": 694414587,
+      "manifest_sha256": "e60ed2a4d4f5ecca7a36d71fd8d41385df0f169847f04f33d80560581ef66853",
+      "update": 16384,
+      "optimizer_steps": [
+        16384.0
+      ],
+      "optimizer_states": 98,
+      "parameter_tensors": 98,
+      "parameters": 57853781,
+      "optimizer_groups": [
+        {
+          "lr": 0.0001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        }
+      ],
+      "visit_count": 8192,
+      "visit_min": 16,
+      "visit_max": 16,
+      "presentations": 131072,
+      "sampler_fields_present": true,
+      "cpu_tensor_only": true,
+      "initial_state_sha256": "7a84c10a2f27c179e4c7b5ab45da92916376bbcbf9e0f8612499e0aac563e9e4",
+      "final_state_sha256": "ec218b6a431c2e3380404c8dc54538e3fb27a1c07ac07b849bf11905c28019b6",
+      "source_sha256": {
+        "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+        "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+        "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+        "semantic_text_acquisition.py": "e67269012f0ef6e30b78c0265ab007f72f3278310dfad8fad526d60a38001d59",
+        "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+        "semantic_contracts.py": "914a12a24a14434918412f2ad71368f51085bd248c7398164b0c2b1c9a0e215f",
+        "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+        "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+        "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+        "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670"
+      },
+      "data_audit_sha256": "2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1",
+      "parent_checkpoint_sha256": null,
+      "training_config": {
+        "output_dir": "results/s12-parent-701",
+        "data_dir": "data/s01",
+        "seed": 701,
+        "device": "cuda",
+        "batch_size": 8,
+        "updates": 16384,
+        "learning_rate": 0.0001,
+        "negative_pairs": 128,
+        "checkpoints": [
+          0,
+          8192,
+          16384
+        ],
+        "calibration_count": 128,
+        "evaluation_count": 512,
+        "train_limit": 8192,
+        "job": "parent",
+        "budget_status": "frozen"
+      },
+      "same_ordered_model_shapes_as_s11": true
+    },
+    {
+      "name": "s12-decay-701",
+      "seed": 701,
+      "checkpoint_path": "/home/brandonin/topoformer-campaign01-semantics/results/s12-decay-701/model-u24576.pt",
+      "checkpoint_sha256": "f419fe818626fc23b98f8e0bb7a89491ff5e015e529b5facb68ee5281d2e808a",
+      "checkpoint_bytes": 694414587,
+      "manifest_sha256": "bfd24b660c3a4a28577fc1d6cc7bcbdcf3f6ba138907d2660298b89e78c6112a",
+      "update": 24576,
+      "optimizer_steps": [
+        24576.0
+      ],
+      "optimizer_states": 98,
+      "parameter_tensors": 98,
+      "parameters": 57853781,
+      "optimizer_groups": [
+        {
+          "lr": 1e-05,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        }
+      ],
+      "visit_count": 8192,
+      "visit_min": 24,
+      "visit_max": 24,
+      "presentations": 196608,
+      "sampler_fields_present": true,
+      "cpu_tensor_only": true,
+      "initial_state_sha256": "ec218b6a431c2e3380404c8dc54538e3fb27a1c07ac07b849bf11905c28019b6",
+      "final_state_sha256": "0ce7b767ec460dca9ed9004c2379483603a70919e0a18651af3ff74782db7785",
+      "source_sha256": {
+        "campaign_semantics_continue.py": "6d5a8f4ae5143bdfc93f589fa3c189966a787e0fc6a83dc6bc06382c14ac8585",
+        "campaign_semantics_lr.py": "37382d47849c29f15b407dd9b4b7aa9d66e041ede7ba7477d016e4aa3711dd9a",
+        "campaign_semantics_lr_train.py": "00a23d1616106ee2ec069852b2405b62083999274b2bc9940277a9b96fca64fb",
+        "campaign_semantics_confirmation.py": "3eed1669a97fbf0a7cb2e0dc69c09c8bd04af92928490d0258cd7d469ccd6e7d",
+        "campaign_semantics_confirmation_train.py": "120b9fa02f0639c653d86a572ad03fe3d3e54e0ebb5ce23b7895088c99b31a54",
+        "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+        "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+        "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+        "semantic_text_acquisition.py": "e67269012f0ef6e30b78c0265ab007f72f3278310dfad8fad526d60a38001d59",
+        "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+        "semantic_contracts.py": "914a12a24a14434918412f2ad71368f51085bd248c7398164b0c2b1c9a0e215f",
+        "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+        "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+        "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+        "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670"
+      },
+      "data_audit_sha256": "2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1",
+      "parent_checkpoint_sha256": "72964b8b0e5bdd84175a56bfb65ca6fe5a033b0f5f47329c74b1b82f83022d59",
+      "training_config": {
+        "output_dir": "results/s12-decay-701",
+        "data_dir": "data/s01",
+        "seed": 701,
+        "device": "cuda",
+        "batch_size": 8,
+        "updates": 24576,
+        "learning_rate": 1e-05,
+        "negative_pairs": 128,
+        "checkpoints": [
+          16384,
+          24576
+        ],
+        "calibration_count": 128,
+        "evaluation_count": 512,
+        "train_limit": 8192,
+        "job": "fork",
+        "budget_status": "frozen",
+        "confirmation_sha256": "fc85da89fe4e1a522d1e0256fc1e58f8afb279494cb1af7ee4ac7235403a43f8",
+        "parent_checkpoint": "results/s12-parent-701/model-u16384.pt",
+        "parent_checkpoint_sha256": "72964b8b0e5bdd84175a56bfb65ca6fe5a033b0f5f47329c74b1b82f83022d59",
+        "parent_evaluation": "results/s12-parent-701/evaluation-u16384.json.gz",
+        "parent_evaluation_sha256": "e3c72555ea0e73ff30bc09c7ac9653b95d00cf3d40018bc4f6781659fb18fd74",
+        "parent_manifest": "results/s12-parent-701/manifest.json.gz",
+        "parent_manifest_sha256": "e60ed2a4d4f5ecca7a36d71fd8d41385df0f169847f04f33d80560581ef66853"
+      },
+      "same_ordered_model_shapes_as_s11": true
+    },
+    {
+      "name": "s12-parent-702",
+      "seed": 702,
+      "checkpoint_path": "/home/brandonin/topoformer-campaign01-semantics/results/s12-parent-702/model-u16384.pt",
+      "checkpoint_sha256": "79a9ba3c74bfe42bce72afe78c3029b34c4428d5ca7168392c7824a34ad98e16",
+      "checkpoint_bytes": 694414587,
+      "manifest_sha256": "6dab8326f34902dc332ae199018282f0829d608361a6fa0002eed2c6c0981c15",
+      "update": 16384,
+      "optimizer_steps": [
+        16384.0
+      ],
+      "optimizer_states": 98,
+      "parameter_tensors": 98,
+      "parameters": 57853781,
+      "optimizer_groups": [
+        {
+          "lr": 0.0001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        }
+      ],
+      "visit_count": 8192,
+      "visit_min": 16,
+      "visit_max": 16,
+      "presentations": 131072,
+      "sampler_fields_present": true,
+      "cpu_tensor_only": true,
+      "initial_state_sha256": "e026003c5c2695463a0a2b9960c360ccc21fe5dc11c6cbf2d0f1d7caee95635a",
+      "final_state_sha256": "e39bec97665ebe3829069375b59bee583b8defbb3864be9c293debadf92fdc39",
+      "source_sha256": {
+        "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+        "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+        "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+        "semantic_text_acquisition.py": "e67269012f0ef6e30b78c0265ab007f72f3278310dfad8fad526d60a38001d59",
+        "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+        "semantic_contracts.py": "914a12a24a14434918412f2ad71368f51085bd248c7398164b0c2b1c9a0e215f",
+        "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+        "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+        "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+        "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670"
+      },
+      "data_audit_sha256": "2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1",
+      "parent_checkpoint_sha256": null,
+      "training_config": {
+        "output_dir": "results/s12-parent-702",
+        "data_dir": "data/s01",
+        "seed": 702,
+        "device": "cuda",
+        "batch_size": 8,
+        "updates": 16384,
+        "learning_rate": 0.0001,
+        "negative_pairs": 128,
+        "checkpoints": [
+          0,
+          8192,
+          16384
+        ],
+        "calibration_count": 128,
+        "evaluation_count": 512,
+        "train_limit": 8192,
+        "job": "parent",
+        "budget_status": "frozen"
+      },
+      "same_ordered_model_shapes_as_s11": true
+    },
+    {
+      "name": "s12-decay-702",
+      "seed": 702,
+      "checkpoint_path": "/home/brandonin/topoformer-campaign01-semantics/results/s12-decay-702/model-u24576.pt",
+      "checkpoint_sha256": "64b3b035c386982d3f9563ff7e24bbd459fba8432cadaa60ffc89bf4c5d8261f",
+      "checkpoint_bytes": 694414587,
+      "manifest_sha256": "c3501de19812fa454ed2015df65728fe442b7268dea52d1ec2b1e5a3a0eaf3b2",
+      "update": 24576,
+      "optimizer_steps": [
+        24576.0
+      ],
+      "optimizer_states": 98,
+      "parameter_tensors": 98,
+      "parameters": 57853781,
+      "optimizer_groups": [
+        {
+          "lr": 1e-05,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        }
+      ],
+      "visit_count": 8192,
+      "visit_min": 24,
+      "visit_max": 24,
+      "presentations": 196608,
+      "sampler_fields_present": true,
+      "cpu_tensor_only": true,
+      "initial_state_sha256": "e39bec97665ebe3829069375b59bee583b8defbb3864be9c293debadf92fdc39",
+      "final_state_sha256": "d630372e839ece322d967ea06f1cc3c0404966906e95ad5646160d6ab2f5b0c1",
+      "source_sha256": {
+        "campaign_semantics_continue.py": "6d5a8f4ae5143bdfc93f589fa3c189966a787e0fc6a83dc6bc06382c14ac8585",
+        "campaign_semantics_lr.py": "37382d47849c29f15b407dd9b4b7aa9d66e041ede7ba7477d016e4aa3711dd9a",
+        "campaign_semantics_lr_train.py": "00a23d1616106ee2ec069852b2405b62083999274b2bc9940277a9b96fca64fb",
+        "campaign_semantics_confirmation.py": "3eed1669a97fbf0a7cb2e0dc69c09c8bd04af92928490d0258cd7d469ccd6e7d",
+        "campaign_semantics_confirmation_train.py": "120b9fa02f0639c653d86a572ad03fe3d3e54e0ebb5ce23b7895088c99b31a54",
+        "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+        "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+        "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+        "semantic_text_acquisition.py": "e67269012f0ef6e30b78c0265ab007f72f3278310dfad8fad526d60a38001d59",
+        "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+        "semantic_contracts.py": "914a12a24a14434918412f2ad71368f51085bd248c7398164b0c2b1c9a0e215f",
+        "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+        "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+        "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+        "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670"
+      },
+      "data_audit_sha256": "2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1",
+      "parent_checkpoint_sha256": "79a9ba3c74bfe42bce72afe78c3029b34c4428d5ca7168392c7824a34ad98e16",
+      "training_config": {
+        "output_dir": "results/s12-decay-702",
+        "data_dir": "data/s01",
+        "seed": 702,
+        "device": "cuda",
+        "batch_size": 8,
+        "updates": 24576,
+        "learning_rate": 1e-05,
+        "negative_pairs": 128,
+        "checkpoints": [
+          16384,
+          24576
+        ],
+        "calibration_count": 128,
+        "evaluation_count": 512,
+        "train_limit": 8192,
+        "job": "fork",
+        "budget_status": "frozen",
+        "confirmation_sha256": "fc85da89fe4e1a522d1e0256fc1e58f8afb279494cb1af7ee4ac7235403a43f8",
+        "parent_checkpoint": "results/s12-parent-702/model-u16384.pt",
+        "parent_checkpoint_sha256": "79a9ba3c74bfe42bce72afe78c3029b34c4428d5ca7168392c7824a34ad98e16",
+        "parent_evaluation": "results/s12-parent-702/evaluation-u16384.json.gz",
+        "parent_evaluation_sha256": "e7b4f3eeb66d64e5830530632790c68a03ce9e781058f3e02f4f7a50b74228f8",
+        "parent_manifest": "results/s12-parent-702/manifest.json.gz",
+        "parent_manifest_sha256": "6dab8326f34902dc332ae199018282f0829d608361a6fa0002eed2c6c0981c15"
+      },
+      "same_ordered_model_shapes_as_s11": true
+    },
+    {
+      "name": "s12-parent-703",
+      "seed": 703,
+      "checkpoint_path": "/home/brandonin/topoformer-campaign01-semantics/results/s12-parent-703/model-u16384.pt",
+      "checkpoint_sha256": "eb26ef2f66a4ab75add34a917f73799f8daab0330fac0afcc7629d132b311162",
+      "checkpoint_bytes": 694414587,
+      "manifest_sha256": "351b1a94f94e86be3c6913ede6fc9663a1d9e11a29d4db13a4bd65a96cb663d4",
+      "update": 16384,
+      "optimizer_steps": [
+        16384.0
+      ],
+      "optimizer_states": 98,
+      "parameter_tensors": 98,
+      "parameters": 57853781,
+      "optimizer_groups": [
+        {
+          "lr": 0.0001,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        }
+      ],
+      "visit_count": 8192,
+      "visit_min": 16,
+      "visit_max": 16,
+      "presentations": 131072,
+      "sampler_fields_present": true,
+      "cpu_tensor_only": true,
+      "initial_state_sha256": "6535ae69c173a99bb26ea8321eff43544404a4685b249c1462b2536cc2ea9860",
+      "final_state_sha256": "7c9fb38fa019cdf74d478695da9c1bbba6f0c050e1b6fc4c2fa9192fd1385758",
+      "source_sha256": {
+        "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+        "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+        "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+        "semantic_text_acquisition.py": "e67269012f0ef6e30b78c0265ab007f72f3278310dfad8fad526d60a38001d59",
+        "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+        "semantic_contracts.py": "914a12a24a14434918412f2ad71368f51085bd248c7398164b0c2b1c9a0e215f",
+        "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+        "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+        "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+        "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670"
+      },
+      "data_audit_sha256": "2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1",
+      "parent_checkpoint_sha256": null,
+      "training_config": {
+        "output_dir": "results/s12-parent-703",
+        "data_dir": "data/s01",
+        "seed": 703,
+        "device": "cuda",
+        "batch_size": 8,
+        "updates": 16384,
+        "learning_rate": 0.0001,
+        "negative_pairs": 128,
+        "checkpoints": [
+          0,
+          8192,
+          16384
+        ],
+        "calibration_count": 128,
+        "evaluation_count": 512,
+        "train_limit": 8192,
+        "job": "parent",
+        "budget_status": "frozen"
+      },
+      "same_ordered_model_shapes_as_s11": true
+    },
+    {
+      "name": "s12-decay-703",
+      "seed": 703,
+      "checkpoint_path": "/home/brandonin/topoformer-campaign01-semantics/results/s12-decay-703/model-u24576.pt",
+      "checkpoint_sha256": "be5c324a24d5a0741b4c66159e46a92f32b8d1691c51df887a17402ccb3267a2",
+      "checkpoint_bytes": 694414587,
+      "manifest_sha256": "9917ac55ece4df83970bc46474bd62938e3e549fe8322d2d8cd782c41a3b6416",
+      "update": 24576,
+      "optimizer_steps": [
+        24576.0
+      ],
+      "optimizer_states": 98,
+      "parameter_tensors": 98,
+      "parameters": 57853781,
+      "optimizer_groups": [
+        {
+          "lr": 1e-05,
+          "betas": [
+            0.9,
+            0.999
+          ],
+          "eps": 1e-08,
+          "weight_decay": 0.01,
+          "amsgrad": false,
+          "maximize": false,
+          "foreach": null,
+          "capturable": false,
+          "differentiable": false,
+          "fused": null,
+          "decoupled_weight_decay": true
+        }
+      ],
+      "visit_count": 8192,
+      "visit_min": 24,
+      "visit_max": 24,
+      "presentations": 196608,
+      "sampler_fields_present": true,
+      "cpu_tensor_only": true,
+      "initial_state_sha256": "7c9fb38fa019cdf74d478695da9c1bbba6f0c050e1b6fc4c2fa9192fd1385758",
+      "final_state_sha256": "9e7dfa80e845ccda88d7cba737295a58ce1b1fdb841535937f578e7e09829c2c",
+      "source_sha256": {
+        "campaign_semantics_continue.py": "6d5a8f4ae5143bdfc93f589fa3c189966a787e0fc6a83dc6bc06382c14ac8585",
+        "campaign_semantics_lr.py": "37382d47849c29f15b407dd9b4b7aa9d66e041ede7ba7477d016e4aa3711dd9a",
+        "campaign_semantics_lr_train.py": "00a23d1616106ee2ec069852b2405b62083999274b2bc9940277a9b96fca64fb",
+        "campaign_semantics_confirmation.py": "3eed1669a97fbf0a7cb2e0dc69c09c8bd04af92928490d0258cd7d469ccd6e7d",
+        "campaign_semantics_confirmation_train.py": "120b9fa02f0639c653d86a572ad03fe3d3e54e0ebb5ce23b7895088c99b31a54",
+        "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+        "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+        "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+        "semantic_text_acquisition.py": "e67269012f0ef6e30b78c0265ab007f72f3278310dfad8fad526d60a38001d59",
+        "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+        "semantic_contracts.py": "914a12a24a14434918412f2ad71368f51085bd248c7398164b0c2b1c9a0e215f",
+        "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+        "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+        "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+        "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670"
+      },
+      "data_audit_sha256": "2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1",
+      "parent_checkpoint_sha256": "eb26ef2f66a4ab75add34a917f73799f8daab0330fac0afcc7629d132b311162",
+      "training_config": {
+        "output_dir": "results/s12-decay-703",
+        "data_dir": "data/s01",
+        "seed": 703,
+        "device": "cuda",
+        "batch_size": 8,
+        "updates": 24576,
+        "learning_rate": 1e-05,
+        "negative_pairs": 128,
+        "checkpoints": [
+          16384,
+          24576
+        ],
+        "calibration_count": 128,
+        "evaluation_count": 512,
+        "train_limit": 8192,
+        "job": "fork",
+        "budget_status": "frozen",
+        "confirmation_sha256": "fc85da89fe4e1a522d1e0256fc1e58f8afb279494cb1af7ee4ac7235403a43f8",
+        "parent_checkpoint": "results/s12-parent-703/model-u16384.pt",
+        "parent_checkpoint_sha256": "eb26ef2f66a4ab75add34a917f73799f8daab0330fac0afcc7629d132b311162",
+        "parent_evaluation": "results/s12-parent-703/evaluation-u16384.json.gz",
+        "parent_evaluation_sha256": "52f770068659fabce0411071c4a69202902e566be36b7339400f9e8f74732bb8",
+        "parent_manifest": "results/s12-parent-703/manifest.json.gz",
+        "parent_manifest_sha256": "351b1a94f94e86be3c6913ede6fc9663a1d9e11a29d4db13a4bd65a96cb663d4"
+      },
+      "same_ordered_model_shapes_as_s11": true
+    }
+  ],
+  "seconds": 6.911128749139607,
+  "available_confirmation": {
+    "path": "research/results/campaign-01/semantics/s15-shape-cache-v2/confirmation.jsonl.gz",
+    "remote_path": "/home/brandonin/topoformer-campaign01-semantics/data/s15-shape-v2/confirmation.jsonl.gz",
+    "sha256": "2710e5e1b6fffab6fa33d56105de13e49d46d64c63d81f61c6ea331347229d32",
+    "shape_audit_sha256": "f8099bbb918997fdc84622f218e466f73b40933412aae7e14403566acb75ecb4",
+    "rows": 2048,
+    "alpha_unique": 2048,
+    "cell_counts": {
+      "3x4": 512,
+      "3x3": 512,
+      "4x3": 512,
+      "4x4": 512
+    },
+    "split_recheck": {
+      "train_mixed": {
+        "sha256": "8ddbd15bea881c13bfd24554ada9293082fcef7b616f6eeb3dad78a4bfa662d2",
+        "rows": 4096,
+        "confirmation_alpha_overlap": 0
+      },
+      "train_control": {
+        "sha256": "a67ee925c8e6d2e8eaa704171e4758fdd17fb32211d09dc8e829b35ed9283c5e",
+        "rows": 4096,
+        "confirmation_alpha_overlap": 0
+      },
+      "development": {
+        "sha256": "25522313035e646cfca4bf0efb1ae550c295cb55ddf6057558d03c42f2239dc3",
+        "rows": 2048,
+        "confirmation_alpha_overlap": 0
+      }
+    },
+    "status": "Reserved and no model inference per frozen S15/S17/S18 run protocols; this inventory reads cache metadata only. Existing S15 cache audit independently excludes prior S01/S13/S14 populations.",
+    "v1_same_confirmation_bytes": true,
+    "not_fresh_confirmations": {
+      "S01_reserved_confirmation": "Already inspected by S12/S14-reference/rename/S16 diagnostics; do not call unused.",
+      "S15_DEVELOPMENT": "Inspected by S15/S17 and current S18; not confirmation.",
+      "S15_v1_confirmation": "Same bytes as v2, not a second independent holdout."
+    }
+  },
+  "stage_equivalence": {
+    "suitable_new_lineage_parents": [
+      "s12-decay-701",
+      "s12-decay-702",
+      "s12-decay-703"
+    ],
+    "schedule": "16384updates at1e-4 then8192updates at1e-5;24576AdamWsteps total;196608presentations;24visits each8192originalTRAIN graphs",
+    "independence": "Separate scratch seeds701/702/703, each own model/AdamW/sampling trajectory; shared data and architecture. Both constant/decay forks within each seed share that parent and are not independent initializations.",
+    "selection_caveat": "All three parent endpoint results already inspected under S12; include fixed lineages without filtering on competence or choosing best. In particular preserve seed701 failure. No S15mixed shape-training baseline exists for these lineages yet.",
+    "current_source_constraint": "Current S18 bindings pin seed201 parent and its reused original baseline. New lineage execution requires separately frozen bindings/config/equivalence audit; these inventory files grant no run authority.",
+    "sampling_note": "S18 uses its declared reset mixed4096order seed15115 and per-presentation RNG150150000+n; old8192schedule states are present but would not be continued unchanged across a new mixed corpus."
+  },
+  "cost_clarification": {
+    "four_thousand_seconds": "Current two-arm hard cap, not a measured cost estimate or minimum. Do not infer replication infeasible from cap sums.",
+    "parents_already_available": "No fresh S11-like parent acquisition needed for701/702/703 decay endpoints.",
+    "incremental_work": "A paired replication still needs original/context/10pass mixed-shape4096updates for each chosen lineage; baseline201 S15 trajectory cannot replace anotherseed original. Add frozen confirmation evaluation, source/guard/serialization costs.",
+    "allocation": "Wait measured complete S18 main cost and root remaining ledger; no protocol selection or allocation here."
+  }
+}
