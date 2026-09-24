@@ -1,6 +1,6 @@
 # Campaign claim map
 
-Updated 2026-09-24 11:59 UTC. Historical stages, gates and raw results remain immutable. Each promotion consumes a named interface, not a blanket stage pass.
+Final campaign synthesis, 2026-09-24. Historical stages, gates and raw results remain immutable. Each promotion consumes a named interface, not a blanket stage pass.
 
 | Claim | Supplied mechanism | Learned mechanism | Current evidence | Next decision |
 |---|---|---|---|---|
@@ -18,9 +18,11 @@ Updated 2026-09-24 11:59 UTC. Historical stages, gates and raw results remain im
 | Coherent destination readout over deep paths | Public graph records, source/relation interface; model-score shared argmax read policy | Shallow-trained payload and routing network | Audited A14 three-seed shared-hard1019/1007/1015 versus original176/187/177 of1024; paired mean+81.41pp,95%CI79.49–83.24; conditional correct-route task3038/3038 | Restricted engineered-policy pass; all9strongreference models perfect. Close explicit-address diagnostic |
 | One exact operation followed by learned decision | Existing exact primitive, validity and schedule | Typed-record proposal lowering; return consumer and decision | C04 all three audited lineages:72 workspace joint cells and24 causal checks pass. Role-trained neural and supplied-copy alternatives also pass | Close restricted composition; no need to add orchestration without a new question |
 
-| Replicated known-motif sequential acquisition | Canonical typed serialization and public copy inventory; fixed TRAIN calibration only for workspace baselines | Scratch record learner versus independent inherited original/contextual learners | S20 all three known-motif competence/superiority gates pass; record macro95.898/94.727/94.857%; all arms heldout3×4 zero. [Final audit](review/S20-final-confirmation-audit.json), [report](semantics/S20-report.md) | Bounded fixed-learner pass, not architecture/FLOP/history match; S21 joint development gate fails; separate S22 diagnostic outcomes pending |
+| Replicated known-motif sequential acquisition | Canonical typed serialization and public copy inventory; fixed TRAIN calibration only for workspace baselines | Scratch record learner versus independent inherited original/contextual learners | S20 all three known-motif competence/superiority gates pass; record macro95.898/94.727/94.857%; all arms heldout3×4 zero. [Final audit](review/S20-final-confirmation-audit.json), [report](semantics/S20-report.md) | Bounded fixed-learner pass, not architecture/FLOP/history match; S21 joint development gate fails; S22 oracle diagnostic closed without learned promotion |
 
-| Broader motif corpus acquisition | Same typed serialization, public input and fixed corpus intervention | Same scratch sequential learner in both arms | S21 new-motif acquisition and old-known retention pass; held-out3×4 is0/512 both arms at every curve. [Report](semantics/S21-report.md), [final audit](review/S21-final-development-audit.json) | Joint gate fails; conditional confirmation ineligible. Canonical-position errors alone do not prove non-isomorphism. S22 separately registered diagnostic pending |
+| Broader motif corpus acquisition | Same typed serialization, public input and fixed corpus intervention | Same scratch sequential learner in both arms | S21 new-motif acquisition and old-known retention pass; held-out3×4 is0/512 both arms at every curve. [Report](semantics/S21-report.md), [final audit](review/S21-final-development-audit.json) | Joint gate fails; conditional confirmation ineligible. Canonical errors alone do not prove non-isomorphism; separate strict audit rejects all valid held-out outputs. S22 oracle diagnostic closed without learned promotion |
+
+| Correct-node sufficiency for frozen relation generation | Privileged count/kinds/full NODE prefix; fixed S21 checkpoints | Unchanged frozen relation generator | S22 all held-out exact relations and complete graphs0/512, even with correct nodes supplied512/512; strict scored node421/311 reflects final validity. [Report](semantics/S22-report.md), [audit](review/S22-final-diagnostic-audit.json) | No learned promotion or node-only repair attested; close branch, preserve partial relation information |
 
 ## Boundaries that matter
 
@@ -31,3 +33,7 @@ Updated 2026-09-24 11:59 UTC. Historical stages, gates and raw results remain im
 **Composition.** C04 uses one exact operation and one learned subsequent decision, not two autonomous exact calls. Numerical train/test overlap is high; this is not unseen arithmetic. The successful role-trained neural baseline and supplied single-return copying weaken necessity claims, and workspace delay16 is roughly47–50times slower in the measured batch1 comparison. Copying a supplied single return is not learned addressing among multiple returns.
 
 **Statistics and promotion.** Shared-event intervals describe event sampling conditional on the fixed seeds; seed variation remains explicit. Restricted new gates do not rewrite earlier failures. No current result establishes broad language understanding, autonomous scheduling, numerical-range generalization or universal superiority of protected state.
+
+## Campaign closure
+
+The replicated known-motif learner comparison stands alongside a sharp omitted-combination boundary. Broader corpus acquisition and privileged node correction do not pass that boundary. Restricted return use works, while balanced tails remain; strong role/copy and attention references limit necessity and superiority claims. Closure reflects convergence of these audited questions, not budget exhaustion. No automatic extension, ineligible confirmation or speculative repair is queued by this claim map.
