@@ -25,3 +25,11 @@ class MultisurfacePreparationTests(unittest.TestCase):
         with self.assertRaises(SurfaceCopyContractError):make_record(e,self.vocab,{})
     def test_bulk_generation_requires_explicit_release(self):
         with self.assertRaisesRegex(ValueError,'not been released'):run({'generation_status':'prepared_not_authorized'})
+
+    def test_actual_token_feature_collision_rejected(self):
+        from topoformer.campaign_semantics_multisurface_data import register_feature_target
+        seen={}
+        a=register_feature_target('alpha beta','target-a',seen)
+        b=register_feature_target('alpha    beta','target-a',seen)
+        self.assertEqual(a,b)
+        with self.assertRaisesRegex(ValueError,'feature sequence'):register_feature_target('alpha    beta','target-b',seen)

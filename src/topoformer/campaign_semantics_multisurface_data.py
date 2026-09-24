@@ -10,6 +10,7 @@ from .campaign_semantics import digest
 from .campaign_semantics_data import compact_example,load_cache,target as historical_target
 from .campaign_semantics_surface_contract import register_surface_target
 from .semantic_graph import SemanticGraph,SemanticNode,SemanticEdge
+from .semantic_curriculum import encode_text
 from .semantic_scaling import surface_input,targets,tokens
 from .tcn_data import build_tcn_example,verify_vendor_manifest,SOURCE_COMMIT,RENDERER_VERSION
 from .thinking_language import ActorInput
@@ -30,7 +31,19 @@ def target(row,vocab,language):
     return targets(graph,public_view(row,language),128,vocab,language=language)
 
 
-def make_record(example,vocab,seen_public):
+def register_feature_target(text,target_sha256,seen_features):
+    features,length=encode_text(text)
+    if length!=len(tokens(ActorInput(text,()))) or features.shape[1]!=length:raise ValueError('actor token truncation')
+    result={}
+    for name,value in [('float32',features),('bfloat16',features.to(torch.bfloat16).view(torch.int16))]:
+        key=name+':'+hashlib.sha256(value.numpy().tobytes()).hexdigest()
+        if key in seen_features and seen_features[key]!=target_sha256:raise ValueError('Identical actor feature sequence has incompatible targets')
+        seen_features[key]=target_sha256;result[name]=key.split(':',1)[1]
+    return result
+
+
+def make_record(example,vocab,seen_public,seen_features=None):
+    if seen_features is None:seen_features={}
     english,_=surface_input(example,'english');record=compact_example(example,english);record['cache_version']=CACHE_VERSION;record['surfaces']={};graph=example.privileged.graph
     english_target=targets(graph,english,128,vocab,language='english')
     for language in RENDERERS:
@@ -38,7 +51,8 @@ def make_record(example,vocab,seen_public):
         if gold['value'].eq(0).any():raise ValueError('target outside frozen TRAIN value vocabulary')
         contract=register_surface_target(graph,public,language,seen_public,target=gold)
         if any(not torch.equal(gold[k],english_target[k]) for k in ('presence','kind','value','edges','slots')):raise ValueError('renderer changed non-copy target semantics')
-        record['surfaces'][language]=dict(text=public.text,public_sha256=hashlib.sha256(public.text.encode()).hexdigest(),tokens=len(tokens(public)),target_sha256=contract['target_sha256'])
+        feature_hashes=register_feature_target(public.text,contract['target_sha256'],seen_features)
+        record['surfaces'][language]=dict(actor_feature_sha256=feature_hashes,text=public.text,public_sha256=hashlib.sha256(public.text.encode()).hexdigest(),tokens=len(tokens(public)),target_sha256=contract['target_sha256'])
     # Compact target conversion must preserve the audited compiler path.
     for language in RENDERERS:
         gold=targets(graph,public_view(record,language),128,vocab,language=language)
@@ -46,11 +60,12 @@ def make_record(example,vocab,seen_public):
     return record
 
 
-def regenerate_allowed_train(rows,vocab,seen_public):
+def regenerate_allowed_train(rows,vocab,seen_public,seen_features=None):
+    if seen_features is None:seen_features={}
     result=[]
     for old in rows:
         example=build_tcn_example('unification',old['seed'],difficulty=.5,languages=RENDERERS)
-        record=make_record(example,vocab,seen_public)
+        record=make_record(example,vocab,seen_public,seen_features)
         for key in ('seed','text','graph_sha256','semantic_sha256','public_sha256','nodes','edges','tokens'):
             if record[key]!=old[key]:raise ValueError(f'Pinned TRAIN regeneration mismatch: {key}, seed {old["seed"]}')
         old_target=historical_target(old,vocab);new_target=target(record,vocab,'english')
@@ -85,17 +100,17 @@ def run(config):
     torch.set_num_threads(2);tick=time.monotonic();data=Path(config['source_data_dir']);out=Path(config['output_dir']);out.mkdir(parents=True,exist_ok=False)
     excluded,old_counts=exclusion_metadata(data,config['exclude_cache_sha256']);old_train=load_cache(data/'train.jsonl.gz')
     if len(old_train)!=8192:raise ValueError('allowed TRAIN population changed')
-    vocab=json.loads((data/'audit.json').read_text())['value_vocabulary'];seen_public={};train=regenerate_allowed_train(old_train,vocab,seen_public)
+    vocab=json.loads((data/'audit.json').read_text())['value_vocabulary'];seen_public={};seen_features={};train=regenerate_allowed_train(old_train,vocab,seen_public,seen_features)
     development=[];duplicates=0
     for attempt in range(config['max_development_attempts']):
         seed=config['development_seed']+attempt;example=build_tcn_example('unification',seed,difficulty=.5,languages=RENDERERS)
         english,_=surface_input(example,'english');key=compact_example(example,english)['semantic_sha256']
         if key in excluded:duplicates+=1;continue
-        record=make_record(example,vocab,seen_public);excluded.add(key);development.append(record)
+        record=make_record(example,vocab,seen_public,seen_features);excluded.add(key);development.append(record)
         if len(development)==512:break
     if len(development)!=512:raise ValueError('declared fresh semantic-support budget exhausted')
     for name,rows in [('train',train),('development',development)]:write_rows(out/(name+'.jsonl.gz'),rows)
-    result=dict(cache_version=CACHE_VERSION,source_commit=SOURCE_COMMIT,renderer_version=RENDERER_VERSION,config=config,train_unique_graphs=len(train),development_unique_graphs=len(development),surfaces_per_graph=2,train_surface_count=2*len(train),development_surface_count=2*len(development),old_excluded_counts=old_counts,duplicate_semantic_keys_skipped=duplicates,development_attempts=attempt+1,all_surfaces_grouped_by_construction=True,train_regeneration_exact=True,per_renderer_copy_injectivity_validated=True,public_target_consistency_validated=True,value_vocabulary=vocab,cpu_seconds=time.monotonic()-tick,cache_sha256={n:digest(out/(n+'.jsonl.gz')) for n in ('train','development')},source_sha256={n:digest(Path(__file__).with_name(n)) for n in ('campaign_semantics_multisurface_data.py','campaign_semantics_surface_contract.py','campaign_semantics_data.py','semantic_scaling.py','tcn_data.py','semantic_graph.py')})
+    result=dict(cache_version=CACHE_VERSION,source_commit=SOURCE_COMMIT,renderer_version=RENDERER_VERSION,config=config,train_unique_graphs=len(train),development_unique_graphs=len(development),surfaces_per_graph=2,train_surface_count=2*len(train),development_surface_count=2*len(development),old_excluded_counts=old_counts,duplicate_semantic_keys_skipped=duplicates,development_attempts=attempt+1,all_surfaces_grouped_by_construction=True,train_regeneration_exact=True,per_renderer_copy_injectivity_validated=True,public_target_consistency_validated=True,actor_feature_target_consistency_validated=True,feature_precision_audits=['float32','bfloat16'],distinct_feature_sequences=len(seen_features)//2,value_vocabulary=vocab,cpu_seconds=time.monotonic()-tick,cache_sha256={n:digest(out/(n+'.jsonl.gz')) for n in ('train','development')},source_sha256={n:digest(Path(__file__).with_name(n)) for n in ('campaign_semantics_multisurface_data.py','campaign_semantics_surface_contract.py','campaign_semantics_data.py','semantic_scaling.py','tcn_data.py','semantic_graph.py')})
     (out/'audit.json').write_text(json.dumps(result,indent=2)+'\n');return result
 
 if __name__=='__main__':
