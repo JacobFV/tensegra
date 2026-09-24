@@ -120,7 +120,7 @@ def main():
             "limits": "Constructive public-encoder collisions, not measured population frequency or task-unsolvability proof. No neural inference/training.",
             "wall_seconds": time.perf_counter()-started, "process_cpu_seconds": time.process_time()-cpu}
         args.output.parent.mkdir(parents=True,exist_ok=True)
-        args.output.write_text(json.dumps(raw,indent=2,sort_keys=True))
+        args.output.write_text(json.dumps(raw,separators=(",", ":"),sort_keys=True))
         print(json.dumps({"output":str(args.output),"pairs":len(pairs),"process_cpu_seconds":raw["process_cpu_seconds"]}))
 
 
