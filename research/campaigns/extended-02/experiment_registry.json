@@ -244,6 +244,28 @@
         "learningcurve"
       ],
       "next_branch": "Six-memberPBT vs multistart/single with explicitwarmstart andRL; ifpoorfitlocalizefeatures/teacher"
+    },
+    {
+      "id": "RL01-data",
+      "status": "registered",
+      "hypothesis": "Fresh alpha-disjoint sixmotif training/known andomitted3x4 corpora remain observable/identifiable under unchangedgenerator.",
+      "intervention": "Versioned relation-only continuation dataset; independently auditedanswers and publicfeatures",
+      "comparator": "HistoricalS21 exclusioninventory alltrain/DEV/confirmationalphaonly",
+      "observable_inputs": "Public surfaces; freeevaluation receives privilegedNODEprefix only",
+      "privileged_targets": "Exactgraphtraining labels; no runtimeagentcoupling",
+      "split": "1024train,512knownDEV,512omittedDEV; TRAIN128 panel, freshseed302100000",
+      "selection_rule": "Abort generatorcontract violations; no performancebasedselection",
+      "budget": {
+        "gpu_seconds": 0,
+        "cpu_core_seconds": 3600
+      },
+      "metrics": [
+        "alphaoverlap",
+        "observablecollision",
+        "capacity",
+        "uniquegraphs"
+      ],
+      "next_branch": "<=120GPU-secondprofile thencombined900secceiling iffeasible"
     }
   ]
 }
