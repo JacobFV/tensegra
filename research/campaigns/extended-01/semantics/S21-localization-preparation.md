@@ -1,0 +1,11 @@
+# Prospective S21 generated-prefix localization
+
+Prepared before either complete S21 development arm is inspected. The script requires the final top-level manifest, successful closed launcher receipt, exact supplied frozen config hash, both complete4096-update arms, all four registered checkpoints and all TRAIN/DEV artifacts. Every required cell/event population must be complete; all paired DEV targets must match. It refuses profile runs, partial arms/checkpoints, timeouts, hash changes, or changed population. No confirmation input exists.
+
+At the fixed4096 endpoint, it describes every greedy generated prefix, including invalid records. Per cell: first node mismatch(kind/value/copy or missing/extra node); exact node-kind sequence and entity-removed layout agreement; missing/extra typed ordered edges and slot-only mismatches after correct nodes; invalid reasons, missing EOS and duplicate records. Paired comparisons retain complete-graph correct/wrong transitions and category/layout transitions on the same events.
+
+Edge serialization order itself is not graph semantics: the script compares semantic edge sets and separately labels the first positional edge discrepancy as an order-sensitive diagnostic. Entity-removed skeletons are diagnostic only, never a relaxed success criterion. Canonical position failures are not automatically graph-isomorphism or causal mechanism claims. The inherited exact graph metric remains primary; invalid sequences receive no partial graph credit.
+
+Teacher-forced field losses/accuracies are copied into a separate explicitly labeled section, never mixed with free-running graph performance. No fitting, thresholds, oracle inference, architecture selection or updated experimental gate is introduced.
+
+Files: `S21-localization.py`, `S21-localization-check.py`. Fifteen synthetic tests cover valid records, public-copy canonicalization, wrong/missing nodes, slot errors, retained invalid/duplicate prefixes, missing EOS, and fail-closed matrix guards. These tests use no experiment outcomes. To run analysis, supply `--main --receipt --config --config-sha256 --development --output` after root releases the closed matrix. The fixed config hash must be provided from the launch record, not guessed from a profile.
