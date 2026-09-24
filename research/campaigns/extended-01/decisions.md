@@ -58,3 +58,6 @@ N1 clean answer accuracy is strong, while reversal errors survive fully correct 
 
 ## 23:48 UTC — confirmation and stronger controls
 S11's minimal LR change warrants the frozen three-parent paired S12 confirmation before adding S09's contextual path. C02's single-seed rekey benefit is substantial but remains below the acquired-interface criterion; retain it and test the stronger N1's role shortcut with one isolated augmentation. A07 addresses the remaining graph-record comparator gap without altering A06. No confirmation results select these development branches.
+
+## 2026-09-24 05:13 UTC — preserve replication and informative negatives
+S12 seed701 decay improves complete graph recovery0→66/1024 but fails103 competence; all remaining paired seeds remain unchanged. A08 reports identical corrupted-graph execution across the strongest routing interfaces; independent audit pending. Do not search for a preferred attention winner. A09's same-population IID/moderate monitoring and training loss are still improving, so a registered bounded saved-state continuation is more informative than labeling its underacquisition an architectural limit. C04 profiles precede exact main cap freeze.
