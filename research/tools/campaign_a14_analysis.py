@@ -7,6 +7,55 @@ import numpy as np
 
 SEEDS=(1401,1402,1403)
 POLICIES=('unchanged','both_hard','shared_soft','shared_hard','oracle_common')
+CONDITIONS=[dict(nodes=32,depth=4,groups=4),dict(nodes=64,depth=8,groups=4),dict(nodes=128,depth=32,groups=8)]
+PUBLIC_KEYS={f'c{ci}_{name}' for ci in range(3) for name in ['gold','successor','start','relation','values','input_keys','input_attributes','input_instructions','input_adjacency']}
+
+
+def require(condition,message):
+    if not condition:raise ValueError(message)
+
+
+def hash_map(value,keys):
+    return set(value)==set(keys) and all(isinstance(v,str) and len(v)==64 and set(v)<=set('0123456789abcdef') for v in value.values())
+
+
+def validate_run_contract(cfg,manifest,arrays):
+    require(cfg['seed'] in SEEDS and cfg['steps']==6000 and cfg['examples']==1024 and cfg['batch']==16,'Fixed seed/endpoint/batch/population mismatch')
+    require(cfg['conditions']==CONDITIONS and cfg['data_seed']==271000000 and cfg['order_seed']==272000000 and cfg['monitor_steps']==[1000,3000,6000],'Frozen condition/population/monitor mismatch')
+    require(manifest['seed']==cfg['seed'] and manifest['steps']==6000 and manifest['presentations']==96000,'Manifest training exposure mismatch')
+    frozen=manifest['confirmation']
+    require(frozen['initial_tensor_sha256']==frozen['final_tensor_sha256']==manifest['final_tensor_sha256'],'Inference tensor mutation/binding mismatch')
+    require(frozen['policies']==list(POLICIES) and set(arrays)==set(POLICIES),'Frozen policy set/order mismatch')
+    require(hash_map(frozen['public_sha256'],PUBLIC_KEYS),'Missing/invalid full public hash bindings')
+    require(hash_map(frozen['record_order_sha256'],{'c0','c1','c2'}),'Missing/invalid record-order hash bindings')
+    for policy,a in arrays.items():
+        for ci,c in enumerate(CONDITIONS):
+            for name in ['task','suffix_value_trajectory','exact_pointer_path','all_node']:
+                value=a[f'c{ci}_{name}'];require(value.shape==(1024,),f'{policy}: truncated/malformed event metric {name}')
+                require(np.isfinite(value).all() and ((value>=0)&(value<=1)).all(),f'{policy}: invalid event metric {name}')
+                if name!='all_node':require(((value==0)|(value==1)).all(),f'{policy}: nonbinary event label {name}')
+            for name in ['pred','route']:require(a[f'c{ci}_{name}'].shape==(1024,c['depth'],c['nodes']),f'{policy}: malformed {name} shape')
+            required_query=['query_mean_route_correct']+[f'query_{kind}_{metric}' for kind in ['record','original_destination','used_destination'] for metric in ['head_correct','heads_agree']]
+            for name in required_query:
+                value=a[f'c{ci}_diagnostic_{name}'];require(value.shape==(1024,c['depth'],8),f'{policy}: malformed query/head shape {name}')
+                require(((value==0)|(value==1)).all(),f'{policy}: nonbinary query/head label {name}')
+            for name in a:
+                if name.startswith(f'c{ci}_diagnostic_'):require(a[name].shape==(1024,c['depth'],8),f'{policy}: malformed diagnostic shape {name}')
+
+
+def validate_references(cfg,manifest,public):
+    expected=json.loads((Path(__file__).resolve().parents[2]/'configs/campaign-a14-engineering-references.json').read_text())
+    require(cfg==expected,'Frozen reference configuration mismatch')
+    require(manifest['optimizer_updates']==0 and len(manifest['references'])==9,'Reference count/update mismatch')
+    identities={(r['seed'],r['mode']):r for r in expected['checkpoints']};seen=set()
+    for ref in manifest['references']:
+        identity=(ref['seed'],ref['mode']);require(identity in identities and identity not in seen,'Missing/duplicate/unknown reference identity');seen.add(identity)
+        original=identities[identity]
+        require(ref['sha256']==original['sha256'] and ref['path']==original['path'],'Reference checkpoint provenance mismatch')
+        require(ref['policies']==['a06_successful'] and ref['reference_mode']==ref['mode'],'Reference policy mismatch')
+        require(ref['initial_tensor_sha256']==ref['final_tensor_sha256'],'Reference inference mutation')
+        require(hash_map(ref['public_sha256'],PUBLIC_KEYS) and ref['public_sha256']==public,'Reference public graph mismatch')
+    require(seen==set(identities),'Incomplete reference identities')
 
 
 def joint_statistics(original,shared,route,replicates=10000,seed=291000000):
@@ -40,11 +89,12 @@ def analyze(runs,references=None):
     for run in runs:
         cfg=json.loads((run/'config.json').read_text());manifest=json.loads((run/'manifest.json').read_text())
         seed=cfg['seed']
-        if seed in payload or seed not in SEEDS or cfg['steps']!=6000 or cfg['examples']!=1024:raise ValueError('Fixed seed/endpoint/population contract mismatch')
-        if cfg['data_seed']!=271000000 or cfg['order_seed']!=272000000 or cfg['monitor_steps']!=[1000,3000,6000]:raise ValueError('Frozen population/monitor contract mismatch')
+        if seed in payload:raise ValueError('Duplicate seed')
+        arrays={policy:np.load(run/'confirmation'/f'{policy}.npz') for policy in POLICIES}
+        validate_run_contract(cfg,manifest,arrays)
         if public is None:public=manifest['confirmation']['public_sha256'];order=manifest['confirmation']['record_order_sha256']
         if public!=manifest['confirmation']['public_sha256'] or order!=manifest['confirmation']['record_order_sha256']:raise ValueError('Public graphs/record order differ across seeds')
-        payload[seed]={policy:np.load(run/'confirmation'/f'{policy}.npz') for policy in POLICIES}
+        payload[seed]=arrays
         provenance[str(seed)]={str(p.relative_to(run)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(run.rglob('*')) if p.is_file() and p.suffix in ('.json','.npz')}
     if set(payload)!=set(SEEDS):raise ValueError('All three fixed seeds required')
     result=dict(seeds=list(SEEDS),input_sha256=provenance,public_hashes_match=True,record_order_hashes_match=True,conditions=[])
@@ -80,6 +130,7 @@ def analyze(runs,references=None):
     result['engineering_references']='pending' if references is None else {}
     if references is not None:
         m=json.loads((references/'manifest.json').read_text())
+        validate_references(json.loads((references/'config.json').read_text()),m,public)
         for ref in m['references']:
             if ref['public_sha256']!=public:raise ValueError('Reference public graph mismatch')
             tag=f"{ref['seed']}-{ref['mode']}"
