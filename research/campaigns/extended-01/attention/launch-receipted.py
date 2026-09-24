@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+"""Run one explicitly released frozen job, with durable process accounting."""
+import argparse
+import datetime
+import fcntl
+import hashlib
+import json
+import os
+from pathlib import Path
+import signal
+import socket
+import subprocess
+import time
+
+JOBS = {
+    "a09": ("0880c64", "campaign-a09-record-extension.json", "89c486b467c178ed354d443d1b0023521f855b649ca45abfcfa6727571462f66", "campaign_attention_records_study", 180),
+    "a08": ("e789147", "campaign-a08-frozen.json", "04b61a0acd05ece7cab53eb97759b4e9203a6f1011b3ff05b97d76b694a9e2e6", "campaign_attention_corruption_study", 300),
+}
+
+
+def atomic_json(path, value):
+    temporary = path.with_suffix(".json.tmp")
+    with temporary.open("w") as handle:
+        json.dump(value, handle, indent=2)
+        handle.write("\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(temporary, path)
+    descriptor = os.open(path.parent, os.O_DIRECTORY)
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
+
+
+def utc():
+    return datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("job", choices=JOBS)
+    parser.add_argument("--release", required=True, help="Coordinator's explicit per-job release identifier")
+    args = parser.parse_args()
+    source, config_name, config_sha, module, cap = JOBS[args.job]
+    stage = Path(f"/tmp/campaign-{args.job}-source-{source}")
+    config = stage / "configs" / config_name
+    assert hashlib.sha256(config.read_bytes()).hexdigest() == config_sha
+    lock = open("/tmp/topoformer-attention-gpu.lock", "w")
+    fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    idle = subprocess.check_output(["nvidia-smi", "--query-compute-apps=pid,process_name,used_gpu_memory", "--format=csv,noheader"], text=True)
+    if idle.strip():
+        raise SystemExit(f"GPU not idle; refusing launch: {idle}")
+    root = Path.home() / "topoformer-campaign01" / "attention" / f"{args.job}-receipted"
+    root.mkdir(parents=True, exist_ok=False)
+    command = [str(Path.home() / "topoformer-stage8-cuda/bin/python"), "-m", f"topoformer.{module}", "--config", str(config), "--output", str(root / "results")]
+    receipt = dict(job=args.job, source=source, config_sha256=config_sha, cap_seconds=cap,
+                   release=args.release, hostname=socket.gethostname(), command=command,
+                   launcher_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                   started_utc=utc(), status="started", gpu_idle_query=idle)
+    atomic_json(root / "receipt.json", receipt)
+    environment = dict(os.environ, PYTHONPATH=str(stage / "src"), OMP_NUM_THREADS="2", OPENBLAS_NUM_THREADS="2", MKL_NUM_THREADS="2")
+    started = time.monotonic()
+    process = None
+    try:
+        with (root / "process.log").open("wb") as log:
+            process = subprocess.Popen(command, cwd=stage, env=environment, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
+            try:
+                result = process.wait(timeout=cap)
+                receipt["status"] = "completed" if result == 0 else "failed"
+            except subprocess.TimeoutExpired:
+                os.killpg(process.pid, signal.SIGKILL)
+                process.wait()
+                result = 124
+                receipt["status"] = "timeout"
+            log.flush()
+            os.fsync(log.fileno())
+        receipt["exit_code"] = result
+    except BaseException as error:
+        if process is not None and process.poll() is None:
+            os.killpg(process.pid, signal.SIGKILL)
+            process.wait()
+        receipt.update(status="launcher_error", error=repr(error), exit_code=1)
+        raise
+    finally:
+        receipt.update(ended_utc=utc(), full_process_occupancy_seconds=time.monotonic() - started)
+        atomic_json(root / "receipt.json", receipt)
+    print(json.dumps(receipt), flush=True)
+    return receipt["exit_code"]
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
