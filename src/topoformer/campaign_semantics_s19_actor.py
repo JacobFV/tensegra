@@ -3,7 +3,8 @@
 Two distinct encoder and two distinct decoder layers, width1024/8heads/FFN4w,
 dropout0. Public encode_text features plus fixed sinusoidal positions. Records
 are [tag,a,b,c,d]: BOS0, NODE1(kind,value,copy,-1), EDGE2(src,dst,role,slot),
-EOS3, PAD4; inactive fields=-1. Class logits use +1 for nullable value/copy/slot.
+EOS3, PAD4; inactive fields=-1. Output value/copy classes are direct indices; only slot uses +1 for valid NONE.
+Nullable preceding-record embeddings retain -1 inactive fields.
 The codec owns graph reconstruction/semantic validity. This module supplies
 exact public-token copying given a learned index, never a graph/term compiler.
 """
@@ -99,10 +100,10 @@ class TypedRecordActor(nn.Module):
         self.slot_embedding=nn.Embedding(max_slot+1,width,padding_idx=0)
         self.copy_input=nn.Linear(width,width,bias=False)
         self.type_head=nn.Linear(width,3) # index0/1/2 means NODE/EDGE/EOS
-        self.kind_head=nn.Linear(width,len(KINDS));self.value_head=nn.Linear(width,value_count+1)
+        self.kind_head=nn.Linear(width,len(KINDS));self.value_head=nn.Linear(width,value_count)
         self.source_head=nn.Linear(width,node_capacity);self.target_head=nn.Linear(width,node_capacity)
         self.role_head=nn.Linear(width,len(ROLES));self.slot_head=nn.Linear(width,max_slot+1)
-        self.copy_query=nn.Linear(width,width);self.copy_key=nn.Linear(width,width);self.copy_none=nn.Linear(width,1)
+        self.copy_query=nn.Linear(width,width);self.copy_key=nn.Linear(width,width)
     @property
     def parameter_count(self):return sum(p.numel() for p in self.parameters())
     def autocast(self):
@@ -150,7 +151,7 @@ class TypedRecordActor(nn.Module):
         x=self.decoder_norm(x)
         copy=self.copy_query(x)@cache.copy_keys.transpose(-1,-2)/math.sqrt(self.width)
         copy=copy.masked_fill(~cache.public_mask[:,None,:],-torch.inf)
-        return {**{k:head(x).float() for k,head in (('type',self.type_head),('kind',self.kind_head),('value',self.value_head),('source',self.source_head),('target',self.target_head),('role',self.role_head),('slot',self.slot_head))},'copy':torch.cat((self.copy_none(x),copy),dim=-1).float()}
+        return {**{k:head(x).float() for k,head in (('type',self.type_head),('kind',self.kind_head),('value',self.value_head),('source',self.source_head),('target',self.target_head),('role',self.role_head),('slot',self.slot_head))},'copy':copy.float()}
     def forward(self,publics,previous_records):
         """Logits after each supplied PREVIOUS record; first record must be BOS."""
         with self.autocast():
@@ -197,11 +198,10 @@ class TypedRecordActor(nn.Module):
                     tag=choice['type'][i]+1
                     if tag==EOS:r=[EOS,-1,-1,-1,-1];status[i]='eos'
                     elif tag==NODE:
-                        kind=choice['kind'][i];copy=choice['copy'][i]-1 if kind in copying_kinds else -1
-                        value=-1 if kind in copying_kinds else choice['value'][i]-1;r=[NODE,kind,value,copy,-1]
+                        kind=choice['kind'][i];copy=choice['copy'][i] if kind in copying_kinds else -1
+                        value=-1 if kind in copying_kinds else choice['value'][i];r=[NODE,kind,value,copy,-1]
                         if edge_phase[i]:status[i]='node_after_edge'
                         elif nodes[i]>=self.node_capacity:status[i]='node_capacity_overflow'
-                        elif (kind in copying_kinds and copy<0) or (kind not in copying_kinds and value<0):status[i]='missing_node_value'
                         else:nodes[i]+=1
                     else:
                         r=[EDGE,choice['source'][i],choice['target'][i],choice['role'][i],choice['slot'][i]-1];edge_phase[i]=True
