@@ -293,6 +293,28 @@ def extract(root, c04_audit=None, c04_provisional=None):
                     for policy,counts in policies.items():
                         add('s15_learning',source,arm=arm,shape=shape,policy=policy,added_update=curve['added_update'],**counts)
         add('s15_paired',source,paired=summary['paired'],criteria=summary['criteria'],confirmation_eligible=summary['confirmation_eligible'],one_paired_extension_eligible=summary['one_paired_extension_eligible'])
+    audit_path=review+'S16-main-audit.json'
+    if (root/audit_path).exists():
+        audit=read(audit_path)
+        assert audit['all_paired_components_repairs_regressions_verified']
+        for path,digest in audit['input_sha256'].items():
+            assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'S16 binding mismatch: {path}'
+            inputs[path]=digest
+        source=base+'semantics/s16-main/paired-summary.json';summary=read(source)
+        for endpoint in summary['endpoints']:
+            for policy,counts in endpoint['policies'].items():
+                add('s16_normalization',source,seed=endpoint['seed'],arm=endpoint['arm'],policy=policy,**counts)
+    audit_path=review+'S17-main-pair-audit.json'
+    if (root/audit_path).exists():
+        for name in ('S17-main-audit.json','S17-main-pair-audit.json'):
+            audit=read(review+name)
+            for path,digest in audit['input_sha256'].items():
+                assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'S17 binding mismatch: {path}'
+                inputs[path]=digest
+        source=base+'semantics/s17-paired-analysis.json';summary=read(source)
+        for arm,cells in summary['results'].items():
+            for shape,counts in cells.items():
+                add('s17_calibration',source,arm=arm,shape=shape,**counts)
     if c04_audit:
         # An explicit final audit index binds each approved summary byte-for-byte.
         # Shape: {"input_sha256": {"repository/relative/path": "sha256"}}.
@@ -581,6 +603,25 @@ def render(data, output):
         criteria=select('s15_paired')[0]['criteria']
         failed=', '.join(k for k in ('acquisition','retention','recombination') if not criteria[k])
         finish(fig,'semantic-shape-development',f'S15: one S14-informed development pair; failed gates: {failed}. No confirmation or symmetric extension eligible.\nFixed historical TRAIN128 calibration. Construction exposure matched; tokens/graph sizes differ. Component learning does not establish complete acquisition or isolate recombination.')
+    if select('s16_normalization'):
+        fig,axes=plt.subplots(1,2,figsize=(10,4.6))
+        for ax,policy in zip(axes,('raw','calibrated')):
+            for row in select('s16_normalization',policy=policy):
+                arm=row['arm'];seed=row['seed']
+                ax.plot([0,1],[row['original']['exact'],row['normalized']['exact']],'o-' if arm=='decay' else 'x--',color=f'C{seed-701}',label=f'{seed} / {arm}')
+            ax.set(title=f'S16 frozen models · {policy}',xticks=[0,1],xticklabels=['Original public input','Programmed normalization'],ylabel='Complete graphs / 1024');ax.legend(fontsize=7)
+        finish(fig,'semantic-input-diagnostic','Six frozen models share the same 1024 semantic instances; model×event cells are not independent replication.\nNormalization is a programmed input transformation, not learned invariance. Historical correctness gates remain unchanged.')
+    if select('s17_calibration'):
+        fig,axes=plt.subplots(1,2,figsize=(11,4.8))
+        shapes=('3x3','3x4','4x3','4x4')
+        for ax,arm in zip(axes,('control','mixed')):
+            for i,(policy,label) in enumerate([('raw','Raw'),('historical','S15 historical TRAIN128'),('matched','Actual endpoint TRAIN128')]):
+                ss=[next(r for r in select('s17_calibration',arm=arm) if r['shape']==shape) for shape in shapes]
+                ax.plot(range(4),[r['policies'][policy]['complete'] for r in ss],'.--' if policy=='raw' else '.-',label=label)
+                if policy!='raw':
+                    for j,row in enumerate(ss): ax.annotate(str(row['policies'][policy]['complete']),(j,row['policies'][policy]['complete']),xytext=(3,(i-1)*10),textcoords='offset points',fontsize=7)
+            ax.set(title=f'S17 {arm}: frozen S15 endpoint',xticks=range(4),xticklabels=['3×3 new','3×4 held out','4×3 known','4×4 known'],ylabel='Complete graphs / 512',ylim=(-5,275));ax.legend(fontsize=7)
+        finish(fig,'semantic-calibration-diagnostic','Exploratory TRAIN-only recalibration: same raw predictions and DEV targets; one threshold policy per endpoint across all four cells.\nNo new training, DEV fitting, learned invariance, checkpoint selection or retroactive S15 gate promotion. Component F1 retained in data is macro across graphs.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')=='independently_audited'})
