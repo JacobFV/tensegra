@@ -1,0 +1,41 @@
+{
+  "examples": 1024,
+  "identifier_occurrences": 19556,
+  "shape_counts": {
+    "4x3": 487,
+    "4x4": 537
+  },
+  "independent_mapping_equal": true,
+  "full_fp32_bf16_pair_equality": true,
+  "all_first_copy_positions_preserved": true,
+  "copy_restoration_no_repair": true,
+  "idempotent": true,
+  "per_row_feature_sha256_digest": "3c4c13b02575efca81d8036cc6f67557d74835711c4aa473d2482e9d4aa25ac4",
+  "input_sha256": {
+    "research/results/campaign-01/semantics/s01-data/reserved_confirmation.jsonl.gz": "fc85da89fe4e1a522d1e0256fc1e58f8afb279494cb1af7ee4ac7235403a43f8",
+    "research/results/campaign-01/semantics/s12-rename-case-audit/renamed_confirmation.jsonl.gz": "a3f3bc5ed3d6fb188f5fb787d079af532cc67ec170a6b89937ea1d0f7777a4fb",
+    "research/results/campaign-01/semantics/s01-data/train.jsonl.gz": "9c86e311b7f58587918cb314ae9ba7fbc749c062c71829023135c86e568c0710",
+    "research/campaigns/extended-01/semantics/S16-public-audit.json": "deba670f33652a706f0014f453560ddf9f5869eb97bcbb5a15f3e59d1ae1f2dd",
+    "src/topoformer/campaign_semantics_identity_contract.py": "e39f75f0d99b49fccb6dd8f98f5bbfefdfc849eab5122fa6333947312d98b1ae",
+    "tests/test_campaign_semantics_identity_contract_s16.py": "6454f85f6e8e541469be77f4a5d7f79b34592abefec28331c82d86e610142e6c",
+    "research/campaigns/extended-01/semantics/S16-public-audit.py": "9ec8875e7fd08dde880e9fe91f0eaa65b87baebbd8ae50a0c2119b50e5f52799",
+    "research/campaigns/extended-01/semantics/S16-feasibility-and-protocol.md": "d73c91918a912f286333b2bda48b82e5fea18eb54629b68cfbc7d2fe2ad3a416",
+    "research/campaigns/extended-01/semantics/S16-prospective-diagnostic.json": "5647ba3aa6b09fcbb078d2e651555d749883bb437b9ae135b7d71bada4c16d45"
+  },
+  "cpu_audit_wall_seconds": 1.2043514573015273,
+  "scope": "Public text and CPU encoding only; no target fields, actor construction, forward, normalization outcome or threshold selection.",
+  "source_ref": "8e88bd92",
+  "mechanical_tests": {
+    "passed": 13,
+    "seconds": 0.77,
+    "cuda_hidden": true,
+    "threads": 2
+  },
+  "findings": [
+    "Strict English renderer parser and visible case convention are explicitly supplied prior; no typed copy inventory assumed. New canonicalizer and restoration do not access graphs, labels, targets or model.",
+    "Simultaneous per-namespace mapping preserves equality and token positions, rejects structural aliases and unsupported syntax. Original token index restoration retains mistakes; no graph or copy repair.",
+    "All1024 normalized original/renamed full public inputs equal; independent structural-token exclusion/rank map matches every identity span and substitution. Normalized equality is programmed, not evidence of acquired invariance.",
+    "Prospective all-six original versus normalized-original comparison retains frozen checkpoints and historical TRAIN thresholds; no normalization search, gate relaxation or redundant renamed forward needed. Separate runner/profile review and root release still required."
+  ],
+  "source_archive_sha256": "25881c4e942b54e55f93745b692138099c95b7c9c3cce7b009d7d350eeac80f6"
+}
