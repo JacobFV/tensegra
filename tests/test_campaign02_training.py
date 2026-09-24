@@ -1,0 +1,64 @@
+"""Small-width mathematical/mechanical tests, not experimental substitutes."""
+from dataclasses import asdict
+
+import pytest
+import torch
+
+from topoformer.campaign02_policy import CandidatePolicy, PolicyConfig
+from topoformer.campaign02_training import Frame, TrainConfig, Learner, collate, supervised_loss, batched_episodes, live_episode
+from topoformer.campaign02_world import Workshop, generate_world, encode_observation, encode_action, action_catalog
+
+
+def test_padding_and_targets():
+    obs, candidates, mask, targets = collate([Frame([1.], [[1., 2.]], 0), Frame([2.], [[3., 4.], [5., 6.]], 1)])
+    assert candidates.shape == (2, 2, 2)
+    assert mask.tolist() == [[True, False], [True, True]]
+    assert targets.tolist() == [0, 1]
+    with pytest.raises(ValueError):
+        collate([Frame([1.], [[1.]], 1)])
+
+
+@pytest.mark.parametrize("family", ["lightweight", "recurrent"])
+def test_sequence_gradients(family):
+    torch.manual_seed(7)
+    model = CandidatePolicy(PolicyConfig(2, 2, width=8, heads=2, family=family))
+    frame = Frame([.1, .3], [[.2, .1], [.5, .2]], 1)
+    loss, count = supervised_loss(model, [[frame, frame], [frame]], bptt_steps=1)
+    loss.backward()
+    assert count == 3 and torch.isfinite(loss)
+    assert model.candidate.weight.grad.abs().sum() > 0
+
+
+def test_checkpoint_restores_rng_and_optimizer(tmp_path):
+    torch.manual_seed(8)
+    cfg = TrainConfig(width=8)
+    model = CandidatePolicy(PolicyConfig(2, 2, width=8, heads=2))
+    learner = Learner(model, cfg)
+    loss, _ = supervised_loss(model, [[Frame([.1, .2], [[.2, .3], [.4, .5]], 1)]])
+    loss.backward()
+    learner.optimizer.step()
+    learner.save(tmp_path/"model.pt", {"scope": "mechanical"})
+    expected_rng = torch.rand(3)
+    expected = {k: v.clone() for k, v in model.state_dict().items()}
+    with torch.no_grad():
+        next(model.parameters()).add_(1)
+    assert learner.load(tmp_path/"model.pt") == {"scope": "mechanical"}
+    assert torch.equal(torch.rand(3), expected_rng)
+    assert all(torch.equal(model.state_dict()[k], v) for k, v in expected.items())
+    assert learner.optimizer.state
+
+
+@pytest.mark.parametrize("family", ["lightweight", "recurrent"])
+def test_batched_matches_single_closed_loop(family):
+    torch.manual_seed(9)
+    factory = lambda seed: Workshop(generate_world(seed, choices=1, step_limit=3))
+    observation = factory(10).observe()
+    model = CandidatePolicy(PolicyConfig(len(encode_observation(observation)),
+        len(encode_action(observation, action_catalog(observation)[0])), width=8, heads=2, family=family))
+    model.eval()
+    with torch.no_grad():
+        batch = batched_episodes(model, [factory(10), factory(11)], max_steps=3)
+        single = [live_episode(model, factory(seed), max_steps=3)[0] for seed in (10, 11)]
+    assert [[r["action"] for r in e["trace"]] for e in batch] == [[r["action"] for r in e["trace"]] for e in single]
+    assert [r["outcome"]["utility"] for r in batch] == [r["outcome"]["utility"] for r in single]
+    assert batch[1]["timing"] is None
