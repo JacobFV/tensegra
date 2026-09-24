@@ -1,0 +1,44 @@
+{
+  "cwd": "/home/brandonin/topoformer-campaign01-semantics",
+  "argv": [
+    "/usr/bin/time",
+    "-f",
+    "elapsed_seconds=%e\nexit_code=%x\nmaxrss_kib=%M",
+    "-o",
+    "/home/brandonin/topoformer-campaign01-semantics/results/s21-main-launch.outer.txt",
+    "/usr/bin/timeout",
+    "--signal=KILL",
+    "1770s",
+    "/home/brandonin/topoformer-stage8-cuda/bin/python",
+    "/home/brandonin/topoformer-campaign01-semantics/s21-main-source-77683135/src/topoformer/campaign_semantics_s21_launch.py",
+    "/home/brandonin/topoformer-campaign01-semantics/s21-main-source-77683135/configs/campaign-s21-main-frozen-v1.json",
+    "--cap",
+    "1770",
+    "--python",
+    "/home/brandonin/topoformer-stage8-cuda/bin/python",
+    "--prefix",
+    "/home/brandonin/topoformer-campaign01-semantics/results/s21-main-launch"
+  ],
+  "argv_json_sha256": "e54dfed9fdbb6951845b9fb7f28997079fb956a094160691ba3a6073a3fb9b31",
+  "cap_seconds": 1770,
+  "config_sha256": "5a13908ec22e9ad47350d7d85433b46291dada4552a474300fcef57871f30db3",
+  "source_commit": "77683135",
+  "source_tar_sha256": "e1dce5f3dad8fed56075d5d7d629812e923b70dad5a1c3f51e27e55a508d1ccb",
+  "source_manifest_path": "/home/brandonin/topoformer-campaign01-semantics/s21-main-source-77683135/configs/campaign-s21-main-frozen-v1.json",
+  "launch_authority": "Separate explicit root GPU release required",
+  "scope": "GNU timeout default process group, KILL at1770s without grace; GNU time outside wrapper and timeout; cwd preserves fixed relative data/output namespace, launcher child PYTHONPATH resolves immutable own source",
+  "utilities": {
+    "/usr/bin/time": {
+      "sha256": "4a445f72fefaf4127931df2b799aa885e27553b5a55e104a329d41fc8dc83083",
+      "version": "GNU Time UNKNOWN"
+    },
+    "/usr/bin/timeout": {
+      "sha256": "52c67910ffecb65d1d5172e01720145c54941aff91e7b3a11ab222c86fb425a8",
+      "version": "GNU coreutils9.4"
+    }
+  },
+  "cpu_guard_seconds": 0.002574145793914795,
+  "staged_files": 193,
+  "unused_prefix_checked": true,
+  "cost_proposal_commit": "2cf24ff3"
+}
