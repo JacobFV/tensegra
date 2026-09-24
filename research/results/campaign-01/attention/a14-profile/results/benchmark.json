@@ -1,0 +1,57 @@
+{
+  "condition": {
+    "nodes": 128,
+    "depth": 32,
+    "groups": 8
+  },
+  "batch": 16,
+  "preparation_seconds": 0.013882212340831757,
+  "policies": {
+    "unchanged": {
+      "warmup_seconds": 0.5106945782899857,
+      "repeated_forward_seconds": [
+        0.4859059941954911,
+        0.4859520108439028,
+        0.482753608841449
+      ],
+      "cuda_peak_allocated_bytes": 1042956288
+    },
+    "both_hard": {
+      "warmup_seconds": 0.6544647151604295,
+      "repeated_forward_seconds": [
+        0.6363292699679732,
+        0.6384201827459037,
+        0.6391669511795044
+      ],
+      "cuda_peak_allocated_bytes": 1445609472
+    },
+    "shared_soft": {
+      "warmup_seconds": 0.4911347641609609,
+      "repeated_forward_seconds": [
+        0.48888978781178594,
+        0.49146078107878566,
+        0.49409007793292403
+      ],
+      "cuda_peak_allocated_bytes": 1042956288
+    },
+    "shared_hard": {
+      "warmup_seconds": 0.49329487793147564,
+      "repeated_forward_seconds": [
+        0.49231567699462175,
+        0.49827903881669044,
+        0.48958329297602177
+      ],
+      "cuda_peak_allocated_bytes": 1044004864
+    },
+    "oracle_common": {
+      "warmup_seconds": 0.4923218060284853,
+      "repeated_forward_seconds": [
+        0.49556177482008934,
+        0.49076924519613385,
+        0.4935648459941149
+      ],
+      "cuda_peak_allocated_bytes": 1044004864
+    }
+  },
+  "scope": "Uninstrumented model forward with pretokenized input; setup, warmup and repeats charged separately; no sparse-kernel or cross-architecture efficiency claim"
+}
