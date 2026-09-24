@@ -1,6 +1,6 @@
 # A14 confirmation status
 
-Seeds1401/1402 completed their fixed6000-update endpoints. Seed1403 and the nine engineering references remain required and await separate root GPU release. No aggregate confirmation/effect/competence conclusion is made before all three seeds. All policies, thresholds, populations and remaining seeds remain unchanged.
+All three prescribed seeds1401/1402/1403 completed their fixed6000-update endpoints. The nine engineering references remain required and await separate root GPU release. Protocol aggregation waits for those references, as directed by root. All policies, thresholds and populations remain unchanged.
 
 | Seed1401 policy | IID task/1024 | Moderate task/1024 | Joint task/1024 | Joint all-node suffix/1024 |
 |---|---:|---:|---:|---:|
@@ -27,3 +27,15 @@ Raw/receipt019a790a: `research/results/campaign-01/attention/a14/1401`. Checkpoi
 | Privileged oracle | 1024 | 1024 | 1024 | 1024 |
 
 Shared-hard joint route is correct1006/1024, with task correct1006/1006 on that support and one additional route-wrong/task-correct case. Exact full public input and record-order hashes match1401. Strict loader contract passes; independent21-cell audit requested. Atomic full-process receipt341.759054285seconds; training+monitor69.728744298seconds, of which monitor1.838662309; internal total340.633539069seconds. Same508,828,160byte training+monitor and1,516,548,608byte inference peaks as1401. Raw/receipt905c6bce at `research/results/campaign-01/attention/a14/1402`; checkpoint/state durable remotely with SHA inventory archived. GPU verified free. Attention accounting2363.204134675seconds includes the uncertain60-second A08 profile bound. No pooled bootstrap before1403.
+
+## Seed1403
+
+| Policy | IID task/1024 | Moderate task/1024 | Joint task/1024 | Joint all-node suffix/1024 |
+|---|---:|---:|---:|---:|
+| Original | 1018 | 953 | 177 | 0 |
+| Both hard | 1012 | 990 | 245 | 2 |
+| Shared soft | 1016 | 849 | 179 | 0 |
+| Shared hard | 1024 | 1023 | 1015 | 955 |
+| Privileged oracle | 1024 | 1024 | 1024 | 1024 |
+
+Shared-hard joint route and task/route intersection both1015/1024. Exact full public inputs and record-order hashes match both earlier seeds; strict loader contract passes. Independent21-cell audit requested. Atomic full-process receipt336.333546519seconds, GPU verified free. Raw/receiptbc1512a4 at `research/results/campaign-01/attention/a14/1403`; checkpoint/state durable remotely with SHA inventory archived. Attention accounting2699.537681194seconds includes the uncertain60-second A08 profile bound. Reference jobs and final paired aggregation remain pending; no outcome changes are authorized.
