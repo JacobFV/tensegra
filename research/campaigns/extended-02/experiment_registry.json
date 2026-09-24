@@ -341,6 +341,67 @@
         "streamhash"
       ],
       "next_branch": "Choose targetedconditioning or exposure intervention independentlyofpublicmemoryrepair"
+    },
+    {
+      "id": "E07",
+      "phase": 2,
+      "status": "completed_development",
+      "hypothesis": "E05 budget-escalation failure is an input-contract problem.",
+      "intervention": "2x2 input contract {legacy summaries, public-tree memory} x {features v1, v2}; exact E05 recipe/seeds/DEV",
+      "comparator": "legacy-v1 (reproduces E05)",
+      "split": "E05 DEV128 (development reuse)",
+      "result": "legacy-v1 57/128 (exact E05 reproduction); legacy-v2 119/128; recurrent-v2 116/128; memory arms wall-capped at 300/600 updates (0.891/0.875)",
+      "limits": "one seed per arm; v2 relational facts are supplied, not learned"
+    },
+    {
+      "id": "E08-profiles",
+      "phase": 2,
+      "status": "completed_design_only",
+      "hypothesis": "Actor-critic phase is stable enough for a population comparison.",
+      "result": "AC v1 collapsed (5/6 members to 0.0 DEV); AC v2 (KL trust region + normalized advantages) stable 0.92-1.0; leverage profile located harder conditions",
+      "limits": "design profiles, not evidence"
+    },
+    {
+      "id": "E08",
+      "phase": 2,
+      "status": "running",
+      "hypothesis": "PBT finalist has higher sealed verified utility than matched multistart and single learner.",
+      "intervention": "PBT selection/inheritance/mutation of (lr, entropy, KL) over actor-critic v2 from a shared supervised bank",
+      "comparator": "independent multistart (best DEV), single learner with all updates",
+      "split": "DEV 128 per replicate for selection; sealed 70M+ for evaluation",
+      "protocol": "phase2/E08-protocol.md",
+      "replicates": 3
+    },
+    {
+      "id": "E09",
+      "phase": 2,
+      "status": "registered",
+      "hypothesis": "Sealed IID/transfer/intervention evaluation of frozen finalists vs references",
+      "conditions": "research/tools/campaign02_e09_config.py (8 IID, 10 transfer, 8 intervention)"
+    },
+    {
+      "id": "E11",
+      "phase": 2,
+      "status": "running",
+      "hypothesis": "Recurrent workspace earns its 12x parameters under RL.",
+      "intervention": "single-learner RL from E07 v2 bootstraps, identical streams",
+      "limits": "one seed per family; exploratory"
+    },
+    {
+      "id": "E12",
+      "phase": 2,
+      "status": "running",
+      "hypothesis": "Adaptive curriculum (PBT-mutated training mixture weights) beats fixed curriculum.",
+      "comparator": "E08 PBT per replicate",
+      "limits": "round-0 component realization differs from E08 (different hash), distributionally equal"
+    },
+    {
+      "id": "RL02",
+      "phase": 2,
+      "status": "running",
+      "hypothesis": "Pointer/common-address node addressing repairs omitted 3x4 relation generation.",
+      "protocol": "semantics/RL02-design.md",
+      "comparator": "RL01 all-record recipe re-run under same source"
     }
   ],
   "closure": "User requested closure before main population, memory acquisition, and confirmation; no unrun study is promoted."
