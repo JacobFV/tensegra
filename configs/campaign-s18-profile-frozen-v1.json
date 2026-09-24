@@ -1,0 +1,54 @@
+{
+  "budget_status": "frozen",
+  "bindings": {
+    "path": "research/campaigns/extended-01/semantics/S18-bindings.json",
+    "sha256": "4364e758de6792886c391cb372ba3a9d67d5e26c081608492043c08a93c4f74b"
+  },
+  "width": 1024,
+  "capacity": 128,
+  "batch_size": 8,
+  "learning_rate": 1e-05,
+  "schedule_seed": 15115,
+  "negative_pairs": 128,
+  "device": "cuda",
+  "control_microsteps": 10,
+  "calibration_count": 128,
+  "baseline_policy": "reuse_S15_mixed_S17_endpoint_plus_frozen_early_curves",
+  "calibration_policy": "same_S17_mixed128_matched_primary_historical_secondary",
+  "launch_authority": "separate root GPU release required",
+  "job": "profile",
+  "added_updates": 20,
+  "checkpoints": [
+    0,
+    20
+  ],
+  "dev_per_cell": 16,
+  "arms": [
+    "context",
+    "workspace_control"
+  ],
+  "proposed_cap_seconds": 180.0,
+  "output_dir": "/home/brandonin/topoformer-campaign01-semantics/results/s18-profile-v1",
+  "prepared_sha256": "fc6dac429cb3a84fe97d7f18b4afbe844a72fd5972938f2307cdef06ddb13e7c",
+  "source_sha256": {
+    "campaign_semantics_s18.py": "183667b8da0f74df92913caa1dda32eb736250b1a66e7bf0d957d04d13fe7f4f",
+    "campaign_semantics_s18_freeze.py": "929b57620f5d7102972cb3039f72c93c8bc433fec01a24e09c668be9e577279e",
+    "campaign_semantics_s18_launch.py": "537d830fb989159f04d33b98bdee8f1cd5841fe4757da5ee1ac5c432c0c0367c",
+    "campaign_semantics_s18_actor.py": "7562746da3ccff3b6a1ac6874871c40f0a3f76051977639eebece40dc1435de3",
+    "campaign_semantics_s18_compute.py": "fbbca955e9ee5f6a45d9522dc6e7a99fd2f1b899ab559facd0a6cb0aa3cb51c6",
+    "campaign_semantics_grounded_actor.py": "b8351a392d9928876d7a82f8cb32386df91356f561b5fb62b1dc4432feb4adfe",
+    "campaign_semantics_shape_train.py": "bc7812834dffde6e0061b1590c51a2b70c06ddb57d84644c9b4fd396d2e49c36",
+    "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+    "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+    "campaign_semantics_continue.py": "6d5a8f4ae5143bdfc93f589fa3c189966a787e0fc6a83dc6bc06382c14ac8585",
+    "campaign_semantics_lr.py": "37382d47849c29f15b407dd9b4b7aa9d66e041ede7ba7477d016e4aa3711dd9a",
+    "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+    "semantic_text_acquisition.py": "e67269012f0ef6e30b78c0265ab007f72f3278310dfad8fad526d60a38001d59",
+    "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+    "semantic_contracts.py": "914a12a24a14434918412f2ad71368f51085bd248c7398164b0c2b1c9a0e215f",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+    "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+    "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670"
+  }
+}

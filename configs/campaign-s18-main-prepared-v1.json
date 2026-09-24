@@ -1,0 +1,34 @@
+{
+  "budget_status": "prepared",
+  "bindings": {
+    "path": "research/campaigns/extended-01/semantics/S18-bindings.json",
+    "sha256": "4364e758de6792886c391cb372ba3a9d67d5e26c081608492043c08a93c4f74b"
+  },
+  "width": 1024,
+  "capacity": 128,
+  "batch_size": 8,
+  "learning_rate": 1e-05,
+  "schedule_seed": 15115,
+  "negative_pairs": 128,
+  "device": "cuda",
+  "control_microsteps": 10,
+  "calibration_count": 128,
+  "baseline_policy": "reuse_S15_mixed_S17_endpoint_plus_frozen_early_curves",
+  "calibration_policy": "same_S17_mixed128_matched_primary_historical_secondary",
+  "launch_authority": "separate root GPU release required",
+  "job": "main",
+  "added_updates": 4096,
+  "checkpoints": [
+    0,
+    1024,
+    2048,
+    4096
+  ],
+  "dev_per_cell": 512,
+  "arms": [
+    "context",
+    "workspace_control"
+  ],
+  "proposed_cap_seconds": null,
+  "output_dir": "/home/brandonin/topoformer-campaign01-semantics/results/s18-main-v1"
+}
