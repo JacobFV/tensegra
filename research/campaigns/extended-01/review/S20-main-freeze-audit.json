@@ -1,0 +1,107 @@
+{
+  "status": "pass",
+  "cost": {
+    "status": "pass",
+    "seconds": 0.0006446570041589439,
+    "terms": {
+      "original": {
+        "optimizer": 389.22408571243284,
+        "setup": 1.6695860009640455,
+        "checkpoint": 2.6942491056397557,
+        "calibration_fixed": 2.9984734538011253,
+        "confirmation": 19.960990861058235,
+        "export_with_2x_allowance": 34.94829525984824,
+        "post_state_hash": 0.19221023935824633,
+        "eval_wrapper_fixed": 0.4457252286374569
+      },
+      "context": {
+        "optimizer": 319.8228605270386,
+        "setup": 0.5261793597601354,
+        "checkpoint": 1.8431201111525297,
+        "calibration_fixed": 2.7188014066778123,
+        "confirmation": 25.163770854473114,
+        "export_with_2x_allowance": 33.20011611034473,
+        "post_state_hash": 0.17525309417396784,
+        "eval_wrapper_fixed": 0.5276425099000335
+      },
+      "record": {
+        "optimizer": 182.21263856887816,
+        "setup": 0.2666612137109041,
+        "checkpoint": 1.731805693358183,
+        "teacher_forced_train": 0.08104808535426855,
+        "teacher_forced_confirmation": 1.1912977248430252,
+        "greedy_68_batches_160steps": 53.83966447971761,
+        "export_2x": 4.604177752509713,
+        "packing_residual_2x": 10.599558841437101,
+        "eval_wrapper_fixed": 0.7909119771793485
+      }
+    },
+    "nine_arm_subtotal": 3274.2873725167474,
+    "outer_residual": 4.982360307984052,
+    "forecast_seconds": 3891.056436820477,
+    "cap_seconds": 4300,
+    "envelope_including_profile": 4333.83,
+    "scope": "Independent timing arithmetic only; doubled export/recordmetric allowances plus600reserve are engineering estimates, not deterministic bounds; no recipe/quality selection.",
+    "harness_note": "Initial residual arithmetic used whole_evaluation_seconds instead of sum additive phase clocks; differing2.4\u20132.9microseconds perarm. Reconciled exact documented phase sum; no source or proposal change."
+  },
+  "freeze": {
+    "status": "pass",
+    "seconds": 1.5962820588611066,
+    "config_sha256": "4e648a9a274a7cabcbb84c0b2e6e6a2dcbf37925e2146b0758702086245f6c8b",
+    "outer_binding": {
+      "cwd": "/home/brandonin/topoformer-campaign01-semantics",
+      "argv": [
+        "/usr/bin/time",
+        "-f",
+        "elapsed_seconds=%e\nexit_code=%x\nmaxrss_kib=%M",
+        "-o",
+        "/home/brandonin/topoformer-campaign01-semantics/results/s20-main-launch.outer.txt",
+        "/usr/bin/timeout",
+        "--signal=KILL",
+        "4300s",
+        "/home/brandonin/topoformer-stage8-cuda/bin/python",
+        "/home/brandonin/topoformer-campaign01-semantics/s20-main-source-a7345916/src/topoformer/campaign_semantics_s20_launch.py",
+        "/home/brandonin/topoformer-campaign01-semantics/s20-main-source-a7345916/configs/campaign-s20-main-frozen-v1.json",
+        "--cap",
+        "4300",
+        "--python",
+        "/home/brandonin/topoformer-stage8-cuda/bin/python",
+        "--prefix",
+        "/home/brandonin/topoformer-campaign01-semantics/results/s20-main-launch"
+      ],
+      "argv_json_sha256": "739a93eed37c48d34151dc588c792bfc5864cf5cf8056c3afbbb445d9493052b",
+      "cap_seconds": 4300,
+      "config_sha256": "4e648a9a274a7cabcbb84c0b2e6e6a2dcbf37925e2146b0758702086245f6c8b",
+      "source_commit": "a7345916",
+      "source_tar_sha256": "3d3d0e9b876cb935416c708113f73151871378285023a81955404757ffcf2fa2",
+      "source_manifest_path": "/home/brandonin/topoformer-campaign01-semantics/s20-main-source-a7345916/configs/campaign-s20-main-frozen-v1.json",
+      "launch_authority": "Separate explicit root GPU release required",
+      "scope": "GNU timeout default process group, KILL at4300s without grace; GNU time outside wrapper and timeout; cwd preserves fixed relative data/output namespace, launcher child PYTHONPATH resolves immutable own source",
+      "utilities": {
+        "/usr/bin/time": {
+          "sha256": "4a445f72fefaf4127931df2b799aa885e27553b5a55e104a329d41fc8dc83083",
+          "version": "GNU Time UNKNOWN"
+        },
+        "/usr/bin/timeout": {
+          "sha256": "52c67910ffecb65d1d5172e01720145c54941aff91e7b3a11ab222c86fb425a8",
+          "version": "GNU coreutils9.4"
+        }
+      },
+      "profile_manifest_sha256": "54533444357774858d69b8b86b91b6f6be3864a4163e78bf448094c6ca122fec",
+      "cost_evidence_commit": "aa4e9697",
+      "cost_planning_estimate_seconds": 3891.056,
+      "allocation_scope": "all nine fixed endpoints; no early quality selection or automatic extension"
+    },
+    "readonly": true,
+    "unused_prefix": true,
+    "source_identical_review": true,
+    "confirmation_hash_only": true
+  },
+  "seconds": 1.5969267158652656,
+  "input_sha256": {
+    "research/campaigns/extended-01/semantics/S20-measured-main-cost.json": "a9b0282254a2bf84b5485293434f9ab9b6754e5154b39789507e6f9c78d4b90d",
+    "research/campaigns/extended-01/semantics/S20-measured-main-cost.md": "fbacb218c9f832b305944ea23721be65ceae338e4ca2b364ac7ad6047250a5d8",
+    "configs/campaign-s20-main-frozen-v1.json": "4e648a9a274a7cabcbb84c0b2e6e6a2dcbf37925e2146b0758702086245f6c8b"
+  },
+  "clearance": "Fixedall9main under4300wholeprocesscap clears review, root sole release authority.3891.056estimate includes600reserve, not deterministic bound;4333.83profile+cap within5000."
+}
