@@ -198,3 +198,32 @@ def test_compute_tariff_harness_only_finite_and_accounted():
     free=Workshop(generate_world(12))
     free.charge_compute(100)
     assert free.evaluate()['modeled_compute_cost']==0
+
+
+def test_declared_and_remaining_call_budgets_are_public():
+    def executor(*args):
+        return {'status':'timeout','payload':None,'work_units':16,'certificate_valid':False}
+    for expose in (False,True):
+        env=Workshop(generate_world(13,work_limit=128,call_budgets=(16,64,128),
+                                   include_remaining_budget=expose),executor)
+        assert env.observe().goal['call_budgets']==[16,64,128]
+        assert env.observe().goal['include_remaining_budget']==expose
+        env.step(Action('inspect',{'target':env.observe().item_inventory[0]['handle']}))
+        env.step(Action('start_subset',{'handle':'p'}))
+        env.step(Action('call',{'problem':'p','budget':16}))
+        budgets=[a.arguments['budget'] for a in action_catalog(env.observe()) if a.kind=='call']
+        assert budgets==([16,64,112] if expose else [16,64])
+        assert max(budgets)<=env.observe().remaining_work
+    for invalid in ((0,),(-1,),(True,),(),[16]):
+        try:
+            generate_world(13,call_budgets=invalid)
+            assert False,'invalid budget declaration accepted'
+        except ValueError:
+            pass
+
+
+def test_default_budget_catalog_unchanged():
+    env=Workshop(generate_world(14))
+    env.step(Action('inspect',{'target':env.observe().item_inventory[0]['handle']}))
+    env.step(Action('start_subset',{'handle':'p'}))
+    assert [a.arguments['budget'] for a in action_catalog(env.observe()) if a.kind=='call']==[16,128,1024]

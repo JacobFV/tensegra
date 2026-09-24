@@ -42,6 +42,15 @@ class WorldSpec:
     travel_price: float = .001
     travel_limit: int = 64
     compute_price: float = 0.0
+    call_budgets: tuple[int, ...] = (16,128,1024)
+    include_remaining_budget: bool = False
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.call_budgets,tuple) or not self.call_budgets or any(
+                isinstance(b,bool) or not isinstance(b,int) or b <= 0 for b in self.call_budgets):
+            raise ValueError("call_budgets must be a nonempty tuple of positive integers")
+        if type(self.include_remaining_budget) is not bool:
+            raise ValueError("include_remaining_budget must be boolean")
 
 
 @dataclass(frozen=True)
@@ -186,7 +195,8 @@ class Workshop:
         s = self._spec
         return Observation(VERSION, self._version,
             {"categories":list(s.categories), "capacity":s.capacity, "funds":s.funds,
-             "destination":s.destination},
+             "destination":s.destination,"call_budgets":list(s.call_budgets),
+             "include_remaining_budget":s.include_remaining_budget},
             tuple({"handle":x.handle,"category":x.category} for x in s.items),
             deepcopy(self._items),
             tuple((a,b,w) for (a,b),w in sorted(self._edges.items())) if self._map_known else None,
@@ -408,7 +418,7 @@ ACTION_KINDS = ("inspect","start_subset","add_constraint","build_route","call","
 CONSTRAINTS = ("capacity","funds","incompatibility")
 
 
-def action_catalog(observation: Observation, budgets: tuple[int,...] = (16,128,1024)) -> list[Action]:
+def action_catalog(observation: Observation, budgets: tuple[int,...] | None = None) -> list[Action]:
     """Public syntactic choices, including premature, stale, and wrong-return uses.
 
     Does not enumerate feasible subsets, shortest paths, or hidden-ready masks.
@@ -416,6 +426,9 @@ def action_catalog(observation: Observation, budgets: tuple[int,...] = (16,128,1
     arbitrary directly supplied route remains accepted by step().
     """
     o = observation
+    declared = tuple(o.goal.get("call_budgets",(16,128,1024))) if budgets is None else budgets
+    budgets = tuple(dict.fromkeys(declared + ((o.remaining_work,) if
+                    o.goal.get("include_remaining_budget",False) and o.remaining_work > 0 else ())))
     if o.done:
         return []
     actions = [Action("verify"),Action("think"),Action("abstain"),Action("commit_pending")]
