@@ -1,0 +1,29 @@
+{
+  "status": "PASS_CPU_CONTRACT_ONLY",
+  "source_commit": "6563de69",
+  "fixture_commit": "990de467",
+  "input_sha256": {
+    "research/campaigns/extended-01/semantics/S21-isomorphism.py": "4ee11f3e8f1cd69ea542b2210e59fbe854fe1d89f89e6cd39438bcf10b0ef058",
+    "research/campaigns/extended-01/semantics/S21-isomorphism-check.py": "be73fa84333ece884fb83622fdfc3389ddb0337c4bef8f4b3128698777f051e6"
+  },
+  "depends_on": "research/campaigns/extended-01/review/S21-final-development-audit.json",
+  "checks": [
+    "Exact node kind and finite JSON value or public copied identity string; duplicate occurrences of the same token are equivalent.",
+    "Directed multigraph preserves relation, ordered slot and edge multiplicity under node permutation.",
+    "Necessary attribute/typed-degree filters only reject provably impossible matches; full MultiDiGraphMatcher resolves remaining graphs.",
+    "Previously independently audited invalid outputs retain failure status; script does not independently rerun codec validation.",
+    "Per-match and whole-process deadlines yield unresolved, never non-isomorphic.",
+    "Historical canonical scoring and registered S21 gates remain unchanged."
+  ],
+  "tests": {
+    "passed": 15,
+    "cpu_wall_seconds": 0.0028321142308413982,
+    "cuda_visible_devices": "",
+    "threads": 2,
+    "environment": "gb10-direct /home/brandonin/topoformer-pilot/.venv/bin/python"
+  },
+  "scope": "Source and synthetic fixtures only; actual 1024 heldout comparisons not inspected. No actor, model forward, GPU, or sealed confirmation access.",
+  "harness_notes": [
+    "Local networkx import unavailable; used existing remote CPU environment. No source modification."
+  ]
+}
