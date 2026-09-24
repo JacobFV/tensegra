@@ -1,0 +1,11 @@
+# Prospective sequence-decoder feasibility
+
+Read-only inspection during S18; no S18 outcomes or confirmation examples inspected. The actual 4,096-row S15 mixed TRAIN cache has public lengths 46/54/64, 25–37 nodes and 56–85 edges. A generic atomic node/edge serialization needs 358–539 tokens. A typed-record decoder needs 84–125 steps: node kind plus value/copy, then directed source/target/relation/slot records, boundaries and EOS. The local stdlib scan took 0.1986 seconds; no GPU was used.
+
+A candidate contract would preserve canonical node order, deterministically sorted individual edge records, multiple relations per pair, ordered slots and learned copying from the full public token inventory. Node/edge counts must be predicted; current-record gold fields cannot enter its forward prediction. Invalid or truncated output must count as failure. This is lossless for the current scored graph targets, not automatically every compiler metadata field: compact caches omit roots, canonical IDs and provenance. Any stronger reconstruction claim needs separate round-trip tests.
+
+Reuse `semantic_curriculum.encode_text`, `ActorInput`, ontology vocabularies and data packing. A causal decoder still needs shifted records, positional information, masks and tested incremental KV caching. Width stays 1024. Parallel teacher-forced training may be affordable; free-running 512-example evaluation, not only optimizer timing, must be profiled. No new experiment is authorized by this feasibility note.
+
+A shorter learned term sequence followed by `compile_term` is a distinct engineering alternative: it supplies scope/entity creation and contains/declares/refers_to semantics. It must not be described as learning every graph edge. No public-text parser or gold term may secretly construct inference input.
+
+If S18 fails with poor TRAIN acquisition, a separately registered record-decoder comparison would test a substantially different output interface rather than another calibration tweak. Match public data and construction exposure where possible, disclose changed parameters/objectives/teacher forcing, retain whole-graph free-running metrics, and stop if representative profiling cannot support a meaningful acquisition test. No inference-cost or competence claim exists yet.
