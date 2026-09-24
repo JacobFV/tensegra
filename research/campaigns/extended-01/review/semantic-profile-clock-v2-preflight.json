@@ -1,0 +1,23 @@
+{
+  "source_ref": "fb3b0234",
+  "input_sha256": {
+    "configs/campaign-s13-mixed-profile-frozen-v2.json": "a17b13fc5a0ad7d9938e5dc724a5e8f0bf535ce088bd35021ca56bfd8e175c0d",
+    "configs/campaign-s13-english-profile-frozen-v2.json": "deb21dbfadbdb69fd8414bf2f70cf78960e61273204cbfc7834dae31b489444b",
+    "configs/campaign-s14-motif-profile-frozen-v2.json": "630a1745463a8f2a208bffe7793dcad5d4dbc7c38e129d5f0ba886effc046008",
+    "configs/campaign-s12-renamed-profile-frozen-v2.json": "ac24d907e6383bf809d6d338a825e9ca4ba68829473ed27fe07be44514c07a84",
+    "src/topoformer/campaign_semantics_multisurface_launch.py": "c4b26078146123fc3be937905cba959406d1ce442399fe3304f1a411b1ee09f4",
+    "src/topoformer/campaign_semantics_motif_launch.py": "91dc3f8beb89d5b636ea36655b1c64060f9df569fe50e6d0b2908a66928f9cfa",
+    "src/topoformer/campaign_semantics_confirmation_rename_profile_launch.py": "7aea75d6c4b3f3e4212c7c9508ae001514e6731e5123fdfe1ad97460146967fe"
+  },
+  "source_bindings_verified": 65,
+  "tests_passed": 1,
+  "cpu_test_seconds": 0.022,
+  "checks": [
+    "All three wrapper clocks start before source/all6 matrix hashing",
+    "Durable start receipt precedes preflight; failures persist error completion without child",
+    "Child timeout subtracts elapsed preflight; exhausted budget prevents launch",
+    "All four v2 configs differ from retained v1 only source bindings; model recipes unchanged"
+  ],
+  "limitation": "CPU preflight is synchronous and counted, but not asynchronously interrupted at cap; if it exceeds cap no child starts. Small initial idle query/import and final persistence remain outside measured bracket.",
+  "release_scope": "Profile-only prospective clearance; complete six-fork matrix and separate root release still required."
+}
