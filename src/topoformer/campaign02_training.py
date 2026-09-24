@@ -13,6 +13,7 @@ from dataclasses import asdict, dataclass
 import gzip
 import hashlib
 import json
+import math
 from pathlib import Path
 import random
 import time
@@ -42,8 +43,11 @@ class TrainConfig:
     bptt_steps: int = 8
     evaluation_batch: int = 32
     training_seed_start: int | None = None
+    neural_work_per_forward: float = 1.0
 
     def __post_init__(self):
+        if not math.isfinite(self.neural_work_per_forward) or self.neural_work_per_forward < 0:
+            raise ValueError("Invalid frozen neural tariff")
         if self.method not in {"supervised", "actor_critic"}:
             raise ValueError("Unknown learning method")
         if min(self.width, self.batch_size, self.max_steps, self.bptt_steps, self.evaluation_batch) < 1 or self.learning_rate <= 0:
@@ -115,7 +119,7 @@ def supervised_loss(model, trajectories: list[list[Frame]], device="cpu", bptt_s
     return torch.stack(losses).mean(), len(losses)
 
 
-def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradients=False):
+def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradients=False, neural_work_per_forward=1.0):
     """All choices are learned. Exact actor-visible observations retained for replay."""
     observation, hidden, trace, terms = env.observe(), None, [], []
     cpu_start, wall_start = time.process_time(), time.perf_counter()
@@ -136,6 +140,7 @@ def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradie
         probability = float(distribution.probs[index].detach().cpu())
         neural_wall = time.perf_counter() - neural_start
         before = observation
+        env.charge_compute(neural_work_per_forward)
         observation = env.step(actions[index])
         if gradients:
             current_utility = float(env.evaluate()["utility"])
@@ -144,6 +149,7 @@ def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradie
         trace.append({"step": step, "observation": before.to_dict(), "action_index": index,
                       "action": asdict(actions[index]), "candidate_count": len(actions),
                       "probability": probability, "neural_forward_wall_seconds": neural_wall,
+                      "neural_work_units": neural_work_per_forward,
                       "remaining_steps": observation.remaining_steps, "remaining_work": observation.remaining_work,
                       "feedback": observation.feedback})
     outcome = env.evaluate()
@@ -152,7 +158,7 @@ def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradie
             "episode_wall_seconds": time.perf_counter()-wall_start}, terms
 
 
-def batched_episodes(model, environments, *, device="cpu", max_steps=64):
+def batched_episodes(model, environments, *, device="cpu", max_steps=64, neural_work_per_forward=1.0):
     """Batch current public states; hidden rows retain their own episode identity."""
     observations = [env.observe() for env in environments]
     traces = [[] for _ in environments]
@@ -179,13 +185,14 @@ def batched_episodes(model, environments, *, device="cpu", max_steps=64):
         for row, index in enumerate(active):
             actions = public[row][0]
             before = observations[index]
+            environments[index].charge_compute(neural_work_per_forward)
             after = environments[index].step(actions[chosen[row]])
             observations[index] = after
             traces[index].append({"step": step, "observation": before.to_dict(),
                 "action_index": chosen[row], "action": asdict(actions[chosen[row]]),
                 "candidate_count": len(actions), "probability": probabilities[row],
                 "neural_forward_wall_seconds_allocated": neural_wall / len(active),
-                "active_batch_size": len(active),
+                "active_batch_size": len(active), "neural_work_units": neural_work_per_forward,
                 "remaining_steps": after.remaining_steps, "remaining_work": after.remaining_work,
                 "feedback": after.feedback})
     timing = {"batch_process_cpu_seconds": time.process_time()-cpu_start,
@@ -226,7 +233,7 @@ class Learner:
                     self.data_hash.update(json.dumps(result["steps"], sort_keys=True).encode())
                 else:
                     result, episode_terms = live_episode(self.model, env, device=cfg.device,
-                        max_steps=cfg.max_steps, sample=True, gradients=True)
+                        max_steps=cfg.max_steps, sample=True, gradients=True, neural_work_per_forward=cfg.neural_work_per_forward)
                     future_reward = 0.0
                     for logp, value, entropy, reward_delta in reversed(episode_terms):
                         future_reward += reward_delta
@@ -264,7 +271,7 @@ class Learner:
             for offset in range(0, len(seeds), self.config.evaluation_batch):
                 chunk = seeds[offset:offset+self.config.evaluation_batch]
                 results = batched_episodes(self.model, [world_factory(s) for s in chunk],
-                    device=self.config.device, max_steps=self.config.max_steps)
+                    device=self.config.device, max_steps=self.config.max_steps, neural_work_per_forward=self.config.neural_work_per_forward)
                 rows.extend({"seed": seed, **result} for seed, result in zip(chunk, results))
         if output:
             output.parent.mkdir(parents=True, exist_ok=True)
@@ -344,6 +351,7 @@ def main():
     parser.add_argument("--bptt-steps", type=int, default=8)
     parser.add_argument("--evaluation-batch", type=int, default=32)
     parser.add_argument("--max-steps", type=int, default=64)
+    parser.add_argument("--neural-work-per-forward", type=float, default=1.0)
     parser.add_argument("--validation-seed", type=int, required=True)
     parser.add_argument("--validation-examples", type=int, default=512)
     parser.add_argument("--evaluate-every", type=int, default=0,
@@ -364,7 +372,7 @@ def main():
     torch.manual_seed(args.seed)
     cfg = TrainConfig(seed=args.seed, width=args.width, family=args.family, batch_size=args.batch,
         method=args.method, device=args.device, learning_rate=args.learning_rate, max_steps=args.max_steps,
-        bptt_steps=args.bptt_steps, evaluation_batch=args.evaluation_batch, training_seed_start=args.training_seed_start)
+        bptt_steps=args.bptt_steps, evaluation_batch=args.evaluation_batch, training_seed_start=args.training_seed_start, neural_work_per_forward=args.neural_work_per_forward)
     world_kwargs = json.loads(args.world_json)
     args.output.mkdir(parents=True, exist_ok=True)
     manager = BoundedSolver() if args.executor == "persistent" else nullcontext(None)
@@ -408,6 +416,8 @@ def main():
             "address_seed_rule": "SHA256 of world seed + role + independent namespace", "address_namespace": args.address_namespace,
             "teacher": args.teacher if cfg.method == "supervised" else None, "executor": args.executor,
             "threads": args.threads, "source_hashes": sources,
+            "neural_work_per_forward": cfg.neural_work_per_forward,
+            "teacher_cost_scope": "public reference environmental/solver costs only; supervised prediction cost is training work in outer ledger",
             "solver_accounting": ({"startup_wall_seconds": solver.startup_wall_seconds,
                 "startup_child_cpu_seconds": solver.startup_child_cpu_seconds, "call_wall_seconds": solver.call_wall_seconds,
                 "restarts": solver.restarts} if solver else {"version": "isolated-per-call"})}
