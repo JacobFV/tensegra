@@ -18,7 +18,7 @@ def test_generation_feasible_and_private():
         assert obs.known_items == {} and obs.known_edges is None
         assert all(set(x)=={'handle','category'} for x in obs.item_inventory)
         assert 'seed' not in obs.to_dict()
-        assert len(encode_observation(obs))==26
+        assert len(encode_observation(obs))==27
         assert len({len(encode_action(obs,a)) for a in action_catalog(obs)})==1
 
 
@@ -176,3 +176,25 @@ def test_executor_injection_keeps_lowering_and_validation_identical():
     assert calls[0]==calls[1]
     assert len(validators)==2
     assert injected['child_cpu_seconds']==.02
+
+
+def test_compute_tariff_harness_only_finite_and_accounted():
+    spec=generate_world(12,compute_price=.02)
+    env=Workshop(spec)
+    assert env.observe().prices['compute']==.02
+    env.charge_compute(2)
+    env.charge_compute(.5)
+    assert env.evaluate()['compute_units']==2.5
+    assert env.evaluate()['modeled_compute_cost']==.05
+    assert env.evaluate()['cost']==.05
+    for invalid in (-1,float('inf'),float('nan'),True,'1'):
+        try:
+            env.charge_compute(invalid)
+            assert False, 'invalid tariff accepted'
+        except ValueError:
+            pass
+    assert env.evaluate()['compute_units']==2.5
+    assert all(a.kind!='charge_compute' for a in action_catalog(env.observe()))
+    free=Workshop(generate_world(12))
+    free.charge_compute(100)
+    assert free.evaluate()['modeled_compute_cost']==0

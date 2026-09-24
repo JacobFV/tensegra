@@ -8,6 +8,7 @@ from __future__ import annotations
 from copy import deepcopy
 from dataclasses import asdict, dataclass, field
 import random
+import math
 import time
 from typing import Any, Callable, Mapping
 
@@ -40,6 +41,7 @@ class WorldSpec:
     work_price: float = .00001
     travel_price: float = .001
     travel_limit: int = 64
+    compute_price: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -160,10 +162,25 @@ class Workshop:
         self._solver_cpu = 0.0
         self._reductions: list[dict[str, Any]] = []
         self._travel = 0
+        self._compute_units = 0.0
         self._feedback: dict[str,Any] = {"status":"ready"}
         self._history: list[dict[str,Any]] = []
         self._pending: dict[int,str] = {}
         self._handle_rng = random.Random(address_seed)
+
+    def charge_compute(self, units: float) -> None:
+        """Harness-only modeled work tariff; policies cannot call this method.
+
+        The harness freezes tariff units from a representative profile and calls
+        this before scoring/choosing actions. This is not measured CPU/GPU time.
+        Actual resource receipts remain separate and authoritative for budgets.
+        """
+        if isinstance(units,bool) or not isinstance(units,(int,float)) or not math.isfinite(units) or units < 0:
+            raise ValueError("compute units must be finite nonnegative numbers")
+        total = self._compute_units + units
+        if not math.isfinite(total):
+            raise ValueError("cumulative compute units must remain finite")
+        self._compute_units = total
 
     def observe(self) -> Observation:
         s = self._spec
@@ -177,7 +194,7 @@ class Workshop:
             tuple({k:deepcopy(v) for k,v in r.items() if k != "payload"} for r in self._records.values()),
             deepcopy(self._retrieved),deepcopy(self._problems),tuple(self._pending.values()),self._selected,self._position,self._delivered,self._verified,self._done,
             max(0,s.step_limit-self._steps), max(0,s.travel_limit-self._travel), max(0,s.work_limit-self._work),
-            {"observation":s.observation_price,"action":s.action_price,"work":s.work_price,"travel":s.travel_price},
+            {"observation":s.observation_price,"action":s.action_price,"work":s.work_price,"travel":s.travel_price,"compute":s.compute_price},
             deepcopy(self._feedback))
 
     def _record(self, kind: str, payload: Any, **metadata: Any) -> str:
@@ -378,10 +395,11 @@ class Workshop:
     def evaluate(self) -> dict[str,Any]:
         """Evaluator-only summary, never returned to actor during an episode."""
         s = self._spec
-        cost = self._steps*s.action_price+self._travel*s.travel_price+self._observations*s.observation_price+self._work*s.work_price
+        cost = self._steps*s.action_price+self._travel*s.travel_price+self._observations*s.observation_price+self._work*s.work_price+self._compute_units*s.compute_price
         return {"verified_success":self._verified,"delivered":self._delivered,"utility":float(self._verified)-cost,
                 "steps":self._steps,"observations":self._observations,"work_units":self._work,
-                "solver_cpu_seconds":self._solver_cpu,"travel_distance":self._travel,"cost":cost,
+                "solver_cpu_seconds":self._solver_cpu,"travel_distance":self._travel,
+                "compute_units":self._compute_units,"modeled_compute_cost":self._compute_units*s.compute_price,"cost":cost,
                 "reductions":deepcopy(self._reductions),"history":deepcopy(self._history)}
 
 
@@ -437,7 +455,7 @@ def encode_observation(o: Observation) -> list[float]:
             o.remaining_steps/64,o.remaining_work/4096,o.state_version/8,
             o.prices["observation"],o.prices["action"],o.prices["work"],
             float(o.feedback.get("status")=="success"),float(o.feedback.get("status")=="rejected"),
-            float(o.feedback.get("status")=="obstacle"),float(o.feedback.get("status")=="timeout"),o.remaining_travel/64,o.prices["travel"]]
+            float(o.feedback.get("status")=="obstacle"),float(o.feedback.get("status")=="timeout"),o.remaining_travel/64,o.prices["travel"],o.prices["compute"]]
 
 
 def encode_action(o: Observation, action: Action) -> list[float]:
