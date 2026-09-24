@@ -91,3 +91,6 @@ Profile13.44s includes full driver/serialization; independently replayed108 read
 
 ## 2026-09-24: allocate semantic mains after profile and contract audit
 All68 frozen-source bindings and unchanged prepared recipes independently verify. Allocate S13English/mixed600s each: measured training308/318s projected plus checkpoint evaluation/export. Allocate S14motif and S12rename420s each: measured variable loops scale to339/381s plus fixed18/19s; no naive whole-profile multiplier. Main recipes/checkpoints/thresholds remain unchanged; profile metrics are not used to tune them. Root schedules individually after R10 and attention confirmation slots. These are transfer diagnostics and bilingual development, not automatic broad semantic promotion.
+
+### R10 fixed-endpoint screen and semantic transfer (08:12 UTC)
+R10 increases balanced-context diversity at matched updates but misses both worst-stratum calibration criteria. Do not promote or tune on validation; independently audit and inspect frozen training curves for a bounded, newly registered hypothesis. Initial reconstruction is perfect in this diagnostic, so a new ingestion representation is unsupported. Advance independent S14 all-six-model unseen-arity test while return analysis proceeds.
