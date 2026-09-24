@@ -1,0 +1,33 @@
+{
+  "main": [
+    {
+      "job": "C04-lineage-0",
+      "input": "research/results/campaign-01/composition/c04-confirmation/0/c04-confirmation-0.batch.json",
+      "sha256": "6ee7eb48e55d044266b2c0132a0bb6517a1bbb835524bfbfbd56fbf1e0be94a0",
+      "child_process_seconds": 648.3173464252613,
+      "outer_receipted_batch_seconds": 652.581702,
+      "recommended_replacement_seconds": 652.581702,
+      "increment_seconds": 4.264355574738602
+    },
+    {
+      "job": "C04-lineage-1",
+      "input": "research/results/campaign-01/composition/c04-confirmation/1/c04-confirmation-1.batch.json",
+      "sha256": "05edc3439a0988675142219de5cd021c1133495f0581481c10f87459b22eeae5",
+      "child_process_seconds": 650.2077004262246,
+      "outer_receipted_batch_seconds": 654.479806,
+      "recommended_replacement_seconds": 654.479806,
+      "increment_seconds": 4.272105573775434
+    }
+  ],
+  "main_increment_seconds": 8.536461148514036,
+  "profile": {
+    "input": "research/results/campaign-01/composition/c04-profile/c04-profile-batch-receipt.json",
+    "sha256": "b1f5eabf0180b4f25ecafc7c1d60e4589ce3923dcc1b9844c4031d1545e43491",
+    "child_process_seconds": 21.218453886453062,
+    "first_child_to_last_child_span_seconds": 67.10571,
+    "first_child_to_idle_check_span_seconds": 89.129664,
+    "scope": "No outer batch start/end in this receipt. Child sum is measured process occupancy; spans include orchestration gaps and are conservative reservations, not measured GPU-active time."
+  },
+  "recommendation": "Replace each child sum with its outer batch duration once, never add both. Keep recorded child sums as measured subcomponents. For profile choose explicit conservative first-child-to-idle-check span if accounting all reserved-slot overhead; it is not a recovered outer-process wall measurement.",
+  "limitation": "Main UTC bracket ends before final nvidia-smi/ps/receipt persistence in launcher; process startup before started_utc and final publication tail are not independently timed. Preserve this boundary disclosure rather than claiming exact OS lifetime."
+}
