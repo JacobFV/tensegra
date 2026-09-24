@@ -76,3 +76,6 @@ A13's frozen common hard destination improves deep task86→499/512 while leavin
 
 ## 2026-09-24: close restricted composition; preserve stronger alternatives
 C04 independently confirms the acquired lowering/return/use chain, but the role-trained MLP also passes and the supplied-copy control is slightly more accurate with much lower cost. More orchestration machinery is not justified by these outcomes. Stop this branch after audit/figures; reserve resources for semantic transfer and A14 read-policy replication. This does not pass historical broad return contracts, demonstrate multiple exact operations, or establish autonomous scheduling.
+
+## 2026-09-24: conditional return-tail diversity branch
+CPU review of R06–R09: balanced fitting improves late tails but near-perfect fitting accuracy still exceeds fresh-context results; residual decoder and phase split did not justify complexity. Authorize CPU preparation of a fresh development comparison on backbone11: nested balanced16k/64k contexts, identical linear consumer and3600 fitting updates/presentation budget, delays through16 and32 excluded from selection. Extraction/fitting/evaluation must be profiled and source reviewed before GPU release. Original-mixture competence and balanced tail gains remain distinct; this cannot retrospectively promote R04 subtype reliability.
