@@ -1,0 +1,2645 @@
+{
+  "config": {
+    "checkpoints": [
+      {
+        "name": "lightweight",
+        "path": "/home/brandonin/topoformer-campaign02/results/e03-acquire-lightweight/checkpoint.pt",
+        "sha256": "fe31cc203c80a628d9da8a1e07b37ef21785468277324775f8c0fd7853739d08"
+      },
+      {
+        "name": "recurrent",
+        "path": "/home/brandonin/topoformer-campaign02/results/e03-acquire-recurrent/checkpoint.pt",
+        "sha256": "22af1d12760f6ad5502e2a8a34737e7e36a98d82b66e09b1bb7f44818aa8e0d0"
+      }
+    ],
+    "evaluation_batch": 32,
+    "references": [
+      "cheap",
+      "always_tool",
+      "cheap_first"
+    ],
+    "reference_compute_tariff": 0,
+    "address_namespace": "extended-02-e04-development-v1",
+    "conditions": [
+      {
+        "name": "easy",
+        "seed_start": 26000000,
+        "examples": 512,
+        "world": {
+          "categories": 2,
+          "choices": 2,
+          "locations": 5,
+          "step_limit": 48
+        }
+      },
+      {
+        "name": "medium",
+        "seed_start": 26010000,
+        "examples": 512,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "step_limit": 48
+        }
+      },
+      {
+        "name": "hard_feasible",
+        "seed_start": 26020000,
+        "examples": 512,
+        "world": {
+          "categories": 4,
+          "choices": 4,
+          "locations": 9,
+          "step_limit": 48
+        }
+      },
+      {
+        "name": "work_tight",
+        "seed_start": 26030000,
+        "examples": 512,
+        "world": {
+          "categories": 4,
+          "choices": 4,
+          "locations": 9,
+          "step_limit": 48,
+          "work_limit": 128
+        }
+      },
+      {
+        "name": "expensive_tools",
+        "seed_start": 26040000,
+        "examples": 512,
+        "world": {
+          "categories": 4,
+          "choices": 4,
+          "locations": 9,
+          "step_limit": 48,
+          "work_price": 0.002
+        }
+      },
+      {
+        "name": "expensive_travel",
+        "seed_start": 26050000,
+        "examples": 512,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 9,
+          "step_limit": 48,
+          "travel_price": 0.04
+        }
+      },
+      {
+        "name": "obstacle",
+        "seed_start": 26060000,
+        "examples": 512,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "step_limit": 48,
+          "obstacle": true
+        }
+      }
+    ]
+  },
+  "config_sha256": "9426304c1985e964de11a474144c51b865d9b5069ac2225dc3ece89ecd506fde",
+  "sources": {
+    "evaluator": "0bce8f43235adc8e6c550c6aa3550edf6f65ff1f96fad59ab369d1b3791c7de8",
+    "training": "ba09dac702b9fc8e283a779c06bad157f6b7a42798e9f9deac709e8c175f66d7",
+    "policy": "011b6c847e1f581732282ae7d0f7b4157756ba52b65a9cfd382f08db3ecf4522",
+    "protocol": "4578545941f6efbe352c2c95334947960981994821020ebe208fd0a3f5509131",
+    "world": "eab70ba2580b7ffe6da1c4db58ec239045ae56fdef3c9f826991e36a7ea64369",
+    "references": "06bcdc8183049799262d94de3ec3c4540d34e518e21e89504b95e149daa39f63"
+  },
+  "checkpoints": [
+    {
+      "name": "lightweight",
+      "path": "/home/brandonin/topoformer-campaign02/results/e03-acquire-lightweight/checkpoint.pt",
+      "sha256": "fe31cc203c80a628d9da8a1e07b37ef21785468277324775f8c0fd7853739d08"
+    },
+    {
+      "name": "recurrent",
+      "path": "/home/brandonin/topoformer-campaign02/results/e03-acquire-recurrent/checkpoint.pt",
+      "sha256": "22af1d12760f6ad5502e2a8a34737e7e36a98d82b66e09b1bb7f44818aa8e0d0"
+    }
+  ],
+  "profile_limit": null,
+  "results": [
+    {
+      "condition": "easy",
+      "arm": "lightweight",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.97149705078125,
+        "cost": 0.02850294921875,
+        "steps": 17.0,
+        "observations": 5.0,
+        "work_units": 19.826171875,
+        "travel_distance": 6.3046875,
+        "compute_units": 17.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0008141322499999944
+      },
+      "cost_per_success_including_failures": 0.02850294921875,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 8704,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 1024,
+        "action/retrieve": 1024,
+        "action/use_return": 1024,
+        "return_use_attempts": 1024,
+        "multiple_return_use_attempts": 512,
+        "return_address_contract_valid": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "return_application_success": 1024,
+        "stale_return_use": 0,
+        "action/build_route": 512,
+        "action/verify": 512,
+        "reductions": 1024,
+        "correct_reductions": 1024,
+        "certificate_valid_reductions": 1024
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 1.7722109025344253,
+      "artifact": "easy/lightweight.jsonl.gz",
+      "artifact_sha256": "0569a4b64567df417d2ac7aad3f6ee0f1b094032b4bca2a309d71127c412a440",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 2205698,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "easy",
+      "arm": "recurrent",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.97149705078125,
+        "cost": 0.02850294921875,
+        "steps": 17.0,
+        "observations": 5.0,
+        "work_units": 19.826171875,
+        "travel_distance": 6.3046875,
+        "compute_units": 17.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0008672216250000114
+      },
+      "cost_per_success_including_failures": 0.02850294921875,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 8704,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 1024,
+        "action/retrieve": 1024,
+        "action/use_return": 1024,
+        "return_use_attempts": 1024,
+        "multiple_return_use_attempts": 512,
+        "return_address_contract_valid": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "return_application_success": 1024,
+        "stale_return_use": 0,
+        "action/build_route": 512,
+        "action/verify": 512,
+        "reductions": 1024,
+        "correct_reductions": 1024,
+        "certificate_valid_reductions": 1024
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 2.5312339663505554,
+      "artifact": "easy/recurrent.jsonl.gz",
+      "artifact_sha256": "1392fdb8a0770dbf72c06cabc08d6dd7683f045f3e711e69e65abeb06a823f46",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "recurrent",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "recurrent",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 26364930,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "easy",
+      "arm": "reference-cheap",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 452,
+      "success": 0.8828125,
+      "means": {
+        "utility": 0.8596738281249999,
+        "cost": 0.023138671875000003,
+        "steps": 11.423828125,
+        "observations": 4.8828125,
+        "work_units": 0.0,
+        "travel_distance": 6.83203125,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.026210176991150445,
+      "counts": {
+        "action/inspect": 2500,
+        "status/success": 5789,
+        "action/choose_item": 904,
+        "action/commit_pending": 452,
+        "action/move": 1481,
+        "action/verify": 452,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "action/abstain": 60,
+        "status/unknown": 60
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "easy/reference-cheap.jsonl.gz",
+      "artifact_sha256": "ac3c2218941c2abf64b6d12c80df3b4d83958c12399162b8ddf784ba48094024",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.047037631999996776
+    },
+    {
+      "condition": "easy",
+      "arm": "reference-always_tool",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.97149705078125,
+        "cost": 0.02850294921875,
+        "steps": 17.0,
+        "observations": 5.0,
+        "work_units": 19.826171875,
+        "travel_distance": 6.3046875,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0011835524687500594
+      },
+      "cost_per_success_including_failures": 0.02850294921875,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 8704,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 1024,
+        "action/retrieve": 1024,
+        "action/use_return": 1024,
+        "return_use_attempts": 1024,
+        "multiple_return_use_attempts": 512,
+        "return_address_contract_valid": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "return_application_success": 1024,
+        "stale_return_use": 0,
+        "action/build_route": 512,
+        "action/verify": 512,
+        "reductions": 1024,
+        "correct_reductions": 1024,
+        "certificate_valid_reductions": 1024
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "easy/reference-always_tool.jsonl.gz",
+      "artifact_sha256": "a249656ea85e0035d90dead1e403493db3b178c1ac025456458a26c5e2e06dfe",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.06291822400001479
+    },
+    {
+      "condition": "easy",
+      "arm": "reference-cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.975366015625,
+        "cost": 0.024633984375,
+        "steps": 13.107421875,
+        "observations": 5.0,
+        "work_units": 15.15625,
+        "travel_distance": 6.375,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0005851224374999633
+      },
+      "cost_per_success_including_failures": 0.024633984375,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 6567,
+        "action/choose_item": 904,
+        "action/commit_pending": 452,
+        "action/build_route": 326,
+        "action/call": 530,
+        "action/retrieve": 386,
+        "action/use_return": 386,
+        "return_use_attempts": 386,
+        "multiple_return_use_attempts": 166,
+        "return_address_contract_valid": 386,
+        "multiple_return_address_contract_valid": 166,
+        "return_application_success": 386,
+        "stale_return_use": 0,
+        "action/verify": 512,
+        "reductions": 530,
+        "correct_reductions": 530,
+        "certificate_valid_reductions": 386,
+        "action/move": 415,
+        "status/timeout": 144,
+        "action/start_subset": 60,
+        "action/add_constraint": 180
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "easy/reference-cheap_first.jsonl.gz",
+      "artifact_sha256": "2036b14807c137a758cc620106e6f70bc248a265e54ac512d2d05618836668b7",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.049064863999999986
+    },
+    {
+      "condition": "medium",
+      "arm": "lightweight",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.960962578125,
+        "cost": 0.039037421875,
+        "steps": 22.0,
+        "observations": 10.0,
+        "work_units": 50.8125,
+        "travel_distance": 6.529296875,
+        "compute_units": 22.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.001047910312499924
+      },
+      "cost_per_success_including_failures": 0.039037421875,
+      "counts": {
+        "action/inspect": 5120,
+        "status/success": 11264,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 1024,
+        "action/retrieve": 1024,
+        "action/use_return": 1024,
+        "return_use_attempts": 1024,
+        "multiple_return_use_attempts": 512,
+        "return_address_contract_valid": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "return_application_success": 1024,
+        "stale_return_use": 0,
+        "action/build_route": 512,
+        "action/verify": 512,
+        "reductions": 1024,
+        "correct_reductions": 1024,
+        "certificate_valid_reductions": 1024
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 2.683308657258749,
+      "artifact": "medium/lightweight.jsonl.gz",
+      "artifact_sha256": "0250390704d2352b5dc2c2151ac4e8444ed8c3f9db76c0a0f6a614b9bd007220",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 2205698,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "medium",
+      "arm": "recurrent",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 0,
+      "success": 0.0,
+      "means": {
+        "utility": -0.057228867187500004,
+        "cost": 0.057228867187500004,
+        "steps": 48.0,
+        "observations": 9.0,
+        "work_units": 22.88671875,
+        "travel_distance": 0.0,
+        "compute_units": 48.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0016451082812499306
+      },
+      "cost_per_success_including_failures": null,
+      "counts": {
+        "action/inspect": 4608,
+        "status/success": 7831,
+        "action/start_subset": 512,
+        "action/add_constraint": 1024,
+        "action/call": 1302,
+        "action/retrieve": 1227,
+        "action/verify": 15903,
+        "status/incomplete": 15903,
+        "reductions": 1302,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 460,
+        "status/infeasible": 842
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 11.554494448937476,
+      "artifact": "medium/recurrent.jsonl.gz",
+      "artifact_sha256": "61ad4137c91072b477d9cb8fb136989d827d568bb61abc502a2b519cb41a4fee",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "recurrent",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "recurrent",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 26364930,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "medium",
+      "arm": "reference-cheap",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 434,
+      "success": 0.84765625,
+      "means": {
+        "utility": 0.8122070312499999,
+        "cost": 0.035449218750000004,
+        "steps": 17.654296875,
+        "observations": 9.84765625,
+        "work_units": 0.0,
+        "travel_distance": 7.947265625,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.04182027649769586,
+      "counts": {
+        "action/inspect": 5042,
+        "status/success": 8961,
+        "action/abstain": 78,
+        "status/unknown": 78,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "action/choose_item": 1302,
+        "action/commit_pending": 434,
+        "action/move": 1749,
+        "action/verify": 434
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "medium/reference-cheap.jsonl.gz",
+      "artifact_sha256": "0ffdd5df0fc03729c25662fd9cb6cf28a95de81aa5714946877997a2f1a42431",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.12507657599995525
+    },
+    {
+      "condition": "medium",
+      "arm": "reference-always_tool",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.960962578125,
+        "cost": 0.039037421875,
+        "steps": 22.0,
+        "observations": 10.0,
+        "work_units": 50.8125,
+        "travel_distance": 6.529296875,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0013817987812501683
+      },
+      "cost_per_success_including_failures": 0.039037421875,
+      "counts": {
+        "action/inspect": 5120,
+        "status/success": 11264,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 1024,
+        "action/retrieve": 1024,
+        "action/use_return": 1024,
+        "return_use_attempts": 1024,
+        "multiple_return_use_attempts": 512,
+        "return_address_contract_valid": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "return_application_success": 1024,
+        "stale_return_use": 0,
+        "action/build_route": 512,
+        "action/verify": 512,
+        "reductions": 1024,
+        "correct_reductions": 1024,
+        "certificate_valid_reductions": 1024
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "medium/reference-always_tool.jsonl.gz",
+      "artifact_sha256": "d792c99f8fc5e22f13eac5d54dceb37112a39199bf48453f53fa33b5b496a3c5",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.1267035199999711
+    },
+    {
+      "condition": "medium",
+      "arm": "reference-cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.96358818359375,
+        "cost": 0.03641181640625,
+        "steps": 19.517578125,
+        "observations": 10.0,
+        "work_units": 29.658203125,
+        "travel_distance": 6.59765625,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0008724874374999377
+      },
+      "cost_per_success_including_failures": 0.03641181640625,
+      "counts": {
+        "action/inspect": 5120,
+        "status/success": 9589,
+        "action/start_subset": 78,
+        "action/add_constraint": 234,
+        "action/call": 758,
+        "status/timeout": 404,
+        "action/retrieve": 417,
+        "action/use_return": 417,
+        "return_use_attempts": 417,
+        "multiple_return_use_attempts": 342,
+        "return_address_contract_valid": 417,
+        "multiple_return_address_contract_valid": 342,
+        "return_application_success": 417,
+        "stale_return_use": 0,
+        "action/move": 382,
+        "action/verify": 512,
+        "reductions": 758,
+        "correct_reductions": 758,
+        "certificate_valid_reductions": 417,
+        "action/choose_item": 1302,
+        "action/commit_pending": 434,
+        "action/build_route": 339
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "medium/reference-cheap_first.jsonl.gz",
+      "artifact_sha256": "2d131070bab61b3733e41f0a752def6162233b10dd5869b26ed4aabe4178496c",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.117728975999988
+    },
+    {
+      "condition": "hard_feasible",
+      "arm": "lightweight",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.94455234375,
+        "cost": 0.055447656250000005,
+        "steps": 29.0,
+        "observations": 17.0,
+        "work_units": 289.6875,
+        "travel_distance": 6.55078125,
+        "compute_units": 29.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.001401261562500128
+      },
+      "cost_per_success_including_failures": 0.055447656250000005,
+      "counts": {
+        "action/inspect": 8704,
+        "status/success": 14848,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 1024,
+        "action/retrieve": 1024,
+        "action/use_return": 1024,
+        "return_use_attempts": 1024,
+        "multiple_return_use_attempts": 512,
+        "return_address_contract_valid": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "return_application_success": 1024,
+        "stale_return_use": 0,
+        "action/build_route": 512,
+        "action/verify": 512,
+        "reductions": 1024,
+        "correct_reductions": 1024,
+        "certificate_valid_reductions": 1024
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 4.91408032970503,
+      "artifact": "hard_feasible/lightweight.jsonl.gz",
+      "artifact_sha256": "4454581eff86c3cf800e3399949f86c8ab67eb59d1d832629fe5c12e55f12c8c",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 2205698,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "hard_feasible",
+      "arm": "recurrent",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 0,
+      "success": 0.0,
+      "means": {
+        "utility": -0.064,
+        "cost": 0.064,
+        "steps": 48.0,
+        "observations": 16.0,
+        "work_units": 0.0,
+        "travel_distance": 0.0,
+        "compute_units": 48.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": null,
+      "counts": {
+        "action/inspect": 8192,
+        "status/success": 8192,
+        "action/verify": 16384,
+        "status/incomplete": 16384,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 11.509028740692884,
+      "artifact": "hard_feasible/recurrent.jsonl.gz",
+      "artifact_sha256": "5a0a828af0aa1d3484cf8102098f2a19ac40c7b310064927482d7a72cccac25e",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "recurrent",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "recurrent",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 26364930,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "hard_feasible",
+      "arm": "reference-cheap",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 445,
+      "success": 0.869140625,
+      "means": {
+        "utility": 0.81726171875,
+        "cost": 0.05187890625,
+        "steps": 26.16015625,
+        "observations": 16.869140625,
+        "work_units": 0.0,
+        "travel_distance": 8.849609375,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.05968988764044944,
+      "counts": {
+        "action/inspect": 8637,
+        "status/success": 13327,
+        "action/choose_item": 1780,
+        "action/commit_pending": 445,
+        "action/move": 2020,
+        "action/verify": 445,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "action/abstain": 67,
+        "status/unknown": 67
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "hard_feasible/reference-cheap.jsonl.gz",
+      "artifact_sha256": "8232917b0c6682719560428f7cea6e626bb960d848ab7468d795285b15f90031",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.2311138239999906
+    },
+    {
+      "condition": "hard_feasible",
+      "arm": "reference-always_tool",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.94455234375,
+        "cost": 0.055447656250000005,
+        "steps": 29.0,
+        "observations": 17.0,
+        "work_units": 289.6875,
+        "travel_distance": 6.55078125,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0017497363437507562
+      },
+      "cost_per_success_including_failures": 0.055447656250000005,
+      "counts": {
+        "action/inspect": 8704,
+        "status/success": 14848,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 1024,
+        "action/retrieve": 1024,
+        "action/use_return": 1024,
+        "return_use_attempts": 1024,
+        "multiple_return_use_attempts": 512,
+        "return_address_contract_valid": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "return_application_success": 1024,
+        "stale_return_use": 0,
+        "action/build_route": 512,
+        "action/verify": 512,
+        "reductions": 1024,
+        "correct_reductions": 1024,
+        "certificate_valid_reductions": 1024
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "hard_feasible/reference-always_tool.jsonl.gz",
+      "artifact_sha256": "0608af474d903c3969881eae7268101b2a22d9d1a7c8837391c92bf78134381d",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.2988136320000052
+    },
+    {
+      "condition": "hard_feasible",
+      "arm": "reference-cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.94826263671875,
+        "cost": 0.051737363281250004,
+        "steps": 27.587890625,
+        "observations": 17.0,
+        "work_units": 53.814453125,
+        "travel_distance": 6.611328125,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0010601954687501228
+      },
+      "cost_per_success_including_failures": 0.051737363281250004,
+      "counts": {
+        "action/inspect": 8704,
+        "status/success": 13647,
+        "action/choose_item": 1780,
+        "action/commit_pending": 445,
+        "action/move": 332,
+        "action/verify": 512,
+        "reductions": 852,
+        "correct_reductions": 852,
+        "certificate_valid_reductions": 433,
+        "action/build_route": 366,
+        "action/call": 852,
+        "status/timeout": 478,
+        "action/retrieve": 433,
+        "action/use_return": 433,
+        "return_use_attempts": 433,
+        "multiple_return_use_attempts": 411,
+        "return_address_contract_valid": 433,
+        "multiple_return_address_contract_valid": 411,
+        "return_application_success": 433,
+        "stale_return_use": 0,
+        "action/start_subset": 67,
+        "action/add_constraint": 201
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "hard_feasible/reference-cheap_first.jsonl.gz",
+      "artifact_sha256": "68f11d99ae34ac34ab80687a0234661c0ecbbadb4945e2ba13b976c28cc15bb4",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.25884127999988493
+    },
+    {
+      "condition": "work_tight",
+      "arm": "lightweight",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 0,
+      "success": 0.0,
+      "means": {
+        "utility": -0.066246796875,
+        "cost": 0.066246796875,
+        "steps": 48.0,
+        "observations": 16.966796875,
+        "work_units": 128.0,
+        "travel_distance": 0.0,
+        "compute_units": 48.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0007441532812498845
+      },
+      "cost_per_success_including_failures": null,
+      "counts": {
+        "action/inspect": 8687,
+        "status/success": 24064,
+        "action/start_subset": 512,
+        "action/add_constraint": 1995,
+        "action/call": 512,
+        "status/timeout": 512,
+        "action/retrieve": 495,
+        "action/use_return": 495,
+        "return_use_attempts": 495,
+        "multiple_return_use_attempts": 0,
+        "return_address_contract_valid": 495,
+        "multiple_return_address_contract_valid": 0,
+        "return_application_success": 495,
+        "stale_return_use": 0,
+        "action/build_route": 11880,
+        "reductions": 512,
+        "correct_reductions": 512,
+        "certificate_valid_reductions": 495
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 8.62836268171668,
+      "artifact": "work_tight/lightweight.jsonl.gz",
+      "artifact_sha256": "32b7235ee7a9a109771aa04afda1aee7cef80b5417a0332496794556c0e5cdcb",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 2205698,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "work_tight",
+      "arm": "recurrent",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 0,
+      "success": 0.0,
+      "means": {
+        "utility": -0.064,
+        "cost": 0.064,
+        "steps": 48.0,
+        "observations": 16.0,
+        "work_units": 0.0,
+        "travel_distance": 0.0,
+        "compute_units": 48.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": null,
+      "counts": {
+        "action/inspect": 8192,
+        "status/success": 8192,
+        "action/verify": 16384,
+        "status/incomplete": 16384,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 11.48300124751404,
+      "artifact": "work_tight/recurrent.jsonl.gz",
+      "artifact_sha256": "4e1a63ecf162e6a0823e55dbc0c4c0e13f511f11d14e60ea4cf379011e050ff6",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "recurrent",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "recurrent",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 26364930,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "work_tight",
+      "arm": "reference-cheap",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 422,
+      "success": 0.82421875,
+      "means": {
+        "utility": 0.773798828125,
+        "cost": 0.050419921875,
+        "steps": 25.505859375,
+        "observations": 16.82421875,
+        "work_units": 0.0,
+        "travel_distance": 8.08984375,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.06117298578199053,
+      "counts": {
+        "action/inspect": 8614,
+        "status/success": 12969,
+        "action/choose_item": 1688,
+        "action/commit_pending": 422,
+        "action/move": 1823,
+        "action/verify": 422,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "action/abstain": 90,
+        "status/unknown": 90
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "work_tight/reference-cheap.jsonl.gz",
+      "artifact_sha256": "54730933757c3a8f5c3bee849fa36218420bb075a55ddcf4de5ff2944558d9fd",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.23589532799991275
+    },
+    {
+      "condition": "work_tight",
+      "arm": "reference-always_tool",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 0,
+      "success": 0.0,
+      "means": {
+        "utility": -0.044113984375000005,
+        "cost": 0.044113984375000005,
+        "steps": 25.8671875,
+        "observations": 16.966796875,
+        "work_units": 128.0,
+        "travel_distance": 0.0,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0007515914374994527
+      },
+      "cost_per_success_including_failures": null,
+      "counts": {
+        "action/inspect": 8687,
+        "status/success": 12220,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 512,
+        "status/timeout": 512,
+        "action/retrieve": 495,
+        "action/use_return": 495,
+        "return_use_attempts": 495,
+        "multiple_return_use_attempts": 0,
+        "return_address_contract_valid": 495,
+        "multiple_return_address_contract_valid": 0,
+        "return_application_success": 495,
+        "stale_return_use": 0,
+        "action/build_route": 495,
+        "action/abstain": 512,
+        "status/unknown": 512,
+        "reductions": 512,
+        "correct_reductions": 512,
+        "certificate_valid_reductions": 495
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "work_tight/reference-always_tool.jsonl.gz",
+      "artifact_sha256": "e93112d50d8080d1ba7121a27e90c8c266eae7ec526878d4ecca9373e9024361",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.21302014400018265
+    },
+    {
+      "condition": "work_tight",
+      "arm": "reference-cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 131,
+      "success": 0.255859375,
+      "means": {
+        "utility": 0.21293125,
+        "cost": 0.042928125000000004,
+        "steps": 24.88671875,
+        "observations": 16.900390625,
+        "work_units": 13.125,
+        "travel_distance": 1.009765625,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0005460325937506677
+      },
+      "cost_per_success_including_failures": 0.16778015267175575,
+      "counts": {
+        "action/inspect": 8653,
+        "status/success": 11941,
+        "action/choose_item": 1688,
+        "action/commit_pending": 422,
+        "action/build_route": 330,
+        "action/call": 420,
+        "status/timeout": 420,
+        "action/abstain": 381,
+        "status/unknown": 381,
+        "reductions": 420,
+        "correct_reductions": 420,
+        "certificate_valid_reductions": 39,
+        "action/start_subset": 90,
+        "action/add_constraint": 270,
+        "action/retrieve": 39,
+        "action/use_return": 39,
+        "return_use_attempts": 39,
+        "multiple_return_use_attempts": 0,
+        "return_address_contract_valid": 39,
+        "multiple_return_address_contract_valid": 0,
+        "return_application_success": 39,
+        "stale_return_use": 0,
+        "action/move": 279,
+        "action/verify": 131
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "work_tight/reference-cheap_first.jsonl.gz",
+      "artifact_sha256": "c96462bedcea1aff9f5c5b08de4f9accd0fbc2afb94c2d28c66eacd21f4feb2a",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.20542270399997165
+    },
+    {
+      "condition": "expensive_tools",
+      "arm": "lightweight",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.36862304687499997,
+        "cost": 0.6313769531250001,
+        "steps": 29.0,
+        "observations": 17.0,
+        "work_units": 289.666015625,
+        "travel_distance": 6.044921875,
+        "compute_units": 29.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0015066716250003685
+      },
+      "cost_per_success_including_failures": 0.6313769531250001,
+      "counts": {
+        "action/inspect": 8704,
+        "status/success": 14848,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 1024,
+        "action/retrieve": 1024,
+        "action/use_return": 1024,
+        "return_use_attempts": 1024,
+        "multiple_return_use_attempts": 512,
+        "return_address_contract_valid": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "return_application_success": 1024,
+        "stale_return_use": 0,
+        "action/build_route": 512,
+        "action/verify": 512,
+        "reductions": 1024,
+        "correct_reductions": 1024,
+        "certificate_valid_reductions": 1024
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 4.875240618363023,
+      "artifact": "expensive_tools/lightweight.jsonl.gz",
+      "artifact_sha256": "42a5b271200adc9f1a2fe181dadd4a8810dd4dd6a348a5c234665844410b2902",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 2205698,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "expensive_tools",
+      "arm": "recurrent",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 0,
+      "success": 0.0,
+      "means": {
+        "utility": -0.064,
+        "cost": 0.064,
+        "steps": 48.0,
+        "observations": 16.0,
+        "work_units": 0.0,
+        "travel_distance": 0.0,
+        "compute_units": 48.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": null,
+      "counts": {
+        "action/inspect": 8192,
+        "status/success": 8192,
+        "action/verify": 16384,
+        "status/incomplete": 16384,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 11.515753175597638,
+      "artifact": "expensive_tools/recurrent.jsonl.gz",
+      "artifact_sha256": "1654708a64f5637c4a9262101c745b9a026f2ee41a001390024d674bf17bfb7e",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "recurrent",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "recurrent",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 26364930,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "expensive_tools",
+      "arm": "reference-cheap",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 436,
+      "success": 0.8515625,
+      "means": {
+        "utility": 0.8008261718749999,
+        "cost": 0.050736328125,
+        "steps": 25.787109375,
+        "observations": 16.8515625,
+        "work_units": 0.0,
+        "travel_distance": 8.09765625,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.0595802752293578,
+      "counts": {
+        "action/inspect": 8628,
+        "status/success": 13127,
+        "action/choose_item": 1744,
+        "action/commit_pending": 436,
+        "action/move": 1883,
+        "action/verify": 436,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "action/abstain": 76,
+        "status/unknown": 76
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "expensive_tools/reference-cheap.jsonl.gz",
+      "artifact_sha256": "a02b10cb79e88aba476860dae25b07a5399efc62dddf02474bc5aa8444d62feb",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.8876840319998394
+    },
+    {
+      "condition": "expensive_tools",
+      "arm": "reference-always_tool",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.36862304687499997,
+        "cost": 0.6313769531250001,
+        "steps": 29.0,
+        "observations": 17.0,
+        "work_units": 289.666015625,
+        "travel_distance": 6.044921875,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0016982117812490852
+      },
+      "cost_per_success_including_failures": 0.6313769531250001,
+      "counts": {
+        "action/inspect": 8704,
+        "status/success": 14848,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 1024,
+        "action/retrieve": 1024,
+        "action/use_return": 1024,
+        "return_use_attempts": 1024,
+        "multiple_return_use_attempts": 512,
+        "return_address_contract_valid": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "return_application_success": 1024,
+        "stale_return_use": 0,
+        "action/build_route": 512,
+        "action/verify": 512,
+        "reductions": 1024,
+        "correct_reductions": 1024,
+        "certificate_valid_reductions": 1024
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "expensive_tools/reference-always_tool.jsonl.gz",
+      "artifact_sha256": "478004a9664bd163367587fc0d5c3a60e96b5e23a5bc44a667df677df578e748",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.2925202720002176
+    },
+    {
+      "condition": "expensive_tools",
+      "arm": "reference-cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9135917968749999,
+        "cost": 0.086408203125,
+        "steps": 27.669921875,
+        "observations": 17.0,
+        "work_units": 16.125,
+        "travel_distance": 9.48828125,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.00016477674999986706
+      },
+      "cost_per_success_including_failures": 0.086408203125,
+      "counts": {
+        "action/inspect": 8704,
+        "status/success": 14048,
+        "action/choose_item": 1744,
+        "action/commit_pending": 436,
+        "action/move": 2190,
+        "action/verify": 512,
+        "reductions": 125,
+        "correct_reductions": 125,
+        "certificate_valid_reductions": 76,
+        "action/start_subset": 76,
+        "action/add_constraint": 228,
+        "action/call": 125,
+        "status/timeout": 119,
+        "action/retrieve": 76,
+        "action/use_return": 76,
+        "return_use_attempts": 76,
+        "multiple_return_use_attempts": 43,
+        "return_address_contract_valid": 76,
+        "multiple_return_address_contract_valid": 43,
+        "return_application_success": 76,
+        "stale_return_use": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "expensive_tools/reference-cheap_first.jsonl.gz",
+      "artifact_sha256": "9e30d9a9333376bdd1a61b6e130303bf3ef8326f64ab8f9ab5a5fa1b693902fb",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.26555326400008994
+    },
+    {
+      "condition": "expensive_travel",
+      "arm": "lightweight",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.7353659765625,
+        "cost": 0.26463402343750003,
+        "steps": 22.0,
+        "observations": 10.0,
+        "work_units": 60.27734375,
+        "travel_distance": 5.80078125,
+        "compute_units": 22.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.001155857218749722
+      },
+      "cost_per_success_including_failures": 0.26463402343750003,
+      "counts": {
+        "action/inspect": 5120,
+        "status/success": 11264,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 1024,
+        "action/retrieve": 1024,
+        "action/use_return": 1024,
+        "return_use_attempts": 1024,
+        "multiple_return_use_attempts": 512,
+        "return_address_contract_valid": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "return_application_success": 1024,
+        "stale_return_use": 0,
+        "action/build_route": 512,
+        "action/verify": 512,
+        "reductions": 1024,
+        "correct_reductions": 1024,
+        "certificate_valid_reductions": 1024
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 2.7636764654889703,
+      "artifact": "expensive_travel/lightweight.jsonl.gz",
+      "artifact_sha256": "23f620bee55136a434546cf06b82dd2924f87b670e577b05c364dc88822048b3",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 2205698,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "expensive_travel",
+      "arm": "recurrent",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 0,
+      "success": 0.0,
+      "means": {
+        "utility": -0.057276328125000005,
+        "cost": 0.057276328125000005,
+        "steps": 48.0,
+        "observations": 9.0,
+        "work_units": 27.6328125,
+        "travel_distance": 0.0,
+        "compute_units": 48.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.003053362781250229
+      },
+      "cost_per_success_including_failures": null,
+      "counts": {
+        "action/inspect": 4608,
+        "status/success": 7736,
+        "action/start_subset": 512,
+        "action/add_constraint": 1024,
+        "action/call": 1572,
+        "action/retrieve": 1150,
+        "action/verify": 15710,
+        "status/incomplete": 15710,
+        "reductions": 1572,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 442,
+        "status/infeasible": 1130
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 11.852504827547818,
+      "artifact": "expensive_travel/recurrent.jsonl.gz",
+      "artifact_sha256": "464a223d13a0dcea316da185c561b1880283cbd6f7a2d77a8a02b569c5a6ae3e",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "recurrent",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "recurrent",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 26364930,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "expensive_travel",
+      "arm": "reference-cheap",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 422,
+      "success": 0.82421875,
+      "means": {
+        "utility": 0.48380078125,
+        "cost": 0.34041796875,
+        "steps": 17.625,
+        "observations": 9.82421875,
+        "work_units": 0.0,
+        "travel_distance": 7.82421875,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.4130189573459716,
+      "counts": {
+        "action/inspect": 5030,
+        "status/success": 8934,
+        "action/choose_item": 1266,
+        "action/commit_pending": 422,
+        "action/move": 1794,
+        "action/verify": 422,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "action/abstain": 90,
+        "status/unknown": 90
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "expensive_travel/reference-cheap.jsonl.gz",
+      "artifact_sha256": "3186e47f572fc94a520115577f9f3fcf089d66a95d615ab7b787bf51951d509b",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.13802635200005398
+    },
+    {
+      "condition": "expensive_travel",
+      "arm": "reference-always_tool",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.7353659765625,
+        "cost": 0.26463402343750003,
+        "steps": 22.0,
+        "observations": 10.0,
+        "work_units": 60.27734375,
+        "travel_distance": 5.80078125,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0013640535312489238
+      },
+      "cost_per_success_including_failures": 0.26463402343750003,
+      "counts": {
+        "action/inspect": 5120,
+        "status/success": 11264,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 1024,
+        "action/retrieve": 1024,
+        "action/use_return": 1024,
+        "return_use_attempts": 1024,
+        "multiple_return_use_attempts": 512,
+        "return_address_contract_valid": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "return_application_success": 1024,
+        "stale_return_use": 0,
+        "action/build_route": 512,
+        "action/verify": 512,
+        "reductions": 1024,
+        "correct_reductions": 1024,
+        "certificate_valid_reductions": 1024
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "expensive_travel/reference-always_tool.jsonl.gz",
+      "artifact_sha256": "8f10dd09dc804e68a6d53ed440ad89dd437b5074fd4ba371fb4d093b022500bf",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.15312438400047768
+    },
+    {
+      "condition": "expensive_travel",
+      "arm": "reference-cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.7372774609375,
+        "cost": 0.26272253906250004,
+        "steps": 20.197265625,
+        "observations": 10.0,
+        "work_units": 49.40234375,
+        "travel_distance": 5.80078125,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0011561280625000774
+      },
+      "cost_per_success_including_failures": 0.26272253906250004,
+      "counts": {
+        "action/inspect": 5120,
+        "status/success": 9785,
+        "action/choose_item": 1266,
+        "action/commit_pending": 422,
+        "action/build_route": 466,
+        "action/call": 1037,
+        "status/timeout": 556,
+        "action/retrieve": 556,
+        "action/use_return": 556,
+        "return_use_attempts": 556,
+        "multiple_return_use_attempts": 481,
+        "return_address_contract_valid": 556,
+        "multiple_return_address_contract_valid": 481,
+        "return_application_success": 556,
+        "stale_return_use": 0,
+        "action/verify": 512,
+        "reductions": 1037,
+        "correct_reductions": 1037,
+        "certificate_valid_reductions": 556,
+        "action/move": 46,
+        "action/start_subset": 90,
+        "action/add_constraint": 270
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "expensive_travel/reference-cheap_first.jsonl.gz",
+      "artifact_sha256": "9a91608c679c0dc0720fe86283d9332349e8877f3dd3c68b2bc07db0c5bf220c",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 1.2852742079999757
+    },
+    {
+      "condition": "obstacle",
+      "arm": "lightweight",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 309,
+      "success": 0.603515625,
+      "means": {
+        "utility": 0.5566714453125,
+        "cost": 0.0468441796875,
+        "steps": 32.30859375,
+        "observations": 10.0,
+        "work_units": 51.41015625,
+        "travel_distance": 4.021484375,
+        "compute_units": 32.30859375,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0010940752812488679
+      },
+      "cost_per_success_including_failures": 0.07761883495145631,
+      "counts": {
+        "action/inspect": 5120,
+        "status/success": 10858,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 6505,
+        "action/retrieve": 1024,
+        "action/use_return": 1024,
+        "return_use_attempts": 1024,
+        "multiple_return_use_attempts": 512,
+        "return_address_contract_valid": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "return_application_success": 821,
+        "stale_return_use": 0,
+        "action/build_route": 512,
+        "status/obstacle": 203,
+        "status/invalid_input": 5481,
+        "reductions": 1024,
+        "correct_reductions": 1024,
+        "certificate_valid_reductions": 1024,
+        "action/verify": 309
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 4.578486351761967,
+      "artifact": "obstacle/lightweight.jsonl.gz",
+      "artifact_sha256": "e4317b508d3ab07b8007239c305c534b3077bcbc25ab54d6d5008c1ba1f98b06",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 2205698,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "obstacle",
+      "arm": "recurrent",
+      "kind": "learned",
+      "examples": 512,
+      "success_count": 0,
+      "success": 0.0,
+      "means": {
+        "utility": -0.057246445312500005,
+        "cost": 0.057246445312500005,
+        "steps": 48.0,
+        "observations": 9.0,
+        "work_units": 24.64453125,
+        "travel_distance": 0.0,
+        "compute_units": 48.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0018325273124968448
+      },
+      "cost_per_success_including_failures": null,
+      "counts": {
+        "action/inspect": 4608,
+        "status/success": 7772,
+        "action/start_subset": 512,
+        "action/add_constraint": 1024,
+        "action/call": 1402,
+        "action/retrieve": 1174,
+        "action/verify": 15856,
+        "status/incomplete": 15856,
+        "reductions": 1402,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 454,
+        "status/infeasible": 948
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 11.658773942384869,
+      "artifact": "obstacle/recurrent.jsonl.gz",
+      "artifact_sha256": "d01a4df703911c30c11bb77353764a977814a5ad291384e967e1c325e6fe7cdd",
+      "policy_config": {
+        "observation_dim": 27,
+        "candidate_dim": 67,
+        "width": 1024,
+        "family": "recurrent",
+        "workspace_rows": 4,
+        "heads": 8
+      },
+      "training_config": {
+        "seed": 302,
+        "width": 1024,
+        "family": "recurrent",
+        "learning_rate": 0.0003,
+        "batch_size": 8,
+        "method": "supervised",
+        "entropy_weight": 0.01,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 48,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 23010000,
+        "neural_work_per_forward": 1.0
+      },
+      "actual_parameter_count": 26364930,
+      "checkpoint_updates": 600,
+      "checkpoint_presentations": 81600
+    },
+    {
+      "condition": "obstacle",
+      "arm": "reference-cheap",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 430,
+      "success": 0.83984375,
+      "means": {
+        "utility": 0.80410546875,
+        "cost": 0.035738281250000004,
+        "steps": 17.783203125,
+        "observations": 9.83984375,
+        "work_units": 0.0,
+        "travel_distance": 8.115234375,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.04255348837209303,
+      "counts": {
+        "action/inspect": 5038,
+        "status/success": 8990,
+        "action/choose_item": 1290,
+        "action/commit_pending": 430,
+        "action/move": 1835,
+        "action/verify": 430,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "status/obstacle": 33,
+        "action/abstain": 82,
+        "status/unknown": 82
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "obstacle/reference-cheap.jsonl.gz",
+      "artifact_sha256": "3ce3f58bd486d12e013bfb3edcd6f7d87173c7e3de2d66815ee6f9b77f5ecd38",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.11597571199934009
+    },
+    {
+      "condition": "obstacle",
+      "arm": "reference-always_tool",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.95825177734375,
+        "cost": 0.04174822265625,
+        "steps": 23.5859375,
+        "observations": 10.0,
+        "work_units": 60.955078125,
+        "travel_distance": 7.552734375,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.001569095500001125
+      },
+      "cost_per_success_including_failures": 0.04174822265625,
+      "counts": {
+        "action/inspect": 5120,
+        "status/success": 11873,
+        "action/start_subset": 512,
+        "action/add_constraint": 1536,
+        "action/call": 1227,
+        "action/retrieve": 1227,
+        "action/use_return": 1227,
+        "return_use_attempts": 1227,
+        "multiple_return_use_attempts": 715,
+        "return_address_contract_valid": 1227,
+        "multiple_return_address_contract_valid": 715,
+        "return_application_success": 1024,
+        "stale_return_use": 0,
+        "action/build_route": 715,
+        "status/obstacle": 203,
+        "action/verify": 512,
+        "reductions": 1227,
+        "correct_reductions": 1227,
+        "certificate_valid_reductions": 1227
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "obstacle/reference-always_tool.jsonl.gz",
+      "artifact_sha256": "b35a3e0b36846c1131f8ef518f70aebc71d7706d18583d595ef4ac6e12619dc7",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.1481358399996111
+    },
+    {
+      "condition": "obstacle",
+      "arm": "reference-cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 512,
+      "success_count": 512,
+      "success": 1.0,
+      "means": {
+        "utility": 0.96073365234375,
+        "cost": 0.03926634765625,
+        "steps": 21.25,
+        "observations": 10.0,
+        "work_units": 43.626953125,
+        "travel_distance": 7.580078125,
+        "compute_units": 0.0,
+        "modeled_compute_cost": 0.0,
+        "solver_cpu_seconds": 0.0012053195625006848
+      },
+      "cost_per_success_including_failures": 0.03926634765625,
+      "counts": {
+        "action/inspect": 5120,
+        "status/success": 10116,
+        "action/choose_item": 1290,
+        "action/commit_pending": 430,
+        "action/build_route": 509,
+        "action/call": 1105,
+        "status/timeout": 581,
+        "action/retrieve": 591,
+        "action/use_return": 591,
+        "status/obstacle": 183,
+        "return_use_attempts": 591,
+        "multiple_return_use_attempts": 518,
+        "return_address_contract_valid": 591,
+        "multiple_return_address_contract_valid": 518,
+        "return_application_success": 451,
+        "stale_return_use": 0,
+        "action/verify": 512,
+        "reductions": 1105,
+        "correct_reductions": 1105,
+        "certificate_valid_reductions": 591,
+        "action/move": 404,
+        "action/start_subset": 82,
+        "action/add_constraint": 246
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "obstacle/reference-cheap_first.jsonl.gz",
+      "artifact_sha256": "639143090b72b197e7284cfe3d5d5915071c84c8f2bb8fd19e3c932c819cb7fe",
+      "reference_compute_tariff": 0,
+      "controller_cpu_seconds": 0.12502684800017505
+    }
+  ],
+  "paired": [
+    {
+      "condition": "easy",
+      "learned": "lightweight",
+      "comparator": "recurrent",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": 0.0
+    },
+    {
+      "condition": "easy",
+      "learned": "lightweight",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 452,
+        "0->1": 60
+      },
+      "support": 512,
+      "mean_utility_difference": 0.11182322265625001
+    },
+    {
+      "condition": "easy",
+      "learned": "lightweight",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": 0.0
+    },
+    {
+      "condition": "easy",
+      "learned": "lightweight",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.0038689648437500047
+    },
+    {
+      "condition": "easy",
+      "learned": "recurrent",
+      "comparator": "lightweight",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": 0.0
+    },
+    {
+      "condition": "easy",
+      "learned": "recurrent",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 452,
+        "0->1": 60
+      },
+      "support": 512,
+      "mean_utility_difference": 0.11182322265625001
+    },
+    {
+      "condition": "easy",
+      "learned": "recurrent",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": 0.0
+    },
+    {
+      "condition": "easy",
+      "learned": "recurrent",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.0038689648437500047
+    },
+    {
+      "condition": "medium",
+      "learned": "lightweight",
+      "comparator": "recurrent",
+      "success_transitions_comparator_to_learned": {
+        "0->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": 1.0181914453125
+    },
+    {
+      "condition": "medium",
+      "learned": "lightweight",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "0->1": 78,
+        "1->1": 434
+      },
+      "support": 512,
+      "mean_utility_difference": 0.14875554687500003
+    },
+    {
+      "condition": "medium",
+      "learned": "lightweight",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": 0.0
+    },
+    {
+      "condition": "medium",
+      "learned": "lightweight",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.0026256054687499916
+    },
+    {
+      "condition": "medium",
+      "learned": "recurrent",
+      "comparator": "lightweight",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -1.0181914453125
+    },
+    {
+      "condition": "medium",
+      "learned": "recurrent",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 78,
+        "1->0": 434
+      },
+      "support": 512,
+      "mean_utility_difference": -0.8694358984375
+    },
+    {
+      "condition": "medium",
+      "learned": "recurrent",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -1.0181914453125
+    },
+    {
+      "condition": "medium",
+      "learned": "recurrent",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -1.02081705078125
+    },
+    {
+      "condition": "hard_feasible",
+      "learned": "lightweight",
+      "comparator": "recurrent",
+      "success_transitions_comparator_to_learned": {
+        "0->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": 1.00855234375
+    },
+    {
+      "condition": "hard_feasible",
+      "learned": "lightweight",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 445,
+        "0->1": 67
+      },
+      "support": 512,
+      "mean_utility_difference": 0.12729062500000005
+    },
+    {
+      "condition": "hard_feasible",
+      "learned": "lightweight",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": 0.0
+    },
+    {
+      "condition": "hard_feasible",
+      "learned": "lightweight",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.003710292968749988
+    },
+    {
+      "condition": "hard_feasible",
+      "learned": "recurrent",
+      "comparator": "lightweight",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -1.00855234375
+    },
+    {
+      "condition": "hard_feasible",
+      "learned": "recurrent",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 445,
+        "0->0": 67
+      },
+      "support": 512,
+      "mean_utility_difference": -0.88126171875
+    },
+    {
+      "condition": "hard_feasible",
+      "learned": "recurrent",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -1.00855234375
+    },
+    {
+      "condition": "hard_feasible",
+      "learned": "recurrent",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -1.01226263671875
+    },
+    {
+      "condition": "work_tight",
+      "learned": "lightweight",
+      "comparator": "recurrent",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.0022467968750000044
+    },
+    {
+      "condition": "work_tight",
+      "learned": "lightweight",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 422,
+        "0->0": 90
+      },
+      "support": 512,
+      "mean_utility_difference": -0.840045625
+    },
+    {
+      "condition": "work_tight",
+      "learned": "lightweight",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.022132812499999998
+    },
+    {
+      "condition": "work_tight",
+      "learned": "lightweight",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 381,
+        "1->0": 131
+      },
+      "support": 512,
+      "mean_utility_difference": -0.279178046875
+    },
+    {
+      "condition": "work_tight",
+      "learned": "recurrent",
+      "comparator": "lightweight",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": 0.0022467968750000044
+    },
+    {
+      "condition": "work_tight",
+      "learned": "recurrent",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 422,
+        "0->0": 90
+      },
+      "support": 512,
+      "mean_utility_difference": -0.837798828125
+    },
+    {
+      "condition": "work_tight",
+      "learned": "recurrent",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.019886015624999996
+    },
+    {
+      "condition": "work_tight",
+      "learned": "recurrent",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 381,
+        "1->0": 131
+      },
+      "support": 512,
+      "mean_utility_difference": -0.27693125
+    },
+    {
+      "condition": "expensive_tools",
+      "learned": "lightweight",
+      "comparator": "recurrent",
+      "success_transitions_comparator_to_learned": {
+        "0->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": 0.432623046875
+    },
+    {
+      "condition": "expensive_tools",
+      "learned": "lightweight",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 436,
+        "0->1": 76
+      },
+      "support": 512,
+      "mean_utility_difference": -0.432203125
+    },
+    {
+      "condition": "expensive_tools",
+      "learned": "lightweight",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": 0.0
+    },
+    {
+      "condition": "expensive_tools",
+      "learned": "lightweight",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.54496875
+    },
+    {
+      "condition": "expensive_tools",
+      "learned": "recurrent",
+      "comparator": "lightweight",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.432623046875
+    },
+    {
+      "condition": "expensive_tools",
+      "learned": "recurrent",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 436,
+        "0->0": 76
+      },
+      "support": 512,
+      "mean_utility_difference": -0.864826171875
+    },
+    {
+      "condition": "expensive_tools",
+      "learned": "recurrent",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.432623046875
+    },
+    {
+      "condition": "expensive_tools",
+      "learned": "recurrent",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.977591796875
+    },
+    {
+      "condition": "expensive_travel",
+      "learned": "lightweight",
+      "comparator": "recurrent",
+      "success_transitions_comparator_to_learned": {
+        "0->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": 0.7926423046875
+    },
+    {
+      "condition": "expensive_travel",
+      "learned": "lightweight",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 422,
+        "0->1": 90
+      },
+      "support": 512,
+      "mean_utility_difference": 0.2515651953125
+    },
+    {
+      "condition": "expensive_travel",
+      "learned": "lightweight",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": 0.0
+    },
+    {
+      "condition": "expensive_travel",
+      "learned": "lightweight",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.0019114843750000002
+    },
+    {
+      "condition": "expensive_travel",
+      "learned": "recurrent",
+      "comparator": "lightweight",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.7926423046875
+    },
+    {
+      "condition": "expensive_travel",
+      "learned": "recurrent",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 422,
+        "0->0": 90
+      },
+      "support": 512,
+      "mean_utility_difference": -0.541077109375
+    },
+    {
+      "condition": "expensive_travel",
+      "learned": "recurrent",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.7926423046875
+    },
+    {
+      "condition": "expensive_travel",
+      "learned": "recurrent",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -0.7945537890625
+    },
+    {
+      "condition": "obstacle",
+      "learned": "lightweight",
+      "comparator": "recurrent",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 203,
+        "0->1": 309
+      },
+      "support": 512,
+      "mean_utility_difference": 0.613917890625
+    },
+    {
+      "condition": "obstacle",
+      "learned": "lightweight",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 171,
+        "1->1": 259,
+        "0->1": 50,
+        "0->0": 32
+      },
+      "support": 512,
+      "mean_utility_difference": -0.24743402343749998
+    },
+    {
+      "condition": "obstacle",
+      "learned": "lightweight",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 203,
+        "1->1": 309
+      },
+      "support": 512,
+      "mean_utility_difference": -0.40158033203125
+    },
+    {
+      "condition": "obstacle",
+      "learned": "lightweight",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 203,
+        "1->1": 309
+      },
+      "support": 512,
+      "mean_utility_difference": -0.40406220703125
+    },
+    {
+      "condition": "obstacle",
+      "learned": "recurrent",
+      "comparator": "lightweight",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 203,
+        "1->0": 309
+      },
+      "support": 512,
+      "mean_utility_difference": -0.613917890625
+    },
+    {
+      "condition": "obstacle",
+      "learned": "recurrent",
+      "comparator": "reference-cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 430,
+        "0->0": 82
+      },
+      "support": 512,
+      "mean_utility_difference": -0.8613519140625
+    },
+    {
+      "condition": "obstacle",
+      "learned": "recurrent",
+      "comparator": "reference-always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -1.0154982226562501
+    },
+    {
+      "condition": "obstacle",
+      "learned": "recurrent",
+      "comparator": "reference-cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 512
+      },
+      "support": 512,
+      "mean_utility_difference": -1.01798009765625
+    }
+  ],
+  "policy_input_scope": "public observation/candidate encodings only; no teacher at evaluation",
+  "address_metric_scope": "role/status/retrieval/provenance validity among extant returned records, not optimal-return oracle",
+  "selection_rule": "frozen supplied checkpoint, no selection",
+  "no_training": true,
+  "solver": {
+    "executor_version": "persistent-v1",
+    "startup_wall_seconds": 0.6140711791813374,
+    "startup_child_cpu_seconds": 0.611534,
+    "call_wall_seconds": 13.71899369545281,
+    "restarts": 0
+  },
+  "resources": {
+    "wall_seconds": 370.53775054076687,
+    "parent_cpu_seconds": 362.4241252,
+    "parent_peak_rss_kib": 3291908,
+    "cuda_peak_allocated_bytes": 240203264,
+    "cuda_peak_reserved_bytes": 442499072,
+    "cuda_device_capacity_bytes": 128453668864,
+    "accounting_scope": "parent CPU excludes solver process; authoritative inclusive workload ledger is external"
+  }
+}
