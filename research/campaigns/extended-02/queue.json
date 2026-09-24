@@ -1,11 +1,13 @@
 {
   "owner": "/root",
   "machine": "gb10-direct / promaxgb10-4dfb",
-  "running": null,
-  "ready": [
-    "E04-transfer-profile",
-    "E02-tight-repair"
-  ],
+  "running": {
+    "id": "E04-transfer",
+    "source": "add41fc1",
+    "cap_gpu_seconds": 900,
+    "cap_cpu_seconds": 1800
+  },
+  "ready": [],
   "planning": [
     "E01 protocol/environment validation",
     "E02 reference leverage profiling",
@@ -43,6 +45,14 @@
       "id": "E03-acquire-recurrent",
       "status": "completed",
       "wall_seconds": 144.617750666
+    },
+    {
+      "id": "E02-tight-repair",
+      "status": "completed"
+    },
+    {
+      "id": "E01-population-runtime",
+      "status": "9 CPU tests passed"
     }
   ],
   "blocked": [],
