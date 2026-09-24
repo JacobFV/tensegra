@@ -67,7 +67,7 @@ The source-binding command emits the dictionary to insert into each configuratio
 
 ## Prepared execution inputs and acquisition panel
 
-`RL01-data-prepared.json` resolves and pins the historical inventory plus **all three** S21 split files (train_broad, development, confirmation). Read-only GB10 SHA256 checks on 2026-09-25 matched every declared exclusion input and the 752,293,177-byte parent checkpoint. The metadata inventory count is 41,638 historical alpha constructions; later S21 exclusions are added before reserving any new split. The metadata receipt's unknown unarchived-data caveat is retained in the new manifest.
+`RL01-data-prepared.json` resolves and pins the historical inventory plus **all three** S21 split files (train_broad, development, confirmation). Read-only GB10 SHA256 checks on 2026-09-24 matched every declared exclusion input and the 752,293,177-byte parent checkpoint. The metadata inventory count is 41,638 historical alpha constructions; later S21 exclusions are added before reserving any new split. The metadata receipt's unknown unarchived-data caveat is retained in the new manifest.
 
 A deterministic stratified TRAIN128 panel now accompanies every checkpoint: 3×3:32; 4×3:16; 4×4:16; 2×4:16; 5×3:24; 5×4:24, selected with fixed seed 20202201. It receives the same local/free metrics but is explicitly training-exposed, never a generalization score. The profile samples public-long examples from this panel too. This adds 768 decoded training examples across the paired main run.
 
