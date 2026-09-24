@@ -62,3 +62,6 @@ Integrated decay701/audits/cache audit and C04 profile launch contracts. S12deca
 
 ### 05:16 UTC queue boundary
 A08 completed206.166659217s and independently audited all72cells. C04 five profiles completed21.218453886s; source8a92869, all pass. Root adopts caps900/180/180/600/120 perlineage×3=5940, scientificprotocol unchanged; worker freezesbeforeanymain. S12parent702 nowGPUowner source dbd3575 cap1400. A10 savedstate2000→3000 cap120 awaitingpreflight. S13 CPUready, noGPU untilfullS12matrix. Figures worker builds reproducibleplots, reviewer runsnewsourceCPUintegration.
+
+### 05:29 UTC durable checkpoint
+Parent702 soleGPUowner, ~11776/16384 at900s/cap1400, healthy. Next root schedule: A10cap120 then C04lineage0cap1980, then remainingS12forks702 andparent/forks703 interleavedC04lineages1/2. A10preflightpassed; C04source c34effb and3configsfullyfrozen/profileaudited; perlineage5phasebatch. S13 source/cacheaudited butunreleased untilS12complete. S14arity3cache1024 audited; compactall6evaluator/source830e77a reviewed, configsnotreleased. Lexicaldiagnosticalsoall6afterS12. Figures source/gziptable integrated744fd13; refreshafterconfirmations. All3953baselineblobsremainunchanged atlastcheck. CurrentGPUcharged12652.768s excludesrunningparent.
