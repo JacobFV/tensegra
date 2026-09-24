@@ -41,6 +41,38 @@ class S21DataTests(unittest.TestCase):
     def test_clearance_required_before_filesystem_mutation(self):
         with self.assertRaisesRegex(ValueError,'clearance'):
             data.build({})
+    def feature_row(self,text='x',value=1):
+        return dict(text=text,nodes=[['num',value]],edges=[])
+    def test_fp32_feature_target_collision_rejected(self):
+        import torch
+        audit=data.PublicFeatureAudit();x=torch.zeros(1,1,68)
+        with patch('topoformer.semantic_curriculum.encode_text',return_value=(x,1)),patch('topoformer.campaign_semantics_s19_codec.encode_row',side_effect=lambda row,v:[row['nodes'][0][1]]):
+            audit.add(self.feature_row())
+            with self.assertRaisesRegex(ValueError,'feature sequence'):
+                audit.add(self.feature_row(value=2))
+    def test_bf16_only_feature_target_collision_rejected(self):
+        import torch
+        audit=data.PublicFeatureAudit();x=torch.zeros(1,1,68);x[:,:,64]=1.
+        y=x.clone();y[:,:,64]=1.0001
+        with patch('topoformer.semantic_curriculum.encode_text',side_effect=[(x,1),(y,1)]),patch('topoformer.campaign_semantics_s19_codec.encode_row',side_effect=lambda row,v:[row['nodes'][0][1]]):
+            audit.add(self.feature_row())
+            with self.assertRaisesRegex(ValueError,'feature sequence'):
+                audit.add(self.feature_row(value=2))
+        self.assertEqual(len(audit.seen['float32']),2)
+        self.assertEqual(len(audit.seen['bfloat16']),1)
+    def test_lexical_collision_rejected(self):
+        import torch
+        audit=data.PublicFeatureAudit();x=torch.zeros(1,1,68)
+        with patch('topoformer.semantic_curriculum.encode_text',return_value=(x,1)),patch('topoformer.campaign_semantics_s19_codec.encode_row',return_value=[1]):
+            audit.add(self.feature_row('x'))
+            with self.assertRaisesRegex(ValueError,'lexical feature collision'):
+                audit.add(self.feature_row('y'))
+    def test_feature_truncation_rejected(self):
+        import torch
+        for features,length in [(torch.zeros(1,1,68),1),(torch.zeros(1,1,68),2)]:
+            with patch('topoformer.semantic_curriculum.encode_text',return_value=(features,length)):
+                with self.assertRaisesRegex(ValueError,'truncation'):
+                    data.PublicFeatureAudit().add(self.feature_row('x y'))
     def test_independent_answer(self):
         nodes=[['record',None],['pred','parent'],['pred','unify'],['list',None],['ident','X'],['ident','bob'],['pred','parent'],['ident','alice'],['ident','bob']]
         edges=[[0,1,'field:pattern',None],[0,2,'field:query',None],[0,3,'field:facts',None],

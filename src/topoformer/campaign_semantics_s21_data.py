@@ -222,6 +222,8 @@ def build(config):
     panels=dict(original=original_panel,broad=[dict(index=i,**{k:broad[i][k] for k in ('seed','semantic_sha256','alpha_sha256')}) for i in panel])
     (out/'panels.json').write_text(json.dumps(panels,indent=2)+'\n')
     summaries={};hashes={};features=PublicFeatureAudit()
+    # Include every comparator TRAIN row, not only the reused broad subset.
+    for row in baseline: features.add(row)
     for split,rows in records.items():
         for row in rows: features.add(row)
         path=out/(split+'.jsonl.gz');write_rows(path,rows);hashes[split]=sha(path)
