@@ -39,7 +39,18 @@ def main():
                   process_occupancy_seconds=time.monotonic()-tick, cap_seconds=args.cap, exit_code=code, timed_out=timed_out,
                   command=command, phase=args.phase, config_sha256=hashlib.sha256(config.read_bytes()).hexdigest(),
                   wrapper_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
-    receipt.write_text(json.dumps(record, indent=2) + '\n')
+    # Persist the complete accounting record before exposing its final name.
+    temporary = receipt.with_name(receipt.name + '.tmp')
+    with temporary.open('x') as stream:
+        stream.write(json.dumps(record, indent=2) + '\n')
+        stream.flush()
+        os.fsync(stream.fileno())
+    os.replace(temporary, receipt)
+    directory = os.open(receipt.parent, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(directory)
+    finally:
+        os.close(directory)
     print(json.dumps(record), flush=True)
     raise SystemExit(code)
 
