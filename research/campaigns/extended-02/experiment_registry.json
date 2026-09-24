@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "experiments": [
+    {
+      "id": "E01",
+      "status": "planning",
+      "hypothesis": "Typed solver protocol and workshop can distinguish reduction error, solver validity, timeout, stale returns and task completion without hidden-state exposure.",
+      "intervention": "New versioned deterministic workshop/protocol",
+      "comparator": "Independent brute-force/certificate fixtures",
+      "observable_inputs": "Public observations/goals/schema and accumulated inspected state only",
+      "privileged_targets": "Hidden world exclusively for evaluator and labeled teacher generation",
+      "split": "Mechanical fixtures; not model generalization",
+      "seeds": [],
+      "exposure": "Bounded tests initially60CPU seconds/worker",
+      "selection_rule": "Mechanical correctness and no hidden observation fields required before learning",
+      "budget": {
+        "gpu_seconds": 0,
+        "cpu_core_seconds": 600
+      },
+      "metrics": [
+        "validator agreement",
+        "status semantics",
+        "hidden-state isolation",
+        "work caps",
+        "invariance"
+      ],
+      "next_branch": "Reference strategy leverage before model training"
+    }
+  ]
+}
