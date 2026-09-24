@@ -1,0 +1,101 @@
+{
+  "bounded_support_candidates_replayed": 20000,
+  "accepted_candidates": 17617,
+  "reservation_candidates_replayed": 4602,
+  "unique_packed_examples": 10240,
+  "alpha_exclusion_and_split_disjointness": true,
+  "intended_common_examples": 2048,
+  "common_order_verified": true,
+  "training_selection_replayed": true,
+  "confirmation_v1_bytes_unchanged": true,
+  "all_generator_targets_replayed": true,
+  "fp32_bf16_and_public_target_conflicts": 0,
+  "lexical_types": 28,
+  "summaries": {
+    "development": {
+      "rows": 2048,
+      "cells": {
+        "3x4": 512,
+        "3x3": 512,
+        "4x4": 512,
+        "4x3": 512
+      },
+      "motifs": {
+        "db46c4401d83f8d1387def8771d8a9e91b81298a5d4fb26310709d7e08c38747": 512,
+        "9081da3a797ac588f8f693c8fe1bac97359893d604f483fa42ae68cab5c23348": 512,
+        "b611d06fb2ce3c64b7da8822af8ecd02d8f3e33bcaa1b7e1fc640f7380e2ea22": 512,
+        "535e1ab9e9064bca0bada6dbe1c4ef52f70a4fd3f70ff67260148b7975a051ba": 512
+      },
+      "tokens": 111616,
+      "nodes": 64103
+    },
+    "confirmation": {
+      "rows": 2048,
+      "cells": {
+        "3x4": 512,
+        "3x3": 512,
+        "4x3": 512,
+        "4x4": 512
+      },
+      "motifs": {
+        "db46c4401d83f8d1387def8771d8a9e91b81298a5d4fb26310709d7e08c38747": 512,
+        "9081da3a797ac588f8f693c8fe1bac97359893d604f483fa42ae68cab5c23348": 512,
+        "535e1ab9e9064bca0bada6dbe1c4ef52f70a4fd3f70ff67260148b7975a051ba": 512,
+        "b611d06fb2ce3c64b7da8822af8ecd02d8f3e33bcaa1b7e1fc640f7380e2ea22": 512
+      },
+      "tokens": 111616,
+      "nodes": 64185
+    },
+    "train_control": {
+      "rows": 4096,
+      "cells": {
+        "4x4": 2048,
+        "4x3": 2048
+      },
+      "motifs": {
+        "b611d06fb2ce3c64b7da8822af8ecd02d8f3e33bcaa1b7e1fc640f7380e2ea22": 2048,
+        "535e1ab9e9064bca0bada6dbe1c4ef52f70a4fd3f70ff67260148b7975a051ba": 2048
+      },
+      "tokens": 241664,
+      "nodes": 138208
+    },
+    "train_mixed": {
+      "rows": 4096,
+      "cells": {
+        "4x4": 1024,
+        "3x3": 2048,
+        "4x3": 1024
+      },
+      "motifs": {
+        "b611d06fb2ce3c64b7da8822af8ecd02d8f3e33bcaa1b7e1fc640f7380e2ea22": 1024,
+        "9081da3a797ac588f8f693c8fe1bac97359893d604f483fa42ae68cab5c23348": 2048,
+        "535e1ab9e9064bca0bada6dbe1c4ef52f70a4fd3f70ff67260148b7975a051ba": 1024
+      },
+      "tokens": 215040,
+      "nodes": 123501
+    }
+  },
+  "packing_expected_sha256": "9227ac67de3faa9aeabf5b94d479416e16f08e328721804c3bf6292b1776f410",
+  "input_sha256": {
+    "research/results/campaign-01/semantics/s15-shape-cache-v2/train_mixed.jsonl.gz": "8ddbd15bea881c13bfd24554ada9293082fcef7b616f6eeb3dad78a4bfa662d2",
+    "research/results/campaign-01/semantics/s15-shape-cache-v2/confirmation.jsonl.gz": "2710e5e1b6fffab6fa33d56105de13e49d46d64c63d81f61c6ea331347229d32",
+    "research/results/campaign-01/semantics/s15-shape-cache-v2/train_control.jsonl.gz": "a67ee925c8e6d2e8eaa704171e4758fdd17fb32211d09dc8e829b35ed9283c5e",
+    "research/results/campaign-01/semantics/s15-shape-cache-v2/pairing-check.json": "20982d5de5b365f2601e42771324db1e7d7940b80837d5a0e4976ef40fd559d2",
+    "research/results/campaign-01/semantics/s15-shape-cache-v2/development.jsonl.gz": "25522313035e646cfca4bf0efb1ae550c295cb55ddf6057558d03c42f2239dc3",
+    "research/results/campaign-01/semantics/s15-shape-cache-v2/audit.json": "f8099bbb918997fdc84622f218e466f73b40933412aae7e14403566acb75ecb4"
+  },
+  "cpu_audit_wall_seconds": 26.60489510500338,
+  "scope": "CPU generator/public/target support only; no actor/import/forward. Mixed trained arity3/threefacts is acquisition; heldout arity3/fourfacts is factor recombination at unchanged depth3. Counts and tokens/nodes differ explicitly; prospective profile/source/negative-RNG review remains separate.",
+  "harness_history": [
+    {
+      "status": "missing_metadata_path",
+      "seconds_upper_bound": 0.2,
+      "reason": "Historical vocabulary metadata is retained in S14 config, not local s01-data/audit.json; corrected lookup."
+    },
+    {
+      "status": "overbroad_arity_assertion",
+      "seconds_upper_bound": 60,
+      "reason": "Reviewer counted two-argument unify root along with parent predicates; corrected parent-only arity check. Independent bounded candidate replay had already passed."
+    }
+  ]
+}
