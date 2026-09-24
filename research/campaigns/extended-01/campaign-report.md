@@ -1,6 +1,6 @@
-# Campaign report — draft, S19 running
+# Campaign report — draft, S20 planned
 
-This draft summarizes independently audited, closed R04/R05, R10/R11, C04, A14 and S12–S18 evidence. S19 is running and is excluded from the outcome assessment. This is not the final campaign report: its result, independent audit and next allocation decision remain open. Historical failures and prospective gates are preserved; a new restricted pass does not overwrite them.
+This draft summarizes independently audited, closed R04/R05, R10/R11, C04, A14 and S12–S19 evidence. S19 is complete and independently audited as a single-seed development result. S20 fresh confirmation is planned only. This is not the final campaign report: confirmation and the final allocation assessment remain open. Historical failures and prospective gates are preserved; a new restricted pass does not overwrite them.
 
 The [claim map](claim-map.md) defines each interface and promotion boundary. The [evidence index](evidence-index.md) and [figure guide](figures/README.md) provide the fuller navigation and reproducibility record. Some archived reports retain their original audit-pending language; the linked independent receipts establish subsequent verification.
 
@@ -42,9 +42,15 @@ All nine A06 engineering references achieve perfect observed task and suffix sco
 
 [S18](semantics/S18-report.md) is complete and independently audited; all promotion gates fail. Contextual matched recovery is 43/0/68/16 versus original 22/0/109/10 and 10-pass 1/0/7/0 across the four cells. All arms share the S11 parent, 57,853,781 parameters and incremental stream; arithmetic/runtime differ, and original training is reused. Actual TRAIN128 calibrated totals are 10 contextual versus 14 original, with calibration overlap making these optimistic fit diagnostics. Strong but imperfect relation ranking coexists with low complete recovery. See the [paired audit](review/S18-main-pair-audit.json), [ranking audit](review/S18-train-ranking-audit.json), [curves](figures/semantic-context-development.svg) and [TRAIN/DEV comparison](figures/semantic-context-train-dev.svg). Scientific failure, not an assumed inability to afford replication, closes this recipe.
 
+## S19: known-motif acquisition, without held-out transfer
+
+[S19](semantics/S19-report.md) passes its fixed acquisition criterion with 128/128 complete TRAIN graphs and 508/507/463 of 512 on the trained DEV motifs. The held-out combination remains 0/512 at every curve. Valid generated outputs still fail there, so malformed generation alone does not explain the held-out result. Gold-prefix field accuracies are separate diagnostics, not generated-graph accuracy.
+
+The [final analysis audit](review/S19-final-analysis-audit.json) and [strict raw replay](review/S19-main-raw-audit.json) verify the archived outcomes. The [learning and endpoint figure](figures/semantic-sequential-development.svg) compares identical DEV events against S18 raw and matched-calibration endpoints. S19 changes parameters, objective, contextual encoder, sequential output interface and inherited-training history together. It has 62,677,315 parameters and starts from scratch; S18 has 57,853,781 parameters and inherited training. Equal incremental construction exposure is not matched FLOPs or an isolated architecture intervention. This is a substantially stronger known-motif learner on one inspected development seed, not confirmation or broad structural generalization.
+
 ## Pending decisions before final assessment
 
-- **S19 outcome:** pending. Fill from the frozen run and independent audit, preserving public-only inference, invalid-output failures and separate TRAIN/DEV acquisition evidence. No efficacy conclusion is entered here.
+- **S20 confirmation:** planned only. Freeze the complete fresh-population, multi-seed protocol before interpreting any confirmation outcome. Preserve known-motif acquisition and held-out transfer as separate criteria.
 - **Comparison boundary:** S19 changes the output/optimization interface and starts from scratch. Account for parameter, inherited-training and execution differences before interpreting it against S18; it is not a pure architectural causal test.
-- **Next allocation:** pending audited S19 outcomes and its declared decision rule. No automatic extension, confirmation or gate relaxation is implied by this draft.
+- **Next allocation:** S19 extension eligibility does not mandate more same-seed exposure. S20 is the planned discriminating replication; no extension, confirmation result or gate relaxation is implied by this draft.
 - **Final synthesis and cost:** reconcile the authoritative budget/receipts after active work closes. Shared-event intervals remain conditional on fixed seeds; repeated policies, delays and cells do not create independent replication.

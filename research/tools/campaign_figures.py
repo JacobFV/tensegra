@@ -345,6 +345,28 @@ def extract(root, c04_audit=None, c04_provisional=None):
         add('s18_rank',source,trained3x3=ranking['trained3x3'],scope=ranking['scope'])
         source=review+'S18-main-archive-audit.json';cost=read(source)
         add('s18_cost',source,total_new_S18_occupancy_seconds=cost['total_new_S18_occupancy_seconds'],historical_reused_training_seconds=cost['historical_reused_training_seconds'],scope=cost['scope'])
+    source=base+'semantics/s19-analysis.json'
+    s19_bindings={}
+    for receipt_path in sorted((root/review).glob('S19-*-audit.json')):
+        receipt=json.loads(receipt_path.read_text())
+        if source in receipt.get('input_sha256',{}):
+            read(str(receipt_path.relative_to(root)))
+            for path,digest in receipt['input_sha256'].items():
+                assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'S19 binding mismatch: {path}'
+                inputs[path]=digest
+                s19_bindings[path]=digest
+    if source in s19_bindings:
+        summary=read(source)
+        for artifact in summary['artifact_inventory'].values():
+            path=artifact['path'];path=path[path.index('research/'):]
+            assert hashlib.sha256((root/path).read_bytes()).hexdigest()==artifact['sha256'], f'S19 inventory mismatch: {path}'
+            inputs[path]=artifact['sha256']
+        for update,splits in summary['curves'].items():
+            for split,counts in splits.items():
+                add('s19_learning',source,added_update=int(update),split=split,**counts)
+        add('s19_summary',source,scope=summary['scope'],paired=summary['endpoint_paired'],decisions=summary['decisions'],costs=summary['costs'])
+    else:
+        status.append(dict(experiment='S19',status='Explicit independent analysis hash binding pending; omitted'))
     if c04_audit:
         # An explicit final audit index binds each approved summary byte-for-byte.
         # Shape: {"input_sha256": {"repository/relative/path": "sha256"}}.
@@ -676,6 +698,23 @@ def render(data, output):
             ss=select('s18_train',arm=arm,added_update=4096,calibration='matched',policy='calibrated')
             totals.append(f"{sum(r['complete'] for r in ss)}/{sum(r['examples'] for r in ss)}")
         finish(fig,'semantic-context-train-dev','Matched full TRAIN128 totals (original/context/10-pass): '+', '.join(totals)+'. Calibration overlap makes these optimistic in-sample fit measures.\nShared S11 parent, 57,853,781 parameters and incremental stream; arithmetic/runtime differ. Reused original training.\nLow complete counts coexist with strong but imperfect relation ranking. One lineage; no confirmation or automatic extension.')
+    if select('s19_learning'):
+        fig,axes=plt.subplots(1,2,figsize=(12,5.5))
+        ss=sorted(select('s19_learning',split='development'),key=lambda r:r['added_update'])
+        shapes=('3x3','3x4','4x3','4x4')
+        for i,shape in enumerate(shapes):
+            axes[0].plot([r['added_update'] for r in ss],[100*r['cells'][shape]['complete']/r['cells'][shape]['examples'] for r in ss], 's--' if shape=='3x4' else 'o-',color=f'C{i}',label=f'DEV {shape}'+(' held out' if shape=='3x4' else ' trained'))
+        train=sorted(select('s19_learning',split='train'),key=lambda r:r['added_update'])
+        axes[0].plot([r['added_update'] for r in train],[100*r['complete']/r['examples'] for r in train],'k:',label='TRAIN128 (exposed)')
+        axes[0].set(title='S19 categorical greedy learning',xlabel='Optimizer updates',ylabel='Complete graphs (%)',ylim=(-3,103));axes[0].legend(fontsize=7)
+        axes[1].plot(range(4),[ss[-1]['cells'][shape]['complete'] for shape in shapes],'o-',label='S19 greedy / scratch')
+        for arm,label in [('original','S18 original'),('context','S18 contextual'),('workspace_control','S18 ten-pass')]:
+            for policy,style in [('raw',':'),('matched','--')]:
+                values=[select('s18_learning',arm=arm,shape=shape,added_update=4096,policy=policy)[0]['complete'] for shape in shapes]
+                axes[1].plot(range(4),values,style,marker='.',label=f'{label} / {policy}')
+        for i,shape in enumerate(shapes):axes[1].annotate(str(ss[-1]['cells'][shape]['complete']),(i,ss[-1]['cells'][shape]['complete']),xytext=(4,4),textcoords='offset points',fontsize=8)
+        axes[1].set(title='Fixed endpoint · same DEV events',xticks=range(4),xticklabels=['3×3 trained','3×4 held out','4×3 trained','4×4 trained'],ylabel='Complete graphs / 512',ylim=(-10,555));axes[1].legend(fontsize=6)
+        finish(fig,'semantic-sequential-development','Known-motif acquisition passes; held-out combination fails. One inspected development seed; no confirmation.\nS19: 62,677,315 parameters, scratch; S18: 57,853,781 parameters, inherited training. Same incremental construction stream, different objectives/interfaces.\nNo parameter/FLOP/history match or isolated architecture claim. Gold-prefix diagnostics are not generated-graph accuracy.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')=='independently_audited'})
