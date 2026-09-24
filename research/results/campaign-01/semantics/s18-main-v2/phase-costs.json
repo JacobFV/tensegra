@@ -1,0 +1,88 @@
+{
+  "outer_seconds": 1940.07,
+  "precision_seconds": 0.01,
+  "conservative_charge_seconds": 1940.08,
+  "wrapper_seconds": 1940.0461642700247,
+  "child_process_seconds": 1936.7854519430548,
+  "preflight_seconds": 2.6779330912977457,
+  "peak_cuda_allocated": 1467351552,
+  "maxrss_kib": 6222460,
+  "arms": [
+    {
+      "arm": "context",
+      "parameters": 57853781,
+      "optimizer_seconds": 335.1663274494931,
+      "optimizer_ms_per_update": 81.8277166624739,
+      "setup_seconds": 0.9469866380095482,
+      "checkpoint_export_seconds": 4.157465542200953,
+      "policies": {
+        "matched": {
+          "whole_evaluation_seconds": 207.93731829337776,
+          "calibration_trainpanel_seconds": 14.525615805760026,
+          "dev_seconds": 142.62272341363132,
+          "export_seconds": 50.1318397349678,
+          "post_state_hash_seconds": 0.6571482666768134,
+          "dev_examples": 8192,
+          "calibration_panel_example_evaluations": 512,
+          "dev_ms_per_example_including_metrics_and_packing": 17.410000416703042
+        },
+        "historical": {
+          "whole_evaluation_seconds": 186.63286752067506,
+          "calibration_trainpanel_seconds": 12.28696985077113,
+          "dev_seconds": 123.24119529966265,
+          "export_seconds": 50.402936932165176,
+          "post_state_hash_seconds": 0.7017765259370208,
+          "dev_examples": 8192,
+          "calibration_panel_example_evaluations": 512,
+          "dev_ms_per_example_including_metrics_and_packing": 15.04409122310335
+        }
+      },
+      "exposures": {
+        "optimizer_tokens": 1720320,
+        "optimizer_nodes": 988008,
+        "optimizer_edges": 2208616
+      },
+      "training_schedule_counted_macs": 276544914718720
+    },
+    {
+      "arm": "workspace_control",
+      "parameters": 57853781,
+      "optimizer_seconds": 494.29366547754034,
+      "optimizer_ms_per_update": 120.67716442322762,
+      "setup_seconds": 1.1250998051837087,
+      "checkpoint_export_seconds": 5.951474939938635,
+      "policies": {
+        "matched": {
+          "whole_evaluation_seconds": 268.0268482300453,
+          "calibration_trainpanel_seconds": 18.03835670463741,
+          "dev_seconds": 196.61416493868455,
+          "export_seconds": 52.5374390068464,
+          "post_state_hash_seconds": 0.8369000595994294,
+          "dev_examples": 8192,
+          "calibration_panel_example_evaluations": 512,
+          "dev_ms_per_example_including_metrics_and_packing": 24.000752555991767
+        },
+        "historical": {
+          "whole_evaluation_seconds": 277.2809018786065,
+          "calibration_trainpanel_seconds": 18.131551097612828,
+          "dev_seconds": 206.4359468622133,
+          "export_seconds": 52.004115210380405,
+          "post_state_hash_seconds": 0.7092994130216539,
+          "dev_examples": 8192,
+          "calibration_panel_example_evaluations": 512,
+          "dev_ms_per_example_including_metrics_and_packing": 25.199700544703774
+        }
+      },
+      "exposures": {
+        "optimizer_tokens": 1720320,
+        "optimizer_nodes": 988008,
+        "optimizer_edges": 2208616
+      },
+      "training_schedule_counted_macs": 287118920253440
+    }
+  ],
+  "scope": "Eval milliseconds includes forward, CPU decoding, metrics and packing, not isolated CUDA kernel latency. CountedMACs exclude unchanged heads and backward; no efficiency conclusion without paired outcomes.",
+  "reference_separate_charge_seconds": 155.1,
+  "failed_reference_separate_charge_seconds": 63.93,
+  "profile_separate_charge_seconds": 86.53
+}
