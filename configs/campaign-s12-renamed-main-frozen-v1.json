@@ -1,0 +1,101 @@
+{
+  "runs": [
+    {
+      "seed": 701,
+      "arm": "constant",
+      "directory": "results/s12-constant-701"
+    },
+    {
+      "seed": 701,
+      "arm": "decay",
+      "directory": "results/s12-decay-701"
+    },
+    {
+      "seed": 702,
+      "arm": "constant",
+      "directory": "results/s12-constant-702"
+    },
+    {
+      "seed": 702,
+      "arm": "decay",
+      "directory": "results/s12-decay-702"
+    },
+    {
+      "seed": 703,
+      "arm": "constant",
+      "directory": "results/s12-constant-703"
+    },
+    {
+      "seed": 703,
+      "arm": "decay",
+      "directory": "results/s12-decay-703"
+    }
+  ],
+  "cache": "results/s12-rename-case-audit/renamed_confirmation.jsonl.gz",
+  "cache_sha256": "a3f3bc5ed3d6fb188f5fb787d079af532cc67ec170a6b89937ea1d0f7777a4fb",
+  "data_audit": "data/s01/audit.json",
+  "device": "cuda",
+  "output_dir": "results/s12-renamed-inference",
+  "job": "main",
+  "budget_status": "frozen",
+  "main_lane": "rename",
+  "prepared_sha256": "74a4cc20ac7e66c1c078f4502b39bc4ba6cdea0c58e1635006f45d21ac62155c",
+  "primary_matrix": [
+    {
+      "seed": 701,
+      "arm": "constant",
+      "manifest_sha256": "949cb337cf009d287644a7030e187c53be1264d5e989baeb902b139d81fe3188",
+      "checkpoint_sha256": "c510532757f431d9d52e50ca52d25ba117019cc9b3ddaf1df54b578a6d270017"
+    },
+    {
+      "seed": 701,
+      "arm": "decay",
+      "manifest_sha256": "bfd24b660c3a4a28577fc1d6cc7bcbdcf3f6ba138907d2660298b89e78c6112a",
+      "checkpoint_sha256": "f419fe818626fc23b98f8e0bb7a89491ff5e015e529b5facb68ee5281d2e808a"
+    },
+    {
+      "seed": 702,
+      "arm": "constant",
+      "manifest_sha256": "ec8ffce7e34c5dbee8aea07530722062cf62838fefad4afbdd48ac52f09c9282",
+      "checkpoint_sha256": "9096417a2b9da36e3f3be6fa2de50d47ab1b5c81ddb6c7052f02deb30ee5f02f"
+    },
+    {
+      "seed": 702,
+      "arm": "decay",
+      "manifest_sha256": "c3501de19812fa454ed2015df65728fe442b7268dea52d1ec2b1e5a3a0eaf3b2",
+      "checkpoint_sha256": "64b3b035c386982d3f9563ff7e24bbd459fba8432cadaa60ffc89bf4c5d8261f"
+    },
+    {
+      "seed": 703,
+      "arm": "constant",
+      "manifest_sha256": "c69018a0b14b92651e786ae2e861b31fef69b4e1952b5d5cf8f68d3cb4fd9c06",
+      "checkpoint_sha256": "ba6a217d96c9dc62087b447fbfcc135f62da7684242412a2770194d7d4b18f6d"
+    },
+    {
+      "seed": 703,
+      "arm": "decay",
+      "manifest_sha256": "9917ac55ece4df83970bc46474bd62938e3e549fe8322d2d8cd782c41a3b6416",
+      "checkpoint_sha256": "be5c324a24d5a0741b4c66159e46a92f32b8d1691c51df887a17402ccb3267a2"
+    }
+  ],
+  "proposed_cap_seconds": 420,
+  "main_source_sha256": {
+    "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+    "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+    "campaign_semantics_continue.py": "6d5a8f4ae5143bdfc93f589fa3c189966a787e0fc6a83dc6bc06382c14ac8585",
+    "campaign_semantics_lr.py": "37382d47849c29f15b407dd9b4b7aa9d66e041ede7ba7477d016e4aa3711dd9a",
+    "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+    "semantic_text_acquisition.py": "e67269012f0ef6e30b78c0265ab007f72f3278310dfad8fad526d60a38001d59",
+    "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+    "semantic_contracts.py": "914a12a24a14434918412f2ad71368f51085bd248c7398164b0c2b1c9a0e215f",
+    "thinking.py": "6f719ee9fa6e58f7cd6247b610339639526a98857bfd0a88b24909bc3d2e2f64",
+    "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+    "semantic_graph.py": "95aa8745f4f399d13d54aacf505d5cdd85c46edce2b2c069febdb6a96bb5e2bb",
+    "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "campaign_semantics_confirmation_rename.py": "15470b6474a483d61bc6deda31b077344a9d1db4d303ae31cc2c6e52b24649e0",
+    "campaign_semantics_confirmation_rename_main_launch.py": "48d99792bcd743aee77069ec8f7b36ac3fc6e6f1bddd593c15f969a85be5531b",
+    "campaign_semantics_main_freeze.py": "89204c27a90b2ba78393d35dea7260142061301d0e4c6071ae23f7c6cdf9f7ef",
+    "campaign_semantics_profile_freeze.py": "c34c8134493b69bb49ed1944329c4787581499c25971928e8f085bbba619f0c9"
+  },
+  "launch_authority": "proposal for review only; separate root allocation and explicit release required"
+}
