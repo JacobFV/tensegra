@@ -102,5 +102,5 @@ def audit(root, source):
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--root',required=True);parser.add_argument('--source',required=True);parser.add_argument('--output',required=True)
     args=parser.parse_args();result=audit(args.root,args.source)
-    Path(args.output).write_text(json.dumps(result,indent=2)+'\n')
+    Path(args.output).write_text(json.dumps(result,separators=(',',':'))+'\n')
     print(json.dumps({k:result[k] for k in ('rows','unique_instances','independently_validated_successful_selections','cells','cpu_seconds')},indent=2))
