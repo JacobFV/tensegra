@@ -26,6 +26,23 @@ def summarize(rows):
  valid=[r for r in rows if r['valid']];components={k:sum(r['exact_components'][k] for r in rows) for k in COMPONENTS}
  macro={k:sum(r['metrics'][k]['f1'] for r in valid)/max(1,len(rows)) for k in ('node','typed_edge','ordered_edge')}
  return dict(examples=len(rows),valid=len(valid),complete=sum(r['complete'] for r in rows),exact_components=components,invalid_reasons=dict(collections.Counter(r['reason'] for r in rows if not r['valid'])),macro_graph_f1_invalid_zero=macro,canonical_edge_order_count=sum(r.get('canonical_edge_order',False) for r in rows))
+def linkage_guard(m):
+ expected={'optimizer_records':3229392,'optimizer_tokens':1720320,'optimizer_nodes':988008,'optimizer_edges':2208616}
+ require(all(m[k]==v for k,v in expected.items()),'exact optimizer exposure')
+ require(m['curves'][0]['model_state_sha256']==m['initial_state_sha256'],'initial curve/state')
+ for curve in m['curves']:
+  for key in ('checkpoint_sha256','model_state_sha256'):
+   digest=curve[key];require(isinstance(digest,str) and len(digest)==64 and all(c in '0123456789abcdef' for c in digest),'checkpoint digest')
+  for key in ('presentations','optimizer_records','optimizer_tokens'):require(type(curve[key])is int and curve[key]>=0,'curve counter')
+  require(curve['presentations']==curve['update']*8,'curve presentations')
+  for key in ('optimizer_records','optimizer_tokens'):
+   # Every registered curve is an integral number of complete corpus epochs.
+   require(curve[key]*4096==m[key]*curve['update'],'curve exposure linkage')
+def entry_guard(entry,d):
+ require(entry['examples']==len(d['rows']),'entry examples')
+ require(entry['teacher_forced_loss']==d['teacher_forced_loss'],'entry teacher-forced loss')
+ cells={cell:dict(examples=sum(r['cell']==cell for r in d['rows']),complete=sum(r['complete'] for r in d['rows'] if r['cell']==cell)) for cell in {r['cell'] for r in d['rows']}}
+ require(entry['cells']==cells,'entry cell summary')
 def main(a):
  c=json.loads(checked(a.config,CONFIG).read_text());m=load(a.main/'manifest.json.gz');receipt=json.loads(a.receipt.read_text())
  require(m['config']==c and c['job']=='main' and c['budget_status']=='frozen','main config')
@@ -36,6 +53,7 @@ def main(a):
  require(len(m['visits'])==4096 and all(v==8 for v in m['visits']),'eight visits')
  require(m['construction_sequence_sha256']==c['expected_construction_sequence_sha256'],'construction stream')
  require([x['update'] for x in m['curves']]==list(STEPS) and m['curves'][-1]['model_state_sha256']==m['final_state_sha256'],'complete curves/final state')
+ linkage_guard(m)
  helper_path=Path(__file__).with_name('S17-analyze.py');checked(helper_path,'13a8c12a014f97b95b65b221457ade75be318c0cb2f76e24234c8391e12d8355')
  spec=importlib.util.spec_from_file_location('s19_component_helper',helper_path);h=importlib.util.module_from_spec(spec);spec.loader.exec_module(h)
  inventory={};results={};documents={};fixed={}
@@ -43,6 +61,7 @@ def main(a):
   step=curve['update'];require(curve['presentations']==step*8,'curve exposure');results[str(step)]={}
   for population in ('train','development'):
    entry=curve[population];path=checked(a.main/entry['artifact'],entry['sha256']);d=load(path);inventory[f'{step}/{population}']=dict(path=str(path),sha256=sha(path));rows=d['rows'];ix=indexed(rows)
+   entry_guard(entry,d)
    require(d['update']==step and d['population']==population,'evaluation metadata')
    require(len(rows)==(128 if population=='train' else 2048),'full population')
    require(d['teacher_forced']==entry['teacher_forced'] and set(d['teacher_forced'])==set(FIELDS),'eight field diagnostics')
@@ -69,7 +88,7 @@ def main(a):
    for cell in CELLS:
     ids=sorted(k for k,r in new.items() if r['cell']==cell);before=[bool(old[k]['raw_metrics' if policy=='raw' else 'calibrated_metrics']['semantic_equivalence']) for k in ids];after=[new[k]['complete'] for k in ids];comparisons[f'{arm}/{policy}'][cell]=dict(transitions_reference_to_s19=paired(before,after),delta_complete=sum(after)-sum(before))
  counts=lambda step:{cell:results[str(step)]['development']['cells'][cell]['complete'] for cell in CELLS}
- out=dict(scope='Single scratch seed, inspected development; TRAIN panel is training-exposed. Teacher-forced gold-prefix diagnostics are distinct from public-only free-running output. Historical actors have 196608 inherited presentations; S19 has none. No parameter/FLOP/history-matched architectural attribution, refit, best-checkpoint selection, or confirmation inference.',config_sha256=CONFIG,analysis_sha256=sha(Path(__file__)),manifest_sha256=sha(a.main/'manifest.json.gz'),receipt_sha256=sha(a.receipt),reference_analysis_sha256=REFERENCE,artifact_inventory=inventory,curves=results,endpoint_paired=comparisons,decisions=decisions(results['4096']['train']['complete'],counts(2048),counts(4096)),costs={k:m[k] for k in ('training_seconds','preflight_seconds','setup_seconds','process_seconds','optimizer_records','optimizer_tokens','optimizer_nodes','optimizer_edges')},checkpoint_scope='Hashes linked by manifest; independent checkpoint/AdamW byte audit remains separate.')
+ out=dict(scope='Single scratch seed, inspected development; TRAIN panel is training-exposed. Teacher-forced gold-prefix diagnostics are distinct from public-only free-running output. Historical actors have 196608 inherited presentations; S19 has none. No parameter/FLOP/history-matched architectural attribution, refit, best-checkpoint selection, or confirmation inference.',config_sha256=CONFIG,analysis_sha256=sha(Path(__file__)),manifest_sha256=sha(a.main/'manifest.json.gz'),receipt_sha256=sha(a.receipt),reference_analysis_sha256=REFERENCE,artifact_inventory=inventory,curves=results,endpoint_paired=comparisons,decisions=decisions(results['4096']['train']['complete'],counts(2048),counts(4096)),costs={k:m[k] for k in ('training_seconds','preflight_seconds','setup_seconds','process_seconds','optimizer_records','optimizer_tokens','optimizer_nodes','optimizer_edges')},checkpoint_scope='Hashes linked by manifest; independent checkpoint/AdamW byte and strict generated-record codec replay audits remain separate; this analysis checks packed tensor components.')
  a.output.write_text(json.dumps(out,indent=2)+'\n')
 if __name__=='__main__':
  p=argparse.ArgumentParser()

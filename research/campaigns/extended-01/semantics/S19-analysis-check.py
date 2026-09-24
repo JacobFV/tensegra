@@ -3,6 +3,22 @@ import importlib.util,unittest
 from pathlib import Path
 p=Path(__file__).with_name('S19-analysis.py');s=importlib.util.spec_from_file_location('s19',p);a=importlib.util.module_from_spec(s);s.loader.exec_module(a)
 class Checks(unittest.TestCase):
+ def test_linkage(self):
+  m=dict(optimizer_records=3229392,optimizer_tokens=1720320,optimizer_nodes=988008,optimizer_edges=2208616,initial_state_sha256='a'*64)
+  m['curves']=[dict(update=u,presentations=u*8,optimizer_records=m['optimizer_records']*u//4096,optimizer_tokens=m['optimizer_tokens']*u//4096,checkpoint_sha256='b'*64,model_state_sha256='a'*64) for u in a.STEPS]
+  a.linkage_guard(m)
+  import copy
+  for key in ('optimizer_records','optimizer_tokens','optimizer_nodes','optimizer_edges'):
+   bad=copy.deepcopy(m);bad[key]+=1
+   with self.assertRaises(ValueError):a.linkage_guard(bad)
+  for key,value in [('checkpoint_sha256','x'),('model_state_sha256','b'*64),('optimizer_records',1)]:
+   bad=copy.deepcopy(m);bad['curves'][0][key]=value
+   with self.assertRaises(ValueError):a.linkage_guard(bad)
+ def test_entry(self):
+  d=dict(rows=[dict(cell='3x3',complete=False)],teacher_forced_loss=1.0);e=dict(examples=1,teacher_forced_loss=1.0,cells={'3x3':dict(examples=1,complete=0)})
+  a.entry_guard(e,d)
+  for key,value in [('examples',2),('teacher_forced_loss',2.),('cells',{})]:
+   with self.assertRaises(ValueError):a.entry_guard({**e,key:value},d)
  def test_promotion(self):
   final=dict.fromkeys(a.CELLS,52);early=dict.fromkeys(a.CELLS,0)
   self.assertTrue(a.decisions(64,early,final)['promotion'])
