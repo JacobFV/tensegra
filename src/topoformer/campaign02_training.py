@@ -16,6 +16,7 @@ import json
 import math
 from pathlib import Path
 import random
+import resource
 import time
 from typing import Callable
 
@@ -394,6 +395,8 @@ def main():
         validation = range(args.validation_seed, args.validation_seed+args.validation_examples)
         if train_start < validation.stop and validation.start < train_end:
             raise ValueError("Training and development episode seed intervals overlap")
+        if torch.device(cfg.device).type == "cuda":
+            torch.cuda.reset_peak_memory_stats(torch.device(cfg.device))
         development, timings = [], []
         remaining = args.steps
         while remaining:
@@ -411,6 +414,12 @@ def main():
             "world": world_kwargs, "world_hash": digest(world_kwargs), "timings": timings, "validation": metrics,
             "development": development, "parameter_count": sum(p.numel() for p in policy.parameters()),
             "workspace_width": cfg.width, "observation_dim": len(obs), "candidate_dim": len(candidates[0]),
+            "memory": {"process_peak_rss_kib": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
+                "process_peak_rss_scope": "whole process lifetime; Linux KiB, excludes child solvers",
+                "cuda_scope": "peak since before fit/development evaluation; allocated/reserved are not device capacity",
+                "cuda_peak_allocated_bytes": torch.cuda.max_memory_allocated(torch.device(cfg.device)) if torch.device(cfg.device).type == "cuda" else None,
+                "cuda_peak_reserved_bytes": torch.cuda.max_memory_reserved(torch.device(cfg.device)) if torch.device(cfg.device).type == "cuda" else None,
+                "cuda_device_capacity_bytes": torch.cuda.get_device_properties(torch.device(cfg.device)).total_memory if torch.device(cfg.device).type == "cuda" else None},
             "workspace_rows": policy.config.workspace_rows if cfg.family == "recurrent" else 0,
             "recurrent_phases": 4 if cfg.family == "recurrent" else 0,
             "decision_presentations": learner.presentations, "unique_training_episodes": learner.episodes,
