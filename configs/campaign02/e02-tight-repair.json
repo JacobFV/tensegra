@@ -1,0 +1,51 @@
+{
+  "episodes": 512,
+  "seed_start": 25004000,
+  "address_seed_start": 88040000,
+  "shared_condition_seeds": true,
+  "cpu_limit_seconds": 240,
+  "executor": "persistent",
+  "model_compute_tariff": 0,
+  "modes": [
+    "cheap_first",
+    "cheap_first_fallback_v2"
+  ],
+  "conditions": [
+    {
+      "name": "standard_fixed",
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "step_limit": 48,
+      "work_limit": 10000,
+      "include_remaining_budget": false
+    },
+    {
+      "name": "standard_remaining",
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "step_limit": 48,
+      "work_limit": 10000,
+      "include_remaining_budget": true
+    },
+    {
+      "name": "tight_fixed",
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "step_limit": 48,
+      "work_limit": 128,
+      "include_remaining_budget": false
+    },
+    {
+      "name": "tight_remaining",
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "step_limit": 48,
+      "work_limit": 128,
+      "include_remaining_budget": true
+    }
+  ]
+}
