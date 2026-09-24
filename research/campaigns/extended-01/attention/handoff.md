@@ -17,3 +17,19 @@ A04 v1 content selector acquires clean IID/depth8 matching in all graph arms. Ho
 A05-v2 seed5011000update development at noncoalescing N128D32K8: soft67.19%,hard/gather74.22%,context21.88%,none16.41%; content16repairssoft/hard to100%,context52.34%. A05b then isolated context address bottleneck. Raw7afff11/reporta05-v2-report.md; durable `~/topoformer-campaign01/attention/a05-v2/{arm}`.
 
 Boundaries: width1024 primary; tiny tests labeled mechanical. Immutable identity keys and public attribute codes are supplied, queries come from supplied ordered instruction sequence; no arbitrary latent grounding/planning claim. Programmed reverse schedule and suffix-value supervision common. Hard gather and masked attention are one algebraic comparator. Context uses supplied hard neighborhood addresses, not ordinary unconstrained graph-token parsing. No-graph is information ablation. No composition authorized by these results. Corruption may remove identifiable target information. Attention argmax paths are diagnostics, not causal proof. Preserve all historical bytes and every failure.
+
+## Additional authorized branches (CPU prepared, no GPU yet)
+
+Root reopened attention track for missing graph-record and topology-robustness comparisons. A07 source d685448, protocol clarification1844c60; staged `/tmp/campaign-a07-source-d685448`. Four mechanical CPU tests pass. Reviewer preflight clears all-edge unmasked KV read followed by dense node read. Width1024,4.575Mallocated/2.413Mparticipating parameters; supplied source/relation coordinate initialization, static target-attribute join, and two-stage address decomposition explicitly disclosed. Profile config campaign-a07-profile.json:12updates,64events, cap60 only after parent release. Development1000updates config exists but requires measured budget/release. Do not call this generic graph-text understanding. No query-dependent graph mask/gather exists.
+
+A08 source b5a4a91 plus disjoint profile namespace afe82d9. Degree-preserving destination rotations replace joint missing/spurious edges while preserving one neighbor perattribute; requested10% realizes12.5% inblock16,25/50exact. Pure deletion unavailable. All9A06 checkpoints frozen and hash-enforced, content16 orboth16 policies,1024freshmain graphs atN64D8K4/N128D32K8. Public tensors storedonce. Tests pass; reviewer preflight pending. Latest snapshot needs staging beforeprofile. Profile64largest×4fractions cap60 thenmainestimated150–250cap300, each requires root release. No GPU job active. Historical A06 still complete/audited and unchanged.
+
+## Latest A07/A09 state
+
+A07 profile4.86s+main50.29s complete source d685448. Raw/report77a51dd, independent21cellaudit complete. Underacquired IID40.82%,N64D8 18.95%,joint10.35%; route errors differ fromA06. Root authorized registered extension onlyif exactmonitoring trigger passes. CPUreevaluation of173Mmonitor at1000 yields43.75/18.75 vs50022.66/11.72, andloss24.8%decline; triggerpasses.
+
+A09 source/config0880c64 staged /tmp/campaign-a09-source-0880c64. Replays2000updatesfromsameinit, exact1000prefix tensorhash and side-by-side checkpointlogit guard abortonmismatch. Savesoptimizer/RNG1000/1500/2000. Newfinal191Mdevpopulation, noarchitecture/scalechange. FiveCPUtestspass1.34s. Reviewerpreflightrequested; cap180 pendingrootrelease. Do notlaunchautomatically. A08profile e789147 remainsqueued, notrun. Attentionoccupancy945.65seconds throughA07.
+
+## Credit-resume recovery
+
+A08 profile e789147 actually completed before interruption; recovered raw/manifest show 2.573s internal wall, tensor immutability, no updates. Outer receipt unavailable; conservatively charge reserved60s with explicit uncertainty. A08 main estimate150–220s/cap300 and A09 replay-extension cap180 ready, neither launched without root release. Profile archive and report now preserved locally.
