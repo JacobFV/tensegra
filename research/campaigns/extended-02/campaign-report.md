@@ -77,3 +77,5 @@ Total experiment GPU occupancy is **1,337.302 seconds (22.29 minutes)**. CPU usa
 ## Recommended restart
 
 First establish that the public-memory consumer learns the exact constructive counterfactuals, then mixed workshops. Independently isolate budget escalation conditioning and decision-loss allocation using the existing matched teacher stream. Only then spend on six-member population versus equal-funded multistart/single baselines and fresh independent confirmation. Do not repeat failed relation-only continuation or describe the current campaign as evidence that evolution works. The useful result is a tested substrate and a localized gap between sequence imitation and resource allocation.
+
+Final [independent closure review](review/campaign-closure-review.md) verifies accounting and claim boundaries. Source/tests/configs/tools whitespace checks pass; generated SVG path whitespace and preserved raw failure-log whitespace are retained. Historical research paths have no changes against baseline.
