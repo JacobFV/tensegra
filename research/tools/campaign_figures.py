@@ -662,7 +662,7 @@ def render(data, output):
                     ss=select('s18_learning',arm=arm,shape=shape,policy=policy);ss.sort(key=lambda r:r['added_update'])
                     ax.plot([r['added_update'] for r in ss],[r['complete'] for r in ss],style,marker='.',color=f'C{i}',label=f'{labels[i]} / {policy}')
             ax.set(title=f'S18 {shape} · '+('new trained' if shape=='3x3' else 'held out' if shape=='3x4' else 'known'),xlabel='Added optimizer updates',ylabel='Complete graphs / 512',ylim=(-3,230));ax.legend(fontsize=6)
-        finish(fig,'semantic-context-development','All fixed acquisition, retention and recombination gates fail. Matched TRAIN calibration is primary; raw is separate. One inspected development parent.\nOriginal curves are reused/retrospectively calibrated. Equal incremental presentations do not match inherited training, parameter count, arithmetic or measured full-path cost.')
+        finish(fig,'semantic-context-development','All fixed acquisition, retention and recombination gates fail. Matched TRAIN calibration is primary; raw is separate. One inspected development parent.\nAll arms share the S11 parent, 57,853,781 parameters and incremental stream; arithmetic/runtime differ. Original training is reused; curves retrospectively calibrated.')
         fig,axes=plt.subplots(1,2,figsize=(11,4.8))
         for ax,policy in zip(axes,('raw','matched')):
             for i,arm in enumerate(arms):
@@ -675,7 +675,7 @@ def render(data, output):
         for arm in arms:
             ss=select('s18_train',arm=arm,added_update=4096,calibration='matched',policy='calibrated')
             totals.append(f"{sum(r['complete'] for r in ss)}/{sum(r['examples'] for r in ss)}")
-        finish(fig,'semantic-context-train-dev','Matched full TRAIN128 totals (original/context/10-pass): '+', '.join(totals)+'. Calibration overlap makes these optimistic in-sample fit measures.\nLow complete counts coexist with strong but imperfect relation ranking; they do not imply no learned information. One lineage, no confirmation or automatic extension.')
+        finish(fig,'semantic-context-train-dev','Matched full TRAIN128 totals (original/context/10-pass): '+', '.join(totals)+'. Calibration overlap makes these optimistic in-sample fit measures.\nShared S11 parent, 57,853,781 parameters and incremental stream; arithmetic/runtime differ. Reused original training.\nLow complete counts coexist with strong but imperfect relation ranking. One lineage; no confirmation or automatic extension.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')=='independently_audited'})
