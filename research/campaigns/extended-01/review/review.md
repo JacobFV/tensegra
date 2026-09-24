@@ -333,3 +333,5 @@ S18 analysis final pin-only4ef23e39 reviewed: exact main4ffecfea/reference944b34
 S18 reference failed-v1 independently diagnosed: both2048unique same semantic population, raw/target/rawmetrics all exactly equal by semanticID, order differs. Failure is strict zip verifier; retain exit1partial/63.93charged, no completed-reference claim. CPU7.270613s; failed timing-parser attempt3.277121s retained. Root elected new frozen full3curve rerun, not recovery machinery.
 
 S18 v2 keyed verifier9d39d00e/277f6fa3 passes narrow source review and six affected fixtures1.30s. Exact complete unique populations matched before raw/target; no scientific numerical change. Remote3.302335s verifies read-only source, maincfe0359c/refe99ee70e, unchanged all-reference/cost bindings, new unused reference outputs and KILL4000/240 outer commands. Full3curve retry separately authorized by root; failed63.93 and duplicatefirstcurvecost retained. Missing-test staging harness attempt0.255376s preserved.
+
+S18 analysis v2 pin-only7bc2b1fc exactly matches cleared maincfe0359c/referencee99ee70e; ten synthetic tests0.007s. No formulas or result reads; explicit reference-v2/main-v1 paths.
