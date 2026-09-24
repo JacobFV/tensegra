@@ -1,6 +1,6 @@
-# Campaign report — draft, S20 confirmed; S21 pending
+# Campaign report — draft, S21 closed; S22 pending
 
-This draft summarizes independently audited closed evidence through S20. S20 confirms known-motif acquisition across three lineages and fails held-out transfer. S21 outcomes remain pending in separate broader-corpus development. This is not the final campaign assessment; historical failures and prospective gates are preserved.
+This draft summarizes independently audited closed evidence through S21. S20 confirms known-motif acquisition across three lineages and fails held-out transfer. S21 broader-corpus development fails its joint gate; S22 diagnostic outcomes remain pending. This is not the final campaign assessment; historical failures and prospective gates are preserved.
 
 The [claim map](claim-map.md) defines each interface and promotion boundary. The [evidence index](evidence-index.md) and [figure guide](figures/README.md) provide the fuller navigation and reproducibility record. Some archived reports retain their original audit-pending language; the linked independent receipts establish subsequent verification.
 
@@ -54,7 +54,10 @@ The [S20 report](semantics/S20-report.md) and [final independent audit](review/S
 
 All arms receive 32,768 incremental presentations. Workspace learners inherit 196,608 presentations and have 57,853,781 parameters; record starts from scratch with 62,677,315. Objectives and execution work differ. Thus this confirms a fixed-learner acquisition comparison, not isolated architectural causation or matched compute. S20 main charged 2,992.72 seconds; with profile, total charged occupancy is 3,026.55 seconds. Actual TRAIN record fit is perfect in each seed, while matched workspace TRAIN diagnostics overlap calibration fitting. No criterion or historical result is replaced.
 
+## S21: broader acquisition without omitted-combination transfer
+
+[S21](semantics/S21-report.md) passes new-motif acquisition and old-known retention, but held-out 3×4 remains zero in both arms: the joint gate fails and conditional confirmation is ineligible. Same scratch initialization and learner isolate the declared corpus intervention; equal presentations do not equal token/record work. [Learning curves](figures/semantic-broad-motif-learning.svg), [endpoints and paired effects](figures/semantic-broad-motif-endpoints.svg), and the [final audit](review/S21-final-development-audit.json) preserve every cell. Canonical node-position localization alone does not establish non-isomorphism or a causal shortcut. Strict isomorphism review remains separate.
+
 ## Pending decisions before final assessment
 
-- **S21:** broader-corpus development was planned before S20 outcomes. S21 outcomes remain pending; this is separate broader-corpus development.
-- **Final synthesis and cost:** reconcile the authoritative budget/receipts after active work closes. Known-motif acquisition and held-out transfer remain separate. No automatic extension or gate relaxation follows from S20.
+[S22](semantics/S22-design.md) is a separately registered oracle-boundary diagnostic, with no outcomes claimed here. Final synthesis and cost reconciliation remain pending; no automatic extension or retrospective gate change follows from S21.
