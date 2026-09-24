@@ -31,4 +31,32 @@ for policy in policies:
   if policy=='shared_hard':assert np.array_equal(route,np.load(a.root/'unchanged.npz')[f'c{ci}_route'])
   cells.append(dict(policy=policy,condition=row['condition'],examples=b,task_correct=int(expected['task'].sum()),path_correct=int(path.sum()),suffix_correct=int(expected['suffix_value_trajectory'].sum()),instrumented_forward_seconds=row['forward_seconds']))
 out=dict(source_ref=a.source_ref,cells=cells,diagnostic_cells_checked=diagnostics,shared_targets_reconstructed_from_initial_values=True,shared_hard_own_argmax_zero_distortion=True,queried_mean_full_path_equals_existing_metric=True,frozen_checkpoint_sha256=m['checkpoint_sha256'],initial_final_tensor_sha256=m['initial_tensor_sha256'],inference_zero_updates=True,training_updates=training['steps'],instrumented_forward_seconds=sum(c['instrumented_forward_seconds'] for c in cells),cpu_audit_wall_seconds=time.monotonic()-tick,scope='Task/path/full suffix labels independently reconstructed; diagnostic means/bounds/shapes/hardening identities checked. Full weights/current hidden payloads absent, so diagnostic MSE/oracle accuracy derivations rely on reviewed source and mechanical tests. No policy selection or model inference.')
+result_root=a.root.parent;run=result_root.parent
+receipt=json.loads((run/'receipt.json').read_text());config_name='campaign-a14-profile.json' if cfg['seed']==1499 else f"campaign-a14-confirm-{cfg['seed']}.json"
+assert hashlib.sha256((result_root/'config.json').read_bytes()).hexdigest()==receipt['config_sha256']==hashlib.sha256(subprocess.check_output(['git','show',a.source_ref+':configs/'+config_name])).hexdigest()
+assert receipt['exit_code']==0 and receipt['source']==a.source_ref
+for line in (run/'SHA256SUMS').read_text().splitlines():
+ h,name=line.split(maxsplit=1);p=run/name
+ if p.exists():assert hashlib.sha256(p.read_bytes()).hexdigest()==h
+for key in pub.files:assert hashlib.sha256(pub[key].tobytes()).hexdigest()==m['public_sha256'][key]
+paired=[]
+for ci,c in enumerate(cfg['conditions']):
+ base=np.load(a.root/'unchanged.npz')[f'c{ci}_task'].astype(bool)
+ for policy in policies:
+  raw=np.load(a.root/f'{policy}.npz');task=raw[f'c{ci}_task'].astype(bool);route=raw[f'c{ci}_diagnostic_query_mean_route_correct'][:,:,0].astype(bool).all(1);heads={}
+  for kind in ('record','original_destination','used_destination'):
+   correct=raw[f'c{ci}_diagnostic_query_{kind}_head_correct'].astype(bool).all(1);heads[kind]=dict(correct=int(correct.sum()),denominator=int(correct.size),events_all_heads=int(correct.all(1).sum()))
+  paired.append(dict(condition=c,policy=policy,event_support=len(task),route_support=int(route.sum()),task_route_joint=[int((route&task).sum()),int((route&~task).sum()),int((~route&task).sum()),int((~route&~task).sum())],task_given_route=float((route&task).sum()/route.sum()) if route.any() else None,fixed=int((~base&task).sum()),broken=int((base&~task).sum()),head_paths=heads))
+dev=0
+for artifact in sorted((result_root/'development').glob('eval-*.npz')):
+ raw=np.load(artifact);report=json.loads(artifact.with_suffix('.json').read_text())
+ for ci,row in enumerate(report['rows']):
+  g=raw[f'c{ci}_gold'];pred=raw[f'c{ci}_pred'];route=raw[f'c{ci}_route'];start=raw[f'c{ci}_start'];succ=raw[f'c{ci}_successor'];b,d,n=g.shape;ix=np.arange(b);ok=pred==g;actual=start.copy();proposed=start.copy();path=np.ones(b,bool)
+  for t in range(d):actual=succ[ix,t,actual];proposed=route[ix,d-1-t,proposed];path&=actual==proposed
+  for key,v in dict(task=ok[:,-1][ix,start],all_node=ok.mean((1,2)),suffix_value_trajectory=ok.all((1,2)),exact_pointer_path=path).items():np.testing.assert_allclose(v,raw[f'c{ci}_{key}']);assert abs(v.mean()-row[key])<1e-6
+  dev+=1
+repo=run
+while repo.name!='research':repo=repo.parent
+repo=repo.parent
+out.update(status='raw_and_provenance_audited_state_receipt_separate',paired=paired,development_cells_verified=dev,full_process_occupancy_seconds=receipt['full_process_occupancy_seconds'],input_sha256={str(p.relative_to(repo)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(run.rglob('*')) if p.is_file()},all_seed_status='pending' if cfg['seed']!=1499 else 'mechanical_profile',cpu_audit_wall_seconds=time.monotonic()-tick)
 a.output.write_text(json.dumps(out,indent=2)+'\n');print(dict(cells=len(cells),seconds=out['cpu_audit_wall_seconds']))
