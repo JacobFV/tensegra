@@ -32,11 +32,14 @@ class MemoryPolicyConfig(PolicyConfig):
     zero_memory: bool = False
     supervised_frame_batch: int = 8
     interface_version: str = "public-tree-memory-v1"
+    codec_version: str = "public-tree-v2"
 
     def __post_init__(self):
         super().__post_init__()
         if min(self.memory_dim, self.max_memory_nodes, self.max_handles, self.supervised_frame_batch) < 1:
             raise ValueError("Positive memory dimensions and explicit caps required")
+        if self.codec_version != "public-tree-v2":
+            raise ValueError("Unsupported public-memory codec semantics")
         if self.interface_version != "public-tree-memory-v1":
             raise ValueError("Unknown public memory interface")
 
@@ -58,7 +61,9 @@ class MemoryCandidatePolicy(CandidatePolicy):
         self.collate_profile = {"calls": 0, "max_frames": 0, "max_padded_rows": 0, "cpu_seconds": 0., "wall_seconds": 0.}
 
     def prepare_public_frame(self, observation, actions, legacy):
-        from .campaign02_memory import encode_memory, MemoryLimits, MemoryCapacityError
+        from .campaign02_memory import encode_memory, MemoryLimits, MemoryCapacityError, VERSION
+        if VERSION != self.config.codec_version:
+            raise ValueError(f"Public-memory codec version mismatch: checkpoint={self.config.codec_version}, runtime={VERSION}")
         wall, cpu = time.perf_counter(), time.process_time()
         try:
             memory = encode_memory(observation, actions,

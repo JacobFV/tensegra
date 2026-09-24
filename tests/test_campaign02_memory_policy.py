@@ -72,3 +72,11 @@ def test_public_capacity_failure_stays_in_episode_denominator():
     assert all(row["unsupported_interface"] == "declared test cap" for row in rows)
     assert all(not row["outcome"]["verified_success"] for row in rows)
     assert all(row["truncated"] for row in rows)
+
+
+def test_memory_codec_version_is_explicit_checkpoint_contract():
+    from dataclasses import asdict
+    model, _ = fixture()
+    assert asdict(model.config)["codec_version"] == "public-tree-v2"
+    with pytest.raises(ValueError, match="codec semantics"):
+        MemoryPolicyConfig(2, 3, width=8, heads=2, memory_dim=5, codec_version="public-tree-v1")
