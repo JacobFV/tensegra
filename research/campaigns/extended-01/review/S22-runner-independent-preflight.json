@@ -1,0 +1,99 @@
+{
+  "snapshot": "fab74aed947797cc978b37b2db74f97d9215eaf1",
+  "archive_sha256": "7faea97c744a94c0d157d44c21a3bb2a5c49525a2d6dad3a91883775befd789d",
+  "sources": {
+    "src/topoformer/campaign_semantics_s22.py": "366915ad2fb0a600dfc3b997af5e70bc48ecee8e3b474ade5748b1143f7188a9",
+    "src/topoformer/campaign_semantics_s22_controller.py": "5c173bff31f21a0a63404c8145ef8d52b6b8168f253db9d75d744ef57966c959",
+    "src/topoformer/campaign_semantics_s22_freeze.py": "d0446d21c4ed5dc32644b612d1a371209c80b31b1e869b845976628ad01e0987",
+    "src/topoformer/campaign_semantics_s22_launch.py": "1462e0cf5e494679ac4270077b481844ac4db59dcbe5c345df2efcc681097cb4"
+  },
+  "design_commit": "c17133cf5d8b77aef280cfbab5be9d8c0ac597b5",
+  "controller_commit": "6b0680f01eb355ebbd3bcfde504fe50230c4b1a3",
+  "passed": true,
+  "clearance": "Source/controller contract cleared for separately frozen and root-released profile only; no model competence claim.",
+  "tests": {
+    "passed": 21,
+    "pytest_seconds": 0.76,
+    "timing": {
+      "outer_seconds": 1.04,
+      "cpu_user_seconds": 1.06,
+      "cpu_system_seconds": 0.12,
+      "exit_code": 0
+    },
+    "log_sha256": "27960904309bdee7a7330b011c129898af0e213a69ab2f2af1becb6281fb541d"
+  },
+  "fullwidth_contract": {
+    "result": {
+      "width": 1024,
+      "heads": 8,
+      "dtype": "bfloat16",
+      "parameters": 62677315,
+      "cuda_available": false,
+      "no_op_parity": true,
+      "policies": {
+        "oracle_node_count": {
+          "batch_individual_equal": true,
+          "counts": [
+            1,
+            2
+          ],
+          "strict_eos": true,
+          "state_unchanged": true
+        },
+        "oracle_node_kinds": {
+          "batch_individual_equal": true,
+          "counts": [
+            1,
+            2
+          ],
+          "strict_eos": true,
+          "state_unchanged": true
+        },
+        "oracle_node_prefix": {
+          "batch_individual_equal": true,
+          "counts": [
+            1,
+            2
+          ],
+          "strict_eos": true,
+          "state_unchanged": true
+        }
+      },
+      "seconds": 0.9268257012590766,
+      "scope": "Random mechanical model with deliberately fixed output heads, no learned checkpoint or corpus outcomes"
+    },
+    "timing": {
+      "outer_seconds": 1.56,
+      "cpu_user_seconds": 1.74,
+      "cpu_system_seconds": 0.14,
+      "exit_code": 0
+    },
+    "script_sha256": "edc877d6c6cf65752d70c444e69e6f430705e28faaa205d4963743babbbfbbbe",
+    "reproduction_script": "import json,time\nimport torch\nfrom topoformer.campaign_semantics_s19_actor import TypedRecordActor\nfrom topoformer.campaign_semantics_s19_codec import NODE,EOS,KINDS\nfrom topoformer.campaign_semantics_s22_controller import NodeCount,NodeKinds,NodePrefix,decode\nfrom topoformer.thinking_language import ActorInput,state_hash\nstart=time.monotonic();torch.set_num_threads(2);torch.manual_seed(220023)\nassert not torch.cuda.is_available()\nm=TypedRecordActor(value_count=4,width=1024,heads=8,node_capacity=128,max_records=160,max_slot=32,autocast_dtype='bfloat16');m.eval()\nwith torch.no_grad():\n for name,index in [('type',2),('kind',KINDS.index('record')),('value',1)]:\n  h=getattr(m,name+'_head');h.weight.zero_();h.bias.fill_(-100);h.bias[index]=100\nbefore=state_hash(m);publics=[ActorInput('alice bob',()),ActorInput('alice bob carol',())]\nnoop=decode(m,publics);assert [{k:r[k]for k in ('records','status','node_count')}for r in noop]==m.greedy(publics)\nboundaries={'oracle_node_count':[NodeCount(1),NodeCount(2)],'oracle_node_kinds':[NodeKinds((KINDS.index('record'),)),NodeKinds((KINDS.index('ident'),KINDS.index('record')))],'oracle_node_prefix':[NodePrefix(((NODE,KINDS.index('record'),1,-1,-1),)),NodePrefix(((NODE,KINDS.index('ident'),-1,2,-1),(NODE,KINDS.index('record'),2,-1,-1)))]}\nresults={}\nfor policy,bindings in boundaries.items():\n batch=decode(m,publics,policy,bindings);single=[decode(m,[p],policy,[b])[0]for p,b in zip(publics,bindings)]\n assert batch==single and [r['node_count']for r in batch]==[1,2]\n assert all(r['status']=='eos'and r['records'][-1][0]==EOS for r in batch)\n assert all(all(x[0]==NODE for x in r['records'][:-1])for r in batch)\n if policy=='oracle_node_prefix':assert all(r['records'][:-1]==[list(x)for x in b.records]for r,b in zip(batch,bindings))\n assert state_hash(m)==before\n results[policy]={'batch_individual_equal':True,'counts':[1,2],'strict_eos':True,'state_unchanged':True}\nprint(json.dumps({'width':m.width,'heads':8,'dtype':'bfloat16','parameters':sum(p.numel()for p in m.parameters()),'cuda_available':torch.cuda.is_available(),'no_op_parity':True,'policies':results,'seconds':time.monotonic()-start,'scope':'Random mechanical model with deliberately fixed output heads, no learned checkpoint or corpus outcomes'}))\n"
+  },
+  "total_cpu_wall_seconds": 2.6,
+  "total_cpu_user_seconds": 2.8,
+  "total_cpu_system_seconds": 0.26,
+  "failed_attempts": [],
+  "cuda_visible_devices": "",
+  "threads": 2,
+  "python": "/home/brandonin/topoformer-pilot/.venv/bin/python",
+  "verified_contracts": [
+    "NodeCount supplies count only; NodeKinds adds canonical kinds; NodePrefix adds complete canonical NODE fields. All explicitly privileged.",
+    "Controller accepts exact typed dataclasses; no edge, slot, edge count, answer, graph row or target argument.",
+    "Encoder receives unchanged ActorInput(text,empty tuple); DEV arity/facts labels select reporting cells only.",
+    "First N output tags forced NODE; subsequent tags retain learned EDGE/EOS ordering. No gold edge termination.",
+    "Node-kind intervention changes active value/copy channel; prefix intervention supplies current output only as next-step previous record.",
+    "Current/future prefix records never enter earlier cache states; independent no-op equals historical greedy, including errors/padding.",
+    "Invalid references, duplicates and record overflow remain strict failures; no graph repair.",
+    "No optimizer/training; no_grad covers controller and evaluation; state/checkpoint hashes checked before/after policies.",
+    "Prepared config cannot launch; frozen inputs pin DEV/vocabulary and both final4096 endpoints; confirmation inputs rejected.",
+    "Matched count/padding/batch semantics tested at full1024 BF16 CPU plus21 labeled small fixtures."
+  ],
+  "limitations": [
+    "No learned checkpoint inference or scientific diagnostic outputs inspected.",
+    "Fullwidth fixture has4-value vocabulary and deterministic edited output heads, not trained semantic behavior.",
+    "Node ordering/count/kinds/prefix implicitly convey privileged layout; any downstream success is conditional, not public semantic acquisition.",
+    "Runtime CUDA profiling, complete raw-metric/provenance audit and root budget release remain required."
+  ]
+}
