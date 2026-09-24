@@ -49,9 +49,8 @@ def run(command, output, wall_cap, cpu_cap, memory_gib=None):
             peak_sampled_cpu=max(peak_sampled_cpu,process_group_cpu(proc.pid))
             if elapsed>wall_cap or peak_sampled_cpu>cpu_cap:
                 reason='wall_cap' if elapsed>wall_cap else 'cpu_cap'
-                os.killpg(proc.pid,signal.SIGTERM)
-                try:proc.wait(timeout=5)
-                except subprocess.TimeoutExpired:os.killpg(proc.pid,signal.SIGKILL);proc.wait()
+                os.killpg(proc.pid,signal.SIGKILL)
+                proc.wait()
                 break
             time.sleep(.2)
         exit_code=proc.wait()
