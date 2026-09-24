@@ -94,3 +94,6 @@ All68 frozen-source bindings and unchanged prepared recipes independently verify
 
 ### R10 fixed-endpoint screen and semantic transfer (08:12 UTC)
 R10 increases balanced-context diversity at matched updates but misses both worst-stratum calibration criteria. Do not promote or tune on validation; independently audit and inspect frozen training curves for a bounded, newly registered hypothesis. Initial reconstruction is perfect in this diagnostic, so a new ingestion representation is unsupported. Advance independent S14 all-six-model unseen-arity test while return analysis proceeds.
+
+### R11 fixed optimizer endpoint (08:38 UTC)
+Both fixed7200 arms fail the prospective balanced-tail calibration screen. Decay improves worstcal118→120/128 and reaches99.8% fitting accuracy; constant drops to87/128. Reused validation favors decay but cannot replace the calibration decision. Close this local optimizer/decoder search after independent audit: no extra learning-rate grid or exposure extension is justified by this bounded protocol. The previously confirmed R04/R05 original-mixture and C04 composition contracts stay separate and unchanged. Further semantic acquisition has independent prerequisites and continues.

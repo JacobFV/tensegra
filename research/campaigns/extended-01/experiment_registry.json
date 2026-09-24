@@ -699,7 +699,7 @@
     },
     {
       "id": "R11",
-      "status": "main_running_after_audited_profile",
+      "status": "completed_failed_screen_audit_pending",
       "hypothesis": "Remaining fixed-feature scalar errors partly reflect incomplete optimizer acquisition rather than missing scalar information",
       "intervention": "Exact replay R10 3600 AdamW steps, then matched3600-step constant.003 versus decayed.0003 forks",
       "comparator": "Unchanged3600 reference and same-exposure constant fork",
@@ -709,8 +709,9 @@
       "source": "a7f99f05",
       "selection": "Fixed7200endpoint; reused development calibration only; all mixture>=98%, worstgrid>=122/128 and fittingd16>=99.8%; fresh confirmation required for promotion",
       "budget": "Successful exact profile4.30s charged4.31; main estimate70\u2013120/cap180 allocated subject to independent profile audit",
-      "next_branch": "Stop after bounded diagnostic or register fresh confirmation if declared screen passes; no historical gate change",
-      "audit": "review/R11-preflight.json"
+      "next_branch": "Close bounded local readout-recipe search; optimizer sensitivity and residual balanced tails reported separately from acquired original-mixture interface",
+      "audit": "review/R11-preflight.json",
+      "result": "Both7200 endpoints fail: constantworstcal87/128,decay120/128<122. Decayfitting65433/65536passes99.8%; reusedvalidationworst122/128; no confirmation."
     }
   ],
   "policy": {
