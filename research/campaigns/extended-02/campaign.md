@@ -4,7 +4,9 @@ Start: 2026-09-24T16:13:17Z. Baseline65d44ae6acb17cd53360e5350f9c297b0c5954d0. R
 
 Question: can learned closed-loop policies and population selection improve verified workshop outcomes per resource over strong heuristic and independently trained alternatives, and transfer to new primitive combinations and resource conditions?
 
-Current phase: A, protocol/environment acquisition and independent design review. No models launched. GB10 verified idle, CUDA2.14.0+cu130/Python3.12.3,122502MiB shared device capacity reported;281GB filesystem free. Existing environment reused.
+Current phase: B/C, acquired easy closed-loop supervised policy and testing resource/size transfer. Both1024-wide controllers solved128/128 shared easy DEV episodes at frozen600-update endpoints; one initialization per family, not a replicated policy claim. Lightweight reached this by100 updates, recurrent by200. E04 fresh512/cell evaluation is running. GPU scheduling remains root-only.
+
+Protocol, persistent bounded solver, observation isolation, immutable returns, independent world checks, and population runtime/resume mechanics have passed bounded tests. Reference leverage study512/cell demonstrates a genuine tool-benefit region and expensive-tool/tight-budget tradeoffs. A paired supplied-reference repair raises tight128-work success138→501/512 by exposing remaining-budget calls. This is an interface repair, not learned resource allocation. Six-member population training is implemented but not yet launched.
 
 ## Boundaries
 Semantic reduction, exact executor correctness, multiple-return addressing, metareasoning, composition, population advantage, and structural attention are separate claims. Typed structured observations first; no gold action sequence at evaluation. Exact payload storage is supplied; learned address selection is evaluated. Default experimental neural workspace width1024; lightweight control may have explicitly declared simpler computation, not a secretly narrow workspace. No pretrained models, external services, or candidate filesystem/network access.
