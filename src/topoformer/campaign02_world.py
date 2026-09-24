@@ -320,8 +320,10 @@ class Workshop:
             record = self._records[a["handle"]]
             self._retrieved[a["handle"]] = deepcopy(record)
             return {"status":"success","record":deepcopy(record),
-                    "stale":record["state_version"] != self._version}
+                    "stale":record.get("primitive")=="shortest_path" and record["state_version"] != self._version}
         if kind == "commit_subset":
+            if self._position != self._spec.start:
+                return {"status":"rejected","reason":"assembly_requires_workshop"}
             handles = a["items"]
             valid, reason = validate_subset(self._spec,handles)
             if not valid:
@@ -493,6 +495,14 @@ def encode_action(o: Observation, action: Action) -> list[float]:
 
 
 def reduction_matches_world(spec: WorldSpec, primitive: str, problem: dict[str,Any],
+                            edges: Mapping[tuple[int,int],int], position: int) -> bool:
+    try:
+        return _reduction_matches_world(spec,primitive,problem,edges,position)
+    except (ValueError,TypeError,KeyError,IndexError):
+        return False
+
+
+def _reduction_matches_world(spec: WorldSpec, primitive: str, problem: dict[str,Any],
                             edges: Mapping[tuple[int,int],int], position: int) -> bool:
     """Privileged evaluator-only exact semantic-reduction audit, never a mask."""
     if primitive == "constrained_subset":

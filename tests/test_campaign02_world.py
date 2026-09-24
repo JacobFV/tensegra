@@ -128,3 +128,22 @@ def test_address_renaming_changes_only_spelling():
     assert encode_observation(x)==encode_observation(y)
     ax=Action('retrieve',{'handle':x.feedback['return']});ay=Action('retrieve',{'handle':y.feedback['return']})
     assert encode_action(x,ax)==encode_action(y,ay)
+
+
+def test_timeout_incumbent_and_no_remote_assembly():
+    spec=generate_world(10)
+    env=Workshop(spec)
+    env.step(Action('move',{'destination':1}))
+    assert env.step(Action('commit_subset',{'items':list(feasible(spec))})).feedback['reason']=='assembly_requires_workshop'
+    from topoformer.campaign02_world import reduction_matches_world
+    assert not reduction_matches_world(spec,'shortest_path',{'edges':[1]}, {},0)
+
+
+def test_partial_obstacle_charges_completed_edges():
+    spec=replace(generate_world(11),blocked_edge=(1,2))
+    env=Workshop(spec)
+    env.step(Action('commit_subset',{'items':list(feasible(spec))}))
+    before=env.evaluate()['travel_distance']
+    obs=env.step(Action('deliver',{'path':list(range(spec.destination+1))}))
+    assert obs.feedback['status']=='obstacle' and obs.position==1
+    assert env.evaluate()['travel_distance']>before
