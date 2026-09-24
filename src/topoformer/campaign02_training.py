@@ -348,7 +348,7 @@ def main():
     parser.add_argument("--width", type=int, default=1024)
     parser.add_argument("--family", choices=("lightweight", "recurrent"), default="lightweight")
     parser.add_argument("--method", choices=("supervised", "actor_critic"), default="supervised")
-    parser.add_argument("--teacher", choices=("always_tool", "cheap_first", "cheap"), default="always_tool")
+    parser.add_argument("--teacher", choices=("always_tool", "cheap_first", "cheap", "cheap_first_fallback_v2"), default="always_tool")
     parser.add_argument("--executor", choices=("isolated", "persistent"), default="persistent")
     parser.add_argument("--learning-rate", type=float, default=3e-4)
     parser.add_argument("--bptt-steps", type=int, default=8)
@@ -368,7 +368,7 @@ def main():
         parser.error("Nonnegative update/interval and positive evaluation support required")
     from .campaign02_policy import CandidatePolicy, PolicyConfig
     from .campaign02_world import Workshop, generate_world, protocol_executor
-    from .campaign02_references import ReferencePolicy
+    from .campaign02_references import make_reference
     from .campaign02_protocol import BoundedSolver
     torch.set_num_threads(args.threads)
     random.seed(args.seed)
@@ -401,7 +401,7 @@ def main():
         remaining = args.steps
         while remaining:
             count = min(remaining, args.evaluate_every or remaining)
-            timings.append(learner.train_tranche(count, factory, lambda: ReferencePolicy(mode=args.teacher)))
+            timings.append(learner.train_tranche(count, factory, lambda: make_reference(args.teacher)))
             remaining -= count
             if args.evaluate_every:
                 result = learner.evaluate(validation, factory, args.output/f"development-{learner.updates}.jsonl.gz")

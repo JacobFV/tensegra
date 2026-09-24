@@ -386,7 +386,7 @@ def main():
     config = PopulationConfig.from_json(json.loads(args.config.read_text()))
     torch.set_num_threads(config.threads)
     from .campaign02_protocol import BoundedSolver
-    from .campaign02_references import ReferencePolicy
+    from .campaign02_references import make_reference
     from .campaign02_world import Workshop, generate_world, protocol_executor
     with BoundedSolver() as solver:
         executor = partial(protocol_executor, execute_call=solver.execute)
@@ -394,7 +394,7 @@ def main():
             kwargs = config.world_mix[mix_index(seed, len(config.world_mix))]
             return Workshop(generate_world(seed, **kwargs), executor=executor,
                 address_seed=independent_address_seed(seed, config.address_namespace))
-        run = PopulationRun(config, args.output, factory, lambda: ReferencePolicy(mode=config.teacher))
+        run = PopulationRun(config, args.output, factory, lambda: make_reference(config.teacher))
         run.run()
         _atomic_json(args.output / "solver-process-accounting.json", {
             "startup_wall_seconds": solver.startup_wall_seconds,
