@@ -269,6 +269,7 @@ def run(directory, output, repeats):
         aggregate_gates='pending' if not complete else {str(r):d['gates'] for r,d in reports.items()},
         comparisons={},semantic_overlap=overlap_report(overlaps),
         policy='fixed4000 primary; CLEAN-calibration selected secondary retained; all3 independent event populations; no averaging away gate failures')
+    result['supplied_copy_scope']='sole actual runtime return supplied by exact scalar copy, plus learned proposal and acquired oracle decision consumer; no learned selection among multiple returns, multi-return addressing, or learned schedule'
     if complete:
         for key in differences[0]:
             result['comparisons'][key]=bootstrap({r:d[key] for r,d in differences.items()},repeats=repeats)
