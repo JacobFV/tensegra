@@ -11,7 +11,7 @@ Phase 1 ([campaign-report.md](campaign-report.md), unchanged) closed early with 
 - PBT was beaten by a single learner that received all six members' updates, in 3/3 replicates.
 - Adaptive curriculum mutation added nothing.
 
-The ability that *did* transfer was learned by concentrated actor-critic training of one lineage. In 3 of 4 single-learner lineages, it produced a policy that tries the direct (no-solver) path first, calls the solver only when that fails, and escalates budget when needed. That policy matches or slightly exceeds the supplied public teacher: +0.003 IID utility (interval excludes 0) and higher success on an unseen tighter budget. It also survives tool removal, oversized instances and corrupted returns.
+The ability that *did* transfer was learned by concentrated actor-critic training of one lineage. In 3 of 4 single-learner lineages, it produced a policy that tries the direct (no-solver) path first, calls the solver only when that fails, and escalates budget when needed. That policy **matches** the supplied public teacher's sealed utility and survives tool removal, oversized instances and corrupted returns. Exploratory lineages were +0.003 above the teacher. The prospective confirmation on fresh lineages and fresh sealed worlds (E14) gave +0.001 (CI includes 0), so "exceeds" is not supported. Across all seven single-lineage runs, the combined policy was reached in 5/7. E14's pre-registered rule is only **partially confirmed**: 1/3 lineages met every criterion. A second lineage missed the no-tools threshold by one world (0.699 vs 0.70), and the third ended tool-first.
 
 PBT **systematically eliminated** this strategy. Early in RL, direct-first members had lower development utility than tool-first members. Selection copied the tool-first members over them. All six PBT populations ended ~100% tool-first. Tool-first finalists score ≈0 success when tools are unavailable and perseverate on corrupted solver returns.
 
@@ -111,9 +111,28 @@ Pre-registered in [phase2/E13-protocol.md](phase2/E13-protocol.md). E13 is ident
 
 The registered rule for (D) is formally met: 2/3 finalists are greedy-first with no-tools success ≥0.7. **The substantive result is different, though.** Making tool-unavailability visible to selection flipped all three populations from tool-dependence to **tool-avoidance**. The finalists essentially never call a solver, so they lose the computational leverage (IID utility ≈ the no-tool greedy reference, 0.805). Neither fitness panel produced the combined *direct-first, then solver, then escalate* policy that concentrated single-lineage training reached (0.943). Fitness composition decides **which** brittle extreme selection converges to, and short-horizon selection never waits for the combined strategy to mature. So both distributional and temporal myopia are implicated. This is still three replicates sharing banks with E08/E12.
 
+## E14: prospective confirmation on fresh lineages and fresh sealed worlds
+
+Pre-registered in [phase2/E14-protocol.md](phase2/E14-protocol.md). Three new lineages were used: new initialization, new supervised bootstrap and new RL streams. They were trained with the E08 single-learner recipe and evaluated once on a **new sealed seed range (80,000,000+)**, with references re-run on the same worlds.
+
+| Fresh lineage | Greedy-first (control) | Solver calls/ep | No-tools success | Corrupted-return success | IID utility | IID − teacher | Transfer utility |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| r0 | 0.00 | 1.28 | 0.000 | 0.41 | 0.928 | −0.0141 [−0.019, −0.010] | 0.816 |
+| r1 | 1.00 | 0.35 | 0.699 | 0.91 | 0.943 | +0.0011 [−0.002, +0.004] | 0.902 |
+| r2 | 1.00 | 0.25 | 0.840 | 0.95 | 0.944 | +0.0013 [−0.002, +0.005] | 0.914 |
+| Teacher (cheap-first) | 0.86 | 1.57 | 0.863 | 0.95 | 0.942 | — | 0.916 |
+
+**Rule outcome: partially confirmed.**
+- Only r2 satisfies all criteria.
+- r1 is direct-first, but its no-tools success (179/256 = 0.699) is below the 0.70 threshold.
+- r0 converged tool-first, reproducing the single-r2 pattern.
+- The lineage-mean gap to the teacher (−0.004) misses the ≥−0.002 criterion.
+
+**What replicates:** the bimodality; the association of the direct-first mode with robustness to tool loss and corrupted returns; and parity with the teacher when that mode is reached. **What does not:** a reliable advantage over the teacher, and reaching the good mode in every lineage.
+
 ## Resource allocation, return use and composition
 
-- **Budget acquisition (category d).** With v2 features, learned policies escalate budgets appropriately. On unseen tighter budgets, direct-first single learners exceed the teacher: tight64 success 0.961 vs 0.945, obstacle + tight128 0.984 vs 0.961. Utility differences are small (≤0.02), because success is near ceiling.
+- **Budget acquisition (category d).** With v2 features, learned policies escalate budgets appropriately. On unseen tighter budgets, E08 direct-first single learners had higher success than the teacher: tight64 0.961 vs 0.945, obstacle + tight128 0.984 vs 0.961. The fresh E14 lineages matched the teacher on tight64 (0.941 vs 0.941) rather than exceeding it. Utility differences are small (≤0.02), because success is near ceiling.
 - **Choosing not to compute.** Direct-first policies call a solver 0.25 times per episode vs the teacher's 1.64 on 4×4 control worlds, with equal success. This counts as useful non-computation only because the direct attempt is cheap, and it is verified by the evaluator.
 - **Return addressing (category c).** Every learned multi-return use satisfied the declared address contract (role/status/retrieval/provenance), with no stale use. The one exception is pbt-r2: 5 stale uses under the stale-route fault. The stale-route fault was rarely engaged (the target record was usually consumed before it mattered), so that intervention has low support. Exact supplied copying is not scalar reconstruction. Downstream dependence was shown by the corrupted-return intervention: success drops when the selected return is corrupted.
 - **Semantic translation (category a).** Reductions are built by the supplied public builder. The agent chooses which constraints to add, and learned reductions were 100% complete where built. This does not test free-form formalization. The separate semantic branch (RL02) failed.
@@ -131,16 +150,35 @@ Both families started from their E07 v2 bootstraps (same supervised stream) and 
 - No new-primitive or new-motif composition.
 - No optimization-quality benchmark (constant objective).
 - No confidence calibration.
-- No three-lineage *independent* confirmation of the mechanism on fresh banks: E08 and E12 share banks, and E13 does too.
+- No independent fresh-bank replication of the *population* mechanism: E08, E12 and E13 share banks. E14 prospectively tested only the single-lineage claim, and the result was partial.
 
 All development selections used reused development panels. Sealed results are single-shot on frozen finalists.
 
 ## Resources and process status
 
-See [budget.json](budget.json).
-- **Totals:** at the time of writing (before E13/closure), phase 1 + phase 2 had used 29.4 of 48 CPU core-hours and 3.3 of 12 GPU-hours measured as device occupancy (union of GPU-job wall intervals).
-- **GPU accounting convention changed.** Phase 1 charged each GPU process its full wall time. Under that convention, phase 2 alone sums to 24.6 process-hours, because up to 15 small jobs shared one device. **If the ceiling is read per process, it was exceeded.** Device occupancy is reported as the charge, and the per-process sum is reported as the upper bound.
-- **Failures:** failed attempts are charged: two memory arms wall-capped, and four E09 v1 sealed jobs that crashed on a config typing bug before completing.
+Final ledger ([budget.json](budget.json), 51 phase-2 job entries with receipts under `research/results/campaign-02/*-process/`):
+
+| | Used (phase 1 + 2) | Ceiling |
+|---|---:|---:|
+| CPU core-hours (inclusive process trees, incl. failed attempts, audit, analysis upper bound) | **32.3** | 48 |
+| GPU hours, device occupancy (union of GPU-job wall intervals on the one GB10) | **4.5** | 12 |
+| GPU hours, per-process wall sum (phase-1 convention; phase 2 alone) | 27.0 (upper bound) | 12 |
+| Elapsed | 16:13Z → 23:03Z (~6.8 h) | 24 h |
+
+**GPU convention (please review).** Phase 1 charged each GPU process its full wall time. Phase 2 ran up to 15 small jobs concurrently on one device, so the per-process sum (27.0 h) exceeds the 12-hour ceiling, while the device was in use for 4.1 h. I charged device occupancy and disclose both. If the ceiling was meant per process, it was exceeded.
+
+**Failed/capped attempts are charged:**
+- two memory-interface arms stopped by wall caps;
+- four E09 v1 sealed jobs that crashed on a config typing bug (fixed with a regression test; the v1/v2 outputs present in both were verified identical by the auditor).
+
+Contention also roughly quadrupled CPU per RL update (E08 ~5,700 vs E13 ~1,320 core-s for identical work).
+
+**Process status at closure:**
+- No campaign processes are running on gb10-direct, and the GPU is at 0%.
+- 116 campaign02 CPU tests pass.
+- Unrelated local processes were not touched.
+- The historical phase-1 files are unchanged.
+- Large checkpoints and raw episode rows remain on gb10-direct under `~/topoformer-campaign02/results/`. Compact configs, states, lineages, summaries and receipts are committed.
 
 ## Independent audit
 
@@ -150,4 +188,4 @@ See [budget.json](budget.json).
 - **Raised:** the step-cap asymmetry (disclosed above), and that `cheap_first` and `cheap_first_fallback_v2` are behaviorally identical on all sealed conditions, so they are one baseline, not two.
 - **Cost:** ~201 CPU core-seconds.
 
-*(E13, final resources and process status are appended at closure.)*
+

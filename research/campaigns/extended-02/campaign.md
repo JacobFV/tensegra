@@ -1,5 +1,7 @@
-# Extended-02: closed at user request
+# Extended-02
 
-Baseline `65d44ae6`; branch `campaign/extended-02`. Root coordinated the shared GPU. Campaign began 2026-09-24T16:13:17Z and closed early on the same day at the user’s credit-conservation request, not a resource ceiling or completed research agenda.
+Baseline `65d44ae6`; branch `campaign/extended-02`. The campaign began 2026-09-24T16:13:17Z.
+- **Phase 1** closed early at the user's credit-conservation request: [campaign-report.md](campaign-report.md), [claim-map.md](claim-map.md). It is unchanged.
+- **Phase 2** resumed by user instruction at ~18:30Z and closed ~23:05Z at an evidential boundary (not a resource ceiling): [campaign-report-phase2.md](campaign-report-phase2.md), [claim-map-phase2.md](claim-map-phase2.md), [independent audit](review/phase2-independent-audit.md).
 
-See [final report](campaign-report.md), [claim map](claim-map.md), [budget](budget.json), and [handoff](handoff.md). Completed protocols/results remain intact. No new training is queued; deferred work is explicitly recorded. Historical campaign and stage files were not modified.
+State: [budget.json](budget.json), [decisions.md](decisions.md), [experiment_registry.json](experiment_registry.json), [population_lineage.json](population_lineage.json), [environment_archive.json](environment_archive.json), [queue.json](queue.json), [handoff.md](handoff.md).
