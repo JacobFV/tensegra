@@ -113,3 +113,6 @@ S15 mixed completed484.141407571s, archived6c602eb5→c02da9cf, GPU idle verifie
 
 ## 2026-09-24 09:30 UTC
 S16-main is sole released GPU job, cap480, immutable1683e657/frozenSHA1e95311a..., reviewerab1efcf8→dc662969cleared. Workercomposition_live runsall6x1024 exactrecipe; noextension. Profile25.28chargedandarchived. S15allgatesfailed/audited; localization455/512newshape failuresedgesonly. S17fixedendpointsactualTRAIN128calibration prepared dccdb661 plusguards926b68eb, profiling90proposed notallocated; timings/CPUguardsreview underway. Noautonomouscompositionnewwork. Integrated154a5de1CPU735tests26subtests,3953historicalentriesunchanged. Pushed2371a0a3 after transientDNSretry; newerrootcommitsneedpush.
+
+## 2026-09-24T09:45:25.184378+00:00
+S17-main soleGPUrelease300cap, source30d69150/config95d7962b/isolateds17-main-source-v1. Reviewerprofile020736f3→46a9f566 plusfreezeclearance. Profile25.66charged. S16all6finished114.74charged, independentrawaudit140e0f3b→50225f62passed; normalizedcaldecay48/103/120vs66/131/139, suppliedinvariance notaccuracygain. S18CPUactor/mechanicalprep composition_live, noGPUallocation, plan77d2075d; strongercontextpath pluscomputecontrol conditionalonS17. Rootqueuesoleauthority.
