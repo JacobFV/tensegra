@@ -1,0 +1,5145 @@
+{
+  "results": [
+    {
+      "condition": "easy",
+      "arm": "lightweight",
+      "success_count": 512,
+      "mean_cost": 0.028502949218749973,
+      "mean_utility": 0.9714970507812491,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1536,
+        "action/build_route": 512,
+        "action/call": 1024,
+        "action/inspect": 2560,
+        "action/retrieve": 1024,
+        "action/start_subset": 512,
+        "action/use_return": 1024,
+        "action/verify": 512,
+        "certificate_valid_reductions": 1024,
+        "correct_reductions": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "multiple_return_use_attempts": 512,
+        "reductions": 1024,
+        "return_address_contract_valid": 1024,
+        "return_application_success": 1024,
+        "return_use_attempts": 1024,
+        "stale_return_use": 0,
+        "status/success": 8704
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "easy",
+      "arm": "recurrent",
+      "success_count": 512,
+      "mean_cost": 0.028502949218749973,
+      "mean_utility": 0.9714970507812491,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1536,
+        "action/build_route": 512,
+        "action/call": 1024,
+        "action/inspect": 2560,
+        "action/retrieve": 1024,
+        "action/start_subset": 512,
+        "action/use_return": 1024,
+        "action/verify": 512,
+        "certificate_valid_reductions": 1024,
+        "correct_reductions": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "multiple_return_use_attempts": 512,
+        "reductions": 1024,
+        "return_address_contract_valid": 1024,
+        "return_application_success": 1024,
+        "return_use_attempts": 1024,
+        "stale_return_use": 0,
+        "status/success": 8704
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "easy",
+      "arm": "reference-cheap",
+      "success_count": 452,
+      "mean_cost": 0.02313867187499998,
+      "mean_utility": 0.8596738281250009,
+      "truncated": 0,
+      "counts": {
+        "action/choose_item": 904,
+        "action/commit_pending": 452,
+        "action/inspect": 2500,
+        "action/move": 1481,
+        "action/verify": 452,
+        "certificate_valid_reductions": 0,
+        "correct_reductions": 0,
+        "reductions": 0,
+        "status/success": 5789,
+        "action/abstain": 60,
+        "status/unknown": 60
+      },
+      "failure_endings": {
+        "('abstain', 'unknown', None)": 60
+      },
+      "failure_last_six": {
+        "inspect -> inspect -> inspect -> inspect -> abstain": 60
+      },
+      "failure_actions": {
+        "inspect": 240,
+        "abstain": 60
+      },
+      "failure_examples": [
+        {
+          "seed": 26000012,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i681184"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r5acd9aa00160ffca",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i633396"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r6b119e3869c2ea03",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i333690"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rab62792e79b44d3a",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i203570"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r9ebc3852b7bce5a4",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 5,
+          "work": 0,
+          "reductions": []
+        },
+        {
+          "seed": 26000023,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i336546"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r7df494fd13d26824",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i454218"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rd7275e3d1199c891",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i409377"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r4bb05d73058b9b89",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i873547"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rd89ba477c06d2cf7",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 5,
+          "work": 0,
+          "reductions": []
+        }
+      ]
+    },
+    {
+      "condition": "easy",
+      "arm": "reference-always_tool",
+      "success_count": 512,
+      "mean_cost": 0.028502949218749973,
+      "mean_utility": 0.9714970507812491,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1536,
+        "action/build_route": 512,
+        "action/call": 1024,
+        "action/inspect": 2560,
+        "action/retrieve": 1024,
+        "action/start_subset": 512,
+        "action/use_return": 1024,
+        "action/verify": 512,
+        "certificate_valid_reductions": 1024,
+        "correct_reductions": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "multiple_return_use_attempts": 512,
+        "reductions": 1024,
+        "return_address_contract_valid": 1024,
+        "return_application_success": 1024,
+        "return_use_attempts": 1024,
+        "stale_return_use": 0,
+        "status/success": 8704
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "easy",
+      "arm": "reference-cheap_first",
+      "success_count": 512,
+      "mean_cost": 0.024633984375000008,
+      "mean_utility": 0.9753660156250005,
+      "truncated": 0,
+      "counts": {
+        "action/build_route": 326,
+        "action/call": 530,
+        "action/choose_item": 904,
+        "action/commit_pending": 452,
+        "action/inspect": 2560,
+        "action/retrieve": 386,
+        "action/use_return": 386,
+        "action/verify": 512,
+        "certificate_valid_reductions": 386,
+        "correct_reductions": 530,
+        "multiple_return_address_contract_valid": 166,
+        "multiple_return_use_attempts": 166,
+        "reductions": 530,
+        "return_address_contract_valid": 386,
+        "return_application_success": 386,
+        "return_use_attempts": 386,
+        "stale_return_use": 0,
+        "status/success": 6567,
+        "action/move": 415,
+        "status/timeout": 144,
+        "action/add_constraint": 180,
+        "action/start_subset": 60
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "medium",
+      "arm": "lightweight",
+      "success_count": 512,
+      "mean_cost": 0.03903742187500001,
+      "mean_utility": 0.9609625781250003,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1536,
+        "action/build_route": 512,
+        "action/call": 1024,
+        "action/inspect": 5120,
+        "action/retrieve": 1024,
+        "action/start_subset": 512,
+        "action/use_return": 1024,
+        "action/verify": 512,
+        "certificate_valid_reductions": 1024,
+        "correct_reductions": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "multiple_return_use_attempts": 512,
+        "reductions": 1024,
+        "return_address_contract_valid": 1024,
+        "return_application_success": 1024,
+        "return_use_attempts": 1024,
+        "stale_return_use": 0,
+        "status/success": 11264
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "medium",
+      "arm": "recurrent",
+      "success_count": 0,
+      "mean_cost": 0.05722886718749963,
+      "mean_utility": -0.05722886718749963,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1024,
+        "action/call": 1302,
+        "action/inspect": 4608,
+        "action/retrieve": 1227,
+        "action/start_subset": 512,
+        "action/verify": 15903,
+        "certificate_valid_reductions": 460,
+        "correct_reductions": 0,
+        "reductions": 1302,
+        "status/incomplete": 15903,
+        "status/success": 7831,
+        "status/infeasible": 842
+      },
+      "failure_endings": {
+        "('verify', 'incomplete', None)": 512
+      },
+      "failure_last_six": {
+        "verify -> verify -> verify -> verify -> verify -> verify": 512
+      },
+      "failure_actions": {
+        "inspect": 4608,
+        "start_subset": 512,
+        "add_constraint": 1024,
+        "call": 1302,
+        "retrieve": 1227,
+        "verify": 15903
+      },
+      "failure_examples": [
+        {
+          "seed": 26010000,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            }
+          ],
+          "steps": 48,
+          "work": 9,
+          "reductions": [
+            {
+              "certificate_valid": true,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            }
+          ]
+        },
+        {
+          "seed": 26010001,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            }
+          ],
+          "steps": 48,
+          "work": 9,
+          "reductions": [
+            {
+              "certificate_valid": true,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "medium",
+      "arm": "reference-cheap",
+      "success_count": 434,
+      "mean_cost": 0.03544921875000001,
+      "mean_utility": 0.8122070312499993,
+      "truncated": 0,
+      "counts": {
+        "action/abstain": 78,
+        "action/inspect": 5042,
+        "certificate_valid_reductions": 0,
+        "correct_reductions": 0,
+        "reductions": 0,
+        "status/success": 8961,
+        "status/unknown": 78,
+        "action/choose_item": 1302,
+        "action/commit_pending": 434,
+        "action/move": 1749,
+        "action/verify": 434
+      },
+      "failure_endings": {
+        "('abstain', 'unknown', None)": 78
+      },
+      "failure_last_six": {
+        "inspect -> inspect -> inspect -> inspect -> inspect -> abstain": 78
+      },
+      "failure_actions": {
+        "inspect": 702,
+        "abstain": 78
+      },
+      "failure_examples": [
+        {
+          "seed": 26010000,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i133837"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "refdb99422adcdb45",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i744922"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rffaea85f250def94",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i999564"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rb31f368452088535",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i426674"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r9c40f59e6ac17f10",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i599708"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r02c2365f83b4a252",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 10,
+          "work": 0,
+          "reductions": []
+        },
+        {
+          "seed": 26010004,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i777561"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "re9c7bd5d238aeaa4",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i233438"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r59979e3e26c78a06",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i203959"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r7085ddd52dfb431a",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i690453"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r5d910c3ffd72f1f6",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i654512"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "re2cbc5135adbb31e",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 10,
+          "work": 0,
+          "reductions": []
+        }
+      ]
+    },
+    {
+      "condition": "medium",
+      "arm": "reference-always_tool",
+      "success_count": 512,
+      "mean_cost": 0.03903742187500001,
+      "mean_utility": 0.9609625781250003,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1536,
+        "action/build_route": 512,
+        "action/call": 1024,
+        "action/inspect": 5120,
+        "action/retrieve": 1024,
+        "action/start_subset": 512,
+        "action/use_return": 1024,
+        "action/verify": 512,
+        "certificate_valid_reductions": 1024,
+        "correct_reductions": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "multiple_return_use_attempts": 512,
+        "reductions": 1024,
+        "return_address_contract_valid": 1024,
+        "return_application_success": 1024,
+        "return_use_attempts": 1024,
+        "stale_return_use": 0,
+        "status/success": 11264
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "medium",
+      "arm": "reference-cheap_first",
+      "success_count": 512,
+      "mean_cost": 0.03641181640625002,
+      "mean_utility": 0.9635881835937494,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 234,
+        "action/call": 758,
+        "action/inspect": 5120,
+        "action/move": 382,
+        "action/retrieve": 417,
+        "action/start_subset": 78,
+        "action/use_return": 417,
+        "action/verify": 512,
+        "certificate_valid_reductions": 417,
+        "correct_reductions": 758,
+        "multiple_return_address_contract_valid": 342,
+        "multiple_return_use_attempts": 342,
+        "reductions": 758,
+        "return_address_contract_valid": 417,
+        "return_application_success": 417,
+        "return_use_attempts": 417,
+        "stale_return_use": 0,
+        "status/success": 9589,
+        "status/timeout": 404,
+        "action/choose_item": 1302,
+        "action/commit_pending": 434,
+        "action/build_route": 339
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "hard_feasible",
+      "arm": "lightweight",
+      "success_count": 512,
+      "mean_cost": 0.055447656250000046,
+      "mean_utility": 0.9445523437500007,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1536,
+        "action/build_route": 512,
+        "action/call": 1024,
+        "action/inspect": 8704,
+        "action/retrieve": 1024,
+        "action/start_subset": 512,
+        "action/use_return": 1024,
+        "action/verify": 512,
+        "certificate_valid_reductions": 1024,
+        "correct_reductions": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "multiple_return_use_attempts": 512,
+        "reductions": 1024,
+        "return_address_contract_valid": 1024,
+        "return_application_success": 1024,
+        "return_use_attempts": 1024,
+        "stale_return_use": 0,
+        "status/success": 14848
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "hard_feasible",
+      "arm": "recurrent",
+      "success_count": 0,
+      "mean_cost": 0.06400000000000004,
+      "mean_utility": -0.06400000000000004,
+      "truncated": 0,
+      "counts": {
+        "action/inspect": 8192,
+        "action/verify": 16384,
+        "certificate_valid_reductions": 0,
+        "correct_reductions": 0,
+        "reductions": 0,
+        "status/incomplete": 16384,
+        "status/success": 8192
+      },
+      "failure_endings": {
+        "('verify', 'incomplete', None)": 512
+      },
+      "failure_last_six": {
+        "verify -> verify -> verify -> verify -> verify -> verify": 512
+      },
+      "failure_actions": {
+        "inspect": 8192,
+        "verify": 16384
+      },
+      "failure_examples": [
+        {
+          "seed": 26020000,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 48,
+          "work": 0,
+          "reductions": []
+        },
+        {
+          "seed": 26020001,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 48,
+          "work": 0,
+          "reductions": []
+        }
+      ]
+    },
+    {
+      "condition": "hard_feasible",
+      "arm": "reference-cheap",
+      "success_count": 445,
+      "mean_cost": 0.05187890625000001,
+      "mean_utility": 0.8172617187499994,
+      "truncated": 0,
+      "counts": {
+        "action/choose_item": 1780,
+        "action/commit_pending": 445,
+        "action/inspect": 8637,
+        "action/move": 2020,
+        "action/verify": 445,
+        "certificate_valid_reductions": 0,
+        "correct_reductions": 0,
+        "reductions": 0,
+        "status/success": 13327,
+        "action/abstain": 67,
+        "status/unknown": 67
+      },
+      "failure_endings": {
+        "('abstain', 'unknown', None)": 67
+      },
+      "failure_last_six": {
+        "inspect -> inspect -> inspect -> inspect -> inspect -> abstain": 67
+      },
+      "failure_actions": {
+        "inspect": 1072,
+        "abstain": 67
+      },
+      "failure_examples": [
+        {
+          "seed": 26020002,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i432993"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rb622320056c05cea",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i735307"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r14a77f46fd7e5e63",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i799176"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rf8630e04f4a3b54f",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i375606"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r2f80006e8a56d23c",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i409082"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rac6e0fc04c774832",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 17,
+          "work": 0,
+          "reductions": []
+        },
+        {
+          "seed": 26020003,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i266334"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rd78519645fdff4b3",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i43441"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rf8e4ef23e36702b4",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i723697"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rc7ae8da762822cfe",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i199397"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rcfc78cec129bb4b3",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i676116"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r15add1d98d001f13",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 17,
+          "work": 0,
+          "reductions": []
+        }
+      ]
+    },
+    {
+      "condition": "hard_feasible",
+      "arm": "reference-always_tool",
+      "success_count": 512,
+      "mean_cost": 0.055447656250000046,
+      "mean_utility": 0.9445523437500007,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1536,
+        "action/build_route": 512,
+        "action/call": 1024,
+        "action/inspect": 8704,
+        "action/retrieve": 1024,
+        "action/start_subset": 512,
+        "action/use_return": 1024,
+        "action/verify": 512,
+        "certificate_valid_reductions": 1024,
+        "correct_reductions": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "multiple_return_use_attempts": 512,
+        "reductions": 1024,
+        "return_address_contract_valid": 1024,
+        "return_application_success": 1024,
+        "return_use_attempts": 1024,
+        "stale_return_use": 0,
+        "status/success": 14848
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "hard_feasible",
+      "arm": "reference-cheap_first",
+      "success_count": 512,
+      "mean_cost": 0.05173736328125002,
+      "mean_utility": 0.9482626367187504,
+      "truncated": 0,
+      "counts": {
+        "action/choose_item": 1780,
+        "action/commit_pending": 445,
+        "action/inspect": 8704,
+        "action/move": 332,
+        "action/verify": 512,
+        "certificate_valid_reductions": 433,
+        "correct_reductions": 852,
+        "reductions": 852,
+        "status/success": 13647,
+        "action/build_route": 366,
+        "action/call": 852,
+        "action/retrieve": 433,
+        "action/use_return": 433,
+        "multiple_return_address_contract_valid": 411,
+        "multiple_return_use_attempts": 411,
+        "return_address_contract_valid": 433,
+        "return_application_success": 433,
+        "return_use_attempts": 433,
+        "stale_return_use": 0,
+        "status/timeout": 478,
+        "action/add_constraint": 201,
+        "action/start_subset": 67
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "work_tight",
+      "arm": "lightweight",
+      "success_count": 0,
+      "mean_cost": 0.06624679687499968,
+      "mean_utility": -0.06624679687499968,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1995,
+        "action/build_route": 11880,
+        "action/call": 512,
+        "action/inspect": 8687,
+        "action/retrieve": 495,
+        "action/start_subset": 512,
+        "action/use_return": 495,
+        "certificate_valid_reductions": 495,
+        "correct_reductions": 512,
+        "multiple_return_address_contract_valid": 0,
+        "multiple_return_use_attempts": 0,
+        "reductions": 512,
+        "return_address_contract_valid": 495,
+        "return_application_success": 495,
+        "return_use_attempts": 495,
+        "stale_return_use": 0,
+        "status/success": 24064,
+        "status/timeout": 512
+      },
+      "failure_endings": {
+        "('build_route', 'success', None)": 495,
+        "('add_constraint', 'success', None)": 17
+      },
+      "failure_last_six": {
+        "build_route -> build_route -> build_route -> build_route -> build_route -> build_route": 495,
+        "add_constraint -> add_constraint -> add_constraint -> add_constraint -> add_constraint -> add_constraint": 17
+      },
+      "failure_actions": {
+        "inspect": 8687,
+        "start_subset": 512,
+        "add_constraint": 1995,
+        "call": 512,
+        "retrieve": 495,
+        "use_return": 495,
+        "build_route": 11880
+      },
+      "failure_examples": [
+        {
+          "seed": 26030000,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_19",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_19",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_20",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_20",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_21",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_21",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_22",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_22",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_23",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_23",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_24",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_24",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            }
+          ],
+          "steps": 48,
+          "work": 128,
+          "reductions": [
+            {
+              "certificate_valid": true,
+              "correct": true,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 128
+            }
+          ]
+        },
+        {
+          "seed": 26030001,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_19",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_19",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_20",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_20",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_21",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_21",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_22",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_22",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_23",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_23",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_24",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_24",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            }
+          ],
+          "steps": 48,
+          "work": 128,
+          "reductions": [
+            {
+              "certificate_valid": true,
+              "correct": true,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 128
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "work_tight",
+      "arm": "recurrent",
+      "success_count": 0,
+      "mean_cost": 0.06400000000000004,
+      "mean_utility": -0.06400000000000004,
+      "truncated": 0,
+      "counts": {
+        "action/inspect": 8192,
+        "action/verify": 16384,
+        "certificate_valid_reductions": 0,
+        "correct_reductions": 0,
+        "reductions": 0,
+        "status/incomplete": 16384,
+        "status/success": 8192
+      },
+      "failure_endings": {
+        "('verify', 'incomplete', None)": 512
+      },
+      "failure_last_six": {
+        "verify -> verify -> verify -> verify -> verify -> verify": 512
+      },
+      "failure_actions": {
+        "inspect": 8192,
+        "verify": 16384
+      },
+      "failure_examples": [
+        {
+          "seed": 26030000,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 48,
+          "work": 0,
+          "reductions": []
+        },
+        {
+          "seed": 26030001,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 48,
+          "work": 0,
+          "reductions": []
+        }
+      ]
+    },
+    {
+      "condition": "work_tight",
+      "arm": "reference-cheap",
+      "success_count": 422,
+      "mean_cost": 0.050419921875000086,
+      "mean_utility": 0.7737988281249991,
+      "truncated": 0,
+      "counts": {
+        "action/choose_item": 1688,
+        "action/commit_pending": 422,
+        "action/inspect": 8614,
+        "action/move": 1823,
+        "action/verify": 422,
+        "certificate_valid_reductions": 0,
+        "correct_reductions": 0,
+        "reductions": 0,
+        "status/success": 12969,
+        "action/abstain": 90,
+        "status/unknown": 90
+      },
+      "failure_endings": {
+        "('abstain', 'unknown', None)": 90
+      },
+      "failure_last_six": {
+        "inspect -> inspect -> inspect -> inspect -> inspect -> abstain": 90
+      },
+      "failure_actions": {
+        "inspect": 1440,
+        "abstain": 90
+      },
+      "failure_examples": [
+        {
+          "seed": 26030001,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i812293"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rdc5cfd258582a985",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i327266"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r3b29c7421ced5603",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i458525"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r343a5caee14815b1",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i715264"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "re304dbfb5c61b521",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i716791"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r84e273f3a4b21cd4",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 17,
+          "work": 0,
+          "reductions": []
+        },
+        {
+          "seed": 26030006,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i101693"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rd8beb6632a4e709a",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i872203"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rd8bcfcccf29214d0",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i562810"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r98d53aa6ef2f796c",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i214948"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r37c7722b3336ea96",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i398207"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rf30ee27c33fbc3f2",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 17,
+          "work": 0,
+          "reductions": []
+        }
+      ]
+    },
+    {
+      "condition": "work_tight",
+      "arm": "reference-always_tool",
+      "success_count": 0,
+      "mean_cost": 0.044113984375000304,
+      "mean_utility": -0.044113984375000304,
+      "truncated": 0,
+      "counts": {
+        "action/abstain": 512,
+        "action/add_constraint": 1536,
+        "action/build_route": 495,
+        "action/call": 512,
+        "action/inspect": 8687,
+        "action/retrieve": 495,
+        "action/start_subset": 512,
+        "action/use_return": 495,
+        "certificate_valid_reductions": 495,
+        "correct_reductions": 512,
+        "multiple_return_address_contract_valid": 0,
+        "multiple_return_use_attempts": 0,
+        "reductions": 512,
+        "return_address_contract_valid": 495,
+        "return_application_success": 495,
+        "return_use_attempts": 495,
+        "stale_return_use": 0,
+        "status/success": 12220,
+        "status/timeout": 512,
+        "status/unknown": 512
+      },
+      "failure_endings": {
+        "('abstain', 'unknown', None)": 512
+      },
+      "failure_last_six": {
+        "call -> retrieve -> use_return -> inspect -> build_route -> abstain": 495,
+        "start_subset -> add_constraint -> add_constraint -> add_constraint -> call -> abstain": 17
+      },
+      "failure_actions": {
+        "inspect": 8687,
+        "start_subset": 512,
+        "add_constraint": 1536,
+        "call": 512,
+        "retrieve": 495,
+        "use_return": 495,
+        "build_route": 495,
+        "abstain": 512
+      },
+      "failure_examples": [
+        {
+          "seed": 26030000,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "budget": 128,
+                  "problem": "problem_0"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "return": "r7301080b7f48ea20",
+                "status": "timeout"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "handle": "r7301080b7f48ea20"
+                },
+                "kind": "retrieve"
+              },
+              "feedback": {
+                "record": {
+                  "budget": 128,
+                  "call_position": 0,
+                  "certificate_valid": true,
+                  "feasible_incumbent": true,
+                  "handle": "r7301080b7f48ea20",
+                  "kind": "computation",
+                  "payload": [
+                    [
+                      3,
+                      12,
+                      2,
+                      13
+                    ],
+                    4,
+                    16,
+                    22
+                  ],
+                  "primitive": "constrained_subset",
+                  "problem": "problem_0",
+                  "problem_snapshot": {
+                    "primitive": "constrained_subset",
+                    "problem": {
+                      "capacity": 16,
+                      "constraints": [
+                        "capacity",
+                        "funds",
+                        "incompatibility"
+                      ],
+                      "forbidden_pairs": [
+                        [
+                          0,
+                          14
+                        ],
+                        [
+                          1,
+                          2
+                        ],
+                        [
+                          1,
+                          4
+                        ],
+                        [
+                          2,
+                          4
+                        ],
+                        [
+                          3,
+                          8
+                        ],
+                        [
+                          3,
+                          9
+                        ],
+                        [
+                          3,
+                          10
+                        ],
+                        [
+                          3,
+                          14
+                        ],
+                        [
+                          5,
+                          9
+                        ],
+                        [
+                          5,
+                          14
+                        ],
+                        [
+                          6,
+                          10
+                        ],
+                        [
+                          6,
+                          15
+                        ],
+                        [
+                          7,
+                          15
+                        ],
+                        [
+                          8,
+                          9
+                        ],
+                        [
+                          8,
+                          11
+                        ],
+                        [
+                          8,
+                          15
+                        ],
+                        [
+                          10,
+                          11
+                        ]
+                      ],
+                      "handles": [
+                        "i835667",
+                        "i872845",
+                        "i819711",
+                        "i156709",
+                        "i811061",
+                        "i16080",
+                        "i930676",
+                        "i631358",
+                        "i259826",
+                        "i47151",
+                        "i138074",
+                        "i154196",
+                        "i169343",
+                        "i907795",
+                        "i265876",
+                        "i385461"
+                      ],
+                      "items": [
+                        [
+                          3,
+                          5,
+                          9,
+                          1
+                        ],
+                        [
+                          3,
+                          1,
+                          6,
+                          1
+                        ],
+                        [
+                          2,
+                          2,
+                          8,
+                          1
+                        ],
+                        [
+                          0,
+                          4,
+                          5,
+                          1
+                        ],
+                        [
+                          0,
+                          6,
+                          4,
+                          1
+                        ],
+                        [
+                          2,
+                          4,
+                          9,
+                          1
+                        ],
+                        [
+                          0,
+                          6,
+                          4,
+                          1
+                        ],
+                        [
+                          1,
+                          4,
+                          7,
+                          1
+                        ],
+                        [
+                          1,
+                          5,
+                          7,
+                          1
+                        ],
+                        [
+                          3,
+                          2,
+                          4,
+                          1
+                        ],
+                        [
+                          2,
+                          5,
+                          7,
+                          1
+                        ],
+                        [
+                          0,
+                          2,
+                          5,
+                          1
+                        ],
+                        [
+                          1,
+                          4,
+                          4,
+                          1
+                        ],
+                        [
+                          3,
+                          6,
+                          5,
+                          1
+                        ],
+                        [
+                          1,
+                          5,
+                          6,
+                          1
+                        ],
+                        [
+                          2,
+                          2,
+                          2,
+                          1
+                        ]
+                      ],
+                      "max_cost": 24
+                    },
+                    "state_version": 0
+                  },
+                  "state_version": 0,
+                  "status": "timeout",
+                  "work_units": 128
+                },
+                "stale": false,
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "as": "subset",
+                  "handle": "r7301080b7f48ea20"
+                },
+                "kind": "use_return"
+              },
+              "feedback": {
+                "selected": [
+                  "i156709",
+                  "i169343",
+                  "i819711",
+                  "i907795"
+                ],
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "map"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "raf2e4303e0ef6f49",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_1",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_1",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 128
+            }
+          ],
+          "steps": 26,
+          "work": 128,
+          "reductions": [
+            {
+              "certificate_valid": true,
+              "correct": true,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 128
+            }
+          ]
+        },
+        {
+          "seed": 26030001,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "budget": 128,
+                  "problem": "problem_0"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "return": "rdb729794c8e29b62",
+                "status": "timeout"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "handle": "rdb729794c8e29b62"
+                },
+                "kind": "retrieve"
+              },
+              "feedback": {
+                "record": {
+                  "budget": 128,
+                  "call_position": 0,
+                  "certificate_valid": true,
+                  "feasible_incumbent": true,
+                  "handle": "rdb729794c8e29b62",
+                  "kind": "computation",
+                  "payload": [
+                    [
+                      5,
+                      0,
+                      11,
+                      1
+                    ],
+                    4,
+                    21,
+                    22
+                  ],
+                  "primitive": "constrained_subset",
+                  "problem": "problem_0",
+                  "problem_snapshot": {
+                    "primitive": "constrained_subset",
+                    "problem": {
+                      "capacity": 23,
+                      "constraints": [
+                        "capacity",
+                        "funds",
+                        "incompatibility"
+                      ],
+                      "forbidden_pairs": [
+                        [
+                          1,
+                          9
+                        ],
+                        [
+                          2,
+                          5
+                        ],
+                        [
+                          2,
+                          12
+                        ],
+                        [
+                          2,
+                          14
+                        ],
+                        [
+                          2,
+                          15
+                        ],
+                        [
+                          3,
+                          4
+                        ],
+                        [
+                          3,
+                          9
+                        ],
+                        [
+                          3,
+                          11
+                        ],
+                        [
+                          3,
+                          12
+                        ],
+                        [
+                          3,
+                          15
+                        ],
+                        [
+                          4,
+                          9
+                        ],
+                        [
+                          5,
+                          12
+                        ],
+                        [
+                          8,
+                          12
+                        ],
+                        [
+                          11,
+                          13
+                        ],
+                        [
+                          12,
+                          13
+                        ]
+                      ],
+                      "handles": [
+                        "i331926",
+                        "i444745",
+                        "i202166",
+                        "i799673",
+                        "i934935",
+                        "i236577",
+                        "i515364",
+                        "i42201",
+                        "i944565",
+                        "i355057",
+                        "i881473",
+                        "i812293",
+                        "i327266",
+                        "i458525",
+                        "i715264",
+                        "i716791"
+                      ],
+                      "items": [
+                        [
+                          1,
+                          7,
+                          9,
+                          1
+                        ],
+                        [
+                          3,
+                          4,
+                          2,
+                          1
+                        ],
+                        [
+                          3,
+                          3,
+                          8,
+                          1
+                        ],
+                        [
+                          1,
+                          3,
+                          8,
+                          1
+                        ],
+                        [
+                          2,
+                          7,
+                          5,
+                          1
+                        ],
+                        [
+                          0,
+                          6,
+                          9,
+                          1
+                        ],
+                        [
+                          1,
+                          3,
+                          3,
+                          1
+                        ],
+                        [
+                          0,
+                          4,
+                          7,
+                          1
+                        ],
+                        [
+                          3,
+                          6,
+                          4,
+                          1
+                        ],
+                        [
+                          0,
+                          1,
+                          3,
+                          1
+                        ],
+                        [
+                          0,
+                          2,
+                          7,
+                          1
+                        ],
+                        [
+                          2,
+                          4,
+                          2,
+                          1
+                        ],
+                        [
+                          2,
+                          4,
+                          2,
+                          1
+                        ],
+                        [
+                          3,
+                          5,
+                          2,
+                          1
+                        ],
+                        [
+                          1,
+                          4,
+                          5,
+                          1
+                        ],
+                        [
+                          2,
+                          5,
+                          7,
+                          1
+                        ]
+                      ],
+                      "max_cost": 24
+                    },
+                    "state_version": 0
+                  },
+                  "state_version": 0,
+                  "status": "timeout",
+                  "work_units": 128
+                },
+                "stale": false,
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "as": "subset",
+                  "handle": "rdb729794c8e29b62"
+                },
+                "kind": "use_return"
+              },
+              "feedback": {
+                "selected": [
+                  "i236577",
+                  "i331926",
+                  "i812293",
+                  "i444745"
+                ],
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "map"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r2ba4b6d048cca3ac",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_1",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_1",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 128
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 128
+            }
+          ],
+          "steps": 26,
+          "work": 128,
+          "reductions": [
+            {
+              "certificate_valid": true,
+              "correct": true,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 128
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "work_tight",
+      "arm": "reference-cheap_first",
+      "success_count": 131,
+      "mean_cost": 0.04292812500000006,
+      "mean_utility": 0.21293125000000007,
+      "truncated": 0,
+      "counts": {
+        "action/abstain": 381,
+        "action/build_route": 330,
+        "action/call": 420,
+        "action/choose_item": 1688,
+        "action/commit_pending": 422,
+        "action/inspect": 8653,
+        "certificate_valid_reductions": 39,
+        "correct_reductions": 420,
+        "reductions": 420,
+        "status/success": 11941,
+        "status/timeout": 420,
+        "status/unknown": 381,
+        "action/add_constraint": 270,
+        "action/retrieve": 39,
+        "action/start_subset": 90,
+        "action/use_return": 39,
+        "multiple_return_address_contract_valid": 0,
+        "multiple_return_use_attempts": 0,
+        "return_address_contract_valid": 39,
+        "return_application_success": 39,
+        "return_use_attempts": 39,
+        "stale_return_use": 0,
+        "action/move": 279,
+        "action/verify": 131
+      },
+      "failure_endings": {
+        "('abstain', 'unknown', None)": 381
+      },
+      "failure_last_six": {
+        "choose_item -> commit_pending -> inspect -> build_route -> call -> abstain": 302,
+        "start_subset -> add_constraint -> add_constraint -> add_constraint -> call -> abstain": 51,
+        "retrieve -> use_return -> inspect -> build_route -> call -> abstain": 28
+      },
+      "failure_actions": {
+        "inspect": 6426,
+        "choose_item": 1208,
+        "commit_pending": 302,
+        "build_route": 330,
+        "call": 409,
+        "abstain": 381,
+        "start_subset": 79,
+        "add_constraint": 237,
+        "retrieve": 28,
+        "use_return": 28
+      },
+      "failure_examples": [
+        {
+          "seed": 26030000,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "item": "i47151"
+                },
+                "kind": "choose_item"
+              },
+              "feedback": {
+                "pending": [
+                  "i154196",
+                  "i169343",
+                  "i385461",
+                  "i47151"
+                ],
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "commit_pending"
+              },
+              "feedback": {
+                "selected": [
+                  "i154196",
+                  "i169343",
+                  "i385461",
+                  "i47151"
+                ],
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "map"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r7301080b7f48ea20",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_0",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_0",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "budget": 16,
+                  "problem": "problem_0"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "return": "raf2e4303e0ef6f49",
+                "status": "timeout"
+              },
+              "state_version": 0,
+              "work": 16
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 16
+            }
+          ],
+          "steps": 25,
+          "work": 16,
+          "reductions": [
+            {
+              "certificate_valid": false,
+              "correct": true,
+              "primitive": "shortest_path",
+              "problem": "problem_0",
+              "work_budget": 16
+            }
+          ]
+        },
+        {
+          "seed": 26030001,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "handle": "rdb729794c8e29b62"
+                },
+                "kind": "retrieve"
+              },
+              "feedback": {
+                "record": {
+                  "budget": 16,
+                  "call_position": 0,
+                  "certificate_valid": true,
+                  "feasible_incumbent": true,
+                  "handle": "rdb729794c8e29b62",
+                  "kind": "computation",
+                  "payload": [
+                    [
+                      5,
+                      0,
+                      11,
+                      1
+                    ],
+                    4,
+                    21,
+                    22
+                  ],
+                  "primitive": "constrained_subset",
+                  "problem": "problem_0",
+                  "problem_snapshot": {
+                    "primitive": "constrained_subset",
+                    "problem": {
+                      "capacity": 23,
+                      "constraints": [
+                        "capacity",
+                        "funds",
+                        "incompatibility"
+                      ],
+                      "forbidden_pairs": [
+                        [
+                          1,
+                          9
+                        ],
+                        [
+                          2,
+                          5
+                        ],
+                        [
+                          2,
+                          12
+                        ],
+                        [
+                          2,
+                          14
+                        ],
+                        [
+                          2,
+                          15
+                        ],
+                        [
+                          3,
+                          4
+                        ],
+                        [
+                          3,
+                          9
+                        ],
+                        [
+                          3,
+                          11
+                        ],
+                        [
+                          3,
+                          12
+                        ],
+                        [
+                          3,
+                          15
+                        ],
+                        [
+                          4,
+                          9
+                        ],
+                        [
+                          5,
+                          12
+                        ],
+                        [
+                          8,
+                          12
+                        ],
+                        [
+                          11,
+                          13
+                        ],
+                        [
+                          12,
+                          13
+                        ]
+                      ],
+                      "handles": [
+                        "i331926",
+                        "i444745",
+                        "i202166",
+                        "i799673",
+                        "i934935",
+                        "i236577",
+                        "i515364",
+                        "i42201",
+                        "i944565",
+                        "i355057",
+                        "i881473",
+                        "i812293",
+                        "i327266",
+                        "i458525",
+                        "i715264",
+                        "i716791"
+                      ],
+                      "items": [
+                        [
+                          1,
+                          7,
+                          9,
+                          1
+                        ],
+                        [
+                          3,
+                          4,
+                          2,
+                          1
+                        ],
+                        [
+                          3,
+                          3,
+                          8,
+                          1
+                        ],
+                        [
+                          1,
+                          3,
+                          8,
+                          1
+                        ],
+                        [
+                          2,
+                          7,
+                          5,
+                          1
+                        ],
+                        [
+                          0,
+                          6,
+                          9,
+                          1
+                        ],
+                        [
+                          1,
+                          3,
+                          3,
+                          1
+                        ],
+                        [
+                          0,
+                          4,
+                          7,
+                          1
+                        ],
+                        [
+                          3,
+                          6,
+                          4,
+                          1
+                        ],
+                        [
+                          0,
+                          1,
+                          3,
+                          1
+                        ],
+                        [
+                          0,
+                          2,
+                          7,
+                          1
+                        ],
+                        [
+                          2,
+                          4,
+                          2,
+                          1
+                        ],
+                        [
+                          2,
+                          4,
+                          2,
+                          1
+                        ],
+                        [
+                          3,
+                          5,
+                          2,
+                          1
+                        ],
+                        [
+                          1,
+                          4,
+                          5,
+                          1
+                        ],
+                        [
+                          2,
+                          5,
+                          7,
+                          1
+                        ]
+                      ],
+                      "max_cost": 24
+                    },
+                    "state_version": 0
+                  },
+                  "state_version": 0,
+                  "status": "timeout",
+                  "work_units": 16
+                },
+                "stale": false,
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 16
+            },
+            {
+              "action": {
+                "arguments": {
+                  "as": "subset",
+                  "handle": "rdb729794c8e29b62"
+                },
+                "kind": "use_return"
+              },
+              "feedback": {
+                "selected": [
+                  "i236577",
+                  "i331926",
+                  "i812293",
+                  "i444745"
+                ],
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 16
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "map"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r2ba4b6d048cca3ac",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 16
+            },
+            {
+              "action": {
+                "arguments": {
+                  "goal": 8,
+                  "handle": "problem_1",
+                  "start": 0
+                },
+                "kind": "build_route"
+              },
+              "feedback": {
+                "problem": "problem_1",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 16
+            },
+            {
+              "action": {
+                "arguments": {
+                  "budget": 16,
+                  "problem": "problem_1"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "return": "r5f83ac3dcb0f60d6",
+                "status": "timeout"
+              },
+              "state_version": 0,
+              "work": 32
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 32
+            }
+          ],
+          "steps": 27,
+          "work": 32,
+          "reductions": [
+            {
+              "certificate_valid": true,
+              "correct": true,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 16
+            },
+            {
+              "certificate_valid": false,
+              "correct": true,
+              "primitive": "shortest_path",
+              "problem": "problem_1",
+              "work_budget": 16
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "expensive_tools",
+      "arm": "lightweight",
+      "success_count": 512,
+      "mean_cost": 0.6313769531249993,
+      "mean_utility": 0.36862304687499997,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1536,
+        "action/build_route": 512,
+        "action/call": 1024,
+        "action/inspect": 8704,
+        "action/retrieve": 1024,
+        "action/start_subset": 512,
+        "action/use_return": 1024,
+        "action/verify": 512,
+        "certificate_valid_reductions": 1024,
+        "correct_reductions": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "multiple_return_use_attempts": 512,
+        "reductions": 1024,
+        "return_address_contract_valid": 1024,
+        "return_application_success": 1024,
+        "return_use_attempts": 1024,
+        "stale_return_use": 0,
+        "status/success": 14848
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "expensive_tools",
+      "arm": "recurrent",
+      "success_count": 0,
+      "mean_cost": 0.06400000000000004,
+      "mean_utility": -0.06400000000000004,
+      "truncated": 0,
+      "counts": {
+        "action/inspect": 8192,
+        "action/verify": 16384,
+        "certificate_valid_reductions": 0,
+        "correct_reductions": 0,
+        "reductions": 0,
+        "status/incomplete": 16384,
+        "status/success": 8192
+      },
+      "failure_endings": {
+        "('verify', 'incomplete', None)": 512
+      },
+      "failure_last_six": {
+        "verify -> verify -> verify -> verify -> verify -> verify": 512
+      },
+      "failure_actions": {
+        "inspect": 8192,
+        "verify": 16384
+      },
+      "failure_examples": [
+        {
+          "seed": 26040000,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 48,
+          "work": 0,
+          "reductions": []
+        },
+        {
+          "seed": 26040001,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 48,
+          "work": 0,
+          "reductions": []
+        }
+      ]
+    },
+    {
+      "condition": "expensive_tools",
+      "arm": "reference-cheap",
+      "success_count": 436,
+      "mean_cost": 0.050736328125000056,
+      "mean_utility": 0.8008261718749985,
+      "truncated": 0,
+      "counts": {
+        "action/choose_item": 1744,
+        "action/commit_pending": 436,
+        "action/inspect": 8628,
+        "action/move": 1883,
+        "action/verify": 436,
+        "certificate_valid_reductions": 0,
+        "correct_reductions": 0,
+        "reductions": 0,
+        "status/success": 13127,
+        "action/abstain": 76,
+        "status/unknown": 76
+      },
+      "failure_endings": {
+        "('abstain', 'unknown', None)": 76
+      },
+      "failure_last_six": {
+        "inspect -> inspect -> inspect -> inspect -> inspect -> abstain": 76
+      },
+      "failure_actions": {
+        "inspect": 1216,
+        "abstain": 76
+      },
+      "failure_examples": [
+        {
+          "seed": 26040015,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i849549"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rda1825e693ac47ed",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i812480"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r5f55d791899903b6",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i781719"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rc8d93ada761f9330",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i22093"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rdf2d7267d3ee7161",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i390563"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r25b7e31b7860d650",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 17,
+          "work": 0,
+          "reductions": []
+        },
+        {
+          "seed": 26040020,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i676153"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rd8d48c65ca3e0d2c",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i119984"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r8809c0ff0b41ef41",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i749941"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r94b358c3e73cebe1",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i58258"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rc1d97e65cb620178",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i425648"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rcb779cd32adc9beb",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 17,
+          "work": 0,
+          "reductions": []
+        }
+      ]
+    },
+    {
+      "condition": "expensive_tools",
+      "arm": "reference-always_tool",
+      "success_count": 512,
+      "mean_cost": 0.6313769531249993,
+      "mean_utility": 0.36862304687499997,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1536,
+        "action/build_route": 512,
+        "action/call": 1024,
+        "action/inspect": 8704,
+        "action/retrieve": 1024,
+        "action/start_subset": 512,
+        "action/use_return": 1024,
+        "action/verify": 512,
+        "certificate_valid_reductions": 1024,
+        "correct_reductions": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "multiple_return_use_attempts": 512,
+        "reductions": 1024,
+        "return_address_contract_valid": 1024,
+        "return_application_success": 1024,
+        "return_use_attempts": 1024,
+        "stale_return_use": 0,
+        "status/success": 14848
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "expensive_tools",
+      "arm": "reference-cheap_first",
+      "success_count": 512,
+      "mean_cost": 0.08640820312499983,
+      "mean_utility": 0.9135917968749986,
+      "truncated": 0,
+      "counts": {
+        "action/choose_item": 1744,
+        "action/commit_pending": 436,
+        "action/inspect": 8704,
+        "action/move": 2190,
+        "action/verify": 512,
+        "certificate_valid_reductions": 76,
+        "correct_reductions": 125,
+        "reductions": 125,
+        "status/success": 14048,
+        "action/add_constraint": 228,
+        "action/call": 125,
+        "action/retrieve": 76,
+        "action/start_subset": 76,
+        "action/use_return": 76,
+        "multiple_return_address_contract_valid": 43,
+        "multiple_return_use_attempts": 43,
+        "return_address_contract_valid": 76,
+        "return_application_success": 76,
+        "return_use_attempts": 76,
+        "stale_return_use": 0,
+        "status/timeout": 119
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "expensive_travel",
+      "arm": "lightweight",
+      "success_count": 512,
+      "mean_cost": 0.26463402343749987,
+      "mean_utility": 0.7353659765625001,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1536,
+        "action/build_route": 512,
+        "action/call": 1024,
+        "action/inspect": 5120,
+        "action/retrieve": 1024,
+        "action/start_subset": 512,
+        "action/use_return": 1024,
+        "action/verify": 512,
+        "certificate_valid_reductions": 1024,
+        "correct_reductions": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "multiple_return_use_attempts": 512,
+        "reductions": 1024,
+        "return_address_contract_valid": 1024,
+        "return_application_success": 1024,
+        "return_use_attempts": 1024,
+        "stale_return_use": 0,
+        "status/success": 11264
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "expensive_travel",
+      "arm": "recurrent",
+      "success_count": 0,
+      "mean_cost": 0.05727632812499965,
+      "mean_utility": -0.05727632812499965,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1024,
+        "action/call": 1572,
+        "action/inspect": 4608,
+        "action/retrieve": 1150,
+        "action/start_subset": 512,
+        "action/verify": 15710,
+        "certificate_valid_reductions": 442,
+        "correct_reductions": 0,
+        "reductions": 1572,
+        "status/incomplete": 15710,
+        "status/success": 7736,
+        "status/infeasible": 1130
+      },
+      "failure_endings": {
+        "('verify', 'incomplete', None)": 512
+      },
+      "failure_last_six": {
+        "verify -> verify -> verify -> verify -> verify -> verify": 512
+      },
+      "failure_actions": {
+        "inspect": 4608,
+        "start_subset": 512,
+        "add_constraint": 1024,
+        "call": 1572,
+        "retrieve": 1150,
+        "verify": 15710
+      },
+      "failure_examples": [
+        {
+          "seed": 26050000,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            }
+          ],
+          "steps": 48,
+          "work": 9,
+          "reductions": [
+            {
+              "certificate_valid": true,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            }
+          ]
+        },
+        {
+          "seed": 26050001,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 144
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 144
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 144
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 144
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 144
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 144
+            }
+          ],
+          "steps": 48,
+          "work": 144,
+          "reductions": [
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": false,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "expensive_travel",
+      "arm": "reference-cheap",
+      "success_count": 422,
+      "mean_cost": 0.34041796875000035,
+      "mean_utility": 0.4838007812499995,
+      "truncated": 0,
+      "counts": {
+        "action/choose_item": 1266,
+        "action/commit_pending": 422,
+        "action/inspect": 5030,
+        "action/move": 1794,
+        "action/verify": 422,
+        "certificate_valid_reductions": 0,
+        "correct_reductions": 0,
+        "reductions": 0,
+        "status/success": 8934,
+        "action/abstain": 90,
+        "status/unknown": 90
+      },
+      "failure_endings": {
+        "('abstain', 'unknown', None)": 90
+      },
+      "failure_last_six": {
+        "inspect -> inspect -> inspect -> inspect -> inspect -> abstain": 90
+      },
+      "failure_actions": {
+        "inspect": 810,
+        "abstain": 90
+      },
+      "failure_examples": [
+        {
+          "seed": 26050019,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i80100"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r264a0b67b97cebfa",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i488684"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r63e2d82460cb60fe",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i272096"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r89dbe7e798beb49d",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i913012"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rd273cb754a93b482",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i767386"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r5098bfdc43495dfd",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 10,
+          "work": 0,
+          "reductions": []
+        },
+        {
+          "seed": 26050020,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i663903"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r94bbb4853243187f",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i698410"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rf323e9af7753bc77",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i971450"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r19da137486046db3",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i176631"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r13d80cdb718b4406",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i944800"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r270e244d121c68c1",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 10,
+          "work": 0,
+          "reductions": []
+        }
+      ]
+    },
+    {
+      "condition": "expensive_travel",
+      "arm": "reference-always_tool",
+      "success_count": 512,
+      "mean_cost": 0.26463402343749987,
+      "mean_utility": 0.7353659765625001,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1536,
+        "action/build_route": 512,
+        "action/call": 1024,
+        "action/inspect": 5120,
+        "action/retrieve": 1024,
+        "action/start_subset": 512,
+        "action/use_return": 1024,
+        "action/verify": 512,
+        "certificate_valid_reductions": 1024,
+        "correct_reductions": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "multiple_return_use_attempts": 512,
+        "reductions": 1024,
+        "return_address_contract_valid": 1024,
+        "return_application_success": 1024,
+        "return_use_attempts": 1024,
+        "stale_return_use": 0,
+        "status/success": 11264
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "expensive_travel",
+      "arm": "reference-cheap_first",
+      "success_count": 512,
+      "mean_cost": 0.2627225390625001,
+      "mean_utility": 0.7372774609374997,
+      "truncated": 0,
+      "counts": {
+        "action/build_route": 466,
+        "action/call": 1037,
+        "action/choose_item": 1266,
+        "action/commit_pending": 422,
+        "action/inspect": 5120,
+        "action/retrieve": 556,
+        "action/use_return": 556,
+        "action/verify": 512,
+        "certificate_valid_reductions": 556,
+        "correct_reductions": 1037,
+        "multiple_return_address_contract_valid": 481,
+        "multiple_return_use_attempts": 481,
+        "reductions": 1037,
+        "return_address_contract_valid": 556,
+        "return_application_success": 556,
+        "return_use_attempts": 556,
+        "stale_return_use": 0,
+        "status/success": 9785,
+        "status/timeout": 556,
+        "action/move": 46,
+        "action/add_constraint": 270,
+        "action/start_subset": 90
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "obstacle",
+      "arm": "lightweight",
+      "success_count": 309,
+      "mean_cost": 0.0468441796875,
+      "mean_utility": 0.5566714453125,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1536,
+        "action/build_route": 512,
+        "action/call": 6505,
+        "action/inspect": 5120,
+        "action/retrieve": 1024,
+        "action/start_subset": 512,
+        "action/use_return": 1024,
+        "certificate_valid_reductions": 1024,
+        "correct_reductions": 1024,
+        "multiple_return_address_contract_valid": 512,
+        "multiple_return_use_attempts": 512,
+        "reductions": 1024,
+        "return_address_contract_valid": 1024,
+        "return_application_success": 821,
+        "return_use_attempts": 1024,
+        "stale_return_use": 0,
+        "status/invalid_input": 5481,
+        "status/obstacle": 203,
+        "status/success": 10858,
+        "action/verify": 309
+      },
+      "failure_endings": {
+        "('call', 'invalid_input', 'stale_problem')": 203
+      },
+      "failure_last_six": {
+        "call -> call -> call -> call -> call -> call": 203
+      },
+      "failure_actions": {
+        "inspect": 2030,
+        "start_subset": 203,
+        "add_constraint": 609,
+        "call": 5887,
+        "retrieve": 406,
+        "use_return": 406,
+        "build_route": 203
+      },
+      "failure_examples": [
+        {
+          "seed": 26060000,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "budget": 1024,
+                  "problem": "problem_1"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "reason": "stale_problem",
+                "status": "invalid_input"
+              },
+              "state_version": 1,
+              "work": 57
+            },
+            {
+              "action": {
+                "arguments": {
+                  "budget": 1024,
+                  "problem": "problem_1"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "reason": "stale_problem",
+                "status": "invalid_input"
+              },
+              "state_version": 1,
+              "work": 57
+            },
+            {
+              "action": {
+                "arguments": {
+                  "budget": 1024,
+                  "problem": "problem_1"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "reason": "stale_problem",
+                "status": "invalid_input"
+              },
+              "state_version": 1,
+              "work": 57
+            },
+            {
+              "action": {
+                "arguments": {
+                  "budget": 1024,
+                  "problem": "problem_1"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "reason": "stale_problem",
+                "status": "invalid_input"
+              },
+              "state_version": 1,
+              "work": 57
+            },
+            {
+              "action": {
+                "arguments": {
+                  "budget": 1024,
+                  "problem": "problem_1"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "reason": "stale_problem",
+                "status": "invalid_input"
+              },
+              "state_version": 1,
+              "work": 57
+            },
+            {
+              "action": {
+                "arguments": {
+                  "budget": 1024,
+                  "problem": "problem_1"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "reason": "stale_problem",
+                "status": "invalid_input"
+              },
+              "state_version": 1,
+              "work": 57
+            }
+          ],
+          "steps": 48,
+          "work": 57,
+          "reductions": [
+            {
+              "certificate_valid": true,
+              "correct": true,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": true,
+              "correct": true,
+              "primitive": "shortest_path",
+              "problem": "problem_1",
+              "work_budget": 1024
+            }
+          ]
+        },
+        {
+          "seed": 26060001,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "budget": 1024,
+                  "problem": "problem_1"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "reason": "stale_problem",
+                "status": "invalid_input"
+              },
+              "state_version": 1,
+              "work": 44
+            },
+            {
+              "action": {
+                "arguments": {
+                  "budget": 1024,
+                  "problem": "problem_1"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "reason": "stale_problem",
+                "status": "invalid_input"
+              },
+              "state_version": 1,
+              "work": 44
+            },
+            {
+              "action": {
+                "arguments": {
+                  "budget": 1024,
+                  "problem": "problem_1"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "reason": "stale_problem",
+                "status": "invalid_input"
+              },
+              "state_version": 1,
+              "work": 44
+            },
+            {
+              "action": {
+                "arguments": {
+                  "budget": 1024,
+                  "problem": "problem_1"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "reason": "stale_problem",
+                "status": "invalid_input"
+              },
+              "state_version": 1,
+              "work": 44
+            },
+            {
+              "action": {
+                "arguments": {
+                  "budget": 1024,
+                  "problem": "problem_1"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "reason": "stale_problem",
+                "status": "invalid_input"
+              },
+              "state_version": 1,
+              "work": 44
+            },
+            {
+              "action": {
+                "arguments": {
+                  "budget": 1024,
+                  "problem": "problem_1"
+                },
+                "kind": "call"
+              },
+              "feedback": {
+                "reason": "stale_problem",
+                "status": "invalid_input"
+              },
+              "state_version": 1,
+              "work": 44
+            }
+          ],
+          "steps": 48,
+          "work": 44,
+          "reductions": [
+            {
+              "certificate_valid": true,
+              "correct": true,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            },
+            {
+              "certificate_valid": true,
+              "correct": true,
+              "primitive": "shortest_path",
+              "problem": "problem_1",
+              "work_budget": 1024
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "obstacle",
+      "arm": "recurrent",
+      "success_count": 0,
+      "mean_cost": 0.057246445312499596,
+      "mean_utility": -0.057246445312499596,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1024,
+        "action/call": 1402,
+        "action/inspect": 4608,
+        "action/retrieve": 1174,
+        "action/start_subset": 512,
+        "action/verify": 15856,
+        "certificate_valid_reductions": 454,
+        "correct_reductions": 0,
+        "reductions": 1402,
+        "status/incomplete": 15856,
+        "status/success": 7772,
+        "status/infeasible": 948
+      },
+      "failure_endings": {
+        "('verify', 'incomplete', None)": 512
+      },
+      "failure_last_six": {
+        "verify -> verify -> verify -> verify -> verify -> verify": 512
+      },
+      "failure_actions": {
+        "inspect": 4608,
+        "start_subset": 512,
+        "add_constraint": 1024,
+        "call": 1402,
+        "retrieve": 1174,
+        "verify": 15856
+      },
+      "failure_examples": [
+        {
+          "seed": 26060000,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            }
+          ],
+          "steps": 48,
+          "work": 9,
+          "reductions": [
+            {
+              "certificate_valid": true,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            }
+          ]
+        },
+        {
+          "seed": 26060001,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "verify"
+              },
+              "feedback": {
+                "status": "incomplete",
+                "verified": false
+              },
+              "state_version": 0,
+              "work": 9
+            }
+          ],
+          "steps": 48,
+          "work": 9,
+          "reductions": [
+            {
+              "certificate_valid": true,
+              "correct": false,
+              "primitive": "constrained_subset",
+              "problem": "problem_0",
+              "work_budget": 1024
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "obstacle",
+      "arm": "reference-cheap",
+      "success_count": 430,
+      "mean_cost": 0.03573828125000001,
+      "mean_utility": 0.8041054687499997,
+      "truncated": 0,
+      "counts": {
+        "action/choose_item": 1290,
+        "action/commit_pending": 430,
+        "action/inspect": 5038,
+        "action/move": 1835,
+        "action/verify": 430,
+        "certificate_valid_reductions": 0,
+        "correct_reductions": 0,
+        "reductions": 0,
+        "status/success": 8990,
+        "status/obstacle": 33,
+        "action/abstain": 82,
+        "status/unknown": 82
+      },
+      "failure_endings": {
+        "('abstain', 'unknown', None)": 82
+      },
+      "failure_last_six": {
+        "inspect -> inspect -> inspect -> inspect -> inspect -> abstain": 82
+      },
+      "failure_actions": {
+        "inspect": 738,
+        "abstain": 82
+      },
+      "failure_examples": [
+        {
+          "seed": 26060009,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i965263"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r0f45d9cc49eb7fbc",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i767025"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "ra2b2ad095bd9ee88",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i804903"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r9c3cbc908c61e37b",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i338755"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r300fc8e26dd7a377",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i394986"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r64c81a7e11425757",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 10,
+          "work": 0,
+          "reductions": []
+        },
+        {
+          "seed": 26060011,
+          "last_events": [
+            {
+              "action": {
+                "arguments": {
+                  "target": "i140644"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "re9b5cca0cb51eff1",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i479798"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "rbdc04c045cc1419f",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i609481"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "ra148c05dddf7b933",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i431349"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r51b6afd43a979f63",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {
+                  "target": "i36439"
+                },
+                "kind": "inspect"
+              },
+              "feedback": {
+                "return": "r75ef5a4f196295f9",
+                "status": "success"
+              },
+              "state_version": 0,
+              "work": 0
+            },
+            {
+              "action": {
+                "arguments": {},
+                "kind": "abstain"
+              },
+              "feedback": {
+                "status": "unknown"
+              },
+              "state_version": 0,
+              "work": 0
+            }
+          ],
+          "steps": 10,
+          "work": 0,
+          "reductions": []
+        }
+      ]
+    },
+    {
+      "condition": "obstacle",
+      "arm": "reference-always_tool",
+      "success_count": 512,
+      "mean_cost": 0.04174822265625001,
+      "mean_utility": 0.9582517773437498,
+      "truncated": 0,
+      "counts": {
+        "action/add_constraint": 1536,
+        "action/build_route": 715,
+        "action/call": 1227,
+        "action/inspect": 5120,
+        "action/retrieve": 1227,
+        "action/start_subset": 512,
+        "action/use_return": 1227,
+        "action/verify": 512,
+        "certificate_valid_reductions": 1227,
+        "correct_reductions": 1227,
+        "multiple_return_address_contract_valid": 715,
+        "multiple_return_use_attempts": 715,
+        "reductions": 1227,
+        "return_address_contract_valid": 1227,
+        "return_application_success": 1024,
+        "return_use_attempts": 1227,
+        "stale_return_use": 0,
+        "status/obstacle": 203,
+        "status/success": 11873
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    },
+    {
+      "condition": "obstacle",
+      "arm": "reference-cheap_first",
+      "success_count": 512,
+      "mean_cost": 0.039266347656250054,
+      "mean_utility": 0.96073365234375,
+      "truncated": 0,
+      "counts": {
+        "action/build_route": 509,
+        "action/call": 1105,
+        "action/choose_item": 1290,
+        "action/commit_pending": 430,
+        "action/inspect": 5120,
+        "action/retrieve": 591,
+        "action/use_return": 591,
+        "action/verify": 512,
+        "certificate_valid_reductions": 591,
+        "correct_reductions": 1105,
+        "multiple_return_address_contract_valid": 518,
+        "multiple_return_use_attempts": 518,
+        "reductions": 1105,
+        "return_address_contract_valid": 591,
+        "return_application_success": 451,
+        "return_use_attempts": 591,
+        "stale_return_use": 0,
+        "status/obstacle": 183,
+        "status/success": 10116,
+        "status/timeout": 581,
+        "action/move": 404,
+        "action/add_constraint": 246,
+        "action/start_subset": 82
+      },
+      "failure_endings": {},
+      "failure_last_six": {},
+      "failure_actions": {},
+      "failure_examples": []
+    }
+  ],
+  "inputs": {
+    "easy/lightweight.jsonl.gz": "0569a4b64567df417d2ac7aad3f6ee0f1b094032b4bca2a309d71127c412a440",
+    "easy/recurrent.jsonl.gz": "1392fdb8a0770dbf72c06cabc08d6dd7683f045f3e711e69e65abeb06a823f46",
+    "easy/reference-cheap.jsonl.gz": "ac3c2218941c2abf64b6d12c80df3b4d83958c12399162b8ddf784ba48094024",
+    "easy/reference-always_tool.jsonl.gz": "a249656ea85e0035d90dead1e403493db3b178c1ac025456458a26c5e2e06dfe",
+    "easy/reference-cheap_first.jsonl.gz": "2036b14807c137a758cc620106e6f70bc248a265e54ac512d2d05618836668b7",
+    "medium/lightweight.jsonl.gz": "0250390704d2352b5dc2c2151ac4e8444ed8c3f9db76c0a0f6a614b9bd007220",
+    "medium/recurrent.jsonl.gz": "61ad4137c91072b477d9cb8fb136989d827d568bb61abc502a2b519cb41a4fee",
+    "medium/reference-cheap.jsonl.gz": "0ffdd5df0fc03729c25662fd9cb6cf28a95de81aa5714946877997a2f1a42431",
+    "medium/reference-always_tool.jsonl.gz": "d792c99f8fc5e22f13eac5d54dceb37112a39199bf48453f53fa33b5b496a3c5",
+    "medium/reference-cheap_first.jsonl.gz": "2d131070bab61b3733e41f0a752def6162233b10dd5869b26ed4aabe4178496c",
+    "hard_feasible/lightweight.jsonl.gz": "4454581eff86c3cf800e3399949f86c8ab67eb59d1d832629fe5c12e55f12c8c",
+    "hard_feasible/recurrent.jsonl.gz": "5a0a828af0aa1d3484cf8102098f2a19ac40c7b310064927482d7a72cccac25e",
+    "hard_feasible/reference-cheap.jsonl.gz": "8232917b0c6682719560428f7cea6e626bb960d848ab7468d795285b15f90031",
+    "hard_feasible/reference-always_tool.jsonl.gz": "0608af474d903c3969881eae7268101b2a22d9d1a7c8837391c92bf78134381d",
+    "hard_feasible/reference-cheap_first.jsonl.gz": "68f11d99ae34ac34ab80687a0234661c0ecbbadb4945e2ba13b976c28cc15bb4",
+    "work_tight/lightweight.jsonl.gz": "32b7235ee7a9a109771aa04afda1aee7cef80b5417a0332496794556c0e5cdcb",
+    "work_tight/recurrent.jsonl.gz": "4e1a63ecf162e6a0823e55dbc0c4c0e13f511f11d14e60ea4cf379011e050ff6",
+    "work_tight/reference-cheap.jsonl.gz": "54730933757c3a8f5c3bee849fa36218420bb075a55ddcf4de5ff2944558d9fd",
+    "work_tight/reference-always_tool.jsonl.gz": "e93112d50d8080d1ba7121a27e90c8c266eae7ec526878d4ecca9373e9024361",
+    "work_tight/reference-cheap_first.jsonl.gz": "c96462bedcea1aff9f5c5b08de4f9accd0fbc2afb94c2d28c66eacd21f4feb2a",
+    "expensive_tools/lightweight.jsonl.gz": "42a5b271200adc9f1a2fe181dadd4a8810dd4dd6a348a5c234665844410b2902",
+    "expensive_tools/recurrent.jsonl.gz": "1654708a64f5637c4a9262101c745b9a026f2ee41a001390024d674bf17bfb7e",
+    "expensive_tools/reference-cheap.jsonl.gz": "a02b10cb79e88aba476860dae25b07a5399efc62dddf02474bc5aa8444d62feb",
+    "expensive_tools/reference-always_tool.jsonl.gz": "478004a9664bd163367587fc0d5c3a60e96b5e23a5bc44a667df677df578e748",
+    "expensive_tools/reference-cheap_first.jsonl.gz": "9e30d9a9333376bdd1a61b6e130303bf3ef8326f64ab8f9ab5a5fa1b693902fb",
+    "expensive_travel/lightweight.jsonl.gz": "23f620bee55136a434546cf06b82dd2924f87b670e577b05c364dc88822048b3",
+    "expensive_travel/recurrent.jsonl.gz": "464a223d13a0dcea316da185c561b1880283cbd6f7a2d77a8a02b569c5a6ae3e",
+    "expensive_travel/reference-cheap.jsonl.gz": "3186e47f572fc94a520115577f9f3fcf089d66a95d615ab7b787bf51951d509b",
+    "expensive_travel/reference-always_tool.jsonl.gz": "8f10dd09dc804e68a6d53ed440ad89dd437b5074fd4ba371fb4d093b022500bf",
+    "expensive_travel/reference-cheap_first.jsonl.gz": "9a91608c679c0dc0720fe86283d9332349e8877f3dd3c68b2bc07db0c5bf220c",
+    "obstacle/lightweight.jsonl.gz": "e4317b508d3ab07b8007239c305c534b3077bcbc25ab54d6d5008c1ba1f98b06",
+    "obstacle/recurrent.jsonl.gz": "d01a4df703911c30c11bb77353764a977814a5ad291384e967e1c325e6fe7cdd",
+    "obstacle/reference-cheap.jsonl.gz": "3ce3f58bd486d12e013bfb3edcd6f7d87173c7e3de2d66815ee6f9b77f5ecd38",
+    "obstacle/reference-always_tool.jsonl.gz": "b35a3e0b36846c1131f8ef518f70aebc71d7706d18583d595ef4ac6e12619dc7",
+    "obstacle/reference-cheap_first.jsonl.gz": "639143090b72b197e7284cfe3d5d5915071c84c8f2bb8fd19e3c932c819cb7fe"
+  },
+  "paired_comparisons": 56,
+  "rows": 17920,
+  "cpu_core_seconds": 23.471134608,
+  "scope": "Independent archived metric reconstruction; no model inference. Producer action-count fields summed but nontrivial address metric not independently reimplemented."
+}
