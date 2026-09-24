@@ -214,6 +214,42 @@ def extract(root, c04_audit=None, c04_provisional=None):
             for head,counts in cell['head_paths'].items():
                 add('a13_query_heads',source,policy=cell['policy'],condition=cell['condition'],head=head,**counts)
         status.append(dict(experiment='A13',status='frozen audited checkpoint; nonoracle routes exactly equal; oracle privileged; no seed replication'))
+    source=review+'A14-final-aggregate-audit.json'
+    if (root/source).exists():
+        audit=read(source)
+        assert audit['all_three_previously_audited_inputs_rebound'] and audit['primary_actual_joint_tables_verified']
+        summary_path=base+'attention/a14/confirmation-analysis.json'
+        assert summary_path in audit['input_sha256'], 'A14 requires explicit aggregate hash binding'
+        for path,digest in audit['input_sha256'].items():
+            assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'A14 audit binding mismatch: {path}'
+            inputs[path]=digest
+        summary=read(summary_path)
+        assert summary['public_hashes_match'] and summary['record_order_hashes_match']
+        assert summary['joint_primary']==audit['primary']
+        for seed,bindings in summary['input_sha256'].items():
+            for relative,digest in bindings.items():
+                path=base+f'attention/a14/{seed}/results/'+relative
+                assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'A14 seed binding mismatch: {path}'
+                inputs[path]=digest
+        for condition in summary['conditions']:
+            for seed,policies in condition['seed_rows'].items():
+                for policy,counts in policies.items():
+                    add('a14_confirmation',summary_path,seed=int(seed),shape=condition['shape'],policy=policy,threshold=condition['threshold'],**counts)
+        add('a14_joint_primary',summary_path,**summary['joint_primary'])
+        # Aggregate audit separately verifies every reference cell and checkpoint binding.
+        if audit.get('reference_cells_verified')==27 and audit.get('reference_checkpoint_bindings_to_A06'):
+            reference_audit=audit
+            for path,digest in reference_audit['input_sha256'].items():
+                assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'A14 reference binding mismatch: {path}'
+                inputs[path]=digest
+            assert len(summary['engineering_references'])==9
+            for model,result in summary['engineering_references'].items():
+                for cell in result['rows']:
+                    add('a14_reference',summary_path,model=model,condition=cell['condition'],total=cell['examples'],
+                        task_correct=round(cell['task']*cell['examples']),route_correct=round(cell['exact_pointer_path']*cell['examples']),
+                        suffix_correct=round(cell['suffix_value_trajectory']*cell['examples']))
+        else:
+            status.append(dict(experiment='A14 references',status='pending independent reference audit'))
     if c04_audit:
         # An explicit final audit index binds each approved summary byte-for-byte.
         # Shape: {"input_sha256": {"repository/relative/path": "sha256"}}.
@@ -410,6 +446,35 @@ def render(data, output):
             denominator=ss[0]['head_path_denominator']
         ax.set(title='Deep query: individual-head full-route correctness',xticks=range(4),xticklabels=['Unchanged','Common soft','Common hard','Oracle'],ylabel=f'Correct queried head paths / {denominator}');ax.legend(fontsize=7)
         finish(fig,'attention-common-route','A13: one frozen checkpoint, paired events, zero updates; no seed replication. Nonoracle mean routes are exactly equal across policies.\nCommon hard is engineered; oracle uses privileged routes. Queried heads share event support (8 heads/event); full all-node suffix counts remain separate in the data.')
+    if select('a14_confirmation'):
+        fig,axes=plt.subplots(2,3,figsize=(14,8))
+        policies=('unchanged','both_hard','shared_soft','shared_hard','oracle_common')
+        names=('Unchanged','Both hard (engineered)','Common soft (engineered)','Common hard (engineered)','Oracle (privileged)')
+        shapes=list(dict.fromkeys(r['shape'] for r in select('a14_confirmation')))
+        for ax,metric,title in zip(axes[0],('task_correct','route_correct','complete_all_node_suffix'),('Joint task answer','Complete queried route','Complete all-node suffix')):
+            for i,policy in enumerate(policies):
+                for seed in (1401,1402,1403):
+                    ss=select('a14_confirmation',policy=policy,seed=seed);ss.sort(key=lambda r:shapes.index(r['shape']))
+                    ax.plot(range(len(shapes)),[100*r[metric]/r['events'] for r in ss],'.-' if policy=='unchanged' else '.--',color=f'C{i}',alpha=.65,label=names[i] if seed==1401 else None)
+            ax.set(title=title,xticks=range(len(shapes)),xticklabels=shapes,ylabel='Correct events (%)',ylim=(-3,104));ax.legend(fontsize=6)
+        joint=select('a14_joint_primary')[0];ax=axes[1,0]
+        for i,value in enumerate(joint['per_seed_gain']):ax.scatter(100*value,i,color=f'C{i}',s=25)
+        mean=joint['mean_gain'];ci=joint['gain_percentile95']
+        ax.errorbar(100*mean,3,xerr=[[100*(mean-ci[0])],[100*(ci[1]-mean)]],fmt='D',color='black',capsize=4)
+        ax.set(title='Joint: common hard − unchanged',yticks=[0,1,2,3],yticklabels=['1401','1402','1403','Fixed-seed mean'],xlabel='Paired task gain (percentage points)');ax.invert_yaxis()
+        ax=axes[1,1]
+        for i,policy in enumerate(policies):
+            ss=select('a14_confirmation',policy=policy,shape='joint')
+            ax.scatter([i+(r['seed']-1402)*.1 for r in ss],[100*r['task_given_correct_queried_route'] for r in ss],color=f'C{i}',s=25)
+        ax.set(title='Joint: task given correct queried route',xticks=range(5),xticklabels=['Original','Both hard','Soft','Hard','Oracle'],ylabel='Conditional task correctness (%)',ylim=(-3,104))
+        ax=axes[1,2]
+        references=select('a14_reference')
+        for i,arm in enumerate(('soft','hard','context')):
+            ss=[r for r in references if r['model'].endswith('-'+arm)]
+            ax.scatter([i+(int(r['model'].split('-')[0])-602)*.1 for r in ss],[100*r['task_correct']/r['total'] for r in ss],s=25,label=arm)
+        ax.set(title='Engineering references · all three shapes',xticks=range(3),xticklabels=['Soft topology','Hard topology','Graph context'],ylabel='Task correct (%)',ylim=(95,101));ax.tick_params(axis='x',labelrotation=12)
+        if not references: ax.text(.05,.5,'Independent reference audit pending',transform=ax.transAxes)
+        finish(fig,'attention-confirmation','A14: three fitted seeds; engineered common hard is distinct from learned unchanged and privileged oracle. Top-row metrics have different requirements.\nCI jointly resamples shared events conditional on fixed seeds. References use different interfaces/training; no parameter/FLOP match or unique attention win is claimed.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')=='independently_audited'})
