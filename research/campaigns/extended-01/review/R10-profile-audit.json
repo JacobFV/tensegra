@@ -1,0 +1,68 @@
+{
+  "metric_float_tolerance": {
+    "relative": 2e-06,
+    "absolute": 1e-07,
+    "note": "Only MAE and signed-error means; all integer counts exact. Non-power-of-two balanced support has FP32 rounding."
+  },
+  "narrow_scalar_gates": [
+    {
+      "arm": "unchanged",
+      "split": "validation",
+      "minimum_correct": 116,
+      "support": 128,
+      "passed": false
+    },
+    {
+      "arm": "balanced_512",
+      "split": "validation",
+      "minimum_correct": 124,
+      "support": 128,
+      "passed": false
+    },
+    {
+      "arm": "balanced_2048",
+      "split": "validation",
+      "minimum_correct": 126,
+      "support": 128,
+      "passed": true
+    }
+  ],
+  "rows_verified": 108,
+  "source_ref": "c0c5aca1",
+  "exposure": [
+    {
+      "events": 512,
+      "rows": 3072,
+      "visited_rows": 3071,
+      "visited_events": 512,
+      "validation_minimum": 124
+    },
+    {
+      "events": 2048,
+      "rows": 12288,
+      "visited_rows": 10721,
+      "visited_events": 2048,
+      "validation_minimum": 126
+    }
+  ],
+  "cpu_audit_wall_seconds": 0.3374696049722843,
+  "scope": "Raw metrics, nested populations, visitation bitsets and source hashes. Frozen feature/weight replay remains separate; follow the registered development/confirmation role rather than promoting individual cells.",
+  "mechanical_profile_only": true,
+  "input_sha256": {
+    "research/results/campaign-01/returns/r10-profile/outer-process.json": "4373228d72ba382447b7bd4716df26107c367b24b101d7d3d64a14e6264db20c",
+    "research/results/campaign-01/returns/r10-profile/predictions.json.gz": "6cdb32c9d0ec0f700ccd9600718bccc5681658f479fae552d56dbe676dbcc38e",
+    "research/results/campaign-01/returns/r10-profile/manifest.json.gz": "1ec36e959379b61ce66eaeedf1edc0f5506e707abf944e49fda92515be4b3281",
+    "research/results/campaign-01/returns/r10-profile/process.json": "6e1ddfd269733310f499148a6a525f6768a85639786c18c19128099c4c7deaf8"
+  },
+  "outer_process_seconds_reported": 13.44,
+  "outer_process_seconds_conservative_precision_bound": 13.45,
+  "main_cost_review": {
+    "expected_seconds": [
+      320,
+      450
+    ],
+    "hard_cap_seconds": 600,
+    "supported_for_separate_release": true,
+    "scope": "Conservative32x feature/readout/export and36x update scaling supports bounded estimate; overhead/startup does not scale exactly, timings are not efficiency evidence. Both frozen arms retained; no profile competence promotion."
+  }
+}
