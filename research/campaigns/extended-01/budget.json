@@ -1337,7 +1337,7 @@
       "recorded_utc": "2026-09-24T14:11:24.969243+00:00"
     }
   ],
-  "cpu_audit_seconds": 5778.482888883239,
+  "cpu_audit_seconds": 6049.6873730243215,
   "accounting": "Monotonic process occupancy includes initialization/training/evaluation/failed runs/export; profiles charged. Serial GPU only. Unmeasured failures receive conservative charges.",
   "projected_ready_caps_seconds": 0,
   "accounting_notes": "Ready caps are estimates, not completed charges or concurrent reservations. Only queue.running may use GPU.",
@@ -1668,14 +1668,21 @@
       "seconds": 2.6,
       "receipt": "research/campaigns/extended-01/review/S22-runner-independent-preflight.json",
       "scope": "CPU only; no GPU occupancy"
+    },
+    {
+      "id": "integration-03e8f013",
+      "seconds": 17.903484399,
+      "receipt": "research/campaigns/extended-01/review/integration-03e8f013.json",
+      "scope": "FullCPUtests/supplementaryfixtures+preservation/export; noGPU"
     }
   ],
   "projection_detail": {
     "S20-main": {
       "cap_seconds": 4300,
       "forecast_seconds": 3891.056,
-      "status": "released_after_independent_profile_cost_freeze_loader_clearance",
-      "scope": "Ninearms/threepairedlineages/full2048confirmationperarm finalonly; wholebranch4333.83<=5000"
+      "status": "closed_actual_recorded",
+      "scope": "Ninearms/threepairedlineages/full2048confirmationperarm finalonly; wholebranch4333.83<=5000",
+      "actual_seconds": 2992.72
     }
   },
   "interruption": {
@@ -1685,5 +1692,11 @@
     "note": "No running experiment at reconciliation. Deadline unchanged; idle interval not GPU occupancy. A08 profile full outer timing missing: charged conservative60-second cap."
   },
   "projected_pending_cap_seconds": 0,
-  "cpu_audit_receipt": "research/campaigns/extended-01/review/cpu-audit-time.json"
+  "cpu_audit_receipt": "research/campaigns/extended-01/review/cpu-audit-time.json",
+  "campaign_closeout": {
+    "status": "scientific_runs_closed_final_verification",
+    "recorded_utc": "2026-09-24T14:20:42.419486+00:00",
+    "gpu_seconds_unused": 12138.271176075516,
+    "reason": "Convergence on supported claims and diagnosed limits, not exhaustion of the resource ceiling; no more experiment jobs scheduled"
+  }
 }
