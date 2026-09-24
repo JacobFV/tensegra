@@ -804,7 +804,7 @@
       "budget": "Profile14.18charged, mainhard1000, measuredforecast777.649610; development3600envelopeinclconditionalextension",
       "protocol": "semantics/S19-design.md",
       "metrics": "Free-runningcompletegraphs, typed/orderededges, copy,invalidoutputs, teacherforcedfieldloss/accuracy, runtime/memory",
-      "next_branch": "S20freshthreepairedseed confirmation protocol/sourceCPUpreparation; noGPUrelease",
+      "next_branch": "S20 completed and independently audited: known-motif confirmation passes, heldout fails; S21/S22 subsequent diagnostics closed.",
       "profile": "source178de154/configd9f853f7, reviewedwhole180cap; mainunset",
       "freeze": "source178de154/config07ccff2d/argv8a6aa8d0",
       "outcome": "TRAIN128/128; trainedDEV508/507/463 of512; heldout0/512. Fixedpromotiontrue, recombinationfalse.",
@@ -840,7 +840,6 @@
       "seed": 2101,
       "exposure": "4096updates/B8/32768presentations perarm; token/recordwork differs andreported",
       "selection_rule": "Fixed4096 heldout>=52 andpairedgain>=26; knownmacrodecline<=5pp; eachnewtrained>=256; noautomaticextension",
-      "budget": "Planning<=1800GPU seconds inclprofile/twodevarms, unallocated; CPUonlyuntilfreeze/profile",
       "origin": "Registered before any S20confirmation outcomes; basedS19closedDEVfailure andboundedgeneratoraudit",
       "data_preflight": "review/S21-builder-inventory-preflight.json",
       "cpu_budget": "600s outer CPU ceiling, CUDAhidden2threads, no retries; bound20000attempts/cell/split unchanged",
@@ -855,19 +854,21 @@
         "semantics/S21-independent-data-review.md",
         "review/S21-cache-provenance-audit.json"
       ],
-      "profile": "source77683135/config05b2dcee/argvb726b45f, hard180, independent review810503d2, not released",
       "profile_release": "180s source77683135/config05b2dcee/argvb726b45f; finalindependentreview4de0d953",
       "main_freeze": "source77683135/config5a13908e/argve54dfed9,hard1770",
       "main_forecast_seconds": 1723.998389,
-      "release_review": "Independent reviewer verified profile960graphs/4states, cost and immutablemain; receipt forthcoming",
       "main_actual_seconds": 818.9,
       "outcome": "Heldout0both;newmotifacquisitionpasses;oldknownloss26passes;conditionalconfirmationineligible",
       "audit": "review/S21-final-development-audit.json",
-      "supplementary_isomorphism": "review/S21-isomorphism-result-audit.json:798validnonisomorphic/226invalid/0unresolved"
+      "supplementary_isomorphism": "review/S21-isomorphism-result-audit.json:798validnonisomorphic/226invalid/0unresolved",
+      "historical_preparation_budget": "Planning<=1800GPU seconds inclprofile/twodevarms, unallocated; CPUonlyuntilfreeze/profile",
+      "historical_preparation_profile": "source77683135/config05b2dcee/argvb726b45f, hard180, independent review810503d2, not released",
+      "historical_preparation_release_review": "Independent reviewer verified profile960graphs/4states, cost and immutablemain; receipt forthcoming",
+      "budget": "Profile29.54 +main818.90 =848.44 GPU seconds charged"
     },
     {
       "id": "S22",
-      "status": "complete_raw_audited_final_report_binding_pending",
+      "status": "complete_independently_audited_diagnostic_only",
       "hypothesis": "Supplying successive node boundaries localizes omitted-motif failure before versus within conditional relation generation",
       "protocol": "semantics/S22-design.md",
       "intervention": "FrozenS21 original/broad with oracle nodecount, typednodekinds, fullnodeprefix; no gold edges",
@@ -878,14 +879,16 @@
       "seed": 2101,
       "exposure": "No training; frozen final4096 checkpoints",
       "selection_rule": "No promotion gate; all policies/cells, paired errors and exact graph metrics; learned repair requires new protocol",
-      "budget": "Planning<=1200GPU seconds including profile; no allocation untilfreeze/review",
       "next_branch": "Localize then consider minimal learned repair only if justified; oracle success cannot pass learned transfer",
-      "profile": "source7a4c2923/config2e827db9/argvdc658554,hard180,notreleased",
-      "release_review": "review/S22-main-freeze-cost-audit.json; worker71b6cdee",
       "main_freeze": "source7a4c2923/config911a7078/argvd6ff5ee5,hard1160",
       "actual_main_seconds": 372.98,
       "outcome": "Allheldoutcomplete/relations0 evenfullgoldnodeprefix; closefrozenbranch/nolearnedpromotion",
-      "report": "semantics/S22-report.md"
+      "report": "semantics/S22-report.md",
+      "historical_preparation_budget": "Planning<=1200GPU seconds including profile; no allocation untilfreeze/review",
+      "historical_preparation_profile": "source7a4c2923/config2e827db9/argvdc658554,hard180,notreleased",
+      "historical_preparation_release_review": "review/S22-main-freeze-cost-audit.json; worker71b6cdee",
+      "budget": "Profile34.29 +main372.98 =407.27 GPU seconds charged",
+      "audit": "review/S22-final-diagnostic-audit.json"
     }
   ],
   "policy": {

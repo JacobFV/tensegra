@@ -10,7 +10,7 @@
     "attention": 10800,
     "adaptive_flex": 5760
   },
-  "charged_seconds": 31061.728823924484,
+  "charged_seconds": 31061.72885841081,
   "reserved_running_seconds": 0,
   "jobs": [
     {
@@ -132,7 +132,7 @@
       "cap_seconds": 900.0,
       "released_utc": "2026-09-23T20:26:22.469752+00:00",
       "status": "completed",
-      "seconds": 646.9737,
+      "seconds": 646.9737306302413,
       "receipt": "research/results/campaign-01/semantics/s01-current-n1024-dev201/s01-n1024.occupancy.json",
       "recorded_utc": "2026-09-23T20:37:59.415911+00:00"
     },
@@ -330,7 +330,7 @@
       "cap_seconds": 60.0,
       "released_utc": "2026-09-23T21:58:14.618013+00:00",
       "status": "completed",
-      "seconds": 10.81017,
+      "seconds": 10.81017385609448,
       "receipt": "research/results/campaign-01/semantics/s06-token-profile/s06-token-profile.occupancy.json",
       "recorded_utc": "2026-09-23T21:59:29.955321+00:00"
     },
@@ -1337,7 +1337,7 @@
       "recorded_utc": "2026-09-24T14:11:24.969243+00:00"
     }
   ],
-  "cpu_audit_seconds": 6049.6873730243215,
+  "cpu_audit_seconds": 6081.91829517434,
   "accounting": "Monotonic process occupancy includes initialization/training/evaluation/failed runs/export; profiles charged. Serial GPU only. Unmeasured failures receive conservative charges.",
   "projected_ready_caps_seconds": 0,
   "accounting_notes": "Ready caps are estimates, not completed charges or concurrent reservations. Only queue.running may use GPU.",
@@ -1696,7 +1696,21 @@
   "campaign_closeout": {
     "status": "scientific_runs_closed_final_verification",
     "recorded_utc": "2026-09-24T14:20:42.419486+00:00",
-    "gpu_seconds_unused": 12138.271176075516,
+    "gpu_seconds_unused": 12138.27114158919,
     "reason": "Convergence on supported claims and diagnosed limits, not exhaustion of the resource ceiling; no more experiment jobs scheduled"
-  }
+  },
+  "final_precision_corrections": [
+    {
+      "id": "S01-n1024",
+      "old_seconds": 646.9737,
+      "receipt_seconds": 646.9737306302413,
+      "reason": "Restore independently audited full receipt precision at final reconciliation"
+    },
+    {
+      "id": "S06-profile",
+      "old_seconds": 10.81017,
+      "receipt_seconds": 10.81017385609448,
+      "reason": "Restore independently audited full receipt precision at final reconciliation"
+    }
+  ]
 }
