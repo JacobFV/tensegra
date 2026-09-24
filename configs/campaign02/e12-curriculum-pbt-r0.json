@@ -1,0 +1,175 @@
+{
+  "mode": "pbt",
+  "population_seed": 8300,
+  "initialization_seeds": [
+    83000,
+    83001,
+    83002,
+    83003,
+    83004,
+    83005
+  ],
+  "rounds": 5,
+  "updates_per_slot": 60,
+  "population_size": 6,
+  "optimizer_policy": "inherit",
+  "training_seed_start": 700000000,
+  "training_seed_stride": 1000000,
+  "development_seed_start": 595000000,
+  "development_examples": 128,
+  "address_namespace": "e08-main-r0",
+  "teacher": "cheap_first_fallback_v2",
+  "methods": [
+    "actor_critic",
+    "actor_critic",
+    "actor_critic",
+    "actor_critic",
+    "actor_critic"
+  ],
+  "threads": 1,
+  "train": {
+    "width": 1024,
+    "family": "lightweight",
+    "device": "cuda",
+    "batch_size": 8,
+    "learning_rate": 0.0003,
+    "rollout_mode": "batched",
+    "max_steps": 48,
+    "evaluation_batch": 32,
+    "policy_loss_reduction": "decision_mean",
+    "advantage_normalization": true
+  },
+  "world_mix": [
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 3,
+      "choices": 3,
+      "locations": 7
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "work_limit": 128
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "work_price": 0.002
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "obstacle": true
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "obstacle": true
+    },
+    {
+      "step_limit": 64,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 5,
+      "locations": 9
+    },
+    {
+      "step_limit": 36,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9
+    }
+  ],
+  "policy": {
+    "interface": "legacy",
+    "feature_version": "v2"
+  },
+  "member_hyperparameters": [
+    {
+      "learning_rate": 3e-05,
+      "entropy_weight": 0.003,
+      "kl_weight": 0.3
+    },
+    {
+      "learning_rate": 1e-05,
+      "entropy_weight": 0.001,
+      "kl_weight": 0.1
+    },
+    {
+      "learning_rate": 0.0001,
+      "entropy_weight": 0.01,
+      "kl_weight": 1.0
+    },
+    {
+      "learning_rate": 3e-06,
+      "entropy_weight": 0.0003,
+      "kl_weight": 0.03
+    },
+    {
+      "learning_rate": 0.0003,
+      "entropy_weight": 0.001,
+      "kl_weight": 3.0
+    },
+    {
+      "learning_rate": 0.0001,
+      "entropy_weight": 0.03,
+      "kl_weight": 0.1
+    }
+  ],
+  "initial_checkpoints": [
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e08-bank-r0/checkpoints/round-0-slot-0-attempt-0.pt",
+      "sha256": "e43ac14744d51438be6ffd851a0a8200cf98c28a4f68d4b53b26ee62549e4809"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e08-bank-r0/checkpoints/round-0-slot-1-attempt-1.pt",
+      "sha256": "7c73aa1ba8b1ffd078674337e9529f4c61de381ed1dd87a8f2bde13f6d108a1c"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e08-bank-r0/checkpoints/round-0-slot-2-attempt-2.pt",
+      "sha256": "b92374a0a731d511244cd0b4d1415f64ececd605474a9a9b521a6fff3a98fa32"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e08-bank-r0/checkpoints/round-0-slot-3-attempt-3.pt",
+      "sha256": "7400c28cd053caee9117341be7649fd520013ab953b4cd359d7fc15c22d92511"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e08-bank-r0/checkpoints/round-0-slot-4-attempt-4.pt",
+      "sha256": "bc9cc7a52b4ab999af9d629d0ec02def39c2c7dc969af317ffd0343582e544db"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e08-bank-r0/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "4bd585c2404dcf74b23870c878cba00faafdacd3d2293aa8430d971c720324ee"
+    }
+  ],
+  "curriculum_mutation": true
+}

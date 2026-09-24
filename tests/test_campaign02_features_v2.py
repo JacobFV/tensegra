@@ -187,3 +187,39 @@ def test_population_imports_bank_with_reset_optimizer_and_fresh_stream(tmp_path)
     with pytest.raises(ValueError):
         PopulationRun(PopulationConfig(**{**cfg.__dict__, "initial_checkpoints": (bad,)+tuple(bank[1:])}),
                       tmp_path / "bad", _factory, _teacher)
+
+
+def test_curriculum_mutation_changes_training_mixture_only(tmp_path):
+    from topoformer.campaign02_population import (PopulationConfig, PopulationRun, mutate_curriculum,
+                                                  weighted_index)
+    import random as _random
+    assert [weighted_index(s, [1, 0, 0]) for s in range(20)] == [0]*20
+    assert {weighted_index(s, [.5, .5]) for s in range(200)} == {0, 1}
+    w, info = mutate_curriculum([.25]*4, _random.Random(0))
+    assert sum(w) == pytest.approx(1) and min(w) >= .02 and info["factor"] in (.5, 2.)
+    torch.set_num_threads(1)
+    mix = ({"categories": 1, "choices": 2, "locations": 3}, {"categories": 1, "choices": 3, "locations": 3})
+    seen = []
+    def component_factory(seed, index):
+        seen.append(index)
+        return Workshop(generate_world(seed, **mix[index]), address_seed=seed + 17)
+    def factory(seed):
+        from topoformer.campaign02_population import mix_index
+        return component_factory(seed, mix_index(seed, 2))
+    cfg = PopulationConfig(mode="pbt", rounds=2, updates_per_slot=1, development_examples=2, teacher="cheap",
+        curriculum_mutation=True, train={"width": 8, "device": "cpu", "batch_size": 1, "max_steps": 4, "evaluation_batch": 2},
+        world_mix=mix)
+    run = PopulationRun(cfg, tmp_path / "cur", factory, _teacher, component_factory=component_factory)
+    assert all(m["curriculum"] == [.5, .5] for m in run.state["members"])
+    for _ in range(6):
+        run._run_slot()
+    for score in run.state["round_scores"]:
+        score["utility"] = 6 - score["slot"]
+    run._selection()
+    events = [x for x in run.state["lineage"] if x["kind"] == "replacement"]
+    assert len(events) == 2 and all(x["curriculum_child"] != x["curriculum_parent"] for x in events)
+    assert run.state["members"][5]["curriculum"] == events[0]["curriculum_child"]
+    with pytest.raises(ValueError):
+        PopulationConfig(mode="multistart", curriculum_mutation=True, world_mix=mix)
+    with pytest.raises(ValueError):
+        PopulationRun(cfg, tmp_path / "missing", factory, _teacher)

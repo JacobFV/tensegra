@@ -54,6 +54,11 @@ class PopulationConfig:
     # stream restarts at this run's disjoint interval, hyperparameters are this
     # run's member rows. Bootstrap cost is charged to the producing job.
     initial_checkpoints: tuple[dict[str, Any], ...] = ()
+    # Adaptive curriculum (PBT only): each member carries sampling weights over
+    # world_mix components for TRAINING streams; children inherit the donor's
+    # weights with one component scaled by 0.5 or 2 (separate RNG stream).
+    # Development selection always uses the fixed uniform-hash mixture anchor.
+    curriculum_mutation: bool = False
 
     def __post_init__(self):
         if self.mode not in {"pbt", "multistart", "single"}:
@@ -85,6 +90,8 @@ class PopulationConfig:
         if self.member_hyperparameters and (len(self.member_hyperparameters) != 6 or any(
                 set(h) - {"learning_rate", "entropy_weight", "kl_weight"} for h in self.member_hyperparameters)):
             raise ValueError("Member hyperparameters need six {learning_rate, entropy_weight} rows")
+        if self.curriculum_mutation and (self.mode != "pbt" or len(self.world_mix) < 2):
+            raise ValueError("Curriculum mutation requires PBT and a multi-component mixture")
         if self.initial_checkpoints and (len(self.initial_checkpoints) != 6 or any(
                 set(c) != {"path", "sha256"} for c in self.initial_checkpoints)):
             raise ValueError("Initial bank import needs six {path, sha256} rows")
@@ -138,6 +145,29 @@ def new_policy(options: dict, obs_dim: int, candidate_dim: int, width: int, fami
     if options.get("zero_memory"):
         raise ValueError("zero_memory applies only to the memory interface")
     return CandidatePolicy(PolicyConfig(obs_dim, candidate_dim, width=width, family=family, feature_version=version))
+
+
+def weighted_index(seed: int, weights) -> int:
+    """Deterministic weighted component choice from a public-free seed hash."""
+    total = float(sum(weights))
+    if not weights or total <= 0 or min(weights) < 0:
+        raise ValueError("Curriculum weights must be nonnegative with positive mass")
+    u = int(digest({"world_seed": seed, "role": "curriculum-component"})[:16], 16) / 2**64 * total
+    acc = 0.0
+    for index, w in enumerate(weights):
+        acc += w
+        if u < acc:
+            return index
+    return len(weights) - 1
+
+
+def mutate_curriculum(weights, rng: random.Random, floor: float = .02):
+    index, factor = rng.randrange(len(weights)), rng.choice((.5, 2.))
+    changed = [w*factor if i == index else w for i, w in enumerate(weights)]
+    total = sum(changed)
+    changed = [max(floor, w/total) for w in changed]
+    total = sum(changed)
+    return [w/total for w in changed], {"component": index, "factor": factor}
 
 
 def mix_index(seed: int, size: int) -> int:
@@ -217,9 +247,13 @@ def inherit_state(parent: dict, recipient: dict, *, optimizer_policy: str,
 
 
 class PopulationRun:
-    def __init__(self, config: PopulationConfig, output: Path, factory, teacher_factory):
+    def __init__(self, config: PopulationConfig, output: Path, factory, teacher_factory, component_factory=None):
         self.config, self.output = config, output
         self.factory, self.teacher_factory = factory, teacher_factory
+        self.component_factory = component_factory
+        if config.curriculum_mutation and component_factory is None:
+            raise ValueError("Curriculum mutation needs a component-indexed world factory")
+        self.curriculum_rng = random.Random(f"curriculum-{config.population_seed}")
         output.mkdir(parents=True, exist_ok=True)
         self.state_path = output / "state.json"
         self.protocol = asdict(config)
@@ -238,6 +272,8 @@ class PopulationRun:
             def tuples(x):
                 return tuple(tuples(v) for v in x) if isinstance(x, list) else x
             self.mutation_rng.setstate(tuples(self.state["mutation_rng"]))
+            if "curriculum_rng" in self.state:
+                self.curriculum_rng.setstate(tuples(self.state["curriculum_rng"]))
             for attempt in self.state["attempts"]:
                 if attempt["status"] == "running":
                     attempt["status"] = "interrupted"
@@ -261,6 +297,8 @@ class PopulationRun:
 
     def _save_state(self):
         self.state["mutation_rng"] = self.mutation_rng.getstate()
+        if self.config.curriculum_mutation:
+            self.state["curriculum_rng"] = self.curriculum_rng.getstate()
         self.state["queue"] = [{"round": r, "slot": s, "member": slot_member(self.config.mode, s)}
             for r in range(self.state["round"], self.config.rounds)
             for s in range(self.state["slot"] if r == self.state["round"] else 0, 6)]
@@ -320,6 +358,8 @@ class PopulationRun:
                 "parameter_count": sum(p.numel() for p in model.parameters()),
                 "learning_rate": train.learning_rate, "entropy_weight": train.entropy_weight,
                 "kl_weight": train.kl_weight, "imported": imported}
+            if cfg.curriculum_mutation:
+                entry["curriculum"] = [1/len(cfg.world_mix)]*len(cfg.world_mix)
             self.state["members"].append(entry)
             self.state["lineage"].append({"kind": "initialization", **entry})
             self._save_state()
@@ -355,7 +395,11 @@ class PopulationRun:
         try:
             learner = self._learner(member, r)
             cursor_before = learner.seed_cursor
-            timing = learner.train_tranche(cfg.updates_per_slot, self.factory,
+            train_factory = self.factory
+            if cfg.curriculum_mutation:
+                weights = list(member["curriculum"])
+                train_factory = lambda seed: self.component_factory(seed, weighted_index(seed, weights))
+            timing = learner.train_tranche(cfg.updates_per_slot, train_factory,
                 self.teacher_factory if learner.config.method == "supervised" else None)
             output = self.output / "development" / f"round-{r}-slot-{slot}-attempt-{attempt_id}.jsonl.gz"
             metrics = learner.evaluate(range(cfg.development_seed_start,
@@ -417,7 +461,10 @@ class PopulationRun:
                 "entropy_factor": entropy_factor, "learning_rate": lr, "entropy_weight": entropy,
                 "kl_factor": kl_factor, "kl_weight": kl,
                 "retained_recipient_seed_cursor": previous["seed_cursor"],
+                "curriculum_parent": donor.get("curriculum"),
                 "retained_recipient_updates": previous["updates"], "scores": state["round_scores"]}
+            if cfg.curriculum_mutation:
+                event["curriculum_child"], event["curriculum_mutation"] = mutate_curriculum(donor["curriculum"], self.curriculum_rng)
             child = inherit_state(parent, previous, optimizer_policy=cfg.optimizer_policy,
                 learning_rate=lr, entropy_weight=entropy, event=event, kl_weight=kl)
             path = self.output / "checkpoints" / f"replacement-round-{r}-slot-{recipient_slot}.pt"
@@ -431,6 +478,7 @@ class PopulationRun:
             recipient.update(individual_id=child_id, parent_id=donor["individual_id"],
                 lineage_id=donor["lineage_id"], generation=donor["generation"] + 1,
                 learning_rate=lr, entropy_weight=entropy, **({"kl_weight": kl} if kl is not None else {}),
+                **({"curriculum": event["curriculum_child"]} if cfg.curriculum_mutation else {}),
                 checkpoint=str(path.relative_to(self.output)), checkpoint_sha256=sha256(path))
             state["lineage"].append(event)
         state["round"] += 1
@@ -466,11 +514,13 @@ def main():
     from .campaign02_world import Workshop, generate_world, protocol_executor
     with BoundedSolver() as solver:
         executor = partial(protocol_executor, execute_call=solver.execute)
-        def factory(seed):
-            kwargs = config.world_mix[mix_index(seed, len(config.world_mix))]
-            return Workshop(generate_world(seed, **kwargs), executor=executor,
+        def component_factory(seed, index):
+            return Workshop(generate_world(seed, **config.world_mix[index]), executor=executor,
                 address_seed=independent_address_seed(seed, config.address_namespace))
-        run = PopulationRun(config, args.output, factory, lambda: make_reference(config.teacher))
+        def factory(seed):
+            return component_factory(seed, mix_index(seed, len(config.world_mix)))
+        run = PopulationRun(config, args.output, factory, lambda: make_reference(config.teacher),
+                            component_factory=component_factory)
         run.run()
         _atomic_json(args.output / "solver-process-accounting.json", {
             "startup_wall_seconds": solver.startup_wall_seconds,
