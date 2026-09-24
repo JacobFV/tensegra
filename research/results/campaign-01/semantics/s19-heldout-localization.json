@@ -1,0 +1,425 @@
+{
+  "scope": "Final inspected DEV only, all generated prefixes including invalids. Canonical-position diagnostics do not establish graph-isomorphism failure causes. Entity-removal is a diagnostic signature only, never relaxed scoring.",
+  "source_sha256": "3586dae7940e0de3da0f798febfe1371708c369b193dd260758f1601c50829f6",
+  "inputs": {
+    "research/results/campaign-01/semantics/s19-main/s19-main-v1/development-u4096.json.gz": "7011b1354e8c987cd2d6287341c65e0c211b7ae269283e8edb1e7c8e4aac61d1",
+    "research/results/campaign-01/semantics/s15-shape-cache-v2/development.jsonl.gz": "25522313035e646cfca4bf0efb1ae550c295cb55ddf6057558d03c42f2239dc3",
+    "research/results/campaign-01/semantics/s15-shape-cache-v2/train_mixed.jsonl.gz": "8ddbd15bea881c13bfd24554ada9293082fcef7b616f6eeb3dad78a4bfa662d2"
+  },
+  "template_kind_sequences": {
+    "4x4": [
+      "scope",
+      "record",
+      "list",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident"
+    ],
+    "3x3": [
+      "scope",
+      "record",
+      "list",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident"
+    ],
+    "4x3": [
+      "scope",
+      "record",
+      "list",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident"
+    ],
+    "3x4": [
+      "scope",
+      "record",
+      "list",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident",
+      "ident",
+      "ident",
+      "pred",
+      "ident"
+    ]
+  },
+  "cells": {
+    "3x3": {
+      "counts": {
+        "examples": 512,
+        "valid": 511,
+        "complete": 508,
+        "eos_present": 511,
+        "node_count_correct": 512,
+        "all_node_records_correct": 511,
+        "kind_sequence_correct": 511,
+        "nodes_correct_but_graph_wrong": 3,
+        "nodes_correct_but_invalid": 1,
+        "nodes_correct_edges_wrong": 2,
+        "nodes_correct_slots_wrong": 0
+      },
+      "histograms": {
+        "first_mismatch_kind_pair": {
+          "(None, None)": 511,
+          "(5, 5)": 1
+        },
+        "first_mismatch_index": {
+          "None": 511,
+          "11": 1
+        },
+        "first_mismatch_fields": {
+          "none": 511,
+          "copy": 1
+        },
+        "generated_node_count": {
+          "25": 26,
+          "26": 205,
+          "27": 230,
+          "28": 51
+        },
+        "gold_node_count": {
+          "25": 26,
+          "26": 205,
+          "27": 230,
+          "28": 51
+        },
+        "reason": {
+          "valid": 511,
+          "invalid_generated_node_reference": 1
+        },
+        "public_tokens": {
+          "46": 512
+        },
+        "entity_removed_kind_template": {
+          "3x3": 512
+        },
+        "full_kind_template_membership": {
+          "3x3": 491,
+          "none": 21
+        },
+        "distance_4x3_minus_3x4": {
+          "0": 512
+        },
+        "pred_argument_counts": {
+          "[3, 3, 3, 3, 1]": 511,
+          "[3, 3, 0, 0, 0]": 1
+        }
+      }
+    },
+    "3x4": {
+      "counts": {
+        "examples": 512,
+        "valid": 391,
+        "complete": 0,
+        "eos_present": 399,
+        "node_count_correct": 313,
+        "all_node_records_correct": 0,
+        "kind_sequence_correct": 0,
+        "nodes_correct_but_graph_wrong": 0,
+        "nodes_correct_but_invalid": 0
+      },
+      "histograms": {
+        "first_mismatch_kind_pair": {
+          "(5, 7)": 507,
+          "(5, 5)": 5
+        },
+        "first_mismatch_index": {
+          "10": 342,
+          "9": 153,
+          "8": 17
+        },
+        "first_mismatch_fields": {
+          "kind+value+copy": 507,
+          "copy": 5
+        },
+        "generated_node_count": {
+          "31": 258,
+          "30": 128,
+          "34": 3,
+          "32": 72,
+          "37": 11,
+          "35": 4,
+          "29": 10,
+          "36": 14,
+          "38": 6,
+          "33": 6
+        },
+        "gold_node_count": {
+          "31": 274,
+          "30": 78,
+          "32": 152,
+          "29": 8
+        },
+        "reason": {
+          "valid": 391,
+          "invalid_generated_node_reference": 108,
+          "duplicate_edge": 5,
+          "historical metric cannot express multiple pair-slot labels": 8
+        },
+        "public_tokens": {
+          "54": 512
+        },
+        "entity_removed_kind_template": {
+          "4x3": 348,
+          "other": 151,
+          "4x4": 13
+        },
+        "full_kind_template_membership": {
+          "none": 335,
+          "4x3": 171,
+          "4x4": 6
+        },
+        "distance_4x3_minus_3x4": {
+          "-5": 348,
+          "-2": 14,
+          "0": 28,
+          "-3": 79,
+          "-4": 35,
+          "-1": 7,
+          "1": 1
+        },
+        "pred_argument_counts": {
+          "[4, 4, 4, 4, 1]": 328,
+          "[4, 4, 4, 4, 4, 0]": 10,
+          "[4, 4, 0, 0, 4, 0]": 1,
+          "[4, 4, 4, 0, 0]": 40,
+          "[4, 4, 4, 4, 4, 1]": 5,
+          "[4, 4, 4, 4, 0]": 43,
+          "[0, 0, 0, 0, 0, 0]": 5,
+          "[0, 0, 0, 0, 0]": 9,
+          "[4, 4, 0, 4, 1]": 5,
+          "[4, 4, 0, 0, 1, 1]": 2,
+          "[4, 4, 0, 0, 0]": 32,
+          "[0, 0, 0, 0]": 1,
+          "[4, 4, 0, 0, 1]": 7,
+          "[4, 4, 4, 3, 0]": 1,
+          "[4, 4, 4, 0, 1]": 5,
+          "[4, 4, 0, 0]": 3,
+          "[4, 0, 0, 0, 0]": 4,
+          "[4, 4, 4, 0, 0, 0]": 3,
+          "[4, 4, 4, 0, 1, 0]": 1,
+          "[4, 4, 1, 0]": 1,
+          "[4, 4, 0, 0, 0, 1]": 1,
+          "[4, 0, 0, 0, 1]": 1,
+          "[4, 4, 4, 4, 0, 0]": 2,
+          "[4, 4, 4, 4, 1, 0]": 1,
+          "[4, 4, 4, 4, 0, 1]": 1
+        }
+      }
+    },
+    "4x3": {
+      "counts": {
+        "examples": 512,
+        "valid": 511,
+        "complete": 507,
+        "eos_present": 511,
+        "node_count_correct": 512,
+        "all_node_records_correct": 511,
+        "kind_sequence_correct": 512,
+        "nodes_correct_but_graph_wrong": 4,
+        "nodes_correct_but_invalid": 1,
+        "nodes_correct_edges_wrong": 3,
+        "nodes_correct_slots_wrong": 1
+      },
+      "histograms": {
+        "first_mismatch_kind_pair": {
+          "(None, None)": 511,
+          "(5, 5)": 1
+        },
+        "first_mismatch_index": {
+          "None": 511,
+          "17": 1
+        },
+        "first_mismatch_fields": {
+          "none": 511,
+          "copy": 1
+        },
+        "generated_node_count": {
+          "31": 273,
+          "30": 100,
+          "32": 139
+        },
+        "gold_node_count": {
+          "31": 273,
+          "30": 100,
+          "32": 139
+        },
+        "reason": {
+          "valid": 511,
+          "invalid_generated_node_reference": 1
+        },
+        "public_tokens": {
+          "54": 512
+        },
+        "entity_removed_kind_template": {
+          "4x3": 512
+        },
+        "full_kind_template_membership": {
+          "4x3": 397,
+          "none": 115
+        },
+        "distance_4x3_minus_3x4": {
+          "-5": 512
+        },
+        "pred_argument_counts": {
+          "[4, 4, 4, 4, 1]": 510,
+          "[4, 4, 4, 0, 0]": 1,
+          "[4, 4, 3, 4, 1]": 1
+        }
+      }
+    },
+    "4x4": {
+      "counts": {
+        "examples": 512,
+        "valid": 512,
+        "complete": 463,
+        "eos_present": 512,
+        "node_count_correct": 508,
+        "all_node_records_correct": 493,
+        "kind_sequence_correct": 508,
+        "nodes_correct_but_graph_wrong": 30,
+        "nodes_correct_but_invalid": 0,
+        "nodes_correct_edges_wrong": 30,
+        "nodes_correct_slots_wrong": 2
+      },
+      "histograms": {
+        "first_mismatch_kind_pair": {
+          "(None, None)": 493,
+          "(5, 5)": 16,
+          "(5, 7)": 3
+        },
+        "first_mismatch_index": {
+          "None": 493,
+          "26": 2,
+          "27": 1,
+          "22": 2,
+          "19": 1,
+          "28": 3,
+          "25": 4,
+          "34": 1,
+          "24": 2,
+          "33": 1,
+          "21": 2
+        },
+        "first_mismatch_fields": {
+          "none": 493,
+          "copy": 16,
+          "kind+value+copy": 3
+        },
+        "generated_node_count": {
+          "36": 238,
+          "37": 245,
+          "35": 29
+        },
+        "gold_node_count": {
+          "36": 242,
+          "37": 241,
+          "35": 29
+        },
+        "reason": {
+          "valid": 512
+        },
+        "public_tokens": {
+          "64": 512
+        },
+        "entity_removed_kind_template": {
+          "4x4": 508,
+          "other": 4
+        },
+        "full_kind_template_membership": {
+          "4x4": 286,
+          "none": 226
+        },
+        "distance_4x3_minus_3x4": {
+          "0": 512
+        },
+        "pred_argument_counts": {
+          "[4, 4, 4, 4, 4, 1]": 507,
+          "[4, 4, 4, 4, 0, 0]": 2,
+          "[4, 4, 4, 4, 4, 0]": 2,
+          "[4, 4, 4, 4, 0, 1]": 1
+        }
+      }
+    }
+  },
+  "cpu_wall_seconds": 4.745993510005064,
+  "event_artifact": {
+    "path": "research/results/campaign-01/semantics/s19-heldout-localization-events.json.gz",
+    "sha256": "38c33dbf9f6357b35b33690037236e33a1e5e9b00409cfcdf180b181887394bb",
+    "count": 2048
+  }
+}
