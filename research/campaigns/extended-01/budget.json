@@ -10,8 +10,8 @@
     "attention": 10800,
     "adaptive_flex": 5760
   },
-  "charged_seconds": 16082.61233281971,
-  "reserved_running_seconds": 1980.0,
+  "charged_seconds": 16740.856710052936,
+  "reserved_running_seconds": 1400.0,
   "jobs": [
     {
       "id": "R01-profile",
@@ -839,9 +839,31 @@
       "seconds": 114.503450415,
       "receipt": "research/results/campaign-01/attention/a12-main/receipt.json",
       "recorded_utc": "2026-09-24T06:22:33.373217+00:00"
+    },
+    {
+      "id": "C04-lineage-1",
+      "kind": "confirmation",
+      "source": "c34effb",
+      "cap_seconds": 1980.0,
+      "released_utc": "2026-09-24T06:22:33.395582+00:00",
+      "status": "completed",
+      "seconds": 650.2077004262246,
+      "receipt": "research/results/campaign-01/composition/c04-confirmation/1/c04-confirmation-1.batch.json",
+      "recorded_utc": "2026-09-24T06:34:39.018791+00:00"
+    },
+    {
+      "id": "A13-profile",
+      "kind": "exploration",
+      "source": "53bdfed",
+      "cap_seconds": 60.0,
+      "released_utc": "2026-09-24T06:34:39.051650+00:00",
+      "status": "completed",
+      "seconds": 8.036676807,
+      "receipt": "research/results/campaign-01/attention/a13-profile/receipt.json",
+      "recorded_utc": "2026-09-24T06:35:53.509029+00:00"
     }
   ],
-  "cpu_audit_seconds": 2914.697397569308,
+  "cpu_audit_seconds": 2936.4743829843305,
   "accounting": "Monotonic process occupancy includes initialization/training/evaluation/failed runs/export; profiles charged. Serial GPU only. Unmeasured failures receive conservative charges.",
   "projected_ready_caps_seconds": 6160,
   "accounting_notes": "Ready caps are estimates, not completed charges or concurrent reservations. Only queue.running may use GPU.",
@@ -913,14 +935,24 @@
       "id": "figures-interim-c04",
       "seconds": 2.305,
       "receipt": "research/campaigns/extended-01/figures/render-receipt.json"
+    },
+    {
+      "id": "C04-lineage0-analysis-hash",
+      "seconds": 3.472247,
+      "note": "1.369950 analysis +2.102297 hash; CPU only"
+    },
+    {
+      "id": "C04-lineage1-analysis-hash",
+      "seconds": 5.347795,
+      "note": "2.330729 analysis +3.017066 hash; CPU only"
     }
   ],
   "projection_detail": {
-    "S12_running_decay702_cap": 800,
-    "S12_remaining_excluding_running_cap": 3000,
-    "C04_remaining_two_lineages_cap": 3960,
-    "A12_main_cap": 180,
-    "S12_rename_S14": "Profile after all-six checkpoints; no main allocation yet",
+    "S12_running_parent703_cap": 1400,
+    "S12_remaining_two_forks_cap": 1600,
+    "C04_remaining_lineage2_cap": 1980,
+    "A13_main_provisional_cap": 180,
+    "S12_rename_S14": "Profile after all-six endpoints; no main allocation yet",
     "S13": "Paired development profile after complete S12; no main allocation yet"
   },
   "interruption": {
@@ -929,5 +961,5 @@
     "reconciled_utc": "2026-09-24T04:48:22Z",
     "note": "No running experiment at reconciliation. Deadline unchanged; idle interval not GPU occupancy. A08 profile full outer timing missing: charged conservative60-second cap."
   },
-  "projected_pending_cap_seconds": 7140
+  "projected_pending_cap_seconds": 3760
 }

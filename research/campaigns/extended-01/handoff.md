@@ -71,3 +71,6 @@ Constant702 completed639.029482550s, raw/cal0/1024, archive c0891ef. A12 profile
 
 ### 06:20 UTC paired endpoint
 S12decay702 completed641.981826689s, raw6/cal131 of1024 versus constant0/0. Archive9143b96; independent audit pending. Seed702 passesindividual103criterion,70166failureunchanged;703all3jobsremainmandatory. A12main nowsoleGPUowner source71f1971 cap180 afterauditedprofile, expected120–145s. Next C04lineage1cap1980, S12parent703cap1400, C04lineage2cap1980, S12forks703800each; allunchanged. FullCPUintegration32fe72f686tests+10subtests14.93s and3953historicalblobs preserved. Latestplots624129c partialmatrixexplicit. Latestpushb7afbbf, newercommitsneedmilestonepush.
+
+### 06:38 UTC live boundary
+C04lineage1 completed650.207700426s, archive20a5d13. All24workspacejoint/8causal pass; fixedroles4054/4073 of4096 passes; static4054/3809 and rekey3945/3823 fail. Independent audit underway; lineage2 unchanged. A13profile8.036676807s archived57da34a, source53bdfed; preflight201aa8c passed, profileaudit pending. Main same4policies115–140s estimate/cap180, unlaunched. GPUownerS12parent703 source dbd3575 cap1400 launched06:36approximately, PID3739595 wrapper. Next A13main ifreviewed, C04lineage2, forks703 then all-six lexical/motif diagnostics and S13profile. No automaticworkerlaunch. Changes afterlatestpush92e9ad7 needmilestonepush.
