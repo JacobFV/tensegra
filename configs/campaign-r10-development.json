@@ -1,0 +1,58 @@
+{
+  "device": "cuda",
+  "backbone_seed": 11,
+  "head_seed": 611000011,
+  "checkpoint": "/home/brandonin/topoformer-stage11/returns/main/11-wide_continue.pt",
+  "checkpoint_sha256": "00e122c8cfe655dc9a8f801b48c5b5092db6caf8909479f2c3ac3910f0b7a077",
+  "pool_seed": 611100101,
+  "pool_size": 131072,
+  "strata_seed": 611000101,
+  "delays": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "grid_delays": [
+    0,
+    1,
+    16
+  ],
+  "batch_size": 64,
+  "eval_distractors": [
+    2,
+    8
+  ],
+  "ce_lr": 0.003,
+  "ce_updates": 3600,
+  "ce_batch_size": 256,
+  "ce_check_every": 300,
+  "data": {
+    "calibration": {
+      "seed": 611200101,
+      "size": 1024
+    },
+    "validation": {
+      "seed": 611300101,
+      "size": 4096
+    }
+  },
+  "grids": {
+    "calibration_grid": {
+      "seed": 611400101,
+      "pool_size": 32768,
+      "per_cell": 128
+    },
+    "validation_grid": {
+      "seed": 611500101,
+      "pool_size": 32768,
+      "per_cell": 128
+    }
+  },
+  "fit_sizes": [
+    16384,
+    65536
+  ]
+}
