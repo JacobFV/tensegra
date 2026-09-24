@@ -17,3 +17,5 @@ Remaining qualifications:
 - Nested receipts are diagnostic only. Charge one inclusive outer receipt per experiment root, never both outer and child CPU. GPU occupancy similarly charges the reserved outer interval only once. Auditor/test parent CPU already includes its nested wrapper jobs.
 
 Measured reviewer experiment CPU: original harness0.74464012 + patched harness0.784934992 + aggregate-cap fixture0.597266784 = **2.126841896 CPU-core seconds**. These three inclusive receipts are the review test charge; do not add nested job figures again. CLI/import/filesystem administration not included as experimental work. The disposable source export is not an installed dependency change.
+
+Post-test source amendment `389d8805` replaces TERM/grace with immediate group SIGKILL on budget exhaustion. Static inspection confirms the specific five-second grace concern is removed; the above numeric tests remain receipts for `bed4795a`, not rerun claims for the amendment. Sampling/startup overhead remains and must be reserved and charged from actual receipts. The subreaper and unconditional descendant cleanup remain.
