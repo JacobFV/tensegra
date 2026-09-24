@@ -3,6 +3,7 @@ import importlib.util
 from pathlib import Path
 import tempfile
 import numpy as np
+import pytest
 
 _source=Path(__file__).resolve().parents[1]/'research/tools/campaign_composition_confirmation_analysis.py'
 _spec=importlib.util.spec_from_file_location('c04_analysis',_source)
@@ -50,3 +51,15 @@ def test_missing_lineages_are_pending_not_failed_or_passing():
         assert len(result['lineages'])==3
         assert result['comparisons']=={}
         assert all(x['status']=='pending' for x in result['lineages'].values())
+
+
+def test_main_rejects_short_profile_and_mismatched_neural_lineage():
+    config={'seed':1601,'replicate':0,'updates':4000,'data':{
+        'train':{'seed':560000001,'count':16384},
+        'calibration':{'seed':560000002,'count':2048},
+        'validation':{'seed':560000003,'count':4096}}}
+    analysis.validate_main_config(config,0,4000)
+    with pytest.raises(ValueError):analysis.validate_main_config(config,0,16)
+    with pytest.raises(ValueError):analysis.validate_main_config(config,1,4000)
+    config['data']['validation']['count']=16
+    with pytest.raises(ValueError):analysis.validate_main_config(config,0,4000)

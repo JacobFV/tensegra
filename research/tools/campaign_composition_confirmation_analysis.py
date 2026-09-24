@@ -98,10 +98,22 @@ def required_files(base):
     return paths
 
 
-def analyze_lineage(base, replicate):
+def validate_main_config(config, replicate, primary_endpoint_step=None):
+    expected_base = 560000000 + replicate*1000000
+    if config['seed'] != 1601+replicate or config['replicate'] != replicate or config['updates'] != 4000:
+        raise ValueError('not the predeclared main model lineage')
+    for split,offset,count in (('train',1,16384),('calibration',2,2048),('validation',3,4096)):
+        if config['data'][split] != {'seed':expected_base+offset,'count':count}:
+            raise ValueError('not the predeclared main population')
+    if primary_endpoint_step is not None and primary_endpoint_step != 4000:
+        raise ValueError('primary endpoint must be fixed4000')
+
+
+def analyze_lineage(base, replicate, main=True):
     import numpy as np
     hybrid_root = Path(str(base)+'-hybrid')
     summary = read_json(hybrid_root/'summary.json')
+    if main: validate_main_config(summary['config'],replicate)
     n = summary['config']['data']['validation']['count']
     result = dict(status='complete', replicate=replicate, model_seed=summary['config']['seed'],
         event_seed=summary['config']['data']['validation']['seed'], hybrid_cells=[], causal=[],
@@ -146,6 +158,10 @@ def analyze_lineage(base, replicate):
     neural_summaries = {}
     for arm in ARMS:
         root = Path(str(base)+'-'+arm); report = read_json(root/'summary.json'); neural_summaries[arm]=report
+        if main:
+            validate_main_config(report['config'],replicate,report['primary_endpoint_step'])
+            if report['primary_endpoint_step'] != 4000:
+                raise ValueError('missing fixed4000 endpoint')
         with gzip.open(root/'numeric-overlap.json.gz','rt') as stream: overlap[arm]=json.load(stream)
         result['neural'][arm] = dict(selected_step=report['selected_step'],primary_endpoint_step=report['primary_endpoint_step'],
             summary_results=report['results'],raw_counts={})
