@@ -2,7 +2,7 @@
 import argparse,collections,gzip,hashlib,importlib.util,json
 from pathlib import Path
 import numpy as np
-MAIN_CONFIG_SHA=None # Pin only after separately reviewed main freeze, before outcomes.
+MAIN_CONFIG_SHA='911a70787dfd31bd1225c04cc2d7c4c2a8b9d721396c12a754d47f1cacfb910e' # Prospective allocated immutable main freeze; no outcomes read.
 CELLS=('2x4','3x3','3x4','4x3','4x4','5x3','5x4')
 POLICIES=('oracle_node_count','oracle_node_kinds','oracle_node_prefix')
 HELPER_SHA='13a8c12a014f97b95b65b221457ade75be318c0cb2f76e24234c8391e12d8355'

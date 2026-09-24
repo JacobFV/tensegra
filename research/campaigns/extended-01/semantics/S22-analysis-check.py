@@ -27,6 +27,6 @@ class Checks(unittest.TestCase):
    with self.assertRaises(ValueError):a.flags_guard({**r,k:v})
  def test_transitions(self):self.assertEqual(a.transitions([0,0,1,1],[0,1,0,1]),{'0->0':1,'0->1':1,'1->0':1,'1->1':1})
  def test_unpinned(self):
-  self.assertIsNone(a.MAIN_CONFIG_SHA)
+  self.assertEqual(a.MAIN_CONFIG_SHA,'911a70787dfd31bd1225c04cc2d7c4c2a8b9d721396c12a754d47f1cacfb910e')
   with self.assertRaises(ValueError):a.checked(Path(__file__),None)
 if __name__=='__main__':unittest.main()
