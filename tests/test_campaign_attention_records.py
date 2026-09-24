@@ -66,3 +66,15 @@ def test_training_prefix_replay_and_resumable_state(tmp_path):
     assert json.loads((second/'prefix-replay.json').read_text())['logits_exact']
     state=torch.load(second/'training-state-00002.pt',weights_only=True)
     assert {'model','optimizer','cpu_rng','cuda_rng','step','config'} <= state.keys()
+    import hashlib
+    resume=second/'training-state-00001.pt'
+    resume_cfg={k:v for k,v in cfg.items() if not k.startswith('prefix_')}
+    resume_cfg.update(resume_state=str(resume),resume_state_sha256=hashlib.sha256(resume.read_bytes()).hexdigest(),
+                      resume_tensor_sha256=m['final_tensor_sha256'],resume_step=1)
+    third=tmp_path/'resumed';run(resume_cfg,third)
+    resumed=torch.load(third/'training-state-00002.pt',weights_only=True)
+    for name,value in state['model'].items():assert torch.equal(value,resumed['model'][name])
+    assert torch.equal(state['cpu_rng'],resumed['cpu_rng'])
+    for key,value in state['optimizer']['state'].items():
+        for field,tensor in value.items():assert torch.equal(tensor,resumed['optimizer']['state'][key][field])
+    assert json.loads((third/'manifest.json').read_text())['updates_this_run']==1

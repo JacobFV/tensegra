@@ -1,0 +1,64 @@
+{
+  "seed": 701,
+  "width": 1024,
+  "mode": "records",
+  "steps": 2000,
+  "batch": 16,
+  "nodes": 32,
+  "groups": 4,
+  "lr": 0.0003,
+  "train_seed": 171000000,
+  "eval_seed": 173000000,
+  "eval_examples": 256,
+  "eval_batch": 32,
+  "generator": "block_permutation_v2",
+  "checkpoints": [
+    0,
+    10,
+    25,
+    50,
+    100,
+    250,
+    500,
+    1000,
+    1500,
+    2000
+  ],
+  "curve_eval_seed": 173000000,
+  "curve_examples": 256,
+  "curve_conditions": [
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0
+    },
+    {
+      "nodes": 64,
+      "depth": 8,
+      "data_group": 1
+    }
+  ],
+  "conditions": [
+    {
+      "nodes": 32,
+      "depth": 4,
+      "data_group": 0
+    },
+    {
+      "nodes": 64,
+      "depth": 8,
+      "data_group": 1
+    }
+  ],
+  "prefix_steps": 1000,
+  "prefix_checkpoint": "/home/brandonin/topoformer-campaign01/attention/a07-development/checkpoint.pt",
+  "prefix_checkpoint_sha256": "137e32e2002400104f1741eb6fa143c537baaca37db1a2748614316d05c6e18c",
+  "prefix_tensor_sha256": "be44e0d5a30f109acfeedeec15278a78f68e49f37aa880fc762e16e41fd0240d",
+  "save_training_state": true,
+  "state_checkpoints": [
+    1000,
+    1500,
+    2000
+  ],
+  "device": "cpu"
+}

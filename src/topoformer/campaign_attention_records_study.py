@@ -23,8 +23,23 @@ def run(cfg,out):
     model=RecordAttention(width=cfg['width']).to(device)
     tensor_hash=lambda:hashlib.sha256(b''.join(t.detach().cpu().numpy().tobytes() for t in model.state_dict().values())).hexdigest()
     initial=tensor_hash();optimizer=torch.optim.AdamW(model.parameters(),lr=cfg['lr'],weight_decay=1e-4)
+    start_step=0
+    if 'resume_state' in cfg:
+        state_path=Path(cfg['resume_state'])
+        if hashlib.sha256(state_path.read_bytes()).hexdigest()!=cfg['resume_state_sha256']:
+            raise ValueError('Resume state SHA mismatch')
+        state=torch.load(state_path,map_location=device,weights_only=False)
+        for key in ['seed','width','mode','batch','nodes','groups','lr','train_seed','generator']:
+            if state['config'][key]!=cfg[key]:raise ValueError(f'Resume contract mismatch: {key}')
+        model.load_state_dict(state['model']);optimizer.load_state_dict(state['optimizer'])
+        if tensor_hash()!=cfg['resume_tensor_sha256']:raise ValueError('Resume tensor SHA mismatch')
+        start_step=state['step']
+        if start_step!=cfg['resume_step']:raise ValueError('Resume step mismatch')
+        torch.set_rng_state(state['cpu_rng'].cpu())
+        if str(device).startswith('cuda'):torch.cuda.set_rng_state_all([x.cpu() for x in state['cuda_rng']])
+        initial=tensor_hash()
     start=time.monotonic();curves=[];losses=[];node_steps=0;replay=None
-    for step in range(cfg['steps']+1):
+    for step in range(start_step,cfg['steps']+1):
         if step==cfg.get('prefix_steps',-1):
             reference=Path(cfg['prefix_checkpoint'])
             if hashlib.sha256(reference.read_bytes()).hexdigest()!=cfg['prefix_checkpoint_sha256']:
@@ -43,7 +58,7 @@ def run(cfg,out):
                 replay=dict(step=step,tensor_sha256=actual,logits_exact=True,max_logit_error=float((left-right).abs().max()))
                 del reference_model
             write(out/'prefix-replay.json',replay)
-        if step in cfg['checkpoints']:
+        if step in cfg['checkpoints'] and not ('resume_state' in cfg and step==start_step):
             ecfg=dict(cfg)
             if step!=cfg['steps'] and 'curve_conditions' in cfg:
                 ecfg.update(conditions=cfg['curve_conditions'],eval_seed=cfg['curve_eval_seed'],eval_examples=cfg['curve_examples'])
@@ -63,7 +78,8 @@ def run(cfg,out):
     write(out/'manifest.json',dict(seed=cfg['seed'],mode=cfg['mode'],width=cfg['width'],parameters_allocated=sum(p.numel() for p in model.parameters()),
          initial_tensor_sha256=initial,final_tensor_sha256=tensor_hash(),checkpoint_sha256=hashlib.sha256((out/'checkpoint.pt').read_bytes()).hexdigest(),
          config_sha256=hashlib.sha256(json.dumps(cfg,sort_keys=True).encode()).hexdigest(),
-         presentations=cfg['steps']*cfg['batch'],generated_graph_draws=cfg['steps']*cfg['batch'],unique_canonical_graphs=None,
+         start_step=start_step,end_step=cfg['steps'],updates_this_run=cfg['steps']-start_step,
+         presentations=(cfg['steps']-start_step)*cfg['batch'],generated_graph_draws=(cfg['steps']-start_step)*cfg['batch'],unique_canonical_graphs=None,
          node_microsteps=node_steps,edge_tokens_per_training_graph=3*cfg['nodes']*cfg['groups'],
          prefix_replay=replay,curves=curves,losses=torch.stack(losses).cpu().tolist() if losses else [],
          wall_seconds_including_eval_export=time.monotonic()-start,
