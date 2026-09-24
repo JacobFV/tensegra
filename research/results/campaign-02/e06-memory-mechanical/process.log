@@ -1,0 +1,37 @@
+.F............................                                           [100%]
+=================================== FAILURES ===================================
+_______ PublicMemoryTests.test_historical_counterexample_memories_differ _______
+
+self = <test_campaign02_memory.PublicMemoryTests testMethod=test_historical_counterexample_memories_differ>
+
+    def test_historical_counterexample_memories_differ(self):
+        path=Path(__file__).parents[1]/'research/campaigns/extended-02/diagnostics/a933-feature-collisions.json'
+>       raw=json.loads(path.read_text())
+                       ^^^^^^^^^^^^^^^^
+
+tests/test_campaign02_memory.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/brandonin/topoformer-campaign02/source-0d1b9318/research/campaigns/extended-02/diagnostics/a933-feature-collisions.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/brandonin/topoformer-campaign02/source-0d1b9318/research/campaigns/extended-02/diagnostics/a933-feature-collisions.json'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_campaign02_memory.py::PublicMemoryTests::test_historical_counterexample_memories_differ
+1 failed, 29 passed in 1.93s

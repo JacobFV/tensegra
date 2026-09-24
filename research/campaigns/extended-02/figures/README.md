@@ -18,3 +18,6 @@ There is one initializer per learned family, not replicated architecture evidenc
 `plotted-data.json.gz` deterministically compresses compact sorted JSON with mtime zero. Its 67 unique rows preserve plotted source values; `data-manifest.json` records all 63 audit/raw/summary hashes and compressed/uncompressed table hashes. Each raw binding is verified before extraction. E03 uses its audit's repository-relative source bindings; E04/E05 relative raw bindings are resolved only within their documented result roots; E02 explicitly verifies both archive and summary digests. Auditors' replay limitations remain in the table.
 
 Extraction took 0.031068673997651786 wall seconds. No render was attempted, so no figure is claimed visually verified. Root can render on the existing CPU environment and inspect layouts before publication. No model/solver inference, GPU work or dependency changes occurred. Render cost and final image verification should be recorded after that step.
+
+## Closure render
+Rendered PNG/SVG/PDF on the configured GB10 Python environment with CUDA disabled. All three PNG layouts visually inspected by root. CPU launch/accounting receipt: `research/results/campaign-02/closure-figures/occupancy.json`. Earlier pending-render text above records the preparation boundary. No inference or dependency installation.

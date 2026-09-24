@@ -1,11 +1,18 @@
-# Campaign handoff
+# Closed campaign handoff
 
-Root soleGPUcoordinator; branchcampaign/extended-02. Baseline65d44ae6 unchanged. Budget authoritativebudget.json: start2026-09-24T16:13:17Z,12GPUh/48CPUh/24elapsedh. Actualconsumption~minutes, not nearceiling.
+User requested ending all threads and documenting to conserve credits. Do not automatically resume training. No active experiment queue. Root branch `campaign/extended-02`; historical main baseline `65d44ae6` preserved.
 
-Running GB10 E05-acquire-recurrent source-a9337b71, resultpaths under/home/brandonin/topoformer-campaign02/results. RootPTysession5098. Frozen600updates mixedcurriculum,128DEV, oneinit5100. Matchinglightweight completed57/128, erraticcurve, rawlocal. Possiblepublicencoder insufficiency under audit by e02_policy/e02_training; do notlaunchlargePBT beforediagnosis. E04 complete512/cell: lightstandardperfect/tight0/obstacle309, recalllarger0; auditlocalizes sequencing/insufficientbudget/staleroute, noexecutorerror.
+## Implemented but untrained frontier
+Public-tree-v2 codec (281 features, stable typed opaque handles) and MemoryCandidatePolicy ordinary cross-attention/keyed reads. Width1024. Checkpoint contract binds codec version. Legacy summary-only lightweight critic remains a limitation before RL. Memory counterfactual runner exists but no acquisition run was launched. Capacity overflow is explicit, never truncation.
 
-Actual6-memberPBT runtimeprofile completed36updates,notcompetence. Resume/inheritanceactualtests pass. OptionalbatchedRL andepisode_mean implemented/tested. PopulationmainNOTlaunched.
+## Best next decisions if resumed
+1. Profile/test memory versus zero-memory on constructive relation counterfactuals, then fresh mixed workshops. Input repair does not automatically fix budget escalation.
+2. Isolate budget acquisition: exact4800-world teacher replay includes2757 escalations,43.39% of calls but2.73% of decisions. Test conditioning/objective allocation rather than assuming no examples.
+3. Only after an identifiable bootstrap works, run six-member population versus equal-funded multistart and single learning; three independent processes for confirmation.
+4. RL01 relation-only branch failed. Do not repeat it; target-node relation addressing is the localized frontier.
 
-RL01 relation data complete atGB10 data/rl01-v1,2048 freshalpha graphs; config/provenance insemantics andconfigs/campaign02. Source-f3c2fd4e hasprofile config; RL01profile readyaftercurrentGPUjob,120smax. Profilethen estimate1024pairedmain<=remaining780s; ifnot, predeclare smallerbudget protocol beforemain. Sevenupdatedfixturetests pass.
+## Storage and provenance
+Remote host gb10-direct (promaxgb10-4dfb), env `/home/brandonin/topoformer-stage8-cuda/bin/python`, campaign `/home/brandonin/topoformer-campaign02`. Immutable source snapshots and large checkpoints remain there; compact predictions/receipts/configs are committed locally. E03 endpoints in results/e03-acquire-{lightweight,recurrent}/checkpoint.pt. E05 endpoints in results/e05-acquire-{lightweight,recurrent}/checkpoints/round-0-slot-5-attempt-5.pt. RL01 weights under results/rl01-main-v1. Consult recorded manifests for hashes, not filenames alone. No optimizer/checkpoint reset or automatic rerun.
 
-Userfullauthority, continue evidence-driven. Preserve allfailures. Next: finishpairedE05run; exactinputcollisionaudit andminimalrepair; profileindependentrelationbranch; then realresourcepolicy/populationcomparisons. Pushmilestones. Finalconfirmedpopulationclaimsrequire3independentprocesses andfresh512cells, notdescendants. Noqueueoutside root.
+## Limits
+One learned initializer per controller and one semantic parent, reused development panels, no confirmation. Feasibility-world objective is constant, not a nontrivial optimization benchmark. Reference policies receive richer full public JSON than legacy neural features. Graph attention and evolutionary advantage untested.

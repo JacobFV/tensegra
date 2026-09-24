@@ -14,3 +14,6 @@ Frozen600-update lightweight mixedbootstrap ends57/128 DEV, witherratic100-stepc
 VersionedE06inputrepair: typedpublic relationalmemory, sameinputs tobothfamilies, no solvedgreedy/pathfeatures; stableopaquehandle equality, explicitorderededges/parentrefs, overflowfails, scalarbytecode+numericfeatures. Keyedcandidatebinding is suppliedaddressprior andwillbedisclosed. Ordinarycontext consumerfirst; zero-memory matchedparameterablation. Counterfactualfit andprofile precedefulltraining. This is aninputcontract intervention, notprogrammableattentionevidence.
 
 E05 final recurrent46/128 versus lightweight57/128. Independent raw audit finds repeated budget16 timeouts dominate57/76 failed episodes; all submitted reductions remain correct. Do not attribute these errors to missing relational inputs without intervention. A separate public-state budget-label audit will localize escalation acquisition. RL01 profile24.17s; conservative full-study estimate625s fits780s cap, so paired fixed1024-update study launched.
+
+## Closure at user request
+Stop new experiments to conserve credits. Complete source fixes, collect receipts, render existing curves, run bounded CPU verification and independent closure review. Defer E06 acquisition/main populations/confirmation explicitly; do not label them failed or passed.

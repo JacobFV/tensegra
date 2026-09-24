@@ -1,0 +1,12 @@
+{
+  "checked_utc": "2026-09-24T17:29:43.776875+00:00",
+  "command": [
+    "ssh",
+    "gb10-direct",
+    "hostname; ps -eo pid,args | grep -E \"[p]ython.*(campaign02|rl01|pytest)\"; nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader"
+  ],
+  "stdout": "promaxgb10-4dfb\n",
+  "stderr": "",
+  "exit_code": 0,
+  "interpretation": "No experiment Python processes or GPU compute processes listed; host header only."
+}

@@ -1,15 +1,18 @@
-# Extended-02 claim map (live)
+# Extended-02 final claim map
 
-| Claim | Evidence/status | Boundary |
+| Claim | Evidence | Limit |
 |---|---|---|
-| Mechanical exact execution | Typed validators and bounded-process fixtures pass | Supplied algorithms; formal-instance correctness is not goal-reduction correctness |
-| Closed-loop sequence acquisition | E03 both1024-wide controllers128/128 easy DEV, one seed each | Explicit typed public features and supervised reference bootstrap; no gold schedule at evaluation; not resource adaptation |
-| Resource leverage | E02 references512/cell: tools improve standard feasible tasks; tight/high-cost conditions change useful policy | Supplied policies, development support, not learned metareasoning |
-| Budget interface | Paired E02 remaining-budget choice improves tight success138→501/512 | Programmed action-space repair;11 residual subset failures retained |
-| Population advantage | Not yet measured | Actual runner/inheritance/resume tested; descendants are not independent lineages |
-| Multi-return consumption | Two-role use acquired on easy tasks | Distinct same-primitive competitors, corruption and stale controls still pending |
-| New primitive composition | Not established | Current world uses subset and route families; their public compiler is supplied |
-| Structural attention advantage | Not tested here | Candidate controller results do not validate attention bias |
-| Semantic relation transfer | RL01 prospective, supplied nodes | Separate one-parent exploratory continuation; no agentic dependency |
+| Typed bounded computation | Protocol, validator, lifecycle and accounting tests | Algorithms and public problem compiler supplied |
+| Easy closed-loop acquisition | Both width1024 controllers128/128 DEV | One initializer each; supervised bootstrap; no evaluation schedule supplied |
+| Resource leverage | Same-public-API reference comparisons512/cell | Heuristic policies, not learned allocation |
+| Public budget repair | Tight reference success138→501/512 | Supplied remaining-budget action choice |
+| Learned transfer | Lightweight512/512 medium/hard; recurrent0/512 | One seed; frozen easy curriculum; richer reference inputs |
+| Mixed resource acquisition | Final57/128 lightweight,46/128 recurrent | Failed development criterion; all learned endpoint calls budget16 |
+| Semantic input sufficiency | Equal legacy features can hide teacher-relevant relations | Constructive collision proof, not prevalence or cause of all failures |
+| Public-memory repair | Lossless typed codec + learned consumer implemented/tested | No neural acquisition experiment completed |
+| Relation transfer | Both RL01 arms0/512 omitted composition | One parent lineage; relation-only loss did not repair target-node addressing |
+| Population advantage | Not measured | Actual inheritance/resume mechanics tested only |
+| Causal multi-return use | Intervention harness implemented | Learned intervention study not run |
+| Structural attention advantage | Not tested | Ordinary keyed memory is not graph-biased attention |
 
-E04 frozen transfer is development diagnosis; repeated128 checkpoint evaluations are not new support. Future confirmation requires fresh worlds and independent training/population lineages. Exact payload retention and action-budget bookkeeping are architectural contracts, not acquired neural algorithms.
+All model results are exploratory development evidence. No three-lineage confirmation, autonomous resource-policy advantage, or evolutionary advantage is claimed.
