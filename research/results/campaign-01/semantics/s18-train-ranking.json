@@ -1,0 +1,1533 @@
+{
+  "scope": "Posthoc actualTRAIN128 only, same labels used in calibration. Optimistic in-sample diagnostic, not generalization. Fixed archived cutoffs only; no threshold search, refit, model calls or independent-error assumption. Ranking is tie-aware AUROC and bucketed AP on predicted-present calibration pairs; absent-class roles undefined. Full packed graph conjunction reported separately.",
+  "inputs": {
+    "original": {
+      "evaluation_path": "research/results/campaign-01/semantics/s17-calibration-main-v1/mixed/evaluation-u28672.json.gz",
+      "evaluation_sha256": "f5ad28c8d1dbee1b973baf00d2be3a56700b7b0c650c0798ae99b019fb337d4c",
+      "calibration_path": "research/results/campaign-01/semantics/s17-calibration-main-v1/mixed/calibration-u28672.npz",
+      "calibration_sha256": "f8ff5ac88ec9beb01e879af773ef77abed929af9477d0aa4f462747ade4761b0"
+    },
+    "context": {
+      "evaluation_path": "/home/brandonin/Documents/topoformer/.worktrees/campaign-s16/research/results/campaign-01/semantics/s18-main-v2/s18-main-v1/context/matched-u28672/evaluation-u28672.json.gz",
+      "evaluation_sha256": "d65cc447aeb853bb794843e185186e0e0623b527734425ffae00cb03abdbbd0a",
+      "calibration_path": "/home/brandonin/Documents/topoformer/.worktrees/campaign-s16/research/results/campaign-01/semantics/s18-main-v2/s18-main-v1/context/matched-u28672/calibration-u28672.npz",
+      "calibration_sha256": "683b22347dc4ece9c7b7df19c46a05f0a82ca0d10c7b689321e842f2105ef259"
+    },
+    "workspace_control": {
+      "evaluation_path": "/home/brandonin/Documents/topoformer/.worktrees/campaign-s16/research/results/campaign-01/semantics/s18-main-v2/s18-main-v1/workspace_control/matched-u28672/evaluation-u28672.json.gz",
+      "evaluation_sha256": "132260fb1cca52ab2737c607516c370949896f10085402ab223a0944edaa9d40",
+      "calibration_path": "/home/brandonin/Documents/topoformer/.worktrees/campaign-s16/research/results/campaign-01/semantics/s18-main-v2/s18-main-v1/workspace_control/matched-u28672/calibration-u28672.npz",
+      "calibration_sha256": "4db9e1653fc55b7668dd332411fe1a9563712431aa99e2d381f64379f2b5eb41"
+    }
+  },
+  "analysis_sha256": "c2010315a0b61ffe2d51b57acedace3b5c7fbad7c332bf09a7805379d82d154a",
+  "source_sha256": "55c238cf2f65777e92074af2d56fba2c4aa5013c887eea4672a5505b2da241eb",
+  "results": {
+    "original": {
+      "3x3": {
+        "graphs": 64,
+        "active_pair_relation_decisions": 582777,
+        "active_positive_labels": 3677,
+        "active_fixed_errors": 241,
+        "active_fixed_error_rate": 0.000413537253529223,
+        "complete_graphs": 5,
+        "full_edges_exact": 5,
+        "active_error_free": 5,
+        "active_error_free_but_full_graph_failed": 0,
+        "active_errors_per_graph_histogram": {
+          "6+": 13,
+          "2-5": 40,
+          "0": 5,
+          "1": 6
+        },
+        "active_errors_per_graph_quantiles": {
+          "0": 0.0,
+          "0.25": 2.0,
+          "0.5": 3.0,
+          "0.75": 5.0,
+          "1": 13.0
+        },
+        "full_graph_failure_patterns": {
+          "edges": 58,
+          "none": 5,
+          "copy,edges": 1
+        },
+        "graphs_with_error_by_relation": {
+          "refers_to": 59,
+          "argument": 31,
+          "item": 1
+        },
+        "relations": {
+          "contains": {
+            "positive": 1280,
+            "negative": 43549,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 2.484375,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "declares": {
+            "positive": 349,
+            "negative": 44480,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 2.046875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "refers_to": {
+            "positive": 832,
+            "negative": 43997,
+            "auroc": 0.9992422177823314,
+            "average_precision": 0.9570464058576641,
+            "frozen_threshold": 5.625,
+            "false_positive": 52,
+            "false_negative": 136,
+            "fixed_error_rate": 0.004193713890561913
+          },
+          "argument": {
+            "positive": 832,
+            "negative": 43997,
+            "auroc": 0.9998070235558019,
+            "average_precision": 0.9867726458045252,
+            "frozen_threshold": 4.65625,
+            "false_positive": 41,
+            "false_negative": 11,
+            "fixed_error_rate": 0.0011599634165384014
+          },
+          "item": {
+            "positive": 192,
+            "negative": 44637,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 13.875,
+            "false_positive": 0,
+            "false_negative": 1,
+            "fixed_error_rate": 2.2306988779584644e-05
+          },
+          "binds": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -26.875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "binding_scope": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -30.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:query": {
+            "positive": 64,
+            "negative": 44765,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 1.3671875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:substitution": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -28.25,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:pattern": {
+            "positive": 64,
+            "negative": 44765,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": -8.1875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:fact": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -24.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:facts": {
+            "positive": 64,
+            "negative": 44765,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": -5.375,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:scene": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -31.25,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          }
+        }
+      },
+      "4x3": {
+        "graphs": 32,
+        "active_pair_relation_decisions": 401544,
+        "active_positive_labels": 2242,
+        "active_fixed_errors": 60,
+        "active_fixed_error_rate": 0.00014942322634630328,
+        "complete_graphs": 7,
+        "full_edges_exact": 7,
+        "active_error_free": 7,
+        "active_error_free_but_full_graph_failed": 0,
+        "active_errors_per_graph_histogram": {
+          "1": 11,
+          "2-5": 12,
+          "0": 7,
+          "6+": 2
+        },
+        "active_errors_per_graph_quantiles": {
+          "0": 0.0,
+          "0.25": 1.0,
+          "0.5": 1.0,
+          "0.75": 3.0,
+          "1": 6.0
+        },
+        "full_graph_failure_patterns": {
+          "edges": 25,
+          "none": 7
+        },
+        "graphs_with_error_by_relation": {
+          "refers_to": 24,
+          "contains": 1,
+          "argument": 9
+        },
+        "relations": {
+          "contains": {
+            "positive": 768,
+            "negative": 30120,
+            "auroc": 0.9999999567701416,
+            "average_precision": 0.9999983067837018,
+            "frozen_threshold": 2.484375,
+            "false_positive": 0,
+            "false_negative": 1,
+            "fixed_error_rate": 3.237503237503238e-05
+          },
+          "declares": {
+            "positive": 194,
+            "negative": 30694,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 2.046875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "refers_to": {
+            "positive": 544,
+            "negative": 30344,
+            "auroc": 0.9997821851107302,
+            "average_precision": 0.9817969245816232,
+            "frozen_threshold": 5.625,
+            "false_positive": 38,
+            "false_negative": 9,
+            "fixed_error_rate": 0.0015216265216265216
+          },
+          "argument": {
+            "positive": 544,
+            "negative": 30344,
+            "auroc": 0.9999914279497061,
+            "average_precision": 0.9994968373255754,
+            "frozen_threshold": 4.65625,
+            "false_positive": 12,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0003885003885003885
+          },
+          "item": {
+            "positive": 96,
+            "negative": 30792,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 13.875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "binds": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -26.875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "binding_scope": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -30.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:query": {
+            "positive": 32,
+            "negative": 30856,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 1.3671875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:substitution": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -28.25,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:pattern": {
+            "positive": 32,
+            "negative": 30856,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": -8.1875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:fact": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -24.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:facts": {
+            "positive": 32,
+            "negative": 30856,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": -5.375,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:scene": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -31.25,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          }
+        }
+      },
+      "4x4": {
+        "graphs": 32,
+        "active_pair_relation_decisions": 551499,
+        "active_positive_labels": 2701,
+        "active_fixed_errors": 175,
+        "active_fixed_error_rate": 0.00031731698516225776,
+        "complete_graphs": 2,
+        "full_edges_exact": 2,
+        "active_error_free": 2,
+        "active_error_free_but_full_graph_failed": 0,
+        "active_errors_per_graph_histogram": {
+          "2-5": 14,
+          "6+": 12,
+          "0": 2,
+          "1": 4
+        },
+        "active_errors_per_graph_quantiles": {
+          "0": 0.0,
+          "0.25": 2.0,
+          "0.5": 5.0,
+          "0.75": 7.0,
+          "1": 24.0
+        },
+        "full_graph_failure_patterns": {
+          "edges": 30,
+          "none": 2
+        },
+        "graphs_with_error_by_relation": {
+          "refers_to": 30,
+          "declares": 3,
+          "argument": 15,
+          "contains": 3,
+          "item": 1
+        },
+        "relations": {
+          "contains": {
+            "positive": 928,
+            "negative": 41495,
+            "auroc": 0.9999998182165695,
+            "average_precision": 0.9999918891199663,
+            "frozen_threshold": 2.484375,
+            "false_positive": 3,
+            "false_negative": 0,
+            "fixed_error_rate": 7.071635669330315e-05
+          },
+          "declares": {
+            "positive": 205,
+            "negative": 42218,
+            "auroc": 0.9999990178735461,
+            "average_precision": 0.9997889055647095,
+            "frozen_threshold": 2.046875,
+            "false_positive": 2,
+            "false_negative": 1,
+            "fixed_error_rate": 7.071635669330315e-05
+          },
+          "refers_to": {
+            "positive": 672,
+            "negative": 41751,
+            "auroc": 0.9994879827514824,
+            "average_precision": 0.9659232339504809,
+            "frozen_threshold": 5.625,
+            "false_positive": 97,
+            "false_negative": 39,
+            "fixed_error_rate": 0.00320580817009641
+          },
+          "argument": {
+            "positive": 672,
+            "negative": 41751,
+            "auroc": 0.9999483367093575,
+            "average_precision": 0.9963414139617511,
+            "frozen_threshold": 4.65625,
+            "false_positive": 28,
+            "false_negative": 4,
+            "fixed_error_rate": 0.000754307804728567
+          },
+          "item": {
+            "positive": 128,
+            "negative": 42295,
+            "auroc": 0.9999998152854948,
+            "average_precision": 0.9999394379844961,
+            "frozen_threshold": 13.875,
+            "false_positive": 0,
+            "false_negative": 1,
+            "fixed_error_rate": 2.357211889776772e-05
+          },
+          "binds": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -26.875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "binding_scope": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -30.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:query": {
+            "positive": 32,
+            "negative": 42391,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 1.3671875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:substitution": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -28.25,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:pattern": {
+            "positive": 32,
+            "negative": 42391,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": -8.1875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:fact": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -24.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:facts": {
+            "positive": 32,
+            "negative": 42391,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": -5.375,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:scene": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -31.25,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          }
+        }
+      }
+    },
+    "context": {
+      "3x3": {
+        "graphs": 64,
+        "active_pair_relation_decisions": 582777,
+        "active_positive_labels": 3677,
+        "active_fixed_errors": 190,
+        "active_fixed_error_rate": 0.00032602522062469866,
+        "complete_graphs": 6,
+        "full_edges_exact": 6,
+        "active_error_free": 6,
+        "active_error_free_but_full_graph_failed": 0,
+        "active_errors_per_graph_histogram": {
+          "6+": 7,
+          "2-5": 38,
+          "0": 6,
+          "1": 13
+        },
+        "active_errors_per_graph_quantiles": {
+          "0": 0.0,
+          "0.25": 1.0,
+          "0.5": 2.0,
+          "0.75": 4.0,
+          "1": 13.0
+        },
+        "full_graph_failure_patterns": {
+          "edges": 57,
+          "none": 6,
+          "kind,edges": 1
+        },
+        "graphs_with_error_by_relation": {
+          "refers_to": 54,
+          "argument": 37,
+          "item": 2
+        },
+        "relations": {
+          "contains": {
+            "positive": 1280,
+            "negative": 43549,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 2.890625,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "declares": {
+            "positive": 349,
+            "negative": 44480,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 5.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "refers_to": {
+            "positive": 832,
+            "negative": 43997,
+            "auroc": 0.9994882326985581,
+            "average_precision": 0.9710886362710948,
+            "frozen_threshold": 5.625,
+            "false_positive": 61,
+            "false_negative": 68,
+            "fixed_error_rate": 0.002877601552566419
+          },
+          "argument": {
+            "positive": 832,
+            "negative": 43997,
+            "auroc": 0.9998507874662783,
+            "average_precision": 0.9906656735934081,
+            "frozen_threshold": 5.03125,
+            "false_positive": 41,
+            "false_negative": 18,
+            "fixed_error_rate": 0.001316112337995494
+          },
+          "item": {
+            "positive": 192,
+            "negative": 44637,
+            "auroc": 0.999999649954074,
+            "average_precision": 0.9999191791058133,
+            "frozen_threshold": 8.6875,
+            "false_positive": 1,
+            "false_negative": 1,
+            "fixed_error_rate": 4.461397755916929e-05
+          },
+          "binds": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -23.5,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "binding_scope": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -33.25,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:query": {
+            "positive": 64,
+            "negative": 44765,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 7.96875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:substitution": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -37.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:pattern": {
+            "positive": 64,
+            "negative": 44765,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 27.625,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:fact": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -16.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:facts": {
+            "positive": 64,
+            "negative": 44765,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": -4.5625,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:scene": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -24.625,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          }
+        }
+      },
+      "4x3": {
+        "graphs": 32,
+        "active_pair_relation_decisions": 401544,
+        "active_positive_labels": 2242,
+        "active_fixed_errors": 83,
+        "active_fixed_error_rate": 0.00020670212977905286,
+        "complete_graphs": 3,
+        "full_edges_exact": 3,
+        "active_error_free": 3,
+        "active_error_free_but_full_graph_failed": 0,
+        "active_errors_per_graph_histogram": {
+          "2-5": 20,
+          "1": 7,
+          "0": 3,
+          "6+": 2
+        },
+        "active_errors_per_graph_quantiles": {
+          "0": 0.0,
+          "0.25": 1.0,
+          "0.5": 2.0,
+          "0.75": 3.0,
+          "1": 12.0
+        },
+        "full_graph_failure_patterns": {
+          "edges": 29,
+          "none": 3
+        },
+        "graphs_with_error_by_relation": {
+          "refers_to": 23,
+          "argument": 16
+        },
+        "relations": {
+          "contains": {
+            "positive": 768,
+            "negative": 30120,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 2.890625,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "declares": {
+            "positive": 194,
+            "negative": 30694,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 5.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "refers_to": {
+            "positive": 544,
+            "negative": 30344,
+            "auroc": 0.9997734010309238,
+            "average_precision": 0.9805752343291889,
+            "frozen_threshold": 5.625,
+            "false_positive": 42,
+            "false_negative": 10,
+            "fixed_error_rate": 0.0016835016835016834
+          },
+          "argument": {
+            "positive": 544,
+            "negative": 30344,
+            "auroc": 0.9999632280245344,
+            "average_precision": 0.9978508937772118,
+            "frozen_threshold": 5.03125,
+            "false_positive": 30,
+            "false_negative": 1,
+            "fixed_error_rate": 0.0010036260036260037
+          },
+          "item": {
+            "positive": 96,
+            "negative": 30792,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 8.6875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "binds": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -23.5,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "binding_scope": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -33.25,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:query": {
+            "positive": 32,
+            "negative": 30856,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 7.96875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:substitution": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -37.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:pattern": {
+            "positive": 32,
+            "negative": 30856,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 27.625,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:fact": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -16.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:facts": {
+            "positive": 32,
+            "negative": 30856,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": -4.5625,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:scene": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -24.625,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          }
+        }
+      },
+      "4x4": {
+        "graphs": 32,
+        "active_pair_relation_decisions": 551499,
+        "active_positive_labels": 2701,
+        "active_fixed_errors": 150,
+        "active_fixed_error_rate": 0.0002719859872819352,
+        "complete_graphs": 1,
+        "full_edges_exact": 1,
+        "active_error_free": 1,
+        "active_error_free_but_full_graph_failed": 0,
+        "active_errors_per_graph_histogram": {
+          "2-5": 18,
+          "1": 4,
+          "6+": 9,
+          "0": 1
+        },
+        "active_errors_per_graph_quantiles": {
+          "0": 0.0,
+          "0.25": 2.0,
+          "0.5": 4.0,
+          "0.75": 6.0,
+          "1": 24.0
+        },
+        "full_graph_failure_patterns": {
+          "edges": 31,
+          "none": 1
+        },
+        "graphs_with_error_by_relation": {
+          "refers_to": 29,
+          "argument": 19,
+          "contains": 2,
+          "declares": 1
+        },
+        "relations": {
+          "contains": {
+            "positive": 928,
+            "negative": 41495,
+            "auroc": 0.999999844185631,
+            "average_precision": 0.9999930515646338,
+            "frozen_threshold": 2.890625,
+            "false_positive": 1,
+            "false_negative": 2,
+            "fixed_error_rate": 7.071635669330315e-05
+          },
+          "declares": {
+            "positive": 205,
+            "negative": 42218,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 5.75,
+            "false_positive": 0,
+            "false_negative": 1,
+            "fixed_error_rate": 2.357211889776772e-05
+          },
+          "refers_to": {
+            "positive": 672,
+            "negative": 41751,
+            "auroc": 0.9995288108297378,
+            "average_precision": 0.9665639416435577,
+            "frozen_threshold": 5.625,
+            "false_positive": 76,
+            "false_negative": 36,
+            "fixed_error_rate": 0.002640077316549985
+          },
+          "argument": {
+            "positive": 672,
+            "negative": 41751,
+            "auroc": 0.9999676725735682,
+            "average_precision": 0.9978763272739639,
+            "frozen_threshold": 5.03125,
+            "false_positive": 30,
+            "false_negative": 4,
+            "fixed_error_rate": 0.0008014520425241025
+          },
+          "item": {
+            "positive": 128,
+            "negative": 42295,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 8.6875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "binds": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -23.5,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "binding_scope": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -33.25,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:query": {
+            "positive": 32,
+            "negative": 42391,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 7.96875,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:substitution": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -37.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:pattern": {
+            "positive": 32,
+            "negative": 42391,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 27.625,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:fact": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -16.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:facts": {
+            "positive": 32,
+            "negative": 42391,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": -4.5625,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:scene": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -24.625,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          }
+        }
+      }
+    },
+    "workspace_control": {
+      "3x3": {
+        "graphs": 64,
+        "active_pair_relation_decisions": 582777,
+        "active_positive_labels": 3677,
+        "active_fixed_errors": 557,
+        "active_fixed_error_rate": 0.0009557686730945113,
+        "complete_graphs": 0,
+        "full_edges_exact": 0,
+        "active_error_free": 0,
+        "active_error_free_but_full_graph_failed": 0,
+        "active_errors_per_graph_histogram": {
+          "6+": 46,
+          "2-5": 17,
+          "1": 1
+        },
+        "active_errors_per_graph_quantiles": {
+          "0": 1.0,
+          "0.25": 5.0,
+          "0.5": 7.0,
+          "0.75": 11.0,
+          "1": 26.0
+        },
+        "full_graph_failure_patterns": {
+          "edges": 57,
+          "copy,edges": 3,
+          "kind,edges": 2,
+          "kind,copy,edges": 1,
+          "copy,edges,slots": 1
+        },
+        "graphs_with_error_by_relation": {
+          "refers_to": 64,
+          "argument": 58,
+          "declares": 5,
+          "contains": 8,
+          "item": 4,
+          "field:query": 1
+        },
+        "relations": {
+          "contains": {
+            "positive": 1280,
+            "negative": 43549,
+            "auroc": 0.9999974256728054,
+            "average_precision": 0.9999116824141552,
+            "frozen_threshold": 7.78125,
+            "false_positive": 4,
+            "false_negative": 8,
+            "fixed_error_rate": 0.00026768386535501573
+          },
+          "declares": {
+            "positive": 349,
+            "negative": 44480,
+            "auroc": 0.9999985827956546,
+            "average_precision": 0.9998114965035053,
+            "frozen_threshold": 4.3125,
+            "false_positive": 5,
+            "false_negative": 0,
+            "fixed_error_rate": 0.00011153494389792322
+          },
+          "refers_to": {
+            "positive": 832,
+            "negative": 43997,
+            "auroc": 0.9978996054800939,
+            "average_precision": 0.890182444420368,
+            "frozen_threshold": 10.0,
+            "false_positive": 56,
+            "false_negative": 306,
+            "fixed_error_rate": 0.00807512993820964
+          },
+          "argument": {
+            "positive": 832,
+            "negative": 43997,
+            "auroc": 0.9992200489849833,
+            "average_precision": 0.9518402787174911,
+            "frozen_threshold": 8.6875,
+            "false_positive": 86,
+            "false_negative": 85,
+            "fixed_error_rate": 0.003814495081308974
+          },
+          "item": {
+            "positive": 192,
+            "negative": 44637,
+            "auroc": 0.9999969079276534,
+            "average_precision": 0.9992826672533018,
+            "frozen_threshold": 21.875,
+            "false_positive": 0,
+            "false_negative": 6,
+            "fixed_error_rate": 0.00013384193267750787
+          },
+          "binds": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -16.125,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "binding_scope": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -18.0,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:query": {
+            "positive": 64,
+            "negative": 44765,
+            "auroc": 0.9999986038199487,
+            "average_precision": 0.9990808823529411,
+            "frozen_threshold": 12.75,
+            "false_positive": 0,
+            "false_negative": 1,
+            "fixed_error_rate": 2.2306988779584644e-05
+          },
+          "field:substitution": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -15.3125,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:pattern": {
+            "positive": 64,
+            "negative": 44765,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 18.25,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:fact": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -7.375,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:facts": {
+            "positive": 64,
+            "negative": 44765,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": -2.28125,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:scene": {
+            "positive": 0,
+            "negative": 44829,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -13.0,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          }
+        }
+      },
+      "4x3": {
+        "graphs": 32,
+        "active_pair_relation_decisions": 401544,
+        "active_positive_labels": 2242,
+        "active_fixed_errors": 209,
+        "active_fixed_error_rate": 0.0005204909051062897,
+        "complete_graphs": 1,
+        "full_edges_exact": 1,
+        "active_error_free": 1,
+        "active_error_free_but_full_graph_failed": 0,
+        "active_errors_per_graph_histogram": {
+          "2-5": 12,
+          "6+": 18,
+          "0": 1,
+          "1": 1
+        },
+        "active_errors_per_graph_quantiles": {
+          "0": 0.0,
+          "0.25": 3.75,
+          "0.5": 6.5,
+          "0.75": 8.0,
+          "1": 19.0
+        },
+        "full_graph_failure_patterns": {
+          "edges": 31,
+          "none": 1
+        },
+        "graphs_with_error_by_relation": {
+          "refers_to": 31,
+          "argument": 22,
+          "item": 3,
+          "contains": 1,
+          "declares": 1
+        },
+        "relations": {
+          "contains": {
+            "positive": 768,
+            "negative": 30120,
+            "auroc": 1.0,
+            "average_precision": 0.9999999999999999,
+            "frozen_threshold": 7.78125,
+            "false_positive": 3,
+            "false_negative": 0,
+            "fixed_error_rate": 9.712509712509713e-05
+          },
+          "declares": {
+            "positive": 194,
+            "negative": 30694,
+            "auroc": 0.999999496190867,
+            "average_precision": 0.999920287672919,
+            "frozen_threshold": 4.3125,
+            "false_positive": 1,
+            "false_negative": 0,
+            "fixed_error_rate": 3.237503237503238e-05
+          },
+          "refers_to": {
+            "positive": 544,
+            "negative": 30344,
+            "auroc": 0.999158515444472,
+            "average_precision": 0.9517625749566798,
+            "frozen_threshold": 10.0,
+            "false_positive": 115,
+            "false_negative": 33,
+            "fixed_error_rate": 0.004791504791504792
+          },
+          "argument": {
+            "positive": 544,
+            "negative": 30344,
+            "auroc": 0.9998566377595726,
+            "average_precision": 0.9896771766614236,
+            "frozen_threshold": 8.6875,
+            "false_positive": 53,
+            "false_negative": 1,
+            "fixed_error_rate": 0.0017482517482517483
+          },
+          "item": {
+            "positive": 96,
+            "negative": 30792,
+            "auroc": 0.999998139397679,
+            "average_precision": 0.9993384082076204,
+            "frozen_threshold": 21.875,
+            "false_positive": 3,
+            "false_negative": 0,
+            "fixed_error_rate": 9.712509712509713e-05
+          },
+          "binds": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -16.125,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "binding_scope": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -18.0,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:query": {
+            "positive": 32,
+            "negative": 30856,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 12.75,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:substitution": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -15.3125,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:pattern": {
+            "positive": 32,
+            "negative": 30856,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 18.25,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:fact": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -7.375,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:facts": {
+            "positive": 32,
+            "negative": 30856,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": -2.28125,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:scene": {
+            "positive": 0,
+            "negative": 30888,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -13.0,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          }
+        }
+      },
+      "4x4": {
+        "graphs": 32,
+        "active_pair_relation_decisions": 551499,
+        "active_positive_labels": 2701,
+        "active_fixed_errors": 359,
+        "active_fixed_error_rate": 0.0006509531295614317,
+        "complete_graphs": 0,
+        "full_edges_exact": 0,
+        "active_error_free": 0,
+        "active_error_free_but_full_graph_failed": 0,
+        "active_errors_per_graph_histogram": {
+          "6+": 28,
+          "2-5": 4
+        },
+        "active_errors_per_graph_quantiles": {
+          "0": 2.0,
+          "0.25": 6.75,
+          "0.5": 11.0,
+          "0.75": 14.0,
+          "1": 32.0
+        },
+        "full_graph_failure_patterns": {
+          "edges": 29,
+          "kind,edges": 1,
+          "copy,edges": 1,
+          "edges,slots": 1
+        },
+        "graphs_with_error_by_relation": {
+          "refers_to": 32,
+          "argument": 27,
+          "contains": 8,
+          "declares": 5,
+          "item": 2,
+          "field:pattern": 1,
+          "field:query": 1
+        },
+        "relations": {
+          "contains": {
+            "positive": 928,
+            "negative": 41495,
+            "auroc": 0.9999972992176042,
+            "average_precision": 0.9998779153587075,
+            "frozen_threshold": 7.78125,
+            "false_positive": 5,
+            "false_negative": 4,
+            "fixed_error_rate": 0.00021214907007990948
+          },
+          "declares": {
+            "positive": 205,
+            "negative": 42218,
+            "auroc": 0.9999927207098117,
+            "average_precision": 0.9985396018468035,
+            "frozen_threshold": 4.3125,
+            "false_positive": 5,
+            "false_negative": 2,
+            "fixed_error_rate": 0.00016500483228437405
+          },
+          "refers_to": {
+            "positive": 672,
+            "negative": 41751,
+            "auroc": 0.9979668116018892,
+            "average_precision": 0.8896857139573421,
+            "frozen_threshold": 10.0,
+            "false_positive": 158,
+            "false_negative": 85,
+            "fixed_error_rate": 0.005728024892157556
+          },
+          "argument": {
+            "positive": 672,
+            "negative": 41751,
+            "auroc": 0.9996916063316419,
+            "average_precision": 0.9760728252742084,
+            "frozen_threshold": 8.6875,
+            "false_positive": 86,
+            "false_negative": 8,
+            "fixed_error_rate": 0.0022157791763901657
+          },
+          "item": {
+            "positive": 128,
+            "negative": 42295,
+            "auroc": 0.9999994458564843,
+            "average_precision": 0.9998187725360577,
+            "frozen_threshold": 21.875,
+            "false_positive": 3,
+            "false_negative": 0,
+            "fixed_error_rate": 7.071635669330315e-05
+          },
+          "binds": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -16.125,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "binding_scope": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -18.0,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:query": {
+            "positive": 32,
+            "negative": 42391,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 12.75,
+            "false_positive": 1,
+            "false_negative": 0,
+            "fixed_error_rate": 2.357211889776772e-05
+          },
+          "field:substitution": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -15.3125,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:pattern": {
+            "positive": 32,
+            "negative": 42391,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": 18.25,
+            "false_positive": 2,
+            "false_negative": 0,
+            "fixed_error_rate": 4.714423779553544e-05
+          },
+          "field:fact": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -7.375,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:facts": {
+            "positive": 32,
+            "negative": 42391,
+            "auroc": 1.0,
+            "average_precision": 1.0,
+            "frozen_threshold": -2.28125,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          },
+          "field:scene": {
+            "positive": 0,
+            "negative": 42423,
+            "auroc": null,
+            "average_precision": null,
+            "frozen_threshold": -13.0,
+            "false_positive": 0,
+            "false_negative": 0,
+            "fixed_error_rate": 0.0
+          }
+        }
+      }
+    }
+  }
+}
