@@ -42,7 +42,7 @@ def main():
             from campaign_semantics_s18_freeze import verify
             config=json.loads(Path(args.config).read_text());verify(config,Path(__file__).parent,args.cap)
             if Path(config['output_dir']).exists():raise RuntimeError('immutable output exists')
-            env={**os.environ,'OMP_NUM_THREADS':'2','OPENBLAS_NUM_THREADS':'2','MKL_NUM_THREADS':'2','PYTHONPATH':'src'}
+            env={**os.environ,'OMP_NUM_THREADS':'2','OPENBLAS_NUM_THREADS':'2','MKL_NUM_THREADS':'2','PYTHONPATH':str(Path(__file__).resolve().parent.parent)}
             remaining=args.cap-(time.monotonic()-tick)
             if remaining<=0:raise subprocess.TimeoutExpired(command,args.cap)
             code=subprocess.run(command,stdout=stream,stderr=subprocess.STDOUT,env=env,timeout=remaining).returncode

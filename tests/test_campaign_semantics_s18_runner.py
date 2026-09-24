@@ -70,6 +70,8 @@ def test_atomic_failed_lifecycle_receipt_no_retry(monkeypatch,tmp_path,timeout):
  calls=[]
  def fake_run(command,**kw):
   calls.append(command)
+  assert kw['env']['PYTHONPATH']==str(Path(launch.__file__).resolve().parent.parent)
+  assert Path(kw['env']['PYTHONPATH']).is_absolute()
   if timeout:raise subprocess.TimeoutExpired(command,kw['timeout'])
   return SimpleNamespace(returncode=17)
  monkeypatch.setattr(launch.subprocess,'run',fake_run)
