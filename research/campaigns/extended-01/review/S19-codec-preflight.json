@@ -1,0 +1,16 @@
+{
+  "source_ref": "6026a386",
+  "edge_emission_permutation_preserves_historical_graph_semantics": true,
+  "argument_slot_swap_changes_target": true,
+  "training_canonical_serialization_unchanged": true,
+  "cpu_tests": 10,
+  "subtests": 14,
+  "cpu_audit_wall_seconds": 0.56,
+  "prior4096TRAIN_roundtrip_reused": "S19-codec-initial-preflight.json",
+  "input_sha256": {
+    "src/topoformer/campaign_semantics_s19_codec.py": "88b0606914dd4585f1715900263de16712fed78743938c3c135d89f7c9180cad",
+    "tests/test_campaign_semantics_s19_codec.py": "06ef1e28262a90cff951efa5e0d4c9d261135facea58fe1ce42987345cc3a57c",
+    "research/campaigns/extended-01/semantics/S19-codec-contract.md": "f325fb2d6f5ff3e6a87dc98dfc29d9d21fce7edacd374cf0f4e26e0f378a46a9"
+  },
+  "scope": "Codec mechanics cleared; inference accepts edge-set permutation while orderedslot labels retained. Invalid duplicate/dangling/conflicting-slot/phase/EOS/capacity records must fail in eventual runner; no graph/node repair or gold-derived inference input. Actor/runner/free-running scoring/cache and GPU profile remain separately pending."
+}
