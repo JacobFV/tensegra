@@ -47,3 +47,22 @@ def test_consistent_key_reassignment_preserves_semantic_targets():
     edge=changed.adjacency.bool().nonzero().reshape(2,48,4)
     bi,_,_,dest=edge.unbind(-1)
     assert torch.equal(tokenize(changed).destination_keys,changed.keys[bi,dest])
+
+
+def test_training_prefix_replay_and_resumable_state(tmp_path):
+    import json
+    from topoformer.campaign_attention_records_study import run
+    # Mechanical one-update CPU check at required primary constructor width.
+    torch.set_num_threads(2)
+    cfg=dict(seed=3,width=1024,mode='records',steps=1,batch=1,nodes=8,groups=2,lr=.0003,
+             train_seed=5,eval_seed=6,eval_examples=1,eval_batch=1,checkpoints=[0,1],device='cpu',
+             conditions=[dict(nodes=8,depth=1,groups=2,data_group=0)],generator='block_permutation_v2')
+    first=tmp_path/'first';run(cfg,first);m=json.loads((first/'manifest.json').read_text())
+    second=tmp_path/'second'
+    cfg.update(steps=2,checkpoints=[0,1,2],prefix_steps=1,prefix_checkpoint=str(first/'checkpoint.pt'),
+               prefix_checkpoint_sha256=m['checkpoint_sha256'],prefix_tensor_sha256=m['final_tensor_sha256'],
+               save_training_state=True,state_checkpoints=[1,2])
+    run(cfg,second)
+    assert json.loads((second/'prefix-replay.json').read_text())['logits_exact']
+    state=torch.load(second/'training-state-00002.pt',weights_only=True)
+    assert {'model','optimizer','cpu_rng','cuda_rng','step','config'} <= state.keys()
