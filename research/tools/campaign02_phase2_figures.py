@@ -6,13 +6,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 P, OUT = Path(sys.argv[1]), Path(sys.argv[2])
-C = {"pbt": "#2a78d6", "multistart": "#eb6834", "single": "#1baf7a", "bank0": "#8a8a85", "curriculum-pbt": "#e87ba4"}
+C = {"robust-pbt": "#eda100", "pbt": "#2a78d6", "multistart": "#eb6834", "single": "#1baf7a", "bank0": "#8a8a85", "curriculum-pbt": "#e87ba4"}
 INK, MUTED, GRID = "#1f1f1e", "#6b6a64", "#e6e5df"
 plt.rcParams.update({"font.size": 9, "axes.edgecolor": MUTED, "axes.labelcolor": INK, "xtick.color": MUTED,
                      "ytick.color": MUTED, "axes.spines.top": False, "axes.spines.right": False})
 
 a = json.load(open(P/"E09-analysis-all.json"))
-modes = ["bank0", "pbt", "curriculum-pbt", "multistart", "single"]
+modes = ["bank0", "pbt", "curriculum-pbt", "robust-pbt", "multistart", "single"]
 fig, axes = plt.subplots(1, 2, figsize=(9, 3.4), sharey=False)
 for ax, key, title in ((axes[0], "iid_mean_utility", "Sealed IID (8 conditions Ã— 256 worlds)"),
                        (axes[1], "transfer_mean_utility", "Sealed held-out transfer (10 conditions)")):
@@ -24,7 +24,7 @@ for ax, key, title in ((axes[0], "iid_mean_utility", "Sealed IID (8 conditions Ã
     for ref, style, lab in (("reference-cheap_first", "-", "public teacher (cheap-first)"), ("reference-cheap", ":", "no-tool greedy")):
         ax.axhline(a[key][ref], color=MUTED, ls=style, lw=1)
         ax.text(-0.4, a[key][ref], lab, color=MUTED, fontsize=7, va="bottom", ha="left")
-    ax.set_xticks(range(len(modes)), ["bank (no RL)", "PBT", "PBT+curric.", "multistart", "single"])
+    ax.set_xticks(range(len(modes)), ["bank\n(no RL)", "PBT", "PBT+\ncurric.", "PBT+robust\nfitness", "multi-\nstart", "single"])
     ax.set_title(title, fontsize=9, color=INK, loc="left")
     ax.grid(axis="y", color=GRID, lw=0.8)
 axes[0].set_ylabel("mean verified utility")

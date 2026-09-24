@@ -6,7 +6,7 @@ Phase 1 ([campaign-report.md](campaign-report.md), unchanged) closed early with 
 
 > *Can selection produce agents that obtain more verified problem-solving ability from the same computational resources, and does that ability transfer beyond the exact primitive combinations used during training?*
 
-**Not in this study.** Six populations were compared on frozen, sealed worlds, with equal RL updates and equal development evaluations:
+**Not in this study.** A fourth population variant (E13) made tool-unavailability visible to selection. It flipped populations to the opposite brittle extreme, tool avoidance, instead of finding the combined strategy. Six populations were compared on frozen, sealed worlds, with equal RL updates and equal development evaluations:
 - Population-based training (PBT) did not beat independent multistart. The pooled paired difference in sealed IID utility is **−0.0097** (95% world-bootstrap interval −0.012 to −0.007), and the signs are mixed across replicates.
 - PBT was beaten by a single learner that received all six members' updates, in 3/3 replicates.
 - Adaptive curriculum mutation added nothing.
@@ -98,7 +98,18 @@ With tools removed (world limit 48), tool-first policies neither find the direct
 
 ## E13: robustness-inclusive fitness
 
-*(Filled after completion; pre-registered in [phase2/E13-protocol.md](phase2/E13-protocol.md).)*
+Pre-registered in [phase2/E13-protocol.md](phase2/E13-protocol.md). E13 is identical to E08 PBT (same banks, hyperparameter rows, mutation RNG, training mixture and streams). The only change is that the development/selection panel adds ~20% no-tool (work limit 0) and 25-item worlds. Training never contains them.
+
+| Sealed | robust-fitness PBT r0 / r1 / r2 | E08 PBT r0 / r1 / r2 |
+|---|---|---|
+| Greedy-first rate (control) | 1.00 / 1.00 / 1.00 | 0.00 / 0.01 / 0.00 |
+| Solver calls per episode (control) | 0.04 / 0.02 / 0.00 | 1.29 / 1.88 / 1.29 |
+| No-tools success (selection-visible) | 0.83 / 0.67 / 0.85 | 0.00 / 0.02 / 0.00 |
+| 4×4 success (tools available) | 0.84 / 0.84 / 0.87 | 1.00 / 1.00 / 1.00 |
+| IID utility | 0.834 / 0.792 / 0.813 | 0.929 / 0.896 / 0.928 |
+| Transfer utility | 0.823 / 0.778 / 0.795 | 0.816 / 0.775 / 0.817 |
+
+The registered rule for (D) is formally met: 2/3 finalists are greedy-first with no-tools success ≥0.7. **The substantive result is different, though.** Making tool-unavailability visible to selection flipped all three populations from tool-dependence to **tool-avoidance**. The finalists essentially never call a solver, so they lose the computational leverage (IID utility ≈ the no-tool greedy reference, 0.805). Neither fitness panel produced the combined *direct-first, then solver, then escalate* policy that concentrated single-lineage training reached (0.943). Fitness composition decides **which** brittle extreme selection converges to, and short-horizon selection never waits for the combined strategy to mature. So both distributional and temporal myopia are implicated. This is still three replicates sharing banks with E08/E12.
 
 ## Resource allocation, return use and composition
 
@@ -114,7 +125,7 @@ Both families started from their E07 v2 bootstraps (same supervised stream) and 
 
 ## What was not established
 
-- No evolutionary advantage.
+- No evolutionary advantage in any of four search designs: PBT, PBT + adaptive curriculum, PBT + robustness-inclusive fitness, multistart.
 - No adaptive-curriculum advantage.
 - No structural-attention result.
 - No new-primitive or new-motif composition.

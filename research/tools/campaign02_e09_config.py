@@ -46,8 +46,8 @@ INTERVENTIONS = [  # paired with a control of identical physical semantics (same
 ]
 
 
-def build(checkpoints, examples, references):
-    conditions, start = [], 70_000_000
+def build(checkpoints, examples, references, start=70_000_000):
+    conditions = []
     for i, (name, world) in enumerate(IID + TRANSFER):
         conditions.append({"name": name, "seed_start": start + 100_000*i, "examples": examples,
                            "world": {**BASE, **world}})
@@ -72,6 +72,11 @@ if __name__ == "__main__":
     p.add_argument("--checkpoints", required=True, help="JSON list of {name,path,sha256}")
     p.add_argument("--examples", type=int, default=256)
     p.add_argument("--output", required=True)
+    p.add_argument("--seed-base", type=int, default=70_000_000)
+    p.add_argument("--no-references", action="store_true")
     a = p.parse_args()
     refs = ["cheap", "always_tool", "cheap_first", "cheap_first_fallback_v2"]
-    json.dump(build(json.load(open(a.checkpoints)), a.examples, refs), open(a.output, "w"), indent=2)
+    cfg = build(json.load(open(a.checkpoints)), a.examples, [] if a.no_references else refs, a.seed_base)
+    if a.seed_base != 70_000_000:
+        cfg["address_namespace"] = f"extended-02-phase2-sealed-{a.seed_base}"
+    json.dump(cfg, open(a.output, "w"), indent=2)

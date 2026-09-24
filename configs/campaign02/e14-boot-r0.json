@@ -1,0 +1,110 @@
+{
+  "mode": "single",
+  "population_seed": 8600,
+  "initialization_seeds": [
+    86000,
+    86001,
+    86002,
+    86003,
+    86004,
+    86005
+  ],
+  "rounds": 1,
+  "updates_per_slot": 100,
+  "population_size": 6,
+  "optimizer_policy": "inherit",
+  "training_seed_start": 900000000,
+  "training_seed_stride": 1000000,
+  "development_seed_start": 980000000,
+  "development_examples": 128,
+  "address_namespace": "e14-boot-r0",
+  "teacher": "cheap_first_fallback_v2",
+  "methods": [
+    "supervised"
+  ],
+  "threads": 1,
+  "train": {
+    "width": 1024,
+    "family": "lightweight",
+    "device": "cuda",
+    "batch_size": 8,
+    "learning_rate": 0.0003,
+    "rollout_mode": "batched",
+    "max_steps": 48,
+    "evaluation_batch": 32,
+    "policy_loss_reduction": "episode_mean"
+  },
+  "world_mix": [
+    {
+      "categories": 2,
+      "choices": 2,
+      "locations": 5,
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001
+    },
+    {
+      "categories": 2,
+      "choices": 2,
+      "locations": 5,
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001
+    },
+    {
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001
+    },
+    {
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "work_limit": 128
+    },
+    {
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "work_price": 0.002
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "obstacle": true
+    }
+  ],
+  "policy": {
+    "interface": "legacy",
+    "feature_version": "v2"
+  }
+}
