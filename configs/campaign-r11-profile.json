@@ -1,0 +1,33 @@
+{
+  "device": "cuda",
+  "backbone_seed": 11,
+  "initialization_seed": 61600011,
+  "head_seed": 611900011,
+  "checkpoint": "/home/brandonin/topoformer-stage11/returns/main/11-wide_continue.pt",
+  "checkpoint_sha256": "00e122c8cfe655dc9a8f801b48c5b5092db6caf8909479f2c3ac3910f0b7a077",
+  "feature_path": "/home/brandonin/topoformer-campaign-01/return-tails/r10-profile/cache.pt.gz",
+  "feature_sha256": "c5cd52988b5aea7d51108bdb5d2c6f0d4bbb05db196bcf7c60ddb5eba3c1b75c",
+  "reference_path": "/home/brandonin/topoformer-campaign-01/return-tails/r10-profile/balanced_2048.pt",
+  "reference_path_sha256": "a1ffb385938763c8d5b158b39125a366aec73b4e609186d97508dd89051bf2bb",
+  "reference_manifest": "/home/brandonin/topoformer-campaign-01/return-tails/r10-profile/manifest.json.gz",
+  "reference_manifest_sha256": "1ec36e959379b61ce66eaeedf1edc0f5506e707abf944e49fda92515be4b3281",
+  "reference_arm": "balanced_2048",
+  "fit_events": 2048,
+  "delays": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16
+  ],
+  "initial_lr": 0.003,
+  "forks": {
+    "constant": 0.003,
+    "decay": 0.0003
+  },
+  "replay_steps": 100,
+  "extra_steps": 100,
+  "batch_size": 256,
+  "check_every": 100
+}
