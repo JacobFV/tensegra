@@ -29,3 +29,7 @@ No automatic exposure extension. If these criteria pass, register a fresh three-
 ## Budget and provenance
 
 Planning envelope<=1800GPU seconds for profile and both development arms; actual caps require profiling full seven-cell evaluation, longest public inputs,160-step decoding, exports and checkpoint costs. Confirmation, if earned, needs a separate allocation. One serial GPU owner remains root; all CPU preparation can proceed while S20 runs. Freeze source, dataset, configs and analysis rules before launch. Preserve all seeds/failed attempts, independently audit metrics, and label supplied serialization versus learned semantic mapping explicitly.
+
+### Historical exclusion boundary resolved before generation
+
+The pinned inventory reconstructs41,638 alpha identities from all identified archived semantic populations, reproduces complete Stage7/8 corpus digests and Stage11 fresh graph hashes, and conservatively includes configured precursor draws. Proceed against this explicit inventory, with reused S15 TRAIN/DEV rows as declared exceptions. Undocumented, unarchived ad-hoc constructions cannot be excluded or asserted absent; this limitation narrows the freshness claim to the identified archived populations. No known archived population is silently omitted. This is a recorded contract clarification, not a relaxation in response to a generated shortfall.
