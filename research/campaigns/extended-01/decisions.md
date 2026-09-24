@@ -106,3 +106,6 @@ Archived mixed3x3 has455/512 failures involving edges alone; exact presence512, 
 
 ## 2026-09-24T09:51:27.577843+00:00 S17 selects contextual-read test
 ActualTRAINcalibration improvesnewtrainedshape1→22/512 butheldoutstays0; errorremainslargelyedges. Proceed withS18existingcontextualtextread vsoriginaland10passcomputecontrol, nohead/encodingchange. Avoidduplicating identicalS15mixedtraining if frozenstates/protocol equivalenceholds; existingcalibrationdifferences require explicitlynamedfixedcheckpointdiagnostics. Reserveconfirmationbudget; profilebeforemainallocation.
+
+### S19 acquired known motifs; confirm rather than extend
+Fixed4096 development passes TRAIN128/128 and fresh trained508/507/463 of512, while unseen3×4 remains0. Raw audit pending; checkpoint/exposure audit passes. Root selects a prospective S20 three-lineage fresh confirmation against both original and contextual baselines, rather than spending more development exposure after an already clear acquisition gain. Different pretraining histories and parameters remain explicit; no compositional or architecture-isolation claim. CPU planning only; confirmation remains unread and GPU idle.
