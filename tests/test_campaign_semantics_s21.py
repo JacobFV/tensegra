@@ -18,6 +18,7 @@ class Guards(unittest.TestCase):
   with self.assertRaises(ValueError):f.validate(c)
  def test_missing_data_blocks(self):
   c=json.loads(Path('configs/campaign-s21-profile-prepared-v1.json').read_text())
+  c['inputs']['audit']['sha256']=None
   with self.assertRaises(ValueError):f.validate(c)
   with self.assertRaises(ValueError):f.verify(self.prepared(),Path('src/topoformer'),180)
  def test_dynamic_exposure(self):

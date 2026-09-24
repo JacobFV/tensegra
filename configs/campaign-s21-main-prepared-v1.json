@@ -34,27 +34,27 @@
   "inputs": {
     "train_original": {
       "path": "data/s15-shape-v2/train_mixed.jsonl.gz",
-      "sha256": null
+      "sha256": "8ddbd15bea881c13bfd24554ada9293082fcef7b616f6eeb3dad78a4bfa662d2"
     },
     "train_broad": {
       "path": "data/s21-six-motif-v1/train_broad.jsonl.gz",
-      "sha256": null
+      "sha256": "1e60754580fac9c02767f074fa7b1445cbf4b7c50a2bf0f5dac734f707097689"
     },
     "development": {
       "path": "data/s21-six-motif-v1/development.jsonl.gz",
-      "sha256": null
+      "sha256": "07df44cdadcb9a697b723b9292dd9b1234f7311680e20074b5aea624a7648b29"
     },
     "panels": {
       "path": "data/s21-six-motif-v1/panels.json",
-      "sha256": null
+      "sha256": "c1abc21807d07bbb336b87278926d5a3f052e0470373ba265edf336b3dd02736"
     },
     "audit": {
       "path": "data/s21-six-motif-v1/audit.json",
-      "sha256": null
+      "sha256": "8cb6a99f717d82c64864a92ac2934effb0ba00e05575e31c9f299e62ddf46469"
     },
     "vocabulary_audit": {
       "path": "data/s01/audit.json",
-      "sha256": null
+      "sha256": "2582514c2a31e51dc32071fcd4177d0e50d8bf710dfa48d73c66a50b81b3d1d1"
     }
   },
   "job": "main",
@@ -74,8 +74,18 @@
     "broad"
   ],
   "expected_epoch_exposures": {
-    "original": null,
-    "broad": null
+    "original": {
+      "tokens": 215040,
+      "nodes": 123501,
+      "edges": 276077,
+      "records": 403674
+    },
+    "broad": {
+      "tokens": 229376,
+      "nodes": 134293,
+      "edges": 305557,
+      "records": 443946
+    }
   },
-  "preparation_status": "blocked_pending_independent_data_audit_and_exact_bindings"
+  "preparation_status": "exact_cache_bindings_pending_independent_audit_and_root_allocation"
 }
