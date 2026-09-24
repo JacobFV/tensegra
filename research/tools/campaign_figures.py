@@ -315,6 +315,36 @@ def extract(root, c04_audit=None, c04_provisional=None):
         for arm,cells in summary['results'].items():
             for shape,counts in cells.items():
                 add('s17_calibration',source,arm=arm,shape=shape,**counts)
+    audit_path=review+'S18-main-pair-audit.json'
+    if (root/audit_path).exists():
+        for name in ('S18-main-pair-audit.json','S18-main-archive-audit.json','S18-main-context-raw-audit.json','S18-main-control-raw-audit.json','S18-reference-v2-audit.json','S18-train-ranking-audit.json','S18-main-train-panel-audit.json','S18-main-components-audit.json'):
+            receipt=read(review+name)
+            for path,digest in receipt.get('input_sha256',{}).items():
+                assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'S18 binding mismatch: {path}'
+                inputs[path]=digest
+        source=base+'semantics/s18-paired-analysis.json';summary=read(source)
+        for artifact in summary['artifact_inventory'].values():
+            for kind in ('evaluation','calibration'):
+                path=artifact[kind+'_path'];path=path[path.index('research/'):]
+                digest=artifact[kind+'_sha256']
+                assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'S18 inventory mismatch: {path}'
+                inputs[path]=digest
+        for arm,updates in summary['results'].items():
+            for update,policies in updates.items():
+                for policy,cells in policies.items():
+                    for shape,counts in cells.items():
+                        add('s18_learning',source,arm=arm,added_update=int(update),policy=policy,shape=shape,**counts)
+        for arm,updates in summary['calibration_overlap_train_panels'].items():
+            for update,calibrations in updates.items():
+                for calibration,panel in calibrations.items():
+                    for shape,policies in panel['cells'].items():
+                        for policy,counts in policies.items():
+                            add('s18_train',source,arm=arm,added_update=int(update),calibration=calibration,policy=policy,shape=shape,**counts)
+        add('s18_paired',source,paired=summary['paired'],decisions=summary['decisions'],endpoint_delta_percentage_points_ci95=summary['endpoint_delta_percentage_points_ci95'],baseline_inherited_seconds=summary['baseline_inherited_seconds'])
+        source=review+'S18-train-ranking-audit.json';ranking=read(source)
+        add('s18_rank',source,trained3x3=ranking['trained3x3'],scope=ranking['scope'])
+        source=review+'S18-main-archive-audit.json';cost=read(source)
+        add('s18_cost',source,total_new_S18_occupancy_seconds=cost['total_new_S18_occupancy_seconds'],historical_reused_training_seconds=cost['historical_reused_training_seconds'],scope=cost['scope'])
     if c04_audit:
         # An explicit final audit index binds each approved summary byte-for-byte.
         # Shape: {"input_sha256": {"repository/relative/path": "sha256"}}.
@@ -622,6 +652,30 @@ def render(data, output):
                     for j,row in enumerate(ss): ax.annotate(str(row['policies'][policy]['complete']),(j,row['policies'][policy]['complete']),xytext=(3,(i-1)*10),textcoords='offset points',fontsize=7)
             ax.set(title=f'S17 {arm}: frozen S15 endpoint',xticks=range(4),xticklabels=['3×3 new','3×4 held out','4×3 known','4×4 known'],ylabel='Complete graphs / 512',ylim=(-5,275));ax.legend(fontsize=7)
         finish(fig,'semantic-calibration-diagnostic','Exploratory TRAIN-only recalibration: same raw predictions and DEV targets; one threshold policy per endpoint across all four cells.\nNo new training, DEV fitting, learned invariance, checkpoint selection or retroactive S15 gate promotion. Component F1 retained in data is macro across graphs.')
+    if select('s18_learning'):
+        arms=('original','context','workspace_control');labels=('Reused original','Context','10-pass control')
+        shapes=('3x3','3x4','4x3','4x4')
+        fig,axes=plt.subplots(2,2,figsize=(11,7))
+        for ax,shape in zip(axes.flat,shapes):
+            for i,arm in enumerate(arms):
+                for policy,style in [('raw','--'),('matched','-')]:
+                    ss=select('s18_learning',arm=arm,shape=shape,policy=policy);ss.sort(key=lambda r:r['added_update'])
+                    ax.plot([r['added_update'] for r in ss],[r['complete'] for r in ss],style,marker='.',color=f'C{i}',label=f'{labels[i]} / {policy}')
+            ax.set(title=f'S18 {shape} · '+('new trained' if shape=='3x3' else 'held out' if shape=='3x4' else 'known'),xlabel='Added optimizer updates',ylabel='Complete graphs / 512',ylim=(-3,230));ax.legend(fontsize=6)
+        finish(fig,'semantic-context-development','All fixed acquisition, retention and recombination gates fail. Matched TRAIN calibration is primary; raw is separate. One inspected development parent.\nOriginal curves are reused/retrospectively calibrated. Equal incremental presentations do not match inherited training, parameter count, arithmetic or measured full-path cost.')
+        fig,axes=plt.subplots(1,2,figsize=(11,4.8))
+        for ax,policy in zip(axes,('raw','matched')):
+            for i,arm in enumerate(arms):
+                train=select('s18_train',arm=arm,shape='3x3',added_update=4096,calibration='matched',policy='raw' if policy=='raw' else 'calibrated')[0]
+                dev=select('s18_learning',arm=arm,shape='3x3',added_update=4096,policy=policy)[0]
+                ax.plot([0,1],[100*r['complete']/r['examples'] for r in (train,dev)],'o-',color=f'C{i}',label=labels[i])
+                for j,row in enumerate((train,dev)):ax.annotate(f"{row['complete']}/{row['examples']}",(j,100*row['complete']/row['examples']),xytext=(4,(i-1)*9),textcoords='offset points',fontsize=7,color=f'C{i}')
+            ax.set(title=f'S18 3×3 acquisition · {policy}',xticks=[0,1],xticklabels=['Actual TRAIN (calibration overlap)','DEV (inspected)'],ylabel='Complete graphs (%)',ylim=(-.8,13));ax.legend(fontsize=7)
+        totals=[]
+        for arm in arms:
+            ss=select('s18_train',arm=arm,added_update=4096,calibration='matched',policy='calibrated')
+            totals.append(f"{sum(r['complete'] for r in ss)}/{sum(r['examples'] for r in ss)}")
+        finish(fig,'semantic-context-train-dev','Matched full TRAIN128 totals (original/context/10-pass): '+', '.join(totals)+'. Calibration overlap makes these optimistic in-sample fit measures.\nLow complete counts coexist with strong but imperfect relation ranking; they do not imply no learned information. One lineage, no confirmation or automatic extension.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')=='independently_audited'})
