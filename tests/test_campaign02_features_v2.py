@@ -122,3 +122,68 @@ def test_population_rejects_unknown_interface_options():
         PopulationConfig(policy={"interface": "graph_bias"})
     with pytest.raises(ValueError):
         PopulationConfig(member_hyperparameters=({"learning_rate": 1e-3},))
+
+
+def test_actor_critic_v2_kl_is_zero_against_identical_reference_and_normalizes():
+    from copy import deepcopy
+    from topoformer.campaign02_policy import CandidatePolicy, PolicyConfig
+    from topoformer.campaign02_training import TrainConfig, actor_critic_objective, batched_on_policy, public_frame
+    torch.manual_seed(0)
+    _, obs, cand = public_frame(_factory(1).observe(), "v2")
+    model = CandidatePolicy(PolicyConfig(len(obs), len(cand[0]), width=8, feature_version="v2"))
+    reference = deepcopy(model).eval()
+    results, terms, kls = batched_on_policy(model, [_factory(s) for s in range(3)], max_steps=4, reference=reference)
+    assert all(len(k) == len(t) for k, t in zip(kls, terms))
+    assert max(abs(float(k)) for row in kls for k in row) < 1e-5
+    cfg = TrainConfig(width=8, method="actor_critic", rollout_mode="batched", kl_weight=.5, advantage_normalization=True)
+    loss, parts = actor_critic_objective(terms, cfg, kls)
+    assert "kl_to_round_start" in parts and torch.isfinite(loss)
+    loss.backward()
+    with pytest.raises(ValueError):
+        TrainConfig(kl_weight=-1.0)
+
+
+def test_actor_critic_v1_defaults_unchanged():
+    from topoformer.campaign02_training import TrainConfig, actor_critic_objective
+    value = torch.tensor(0.2, requires_grad=True)
+    logp = torch.tensor(-1.0, requires_grad=True)
+    episode = [(logp, value, torch.tensor(1.0), 0.5)]
+    loss, parts = actor_critic_objective([episode], TrainConfig(method="actor_critic"))
+    expected = -(-1.0)*(0.5-0.2) + .5*(0.3**2) - .01*1.0
+    assert float(loss) == pytest.approx(expected)
+    assert "kl_to_round_start" not in parts
+
+
+def test_population_imports_bank_with_reset_optimizer_and_fresh_stream(tmp_path):
+    from topoformer.campaign02_population import PopulationConfig, PopulationRun, sha256
+    torch.set_num_threads(1)
+    source = PopulationRun(_config("legacy", "v2", mode="multistart"), tmp_path / "bank", _factory, _teacher)
+    source.run()
+    bank = [{"path": str(tmp_path / "bank" / m["checkpoint"]), "sha256": m["checkpoint_sha256"]} for m in source.state["members"]]
+    cfg = PopulationConfig(mode="pbt", rounds=2, updates_per_slot=1, development_examples=2, teacher="cheap",
+        policy={"interface": "legacy", "feature_version": "v2"}, initial_checkpoints=tuple(bank),
+        methods=("actor_critic", "actor_critic"), training_seed_start=200_000_000,
+        member_hyperparameters=tuple({"learning_rate": 1e-4, "entropy_weight": .01, "kl_weight": .1} for _ in range(6)),
+        train={"width": 8, "device": "cpu", "batch_size": 1, "max_steps": 4, "evaluation_batch": 2,
+               "rollout_mode": "batched", "advantage_normalization": True},
+        world_mix=({"categories": 1, "choices": 2, "locations": 3},))
+    run = PopulationRun(cfg, tmp_path / "rl", _factory, _teacher)
+    first = run._checkpoint(run.state["members"][0])
+    original = torch.load(bank[0]["path"], map_location="cpu", weights_only=False)
+    for key, value in original["model"].items():
+        assert torch.equal(first["model"][key], value)
+    assert first["optimizer"]["state"] == {} and first["seed_cursor"] == 200_000_000
+    assert first["config"]["kl_weight"] == .1 and first["resume_history"][-1]["kind"] == "bank_import"
+    for _ in range(6):
+        run._run_slot()
+    for score in run.state["round_scores"]:
+        score["utility"] = 6 - score["slot"]
+    run._selection()
+    events = [x for x in run.state["lineage"] if x["kind"] == "replacement"]
+    assert len(events) == 2 and all(x["kl_factor"] in (.8, 1.2) for x in events)
+    child = run._checkpoint(run.state["members"][5])
+    assert child["config"]["kl_weight"] == pytest.approx(.1*events[0]["kl_factor"])
+    bad = dict(bank[0], sha256="0"*64)
+    with pytest.raises(ValueError):
+        PopulationRun(PopulationConfig(**{**cfg.__dict__, "initial_checkpoints": (bad,)+tuple(bank[1:])}),
+                      tmp_path / "bad", _factory, _teacher)

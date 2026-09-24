@@ -47,8 +47,15 @@ class TrainConfig:
     neural_work_per_forward: float = 1.0
     rollout_mode: str = "serial"
     policy_loss_reduction: str = "decision_mean"
+    # Actor-critic v2 stabilizers (defaults reproduce historical v1 exactly):
+    # KL(round-start policy || current) trust region on on-policy states, and
+    # per-batch standardization of policy-gradient advantages.
+    kl_weight: float = 0.0
+    advantage_normalization: bool = False
 
     def __post_init__(self):
+        if not math.isfinite(self.kl_weight) or self.kl_weight < 0:
+            raise ValueError("Invalid KL anchor weight")
         if not math.isfinite(self.neural_work_per_forward) or self.neural_work_per_forward < 0:
             raise ValueError("Invalid frozen neural tariff")
         if self.policy_loss_reduction not in {"decision_mean", "episode_mean"}:
@@ -265,7 +272,7 @@ def batched_episodes(model, environments, *, device="cpu", max_steps=64, neural_
 
 
 def batched_on_policy(model, environments, *, device="cpu", max_steps=64,
-                      neural_work_per_forward=1.0, bptt_steps=8, sample=True):
+                      neural_work_per_forward=1.0, bptt_steps=8, sample=True, reference=None):
     """Differentiable current-state-only rollouts with one RNG draw per batch.
 
     This is an explicit alternative to serial episode sampling: categorical RNG
@@ -275,9 +282,10 @@ def batched_on_policy(model, environments, *, device="cpu", max_steps=64,
     """
     observations = [env.observe() for env in environments]
     traces, terms = [[] for _ in environments], [[] for _ in environments]
+    kls = [[] for _ in environments]
     previous_utilities = [0.0 for _ in environments]
     unsupported = {}
-    hidden = None
+    hidden = reference_hidden = None
     cpu_start, wall_start = time.process_time(), time.perf_counter()
     for step in range(max_steps):
         active, public = prepare_active(model, observations, unsupported)
@@ -293,6 +301,19 @@ def batched_on_policy(model, environments, *, device="cpu", max_steps=64,
         distribution = torch.distributions.Categorical(logits=logits)
         selected = distribution.sample() if sample else logits.argmax(-1)
         logp, entropy = distribution.log_prob(selected), distribution.entropy()
+        if reference is not None:
+            # Frozen round-start policy on the same public states; no gradient.
+            with torch.no_grad():
+                reference_current = None if reference_hidden is None else reference_hidden.index_select(0, indices)
+                reference_logits, _, reference_next = score_batch(reference, batch, reference_current)
+                if reference_next is not None:
+                    if reference_hidden is None:
+                        reference_hidden = reference_next.new_zeros((len(environments), *reference_next.shape[1:]))
+                    reference_hidden = reference_hidden.index_copy(0, indices, reference_next)
+            valid = batch[2]
+            p_ref = reference_logits.log_softmax(-1).masked_fill(~valid, 0.0)
+            p_cur = logits.log_softmax(-1).masked_fill(~valid, 0.0)
+            kl = (p_ref.exp()*(p_ref-p_cur)).sum(-1)
         chosen = selected.detach().cpu().tolist()
         probabilities = distribution.probs.gather(1, selected[:, None]).squeeze(1).detach().cpu().tolist()
         neural_wall = time.perf_counter()-neural_start
@@ -309,6 +330,8 @@ def batched_on_policy(model, environments, *, device="cpu", max_steps=64,
             observations[index] = after
             utility = float(environments[index].evaluate()["utility"])
             terms[index].append((logp[row], values[row], entropy[row], utility-previous_utilities[index]))
+            if reference is not None:
+                kls[index].append(kl[row])
             previous_utilities[index] = utility
             traces[index].append({"step": step, "observation": before.to_dict(), "action": asdict(action),
                 "action_index": chosen[row], "candidate_count": len(public[row][0]), "probability": probabilities[row],
@@ -321,7 +344,7 @@ def batched_on_policy(model, environments, *, device="cpu", max_steps=64,
     results = [{"trace": trace, "outcome": env.evaluate(), "truncated": not observation.done,
                 "timing": timing if i == 0 else None, "unsupported_interface": unsupported.get(i)}
                for i, (trace, env, observation) in enumerate(zip(traces, environments, observations))]
-    return results, terms
+    return (results, terms, kls) if reference is not None else (results, terms)
 
 
 def actor_critic_terms(episode_terms, config):
@@ -334,7 +357,7 @@ def actor_critic_terms(episode_terms, config):
     return losses
 
 
-def actor_critic_objective(episodes, config):
+def actor_critic_objective(episodes, config, kls=None):
     """Policy weighting is declared separately from critic regression weighting.
 
     decision_mean retains the historical per-decision objective. episode_mean
@@ -343,12 +366,29 @@ def actor_critic_objective(episodes, config):
     error is averaged over actual decisions; it is a separately weighted fit.
     """
     policy_by_episode, entropy_by_episode, values = [], [], []
-    for episode in episodes:
+    if getattr(config, "advantage_normalization", False) and any(episodes):
+        # Standardize detached advantages over all decisions in this batch.
+        raw = []
+        for episode in episodes:
+            future_reward, part = 0.0, []
+            for logp, value, entropy, reward_delta in reversed(episode):
+                future_reward += reward_delta
+                part.append(future_reward-float(value.detach()))
+            raw.append(list(reversed(part)))
+        flat = [x for part in raw for x in part]
+        mean = sum(flat)/len(flat)
+        std = math.sqrt(sum((x-mean)**2 for x in flat)/len(flat)) + 1e-6
+        scaled = [[(x-mean)/std for x in part] for part in raw]
+    else:
+        scaled = None
+    for e, episode in enumerate(episodes):
         future_reward, policy_terms, entropy_terms = 0.0, [], []
-        for logp, value, entropy, reward_delta in reversed(episode):
+        for t in reversed(range(len(episode))):
+            logp, value, entropy, reward_delta = episode[t]
             future_reward += reward_delta
             advantage = value.new_tensor(future_reward)-value
-            policy_terms.append(-logp*advantage.detach())
+            weight = advantage.detach() if scaled is None else value.new_tensor(scaled[e][t])
+            policy_terms.append(-logp*weight)
             entropy_terms.append(entropy)
             values.append(advantage.square())
         policy_by_episode.append(policy_terms)
@@ -364,7 +404,13 @@ def actor_critic_objective(episodes, config):
         entropy = torch.stack([part for parts in entropy_by_episode for part in parts]).mean()
     value_loss = torch.stack(values).mean()
     loss = policy_loss+config.value_weight*value_loss-config.entropy_weight*entropy
-    return loss, {"policy_loss": policy_loss, "critic_decision_mean_loss": value_loss, "entropy": entropy}
+    parts = {"policy_loss": policy_loss, "critic_decision_mean_loss": value_loss, "entropy": entropy}
+    if kls is not None:
+        flat = [k for episode in kls for k in episode]
+        kl = torch.stack(flat).mean() if flat else zero
+        loss = loss+config.kl_weight*kl
+        parts["kl_to_round_start"] = kl
+    return loss, parts
 
 
 class Learner:
@@ -381,14 +427,25 @@ class Learner:
         cfg = self.config
         self.model.train()
         start_cpu, start_wall = time.process_time(), time.perf_counter()
+        reference = None
+        if cfg.method == "actor_critic" and cfg.kl_weight > 0:
+            if cfg.rollout_mode != "batched":
+                raise ValueError("KL trust region is implemented for batched rollouts only")
+            from copy import deepcopy
+            reference = deepcopy(self.model).eval()
+            for parameter in reference.parameters():
+                parameter.requires_grad_(False)
+        batch_kls = None
         for _ in range(updates):
             trajectories, outcomes, rollout_episodes = [], [], []
             if cfg.method == "actor_critic" and cfg.rollout_mode == "batched":
                 seeds = list(range(self.seed_cursor, self.seed_cursor+cfg.batch_size))
                 self.seed_cursor += cfg.batch_size
-                results, all_terms = batched_on_policy(self.model, [world_factory(seed) for seed in seeds],
+                rollout = batched_on_policy(self.model, [world_factory(seed) for seed in seeds],
                     device=cfg.device, max_steps=cfg.max_steps, neural_work_per_forward=cfg.neural_work_per_forward,
-                    bptt_steps=cfg.bptt_steps)
+                    bptt_steps=cfg.bptt_steps, reference=reference)
+                results, all_terms = rollout[:2]
+                batch_kls = rollout[2] if reference is not None else None
                 for result, episode_terms in zip(results, all_terms):
                     rollout_episodes.append(episode_terms)
                     self.data_hash.update(json.dumps(result["trace"], sort_keys=True).encode())
@@ -420,7 +477,7 @@ class Learner:
                 else:
                     loss, count = supervised_loss(self.model, trajectories, cfg.device, cfg.bptt_steps)
             else:
-                loss, objective_parts = actor_critic_objective(rollout_episodes, cfg)
+                loss, objective_parts = actor_critic_objective(rollout_episodes, cfg, batch_kls)
                 count = sum(map(len, rollout_episodes))
             if not gradients_ready:
                 loss.backward()

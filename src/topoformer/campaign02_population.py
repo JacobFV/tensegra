@@ -49,6 +49,11 @@ class PopulationConfig:
     # Optional per-slot initial {learning_rate, entropy_weight}; identical across
     # search modes so PBT/multistart/single start from the same initial bank.
     member_hyperparameters: tuple[dict[str, Any], ...] = ()
+    # Optional six {path, sha256} bootstrap checkpoints forming the initial bank.
+    # Weights are imported; optimizer state is reset, the per-slot training
+    # stream restarts at this run's disjoint interval, hyperparameters are this
+    # run's member rows. Bootstrap cost is charged to the producing job.
+    initial_checkpoints: tuple[dict[str, Any], ...] = ()
 
     def __post_init__(self):
         if self.mode not in {"pbt", "multistart", "single"}:
@@ -78,8 +83,11 @@ class PopulationConfig:
         if self.policy.get("interface", "legacy") not in {"legacy", "memory"}:
             raise ValueError("Unknown policy interface")
         if self.member_hyperparameters and (len(self.member_hyperparameters) != 6 or any(
-                set(h) - {"learning_rate", "entropy_weight"} for h in self.member_hyperparameters)):
+                set(h) - {"learning_rate", "entropy_weight", "kl_weight"} for h in self.member_hyperparameters)):
             raise ValueError("Member hyperparameters need six {learning_rate, entropy_weight} rows")
+        if self.initial_checkpoints and (len(self.initial_checkpoints) != 6 or any(
+                set(c) != {"path", "sha256"} for c in self.initial_checkpoints)):
+            raise ValueError("Initial bank import needs six {path, sha256} rows")
         for kwargs in self.world_mix:
             if "seed" in kwargs:
                 raise ValueError("World mixture cannot override episode seed")
@@ -87,7 +95,7 @@ class PopulationConfig:
     @classmethod
     def from_json(cls, raw):
         raw = dict(raw)
-        for key in ("initialization_seeds", "methods", "world_mix", "member_hyperparameters"):
+        for key in ("initialization_seeds", "methods", "world_mix", "member_hyperparameters", "initial_checkpoints"):
             if key in raw:
                 raw[key] = tuple(raw[key])
         return cls(**raw)
@@ -184,7 +192,8 @@ def elapsed(before: dict) -> dict:
 
 
 def inherit_state(parent: dict, recipient: dict, *, optimizer_policy: str,
-                  learning_rate: float, entropy_weight: float, event: dict) -> dict:
+                  learning_rate: float, entropy_weight: float, event: dict,
+                  kl_weight: float | None = None) -> dict:
     """Weight ancestry changes; recipient's disjoint data/compute ledger does not."""
     if parent["policy_config"] != recipient["policy_config"]:
         raise ValueError("Cannot cross incompatible policy architectures")
@@ -200,6 +209,8 @@ def inherit_state(parent: dict, recipient: dict, *, optimizer_policy: str,
         group["lr"] = learning_rate
     result["config"]["learning_rate"] = learning_rate
     result["config"]["entropy_weight"] = entropy_weight
+    if kl_weight is not None:
+        result["config"]["kl_weight"] = kl_weight
     result["resume_history"] = list(result.get("resume_history", [])) + [event]
     # Recipient RNG is retained: siblings do not consume the same future stream.
     return result
@@ -270,8 +281,29 @@ class PopulationRun:
             hyper = cfg.member_hyperparameters[slot] if cfg.member_hyperparameters else {}
             train = TrainConfig(**{**cfg.train, **hyper, "seed": seed, "device": "cpu",
                 "training_seed_start": cfg.training_seed_start + slot * cfg.training_seed_stride})
-            model = new_policy(cfg.policy, len(obs), len(candidates[0]), train.width, train.family)
-            learner = Learner(model, train)
+            imported = None
+            if cfg.initial_checkpoints:
+                source = cfg.initial_checkpoints[slot]
+                if sha256(Path(source["path"])) != source["sha256"]:
+                    raise ValueError("Initial bank checkpoint hash mismatch")
+                saved = torch.load(source["path"], map_location="cpu", weights_only=False)
+                model = build_policy(saved["policy_config"])
+                if asdict(model.config) != asdict(new_policy(cfg.policy, len(obs), len(candidates[0]),
+                                                             train.width, train.family).config):
+                    raise ValueError("Imported bank member does not match the declared interface")
+                learner = Learner(model, train)
+                learner.load(Path(source["path"]), allow_config_changes=True)
+                learner.config = train
+                learner.optimizer = torch.optim.AdamW(model.parameters(), lr=train.learning_rate)
+                learner.seed_cursor = train.training_seed_start
+                torch.manual_seed(seed)
+                random.seed(seed)
+                imported = {"source": source, "source_updates": saved["updates"],
+                            "source_presentations": saved["presentations"], "optimizer": "reset at import"}
+                learner.resume_history.append({"kind": "bank_import", **imported})
+            else:
+                model = new_policy(cfg.policy, len(obs), len(candidates[0]), train.width, train.family)
+                learner = Learner(model, train)
             path = self.output / "initial_bank" / f"member-{slot}.pt"
             if path.exists():
                 # A previous initialization may have written this deterministic bank
@@ -281,12 +313,13 @@ class PopulationRun:
                     not torch.equal(old["model"][k], v) for k, v in model.state_dict().items()):
                     raise ValueError("Conflicting initial-bank checkpoint")
             else:
-                learner.save(path, {"role": "initial bank; no training", "slot": slot})
+                learner.save(path, {"role": "initial bank; no training in this run", "slot": slot, "imported": imported})
             entry = {"slot": slot, "individual_id": f"root-{slot}", "lineage_id": f"root-{slot}",
                 "parent_id": None, "generation": 0, "checkpoint": str(path.relative_to(self.output)),
                 "checkpoint_sha256": sha256(path), "initialization_seed": seed,
                 "parameter_count": sum(p.numel() for p in model.parameters()),
-                "learning_rate": train.learning_rate, "entropy_weight": train.entropy_weight}
+                "learning_rate": train.learning_rate, "entropy_weight": train.entropy_weight,
+                "kl_weight": train.kl_weight, "imported": imported}
             self.state["members"].append(entry)
             self.state["lineage"].append({"kind": "initialization", **entry})
             self._save_state()
@@ -368,6 +401,12 @@ class PopulationRun:
             lr_factor, entropy_factor = self.mutation_rng.choice((.8, 1.2)), self.mutation_rng.choice((.8, 1.2))
             lr = min(1e-2, max(1e-6, donor["learning_rate"] * lr_factor))
             entropy = min(1., max(1e-6, donor["entropy_weight"] * entropy_factor))
+            # KL-anchor mutation only when the registered protocol uses it; the
+            # extra RNG draw would otherwise change historical mutation streams.
+            kl = kl_factor = None
+            if donor.get("kl_weight", 0.0) > 0:
+                kl_factor = self.mutation_rng.choice((.8, 1.2))
+                kl = min(10., max(1e-4, donor["kl_weight"] * kl_factor))
             child_id = f"round-{r + 1}-slot-{recipient_slot}"
             event = {"kind": "replacement", "round": r, "individual_id": child_id,
                 "parent_id": donor["individual_id"], "replaced_id": recipient["individual_id"],
@@ -376,10 +415,11 @@ class PopulationRun:
                 "recipient_checkpoint": recipient["checkpoint"], "recipient_sha256": recipient["checkpoint_sha256"],
                 "optimizer_policy": cfg.optimizer_policy, "learning_rate_factor": lr_factor,
                 "entropy_factor": entropy_factor, "learning_rate": lr, "entropy_weight": entropy,
+                "kl_factor": kl_factor, "kl_weight": kl,
                 "retained_recipient_seed_cursor": previous["seed_cursor"],
                 "retained_recipient_updates": previous["updates"], "scores": state["round_scores"]}
             child = inherit_state(parent, previous, optimizer_policy=cfg.optimizer_policy,
-                learning_rate=lr, entropy_weight=entropy, event=event)
+                learning_rate=lr, entropy_weight=entropy, event=event, kl_weight=kl)
             path = self.output / "checkpoints" / f"replacement-round-{r}-slot-{recipient_slot}.pt"
             # Safe retry after crash between immutable replacement and state commit.
             if path.exists():
@@ -390,7 +430,7 @@ class PopulationRun:
                 _atomic_torch(path, child)
             recipient.update(individual_id=child_id, parent_id=donor["individual_id"],
                 lineage_id=donor["lineage_id"], generation=donor["generation"] + 1,
-                learning_rate=lr, entropy_weight=entropy,
+                learning_rate=lr, entropy_weight=entropy, **({"kl_weight": kl} if kl is not None else {}),
                 checkpoint=str(path.relative_to(self.output)), checkpoint_sha256=sha256(path))
             state["lineage"].append(event)
         state["round"] += 1
