@@ -323,3 +323,5 @@ S18 frozen v2 profile clearance passes: config418864b3 unchanged science; resolv
 S18 prospective analysis6ffd1baf formulas and six synthetic tests pass0.006s without outcomes: fixed4096 matched gates against both controls, shared-event conditional bootstrap, retrospective/in-sample scope. Requested stronger source-key/receipt/metadata/final-state/artifact-inventory guards and final frozen config pins before main analysis.
 
 S18 profile saved-state audit passes4.243597s CPU: both initial model/fullAdamW exactly parent, independent160-presentation sampler/query/exposure replay, final24596steps and finite tensors, four checkpoint hashes. No actor construction/forward or outcome selection. Archive/raw timing audit remains separate.
+
+S18 analysis metadata guards a0d2dfb0 pass independent ten synthetic tests0.008s. Complete source set/wrapper, final-state, evaluation summaries, threshold-NPZ identity and artifact inventory added with no formula change; final config pins intentionally reject until prospective allocation/freeze. No outcomes inspected.
