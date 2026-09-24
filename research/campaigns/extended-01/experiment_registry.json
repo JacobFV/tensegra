@@ -565,7 +565,7 @@
     },
     {
       "id": "S13",
-      "status": "cpu_prepared_not_released",
+      "status": "profiles_audited_main_ready",
       "hypothesis": "Unchanged actor can acquire a second renderer with paired surfaces",
       "intervention": "English-only versus alternatingEnglish/Spanish continuation of fixedS11checkpoint",
       "comparators": [
@@ -574,14 +574,15 @@
       "observable_inputs": "Selected publicsurface and copyinventory",
       "privileged_targets": "Same semanticgraph labels fortraining only",
       "protocol": "semantics/S13-training-design.md",
-      "source": "d824318",
+      "source": "e28c9934",
       "selection": "Fixed4096 endpoint; sharedEnglishTRAIN128thresholdpolicy, newDEV512",
-      "budget": "GPUunallocated untilS12matrix/profile; CPUcache131.58s",
-      "next_branch": "Profile only after completeS12; no unseenlanguage transferclaim"
+      "budget": "English55.8614s/mixed68.9601s profiles; main600s perarm allocated from measured308/318s training plus eval/export",
+      "next_branch": "Profile only after completeS12; no unseenlanguage transferclaim",
+      "audit": "review/S13-paired-profile-audit.json"
     },
     {
       "id": "S12-rename",
-      "status": "prepared_not_run",
+      "status": "profile_audited_main_ready",
       "protocol": "semantics/S12-rename-release-preparation.md",
       "hypothesis": "Known-renderer semantic recovery transfers to consistently renamed visible identifiers",
       "intervention": "Frozen public lexical bijection, same graphs and respective final TRAINthresholds",
@@ -591,12 +592,13 @@
       "observable_inputs": "Renamed publictext/copyinventory",
       "privileged_targets": "Scoringonly graphlabels",
       "selection": "No fitting or selection; all6fixedcheckpoints",
-      "budget": "Estimate90\u2013150s, cap/profilepending",
-      "next_branch": "Report lexical transfer separately from original canonical recovery"
+      "budget": "Main420s each allocated from separately measured loop/fixedoverhead; no model/threshold selection",
+      "next_branch": "Report lexical transfer separately from original canonical recovery",
+      "source": "e28c9934"
     },
     {
       "id": "S14",
-      "status": "cpu_population_audited_not_run",
+      "status": "profile_audited_main_ready",
       "protocol": "semantics/S14-arity3-protocol.md",
       "hypothesis": "Frozen actor transfers to unseen ordered arity3 motifs within existing syntax and output support",
       "intervention": "1024 new constructions, arity3 instead4; same depth3",
@@ -606,8 +608,9 @@
       "observable_inputs": "PublicEnglishtext/copyinventory",
       "privileged_targets": "Graphlabels scoring only",
       "selection": "No model or threshold tuning",
-      "budget": "CPU2.157s generation; GPU unallocated",
-      "next_branch": "Zero-shot structuraldiagnostic, no greaterdepthclaim"
+      "budget": "Main420s each allocated from separately measured loop/fixedoverhead; no model/threshold selection",
+      "next_branch": "Zero-shot structuraldiagnostic, no greaterdepthclaim",
+      "source": "e28c9934"
     },
     {
       "id": "A11",
@@ -659,7 +662,7 @@
     },
     {
       "id": "A14",
-      "status": "confirmation_seed1401_running",
+      "status": "two_seeds_completed_third_pending",
       "hypothesis": "Common model-selected destination improves deep value transport across fresh initializations",
       "intervention": "Five fixed read policies applied to each independently trained all-record model",
       "comparator": "Original soft and per-head hard; all9 A06 references separately disclosed",
@@ -679,7 +682,7 @@
     },
     {
       "id": "R10",
-      "status": "profile_audited_main_ready",
+      "status": "fixed_development_running",
       "hypothesis": "More distinct balanced nuisance contexts improve exact scalar tails at equal fitting presentations",
       "intervention": "Nested balanced16k vs64k, same frozen backbone11/linear head/3600updates",
       "observable_inputs": "Perfect public return event and public candidate/distractor memory",

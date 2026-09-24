@@ -88,3 +88,6 @@ All six semantic forks are complete and endpoint-audited. Allocate R10profile60 
 
 ## 2026-09-24: R10 fixed development budget after audited profile
 Profile13.44s includes full driver/serialization; independently replayed108 readouts and2,880 generated events. Measured phase scaling supports320–450s for the nested16k/64k, fixed3,600-update comparison; allocate600s once, sourcec0c5aca1/config803221f4. No representation or recipe change from profile and no delay32 selection. This remains development; its fixed calibration gain rule decides confirmation. Root serial release follows pending attention work.
+
+## 2026-09-24: allocate semantic mains after profile and contract audit
+All68 frozen-source bindings and unchanged prepared recipes independently verify. Allocate S13English/mixed600s each: measured training308/318s projected plus checkpoint evaluation/export. Allocate S14motif and S12rename420s each: measured variable loops scale to339/381s plus fixed18/19s; no naive whole-profile multiplier. Main recipes/checkpoints/thresholds remain unchanged; profile metrics are not used to tune them. Root schedules individually after R10 and attention confirmation slots. These are transfer diagnostics and bilingual development, not automatic broad semantic promotion.
