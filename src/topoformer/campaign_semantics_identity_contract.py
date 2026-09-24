@@ -1,5 +1,8 @@
 """Scoped programmed refers-to relation from learned public copy identities."""
 import argparse,gzip,hashlib,json,time
+import dataclasses
+import re
+import operator
 from pathlib import Path
 import torch
 from .campaign_semantics import digest,write_gzip
@@ -7,6 +10,118 @@ from .campaign_semantics_data import load_cache
 from .semantic_curriculum import unpack_graph,pack_graph
 from .semantic_scaling import metrics,tokens,identifier_forms
 from .thinking_language import KINDS,ROLES,ActorInput
+
+
+# S16 supplied renderer/lexical contract; no model, target or graph determines it.
+S16_VARIABLE_INVENTORY = ('A','B','C','D','E')
+S16_NAME_INVENTORY = ('alice','bob','carol','dave','erin','frank')
+S16_RESERVED = frozenset('You know these facts The pattern is What the unify parent and'.split())
+
+
+@dataclasses.dataclass(frozen=True)
+class PublicIdentityNormalization:
+    public: ActorInput
+    original_tokens: tuple
+    canonical_tokens: tuple
+    identity_positions: tuple
+    original_to_canonical: tuple
+    arity: int
+    facts: int
+
+
+def canonicalize_public_identifiers(public):
+    """S16 first-occurrence alpha normalization for one closed English renderer.
+
+    The supplied parser locates identifier argument spans in public text only.
+    Case supplies variable/name type; it is not inferred from privileged nodes.
+    Reject unsupported grammar, arity, namespace/candidate collisions or capacity.
+    This does not infer the semantic graph or choose a unifying fact.
+    """
+    if not isinstance(public,ActorInput) or public.options:
+        raise ValueError('S16 requires text-only public ActorInput')
+    matches=list(re.finditer(r'\w+|[^\w\s]',public.text,re.UNICODE))
+    tok=[m.group() for m in matches]
+    if not tok: raise ValueError('empty public renderer input')
+    cursor=0; positions=[]
+
+    def expect(*literal):
+        nonlocal cursor
+        if tok[cursor:cursor+len(literal)]!=list(literal):
+            raise ValueError('unsupported S16 public renderer grammar')
+        cursor+=len(literal)
+
+    def identifier():
+        nonlocal cursor
+        if cursor>=len(tok): raise ValueError('missing public identifier')
+        value=tok[cursor]
+        if (not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*',value)
+                or not (value.isupper() or value.islower()) or value in S16_RESERVED):
+            raise ValueError('unsupported or reserved opaque identifier')
+        positions.append(cursor);cursor+=1
+
+    def parent():
+        if cursor<len(tok) and tok[cursor]=='parent':
+            expect('parent',':');identifier();arity=1
+            while cursor<len(tok) and tok[cursor]==',':
+                expect(',');identifier();arity+=1
+            expect('and');identifier();arity+=1
+            if not 3<=arity<=5:raise ValueError('parent list arity outside3–5')
+        else:
+            identifier();expect('parent');identifier();arity=2
+        return arity
+
+    expect('You','know','these','facts',':')
+    arity=parent();fact_count=1
+    while cursor<len(tok) and tok[cursor]==';':
+        expect(';')
+        if parent()!=arity:raise ValueError('inconsistent public predicate arity')
+        fact_count+=1
+    if not 1<=fact_count<=4:raise ValueError('fact count exceeds S16 renderer scope')
+    expect('.','The','pattern','is')
+    if parent()!=arity:raise ValueError('pattern/fact public arity mismatch')
+    expect('.','What','is','the','unify');identifier();expect('?')
+    if cursor!=len(tok):raise ValueError('trailing public text outside S16 grammar')
+
+    mapping={};used={'variable':0,'name':0}
+    for position in positions:
+        value=tok[position]
+        if value in mapping:continue
+        namespace='variable' if value.isupper() else 'name'
+        inventory=S16_VARIABLE_INVENTORY if namespace=='variable' else S16_NAME_INVENTORY
+        if used[namespace]>=len(inventory):raise ValueError('public identity inventory capacity exceeded')
+        mapping[value]=inventory[used[namespace]];used[namespace]+=1
+    canonical=tok.copy()
+    for position in positions:canonical[position]=mapping[tok[position]]
+    # Protect the actor's existing all-token first-occurrence copy normalization.
+    # An identity may not alias any nonidentity token before or after rewriting.
+    other={value for i,value in enumerate(tok) if i not in set(positions)}
+    if other & (set(mapping)|set(mapping.values())):
+        raise ValueError('identity collides with public structural token')
+    pieces=[];previous=0
+    for i,match in enumerate(matches):
+        pieces.extend((public.text[previous:match.start()],canonical[i]));previous=match.end()
+    pieces.append(public.text[previous:])
+    normalized=ActorInput(''.join(pieces),())
+    if tokens(normalized)!=canonical:raise ValueError('canonicalization changed token boundaries')
+    return PublicIdentityNormalization(normalized,tuple(tok),tuple(canonical),tuple(positions),
+        tuple(mapping.items()),arity,fact_count)
+
+
+def restore_public_copy_tokens(normalization,copy_positions):
+    """Read predicted indices against original public inventory; never repair.
+
+    Nonidentity token choices remain nonidentity strings (errors remain errors).
+    -1 remains absent; out-of-range indices fail rather than using gold labels.
+    All token indices, including the actor's first-occurrence reduction, survive
+    normalization unchanged because its substitution is globally injective.
+    """
+    output=[]
+    for position in copy_positions:
+        index=operator.index(position)
+        if index==-1:output.append(None)
+        elif 0<=index<len(normalization.original_tokens):output.append(normalization.original_tokens[index])
+        else:raise ValueError('predicted copy pointer outside public inventory')
+    return tuple(output)
 
 
 def derive_refers_to(pred):
