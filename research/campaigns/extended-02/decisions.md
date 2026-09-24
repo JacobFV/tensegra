@@ -42,3 +42,9 @@ Stop new experiments to conserve credits. Complete source fixes, collect receipt
 - E13 result: rule formally met (2/3 greedy-first with no-tools >= .7), substantively populations flipped to tool-avoidance (calls ~0; IID .834/.792/.813). Reported as both.
 - Budget at 22:20Z: CPU 30.7/48 core-h; GPU device 3.9/12 h. E14 (prospective confirmation on fresh lineages, fresh sealed seeds 80M+) registered and launched; cost estimate ~2 core-h. Remaining budget after E14 is reserved for closure.
 - E14 (fresh lineages, fresh sealed seeds 80M+): PARTIALLY CONFIRMED by registered rule (1/3 all criteria; r1 no-tools 0.699 < 0.70; r0 tool-first; mean gap -0.004). Direct-first lineages match teacher (+0.001, CI includes 0). Report downgraded from "exceeds" to "matches". Phase 2 stops here: main questions at an evidential boundary; remaining budget reserved.
+
+## Phase 3 (continuation) — 2026-09-24 ~23:10Z
+- User accepted device-occupancy GPU accounting and asked to continue with further branches, documenting as we go. Ceilings/deadline unchanged (48 CPU core-h, 12 GPU device-h, deadline 2026-09-25T16:13Z). Used at start: CPU 32.3, GPU 4.5.
+- Next branches by information value/cost: E15 depth-vs-breadth selection (successive halving, with/without behavioral niche protection) on E08 banks; then E16 new-primitive composition world.
+- Run jobs with low concurrency: contention quadrupled CPU per RL update in phase 2.
+- E15 implemented: population mode `halving` (survivors inherit eliminated slots sequentially) with optional supplied-niche protection (k>=2 only). 119 CPU tests pass. Registered phase2/E15-protocol.md; six runs (plain/niche x r0-r2) on E08 banks.

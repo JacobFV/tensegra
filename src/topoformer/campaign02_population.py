@@ -62,9 +62,15 @@ class PopulationConfig:
     # Optional separate development (selection) mixture. Training streams keep
     # world_mix; only the fitness panel changes. Empty = historical behavior.
     development_world_mix: tuple[dict[str, Any], ...] = ()
+    # Successive halving: survivors per round (first must be 6, nonincreasing,
+    # each divides 6). A survivor receives 6/k consecutive slots per round, i.e.
+    # sequential depth. Optional niche protection keeps the best member of each
+    # SUPPLIED behavioral niche (greedy-first rate on public DEV trajectories).
+    halving_survivors: tuple[int, ...] = ()
+    niche_protection: bool = False
 
     def __post_init__(self):
-        if self.mode not in {"pbt", "multistart", "single"}:
+        if self.mode not in {"pbt", "multistart", "single", "halving"}:
             raise ValueError("Unknown search mode")
         if self.population_size != 6 or len(self.initialization_seeds) != 6:
             raise ValueError("This registered search uses exactly six initial members")
@@ -93,6 +99,12 @@ class PopulationConfig:
         if self.member_hyperparameters and (len(self.member_hyperparameters) != 6 or any(
                 set(h) - {"learning_rate", "entropy_weight", "kl_weight"} for h in self.member_hyperparameters)):
             raise ValueError("Member hyperparameters need six {learning_rate, entropy_weight} rows")
+        if self.mode == "halving":
+            k = self.halving_survivors
+            if len(k) != self.rounds or k[0] != 6 or any(6 % x for x in k) or any(b > a for a, b in zip(k, k[1:])):
+                raise ValueError("halving_survivors: one entry per round, start at 6, nonincreasing divisors of 6")
+        elif self.halving_survivors or self.niche_protection:
+            raise ValueError("halving options require mode='halving'")
         if self.curriculum_mutation and (self.mode != "pbt" or len(self.world_mix) < 2):
             raise ValueError("Curriculum mutation requires PBT and a multi-component mixture")
         if self.initial_checkpoints and (len(self.initial_checkpoints) != 6 or any(
@@ -106,7 +118,7 @@ class PopulationConfig:
     def from_json(cls, raw):
         raw = dict(raw)
         for key in ("initialization_seeds", "methods", "world_mix", "member_hyperparameters", "initial_checkpoints",
-                    "development_world_mix"):
+                    "development_world_mix", "halving_survivors"):
             if key in raw:
                 raw[key] = tuple(raw[key])
         return cls(**raw)
@@ -172,6 +184,39 @@ def mutate_curriculum(weights, rng: random.Random, floor: float = .02):
     changed = [max(floor, w/total) for w in changed]
     total = sum(changed)
     return [w/total for w in changed], {"component": index, "factor": factor}
+
+
+def greedy_first_rate(rows) -> float:
+    """Supplied behavioral descriptor: fraction of DEV episodes whose first
+    selection-relevant action is a direct item choice/commit, not a solver path."""
+    def first(trace):
+        for step in trace:
+            kind = step["action"]["kind"]
+            if kind in ("choose_item", "commit_pending"):
+                return 1
+            if kind in ("call", "start_subset"):
+                return 0
+        return 0
+    rows = list(rows)
+    return sum(first(r["trace"]) for r in rows)/len(rows) if rows else 0.0
+
+
+def halving_keep(scores: list[dict], k: int, niche: bool) -> list[int]:
+    """Keep k members by last-slot DEV utility (member-index tie break); with
+    niche protection, first keep the best of each greedy-first niche."""
+    ordered = sorted(scores, key=lambda x: (-x["utility"], x["member"]))
+    kept = []
+    if niche and k >= 2:  # with one survivor, protection would become a hard mode preference
+        for label in (True, False):
+            best = next((x for x in ordered if (x["behavior_greedy_first"] >= .5) == label), None)
+            if best is not None and len(kept) < k:
+                kept.append(best["member"])
+    for x in ordered:
+        if len(kept) >= k:
+            break
+        if x["member"] not in kept:
+            kept.append(x["member"])
+    return sorted(kept)
 
 
 def mix_index(seed: int, size: int) -> int:
@@ -307,11 +352,18 @@ class PopulationRun:
         self.state["mutation_rng"] = self.mutation_rng.getstate()
         if self.config.curriculum_mutation:
             self.state["curriculum_rng"] = self.curriculum_rng.getstate()
-        self.state["queue"] = [{"round": r, "slot": s, "member": slot_member(self.config.mode, s)}
+        self.state["queue"] = [{"round": r, "slot": s, "member": self._slot_member(r, s)}
             for r in range(self.state["round"], self.config.rounds)
             for s in range(self.state["slot"] if r == self.state["round"] else 0, 6)]
         _atomic_json(self.state_path, self.state)
         _atomic_json(self.output / "population_lineage.json", self.state["lineage"])
+
+    def _slot_member(self, round_index: int, slot: int) -> int:
+        if self.config.mode != "halving":
+            return slot_member(self.config.mode, slot)
+        survivors = self.state.get("survivors", list(range(6)))
+        # Future rounds are planned with current survivors; the plan is refreshed after each cut.
+        return survivors[slot // (6 // len(survivors))]
 
     def _initialize(self):
         cfg = self.config
@@ -392,7 +444,8 @@ class PopulationRun:
     def _run_slot(self):
         cfg, state = self.config, self.state
         r, slot = state["round"], state["slot"]
-        member = state["members"][slot_member(cfg.mode, slot)]
+        member_index = self._slot_member(r, slot)
+        member = state["members"][member_index]
         attempt_id = len(state["attempts"])
         attempt = {"id": attempt_id, "round": r, "slot": slot, "member_id": member["individual_id"],
                    "status": "running", "input_checkpoint_sha256": member["checkpoint_sha256"]}
@@ -412,6 +465,9 @@ class PopulationRun:
             output = self.output / "development" / f"round-{r}-slot-{slot}-attempt-{attempt_id}.jsonl.gz"
             metrics = learner.evaluate(range(cfg.development_seed_start,
                 cfg.development_seed_start + cfg.development_examples), self.development_factory, output)
+            import gzip
+            with gzip.open(output, "rt") as stream:
+                metrics["behavior_greedy_first"] = greedy_first_rate(json.loads(line) for line in stream)
             # Move every tensor to CPU before writing/parking, then release GPU.
             learner.model.to("cpu")
             for key in list(learner.optimizer.state):
@@ -420,7 +476,7 @@ class PopulationRun:
             learner.save(path, {"round": r, "slot": slot, "metrics": metrics,
                 "protocol_hash": self.protocol_hash, "individual_id": member["individual_id"]})
             member["checkpoint"], member["checkpoint_sha256"] = str(path.relative_to(self.output)), sha256(path)
-            row = {"round": r, "slot": slot, "member_id": member["individual_id"],
+            row = {"round": r, "slot": slot, "member": member_index, "member_id": member["individual_id"],
                 "training_seed_interval": [cursor_before, learner.seed_cursor],
                 "updates": cfg.updates_per_slot, "cumulative_slot_updates": learner.updates,
                 "cumulative_decision_presentations": learner.presentations, "training_timing": timing,
@@ -446,6 +502,23 @@ class PopulationRun:
     def _selection(self):
         cfg, state = self.config, self.state
         r = state["round"]
+        if cfg.mode == "halving":
+            if r + 1 < cfg.rounds:
+                last = {}
+                for row in state["round_scores"]:
+                    last[row["member"]] = row
+                k = cfg.halving_survivors[r + 1]
+                kept = halving_keep(list(last.values()), k, cfg.niche_protection)
+                state["lineage"].append({"kind": "halving", "round": r, "kept": kept,
+                    "dropped": sorted(set(last) - set(kept)), "niche_protection": cfg.niche_protection,
+                    "scores": [{k2: v[k2] for k2 in ("member", "member_id", "utility", "success", "behavior_greedy_first",
+                                                     "cumulative_slot_updates")} for v in last.values()]})
+                state["survivors"] = kept
+            state["round"] += 1
+            state["slot"] = 0
+            state["round_scores"] = []
+            self._save_state()
+            return
         pairs = selection_pairs(state["round_scores"]) if cfg.mode == "pbt" and r + 1 < cfg.rounds else []
         for donor_slot, recipient_slot in pairs:
             donor, recipient = state["members"][donor_slot], state["members"][recipient_slot]
@@ -502,6 +575,11 @@ class PopulationRun:
         # Best CURRENT final population only. No historical checkpoint cherry-pick.
         final = [r for r in self.state["allocations"] if r["round"] == self.config.rounds - 1]
         eligible = final[-1:] if self.config.mode == "single" else final
+        if self.config.mode == "halving":
+            latest = {}
+            for row in final:
+                latest[row["member"]] = row  # each survivor's last sequential slot only
+            eligible = list(latest.values())
         winner = sorted(eligible, key=lambda x: (-x["utility"], x["slot"]))[0]
         self.state["status"] = "completed"
         self.state["finalist"] = winner

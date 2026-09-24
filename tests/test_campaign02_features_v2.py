@@ -245,3 +245,40 @@ def test_separate_development_mixture_only_changes_selection_panel(tmp_path):
     run._run_slot()
     assert set(dev_seen) == {cfg.development_seed_start, cfg.development_seed_start + 1}
     assert not set(train_seen) & set(dev_seen)
+
+
+def test_halving_keep_rule_and_niche_protection():
+    from topoformer.campaign02_population import halving_keep
+    scores = [{"member": i, "utility": u, "behavior_greedy_first": g}
+              for i, (u, g) in enumerate([(.9, 0), (.8, 0), (.7, 1), (.95, 0), (.6, 1), (.5, 0)])]
+    assert halving_keep(scores, 3, False) == [0, 1, 3]
+    assert halving_keep(scores, 3, True) == [0, 2, 3]   # best greedy-first (2) protected
+    assert halving_keep(scores, 1, True) == [3]         # no protection with a single survivor
+    assert halving_keep([{**s, "behavior_greedy_first": 0} for s in scores], 2, True) == [0, 3]
+
+
+@pytest.mark.parametrize("niche", [False, True])
+def test_halving_gives_survivors_sequential_depth(tmp_path, niche):
+    from topoformer.campaign02_population import PopulationConfig, PopulationRun
+    torch.set_num_threads(1)
+    cfg = PopulationConfig(mode="halving", rounds=3, updates_per_slot=1, development_examples=2, teacher="cheap",
+        halving_survivors=(6, 3, 2), niche_protection=niche,
+        train={"width": 8, "device": "cpu", "batch_size": 1, "max_steps": 4, "evaluation_batch": 2},
+        world_mix=({"categories": 1, "choices": 2, "locations": 3},))
+    run = PopulationRun(cfg, tmp_path / "h", _factory, _teacher)
+    run.run()
+    rows = run.state["allocations"]
+    assert len(rows) == 18 and sum(r["updates"] for r in rows) == 18
+    r1 = [r["member"] for r in rows if r["round"] == 1]
+    assert len(set(r1)) == 3 and r1 == sorted(r1)
+    r2 = [r for r in rows if r["round"] == 2]
+    assert len({r["member"] for r in r2}) == 2
+    finalist = run.state["finalist"]
+    assert finalist["cumulative_slot_updates"] == 1 + 2 + 3  # sequential depth for survivors
+    cuts = [x for x in run.state["lineage"] if x["kind"] == "halving"]
+    assert [len(c["kept"]) for c in cuts] == [3, 2]
+    assert all(0 <= r["behavior_greedy_first"] <= 1 for r in rows)
+    with pytest.raises(ValueError):
+        PopulationConfig(mode="halving", rounds=2, halving_survivors=(6, 4))
+    with pytest.raises(ValueError):
+        PopulationConfig(mode="pbt", niche_protection=True)
