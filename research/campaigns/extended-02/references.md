@@ -1,0 +1,42 @@
+# Public-information reference policies v1
+
+`ReferencePolicy.choose(observation, catalog)` receives the same current public
+observation and syntactic action catalogue as learned actors. It never receives
+a world, generation seed, planted solution, evaluator, or gold action mask.
+`choose_index` requires exact catalogue matching; no nearest-action correction.
+
+Three supplied policies establish solvability, not learned orchestration:
+
+- `cheap`: inspect inventory, choose a local greedy item per category, attempt
+  the visible direct route, verify or abstain. No combination search/backtracking.
+- `always_tool`: inspect, explicitly add capacity/funds/incompatibility
+  constraints, call optimization, retrieve its addressed result, commit it,
+  inspect map, build/call route, retrieve a distinct result, deliver and verify.
+- `cheap_first`: use greedy when available; otherwise construct the optimization
+  problem, escalate catalogue budgets after timeout, and use routing on obstacle.
+
+The reference chooses result records by public primitive/problem provenance and
+state version, not array position alone. `retrieve` precedes protected exact
+`use_return`; this is supplied addressing logic plus exact access, not learned
+scalar reconstruction. All generated subset values are one: the environmental
+objective is feasibility; optimality is not needed for verified completion.
+
+All combinatorial work occurs through charged primitive calls. Greedy scans,
+reduction choices, and policy selection have measured controller process CPU.
+Deterministic work units are not asserted equal CPU costs. `run_episode` records
+controller CPU, complete episode CPU/wall, simulator solver CPU/work, actions and
+feedback. Generation/import costs must be separately charged by the runner.
+
+First proposed experiment (requires coordinator scheduling): 32 paired seeds per
+registered difficulty, all three policies, ≤120 CPU seconds, no GPU. Report raw
+verified success, cost/work/latency, constraints added, returned records addressed,
+replanning and unavailable/timeout outcomes. Register exact difficulty parameters,
+seed partitions, and data/source hashes before launch. The small unit fixtures
+only test API mechanics and are not empirical evidence of a leverage region.
+
+Known scope: these heuristics inspect all items; they are not optimal observation
+policies. Largest-budget means largest currently offered catalogue budget. Calls
+restart after timeout; there is no implicit resumed solver state. Partial feasible
+incumbents are not consumed by this reference until the typed world contract
+explicitly supports them. No empirical leverage claim is made before the paired
+reference experiment.
