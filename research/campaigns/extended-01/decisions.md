@@ -79,3 +79,6 @@ C04 independently confirms the acquired lowering/return/use chain, but the role-
 
 ## 2026-09-24: conditional return-tail diversity branch
 CPU review of R06–R09: balanced fitting improves late tails but near-perfect fitting accuracy still exceeds fresh-context results; residual decoder and phase split did not justify complexity. Authorize CPU preparation of a fresh development comparison on backbone11: nested balanced16k/64k contexts, identical linear consumer and3600 fitting updates/presentation budget, delays through16 and32 excluded from selection. Extraction/fitting/evaluation must be profiled and source reviewed before GPU release. Original-mixture competence and balanced tail gains remain distinct; this cannot retrospectively promote R04 subtype reliability.
+
+## 2026-09-24: A14 main allocation after measured profile
+Independent profile audit verifies source/state/public pairing and five read policies. Measured training93.59s plus largest-shape inference248.46s supports360–400s expected per seed; allocate480s each for1401/1402/1403 plus120s for frozen engineering references (1,560s total future allocation). Every source/config/policy/endpoint remains frozen, no profile outcome selection. Root releases serially after the final semantic fork. Reference cap remains based on historical same-model evaluation timing and is disclosed separately.
