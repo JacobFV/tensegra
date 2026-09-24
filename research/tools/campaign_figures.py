@@ -347,11 +347,27 @@ def extract(root, c04_audit=None, c04_provisional=None):
         add('s18_cost',source,total_new_S18_occupancy_seconds=cost['total_new_S18_occupancy_seconds'],historical_reused_training_seconds=cost['historical_reused_training_seconds'],scope=cost['scope'])
     source=base+'semantics/s19-analysis.json'
     s19_bindings={}
+    s19_report_updates={}
+    for update_path in sorted((root/review).glob('S19-*.json')):
+        update=json.loads(update_path.read_text())
+        if update.get('supersedes_receipt')==review+'S19-final-analysis-audit.json':
+            prior=read(update['supersedes_receipt'])
+            read(str(update_path.relative_to(root)))
+            for path,old_digest in update['supersedes_input_sha256'].items():
+                assert path=='research/campaigns/extended-01/semantics/S19-report.md', 'Only explicit S19 report wording supersession is allowed'
+                assert prior['input_sha256'][path]==old_digest
+                new_digest=update['input_sha256'][path]
+                assert hashlib.sha256((root/path).read_bytes()).hexdigest()==new_digest
+                s19_report_updates[path]=(old_digest,new_digest)
     for receipt_path in sorted((root/review).glob('S19-*-audit.json')):
         receipt=json.loads(receipt_path.read_text())
         if source in receipt.get('input_sha256',{}):
             read(str(receipt_path.relative_to(root)))
             for path,digest in receipt['input_sha256'].items():
+                if path in s19_report_updates:
+                    old_digest,new_digest=s19_report_updates[path]
+                    assert digest==old_digest
+                    digest=new_digest
                 assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'S19 binding mismatch: {path}'
                 inputs[path]=digest
                 s19_bindings[path]=digest
@@ -368,7 +384,7 @@ def extract(root, c04_audit=None, c04_provisional=None):
     else:
         status.append(dict(experiment='S19',status='Explicit independent analysis hash binding pending; omitted'))
     # S20 is final-only: never inspect arm archives or an unbound interim aggregate.
-    audit_path=review+'S20-final-analysis-audit.json'
+    audit_path=review+'S20-final-confirmation-audit.json'
     source=base+'semantics/s20-analysis.json'
     if (root/audit_path).exists():
         receipt=read(audit_path)
@@ -750,7 +766,9 @@ def render(data, output):
                     row=select('s20_paired',seed=seed,comparison=f'{arm}/{policy}')[0]
                     ax.plot(range(4),[row['cells'][s]['baseline_complete'] for s in shapes],style,marker='.',color=color,label=f'{arm} / {policy}')
             ax.set(title=f'S20 lineage {seed}',xticks=range(4),xticklabels=['3×3','3×4\nheld out','4×3','4×4'],ylim=(-10,530),ylabel='Complete confirmation graphs / 512');ax.legend(fontsize=6)
-        finish(fig,'semantic-confirmation-shapes','Fixed endpoints; known motifs and held-out 3×4 have separate all-seed competence gates. Record is categorical, without edge calibration.\nRecord: scratch, 62,677,315 parameters; workspace: inherited parents, 57,853,781 parameters. Same incremental stream; different objectives/history/arithmetic.\nNo isolated architecture or matched-FLOP claim. TRAIN fitting/calibration overlap is separate from fresh confirmation.')
+        gates=select('s20_summary')[0]['decisions']
+        outcome='Known-motif claim: '+('PASS' if gates['replicated_known_claim'] else 'FAIL')+'; held-out competence: '+('PASS' if gates['heldout_claim'] else 'FAIL')+'. '
+        finish(fig,'semantic-confirmation-shapes',outcome+'Record is categorical, without edge calibration.\nRecord: scratch, 62,677,315 parameters; workspace: inherited parents, 57,853,781 parameters. Same incremental stream; different objectives/history/arithmetic.\nNo isolated architecture or matched-FLOP claim. TRAIN fitting/calibration overlap is separate from fresh confirmation.')
         fig,axes=plt.subplots(1,2,figsize=(12,5.1),sharey=True)
         summary=select('s20_summary')[0]
         for ax,arm in zip(axes,('original','context')):
@@ -763,9 +781,10 @@ def render(data, output):
                 x=[i+offset for i in range(4)]
                 ax.vlines(x,[c[0] for c in intervals],[c[1] for c in intervals],color=color)
                 ax.plot(x,centers,'o',color=color,label=f'Record minus {arm} / {policy}')
-            ax.axhline(0,color='gray',linewidth=.8)
             ax.set(title=f'Known-motif difference versus {arm}',xticks=range(4),xticklabels=['701','702','703','Fixed-model mean'],ylabel='Paired macro difference (percentage points)');ax.legend(fontsize=7)
-        finish(fig,'semantic-confirmation-differences','95% paired event-bootstrap intervals use shared draws within the three known cells across all fixed models and policies.\nIntervals condition on these trained models; the fixed-model mean is not seed-population uncertainty. Both baselines and all seeds retained.\nHeld-out competence is separate; positive direction alone does not establish the registered all-seed acquisition claim.')
+        endpoints=[v for row in select('s20_paired') for v in row['conditional_event_ci95_percentage_points']]
+        for ax in axes: ax.set_ylim(min(endpoints)-1,max(endpoints)+1)
+        finish(fig,'semantic-confirmation-differences','Vertical axis zoomed to effects. 95% paired event-bootstrap intervals use shared draws within the three known cells across all fixed models and policies.\nIntervals condition on these trained models; the fixed-model mean is not seed-population uncertainty. Both baselines and all seeds retained.\nHeld-out competence is separate; positive direction alone does not establish the registered all-seed acquisition claim.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')=='independently_audited'})
