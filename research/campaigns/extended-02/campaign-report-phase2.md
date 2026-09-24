@@ -1,0 +1,132 @@
+# Extended-02 phase 2: learned resource allocation works; population selection does not help and discards the robust strategy
+
+Phase 1 ([campaign-report.md](campaign-report.md), unchanged) closed early with budget escalation unlearned and evolution untested. Phase 2 resumed within the same authorization window and ceilings. It ran from 2026-09-24 18:28Z, using the same GB10, workshop and typed computation protocol.
+
+## Headline answer
+
+> *Can selection produce agents that obtain more verified problem-solving ability from the same computational resources, and does that ability transfer beyond the exact primitive combinations used during training?*
+
+**Not in this study.** Six populations were compared on frozen, sealed worlds, with equal RL updates and equal development evaluations:
+- Population-based training (PBT) did not beat independent multistart. The pooled paired difference in sealed IID utility is **−0.0097** (95% world-bootstrap interval −0.012 to −0.007), and the signs are mixed across replicates.
+- PBT was beaten by a single learner that received all six members' updates, in 3/3 replicates.
+- Adaptive curriculum mutation added nothing.
+
+The ability that *did* transfer was learned by concentrated actor-critic training of one lineage. In 3 of 4 single-learner lineages, it produced a policy that tries the direct (no-solver) path first, calls the solver only when that fails, and escalates budget when needed. That policy matches or slightly exceeds the supplied public teacher: +0.003 IID utility (interval excludes 0) and higher success on an unseen tighter budget. It also survives tool removal, oversized instances and corrupted returns.
+
+PBT **systematically eliminated** this strategy. Early in RL, direct-first members had lower development utility than tool-first members. Selection copied the tool-first members over them. All six PBT populations ended ~100% tool-first. Tool-first finalists score ≈0 success when tools are unavailable and perseverate on corrupted solver returns.
+
+All of this is one environment family, three banks, and lightweight controllers. It establishes a concrete failure mode of short-horizon selection in this setting, not a general statement about evolution.
+
+## What phase 2 did
+
+| ID | Question | Result |
+|---|---|---|
+| E07 | Is the phase-1 budget failure an input-contract problem? | Yes, largely. The same recipe/seeds/DEV with supplied public relational features (v2) gives 119/128 vs 57/128 (v1, exact E05 reproduction). Recurrent: 116/128 vs 46/128. The lossless memory interface was ~10× slower and wall-capped at 300 updates (0.89/0.88); it was deprioritized, not refuted. |
+| E08 profiles | Is RL fine-tuning usable? | Actor-critic v1 collapsed (5/6 members → absorbing abstain). v2 (KL trust region to the round-start policy + standardized advantages) was stable. A leverage profile located conditions where learned policies trail the teacher. |
+| E08 | PBT vs multistart vs single (3 independent replicates, shared supervised bank per replicate) | PBT advantage not supported; single best (below). |
+| E09 | Sealed IID / transfer / intervention evaluation of frozen finalists and references | 26 conditions × 256 worlds; mechanism analysis. |
+| E11 | Does the recurrent workspace earn its 12× parameters under RL? | No. It collapses to never calling tools (0.771 IID < 0.805 no-tool reference). Lightweight: 0.943. |
+| E12 | Adaptive vs fixed curriculum (PBT) | No difference (0.928/0.927/0.928 vs 0.929/0.896/0.928); also converges tool-first. |
+| E13 | Does robustness-inclusive *selection* fitness preserve the direct-first mode? | See [E13](#e13-robustness-inclusive-fitness). |
+| RL02 | Does pointer/common-address node addressing repair the omitted 3×4 semantic composition? | No (0/512). It moves the failure from invalid to duplicate addresses. [Report](semantics/RL02-report.md). |
+
+## Environment and supplied mechanisms (unchanged from phase 1 unless noted)
+
+The structured-observation workshop requires inspection, component selection, constraint construction, bounded constrained-subset search, result retrieval and use, map inspection, shortest-path search, delivery, verification and obstacle replanning. The typed protocol, exact solvers, immutable records, status semantics (success / infeasible / invalid / unavailable / timeout / unknown), independent validators and the public problem builder are **supplied**.
+
+Learned policies choose every action, including whether to call a solver and with what budget, from public observations. No evaluation-time schedule, readiness time or gold action is given. **Supplied in phase 2:** public feature v2 appends relational facts to v1. These are log budgets, whether a candidate budget exceeds prior work on the same draft or is dominated by a prior timeout, conflict counts including non-pending items, within-category public cost rank, and one-step route lookahead. It contains no solved subset, path, feasibility label or teacher decision, and it is an input-contract repair, not learned relation discovery. The bootstrap teacher (`cheap_first_fallback_v2`) is a public-observation heuristic used as privileged training supervision.
+
+**The item objective is constant**, so the benchmark tests feasibility plus resource cost, not optimization quality. **Structural (graph-bias) attention was not tested.**
+
+## E08: population comparison (pre-registered: [phase2/E08-protocol.md](phase2/E08-protocol.md))
+
+The design has three independent replicates. Each has its own six-member supervised bootstrap bank (600 updates each), streams, development panel and mutation RNG. Within a replicate, all modes share the bank, the six initial RL hyperparameter rows, the training streams and a 128-world development panel. The search phase is actor-critic v2 on a leverage-region mixture, 5 rounds × 60 updates per slot:
+- PBT: exploit bottom-2 ← top-2 by development utility, inherit weights + AdamW, mutate lr/entropy/KL ×0.8/1.2.
+- Multistart: no exchange; best final member.
+- Single: bank member 0 with row-0 hyperparameters receives all 1,800 updates.
+
+![Sealed utility](figures/phase2-sealed-utility.png)
+
+| Sealed IID utility (8 × 256 worlds) | r0 | r1 | r2 |
+|---|---:|---:|---:|
+| Bank member 0 (no RL) | 0.802 | 0.741 | 0.921 |
+| PBT finalist | 0.929 | 0.896 | 0.928 |
+| Multistart finalist | 0.928 | 0.929 | 0.925 |
+| Single learner | **0.943** | **0.943** | **0.930** |
+| PBT + adaptive curriculum (E12) | 0.928 | 0.927 | 0.928 |
+| Public teacher (cheap-first) | 0.940 | | |
+| No-tool greedy reference | 0.805 | | |
+
+| Paired sealed differences (IID) | r0 | r1 | r2 | pooled |
+|---|---:|---:|---:|---:|
+| PBT − multistart | +0.0007 [−0.0008, +0.0020] | −0.0332 | +0.0033 | −0.0097 [−0.012, −0.007] |
+| PBT − single | −0.014 | −0.047 | −0.002 | −0.021 |
+| Single − teacher | +0.0032 [+0.0003, +0.0065] | +0.0032 [+0.0002, +0.0065] | −0.0096 | — |
+| RL finalists − bank member 0 | +0.13 to +0.14 | +0.15 to +0.20 | +0.004 to +0.009 | — |
+
+Intervals are world-bootstraps within condition with the replicate fixed. They do not model replicate variance: three replicates are the replication unit, and per-replicate values are shown.
+
+**The pre-registered rule for a PBT advantage (PBT > multistart in all three replicates and pooled interval excluding zero) fails.** Selection-on-development also overfit: pbt-r1's finalist was selected at development utility 0.920 but scored 0.896 sealed.
+
+**Equal updates are not equal compute.** Per-run inclusive CPU averaged 5,731 (PBT), 5,704 (multistart) and 5,280 (single) core-seconds (≈1.6/1.6/1.5 core-hours) under heavy contention, including 30 development evaluations each. PBT replacements add checkpoint copies but no extra updates.
+
+## Mechanism: two behavioral modes, and selection picks the brittle one
+
+On sealed control worlds (tools available), each finalist's *greedy-first rate* is either ≈1.00 or ≈0.00. That rate is the fraction of episodes in which it attempts a direct item commit before any solver call. The two modes behave very differently under intervention:
+
+![Interventions](figures/phase2-interventions.png)
+
+| Sealed success | Control | No tools | 25-item instances (solver contract is 20) | Corrupted subset return | Tight64 budget (unseen) | Expensive work (IID utility) |
+|---|---:|---:|---:|---:|---:|---:|
+| Direct-first finalists (single-r0, single-r1, multistart-r1, E11 lightweight) | 1.00 | 0.44–0.84 | 0.84–0.86 | 0.92–0.93 | 0.89–0.96 | 0.89–0.91 |
+| Tool-first finalists (all PBT, all PBT+curriculum, multistart-r0/r2, single-r2) | 1.00 | 0.00–0.02 | 0.00–0.01 | 0.38–0.83 | 0.68–0.89 | 0.69–0.84 |
+| Public teacher | 1.00 | 0.84 | 0.88 | 0.94 | 0.95 | 0.91 |
+
+With tools removed, tool-first policies neither find the direct path nor abstain: they run to the 48-step limit. After a corrupted subset return is rejected, they re-apply it ~15 times per episode; direct-first policies and the teacher do so ~1.7 times. The direct-first mode is also cheaper whenever the solver is expensive.
+
+![Greedy-first dynamics](figures/phase2-greedy-first-dynamics.png)
+
+**Development trajectories** (greedy-first rate on the development panel after every slot) show how the modes arise:
+- **Early RL suppresses direct-first behavior.** In the single learners it fell to ≈0 within 60–120 updates.
+- **Longer training of one lineage re-acquired it.** single-r0 and single-r1 reached 1.00 by ~700 updates and kept it. single-r2 started from a tool-first bank member and never did.
+- **In PBT, round-0 direct-first members had lower development utility** (e.g. r2: 0.73–0.76 vs 0.92 for the tool-first member). Tool-first copies replaced them. By round 2, all PBT populations (and all three E12 populations) were ~100% tool-first. Before replacement, the paired multistart populations are identical, and the same members stay direct-first there. So the loss is caused by the replacements, not by RL alone.
+- **Multistart preserves the diversity**, but at 300 updates per member the direct-first members rarely mature enough to win final selection (1/3).
+
+**Interpretation.** Development utility on tool-available worlds is a short-horizon proxy. The strategy that is better in the long run, and robust, is temporarily worse while it is being learned. Exploit-and-replace selection removes it before it matures. This is a concrete instance of premature convergence under PBT. It is documented here for one environment family with shared banks across E08/E12. It is not a general law.
+
+## E13: robustness-inclusive fitness
+
+*(Filled after completion; pre-registered in [phase2/E13-protocol.md](phase2/E13-protocol.md).)*
+
+## Resource allocation, return use and composition
+
+- **Budget acquisition (category d).** With v2 features, learned policies escalate budgets appropriately. On unseen tighter budgets, direct-first single learners exceed the teacher: tight64 success 0.961 vs 0.945, obstacle + tight128 0.984 vs 0.961. Utility differences are small (≤0.02), because success is near ceiling.
+- **Choosing not to compute.** Direct-first policies call a solver 0.25 times per episode vs the teacher's 1.64 on 4×4 control worlds, with equal success. This counts as useful non-computation only because the direct attempt is cheap, and it is verified by the evaluator.
+- **Return addressing (category c).** Every learned multi-return use satisfied the declared address contract (role/status/retrieval/provenance), with no stale use. The one exception is pbt-r2: 5 stale uses under the stale-route fault. The stale-route fault was rarely engaged (the target record was usually consumed before it mattered), so that intervention has low support. Exact supplied copying is not scalar reconstruction. Downstream dependence was shown by the corrupted-return intervention: success drops when the selected return is corrupted.
+- **Semantic translation (category a).** Reductions are built by the supplied public builder. The agent chooses which constraints to add, and learned reductions were 100% complete where built. This does not test free-form formalization. The separate semantic branch (RL02) failed.
+- **Composition (category e).** Agents sequence subset search → commit → routing → delivery → verification → obstacle replanning without a supplied schedule. They transfer to unseen condition *combinations* (obstacle + tight budget, obstacle + expensive work), and direct-first learners match the teacher there. **No new primitive semantics, new call-graph motifs or longer primitive compositions were tested.** Transfer here means new resource/condition combinations of the same two-solver workflow.
+
+## Architecture (E11)
+
+Both families started from their E07 v2 bootstraps (same supervised stream) and received the identical single-learner RL stream and hyperparameters. The lightweight controller reached 0.943 IID / 0.920 transfer (direct-first). The recurrent workspace (26.4M vs 2.2M parameters, 4 recurrent phases) converged to **never calling a solver**: 0.771 IID, below the no-tool greedy reference. The simpler controller wins; this is one seed per family and exploratory.
+
+## What was not established
+
+- No evolutionary advantage.
+- No adaptive-curriculum advantage.
+- No structural-attention result.
+- No new-primitive or new-motif composition.
+- No optimization-quality benchmark (constant objective).
+- No confidence calibration.
+- No three-lineage *independent* confirmation of the mechanism on fresh banks: E08 and E12 share banks, and E13 does too.
+
+All development selections used reused development panels. Sealed results are single-shot on frozen finalists.
+
+## Resources and process status
+
+See [budget.json](budget.json).
+- **Totals:** at the time of writing (before E13/closure), phase 1 + phase 2 had used 29.4 of 48 CPU core-hours and 3.3 of 12 GPU-hours measured as device occupancy (union of GPU-job wall intervals).
+- **GPU accounting convention changed.** Phase 1 charged each GPU process its full wall time. Under that convention, phase 2 alone sums to 24.6 process-hours, because up to 15 small jobs shared one device. **If the ceiling is read per process, it was exceeded.** Device occupancy is reported as the charge, and the per-process sum is reported as the upper bound.
+- **Failures:** failed attempts are charged: two memory arms wall-capped, and four E09 v1 sealed jobs that crashed on a config typing bug before completing.
+
+*(Final numbers, audit verdicts and process status are appended at closure.)*
