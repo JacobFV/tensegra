@@ -101,7 +101,9 @@ def run(config):
     torch.set_num_threads(2);tick=time.monotonic();data=Path(config['source_data_dir']);out=Path(config['output_dir']);out.mkdir(parents=True,exist_ok=False)
     excluded,old_counts=exclusion_metadata(data,config['exclude_cache_sha256']);old_train=load_cache(data/'train.jsonl.gz')
     if len(old_train)!=8192:raise ValueError('allowed TRAIN population changed')
-    vocab=json.loads((data/'audit.json').read_text())['value_vocabulary'];seen_public={};seen_features={};train=regenerate_allowed_train(old_train,vocab,seen_public,seen_features)
+    vocab=json.loads((data/'audit.json').read_text())['value_vocabulary']
+    if vocab!=config['value_vocabulary']:raise ValueError('frozen value-class ordering changed')
+    seen_public={};seen_features={};train=regenerate_allowed_train(old_train,vocab,seen_public,seen_features)
     development=[];duplicates=0
     for attempt in range(config['max_development_attempts']):
         seed=config['development_seed']+attempt;example=build_tcn_example('unification',seed,difficulty=.5,languages=RENDERERS)
@@ -111,7 +113,7 @@ def run(config):
         if len(development)==512:break
     if len(development)!=512:raise ValueError('declared fresh semantic-support budget exhausted')
     for name,rows in [('train',train),('development',development)]:write_rows(out/(name+'.jsonl.gz'),rows)
-    result=dict(cache_version=CACHE_VERSION,source_commit=SOURCE_COMMIT,renderer_version=RENDERER_VERSION,config=config,train_unique_graphs=len(train),development_unique_graphs=len(development),surfaces_per_graph=2,train_surface_count=2*len(train),development_surface_count=2*len(development),old_excluded_counts=old_counts,duplicate_semantic_keys_skipped=duplicates,development_attempts=attempt+1,all_surfaces_grouped_by_construction=True,train_regeneration_exact=True,per_renderer_copy_injectivity_validated=True,public_target_consistency_validated=True,actor_feature_target_consistency_validated=True,feature_precision_audits=['float32','bfloat16'],distinct_feature_sequences={name:sum(k.startswith(name+':') for k in seen_features) for name in ('float32','bfloat16')},value_vocabulary=vocab,cpu_seconds=time.monotonic()-tick,cache_sha256={n:digest(out/(n+'.jsonl.gz')) for n in ('train','development')},source_sha256={n:digest(Path(__file__).with_name(n)) for n in ('campaign_semantics_multisurface_data.py','campaign_semantics_surface_contract.py','campaign_semantics_data.py','semantic_scaling.py','tcn_data.py','semantic_graph.py')})
+    result=dict(cache_version=CACHE_VERSION,source_commit=SOURCE_COMMIT,renderer_version=RENDERER_VERSION,config=config,train_unique_graphs=len(train),development_unique_graphs=len(development),surfaces_per_graph=2,train_surface_count=2*len(train),development_surface_count=2*len(development),old_excluded_counts=old_counts,duplicate_semantic_keys_skipped=duplicates,development_attempts=attempt+1,all_surfaces_grouped_by_construction=True,train_regeneration_exact=True,per_renderer_copy_injectivity_validated=True,public_target_consistency_validated=True,actor_feature_target_consistency_validated=True,feature_precision_audits=['float32','bfloat16'],distinct_feature_sequences={name:sum(k.startswith(name+':') for k in seen_features) for name in ('float32','bfloat16')},value_vocabulary=vocab,cpu_seconds=time.monotonic()-tick,cache_sha256={n:digest(out/(n+'.jsonl.gz')) for n in ('train','development')},source_sha256={n:digest(Path(__file__).with_name(n)) for n in ('campaign_semantics_multisurface_data.py','campaign_semantics_surface_contract.py','campaign_semantics_data.py','semantic_scaling.py','semantic_curriculum.py','thinking_language.py','tcn_data.py','semantic_graph.py')})
     (out/'audit.json').write_text(json.dumps(result,indent=2)+'\n');return result
 
 if __name__=='__main__':
