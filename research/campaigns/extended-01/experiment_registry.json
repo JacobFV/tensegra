@@ -735,7 +735,7 @@
     },
     {
       "id": "S16",
-      "status": "main_running",
+      "status": "completed_diagnostic_audit_pending",
       "hypothesis": "Public identifier normalization can supply spelling invariance without requiring the graph model to learn irrelevant lexical correlations",
       "intervention": "Narrow publicEnglishrenderer parser plus first-occurrence namespace canonicalization into fixedknowntraininglexemes; restorecopyviaoriginaltokenindex",
       "comparator": "Allsix unchangedS12 original versus normalizedoriginal; normalizedrenamed fullinput equivalence separately established mechanically",
@@ -745,10 +745,11 @@
       "protocol": "semantics/S16-feasibility-and-protocol.md",
       "population": "1024 existingoriginal/renamed S12diagnosticpairs, arity4/facts3or4; alreadyinspectedfailure motivates study",
       "selection": "Singlefixedmapping,all6checkpoints/originalthresholds,no tuning/retraining; no automaticaccuracygate",
-      "budget": "Profile25.28s;all6x1024maincap480",
+      "budget": "25.28profile+114.74maincharged",
       "next_branch": "Independent runner review, then timing-only60s profile under root release; main cap derived afterward",
       "limitations": "Suppliedparserandknownvocabulary prior, notlearnedlanguage; no broadsyntax/identitycapacity/case-changing rename claim",
-      "audit": "review/S16-profile-audit.json;review/S16-profile-state-audit.json"
+      "audit": "review/S16-profile-audit.json;review/S16-profile-state-audit.json",
+      "result": "Normalizedcaldecay48/103/120 vs original66/131/139; constants0both. Fullinputrenameinvarianceprogrammed, notcorrectnessguarantee"
     },
     {
       "id": "S17",
