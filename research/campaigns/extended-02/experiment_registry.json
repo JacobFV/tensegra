@@ -289,6 +289,35 @@
         "memory"
       ],
       "next_branch": "Freeze reducedexposure if1024paired+full512eval exceeds900seccombined"
+    },
+    {
+      "id": "RL01-main",
+      "status": "registered",
+      "hypothesis": "Relation-only loss allocation improves freelydecoded omittedcomposition relations after suppliedcorrectnodes versus ordinarycontinuation.",
+      "intervention": "1024updates\u00d78 perarm, parentS21broad, AdamWreset, denominator8 unchanged",
+      "comparator": "Allrecordloss; paired minibatches,parentweights andfreshTRAIN1024",
+      "observable_inputs": "Publictext, correctNODEprefix atfreeevaluation; no edges/count/EOS",
+      "privileged_targets": "Goldteacherforcing andNODEboundary clearlyprivileged; separatefree/localmetrics",
+      "split": "Fresh1024train,TRAIN128panel,512knownDEV,512omitted3x4DEV; alphadisjoint allhistorical",
+      "seed": 2201,
+      "exposure": "8192presentations perarm, checkpoints0/256/1024, fixedfinal",
+      "selection_rule": "No bestcheckpoint. Newconfirmation onlyifomitted>=52/512 and>=26better,knownloss<=26;oneparent notreplicatedclaim.",
+      "budget": {
+        "gpu_seconds": 780,
+        "cpu_core_seconds": 1560
+      },
+      "profile_estimate": "Measured~.05-.078s/trainupdate,~.5-.63s per8 worstlengthdecodecell; conservative625s main incl full512/128 panels andexports within780cap.",
+      "metrics": [
+        "freecompletegraph",
+        "exactrelations",
+        "validity",
+        "teacherwholeorderededge",
+        "EOS",
+        "learningcurve",
+        "memory",
+        "runtime"
+      ],
+      "next_branch": "Ifpromising newindependentlineages confirmation; otherwise localize relationfailure withoutblockingagents"
     }
   ]
 }
