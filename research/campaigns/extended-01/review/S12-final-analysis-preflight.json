@@ -1,0 +1,33 @@
+{
+  "source_sha256": {
+    "src/topoformer/campaign_semantics_confirmation_analysis.py": "9dc6ea686490b55413e21bb22d2ef544acf99f75c966c0a73612da37551d0dc6",
+    "research/campaigns/extended-01/semantics/S10-S12-analysis.py": "d733ce11e97079823182b3c8a9c02eb396d02609c51ad00a4daaef1fa0e02e4a",
+    "research/campaigns/extended-01/semantics/S10-paired-report.py": "322cf8e3e2163c1ca1d1994065fdfc2997e0fd2ac231c9e7870bf27a6c50e45d"
+  },
+  "fixture_checks": [
+    "shared-event cancellation across three fixed seeds, exact primary/secondary interval agreement",
+    "701 competence failure preserved despite positive direction and other competent seeds",
+    "incomplete matrix rejection",
+    "paired ordering rejection",
+    "calibrated primary/raw secondary/schema separate"
+  ],
+  "source_review": [
+    "S10 frequency output uses fixed TRAIN8192 prediction hash, never actor predictions, and exact confirmation identity/target pairing",
+    "All schema/bookkeeping variants remain secondary; no policy selection",
+    "Legacy S10 paired report provides descriptive counts only, not all-six promotion",
+    "Primary evaluator relies on prior immutable artifact audit for actual targets and producer lineage; semantic identity alone is not an independent target hash guard"
+  ],
+  "cpu_audit_wall_seconds": 0.33155628299573436,
+  "scope": "AST-extracted pure analysis functions and synthetic fixtures; no model imports, inference or future outcome access.",
+  "harness_attempts": [
+    {
+      "status": "failed",
+      "reason": "AST harness omitted __file__; no source defect",
+      "wall_seconds": 0.295971311
+    },
+    {
+      "status": "passed",
+      "wall_seconds": 0.33155628299573436
+    }
+  ]
+}
