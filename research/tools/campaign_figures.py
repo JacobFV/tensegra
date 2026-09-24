@@ -218,7 +218,7 @@ def render(data, output):
                 ax.axhline(ss[0]['threshold'],color='.7',lw=.7)
         if not select('semantic_confirmation',seed=seed):
             ax.text(.02,.9-(seed-701)*.1,f'{seed}: pending',transform=ax.transAxes)
-    ax.set(title='Fresh confirmation: paired seeds',xticks=[0,1],xticklabels=['Constant','Decay'],ylabel='Complete graphs / 1024');ax.legend(fontsize=7)
+    ax.set(title=f"Fresh confirmation: {len({r['seed'] for r in select('semantic_confirmation')})}/3 audited seeds",xticks=[0,1],xticklabels=['Constant','Decay'],ylabel='Complete graphs / 1024');ax.legend(fontsize=7)
     ax=axes[1,1];rr=select('semantic_supplied',policy='calibrated')
     checkpoints=sorted({r['checkpoint'] for r in rr})
     for arm in ('baseline','bookkeeping','schema','combined'):
@@ -278,10 +278,12 @@ def render(data, output):
             ss=[next(r for r in select('composition',arm=arm,metric=metric) if r['split']==split) for split in ('fresh_validation','fresh_validation-reversed')]
             ax.plot([0,1],[100*r['correct']/r['total'] for r in ss],style,marker='o',color=f'C{ai}',label=f'{arm} {metric}')
     ax.set(title='C03 fixed endpoint · development',xticks=[0,1],xticklabels=['Clean','Roles reversed'],ylabel='Correct (%)');ax.legend(fontsize=7)
-    finish(fig,'returns-composition','Restricted original mixture / finite domain. Seed traces are separate; repeated delays share events.\nC03 is one development initialization with supplied scheduling. C04 confirmation is pending; no confirmation values imputed.')
+    finish(fig,'returns-composition','Restricted original mixture / finite domain. Seed traces are separate; repeated delays share events.\nC03 is one development initialization with supplied scheduling. C04 appears separately when audited; incomplete lineages are never imputed.')
 
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
+        audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid')})
+        pending_lineages=[n for n in (560,561,562) if n not in audited_lineages]
         for ax,view in zip(axes[0],('clean','reversed')):
             for ai,path in enumerate(('workspace','supplied_copy')):
                 for lineage in (560,561,562):
@@ -308,7 +310,7 @@ def render(data, output):
                 ss.sort(key=lambda r:r['delay'])
                 ax.plot([r['delay'] for r in ss],[100*r['correct']/r['total'] for r in ss],'.-',color=f'C{ai}',alpha=.65,label=metric if lineage==560 else None)
         ax.set(title='C04 reversed: answer / joint / refusal',xlabel='Workspace delay',ylabel='Count / total (%)');ax.legend(fontsize=7)
-        finish(fig,'composition-confirmation','Each trace/marker is one lineage (560/561/562); missing audited lineages remain absent. Shared views/delays are not independent.\nNeural x = fixed 4000 primary; + = selected secondary. Supplied-copy is a sole-return reference. Finite numeric train/test overlap; supplied scheduling.')
+        finish(fig,'composition-confirmation',f"Audited lineages: {audited_lineages}; pending: {pending_lineages}. Each trace is a lineage; shared views/delays are not independent.\nNeural x = fixed 4000 primary; + = selected secondary. Supplied-copy is a sole-return reference. Finite numeric train/test overlap; supplied scheduling.")
 
 
 def main():
