@@ -18,7 +18,9 @@ checkpoint=Path(cfg['checkpoint'])
 if hashlib.sha256(checkpoint.read_bytes()).hexdigest()!=cfg['checkpoint_sha256']:raise SystemExit('Checkpoint mismatch')
 active=subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader'],text=True).strip()
 if active:raise SystemExit('GPU not idle: '+active)
-cmd=[sys.executable,'-m','topoformer.campaign_returns_balanced_diversity','--config',str(config),'--output',str(output)]
+module=manifest.get('module','topoformer.campaign_returns_balanced_diversity')
+if module not in {'topoformer.campaign_returns_balanced_diversity','topoformer.campaign_returns_linear_continuation'}:raise SystemExit('Unapproved experiment module')
+cmd=[sys.executable,'-m',module,'--config',str(config),'--output',str(output)]
 child_start=time.monotonic();completed=subprocess.run(cmd,cwd=root,check=False)
 record=dict(source_commit=manifest['source_commit'],snapshot_sha256=hashlib.sha256((root/'snapshot.json').read_bytes()).hexdigest(),
             config_sha256=hashlib.sha256(config.read_bytes()).hexdigest(),checkpoint_sha256=cfg['checkpoint_sha256'],
