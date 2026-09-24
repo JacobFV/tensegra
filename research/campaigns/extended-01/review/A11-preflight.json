@@ -1,0 +1,43 @@
+{
+  "source_ref": "b02f3b6",
+  "config_sha256": "696319d7298d04132fc2f7ac30d4490dcfc501efd1ffbcedec7e6d1269cd0b99",
+  "unchanged_runner_from_audited_A10": true,
+  "changed_config_keys": [
+    "checkpoints",
+    "eval_seed",
+    "resume_state",
+    "resume_state_sha256",
+    "resume_step",
+    "resume_tensor_sha256",
+    "state_checkpoints",
+    "steps"
+  ],
+  "resume_bound_to_independently_verified_3000_state": true,
+  "additional_updates": 3000,
+  "additional_presentations": 48000,
+  "fresh_final_seed": 211000000,
+  "monitor_cells": [
+    {
+      "condition": {
+        "nodes": 32,
+        "depth": 4,
+        "data_group": 0
+      },
+      "examples": 256,
+      "previous_correct": 241,
+      "current_correct": 247
+    },
+    {
+      "condition": {
+        "nodes": 64,
+        "depth": 8,
+        "data_group": 1
+      },
+      "examples": 256,
+      "previous_correct": 155,
+      "current_correct": 183
+    }
+  ],
+  "cpu_audit_wall_seconds": 0.032126745965797454,
+  "scope": "Unchanged-runner config-only preflight and paired CPU-monitor raw reconstruction; prior resume test reused. No GPU/model forward, no confirmation claim; same-population monitor uses CPU while prior point used GPU."
+}
