@@ -735,7 +735,7 @@
     },
     {
       "id": "S16",
-      "status": "profile_running",
+      "status": "profile_complete_main_freeze_pending",
       "hypothesis": "Public identifier normalization can supply spelling invariance without requiring the graph model to learn irrelevant lexical correlations",
       "intervention": "Narrow publicEnglishrenderer parser plus first-occurrence namespace canonicalization into fixedknowntraininglexemes; restorecopyviaoriginaltokenindex",
       "comparator": "Allsix unchangedS12 original versus normalizedoriginal; normalizedrenamed fullinput equivalence separately established mechanically",
@@ -745,10 +745,25 @@
       "protocol": "semantics/S16-feasibility-and-protocol.md",
       "population": "1024 existingoriginal/renamed S12diagnosticpairs, arity4/facts3or4; alreadyinspectedfailure motivates study",
       "selection": "Singlefixedmapping,all6checkpoints/originalthresholds,no tuning/retraining; no automaticaccuracygate",
-      "budget": "60s profilecap;mainunallocated",
+      "budget": "25.28sprofilecharged;480s maincapapprovedforfreeze, noreleaseyet",
       "next_branch": "Independent runner review, then timing-only60s profile under root release; main cap derived afterward",
       "limitations": "Suppliedparserandknownvocabulary prior, notlearnedlanguage; no broadsyntax/identitycapacity/case-changing rename claim",
       "audit": "review/S16-runner-preflight.json"
+    },
+    {
+      "id": "S17",
+      "status": "cpu_preparation",
+      "hypothesis": "Actual training-mixture calibration can reduce localized edge-decision errors without changing graph representations",
+      "intervention": "Fixed128actualTRAINexamples perendpoint, mixturematched; same scalarrelationthreshold rule",
+      "comparator": "Original raw andhistoricalTRAINcalibration on bothS15 frozenendpoints",
+      "observable_inputs": "Unchangedpublictext",
+      "privileged_targets": "TRAINlabels for calibration; DEVlabels only scoring",
+      "population": "All2048existingDEV perarm; exploratory posthocdiagnosis,confirmation untouched",
+      "selection": "Deterministic64/32/32mixed and64/64control before newmodel scores; noDEVcutoffselection",
+      "protocol": "semantics/S17-protocol.md",
+      "source": "dccdb661 prepared",
+      "budget": "Profile90proposed, notyetreleased;mainafterprofile",
+      "next_branch": "Distinguish threshold mismatch from remainingedge acquisition; no retrospectiveS15pass"
     }
   ],
   "policy": {
