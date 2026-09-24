@@ -1,0 +1,110 @@
+{
+  "preflight_seconds": 0.6073277932591736,
+  "process_seconds": 31.229218407999724,
+  "arms": [
+    {
+      "seed": 701,
+      "arm": "original",
+      "parameters": 57853781,
+      "setup_seconds": 1.6695860009640455,
+      "training_seconds": 1.9005082310177386,
+      "evaluation_seconds": 5.802026441786438,
+      "checkpoint_export_seconds": 2.6942491056397557,
+      "worst_case_timing": null,
+      "matched": {
+        "seconds": 4.253697099164128,
+        "whole_evaluation_seconds": 5.35629882896319,
+        "timing": {
+          "calibration_trainpanel_seconds": 2.9984734538011253,
+          "dev_seconds": 0.6237809644080698,
+          "export_seconds": 1.5418365555815399,
+          "post_state_hash_seconds": 0.19221023935824633
+        }
+      }
+    },
+    {
+      "seed": 701,
+      "arm": "context",
+      "parameters": 57853781,
+      "setup_seconds": 0.5261793597601354,
+      "training_seconds": 1.5616350611671805,
+      "evaluation_seconds": 5.672775854822248,
+      "checkpoint_export_seconds": 1.8431201111525297,
+      "worst_case_timing": null,
+      "matched": {
+        "seconds": 4.156917999964207,
+        "whole_evaluation_seconds": 5.145130496937782,
+        "timing": {
+          "calibration_trainpanel_seconds": 2.7188014066778123,
+          "dev_seconds": 0.7863678392022848,
+          "export_seconds": 1.4647110048681498,
+          "post_state_hash_seconds": 0.17525309417396784
+        }
+      }
+    },
+    {
+      "seed": 701,
+      "arm": "record",
+      "parameters": 62677315,
+      "setup_seconds": 0.2666612137109041,
+      "training_seconds": 0.8897101492621005,
+      "evaluation_seconds": 3.281461250036955,
+      "checkpoint_export_seconds": 1.731805693358183,
+      "worst_case_timing": {
+        "seconds": 0.39637317694723606,
+        "batch_size": 32,
+        "steps": 160,
+        "scope": "Timing-only own-prediction rollout ignores EOS/invalid stop, no gold prefix/count. Not an evaluated prediction or quality result.",
+        "train_indices": [
+          0,
+          4,
+          5,
+          6,
+          14,
+          17,
+          18,
+          20,
+          24,
+          26,
+          30,
+          41,
+          42,
+          46,
+          53,
+          54,
+          55,
+          58,
+          63,
+          64,
+          81,
+          85,
+          90,
+          93,
+          102,
+          106,
+          113,
+          114,
+          117,
+          122,
+          125,
+          137
+        ],
+        "artifact": "worst-case-profile.json.gz",
+        "sha256": "dd6a920e41663fbb3eb58419a4d8be869452d8d81003197d1762b1ed40217d9d",
+        "export_seconds": 0.004220249131321907
+      },
+      "train": {
+        "teacher_forced_seconds": 0.08104808535426855,
+        "free_running_seconds": 1.202075493056327,
+        "export_seconds": 0.1356474058702588,
+        "total_seconds": 1.6214628727175295
+      },
+      "evaluation": {
+        "teacher_forced_seconds": 0.03722805390134454,
+        "free_running_seconds": 0.604873064905405,
+        "export_seconds": 0.06770129594951868,
+        "total_seconds": 0.8690864001400769
+      }
+    }
+  ]
+}
