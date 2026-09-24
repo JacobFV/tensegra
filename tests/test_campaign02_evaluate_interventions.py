@@ -61,3 +61,17 @@ def test_resource_pairing_preserves_physical_semantics():
     b={**a,'work_limit':0,'compute_price':2}
     assert m.semantic_spec_hash(a)==m.semantic_spec_hash(b)
     assert m.semantic_spec_hash(a)!=m.semantic_spec_hash({**a,'capacity':3})
+
+
+def test_every_registered_sealed_condition_builds_through_evaluator():
+    import json, sys
+    from topoformer.campaign02_world import generate_world
+    m = evaluator()
+    tools = Path(__file__).resolve().parents[1]/'research/tools'
+    sys.path.insert(0, str(tools))
+    import campaign02_e09_config as e09
+    cfg = json.loads(json.dumps(e09.build([], 2, [])))  # exact JSON round trip
+    for condition in cfg['conditions']:
+        spec = generate_world(condition['seed_start'], **m.world_kwargs(condition['world']))
+        assert isinstance(spec.call_budgets, tuple)
+        m.condition_faults(condition)

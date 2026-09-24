@@ -138,6 +138,14 @@ def condition_faults(condition):
     return tuple(normalized)
 
 
+def world_kwargs(world):
+    """JSON has no tuples: restore the tuple-typed public call-budget menu."""
+    world = dict(world)
+    if "call_budgets" in world:
+        world["call_budgets"] = tuple(world["call_budgets"])
+    return world
+
+
 def semantic_spec_hash(spec):
     # Public resource interventions may differ; physical facts/goals may not.
     resources = {"step_limit","work_limit","observation_price","action_price","work_price",
@@ -230,7 +238,7 @@ def main():
             if n < 1 or Path(name).name != name:
                 raise ValueError("Invalid condition name or support")
             seeds = list(range(condition["seed_start"], condition["seed_start"]+n))
-            specs = [generate_world(seed, **condition.get("world", {})) for seed in seeds]
+            specs = [generate_world(seed, **world_kwargs(condition.get("world", {}))) for seed in seeds]
             namespace = condition.get("address_namespace", cfg.get("address_namespace", "extended-02-frozen-eval-v1"))
             faults = condition_faults(condition)
             def factory(index):
