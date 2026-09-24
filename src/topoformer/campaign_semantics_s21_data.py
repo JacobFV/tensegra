@@ -179,8 +179,16 @@ def build(config):
     if 'exclusion_inventory' in config:
         inventory_path=pinned_path(config['exclusion_inventory'])
         inventory=json.load(gzip.open(inventory_path,'rt')) if inventory_path.suffix=='.gz' else json.loads(inventory_path.read_text())
-        seen.update(inventory['alpha_sha256']);inventory_coverage=inventory.get('coverage')
-        sources.append(dict(path=str(inventory_path),sha256=sha(inventory_path),role='independently built alpha-only historical exclusion inventory',unique_alpha=len(inventory['alpha_sha256'])))
+        if isinstance(inventory,list):
+            keys=inventory
+            metadata_path=pinned_path(config['exclusion_inventory_metadata'])
+            inventory_coverage=json.loads(metadata_path.read_text())
+            if inventory_coverage['alpha_sha256']!=sha(inventory_path): raise ValueError('inventory metadata hash mismatch')
+        else:
+            keys=inventory['alpha_sha256'];inventory_coverage=inventory.get('coverage')
+        if any(not isinstance(k,str) or len(k)!=64 for k in keys): raise ValueError('invalid alpha hash inventory')
+        seen.update(keys)
+        sources.append(dict(path=str(inventory_path),sha256=sha(inventory_path),role='independently built alpha-only historical exclusion inventory',unique_alpha=len(keys)))
     # Exclusions retain only opaque hashes, even for previously sealed splits.
     for spec in config.get('exclusion_sources',[]):
         path=pinned_path(spec);keys=set();count=0
