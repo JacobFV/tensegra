@@ -8,11 +8,44 @@ ARMS=('original','context','workspace_control')
 POLICIES=('raw','historical','matched')
 BINDINGS_SHA='4364e758de6792886c391cb372ba3a9d67d5e26c081608492043c08a93c4f74b'
 HELPER_SHA='13a8c12a014f97b95b65b221457ade75be318c0cb2f76e24234c8391e12d8355'
+SOURCES=('campaign_semantics_s18.py','campaign_semantics_s18_freeze.py','campaign_semantics_s18_launch.py',
+ 'campaign_semantics_s18_actor.py','campaign_semantics_s18_compute.py','campaign_semantics_grounded_actor.py',
+ 'campaign_semantics_shape_train.py','campaign_semantics.py','campaign_semantics_data.py','campaign_semantics_continue.py',
+ 'campaign_semantics_lr.py','semantic_curriculum.py','semantic_text_acquisition.py','semantic_scaling.py',
+ 'semantic_contracts.py','thinking.py','thinking_language.py','semantic_graph.py','tcn_data.py')
+# Fill only from prospectively reviewed immutable freezes, before main-result reads.
+PINNED_CONFIG_SHA={'main':None,'reference':None}
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 def load(path):return json.load(gzip.open(path,'rt'))
 def require(condition,message):
  if not condition:raise ValueError(message)
 def hashcheck(path,expected):require(sha(path)==expected,'changed artifact: '+str(path));return Path(path)
+def metadata_guard(config,receipt,actual_config_sha,expected_config_sha):
+ require(isinstance(expected_config_sha,str) and len(expected_config_sha)==64,'prospective config pin unavailable')
+ require(actual_config_sha==expected_config_sha,'frozen config pin mismatch')
+ require(set(config['source_sha256'])==set(SOURCES),'incomplete or extra source freeze')
+ require(receipt['wrapper_sha256']==config['source_sha256']['campaign_semantics_s18_launch.py'],'receipt launcher mismatch')
+def final_state_guard(result):
+ require(result['curves'][-1]['added_update']==4096 and result['curves'][-1]['model_state_sha256']==result['final_state_sha256'],'final curve/state disagreement')
+def evaluation_guard(document,entry,filename):
+ require(entry['artifact']==filename and entry['update']==document['update'],'manifest evaluation identity mismatch')
+ require(document['calibration_data_artifact']==f"calibration-u{document['update']}.npz",'calibration NPZ name mismatch')
+ require(len(document['thresholds'])==len(document['calibration'])==13,'relation threshold count')
+ require(document['thresholds']==[v['threshold'] for v in document['calibration']],'threshold/calibration record disagreement')
+ require(len(document['calibration_data_sha256'])==64,'calibration digest missing')
+ for label,rows,key in [('dev_raw',document['rows'],'raw_metrics'),('dev_calibrated',document['rows'],'calibrated_metrics'),('train_raw',document['train_metrics'],'raw'),('train_calibrated',document['train_metrics'],'calibrated')]:
+  require(entry[label]['examples']==len(rows) and entry[label]['exact']==sum(r[key]['semantic_equivalence'] for r in rows),'manifest evaluation count disagreement')
+  require(np.isclose(entry[label]['copy'],sum(r[key]['identity_copy_accuracy'] for r in rows)/len(rows),rtol=0,atol=1e-12),'manifest copy summary disagreement')
+  for kind in ('typed_edge','ordered_edge'):
+   tp=sum(r[key][kind]['true_positive'] for r in rows);den=sum(r[key][kind]['predicted_count']+r[key][kind]['gold_count'] for r in rows)
+   require(np.isclose(entry[label][kind+'_f1'],2*tp/max(1,den),rtol=0,atol=1e-12),'manifest edge summary disagreement')
+def calibration_array_guard(document,npz):
+ require(set(npz.files)=={'scores','targets','pairs','offsets'},'calibration NPZ arrays differ')
+ scores=npz['scores'];targets=npz['targets'];pairs=npz['pairs'];offsets=npz['offsets']
+ require(scores.shape==targets.shape and scores.ndim==2 and scores.shape[1]==13 and pairs.shape==(len(scores),2),'calibration array shapes')
+ require(offsets.shape==(129,) and offsets[0]==0 and offsets[-1]==len(scores) and bool(np.all(np.diff(offsets)>=0)),'calibration offsets')
+ require(len(document['calibration_records'])==128,'calibration records incomplete')
+ require(all(r['start']==int(offsets[i]) and r['stop']==int(offsets[i+1]) and r['seed']==document['train_rows'][i]['seed'] for i,r in enumerate(document['calibration_records'])),'calibration record/array identity differs')
 def decisions(counts):
  require(set(counts)==set(ARMS),'all three arms required')
  require(all(set(v)==set(CELLS) and all(type(n) is int and 0<=n<=512 for n in v.values()) for v in counts.values()),'four512cells required')
@@ -57,7 +90,7 @@ def main(args):
  require(roles is not None,'role schema missing')
  manifests={};configs={};hashes={}
  for job,path,config_path,receipt_path in [('main',args.main,args.main_config,args.main_receipt),('reference',args.reference,args.reference_config,args.reference_receipt)]:
-  c=json.loads(config_path.read_text());m=load(path/'manifest.json.gz');receipt=json.loads(receipt_path.read_text())
+  c=json.loads(config_path.read_text());receipt=json.loads(receipt_path.read_text());metadata_guard(c,receipt,sha(config_path),PINNED_CONFIG_SHA[job]);m=load(path/'manifest.json.gz')
   require(c==m['config'] and c['budget_status']=='frozen' and c['job']==job,'wrong/floating config')
   require(c['bindings']['sha256']==BINDINGS_SHA and c['dev_per_cell']==512 and c['calibration_count']==128,'population changed')
   require(c['arms']==(['context','workspace_control'] if job=='main' else ['original']) and c['checkpoints']==list(STEPS if job=='main' else STEPS[:3]),'arms/curves changed')
@@ -75,9 +108,12 @@ def main(args):
  cachepath=hashcheck(root/'s15-shape-cache-v2/development.jsonl.gz',bindings['caches']['development']['sha256']);cache={r['semantic_sha256']:r for r in map(json.loads,gzip.open(cachepath,'rt'))};require(len(cache)==2048,'DEV count')
  selection=json.loads(hashcheck(root/'s17-calibration-selection/selection.json',bindings['selection']['sha256']).read_text())['mixed'];selections={r['seed']:r for r in selection};require(len(selections)==128,'TRAIN128 selection')
  events={cell:sorted(k for k,r in cache.items() if f"{r['arity']}x{r['facts']}"==cell) for cell in CELLS};require(all(len(v)==512 for v in events.values()),'cell counts')
- targets={};raw_records={};results={};flags={};train_panels={}
- def consume(arm,step,policy,path,expected_sha):
-  hashcheck(path,expected_sha);d=load(path);require(d['update']==24576+step,'artifact checkpoint differs');hashcheck(path.parent/d['calibration_data_artifact'],d['calibration_data_sha256'])
+ targets={};raw_records={};results={};flags={};train_panels={};inventory={}
+ def consume(arm,step,policy,path,expected_sha,entry):
+  hashcheck(path,expected_sha);require(entry['sha256']==expected_sha,'manifest evaluation hash disagreement');d=load(path);require(d['update']==24576+step,'artifact checkpoint differs');evaluation_guard(d,entry,path.name);npz_path=hashcheck(path.parent/d['calibration_data_artifact'],d['calibration_data_sha256'])
+  with np.load(npz_path,allow_pickle=False) as npz:calibration_array_guard(d,npz)
+  inventory[f'{arm}/{step}/{policy}']=dict(evaluation_path=str(path),evaluation_sha256=expected_sha,calibration_path=str(npz_path),calibration_sha256=d['calibration_data_sha256'])
+  if arm=='original' and step==4096 and policy=='matched':require(d['thresholds']==s17mixed['new_thresholds'] and d['calibration_data_sha256']==s17mixed['calibration_npz_sha256'],'S17 calibration metadata disagreement')
   rows=index_rows(d['rows'],cache);key=(arm,step);raw_digest=hashlib.sha256(json.dumps([(k,rows[k]['raw'],rows[k]['raw_metrics']) for k in sorted(rows)],sort_keys=True).encode()).hexdigest()
   if key in raw_records:require(raw_records[key]==raw_digest,'raw output changed with policy')
   raw_records[key]=raw_digest
@@ -101,16 +137,16 @@ def main(args):
  ref=manifests['reference']['results'];require(len(ref)==1 and ref[0]['no_optimizer_or_training'],'reference trained/missing');require([c['added_update'] for c in ref[0]['curves']]==list(STEPS[:3]),'reference curves incomplete')
  for i,step in enumerate(STEPS):
   bound=bindings['checkpoints'][i];require(old['curves'][i]['checkpoint_sha256']==bound['checkpoint']['sha256'],'original checkpoint binding')
-  consume('original',step,'historical',oldpath/f"evaluation-u{24576+step}.json.gz",bound['historical_evaluation']['sha256'])
-  if step==4096:consume('original',step,'matched',s17path/'mixed/evaluation-u28672.json.gz',bindings['matched_endpoint']['sha256'])
+  consume('original',step,'historical',oldpath/f"evaluation-u{24576+step}.json.gz",bound['historical_evaluation']['sha256'],old['curves'][i]['evaluation'])
+  if step==4096:consume('original',step,'matched',s17path/'mixed/evaluation-u28672.json.gz',bindings['matched_endpoint']['sha256'],s17mixed['evaluation'])
   else:
-   curve=ref[0]['curves'][i];require(curve['checkpoint']==bound['checkpoint'] and curve['raw_target_replay_exact'],'reference checkpoint/replay mismatch');consume('original',step,'matched',args.reference/f'u{24576+step}'/curve['evaluation']['artifact'],curve['evaluation']['sha256'])
+   curve=ref[0]['curves'][i];require(curve['checkpoint']==bound['checkpoint'] and curve['raw_target_replay_exact'],'reference checkpoint/replay mismatch');consume('original',step,'matched',args.reference/f'u{24576+step}'/curve['evaluation']['artifact'],curve['evaluation']['sha256'],curve['evaluation'])
  require([r['arm'] for r in manifests['main']['results']]==['context','workspace_control'],'new arms incomplete')
  for arm_result in manifests['main']['results']:
-  arm=arm_result['arm'];require(arm_result['curves'][0]['model_state_sha256']==bindings['original_initial_state_sha256'],'new arm initial tensors changed');stream_guard(arm_result,bindings['expected_streams']);require([c['added_update'] for c in arm_result['curves']]==list(STEPS),'new curves incomplete')
+  final_state_guard(arm_result);arm=arm_result['arm'];require(arm_result['curves'][0]['model_state_sha256']==bindings['original_initial_state_sha256'],'new arm initial tensors changed');stream_guard(arm_result,bindings['expected_streams']);require([c['added_update'] for c in arm_result['curves']]==list(STEPS),'new curves incomplete')
   for curve in arm_result['curves']:
    step=curve['added_update'];require(curve['update']==24576+step and curve['added_presentations']==step*8,'curve exposure changed')
-   for policy in ('matched','historical'):consume(arm,step,policy,args.main/arm/f'{policy}-u{24576+step}'/curve[policy]['artifact'],curve[policy]['sha256'])
+   for policy in ('matched','historical'):consume(arm,step,policy,args.main/arm/f'{policy}-u{24576+step}'/curve[policy]['artifact'],curve[policy]['sha256'],curve[policy])
  require(all(set(results[arm][str(step)])==set(POLICIES) for arm in ARMS for step in STEPS),'incomplete policies')
  paired={};intervals={};rng=np.random.default_rng(18018)
  for cell in CELLS:
@@ -122,7 +158,7 @@ def main(args):
      if step==4096:deltas[key]=c-b
   intervals.update(bootstrap(deltas,draws))
  counts={arm:{cell:results[arm]['4096']['matched'][cell]['complete'] for cell in CELLS} for arm in ARMS}
- out=dict(scope='S15/S17-informed single-parent development; reused inspected baseline. Fixed4096 matched policy decides gates. Event-bootstrap intervals are conditional on this one training lineage, not seed uncertainty, and descriptive rather than multiplicity-adjusted. Same event draws shared across policies/comparators within each cell. No automatic extension or confirmation.',analysis_source_sha256=sha(Path(__file__)),bindings_sha256=BINDINGS_SHA,inputs=hashes,results=results,calibration_overlap_train_panels=train_panels,paired=paired,endpoint_delta_percentage_points_ci95=intervals,decisions=decisions(counts),baseline_inherited_seconds=484.14140757126734,checkpoint_scope='Checkpoint bytes remain remote; input binding/receipts/manifests checked here. Independent remote audit must verify saved model/AdamW bytes and state; this CPU analysis does not deserialize checkpoints.')
+ out=dict(scope='S15/S17-informed single-parent development; reused inspected baseline. Fixed4096 matched policy decides gates. Event-bootstrap intervals are conditional on this one training lineage, not seed uncertainty, and descriptive rather than multiplicity-adjusted. Same event draws shared across policies/comparators within each cell. No automatic extension or confirmation.',analysis_source_sha256=sha(Path(__file__)),bindings_sha256=BINDINGS_SHA,inputs=hashes,frozen_config_pins=PINNED_CONFIG_SHA,artifact_inventory=inventory,results=results,calibration_overlap_train_panels=train_panels,paired=paired,endpoint_delta_percentage_points_ci95=intervals,decisions=decisions(counts),baseline_inherited_seconds=484.14140757126734,checkpoint_scope='Checkpoint bytes remain remote; input binding/receipts/manifests checked here. Independent remote audit must verify saved model/AdamW bytes and state; this CPU analysis does not deserialize checkpoints.')
  args.output.write_text(json.dumps(out,indent=2)+'\n')
 if __name__=='__main__':
  p=argparse.ArgumentParser()
