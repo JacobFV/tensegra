@@ -1,0 +1,261 @@
+{
+  "mode": "pbt",
+  "population_seed": 8301,
+  "initialization_seeds": [
+    83100,
+    83101,
+    83102,
+    83103,
+    83104,
+    83105
+  ],
+  "rounds": 5,
+  "updates_per_slot": 60,
+  "population_size": 6,
+  "optimizer_policy": "inherit",
+  "training_seed_start": 720000000,
+  "training_seed_stride": 1000000,
+  "development_seed_start": 596000000,
+  "development_examples": 128,
+  "address_namespace": "e08-main-r1",
+  "teacher": "cheap_first_fallback_v2",
+  "methods": [
+    "actor_critic",
+    "actor_critic",
+    "actor_critic",
+    "actor_critic",
+    "actor_critic"
+  ],
+  "threads": 1,
+  "train": {
+    "width": 1024,
+    "family": "lightweight",
+    "device": "cuda",
+    "batch_size": 8,
+    "learning_rate": 0.0003,
+    "rollout_mode": "batched",
+    "max_steps": 48,
+    "evaluation_batch": 32,
+    "policy_loss_reduction": "decision_mean",
+    "advantage_normalization": true
+  },
+  "world_mix": [
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 3,
+      "choices": 3,
+      "locations": 7
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "work_limit": 128
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "work_price": 0.002
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "obstacle": true
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "obstacle": true
+    },
+    {
+      "step_limit": 64,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 5,
+      "locations": 9
+    },
+    {
+      "step_limit": 36,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9
+    }
+  ],
+  "policy": {
+    "interface": "legacy",
+    "feature_version": "v2"
+  },
+  "member_hyperparameters": [
+    {
+      "learning_rate": 3e-05,
+      "entropy_weight": 0.003,
+      "kl_weight": 0.3
+    },
+    {
+      "learning_rate": 1e-05,
+      "entropy_weight": 0.001,
+      "kl_weight": 0.1
+    },
+    {
+      "learning_rate": 0.0001,
+      "entropy_weight": 0.01,
+      "kl_weight": 1.0
+    },
+    {
+      "learning_rate": 3e-06,
+      "entropy_weight": 0.0003,
+      "kl_weight": 0.03
+    },
+    {
+      "learning_rate": 0.0003,
+      "entropy_weight": 0.001,
+      "kl_weight": 3.0
+    },
+    {
+      "learning_rate": 0.0001,
+      "entropy_weight": 0.03,
+      "kl_weight": 0.1
+    }
+  ],
+  "initial_checkpoints": [
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e08-bank-r1/checkpoints/round-0-slot-0-attempt-0.pt",
+      "sha256": "1dc3d3ae3afa8932bd00b8971a1e4affc83fb9db005bd9f1f690d1eed850daec"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e08-bank-r1/checkpoints/round-0-slot-1-attempt-1.pt",
+      "sha256": "c0569938188d61f34743be113ec8c0a84b2600c3d8faca4b333f824f399fe301"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e08-bank-r1/checkpoints/round-0-slot-2-attempt-2.pt",
+      "sha256": "9bbd5b50dff743737206a607ecc5881571a2f685ee65764aea6d508972401ae3"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e08-bank-r1/checkpoints/round-0-slot-3-attempt-3.pt",
+      "sha256": "601784b72ce7153be8d808e62462d6468317f834868a6c0a7fa0f24d48abb6cb"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e08-bank-r1/checkpoints/round-0-slot-4-attempt-4.pt",
+      "sha256": "2bdd6607ab7d15ef2e3fd85d31045e8b5db609299d5905c4c2a0ca7f166cfe3f"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e08-bank-r1/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "071d6cee4eea6de2575d60a754e5c1b63b7a0629ade944d2670596c0aa3c819d"
+    }
+  ],
+  "development_world_mix": [
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 3,
+      "choices": 3,
+      "locations": 7
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "work_limit": 128
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "work_price": 0.002
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "obstacle": true
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "obstacle": true
+    },
+    {
+      "step_limit": 64,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 5,
+      "locations": 9
+    },
+    {
+      "step_limit": 36,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9
+    },
+    {
+      "step_limit": 48,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 4,
+      "choices": 4,
+      "locations": 9,
+      "work_limit": 0
+    },
+    {
+      "step_limit": 64,
+      "include_remaining_budget": true,
+      "compute_price": 0.0001,
+      "categories": 5,
+      "choices": 5,
+      "locations": 11
+    }
+  ]
+}

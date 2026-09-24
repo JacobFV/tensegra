@@ -223,3 +223,25 @@ def test_curriculum_mutation_changes_training_mixture_only(tmp_path):
         PopulationConfig(mode="multistart", curriculum_mutation=True, world_mix=mix)
     with pytest.raises(ValueError):
         PopulationRun(cfg, tmp_path / "missing", factory, _teacher)
+
+
+def test_separate_development_mixture_only_changes_selection_panel(tmp_path):
+    from topoformer.campaign02_population import PopulationConfig, PopulationRun
+    torch.set_num_threads(1)
+    dev_seen, train_seen = [], []
+    def train_factory(seed):
+        train_seen.append(seed)
+        return _factory(seed)
+    def dev_factory(seed):
+        dev_seen.append(seed)
+        return Workshop(generate_world(seed, categories=1, choices=3, locations=3, work_limit=0), address_seed=seed + 17)
+    cfg = PopulationConfig(mode="pbt", rounds=1, updates_per_slot=1, development_examples=2, teacher="cheap",
+        development_world_mix=({"categories": 1, "choices": 3, "locations": 3, "work_limit": 0},),
+        train={"width": 8, "device": "cpu", "batch_size": 1, "max_steps": 4, "evaluation_batch": 2},
+        world_mix=({"categories": 1, "choices": 2, "locations": 3},))
+    with pytest.raises(ValueError):
+        PopulationRun(cfg, tmp_path / "missing", train_factory, _teacher)
+    run = PopulationRun(cfg, tmp_path / "dev", train_factory, _teacher, development_factory=dev_factory)
+    run._run_slot()
+    assert set(dev_seen) == {cfg.development_seed_start, cfg.development_seed_start + 1}
+    assert not set(train_seen) & set(dev_seen)

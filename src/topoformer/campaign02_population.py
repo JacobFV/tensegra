@@ -59,6 +59,9 @@ class PopulationConfig:
     # weights with one component scaled by 0.5 or 2 (separate RNG stream).
     # Development selection always uses the fixed uniform-hash mixture anchor.
     curriculum_mutation: bool = False
+    # Optional separate development (selection) mixture. Training streams keep
+    # world_mix; only the fitness panel changes. Empty = historical behavior.
+    development_world_mix: tuple[dict[str, Any], ...] = ()
 
     def __post_init__(self):
         if self.mode not in {"pbt", "multistart", "single"}:
@@ -95,14 +98,15 @@ class PopulationConfig:
         if self.initial_checkpoints and (len(self.initial_checkpoints) != 6 or any(
                 set(c) != {"path", "sha256"} for c in self.initial_checkpoints)):
             raise ValueError("Initial bank import needs six {path, sha256} rows")
-        for kwargs in self.world_mix:
+        for kwargs in self.world_mix + self.development_world_mix:
             if "seed" in kwargs:
                 raise ValueError("World mixture cannot override episode seed")
 
     @classmethod
     def from_json(cls, raw):
         raw = dict(raw)
-        for key in ("initialization_seeds", "methods", "world_mix", "member_hyperparameters", "initial_checkpoints"):
+        for key in ("initialization_seeds", "methods", "world_mix", "member_hyperparameters", "initial_checkpoints",
+                    "development_world_mix"):
             if key in raw:
                 raw[key] = tuple(raw[key])
         return cls(**raw)
@@ -247,9 +251,13 @@ def inherit_state(parent: dict, recipient: dict, *, optimizer_policy: str,
 
 
 class PopulationRun:
-    def __init__(self, config: PopulationConfig, output: Path, factory, teacher_factory, component_factory=None):
+    def __init__(self, config: PopulationConfig, output: Path, factory, teacher_factory, component_factory=None,
+                 development_factory=None):
         self.config, self.output = config, output
         self.factory, self.teacher_factory = factory, teacher_factory
+        if config.development_world_mix and development_factory is None:
+            raise ValueError("A separate development mixture needs its own world factory")
+        self.development_factory = development_factory or factory
         self.component_factory = component_factory
         if config.curriculum_mutation and component_factory is None:
             raise ValueError("Curriculum mutation needs a component-indexed world factory")
@@ -403,7 +411,7 @@ class PopulationRun:
                 self.teacher_factory if learner.config.method == "supervised" else None)
             output = self.output / "development" / f"round-{r}-slot-{slot}-attempt-{attempt_id}.jsonl.gz"
             metrics = learner.evaluate(range(cfg.development_seed_start,
-                cfg.development_seed_start + cfg.development_examples), self.factory, output)
+                cfg.development_seed_start + cfg.development_examples), self.development_factory, output)
             # Move every tensor to CPU before writing/parking, then release GPU.
             learner.model.to("cpu")
             for key in list(learner.optimizer.state):
@@ -519,8 +527,14 @@ def main():
                 address_seed=independent_address_seed(seed, config.address_namespace))
         def factory(seed):
             return component_factory(seed, mix_index(seed, len(config.world_mix)))
+        development_factory = None
+        if config.development_world_mix:
+            def development_factory(seed):
+                kwargs = config.development_world_mix[mix_index(seed, len(config.development_world_mix))]
+                return Workshop(generate_world(seed, **kwargs), executor=executor,
+                    address_seed=independent_address_seed(seed, config.address_namespace))
         run = PopulationRun(config, args.output, factory, lambda: make_reference(config.teacher),
-                            component_factory=component_factory)
+                            component_factory=component_factory, development_factory=development_factory)
         run.run()
         _atomic_json(args.output / "solver-process-accounting.json", {
             "startup_wall_seconds": solver.startup_wall_seconds,

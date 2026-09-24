@@ -1,0 +1,426 @@
+{
+  "checkpoints": [
+    {
+      "name": "curriculum-pbt-r0",
+      "path": "/home/brandonin/topoformer-campaign02/results/e12-curriculum-pbt-r0/checkpoints/round-4-slot-2-attempt-26.pt",
+      "sha256": "bb2b193ac7d9f4722fb310e6632f99294588c5decf6ceab392a08260bf7b0f8d",
+      "development_utility": 0.935977265625,
+      "development_success": 1.0,
+      "slot": 2
+    },
+    {
+      "name": "curriculum-pbt-r1",
+      "path": "/home/brandonin/topoformer-campaign02/results/e12-curriculum-pbt-r1/checkpoints/round-4-slot-1-attempt-25.pt",
+      "sha256": "3fe2bd4ec4dfd4eca87af97e1e85c34b84c57342304d3c67869e04e6330e0b6b",
+      "development_utility": 0.919268984375,
+      "development_success": 0.9921875,
+      "slot": 1
+    },
+    {
+      "name": "curriculum-pbt-r2",
+      "path": "/home/brandonin/topoformer-campaign02/results/e12-curriculum-pbt-r2/checkpoints/round-4-slot-1-attempt-25.pt",
+      "sha256": "331a123bacecd646b4d0d89b27300c6536b2cab908bd2538cce5cf501b5206f5",
+      "development_utility": 0.927346015625,
+      "development_success": 1.0,
+      "slot": 1
+    }
+  ],
+  "evaluation_batch": 32,
+  "references": [],
+  "reference_compute_tariff": 1.0,
+  "address_namespace": "extended-02-phase2-sealed-v1",
+  "conditions": [
+    {
+      "name": "iid_3x3",
+      "seed_start": 70000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 3,
+        "choices": 3,
+        "locations": 7
+      }
+    },
+    {
+      "name": "iid_4x4",
+      "seed_start": 70100000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9
+      }
+    },
+    {
+      "name": "iid_4x4_tight128",
+      "seed_start": 70200000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_limit": 128
+      }
+    },
+    {
+      "name": "iid_4x4_expensive_work",
+      "seed_start": 70300000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_price": 0.002
+      }
+    },
+    {
+      "name": "iid_3x3_obstacle",
+      "seed_start": 70400000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "obstacle": true
+      }
+    },
+    {
+      "name": "iid_4x4_obstacle",
+      "seed_start": 70500000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "obstacle": true
+      }
+    },
+    {
+      "name": "iid_4x5",
+      "seed_start": 70600000,
+      "examples": 256,
+      "world": {
+        "step_limit": 64,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 5,
+        "locations": 9
+      }
+    },
+    {
+      "name": "iid_4x4_steps36",
+      "seed_start": 70700000,
+      "examples": 256,
+      "world": {
+        "step_limit": 36,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9
+      }
+    },
+    {
+      "name": "xfer_2x2_easy",
+      "seed_start": 70800000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 2,
+        "choices": 2,
+        "locations": 5
+      }
+    },
+    {
+      "name": "xfer_4x4_tight64",
+      "seed_start": 70900000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_limit": 64
+      }
+    },
+    {
+      "name": "xfer_4x4_work256",
+      "seed_start": 71000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_limit": 256
+      }
+    },
+    {
+      "name": "xfer_4x4_work_price_mid",
+      "seed_start": 71100000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_price": 0.0005
+      }
+    },
+    {
+      "name": "xfer_4x4_obstacle_tight128",
+      "seed_start": 71200000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "obstacle": true,
+        "work_limit": 128
+      }
+    },
+    {
+      "name": "xfer_3x3_obstacle_expensive_work",
+      "seed_start": 71300000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "obstacle": true,
+        "work_price": 0.002
+      }
+    },
+    {
+      "name": "xfer_3x3_expensive_travel",
+      "seed_start": 71400000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "travel_price": 0.01
+      }
+    },
+    {
+      "name": "xfer_4x4_budget_menu_32_256_2048",
+      "seed_start": 71500000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "call_budgets": [
+          32,
+          256,
+          2048
+        ]
+      }
+    },
+    {
+      "name": "xfer_5x4_larger",
+      "seed_start": 71600000,
+      "examples": 256,
+      "world": {
+        "step_limit": 64,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 5,
+        "choices": 4,
+        "locations": 11
+      }
+    },
+    {
+      "name": "xfer_5x5_subset_tool_invalid",
+      "seed_start": 71700000,
+      "examples": 256,
+      "world": {
+        "step_limit": 64,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 5,
+        "choices": 5,
+        "locations": 11
+      }
+    },
+    {
+      "name": "int_4x4_control",
+      "seed_start": 75000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9
+      }
+    },
+    {
+      "name": "int_4x4_no_tools",
+      "seed_start": 75000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_limit": 0
+      },
+      "paired_control": "int_4x4_control"
+    },
+    {
+      "name": "int_4x4_work_price_high",
+      "seed_start": 75000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_price": 0.002
+      },
+      "paired_control": "int_4x4_control"
+    },
+    {
+      "name": "int_4x4_work_limit_128",
+      "seed_start": 75000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_limit": 128
+      },
+      "paired_control": "int_4x4_control"
+    },
+    {
+      "name": "int_4x4_subset_wrong_value",
+      "seed_start": 75000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9
+      },
+      "paired_control": "int_4x4_control",
+      "return_faults": [
+        {
+          "kind": "wrong_value",
+          "ordinal": 0,
+          "primitive": "constrained_subset",
+          "payload_path": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "int_4x4_subset_absent",
+      "seed_start": 75000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9
+      },
+      "paired_control": "int_4x4_control",
+      "return_faults": [
+        {
+          "kind": "absent",
+          "ordinal": 0,
+          "primitive": "constrained_subset"
+        }
+      ]
+    },
+    {
+      "name": "int_3x3_obstacle_control",
+      "seed_start": 75100000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "obstacle": true
+      }
+    },
+    {
+      "name": "int_3x3_obstacle_route_stale",
+      "seed_start": 75100000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "obstacle": true
+      },
+      "paired_control": "int_3x3_obstacle_control",
+      "return_faults": [
+        {
+          "kind": "stale",
+          "ordinal": 0,
+          "primitive": "shortest_path"
+        }
+      ]
+    }
+  ],
+  "accounting": "Learned and reference controllers pay the same 1.0-unit modeled tariff per decision; actual neural/solver resources recorded separately."
+}
