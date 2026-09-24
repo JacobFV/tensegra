@@ -62,3 +62,22 @@ def test_batched_matches_single_closed_loop(family):
     assert [[r["action"] for r in e["trace"]] for e in batch] == [[r["action"] for r in e["trace"]] for e in single]
     assert [r["outcome"]["utility"] for r in batch] == [r["outcome"]["utility"] for r in single]
     assert batch[1]["timing"] is None
+
+
+def test_resume_requires_explicit_changes(tmp_path):
+    from dataclasses import replace
+    model = CandidatePolicy(PolicyConfig(2, 2, width=8, heads=2))
+    learner = Learner(model, TrainConfig(width=8))
+    learner.save(tmp_path/"model.pt")
+    changed = Learner(CandidatePolicy(model.config), replace(learner.config, learning_rate=.001))
+    with pytest.raises(ValueError, match="Explicit resume"):
+        changed.load(tmp_path/"model.pt")
+    changed.load(tmp_path/"model.pt", allow_config_changes=True, reset_learning_rate=True)
+    assert changed.optimizer.param_groups[0]["lr"] == .001
+    assert changed.resume_history[-1]["learning_rate_policy"] == "requested"
+
+
+def test_address_stream_independent_and_repeatable():
+    from topoformer.campaign02_training import independent_address_seed
+    assert independent_address_seed(1, "a") == independent_address_seed(1, "a")
+    assert len({independent_address_seed(1, "a"), independent_address_seed(2, "a"), independent_address_seed(1, "b")}) == 3

@@ -7,6 +7,8 @@ not semantic correctness. The coordinator owns all experiment launches.
 from __future__ import annotations
 
 import argparse
+from contextlib import nullcontext
+from functools import partial
 from dataclasses import asdict, dataclass
 import gzip
 import hashlib
@@ -39,11 +41,12 @@ class TrainConfig:
     max_steps: int = 64
     bptt_steps: int = 8
     evaluation_batch: int = 32
+    training_seed_start: int | None = None
 
     def __post_init__(self):
         if self.method not in {"supervised", "actor_critic"}:
             raise ValueError("Unknown learning method")
-        if min(self.width, self.batch_size, self.max_steps) < 1 or self.learning_rate <= 0:
+        if min(self.width, self.batch_size, self.max_steps, self.bptt_steps, self.evaluation_batch) < 1 or self.learning_rate <= 0:
             raise ValueError("Invalid training dimensions/rate")
 
 
@@ -121,6 +124,7 @@ def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradie
         if observation.done:
             break
         actions, obs, features = public_frame(observation)
+        neural_start = time.perf_counter()
         batch = collate([Frame(obs, features, 0)], device)
         with torch.set_grad_enabled(gradients):
             logits, value, hidden = model.score(batch[0], batch[1], hidden, batch[2])
@@ -129,6 +133,8 @@ def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradie
             index = int(selected.detach().cpu())
             if gradients:
                 terms.append((distribution.log_prob(selected), value[0], distribution.entropy()))
+        probability = float(distribution.probs[index].detach().cpu())
+        neural_wall = time.perf_counter() - neural_start
         before = observation
         observation = env.step(actions[index])
         if gradients:
@@ -137,7 +143,7 @@ def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradie
             previous_utility = current_utility
         trace.append({"step": step, "observation": before.to_dict(), "action_index": index,
                       "action": asdict(actions[index]), "candidate_count": len(actions),
-                      "probability": float(distribution.probs[index].detach().cpu()),
+                      "probability": probability, "neural_forward_wall_seconds": neural_wall,
                       "remaining_steps": observation.remaining_steps, "remaining_work": observation.remaining_work,
                       "feedback": observation.feedback})
     outcome = env.evaluate()
@@ -157,6 +163,7 @@ def batched_episodes(model, environments, *, device="cpu", max_steps=64):
         if not active:
             break
         public = [public_frame(observations[i]) for i in active]
+        neural_start = time.perf_counter()
         batch = collate([Frame(obs, features, 0) for _, obs, features in public], device)
         current_hidden = None if hidden is None else hidden[active]
         logits, _, next_hidden = model.score(batch[0], batch[1], current_hidden, batch[2])
@@ -164,6 +171,7 @@ def batched_episodes(model, environments, *, device="cpu", max_steps=64):
         selected = logits.argmax(-1)
         chosen = selected.cpu().tolist()
         probabilities = logits.softmax(-1).gather(1, selected[:, None]).squeeze(1).cpu().tolist()
+        neural_wall = time.perf_counter() - neural_start
         if next_hidden is not None:
             if hidden is None:
                 hidden = next_hidden.new_zeros((len(environments), *next_hidden.shape[1:]))
@@ -176,11 +184,14 @@ def batched_episodes(model, environments, *, device="cpu", max_steps=64):
             traces[index].append({"step": step, "observation": before.to_dict(),
                 "action_index": chosen[row], "action": asdict(actions[chosen[row]]),
                 "candidate_count": len(actions), "probability": probabilities[row],
+                "neural_forward_wall_seconds_allocated": neural_wall / len(active),
+                "active_batch_size": len(active),
                 "remaining_steps": after.remaining_steps, "remaining_work": after.remaining_work,
                 "feedback": after.feedback})
     timing = {"batch_process_cpu_seconds": time.process_time()-cpu_start,
               "batch_wall_seconds": time.perf_counter()-wall_start,
-              "batch_size": len(environments)}
+              "batch_size": len(environments),
+              "neural_timing_scope": "collate/device transfer + model scoring + synchronized CPU choice/probabilities; allocated equally among active batch, not serial latency"}
     # Batch timing stored once, not repeated as if independent episode work.
     return [{"trace": trace, "outcome": env.evaluate(), "truncated": not obs.done,
              "timing": timing if i == 0 else None}
@@ -192,7 +203,8 @@ class Learner:
         self.model, self.config = model.to(config.device), config
         self.optimizer = torch.optim.AdamW(model.parameters(), lr=config.learning_rate)
         self.updates = self.presentations = self.episodes = 0
-        self.seed_cursor = config.seed * 1_000_000
+        self.seed_cursor = config.seed * 1_000_000 if config.training_seed_start is None else config.training_seed_start
+        self.resume_history: list[dict] = []
         self.curves: list[dict] = []
         self.data_hash = hashlib.sha256()
 
@@ -275,14 +287,28 @@ class Learner:
             "seed_cursor": self.seed_cursor, "curves": self.curves, "data_hash": self.data_hash.hexdigest(),
             "torch_rng": torch.get_rng_state(), "cuda_rng": torch.cuda.get_rng_state_all() if torch.cuda.is_available() else [],
             "python_rng": random.getstate(), "metadata": metadata or {},
-            "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}, path)
+            "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            "resume_history": self.resume_history}, path)
 
-    def load(self, path: Path):
+    def load(self, path: Path, *, allow_config_changes=False, reset_learning_rate=False):
         checkpoint = torch.load(path, map_location=self.config.device, weights_only=False)
         if checkpoint["policy_config"] != asdict(self.model.config):
             raise ValueError("Checkpoint architecture mismatch")
+        current = asdict(self.config)
+        differences = {k: {"checkpoint": checkpoint["config"].get(k), "requested": v}
+                       for k, v in current.items() if checkpoint["config"].get(k) != v}
+        semantic_changes = set(differences) - {"device", "evaluation_batch"}
+        if semantic_changes and not allow_config_changes:
+            raise ValueError(f"Explicit resume configuration change authorization required: {sorted(semantic_changes)}")
         self.model.load_state_dict(checkpoint["model"])
         self.optimizer.load_state_dict(checkpoint["optimizer"])
+        if reset_learning_rate:
+            for group in self.optimizer.param_groups:
+                group["lr"] = self.config.learning_rate
+        self.resume_history = list(checkpoint.get("resume_history", []))
+        self.resume_history.append({"checkpoint_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "config_changes": differences, "learning_rate_policy": "requested" if reset_learning_rate else "inherited",
+            "actual_learning_rates": [group["lr"] for group in self.optimizer.param_groups]})
         for key in ("updates", "presentations", "episodes", "seed_cursor", "curves"):
             setattr(self, key, checkpoint[key])
         torch.set_rng_state(checkpoint["torch_rng"].cpu())
@@ -294,47 +320,100 @@ class Learner:
         return checkpoint["metadata"]
 
 
+def independent_address_seed(world_seed: int, namespace: str) -> int:
+    """Separate deterministic RNG stream; spelling is never a policy feature."""
+    return int(digest({"namespace": namespace, "world_seed": world_seed, "role": "record-addresses"})[:16], 16)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--steps", type=int, default=100)
     parser.add_argument("--batch", type=int, default=8)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--training-seed-start", type=int)
+    parser.add_argument("--address-namespace", default="extended-02-training-v1")
     parser.add_argument("--device", default="cpu")
+    parser.add_argument("--threads", type=int, choices=(1, 2), default=1)
     parser.add_argument("--width", type=int, default=1024)
     parser.add_argument("--family", choices=("lightweight", "recurrent"), default="lightweight")
     parser.add_argument("--method", choices=("supervised", "actor_critic"), default="supervised")
+    parser.add_argument("--teacher", choices=("always_tool", "cheap_first", "cheap"), default="always_tool")
+    parser.add_argument("--executor", choices=("isolated", "persistent"), default="persistent")
+    parser.add_argument("--learning-rate", type=float, default=3e-4)
+    parser.add_argument("--bptt-steps", type=int, default=8)
+    parser.add_argument("--evaluation-batch", type=int, default=32)
+    parser.add_argument("--max-steps", type=int, default=64)
     parser.add_argument("--validation-seed", type=int, required=True)
     parser.add_argument("--validation-examples", type=int, default=512)
+    parser.add_argument("--evaluate-every", type=int, default=0,
+                        help="Development only; fixed seeds reused and recorded, never confirmation")
     parser.add_argument("--world-json", default="{}")
     parser.add_argument("--resume", type=Path)
+    parser.add_argument("--allow-resume-config-changes", action="store_true")
+    parser.add_argument("--reset-learning-rate", action="store_true")
     args = parser.parse_args()
+    if args.steps < 0 or args.evaluate_every < 0 or args.validation_examples < 1:
+        parser.error("Nonnegative update/interval and positive evaluation support required")
     from .campaign02_policy import CandidatePolicy, PolicyConfig
-    from .campaign02_world import Workshop, generate_world
+    from .campaign02_world import Workshop, generate_world, protocol_executor
     from .campaign02_references import ReferencePolicy
-    from .campaign02_world import protocol_executor
+    from .campaign02_protocol import BoundedSolver
+    torch.set_num_threads(args.threads)
     random.seed(args.seed)
     torch.manual_seed(args.seed)
     cfg = TrainConfig(seed=args.seed, width=args.width, family=args.family, batch_size=args.batch,
-                      method=args.method, device=args.device)
+        method=args.method, device=args.device, learning_rate=args.learning_rate, max_steps=args.max_steps,
+        bptt_steps=args.bptt_steps, evaluation_batch=args.evaluation_batch, training_seed_start=args.training_seed_start)
     world_kwargs = json.loads(args.world_json)
-    factory = lambda seed: Workshop(generate_world(seed, **world_kwargs), executor=protocol_executor)
-    env = factory(cfg.seed)
-    _, obs, candidates = public_frame(env.observe())
-    policy = CandidatePolicy(PolicyConfig(len(obs), len(candidates[0]), width=cfg.width, family=cfg.family))
-    learner = Learner(policy, cfg)
-    if args.resume:
-        learner.load(args.resume)
-    timing = learner.train_tranche(args.steps, factory, lambda: ReferencePolicy(mode="cheap_first"))
     args.output.mkdir(parents=True, exist_ok=True)
-    metrics = learner.evaluate(range(args.validation_seed, args.validation_seed+args.validation_examples),
-                               factory, args.output/"validation.jsonl.gz")
-    metadata = {"selection_rule": "last update; validation descriptive only", "world": world_kwargs,
-                "world_hash": digest(world_kwargs), "timing": timing, "validation": metrics,
-                "parameter_count": sum(p.numel() for p in policy.parameters())}
-    learner.save(args.output/"checkpoint.pt", metadata)
-    (args.output/"curves.json").write_text(json.dumps(learner.curves, indent=2))
-    (args.output/"summary.json").write_text(json.dumps(metadata, indent=2))
+    manager = BoundedSolver() if args.executor == "persistent" else nullcontext(None)
+    with manager as solver:
+        executor = partial(protocol_executor, execute_call=solver.execute) if solver else protocol_executor
+        def factory(seed):
+            return Workshop(generate_world(seed, **world_kwargs), executor=executor,
+                address_seed=independent_address_seed(seed, args.address_namespace))
+        _, obs, candidates = public_frame(factory(cfg.seed).observe())
+        policy = CandidatePolicy(PolicyConfig(len(obs), len(candidates[0]), width=cfg.width, family=cfg.family))
+        learner = Learner(policy, cfg)
+        if args.resume:
+            learner.load(args.resume, allow_config_changes=args.allow_resume_config_changes,
+                         reset_learning_rate=args.reset_learning_rate)
+        train_start = learner.seed_cursor
+        train_end = train_start + args.steps * cfg.batch_size
+        validation = range(args.validation_seed, args.validation_seed+args.validation_examples)
+        if train_start < validation.stop and validation.start < train_end:
+            raise ValueError("Training and development episode seed intervals overlap")
+        development, timings = [], []
+        remaining = args.steps
+        while remaining:
+            count = min(remaining, args.evaluate_every or remaining)
+            timings.append(learner.train_tranche(count, factory, lambda: ReferencePolicy(mode=args.teacher)))
+            remaining -= count
+            if args.evaluate_every:
+                result = learner.evaluate(validation, factory, args.output/f"development-{learner.updates}.jsonl.gz")
+                development.append({"update": learner.updates, **result})
+                learner.save(args.output/"checkpoint.pt", {"selection_rule": "last update", "development": development})
+        metrics = development[-1] if development else learner.evaluate(validation, factory, args.output/"validation.jsonl.gz")
+        sources = {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
+                   for name in ("campaign02_training.py", "campaign02_policy.py", "campaign02_world.py", "campaign02_protocol.py", "campaign02_references.py")}
+        metadata = {"selection_rule": "last update; fixed development seeds descriptive, no confirmation",
+            "world": world_kwargs, "world_hash": digest(world_kwargs), "timings": timings, "validation": metrics,
+            "development": development, "parameter_count": sum(p.numel() for p in policy.parameters()),
+            "workspace_width": cfg.width, "observation_dim": len(obs), "candidate_dim": len(candidates[0]),
+            "workspace_rows": policy.config.workspace_rows if cfg.family == "recurrent" else 0,
+            "recurrent_phases": 4 if cfg.family == "recurrent" else 0,
+            "decision_presentations": learner.presentations, "unique_training_episodes": learner.episodes,
+            "training_seed_interval_this_invocation": [train_start, train_end],
+            "address_seed_rule": "SHA256 of world seed + role + independent namespace", "address_namespace": args.address_namespace,
+            "teacher": args.teacher if cfg.method == "supervised" else None, "executor": args.executor,
+            "threads": args.threads, "source_hashes": sources,
+            "solver_accounting": ({"startup_wall_seconds": solver.startup_wall_seconds,
+                "startup_child_cpu_seconds": solver.startup_child_cpu_seconds, "call_wall_seconds": solver.call_wall_seconds,
+                "restarts": solver.restarts} if solver else {"version": "isolated-per-call"})}
+        learner.save(args.output/"checkpoint.pt", metadata)
+        (args.output/"curves.json").write_text(json.dumps(learner.curves, indent=2))
+        (args.output/"summary.json").write_text(json.dumps(metadata, indent=2))
 
 
 if __name__ == "__main__":
