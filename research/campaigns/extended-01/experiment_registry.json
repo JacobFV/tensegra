@@ -753,7 +753,7 @@
     },
     {
       "id": "S17",
-      "status": "main_running",
+      "status": "completed_diagnostic_final_aggregate_audit_pending",
       "hypothesis": "Actual training-mixture calibration can reduce localized edge-decision errors without changing graph representations",
       "intervention": "Fixed128actualTRAINexamples perendpoint, mixturematched; same scalarrelationthreshold rule",
       "comparator": "Original raw andhistoricalTRAINcalibration on bothS15 frozenendpoints",
@@ -763,9 +763,25 @@
       "selection": "Deterministic64/32/32mixed and64/64control before newmodel scores; noDEVcutoffselection",
       "protocol": "semantics/S17-protocol.md",
       "source": "65e43fa7+99589a36;mainfreeze30d69150",
-      "budget": "Profile25.66s;main300cap",
+      "budget": "25.66profile+100.74main",
       "next_branch": "Distinguish threshold mismatch from remainingedge acquisition; no retrospectiveS15pass",
-      "audit": "review/S17-profile-audit.json"
+      "audit": "review/S17-profile-audit.json",
+      "result": "Mixed3x3matchedTRAIN22/512versus1 historical;heldout0. Residualedgeacquisitionfailed, historicalS15gatesunchanged"
+    },
+    {
+      "id": "S18",
+      "status": "cpu_runner_preparation",
+      "hypothesis": "Predicted-pointer contextual text read improves learned edge acquisition beyond originalworkspace and comparable additionalrecurrence",
+      "intervention": "ExistingS09contextpathvsfixed10passcomputecontrol; noaddedparameters ornewhead",
+      "comparator": "S15mixed original actor ifexactreuseequivalenceverified; otherwise matchedoriginal arm",
+      "observable_inputs": "SamepublicEnglishtext andcopyinventory; no parser/schema/normalization/goldforward",
+      "privileged_targets": "Same supervisedgraph/copy labels, TRAIN128 globalcalibration",
+      "population": "SameS15mixed4096TRAIN/all4existingDEV512cells; freshreservedconfirmation untouched",
+      "selection": "Fixed4096endpoint; trained3x3>=52/gain26abovebothcontrols; retention>=103/1024/loss<=51; heldoutseparategate",
+      "protocol": "semantics/S18-conditional-learned-edge-plan.md",
+      "source": "bbbda45d actor;runnerpending",
+      "budget": "Profilesrequired; developmenttarget<=1.5GPUh,retainconfirmationreserve",
+      "next_branch": "Oneattributablelearningcomparison aftercalibrationlocalization; noautomaticextension"
     }
   ],
   "policy": {

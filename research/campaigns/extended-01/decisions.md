@@ -103,3 +103,6 @@ Independent review clarified that578/568second forecasts extrapolate combined ca
 
 ## S15 localization selects calibration before architecture (2026-09-24 09:19 UTC)
 Archived mixed3x3 has455/512 failures involving edges alone; exact presence512, slots507, type478, copy477. Gold-edge replacement yields456complete (privilegeddiagnostic). No evidence here that newshape node allocation is the first failure. Request separately registered S17 actual-TRAIN-mixture128 recalibration with identical scalar threshold rule/globalpolicy, frozenmodels, noDEVselection. Compare alloldDEV and preserve S15primaryfailures. This cheaper discriminating intervention precedes contextual-read architecture. S16 public normalization remains independent and nextscheduled profile pending timing-onlyrefreeze.
+
+## 2026-09-24T09:51:27.577843+00:00 S17 selects contextual-read test
+ActualTRAINcalibration improvesnewtrainedshape1→22/512 butheldoutstays0; errorremainslargelyedges. Proceed withS18existingcontextualtextread vsoriginaland10passcomputecontrol, nohead/encodingchange. Avoidduplicating identicalS15mixedtraining if frozenstates/protocol equivalenceholds; existingcalibrationdifferences require explicitlynamedfixedcheckpointdiagnostics. Reserveconfirmationbudget; profilebeforemainallocation.
