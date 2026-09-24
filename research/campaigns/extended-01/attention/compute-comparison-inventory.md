@@ -7,7 +7,7 @@ A11 adds dense unmasked attention over all public edge records followed by dense
 | Existing accounting | Soft | Gather | Keyed context | All-record A11 |
 |---|---:|---:|---:|---:|
 | Allocated parameters | 4,306,986 | 4,306,986 | 4,306,986 | 4,575,275 |
-| Last-update nonzero-gradient parameter tensors | 4,298,793 | 4,298,769 | 4,306,962 | 2,412,562 |
+| Parameters in tensors receiving nonzero gradients at last update | 4,298,793 | 4,298,769 | 4,306,962 | 2,412,562 |
 | A06 full-run CUDA peak bytes | 863,058,944 | 832,386,560 | 869,449,216 | — |
 | A06 successful-policy joint forward seconds/1024events, seed mean | 3.639 | 3.680 | 4.074 | — |
 | A08 clean joint forward seconds/1024events, seed mean | 3.484 | 3.536 | 3.816 | — |
