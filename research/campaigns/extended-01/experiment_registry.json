@@ -735,7 +735,7 @@
     },
     {
       "id": "S16",
-      "status": "completed_diagnostic_audit_pending",
+      "status": "completed_diagnostic_independently_audited",
       "hypothesis": "Public identifier normalization can supply spelling invariance without requiring the graph model to learn irrelevant lexical correlations",
       "intervention": "Narrow publicEnglishrenderer parser plus first-occurrence namespace canonicalization into fixedknowntraininglexemes; restorecopyviaoriginaltokenindex",
       "comparator": "Allsix unchangedS12 original versus normalizedoriginal; normalizedrenamed fullinput equivalence separately established mechanically",
@@ -748,12 +748,12 @@
       "budget": "25.28profile+114.74maincharged",
       "next_branch": "Independent runner review, then timing-only60s profile under root release; main cap derived afterward",
       "limitations": "Suppliedparserandknownvocabulary prior, notlearnedlanguage; no broadsyntax/identitycapacity/case-changing rename claim",
-      "audit": "review/S16-profile-audit.json;review/S16-profile-state-audit.json",
+      "audit": "review/S16-main-audit.json",
       "result": "Normalizedcaldecay48/103/120 vs original66/131/139; constants0both. Fullinputrenameinvarianceprogrammed, notcorrectnessguarantee"
     },
     {
       "id": "S17",
-      "status": "cpu_preparation",
+      "status": "profile_running",
       "hypothesis": "Actual training-mixture calibration can reduce localized edge-decision errors without changing graph representations",
       "intervention": "Fixed128actualTRAINexamples perendpoint, mixturematched; same scalarrelationthreshold rule",
       "comparator": "Original raw andhistoricalTRAINcalibration on bothS15 frozenendpoints",
@@ -762,8 +762,8 @@
       "population": "All2048existingDEV perarm; exploratory posthocdiagnosis,confirmation untouched",
       "selection": "Deterministic64/32/32mixed and64/64control before newmodel scores; noDEVcutoffselection",
       "protocol": "semantics/S17-protocol.md",
-      "source": "dccdb661 prepared",
-      "budget": "Profile90proposed, notyetreleased;mainafterprofile",
+      "source": "65e43fa7+99589a36;freeze0996cb69",
+      "budget": "90sprofilecap;mainpendingtiming",
       "next_branch": "Distinguish threshold mismatch from remainingedge acquisition; no retrospectiveS15pass"
     }
   ],
