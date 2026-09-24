@@ -1,0 +1,79 @@
+{
+  "budget_status": "prepared",
+  "seed": 2101,
+  "schedule_seed": 15115,
+  "width": 1024,
+  "encoder_layers": 2,
+  "decoder_layers": 2,
+  "heads": 8,
+  "ffn_width": 4096,
+  "dropout": 0,
+  "capacity": 128,
+  "max_records": 160,
+  "max_slot": 32,
+  "batch_size": 8,
+  "evaluation_batch_size": 32,
+  "train_panel_count": 128,
+  "learning_rate": 0.0003,
+  "final_learning_rate": 3e-05,
+  "warmup_updates": 128,
+  "weight_decay": 0.01,
+  "gradient_clip": 1.0,
+  "loss_policy": "equal_mean_of_eight_applicable_field_means_absent_zero",
+  "autocast_dtype": "bfloat16",
+  "device": "cuda",
+  "optimizer_betas": [
+    0.9,
+    0.999
+  ],
+  "optimizer_eps": 1e-08,
+  "initialization": "scratch_no_inherited_weights",
+  "calibration": "none",
+  "cap_seconds": null,
+  "launch_authority": "Separate root allocation, source freeze, independent review and explicit GPU release required",
+  "inputs": {
+    "train_original": {
+      "path": "data/s15-shape-v2/train_mixed.jsonl.gz",
+      "sha256": null
+    },
+    "train_broad": {
+      "path": "data/s21-six-motif-v1/train_broad.jsonl.gz",
+      "sha256": null
+    },
+    "development": {
+      "path": "data/s21-six-motif-v1/development.jsonl.gz",
+      "sha256": null
+    },
+    "panels": {
+      "path": "data/s21-six-motif-v1/panels.json",
+      "sha256": null
+    },
+    "audit": {
+      "path": "data/s21-six-motif-v1/audit.json",
+      "sha256": null
+    },
+    "vocabulary_audit": {
+      "path": "data/s01/audit.json",
+      "sha256": null
+    }
+  },
+  "job": "profile",
+  "updates": 20,
+  "checkpoints": [
+    0,
+    20
+  ],
+  "dev_per_cell": 16,
+  "worst_case_profile": true,
+  "output_dir": "results/s21-profile-v1",
+  "expected_construction_sequence_sha256": "85054bf25e3a3e2a5a9a932b441d6413fd0d7ad827df79e1583268aaddf5acd9",
+  "arms": [
+    "original",
+    "broad"
+  ],
+  "expected_epoch_exposures": {
+    "original": null,
+    "broad": null
+  },
+  "preparation_status": "blocked_pending_independent_data_audit_and_exact_bindings"
+}
