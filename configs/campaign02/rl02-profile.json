@@ -1,0 +1,71 @@
+{
+  "status": "registered_profile",
+  "version": "e02-relation-pointer-v1",
+  "source_sha256": {
+    "campaign02_relation.py": "0a50b800d997eeffa216e21c5d3a228a907aa6cf4fefbc38b18c1e2e0ad8c9a0",
+    "campaign_semantics.py": "0eda5489c8badddf7a700e398b7d35907392fd99a0bb074d779727ab951cf05d",
+    "campaign_semantics_continue.py": "6d5a8f4ae5143bdfc93f589fa3c189966a787e0fc6a83dc6bc06382c14ac8585",
+    "campaign_semantics_data.py": "fd0c49291b62a25fa2899921bd9fb70698f9a7f798a2bd26e4f0920df4883797",
+    "campaign_semantics_s19.py": "a42035daaf563d4aa63e7ded5bd949a646c77fd85ed86804ff396b4ac82c0407",
+    "campaign_semantics_s19_actor.py": "b84dc10df3a34fdc3662730cbcdb88012ccb9f8ffcead4b4eebfe2588549ba17",
+    "campaign_semantics_s19_codec.py": "88b0606914dd4585f1715900263de16712fed78743938c3c135d89f7c9180cad",
+    "campaign_semantics_s21_data.py": "1fd8ce1b807877b2f8e84ceb42138003ce6c00740276d11ec3f8c591861f6ab5",
+    "campaign_semantics_s22_controller.py": "5c173bff31f21a0a63404c8145ef8d52b6b8168f253db9d75d744ef57966c959",
+    "semantic_scaling.py": "d9bf605dad9b7de9637903b980c7c00b6751273f8bea87ac977e0c275aa7f9e9",
+    "semantic_curriculum.py": "69293b602cd42ad2315e8e4a53085e622191a9e21a053e3e287c894e8fe58a3f",
+    "thinking_language.py": "569cb1f1bab9ce17a7ab9e0df3e53af623c37fa9ad43dd33650982548178dcdf",
+    "tcn_data.py": "1531f0af7d7e2f718d22fa9a45866d917e8a5ab1e26a45f5a15b4f5fe7c94670",
+    "campaign02_relation_pointer.py": "cbf03ceeb76adac501298237223fea0fae7e37b7dbbae1b951ccb15a2f913e4d"
+  },
+  "arms": [
+    "all_records",
+    "pointer"
+  ],
+  "pointer": {
+    "fields": [
+      "source",
+      "target"
+    ],
+    "mode": "replace",
+    "dim": 256,
+    "learning_rate": 0.0003,
+    "init_seed": 220202,
+    "mask": "NODE records among causal previous inputs only; never gold edges or future records"
+  },
+  "width": 1024,
+  "batch_size": 8,
+  "eval_batch_size": 32,
+  "learning_rate": 3e-05,
+  "threads": 2,
+  "device": "cuda",
+  "seed": 2201,
+  "schedule_seed": 220122,
+  "parent": {
+    "path": "/home/brandonin/topoformer-campaign01-semantics/results/s21-main-v1/broad/model-u4096.pt",
+    "sha256": "a5ad0f6d4fba9804a0ae3ed1ef8dd7b399ed2037dc89acd7b28c07f3bfc56af8"
+  },
+  "parent_state_sha256": "2d1267174e4f7fbd93ebd77da36bec0748e74f5c412cc0144b56cf64925d683e",
+  "inputs": {
+    "train": {
+      "path": "/home/brandonin/topoformer-campaign02/data/rl01-v1/train.jsonl.gz",
+      "sha256": "f4cced241c895f961c53415edd7a60ff9f45f692bd46253ba77669357e988e1d"
+    },
+    "known": {
+      "path": "/home/brandonin/topoformer-campaign02/data/rl01-v1/known.jsonl.gz",
+      "sha256": "9a0636bca4e699e21da419403e5a497c1e79474e5eed29ac14c9aab6b0b5d543"
+    },
+    "heldout": {
+      "path": "/home/brandonin/topoformer-campaign02/data/rl01-v1/heldout.jsonl.gz",
+      "sha256": "e1b6bc544e04c4a8b476a23eb12d9273d014f067926b6476fa52b3d14800f84c"
+    }
+  },
+  "job": "profile",
+  "output_dir": "/home/brandonin/topoformer-campaign02/results/rl02-profile-v1",
+  "updates": 8,
+  "checkpoints": [
+    0,
+    8
+  ],
+  "profile_examples": 8,
+  "cap_seconds": 120
+}
