@@ -1,0 +1,176 @@
+{
+  "preflight_seconds": 3.9834088650532067,
+  "process_seconds": 27.37787271803245,
+  "peak_cuda_allocated": 1381968896,
+  "process_maxrss_kib": 3279232,
+  "arms": [
+    {
+      "arm": "original",
+      "seed": 2101,
+      "parameters": 62677315,
+      "training_seconds": 1.1406838418915868,
+      "setup_seconds": 0.950328956823796,
+      "worst_case_timing": {
+        "seconds": 0.8325187172740698,
+        "batch_size": 32,
+        "steps": 160,
+        "scope": "Timing-only own-prediction rollout ignores EOS/invalid stop, no gold prefix/count. Not an evaluated prediction or quality result.",
+        "public_pool_indices": [
+          4192,
+          4193,
+          4194,
+          4195,
+          4196,
+          4197,
+          4198,
+          4199,
+          4200,
+          4201,
+          4202,
+          4203,
+          4204,
+          4205,
+          4206,
+          4207,
+          0,
+          4,
+          5,
+          6,
+          14,
+          17,
+          18,
+          20,
+          24,
+          26,
+          30,
+          41,
+          42,
+          46,
+          53,
+          54
+        ],
+        "artifact": "worst-case-profile.json.gz",
+        "sha256": "a07b11aedfab69d7592257741a5684f452aa4689349809aeb097d43fa4339f6d",
+        "export_seconds": 0.003199329599738121
+      },
+      "curves": [
+        {
+          "update": 0,
+          "checkpoint_export_seconds": 0.8581427480094135,
+          "train": {
+            "teacher_forced_seconds": 0.19676607195287943,
+            "free_running_seconds": 0.0395436710678041,
+            "export_seconds": 0.12953658122569323,
+            "total_seconds": 0.8760753651149571
+          },
+          "development": {
+            "teacher_forced_seconds": 0.11375734210014343,
+            "free_running_seconds": 0.04557754471898079,
+            "export_seconds": 0.11663534212857485,
+            "total_seconds": 0.6408011908642948
+          }
+        },
+        {
+          "update": 20,
+          "checkpoint_export_seconds": 2.050160896964371,
+          "train": {
+            "teacher_forced_seconds": 0.08158404426649213,
+            "free_running_seconds": 1.2037855423986912,
+            "export_seconds": 0.13692977000027895,
+            "total_seconds": 1.820347186177969
+          },
+          "development": {
+            "teacher_forced_seconds": 0.06398633820936084,
+            "free_running_seconds": 1.162074658088386,
+            "export_seconds": 0.12191942520439625,
+            "total_seconds": 1.7395366639830172
+          }
+        }
+      ]
+    },
+    {
+      "arm": "broad",
+      "seed": 2101,
+      "parameters": 62677315,
+      "training_seconds": 1.0241074026562274,
+      "setup_seconds": 0.660677732899785,
+      "worst_case_timing": {
+        "seconds": 0.4064930989407003,
+        "batch_size": 32,
+        "steps": 160,
+        "scope": "Timing-only own-prediction rollout ignores EOS/invalid stop, no gold prefix/count. Not an evaluated prediction or quality result.",
+        "public_pool_indices": [
+          5,
+          10,
+          17,
+          18,
+          19,
+          27,
+          30,
+          31,
+          38,
+          42,
+          45,
+          51,
+          54,
+          58,
+          63,
+          66,
+          68,
+          71,
+          79,
+          81,
+          89,
+          92,
+          93,
+          100,
+          101,
+          109,
+          112,
+          113,
+          116,
+          117,
+          127,
+          131
+        ],
+        "artifact": "worst-case-profile.json.gz",
+        "sha256": "c38c0bdf18a23893a6a534db555dce6df68a9106000ef055096662a520c8433c",
+        "export_seconds": 0.0025728968903422356
+      },
+      "curves": [
+        {
+          "update": 0,
+          "checkpoint_export_seconds": 0.90717797819525,
+          "train": {
+            "teacher_forced_seconds": 0.14460799749940634,
+            "free_running_seconds": 0.03319297917187214,
+            "export_seconds": 0.13310688734054565,
+            "total_seconds": 0.7153371861204505
+          },
+          "development": {
+            "teacher_forced_seconds": 0.06258760252967477,
+            "free_running_seconds": 0.030979888048022985,
+            "export_seconds": 0.11320023704320192,
+            "total_seconds": 0.5843919320032
+          }
+        },
+        {
+          "update": 20,
+          "checkpoint_export_seconds": 1.8155701206997037,
+          "train": {
+            "teacher_forced_seconds": 0.07323799235746264,
+            "free_running_seconds": 1.201559049077332,
+            "export_seconds": 0.1378263309597969,
+            "total_seconds": 1.8053354090079665
+          },
+          "development": {
+            "teacher_forced_seconds": 0.06310240412130952,
+            "free_running_seconds": 1.156102945562452,
+            "export_seconds": 0.11960065737366676,
+            "total_seconds": 1.692165876738727
+          }
+        }
+      ]
+    }
+  ]
+}
