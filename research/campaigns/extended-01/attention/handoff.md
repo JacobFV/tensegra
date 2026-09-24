@@ -1,5 +1,7 @@
 ## Current final state
 
+A14seed1403complete67dc519 rawbc1512a4,336.333546519s/GPUFREE. Fixed6000/96000,strictcontractpasses,fullpublic/orderhashesmatch1401/1402. Jointtask177/245/179/1015/1024 original/both/sharedsoft/sharedhard/oracle; sharedhardconditional1015/1015,jointsuffix955. All3mainsdone;9A06refsremainrequired, aggregateafterrefs perroot. Revieweractivated21cellaudit. RootS12renameownsGPU; noattentionlaunch. Cumulative2699.537681194sincludesuncertainA08profile60sbound.
+
 A14seed1402complete67dc519 raw905c6bce,341.759054285s/GPUFREE. Fixed6000/96000,strictcontractpasses; fullpublic/orderhashesmatch1401. Jointtask187/221/183/1007/1024 original/both/sharedsoft/sharedhard/oracle; sharedhardconditional1006/1006,jointsuffix960. Seed1403+9refsremainrequired unchanged,separaterootreleases; no pooledgate/bootstrap. Independent21cellauditactivated. Cumulative2363.204134675sincludesuncertainA08profile60sbound.
 
 A14seed1401complete67dc519 raw019a790a,355.515602229s/GPUFREE. Fixed6000/96000,strictcontractpasses; jointtask176/257/177/1019/1024 original/both/sharedsoft/sharedhard/oracle,sharedhardconditional1017/1017,jointsuffix964/1024. No3seedconclusion;1402/1403+9refsremainrequired unchanged, separateGPUreleases. Independent21cellauditactivated. RootR10/semanticprofilesownGPU; noattentionlaunch. Cumulative2021.445080390sincludesuncertainA08profile60sbound.
