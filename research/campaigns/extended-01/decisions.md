@@ -61,3 +61,6 @@ S11's minimal LR change warrants the frozen three-parent paired S12 confirmation
 
 ## 2026-09-24 05:13 UTC — preserve replication and informative negatives
 S12 seed701 decay improves complete graph recovery0→66/1024 but fails103 competence; all remaining paired seeds remain unchanged. A08 reports identical corrupted-graph execution across the strongest routing interfaces; independent audit pending. Do not search for a preferred attention winner. A09's same-population IID/moderate monitoring and training loss are still improving, so a registered bounded saved-state continuation is more informative than labeling its underacquisition an architectural limit. C04 profiles precede exact main cap freeze.
+
+### 06:17 UTC: release plan after paired semantic run
+The frozen A12 profile passed independent correctness/provenance checks. Its8.498s total profile and measured instrumented forward extrapolate to120–145s main; retain the prospectively proposed180s cap without changing any policy or population. Put A12-main next, followed by unchanged C04 lineage1. Profile outcomes select neither a policy nor an architecture. Current semantic decay702 completes its original paired protocol first.
