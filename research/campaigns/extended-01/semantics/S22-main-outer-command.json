@@ -1,0 +1,44 @@
+{
+  "cwd": "/home/brandonin/topoformer-campaign01-semantics",
+  "argv": [
+    "/usr/bin/time",
+    "-f",
+    "elapsed_seconds=%e\nexit_code=%x\nmaxrss_kib=%M",
+    "-o",
+    "/home/brandonin/topoformer-campaign01-semantics/results/s22-main-launch.outer.txt",
+    "/usr/bin/timeout",
+    "--signal=KILL",
+    "1160s",
+    "/home/brandonin/topoformer-stage8-cuda/bin/python",
+    "/home/brandonin/topoformer-campaign01-semantics/s22-main-source-7a4c2923/src/topoformer/campaign_semantics_s22_launch.py",
+    "/home/brandonin/topoformer-campaign01-semantics/s22-main-source-7a4c2923/configs/campaign-s22-main-frozen-v1.json",
+    "--cap",
+    "1160",
+    "--python",
+    "/home/brandonin/topoformer-stage8-cuda/bin/python",
+    "--prefix",
+    "/home/brandonin/topoformer-campaign01-semantics/results/s22-main-launch"
+  ],
+  "argv_json_sha256": "d6ff5ee5dca989960ee628e78763feb209715613ed88e64cc27f8b6ba87b9a34",
+  "cap_seconds": 1160,
+  "config_sha256": "911a70787dfd31bd1225c04cc2d7c4c2a8b9d721396c12a754d47f1cacfb910e",
+  "source_commit": "7a4c2923",
+  "source_tar_sha256": "f43ad7e0b9613fc569a3f3b1c3deafbd840fa6eab359df23987e2813e9308125",
+  "source_manifest_path": "/home/brandonin/topoformer-campaign01-semantics/s22-main-source-7a4c2923/configs/campaign-s22-main-frozen-v1.json",
+  "launch_authority": "Separate explicit root GPU release required",
+  "scope": "GNU timeout default process group, KILL at1160s without grace; GNU time outside wrapper and timeout; cwd preserves fixed relative data/output namespace, launcher child PYTHONPATH resolves immutable own source",
+  "utilities": {
+    "/usr/bin/time": {
+      "sha256": "4a445f72fefaf4127931df2b799aa885e27553b5a55e104a329d41fc8dc83083",
+      "version": "GNU Time UNKNOWN"
+    },
+    "/usr/bin/timeout": {
+      "sha256": "52c67910ffecb65d1d5172e01720145c54941aff91e7b3a11ab222c86fb425a8",
+      "version": "GNU coreutils9.4"
+    }
+  },
+  "unused_prefix_checked": true,
+  "staged_files": 197,
+  "cost_proposal_commit": "f5faa55d",
+  "cpu_guard_seconds": 0.7042257366701961
+}
