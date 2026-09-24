@@ -2,12 +2,14 @@
   "owner": "/root",
   "machine": "gb10-direct / promaxgb10-4dfb",
   "running": {
-    "id": "E05-population-profile",
-    "source": "4ad28856",
-    "cap_gpu_seconds": 180,
-    "cap_cpu_seconds": 360
+    "id": "E05-acquire-recurrent",
+    "source": "a9337b71",
+    "cap_gpu_seconds": 1800,
+    "cap_cpu_seconds": 3600
   },
-  "ready": [],
+  "ready": [
+    "RL01-profile"
+  ],
   "planning": [
     "E01 protocol/environment validation",
     "E02 reference leverage profiling",
@@ -58,6 +60,18 @@
       "id": "E04-transfer",
       "status": "completed",
       "wall_seconds": 372.107195311
+    },
+    {
+      "id": "E05-population-profile",
+      "status": "completed_mechanical_only"
+    },
+    {
+      "id": "E05-acquire-lightweight",
+      "status": "completed_57/128_DEV"
+    },
+    {
+      "id": "RL01-data",
+      "status": "completed_2048_alpha_disjoint"
     }
   ],
   "blocked": [],

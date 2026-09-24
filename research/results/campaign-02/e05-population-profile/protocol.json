@@ -1,0 +1,107 @@
+{
+  "address_namespace": "e05-profile-v1",
+  "development_examples": 8,
+  "development_seed_start": 390000000,
+  "initialization_seeds": [
+    5030,
+    5031,
+    5032,
+    5033,
+    5034,
+    5035
+  ],
+  "methods": [
+    "supervised",
+    "supervised",
+    "actor_critic"
+  ],
+  "mode": "pbt",
+  "optimizer_policy": "inherit",
+  "population_seed": 503,
+  "population_size": 6,
+  "rounds": 3,
+  "teacher": "cheap_first_fallback_v2",
+  "threads": 1,
+  "train": {
+    "batch_size": 8,
+    "device": "cuda",
+    "evaluation_batch": 32,
+    "family": "lightweight",
+    "learning_rate": 0.0003,
+    "max_steps": 48,
+    "rollout_mode": "batched",
+    "width": 1024
+  },
+  "training_seed_start": 300000000,
+  "training_seed_stride": 1000000,
+  "updates_per_slot": 2,
+  "world_mix": [
+    {
+      "categories": 2,
+      "choices": 2,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 5,
+      "step_limit": 48
+    },
+    {
+      "categories": 2,
+      "choices": 2,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 5,
+      "step_limit": 48
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "step_limit": 48
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "step_limit": 48
+    },
+    {
+      "categories": 4,
+      "choices": 4,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 9,
+      "step_limit": 48
+    },
+    {
+      "categories": 4,
+      "choices": 4,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 9,
+      "step_limit": 48,
+      "work_limit": 128
+    },
+    {
+      "categories": 4,
+      "choices": 4,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 9,
+      "step_limit": 48,
+      "work_price": 0.002
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "obstacle": true,
+      "step_limit": 48
+    }
+  ]
+}

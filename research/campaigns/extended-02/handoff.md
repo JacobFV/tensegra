@@ -1,3 +1,11 @@
-# Extended-02 handoff
+# Campaign handoff
 
-Root owns GPU scheduling. Branch campaign/extended-02, baseline65d44ae6. E03 both width1024 frozen endpoints solve128/128 easy DEV; same repeated DEV curves not independent support. Lightweight58.21s vs recurrent144.62s GPU occupancy. No resource planning claim. E04 frozen transfer registered; profile before main. All sources/checkpoint hashes in configs/campaign02/e04-transfer.json. CPU E02 repair2x2 next. Population runtime smoke delegated e02_policy; relation-only semantic source delegated e02_relation_impl, no GPU authorization yet. No GPU jobs at reconciliation16:46UTC. Current receipts budget.json authoritative. Remote root /home/brandonin/topoformer-campaign02, environment /home/brandonin/topoformer-stage8-cuda/bin/python. Preserve historical main and all outcomes. Continue within12GPUh/48CPUh/24elapsedh start2026-09-24T16:13:17Z.
+Root soleGPUcoordinator; branchcampaign/extended-02. Baseline65d44ae6 unchanged. Budget authoritativebudget.json: start2026-09-24T16:13:17Z,12GPUh/48CPUh/24elapsedh. Actualconsumption~minutes, not nearceiling.
+
+Running GB10 E05-acquire-recurrent source-a9337b71, resultpaths under/home/brandonin/topoformer-campaign02/results. RootPTysession5098. Frozen600updates mixedcurriculum,128DEV, oneinit5100. Matchinglightweight completed57/128, erraticcurve, rawlocal. Possiblepublicencoder insufficiency under audit by e02_policy/e02_training; do notlaunchlargePBT beforediagnosis. E04 complete512/cell: lightstandardperfect/tight0/obstacle309, recalllarger0; auditlocalizes sequencing/insufficientbudget/staleroute, noexecutorerror.
+
+Actual6-memberPBT runtimeprofile completed36updates,notcompetence. Resume/inheritanceactualtests pass. OptionalbatchedRL andepisode_mean implemented/tested. PopulationmainNOTlaunched.
+
+RL01 relation data complete atGB10 data/rl01-v1,2048 freshalpha graphs; config/provenance insemantics andconfigs/campaign02. Source-f3c2fd4e hasprofile config; RL01profile readyaftercurrentGPUjob,120smax. Profilethen estimate1024pairedmain<=remaining780s; ifnot, predeclare smallerbudget protocol beforemain. Sevenupdatedfixturetests pass.
+
+Userfullauthority, continue evidence-driven. Preserve allfailures. Next: finishpairedE05run; exactinputcollisionaudit andminimalrepair; profileindependentrelationbranch; then realresourcepolicy/populationcomparisons. Pushmilestones. Finalconfirmedpopulationclaimsrequire3independentprocesses andfresh512cells, notdescendants. Noqueueoutside root.
