@@ -1,0 +1,7 @@
+# S14 CPU population result
+
+The preregistered bounded draw reached1,024 unique alpha-normalized arity3 constructions after1,039attempts (15duplicates,1.44%), in2.157CPU seconds. The10,000attempt cap was not approached; no finite-population saturation/exhaustion is claimed. None overlaps historical TRAIN/DEV/confirmation or S13TRAIN/DEV semantic identities.
+
+The fixed population contains two ordered motifs absent from historical TRAIN:525four-fact and499three-fact cases. All remain depth3. Graph sizes25–32nodes and46/54English tokens fit the inherited128node capacity. Frozen node/edge classes, `parent`/`unify`/null value classes, visibly injective identity copies, unique pair-slot labels and public-target consistency pass the CPU builder checks. Exact source/config/cache/exclusion hashes and the accepted-count curve are in `s14-arity3-cache/audit.json`; the immutable cache SHA is `8b75c555e33ea69e3cc15a1ed7a922acd5b631294a0b1c57ccd9429711eea4d5`.
+
+Protocol/config committed before generation (`d8f9d05`); builder separately versioned before running (`24a2daa`). The pinned generator, compiler, renderer and all S12/S13 sources/caches remain unchanged. No actor imports/model forwards/training were performed. Independent target/feature audit is requested before any GPUrelease; the builder's checks are not claimed as an independent audit. All six fixed S12endpoints must eventually use this exact population and their original TRAIN thresholds, after the full matrix and separate root allocation.
