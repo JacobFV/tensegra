@@ -407,6 +407,24 @@ def extract(root, c04_audit=None, c04_provisional=None):
         add('s20_summary',source,scope=summary['scope'],decisions=summary['decisions'],bootstrap=summary['bootstrap'],mean_ci95=summary['three_fixed_lineage_mean_conditional_ci95_percentage_points'],arms=summary['arms'],process_seconds=summary['process_seconds'])
     else:
         status.append(dict(experiment='S20',status='Final closed independently audited aggregate pending; no interim outcomes read'))
+    audit_path=review+'S21-final-development-audit.json'
+    source=base+'semantics/s21-analysis.json'
+    if (root/audit_path).exists():
+        receipt=read(audit_path)
+        assert source in receipt.get('input_sha256',{}), 'S21 requires final independent aggregate binding'
+        for path,digest in receipt['input_sha256'].items():
+            assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'S21 binding mismatch: {path}'
+            inputs[path]=digest
+        summary=read(source)
+        assert set(summary['curves'])=={'original','broad'}
+        for arm,updates in summary['curves'].items():
+            assert set(updates)=={'0','1024','2048','4096'}
+            for update,splits in updates.items():
+                for split,counts in splits.items():
+                    add('s21_learning',source,arm=arm,added_update=int(update),split=split,**counts)
+        add('s21_summary',source,scope=summary['scope'],paired=summary['paired'],ci95=summary['endpoint_delta_pp_conditional_ci95'],endpoint_counts=summary['endpoint_counts'],decisions=summary['decisions'],exposures=summary['exposures'],training_seconds=summary['training_seconds'],process_seconds=summary['process_seconds'],training_loss_curves=summary['training_loss_curves'])
+    else:
+        status.append(dict(experiment='S21',status='Final independent aggregate audit pending; omitted'))
     if c04_audit:
         # An explicit final audit index binds each approved summary byte-for-byte.
         # Shape: {"input_sha256": {"repository/relative/path": "sha256"}}.
@@ -785,6 +803,32 @@ def render(data, output):
         endpoints=[v for row in select('s20_paired') for v in row['conditional_event_ci95_percentage_points']]
         for ax in axes: ax.set_ylim(min(endpoints)-1,max(endpoints)+1)
         finish(fig,'semantic-confirmation-differences','Vertical axis zoomed to effects. 95% paired event-bootstrap intervals use shared draws within the three known cells across all fixed models and policies.\nIntervals condition on these trained models; the fixed-model mean is not seed-population uncertainty. Both baselines and all seeds retained.\nHeld-out competence is separate; positive direction alone does not establish the registered all-seed acquisition claim.')
+    if select('s21_learning'):
+        groups=[('Old known',('3x3','4x3','4x4')),('Newly exposed in broad',('2x4','5x3','5x4')),('Omitted combination',('3x4',))]
+        fig,axes=plt.subplots(1,3,figsize=(13,4.8),sharey=True)
+        for ax,(label,shapes) in zip(axes,groups):
+            for i,shape in enumerate(shapes):
+                for arm,style in [('original','--'),('broad','-')]:
+                    ss=sorted(select('s21_learning',arm=arm,split='development'),key=lambda r:r['added_update'])
+                    ax.plot([r['added_update'] for r in ss],[r['cells'][shape]['complete'] for r in ss],style,marker='.',color=f'C{i}',label=f'{shape} / {arm}')
+            ax.set(title=label,xlabel='Optimizer updates',ylabel='Complete DEV graphs / 512',ylim=(-10,530));ax.legend(fontsize=6)
+        finish(fig,'semantic-broad-motif-learning','S21 paired development: same scratch initialization and learner; original three-motif versus broad six-motif corpus.\nEqual 32,768 presentations; token/node/edge/record exposure and runtime differ. Curves are inspected DEV, not sealed confirmation.\nAll curves retained; only the fixed 4096 endpoint determines the registered joint gate.')
+        summary=select('s21_summary')[0];shapes=('3x3','4x3','4x4','2x4','5x3','5x4','3x4')
+        fig,axes=plt.subplots(1,2,figsize=(12,5.2))
+        labels=['3×3\nold','4×3\nold','4×4\nold','2×4\nnew','5×3\nnew','5×4\nnew','3×4\nheld out']
+        for arm,color,offset in [('original','C0',-.1),('broad','C1',.1)]:
+            values=[summary['endpoint_counts'][arm][s] for s in shapes]
+            axes[0].plot([i+offset for i in range(7)],values,'o',color=color,label=arm)
+            for i,v in enumerate(values):axes[0].annotate(str(v),(i+offset,v),xytext=(0,5 if arm=='broad' else -12),textcoords='offset points',ha='center',fontsize=6,color=color)
+        axes[0].set(title='Fixed endpoint counts',xticks=range(7),xticklabels=labels,ylabel='Complete DEV graphs / 512',ylim=(-25,545));axes[0].legend(fontsize=7)
+        delta=[100*summary['paired'][s+'/4096']['delta_complete']/512 for s in shapes]
+        intervals=[summary['ci95'][s] for s in shapes]
+        axes[1].vlines(range(7),[v[0] for v in intervals],[v[1] for v in intervals],color='C2')
+        axes[1].plot(range(7),delta,'o',color='C2');axes[1].axhline(0,color='gray',linewidth=.8)
+        axes[1].set(title='Broad minus original · paired effects',xticks=range(7),xticklabels=labels,ylabel='Difference (percentage points)')
+        d=summary['decisions'];gate=lambda value:'PASS' if value else 'FAIL'
+        caption=f"Held-out gain: {gate(d['heldout_gain'])}; old-known retention: {gate(d['old_known_retention'])} (loss {d['old_known_loss_complete']}); new-motif acquisition: {gate(d['new_motif_acquisition'])}. Joint: {gate(d['advance'])}."
+        finish(fig,'semantic-broad-motif-endpoints',caption+' Conditional confirmation: '+('eligible' if d['advance'] else 'INELIGIBLE')+'.\n95% event intervals condition on one paired initialization and inspected DEV; they are not seed uncertainty or gate criteria.\nCanonical exactness is distinct from graph isomorphism; a node-position error alone does not rule out all permutations.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')=='independently_audited'})
