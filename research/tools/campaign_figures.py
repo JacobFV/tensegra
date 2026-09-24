@@ -250,6 +250,32 @@ def extract(root, c04_audit=None, c04_provisional=None):
                         suffix_correct=round(cell['suffix_value_trajectory']*cell['examples']))
         else:
             status.append(dict(experiment='A14 references',status='pending independent reference audit'))
+    for experiment in ('R10','R11'):
+        audit_path=review+experiment+'-development-summary-audit.json'
+        if not (root/audit_path).exists(): continue
+        audit=read(audit_path)
+        for path,digest in audit['input_sha256'].items():
+            assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'{experiment} binding mismatch: {path}'
+            inputs[path]=digest
+        source=base+f'returns/{experiment.lower()}-development/summary.json';summary=read(source)
+        for group in ('cells','strata','paired'):
+            for cell in summary[group]: add('return_tail_'+group,source,experiment=experiment,**cell)
+        add('return_tail_gate',audit_path,experiment=experiment,gate=audit.get('development_gate',audit.get('gates')),selected=audit.get('selected'))
+    audit_path=review+'S13-main-pair-audit.json'
+    if (root/audit_path).exists():
+        for name in ('S13-main-pair-audit.json','S13-english-main-audit.json','S13-mixed-main-audit.json'):
+            receipt=read(review+name)
+            for path,digest in receipt['input_sha256'].items():
+                assert hashlib.sha256((root/path).read_bytes()).hexdigest()==digest, f'S13 binding mismatch: {path}'
+                inputs[path]=digest
+        source=base+'semantics/s13-paired-analysis.json';summary=read(source)
+        for arm,result in summary['results'].items():
+            for curve in result['curves']:
+                for surface,policies in curve['surfaces'].items():
+                    for policy,counts in policies.items():
+                        add('s13_learning',source,arm=arm,surface=surface,policy=policy,added_update=curve['added_update'],
+                            total=sum(v['examples'] for v in counts['by_node_count'].values()),**counts)
+        add('s13_paired',source,paired_endpoint=summary['paired_endpoint'],promotion_criteria=summary['promotion_criteria'],promotion_pass=summary['promotion_pass'])
     if c04_audit:
         # An explicit final audit index binds each approved summary byte-for-byte.
         # Shape: {"input_sha256": {"repository/relative/path": "sha256"}}.
@@ -279,7 +305,7 @@ def extract(root, c04_audit=None, c04_provisional=None):
             rows.extend(dict(row,audit_status='independent_final_audit_pending') for row in composition_rows(read(source),source))
         status[:]=[entry for entry in status if not (entry.get('experiment')=='C04' and entry.get('lineage')==lineage)]
         status.append(dict(experiment='C04',lineage=lineage,status='completed worker results; independent final audit pending'))
-    status.append(dict(experiment='S13',status='cache/protocol only; no model outcome plotted'))
+    status.append(dict(experiment='S13',status='one audited development pair; all criteria fail' if any(r['panel']=='s13_learning' for r in rows) else 'cache/protocol only; no model outcome plotted'))
     conditions=[]
     for row in rows:
         if row['panel']=='attention_final' and row['condition'] not in conditions:
@@ -475,6 +501,47 @@ def render(data, output):
         ax.set(title='Engineering references · all three shapes',xticks=range(3),xticklabels=['Soft topology','Hard topology','Graph context'],ylabel='Task correct (%)',ylim=(95,101));ax.tick_params(axis='x',labelrotation=12)
         if not references: ax.text(.05,.5,'Independent reference audit pending',transform=ax.transAxes)
         finish(fig,'attention-confirmation','A14: three fitted seeds; engineered common hard is distinct from learned unchanged and privileged oracle. Top-row metrics have different requirements.\nCI jointly resamples shared events conditional on fixed seeds. References use different interfaces/training; no parameter/FLOP match or unique attention win is claimed.')
+    if select('return_tail_strata'):
+        fig,axes=plt.subplots(2,2,figsize=(12,7.5))
+        for ax,experiment,arms in [(axes[0,0],'R10',('unchanged','balanced_16384','balanced_65536')),(axes[0,1],'R11',('reference','constant','decay'))]:
+            for i,arm in enumerate(arms):
+                ss=[select('return_tail_strata',experiment=experiment,head=arm,split=split) for split in ('calibration_grid','validation_grid')]
+                minima=[min(r['correct']['value'] for r in group) for group in ss]
+                ax.plot([0,1],minima,'o-',label=arm)
+                for j,value in enumerate(minima):ax.annotate(str(value),(j,value),xytext=(4,(i-1)*8),textcoords='offset points',fontsize=7)
+            ax.axhline(122,color='.5',ls=':',label='Frozen 95% gate: 122/128')
+            ax.set(title=f'{experiment}: worst type/value/delay stratum',xticks=[0,1],xticklabels=['Calibration (gate)','Validation (reused)'],ylabel='Worst scalar count / 128');ax.legend(fontsize=7)
+        ax=axes[1,0]
+        for experiment,arms in [('R10',('balanced_16384','balanced_65536')),('R11',('reference','constant','decay'))]:
+            for arm in arms:
+                ss=select('return_tail_cells',experiment=experiment,head=arm,split='validation')
+                ax.scatter(experiment+' / '+arm,100*min(r['correct']['value']/r['total'] for r in ss))
+        ax.set(title='Original-mixture reused-validation minimum',ylabel='Scalar correct (%)');ax.tick_params(axis='x',labelrotation=25)
+        ax=axes[1,1]
+        for arm in ('reference','constant','decay'):
+            ss=select('return_tail_cells',experiment='R11',head=arm,split='train',target_delay=16,distractors=2)
+            assert len(ss)==1
+            ax.bar(arm,100*ss[0]['correct']['value']/ss[0]['total'])
+        ax.set(title='R11 training fit · delay 16 / 2 distractors',ylabel='Scalar correct (%)',ylim=(98,100))
+        finish(fig,'return-tail-development','R10/R11 fixed development screens fail: calibration threshold governs; reused validation cannot override failure. One development backbone; no promotion.\nR11 decay versus constant identifies a relative learning-rate effect; reference is the inherited endpoint, not a same-initialization additional-exposure control.')
+    if select('s13_learning'):
+        fig,axes=plt.subplots(2,2,figsize=(12,7.5))
+        for ax,surface in zip(axes[0],('english','spanish')):
+            for i,arm in enumerate(('english','mixed')):
+                for policy,style in [('raw','--'),('calibrated','-')]:
+                    ss=select('s13_learning',arm=arm,surface=surface,policy=policy);ss.sort(key=lambda r:r['added_update'])
+                    ax.plot([r['added_update'] for r in ss],[r['exact'] for r in ss],style,marker='o',color=f'C{i}',label=f'{arm}-training / {policy}')
+            ax.set(title=f'S13 {surface} complete graphs',xlabel='Additional optimizer updates from shared parent',ylabel='Complete graphs / 512',ylim=(-3,150));ax.legend(fontsize=7)
+        for ax,metric,title in [(axes[1,0],'mean_copy','Spanish mean copy accuracy'),(axes[1,1],'ordered_edge','Spanish ordered-edge F1')]:
+            for i,arm in enumerate(('english','mixed')):
+                for policy,style in [('raw','--'),('calibrated','-')]:
+                    ss=select('s13_learning',arm=arm,surface='spanish',policy=policy);ss.sort(key=lambda r:r['added_update'])
+                    values=[r[metric] if metric=='mean_copy' else r['edges'][metric]['f1'] for r in ss]
+                    ax.plot([r['added_update'] for r in ss],values,style,marker='o',color=f'C{i}',label=f'{arm}-training / {policy}')
+            ax.set(title=title,xlabel='Additional optimizer updates',ylabel='Component score',ylim=(-.02,1.02));ax.legend(fontsize=7)
+        english_end=max(select('s13_learning',arm='english',surface='english',policy='calibrated'),key=lambda r:r['added_update'])
+        mixed_end=max(select('s13_learning',arm='mixed',surface='english',policy='calibrated'),key=lambda r:r['added_update'])
+        finish(fig,'semantic-bilingual-development',f'S13: one paired development parent; all promotion criteria fail. Spanish complete graphs remain zero despite partial copy/order acquisition.\nEnglish calibrated endpoint falls from English-only {english_end["exact"]:g} to mixed {mixed_end["exact"]:g} /{mixed_end["total"]}. Token/compute exposure differs; these are not confirmation curves or broad multilingual competence.')
     if select('c04_hybrid'):
         fig,axes=plt.subplots(2,2,figsize=(12,8))
         audited_lineages=sorted({r['lineage'] for r in select('c04_hybrid') if r.get('audit_status')=='independently_audited'})
