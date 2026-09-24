@@ -1,5 +1,7 @@
 ## Current final state
 
+A14 all three fixed seeds and nine engineering references complete; frozen aggregate/report `a14-report.md`. Shared-hard joint gains +82.324/+80.078/+81.836 pp, mean +81.413 [79.492,83.236]; conditional 1017/1017,1006/1006,1015/1015. Only shared-hard engineering policy passes all task gates; original learned soft remains failed. All 27 strong reference cells 100% task/suffix. References raw `5436b41b`, full 51.444005635 s; total A14 1107.250816619 s, cumulative 2750.981686829 s including uncertain A08 60 s bound. Independent aggregate audit pending. Recommend close explicit-address branch; no further GPU authorized. Prior entries historical.
+
 A14seed1403complete67dc519 rawbc1512a4,336.333546519s/GPUFREE. Fixed6000/96000,strictcontractpasses,fullpublic/orderhashesmatch1401/1402. Jointtask177/245/179/1015/1024 original/both/sharedsoft/sharedhard/oracle; sharedhardconditional1015/1015,jointsuffix955. All3mainsdone;9A06refsremainrequired, aggregateafterrefs perroot. Revieweractivated21cellaudit. RootS12renameownsGPU; noattentionlaunch. Cumulative2699.537681194sincludesuncertainA08profile60sbound.
 
 A14seed1402complete67dc519 raw905c6bce,341.759054285s/GPUFREE. Fixed6000/96000,strictcontractpasses; fullpublic/orderhashesmatch1401. Jointtask187/221/183/1007/1024 original/both/sharedsoft/sharedhard/oracle; sharedhardconditional1006/1006,jointsuffix960. Seed1403+9refsremainrequired unchanged,separaterootreleases; no pooledgate/bootstrap. Independent21cellauditactivated. Cumulative2363.204134675sincludesuncertainA08profile60sbound.

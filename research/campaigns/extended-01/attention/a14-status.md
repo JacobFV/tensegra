@@ -1,6 +1,6 @@
 # A14 confirmation status
 
-All three prescribed seeds1401/1402/1403 completed their fixed6000-update endpoints. The nine engineering references remain required and await separate root GPU release. Protocol aggregation waits for those references, as directed by root. All policies, thresholds and populations remain unchanged.
+All three prescribed seeds and all nine engineering references are complete. The frozen aggregate passes the replicated-effect and shared-hard competence/conditional rules; original remains failed. All 27 reference cells achieve 100% task and complete suffix. See `a14-report.md` and `research/results/campaign-01/attention/a14/confirmation-analysis.json`. Independent aggregate audit requested. Historical per-seed entries below preserve their then-current status. No further GPU work is authorized.
 
 | Seed1401 policy | IID task/1024 | Moderate task/1024 | Joint task/1024 | Joint all-node suffix/1024 |
 |---|---:|---:|---:|---:|
@@ -39,3 +39,7 @@ Shared-hard joint route is correct1006/1024, with task correct1006/1006 on that 
 | Privileged oracle | 1024 | 1024 | 1024 | 1024 |
 
 Shared-hard joint route and task/route intersection both1015/1024. Exact full public inputs and record-order hashes match both earlier seeds; strict loader contract passes. Independent21-cell audit requested. Atomic full-process receipt336.333546519seconds, GPU verified free. Raw/receiptbc1512a4 at `research/results/campaign-01/attention/a14/1403`; checkpoint/state durable remotely with SHA inventory archived. Attention accounting2699.537681194seconds includes the uncertain60-second A08 profile bound. Reference jobs and final paired aggregation remain pending; no outcome changes are authorized.
+
+## Completed reference and aggregate archive
+
+References raw/receipt `5436b41b`, full occupancy 51.444005635 seconds. All nine exact identities/public hashes validated. A14 total 1107.250816619 seconds; cumulative attention 2750.981686829 seconds includes the uncertain A08 profile 60-second upper bound. Shared-hard joint mean gain +81.413 percentage points, shared-event 95% bootstrap [79.492,83.236]; conditional 3038/3038 across explicit per-seed supports. Strong references tie at perfect accuracy; no structural-attention or efficiency superiority claim. GPU released before CPU aggregation.
