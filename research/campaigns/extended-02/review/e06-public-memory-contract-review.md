@@ -1,0 +1,16 @@
+# Constructive collisions and proposed public-memory contract
+
+Independent audit of compact artifact at `9cbbd00e` / frozen world source `a9337b71` passes. Exact27/67 feature arrays and action catalogues match within both pairs, replayed from frozen encoder source. Independently enumerated feasible selections change from{a,c; b,c} to{b,c}; public route alternatives change from via1=2 versus direct3 to via1=5 versus direct3. Teacher action kinds differ. This establishes incompatible imitation labels under identical encoded observations, not collision prevalence or impossibility of completing the worlds with another strategy. Receipt binds the compact lossless artifact. Reviewer CPU including git child0.015702584seconds; no inference/GPU.
+
+The proposed E06 input repair is justified before large population training. Providing a complete typed public graph to both families removes a demonstrated missing-information boundary. Any gain over the old summary is first an input-interface gain, not attention-bias superiority.
+
+Before making a lossless-input claim, require:
+
+- Exact round-trip recovery of canonical public JSON including integer/float/string/bool/null distinctions, ordered arrays/arguments, directed weighted edges, incompatibilities, draft snapshots, provenance, versions and visible returns. Canonicalization may quotient opaque **spelling** only; preserve identity equality, distinct handles, ordering and references, and retain an external reverse table for executable actions.
+- Canonicalize opaque handle namespaces from public first-occurrence/equality rules; do not sort by randomized spelling or accidentally merge item/result/problem identities. Unknown schema values must be represented or rejected explicitly, not silently hashed into collisions.
+- Candidate links point only to currently public graph objects or candidate-owned literal nodes. They cannot encode successful bindings, future state, private constraints, ready masks, solved routes or teacher actions. Public pending/selected references and immutable call snapshots must remain distinguishable.
+- Identical raw fact graph and candidate access for both lightweight and recurrent readers. The lightweight alternative needs actual candidate-conditioned reads or message passing, not inaccessible JSON alongside a pointwise scorer. Cost/parameter differences remain measured.
+- Explicit capacity errors with retained episode denominators. Never truncate late records, map edges or candidate rows to fit; never discard overflow episodes after observing failure. Bound and profile complete legal histories, including repeatedly built drafts/returns, since these can dominate memory allocation.
+- Tests showing both existing collision pairs become distinguishable, consistent handle renaming preserves the canonical graph, argument reversal remains distinguishable, unknown observations remain unknown, and solver payload injection cannot create a hidden gold edge.
+
+A lossless symbolic codec does not make learned embeddings/attention lossless or acquired. Keep codec round-trip, action discrimination, closed-loop learning and transfer as separate claims. Profile rows/tokens, allocated memory, serialization CPU, attention work and full trajectories before fixing budgets. Preserve the old default and its failed outcomes.

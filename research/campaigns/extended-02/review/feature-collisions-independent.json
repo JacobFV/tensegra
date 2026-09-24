@@ -1,0 +1,53 @@
+{
+  "status": "PASS_CONSTRUCTIVE_COLLISIONS",
+  "artifact_sha256": "25a00cb713f8f63618f7cc0f754618228c2ef425fe9b160034de1686a76dfff3",
+  "source": "a9337b715995e14bcb3fa5748f6e9206c3f9ddf7",
+  "checks": {
+    "downstream_route_weight": {
+      "exact_full_feature_collision": true,
+      "matching_action_catalog": true,
+      "teacher_kinds": [
+        "move",
+        "build_route"
+      ],
+      "independent_route_lengths": [
+        {
+          "via1": 2,
+          "direct": 3
+        },
+        {
+          "via1": 5,
+          "direct": 3
+        }
+      ]
+    },
+    "nonpending_incompatibility": {
+      "exact_full_feature_collision": true,
+      "matching_action_catalog": true,
+      "teacher_kinds": [
+        "choose_item",
+        "start_subset"
+      ],
+      "independent_feasible_subsets": [
+        [
+          [
+            "a",
+            "c"
+          ],
+          [
+            "b",
+            "c"
+          ]
+        ],
+        [
+          [
+            "b",
+            "c"
+          ]
+        ]
+      ]
+    }
+  },
+  "cpu_core_seconds": 0.015702584000000006,
+  "scope": "No model inference; independent semantic witnesses and frozen encoder replay; no prevalence claim."
+}
