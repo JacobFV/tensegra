@@ -15,7 +15,7 @@ p=argparse.ArgumentParser();p.add_argument('config');p.add_argument('--cap',type
 if subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=csv,noheader'],text=True).strip():raise RuntimeError('GPU occupied; coordinator must release an idle slot')
 receipt=Path(a.prefix+'.occupancy.json');log=Path(a.prefix+'.log');started_receipt=Path(a.prefix+'.started.json')
 if receipt.exists() or log.exists() or started_receipt.exists():raise RuntimeError('immutable launch prefix already exists')
-env={**os.environ,'OMP_NUM_THREADS':'2','OPENBLAS_NUM_THREADS':'2','MKL_NUM_THREADS':'2','PYTHONPATH':'src'}
+env={**os.environ,'OMP_NUM_THREADS':'2','OPENBLAS_NUM_THREADS':'2','MKL_NUM_THREADS':'2','PYTHONPATH':str(Path(__file__).resolve().parent.parent)}
 command=[a.python,'-m','topoformer.campaign_semantics_recalibrate',a.config]
 started=datetime.datetime.now(datetime.timezone.utc).isoformat();tick=time.monotonic();timed_out=False;matrix=[];error=None;preflight_seconds=None
 common=dict(started_utc=started,wrapper_pid=os.getpid(),cap_seconds=a.cap,command=command,config_sha256=hashlib.sha256(Path(a.config).read_bytes()).hexdigest(),wrapper_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
