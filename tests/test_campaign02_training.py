@@ -121,3 +121,23 @@ def test_actor_critic_reward_to_go_not_repeated_total():
     terms = [(torch.tensor(0.), torch.tensor(0.), torch.tensor(0.), -.1),
              (torch.tensor(0.), torch.tensor(0.), torch.tensor(0.), .9)]
     assert [float(v) for v in actor_critic_terms(terms, cfg)] == pytest.approx([.81, .64])
+
+
+def test_episode_mean_weights_policy_and_entropy_per_episode():
+    from dataclasses import replace
+    from topoformer.campaign02_training import actor_critic_objective
+    def term(reward):
+        return (torch.tensor(1.), torch.tensor(0.), torch.tensor(2.), reward)
+    episodes = [[term(0.), term(1.)], [term(2.)]]
+    cfg = TrainConfig(width=8, value_weight=0, entropy_weight=0)
+    decision_loss, decision_parts = actor_critic_objective(episodes, cfg)
+    episode_loss, episode_parts = actor_critic_objective(episodes, replace(cfg, policy_loss_reduction="episode_mean"))
+    assert float(decision_loss) == pytest.approx(-4/3)
+    assert float(episode_loss) == pytest.approx(-2)
+    assert float(decision_parts["entropy"]) == pytest.approx(2)
+    assert float(episode_parts["entropy"]) == pytest.approx(3)
+    assert float(decision_parts["critic_decision_mean_loss"]) == pytest.approx(2)
+    assert torch.equal(decision_parts["critic_decision_mean_loss"], episode_parts["critic_decision_mean_loss"])
+    # A zero-decision episode remains in the episode objective denominator.
+    empty_loss, _ = actor_critic_objective(episodes+[[]], replace(cfg, policy_loss_reduction="episode_mean"))
+    assert float(empty_loss) == pytest.approx(-4/3)

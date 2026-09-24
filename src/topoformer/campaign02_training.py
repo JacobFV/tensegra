@@ -46,10 +46,13 @@ class TrainConfig:
     training_seed_start: int | None = None
     neural_work_per_forward: float = 1.0
     rollout_mode: str = "serial"
+    policy_loss_reduction: str = "decision_mean"
 
     def __post_init__(self):
         if not math.isfinite(self.neural_work_per_forward) or self.neural_work_per_forward < 0:
             raise ValueError("Invalid frozen neural tariff")
+        if self.policy_loss_reduction not in {"decision_mean", "episode_mean"}:
+            raise ValueError("Unknown policy objective reduction")
         if self.rollout_mode not in {"serial", "batched"}:
             raise ValueError("Unknown on-policy rollout mode")
         if self.method not in {"supervised", "actor_critic"}:
@@ -281,6 +284,39 @@ def actor_critic_terms(episode_terms, config):
     return losses
 
 
+def actor_critic_objective(episodes, config):
+    """Policy weighting is declared separately from critic regression weighting.
+
+    decision_mean retains the historical per-decision objective. episode_mean
+    sums policy-gradient and entropy terms within each episode, then averages
+    episodes, including zero-decision episodes. In either mode, critic squared
+    error is averaged over actual decisions; it is a separately weighted fit.
+    """
+    policy_by_episode, entropy_by_episode, values = [], [], []
+    for episode in episodes:
+        future_reward, policy_terms, entropy_terms = 0.0, [], []
+        for logp, value, entropy, reward_delta in reversed(episode):
+            future_reward += reward_delta
+            advantage = value.new_tensor(future_reward)-value
+            policy_terms.append(-logp*advantage.detach())
+            entropy_terms.append(entropy)
+            values.append(advantage.square())
+        policy_by_episode.append(policy_terms)
+        entropy_by_episode.append(entropy_terms)
+    if not values:
+        raise ValueError("No live policy decisions")
+    zero = values[0].new_zeros(())
+    if config.policy_loss_reduction == "episode_mean":
+        policy_loss = torch.stack([torch.stack(parts).sum() if parts else zero for parts in policy_by_episode]).mean()
+        entropy = torch.stack([torch.stack(parts).sum() if parts else zero for parts in entropy_by_episode]).mean()
+    else:
+        policy_loss = torch.stack([part for parts in policy_by_episode for part in parts]).mean()
+        entropy = torch.stack([part for parts in entropy_by_episode for part in parts]).mean()
+    value_loss = torch.stack(values).mean()
+    loss = policy_loss+config.value_weight*value_loss-config.entropy_weight*entropy
+    return loss, {"policy_loss": policy_loss, "critic_decision_mean_loss": value_loss, "entropy": entropy}
+
+
 class Learner:
     def __init__(self, model, config: TrainConfig):
         self.model, self.config = model.to(config.device), config
@@ -296,7 +332,7 @@ class Learner:
         self.model.train()
         start_cpu, start_wall = time.process_time(), time.perf_counter()
         for _ in range(updates):
-            trajectories, outcomes, terms = [], [], []
+            trajectories, outcomes, rollout_episodes = [], [], []
             if cfg.method == "actor_critic" and cfg.rollout_mode == "batched":
                 seeds = list(range(self.seed_cursor, self.seed_cursor+cfg.batch_size))
                 self.seed_cursor += cfg.batch_size
@@ -304,7 +340,7 @@ class Learner:
                     device=cfg.device, max_steps=cfg.max_steps, neural_work_per_forward=cfg.neural_work_per_forward,
                     bptt_steps=cfg.bptt_steps)
                 for result, episode_terms in zip(results, all_terms):
-                    terms.extend(actor_critic_terms(episode_terms, cfg))
+                    rollout_episodes.append(episode_terms)
                     self.data_hash.update(json.dumps(result["trace"], sort_keys=True).encode())
                     outcomes.append(result["outcome"])
             else:
@@ -322,15 +358,14 @@ class Learner:
                         result, episode_terms = live_episode(self.model, env, device=cfg.device,
                             max_steps=cfg.max_steps, sample=True, gradients=True,
                             neural_work_per_forward=cfg.neural_work_per_forward, bptt_steps=cfg.bptt_steps)
-                        terms.extend(actor_critic_terms(episode_terms, cfg))
+                        rollout_episodes.append(episode_terms)
                         self.data_hash.update(json.dumps(result["trace"], sort_keys=True).encode())
                     outcomes.append(result["outcome"])
             if cfg.method == "supervised":
                 loss, count = supervised_loss(self.model, trajectories, cfg.device, cfg.bptt_steps)
             else:
-                if not terms:
-                    raise ValueError("No live policy decisions")
-                loss, count = torch.stack(terms).mean(), len(terms)
+                loss, objective_parts = actor_critic_objective(rollout_episodes, cfg)
+                count = sum(map(len, rollout_episodes))
             self.optimizer.zero_grad(set_to_none=True)
             loss.backward()
             norm = nn.utils.clip_grad_norm_(self.model.parameters(), cfg.gradient_clip)
@@ -343,6 +378,8 @@ class Learner:
                 "mean_training_utility": sum(o["utility"] for o in outcomes)/len(outcomes),
                 "training_success": sum(o["verified_success"] for o in outcomes)/len(outcomes),
                 "rollout_mode": cfg.rollout_mode if cfg.method == "actor_critic" else None,
+                "policy_loss_reduction": cfg.policy_loss_reduction if cfg.method == "actor_critic" else None,
+                "objective_parts": {k: float(v.detach()) for k,v in objective_parts.items()} if cfg.method == "actor_critic" else None,
                 "behavior_source": "supplied_public_teacher" if cfg.method == "supervised" else "sampled_learned_policy",
                 "training_utility_scope": "teacher world outcome, not learned closed-loop performance" if cfg.method == "supervised" else "learned on-policy outcome including fixed neural tariff",
                 "supervised_target_decisions": count if cfg.method == "supervised" else 0,
@@ -433,6 +470,7 @@ def main():
     parser.add_argument("--width", type=int, default=1024)
     parser.add_argument("--family", choices=("lightweight", "recurrent"), default="lightweight")
     parser.add_argument("--method", choices=("supervised", "actor_critic"), default="supervised")
+    parser.add_argument("--policy-loss-reduction", choices=("decision_mean", "episode_mean"), default="decision_mean")
     parser.add_argument("--rollout-mode", choices=("serial", "batched"), default="serial")
     parser.add_argument("--teacher", choices=("always_tool", "cheap_first", "cheap", "cheap_first_fallback_v2"), default="always_tool")
     parser.add_argument("--executor", choices=("isolated", "persistent"), default="persistent")
@@ -461,7 +499,7 @@ def main():
     torch.manual_seed(args.seed)
     cfg = TrainConfig(seed=args.seed, width=args.width, family=args.family, batch_size=args.batch,
         method=args.method, device=args.device, learning_rate=args.learning_rate, max_steps=args.max_steps,
-        bptt_steps=args.bptt_steps, evaluation_batch=args.evaluation_batch, training_seed_start=args.training_seed_start, neural_work_per_forward=args.neural_work_per_forward, rollout_mode=args.rollout_mode)
+        bptt_steps=args.bptt_steps, evaluation_batch=args.evaluation_batch, training_seed_start=args.training_seed_start, neural_work_per_forward=args.neural_work_per_forward, rollout_mode=args.rollout_mode, policy_loss_reduction=args.policy_loss_reduction)
     world_kwargs = json.loads(args.world_json)
     args.output.mkdir(parents=True, exist_ok=True)
     manager = BoundedSolver() if args.executor == "persistent" else nullcontext(None)
