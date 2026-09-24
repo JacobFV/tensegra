@@ -1,0 +1,7 @@
+# A07 profile and development allocation
+
+Frozen source d685448,12updates,64examples per endpoint; mechanical timing, not a competence result. Full process4.86seconds; runner2.938seconds. Warmed IID64-case forward.0192seconds; largest N128/D32/K8 forward1.9692seconds. CUDA peak allocated2,086,611,456bytes; peak process RSS2,004,860KiB. Width1024,4,575,275allocated and2,412,562gradient-participating parameters.
+
+Measured evaluation totals2.348seconds (including a cold initial call). The remaining~.59seconds includes12training updates plus generator/startup/export costs: a conservative49ms/update upper allocation gives~49seconds for1000updates. Monitoring two256-event cells across7checkpoints projects~4seconds; two largest512-event final cells project~32seconds; remaining final cells and serialization add overhead. Estimate90–140seconds overall rather than multiplying total profile time by1000/12. Request a240second process ceiling for the already registered1000-update development; no automatic launch.
+
+The12-update model is not competent (IID12.5%,largest6.25%); this tiny profile cannot adjudicate acquisition. Retain unchanged optimizer/exposure and monitor learning in the declared main screen. Config/source hashes, predictions and receipt are in `research/results/campaign-01/attention/a07-profile/`; checkpoint is durable on GB10 under `~/topoformer-campaign01/attention/a07-profile/`. No new mechanism or scale selected from these timing events.
