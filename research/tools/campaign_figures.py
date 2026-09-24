@@ -2,9 +2,10 @@
 """Extract audited campaign counts (stdlib) and render with matplotlib; no model imports.
 
 python3 research/tools/campaign_figures.py --root . --extract-only
-python3 research/tools/campaign_figures.py --render-data <figures>/plotted-data.json --output <figures>
+python3 research/tools/campaign_figures.py --render-data <figures>/plotted-data.json.gz --output <figures>
 """
 import argparse
+from collections import Counter
 import gzip
 import hashlib
 import json
@@ -216,8 +217,21 @@ def main():
     p.add_argument('--extract-only',action='store_true');p.add_argument('--render-data',type=Path);a=p.parse_args()
     output=a.output or a.root/'research/campaigns/extended-01/figures';output.mkdir(parents=True,exist_ok=True)
     start=time.perf_counter()
-    data=json.loads(a.render_data.read_text()) if a.render_data else extract(a.root.resolve())
-    (output/'plotted-data.json').write_text(json.dumps(data,indent=2,sort_keys=True)+'\n')
+    if a.render_data:
+        with (gzip.open(a.render_data,'rt') if a.render_data.suffix=='.gz' else a.render_data.open()) as f:
+            data=json.load(f)
+    else:
+        data=extract(a.root.resolve())
+    # Stable bytes: sorted compact JSON, mtime=0, no embedded source filename.
+    encoded=(json.dumps(data,sort_keys=True,separators=(',',':'),allow_nan=False)+'\n').encode()
+    compressed=gzip.compress(encoded,mtime=0)
+    (output/'plotted-data.json.gz').write_bytes(compressed)
+    receipt=dict(schema_version=data['schema_version'],table='plotted-data.json.gz',
+                 table_sha256=hashlib.sha256(compressed).hexdigest(),
+                 uncompressed_sha256=hashlib.sha256(encoded).hexdigest(),
+                 rows=len(data['rows']),panel_rows=dict(sorted(Counter(r['panel'] for r in data['rows']).items())),
+                 inputs=data['inputs'],status=data['status'],uncertainty=data['uncertainty'])
+    (output/'data-manifest.json').write_text(json.dumps(receipt,indent=2,sort_keys=True)+'\n')
     if not a.extract_only: render(data,output)
     print(json.dumps(dict(rows=len(data['rows']),inputs=len(data['inputs']),wall_seconds=time.perf_counter()-start,rendered=not a.extract_only)))
 if __name__=='__main__': main()
