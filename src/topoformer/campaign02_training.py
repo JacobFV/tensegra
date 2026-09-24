@@ -262,6 +262,10 @@ class Learner:
                 "unique_training_episodes": self.episodes, "loss": float(loss.detach()), "gradient_norm": float(norm),
                 "mean_training_utility": sum(o["utility"] for o in outcomes)/len(outcomes),
                 "training_success": sum(o["verified_success"] for o in outcomes)/len(outcomes),
+                "behavior_source": "supplied_public_teacher" if cfg.method == "supervised" else "sampled_learned_policy",
+                "training_utility_scope": "teacher world outcome, not learned closed-loop performance" if cfg.method == "supervised" else "learned on-policy outcome including fixed neural tariff",
+                "supervised_target_decisions": count if cfg.method == "supervised" else 0,
+                "on_policy_decisions": count if cfg.method == "actor_critic" else 0,
                 "solver_cpu_seconds": sum(o["solver_cpu_seconds"] for o in outcomes)})
         return {"updates": updates, "process_cpu_seconds": time.process_time()-start_cpu,
                 "wall_seconds": time.perf_counter()-start_wall, "last": self.curves[-1] if updates else None}
