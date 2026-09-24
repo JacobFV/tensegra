@@ -12,7 +12,7 @@ import math
 import struct
 from typing import Any
 
-VERSION = "public-tree-v1"
+VERSION = "public-tree-v2"
 # Fixed schema vocabulary is only a compact representation. Unknown literal
 # strings/field names are losslessly represented by ordered UTF-8 byte chunks.
 TOKENS = tuple(sorted(set("""
@@ -57,8 +57,8 @@ class MemoryLimits:
     max_string_bytes: int = 4096
 
     def __post_init__(self):
-        if not 1 <= self.max_nodes <= 65535 or not 1 <= self.max_handles <= 65535:
-            raise ValueError("Node and handle capacities must be in [1,65535]")
+        if not 1 <= self.max_nodes <= 65535 or not 1 <= self.max_handles <= 16383:
+            raise ValueError("Node capacity must be <=65535 and handle capacity <=16383 (four typed ranges)")
         if not 1 <= self.max_depth <= 65535 or not 1 <= self.max_string_bytes <= 65535:
             raise ValueError("Invalid depth/string capacity")
 
@@ -109,71 +109,93 @@ class _Handle:
         self.index = index
 
 
-# Locations carrying references, as opposed to semantically meaningful strings.
-REFERENCE_FIELDS = {"handle", "item", "source", "target", "return"}
-REFERENCE_LISTS = {"pending", "selected", "handles", "incompatible"}
-HANDLE_MAPS = {"known_items", "retrieved", "problems"}
+# Four typed ranges keep existing return addresses stable when new problems are
+# appended. Raw spelling can coincide across namespaces without conflation.
+NAMESPACES = {"item": 0, "problem": 1, "record": 2, "other": 3}
+HANDLE_MAPS = {"known_items": "item", "retrieved": "record", "problems": "problem"}
+ITEM_LISTS = {"pending", "selected", "handles", "incompatible", "items"}
 
 
 def _normalize(observation, actions, limits):
     obs, actions = _plain(observation), _plain(actions)
-    handles: dict[str, int] = {}
-    def intern(name):
+    handles: dict[tuple[str, str], int] = {}
+    counts = {name: 0 for name in NAMESPACES}
+    def intern(namespace, name):
         if not isinstance(name, str):
             raise ValueError("Opaque handle must be a string")
-        if name not in handles:
+        if namespace == "item" and name == "map":
+            raise ValueError("Item handle 'map' conflicts with the public inspection keyword")
+        key = namespace, name
+        if key not in handles:
             if len(handles) >= limits.max_handles:
                 raise MemoryCapacityError("Opaque handle capacity exceeded", limit=limits.max_handles, observed=len(handles)+1)
-            handles[name] = len(handles)
-        return handles[name]
-    # Public declaration order, not lexical spelling or numeric handle magnitude.
+            handles[key] = NAMESPACES[namespace] * limits.max_handles + counts[namespace]
+            counts[namespace] += 1
+        return handles[key]
+    # Existing declaration order is append-only in this workshop. New problem
+    # declarations cannot shift record IDs because those use a separate range.
     for row in obs.get("item_inventory", []):
-        intern(row["handle"])
+        intern("item", row["handle"])
     for key in obs.get("known_items", {}):
-        intern(key)
+        intern("item", key)
     for key in obs.get("problems", {}):
-        intern(key)
+        intern("problem", key)
     for row in obs.get("records", []):
-        intern(row["handle"])
+        intern("record", row["handle"])
     for key in obs.get("retrieved", {}):
-        intern(key)
-    # Candidate-created/invalid references also share identity within this frame.
-    def discover(value, field=""):
+        intern("record", key)
+
+    def ref_role(field, container, action_kind):
+        if field == "handle":
+            if container == "arguments":
+                if action_kind in {"build", "start_subset", "build_route"}: return "problem"
+                if action_kind in {"retrieve", "use_return"}: return "record"
+            return container if container in NAMESPACES else "other"
+        if field in {"item", "source", "target"} or field in ITEM_LISTS: return "item"
+        if field == "problem": return "problem"
+        if field == "return": return "record"
+        return None
+
+    def walk(value, field="", container="", action_kind=None, normalize=False):
         if isinstance(value, dict):
-            for key, item in value.items():
-                if field in HANDLE_MAPS:
-                    intern(key)
-                discover(item, key)
-        elif isinstance(value, list):
-            for item in value:
-                discover(item, field)
-        elif isinstance(value, str):
-            if field in REFERENCE_FIELDS and not (field in {"source", "target"} and value == "map"):
-                intern(value)
-            elif field in REFERENCE_LISTS or field == "problem":
-                intern(value)
-            elif field == "items":  # commit_subset identity list, not numeric rows
-                intern(value)
-    discover(obs)
-    discover(actions)
-    def normalized(value, field=""):
-        if isinstance(value, dict):
-            # Public object property order is retained, including draft row order.
-            return {(f"@handle:{handles[k]}" if field in HANDLE_MAPS else k): normalized(v, k)
-                    for k, v in value.items()}
+            if field in HANDLE_MAPS:
+                namespace = HANDLE_MAPS[field]
+                return {f"@handle:{intern(namespace,k)}" if normalize else k:
+                    walk(v,"",namespace,action_kind,normalize) for k,v in value.items()}
+            if field == "actions":
+                action_kind = value.get("kind")
+                container = "action"
+            elif field == "arguments":
+                container = "arguments"
+            elif field in {"records", "record"}:
+                container = "record"
+            elif field == "item_inventory" or ("handle" in value and "category" in value):
+                container = "item"
+            return {k:walk(v,k,container,action_kind,normalize) for k,v in value.items()}
         if isinstance(value, list):
-            return [normalized(v, field) for v in value]
+            return [walk(v,field,container,action_kind,normalize) for v in value]
         if isinstance(value, str):
-            ref = (field in REFERENCE_FIELDS and not (field in {"source", "target"} and value == "map")) or field in REFERENCE_LISTS or field in {"problem", "items"}
-            if ref and value in handles:
-                return _Handle(handles[value])
-            # KeyError feedback can quote a handle. Preserve the diagnostic while
-            # removing irrelevant spelling; no general natural-language rewrite.
-            if field == "reason":
-                for spelling, index in sorted(handles.items(), key=lambda x: -len(x[0])):
-                    value = value.replace(repr(spelling), repr(f"@handle:{index}"))
+            role = ref_role(field,container,action_kind)
+            if role is not None and not (field in {"source","target"} and value == "map"):
+                identity = intern(role,value)
+                return _Handle(identity) if normalize else value
+            if normalize and field == "reason":
+                # Quoted KeyError handles are normalized only when their spelling
+                # resolves unambiguously to one typed public identity.
+                by_spelling = {}
+                for (_,spelling),identity in handles.items():
+                    by_spelling.setdefault(spelling,set()).add(identity)
+                for spelling,identities in sorted(by_spelling.items(),key=lambda x:-len(x[0])):
+                    if repr(spelling) in value:
+                        if len(identities) != 1:
+                            raise ValueError("Ambiguous quoted handle in diagnostic text")
+                        value = value.replace(repr(spelling),repr(f"@handle:{next(iter(identities))}"))
         return value
-    return {"observation": normalized(obs), "actions": normalized(actions)}, handles
+    # Discovery pass fixes IDs before any reason text is alpha-normalized.
+    walk(obs)
+    walk(actions,"actions")
+    return {"observation":walk(obs,normalize=True),
+            "actions":walk(actions,"actions",normalize=True)},handles
 
 
 def normalized_document(observation, actions=None, limits=MemoryLimits()):
@@ -295,6 +317,7 @@ def encode_memory(observation, actions=None, limits=MemoryLimits()) -> PublicMem
     return PublicMemory(rows,edges,action_links,action_roots,{
         "version":VERSION,"row_dim":ROW_DIM,"nodes":len(rows),"handles":len(handles),
         "edges":len(edges),"actions":len(action_roots),"limits":asdict(limits),
+        "handle_namespaces":NAMESPACES,"handle_namespace_stride":limits.max_handles,
         "relation_types": ["parent_to_child","child_to_parent","reference_to_anchor","anchor_to_reference"]})
 
 

@@ -77,6 +77,41 @@ class PublicMemoryTests(unittest.TestCase):
         self.assertEqual(decode_memory(encode_memory(observed,actions))['observation']['known_edges'],[])
         self.assertNotEqual(a.rows,encode_memory(o,list(reversed(actions))).rows)
 
+    def test_new_problem_keeps_existing_record_identity_and_fresh_binding(self):
+        env=Workshop(generate_world(41),address_seed=22)
+        env.step(Action("inspect",{"target":env.observe().item_inventory[0]["handle"]}))
+        before=env.observe()
+        actions=action_catalog(before)
+        draft=next(a for a in actions if a.kind=="start_subset")
+        old=decode_memory(encode_memory(before,actions))
+        old_return=old["observation"]["records"][0]["handle"]
+        future=old["actions"][actions.index(draft)]["arguments"]["handle"]
+        env.step(draft)
+        new=decode_memory(encode_memory(env.observe()))
+        self.assertEqual(old_return,new["observation"]["records"][0]["handle"])
+        self.assertIn(f"@handle:{future['@opaque']}",new["observation"]["problems"])
+        self.assertNotEqual(old_return,future)
+
+    def test_typed_namespace_collision_and_literal_map(self):
+        o=asdict(Workshop(generate_world(1,categories=1,choices=1)).observe())
+        o["item_inventory"]=[{"handle":"same","category":0}]
+        o["known_items"]={"same":{"handle":"same","category":0,"weight":1,"price":1}}
+        o["problems"]={"same":{"primitive":"constrained_subset","problem":{"handles":["same"]},"state_version":0}}
+        o["records"]=[{"handle":"same","kind":"computation","problem":"same","source":"same","state_version":0}]
+        actions=[{"kind":"choose_item","arguments":{"item":"same"}},
+                 {"kind":"call","arguments":{"problem":"same","budget":16}},
+                 {"kind":"retrieve","arguments":{"handle":"same"}},
+                 {"kind":"inspect","arguments":{"target":"map"}}]
+        decoded=decode_memory(encode_memory(o,actions))
+        bindings=[decoded["actions"][i]["arguments"][key]["@opaque"]
+                  for i,key in enumerate(("item","problem","handle"))]
+        self.assertEqual(bindings,[0,512,1024])
+        self.assertEqual(decoded["actions"][3]["arguments"]["target"],"map")
+        self.assertEqual(decoded,normalized_document(o,actions))
+        o["item_inventory"]=[{"handle":"map","category":0}]
+        with self.assertRaises(ValueError):
+            encode_memory(o,actions)
+
     def test_capacity_never_silently_truncates(self):
         o=Workshop(generate_world(1)).observe()
         with self.assertRaises(MemoryCapacityError) as cm:
