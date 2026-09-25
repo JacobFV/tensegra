@@ -18,6 +18,10 @@ Phase 3 continued on user instruction after the phase-2 closure ([campaign-repor
    - **The E16 controllers are broadly brittle.** When 0–2 irrelevant prior solver results of the wrong type are present, success on *training* compositions falls from 1.000 to 0.32–0.38, while the teacher stays at 1.000.
    - **The repair works.** Training with such distractors (E17; nothing else changed) lifts assign→select from 0.57 to 0.94 (lineage means) and distractor-world success to 1.000 in 2/3 lineages. The registered rule is met.
    - **One lineage shows a separate weakness:** it perseverates on rejected direct commits.
+4. **A never-seen primitive gives a large few-shot head start that does not reliably persist (E18).**
+   - Three lineages were trained without the assign stage. They score ~0 on it zero-shot, as expected: the new actions were never active, so zero-shot success is not identifiable.
+   - After 20 supervised updates on the full mixture, they reach 0.67–0.98 on assign-containing sealed worlds, versus 0.02–0.19 for the same 20 updates from scratch. That point is unregistered and descriptive.
+   - At the registered 120-update endpoint the difference is +0.02 / +0.46 / −0.19, so the rule outcome is **partial**.
 
 ## E15: depth versus breadth in selection
 
@@ -106,3 +110,31 @@ Protocol: [phase2/E17-protocol.md](phase2/E17-protocol.md). E17 is identical to 
 **The r2 residual failure is not about composition.** In ~18% of worlds containing select, r2 repeats a rejected direct commit (capacity/funds rejections, 25–35 per failed episode) instead of switching to the solver. This is the same perseveration pattern seen in phase 2's tool-first finalists after corrupted returns. It is a lineage-level weakness of the select stage.
 
 **Interpretation.** The failure boundary found in E16 was not a limit of "composition" as such. It was a missing *return-binding* skill that the training distribution never demanded. Exposing the controller to wrong-typed returns during training, without ever showing the held-out order, repaired both the held-out order and robustness to distractors. This is consistent with the prompt's emphasis on testing wrong, stale and absent results. The distractors vary type only. Same-type distractors, which would require provenance binding (e.g. an old subset result for a different draft), were **not** tested.
+
+## E18: a held-out primitive
+
+Protocol: [phase2/E18-protocol.md](phase2/E18-protocol.md). Three fresh lineages trained only on S, R and S→R (with distractors): 600 supervised + 1,800 RL updates, no assign stage anywhere. They are compared on assign-containing sealed conditions (11 conditions, 90M+ worlds, 256 each). The arms (same supervised stream within each lineage) are:
+- **zero-shot:** the base endpoint;
+- **adapted:** base + N supervised updates on the full mixture;
+- **scratch:** fresh initialization + the same N updates.
+
+| Assign-containing sealed success | r0 | r1 | r2 |
+|---|---:|---:|---:|
+| Zero-shot (base) | 0.112 | 0.000 | 0.141 |
+| *Adapted, N = 20 (unregistered, descriptive)* | *0.980* | *0.668* | *0.677* |
+| *Scratch, N = 20 (unregistered, descriptive)* | *0.060* | *0.021* | *0.194* |
+| Adapted, N = 120 (registered) | 0.852 | 0.896 | 0.621 |
+| Scratch, N = 120 (registered) | 0.834 | 0.435 | 0.812 |
+| Adapted − scratch at 120 | +0.018 | +0.461 | −0.191 |
+| Select/route-only retention: base → adapted@120 | 0.993 → 0.896 | 1.000 → 0.995 | 0.894 → 0.891 |
+
+**Registered rule: partial.** Only 1/3 lineages meet the +0.10 threshold, and 1/3 is negative.
+
+- **What prior training buys:** a very fast start on the new primitive. At 20 updates the gap is +0.48 to +0.92, consistent with reuse of stage-generic skills (gating, return binding, budget escalation).
+- **Why that doesn't settle transfer:** by 120 updates both kinds of learner are dominated by lineage-specific failures. scratch-r1 collapses on held-out orders (0.435); adapted-r2 drops to 0.621; adapted-r0 loses 0.10 of retention.
+- **Development curves:** they tell the same story. Scratch catches up by ~40 updates, then both oscillate between 0.63 and 1.0.
+- **Classification:** this is few-shot *retraining* with privileged teacher supervision. It is not descriptor-based zero-shot use of a new primitive, which the controllers cannot do by construction.
+
+## Phase-3 resources
+
+Ledger: [budget.json](budget.json). Through E18 the campaign totals are **41.0 of 48 CPU core-hours** and **7.7 of 12 GPU device-hours**. At low concurrency a 1,800-update RL lineage costs ~700–750 CPU core-seconds, versus ~5,700 under phase-2 contention.

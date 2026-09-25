@@ -10,4 +10,4 @@ It extends [claim-map-phase2.md](claim-map-phase2.md). All results come from sea
 | e/c. Failure boundary | Novel composition exposes a return-binding shortcut (apply the existing return of the wrong type) | E16 A→S 0.00 in one lineage; 12,195 type-mismatch uses | Localized; see E17 |
 | c. Return binding | Wrong-typed distractor returns derail untrained controllers; training with them repairs both the distractors and the held-out order | E16 on distractor worlds 0.32–0.38; E17 A→S 0.57 → 0.94 (means); registered rule passes | Type-only distractors; provenance (same-type) binding untested |
 | d. Resource allocation | Budget-bound hard-assign region: learned controllers equal the teacher | E16/E17 hard assign = teacher (0.746 / 0.824) | Not superior |
-| e. New primitive | *(E18 pending)* | | |
+| e. New primitive | Prior two-primitive training gives a large few-shot head start on a never-seen primitive; not reliable after 120 updates | E18: adapted@20 0.67–0.98 vs scratch 0.02–0.19 (unregistered); @120 +0.02/+0.46/−0.19 → partial | Few-shot retraining with teacher supervision; zero-shot not identifiable; one new primitive |
