@@ -4,14 +4,14 @@ Phase 3 continued on user instruction after the phase-2 closure ([campaign-repor
 
 ## Summary so far
 
-1. **Selection that allocates depth beats selection by copying (E15).** Successive halving gives the eliminated members' update slots to survivors, who keep training sequentially. It beats PBT in 3/3 replicates (pooled sealed IID utility +0.015 [+0.012, +0.018]; transfer +0.052) and matched multistart in 3/3 (+0.005 [+0.003, +0.007]).
+1. **Selection that allocates depth beats selection by copying (E15).** Successive halving gives the eliminated members' update slots to survivors, who keep training sequentially. In point estimates, it beats PBT in 3/3 replicates (pooled sealed IID utility +0.015 [+0.012, +0.018]; transfer +0.052) and matched multistart in 3/3 (+0.005 [+0.003, +0.007]). Per replicate, the r0 interval vs PBT includes zero (+0.004 [−0.0005, +0.009]) and the r2 margin is +0.001.
    - It found the profile-tuned hyperparameter row on its own in 5/6 runs.
    - It still trails the single learner that was *handed* that row (−0.006, 3/3).
    - The registered depth hypothesis, that most finalists reach the robust direct-first mode, is **not supported**: 1/3 per arm.
    - Supplied niche protection did not help (−0.002).
 2. **Learned controllers compose three primitives in unseen orders, with one sharp, localized failure (E16).**
    - In a new modular workshop (select/route/assign over subset search, shortest path and CSP), RL controllers trained on singles and three ordered pairs solved every training composition (1.000).
-   - They also solved most held-out orders and three-stage sequences, and the registered transfer rule passes (2/3 lineages).
+   - They also solved most held-out orders and three-stage sequences, and the registered transfer rule passes (2/3 lineages) **on the aggregate reading**: mean over held-out pairs and mean over triples. Applied per condition, only 1/3 lineages pass, and r0 clears the aggregate held-out criterion by 0.011.
    - **Where it fails:** select after assign, a transition never seen in training (0.00 / 0.77 / 0.94 across lineages).
    - **Mechanism:** the policy applies the previous stage's CSP return as the select result, over and over. This is a return-binding shortcut that only a novel composition exposes.
 3. **Wrong-type return exposure repairs it (E17).**
@@ -71,7 +71,7 @@ Sealed success (90M+ seeds, 256 worlds each):
 | Triples, **S after A** (3) | .58–.70 | 0.78–0.82 | 0.89–0.93 | **0.000** | 1.000 | 0.43–0.45 |
 | Hard assign 6×4 (A; S→A) | .65–.73 | 0.746; 0.824 | same | same | 0.746; 0.824 | 0.18–0.23 |
 
-**Registered rule:** compositional transfer is **supported** (r0 and r1 pass: held-out pairs ≥0.9× IID and triples ≥0.8× IID; r2 fails).
+**Registered rule:** compositional transfer is **supported on the aggregate reading** (r0 and r1 pass: mean held-out-pair success ≥0.9× IID and mean triple success ≥0.8× IID; r2 fails). The protocol did not specify aggregation. Per condition only r1 passes, and r0 fails A→S (.773), A-R-S (.801) and R-A-S (.781). The per-lineage aggregates are .911/.980/.634 (held-out pairs) and .893/.954/.480 (triples), against an IID of 1.000.
 - RL substantially improves composition over the bootstrap. For example, bootstrap r1 solves the S→R→A triple only 0.105 of the time.
 - On the budget-bound hard-assign region, all RL lineages equal the teacher exactly.
 
@@ -101,13 +101,14 @@ Protocol: [phase2/E17-protocol.md](phase2/E17-protocol.md). E17 is identical to 
 | Distractor worlds (3 IID + 3 held-out pairs) | 0.00–0.65 | **1.000 / 1.000** / 0.81–1.00 |
 | Hard assign (budget-bound) | = teacher | = teacher |
 
-**Registered rule: supported.**
+**Registered rule: passes on the mean reading, fails on a per-lineage reading.**
 - The mean A→S gain is +0.36, above the required 0.2.
 - The minimum lineage is 0.805, clearing the 0.8 floor.
-- The IID-pair mean is 0.980 (≥0.95 required).
-- **Per-lineage caveat:** r2 individually drops to 0.824 on S→R.
+- The IID-pair mean over lineages is 0.980 (≥0.95 required).
+- **Per lineage, r2's IID-pair mean is 0.941 < 0.95.** Its S→R success is 0.824. The protocol's own "no lineage below 0.8" clause is per lineage, so the stricter reading is defensible.
+- No E17 lineage issues a single wrong-type `as=select` use (the auditor counted zero).
 
-**The r2 residual failure is not about composition.** In ~18% of worlds containing select, r2 repeats a rejected direct commit (capacity/funds rejections, 25–35 per failed episode) instead of switching to the solver. This is the same perseveration pattern seen in phase 2's tool-first finalists after corrupted returns. It is a lineage-level weakness of the select stage.
+**The r2 residual failure is not about composition.** In 13.2% of select-containing sealed worlds (10.5–19.5% by condition; corrected by the audit from my initial ~18%), r2 repeats a rejected direct commit instead of switching to the solver. Each failed episode has 38–50 capacity/funds rejections (corrected from 25–35). This is the same perseveration pattern seen in phase 2's tool-first finalists after corrupted returns. It is a lineage-level weakness of the select stage.
 
 **Interpretation.** The failure boundary found in E16 was not a limit of "composition" as such. It was a missing *return-binding* skill that the training distribution never demanded. Exposing the controller to wrong-typed returns during training, without ever showing the held-out order, repaired both the held-out order and robustness to distractors. This is consistent with the prompt's emphasis on testing wrong, stale and absent results. The distractors vary type only. Same-type distractors, which would require provenance binding (e.g. an old subset result for a different draft), were **not** tested.
 
@@ -138,3 +139,27 @@ Protocol: [phase2/E18-protocol.md](phase2/E18-protocol.md). Three fresh lineages
 ## Phase-3 resources
 
 Ledger: [budget.json](budget.json). Through E18 the campaign totals are **41.0 of 48 CPU core-hours** and **7.7 of 12 GPU device-hours**. At low concurrency a 1,800-update RL lineage costs ~700–750 CPU core-seconds, versus ~5,700 under phase-2 contention.
+
+## Independent audit (phase 3)
+
+[review/phase3-independent-audit.md](review/phase3-independent-audit.md) is a separate reconstruction from raw rows with its own code (~475 CPU core-s).
+
+**Confirmed:**
+- all E15, E16, E17 and E18 success and utility numbers;
+- the E15 halving mechanics (all 24 cuts recomputed);
+- the E16 localization count (12,195);
+- the E16 distractor diagnostic, exact world by world: every success is a zero-distractor world;
+- E18 PARTIAL;
+- sealed-seed disjointness against 1,515 ranges;
+- held-out integrity of every training mixture;
+- the ledger (85 receipts match exactly).
+
+**Qualified or corrected (all incorporated above):**
+- E16 and E17 rule outcomes depend on reading criteria as means.
+- The E17 r2 localization magnitudes (corrected).
+- The E15 per-replicate interval for r0.
+
+**Additional disclosures:**
+- **Pairing across roots.** E16 and E17/E18 sealed worlds are identical in content and seeds, but their spec_hash differs because of an explicit empty `distractors` field. Pairing across these roots must use seeds.
+- **Shared training worlds.** RL lineage 0 of E16, E17 and E18-base starts its training stream at the same seed as bootstrap lineage 2 (e.g. 1.04e9), so those lineages share their first 4,800 training worlds. This weakens independence slightly and does not affect sealed evaluation.
+- **Step caps.** The modular experiments have no step-cap asymmetry (learned max_steps = world step_limit = 64).
