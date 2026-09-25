@@ -22,6 +22,7 @@ Phase 3 continued on user instruction after the phase-2 closure ([campaign-repor
    - Three lineages were trained without the assign stage. They score ~0 on it zero-shot, as expected: the new actions were never active, so zero-shot success is not identifiable.
    - After 20 supervised updates on the full mixture, they reach 0.67–0.98 on assign-containing sealed worlds, versus 0.02–0.19 for the same 20 updates from scratch. That point is unregistered and descriptive.
    - At the registered 120-update endpoint the difference is +0.02 / +0.46 / −0.19, so the rule outcome is **partial**.
+6. **Depth + robustness-visible selection fails (E21).** Halving with no-tool/oversized worlds in the selection panel reached the combined policy in 0/3 runs and lowered sealed utility vs plain halving (0.822/0.928/0.888 vs 0.933/0.936/0.929).
 5. **Provenance binding needs a provenance input (E19/E20).** Prior results of the *right* type but for an unrelated instance collapse the E17 controllers (0.35 mean success, below the no-tool greedy's 0.63). Their m1 inputs carry no provenance. Adding public provenance features (m2), and training with same- and wrong-type distractors, restores 1.000 in all three lineages with no retention loss (registered rule supported 3/3). The two changes were made together.
 
 ## E15: depth versus breadth in selection
@@ -112,6 +113,27 @@ Protocol: [phase2/E17-protocol.md](phase2/E17-protocol.md). E17 is identical to 
 **The r2 residual failure is not about composition.** In 13.2% of select-containing sealed worlds (10.5–19.5% by condition; corrected by the audit from my initial ~18%), r2 repeats a rejected direct commit instead of switching to the solver. Each failed episode has 38–50 capacity/funds rejections (corrected from 25–35). This is the same perseveration pattern seen in phase 2's tool-first finalists after corrupted returns. It is a lineage-level weakness of the select stage.
 
 **Interpretation.** The failure boundary found in E16 was not a limit of "composition" as such. It was a missing *return-binding* skill that the training distribution never demanded. Exposing the controller to wrong-typed returns during training, without ever showing the held-out order, repaired both the held-out order and robustness to distractors. This is consistent with the prompt's emphasis on testing wrong, stale and absent results. The distractors vary type only. Same-type distractors, which would require provenance binding (e.g. an old subset result for a different draft), were **not** tested.
+
+## E21: depth allocation with robustness-visible fitness
+
+Protocol: [phase2/E21-protocol.md](phase2/E21-protocol.md). E21 is E15 halving-plain with E13's selection panel (~20% no-tool and 25-item worlds; training unchanged).
+
+| Sealed | r0 | r1 | r2 |
+|---|---:|---:|---:|
+| Greedy-first (control) | 0.25 | 0.01 | 0.12 |
+| Solver calls per control episode | 1.59 | 1.27 | 1.68 |
+| No-tools success (selection-visible) | 0.52 | 0.00 | 0.01 |
+| IID utility | 0.822 | 0.928 | 0.888 |
+| E15 halving-plain IID utility | 0.933 | 0.936 | 0.929 |
+| Transfer utility | 0.710 | 0.838 | 0.829 |
+
+**Registered outcome: mixed.**
+- **The combined policy was not reached:** 0/3 finalists meet the direct-first + tool-use + no-tools criteria.
+- **Not an over-correction either:** the finalists still call solvers, unlike E13's tool-avoiding populations.
+- **Worse than plain halving:** utility and transfer both drop.
+- **Development dynamics:** the surviving lineages oscillated between modes in the final rounds. Final-round greedy-first rates fell from ~1.0 to 0.07–0.37 in the selected member.
+
+Making robustness visible to depth-allocating selection added selection noise without selecting the robust mode. Across all five population designs tested (PBT, PBT + curriculum, PBT + robust fitness, halving, halving + robust fitness), **none** reliably produced the combined policy. Concentrated single-lineage training produced it in 5/7 lineages in phase 2 and in 2/3 fresh lineages in E14.
 
 ## E19/E20: provenance binding under same-type distractors
 
