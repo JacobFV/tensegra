@@ -1,0 +1,248 @@
+{
+  "mode": "single",
+  "population_seed": 8900,
+  "initialization_seeds": [
+    89000,
+    89001,
+    89002,
+    89003,
+    89004,
+    89005
+  ],
+  "rounds": 5,
+  "updates_per_slot": 60,
+  "population_size": 6,
+  "optimizer_policy": "inherit",
+  "training_seed_start": 1040000000,
+  "training_seed_stride": 1000000,
+  "development_seed_start": 1095000000,
+  "development_examples": 128,
+  "address_namespace": "e17-rl-r0",
+  "teacher": "modular_cheap_first",
+  "methods": [
+    "actor_critic",
+    "actor_critic",
+    "actor_critic",
+    "actor_critic",
+    "actor_critic"
+  ],
+  "threads": 1,
+  "train": {
+    "width": 1024,
+    "family": "lightweight",
+    "device": "cuda",
+    "batch_size": 8,
+    "learning_rate": 0.0003,
+    "rollout_mode": "batched",
+    "max_steps": 64,
+    "evaluation_batch": 32,
+    "policy_loss_reduction": "decision_mean",
+    "advantage_normalization": true
+  },
+  "world_mix": [
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "select"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "route"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "assign"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "select",
+        "route"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "select",
+        "assign"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "assign",
+        "route"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "select",
+        "route"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "select",
+        "assign"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "assign",
+        "route"
+      ],
+      "distractors": 2
+    }
+  ],
+  "policy": {
+    "interface": "legacy",
+    "feature_version": "m1"
+  },
+  "world_family": "modular",
+  "initial_checkpoints": [
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e17-boot-r0/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "f20528eb35759cd70e34d4b2b65e4e83cbed92ea4fe9a076f793db93b10efca5"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e17-boot-r0/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "f20528eb35759cd70e34d4b2b65e4e83cbed92ea4fe9a076f793db93b10efca5"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e17-boot-r0/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "f20528eb35759cd70e34d4b2b65e4e83cbed92ea4fe9a076f793db93b10efca5"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e17-boot-r0/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "f20528eb35759cd70e34d4b2b65e4e83cbed92ea4fe9a076f793db93b10efca5"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e17-boot-r0/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "f20528eb35759cd70e34d4b2b65e4e83cbed92ea4fe9a076f793db93b10efca5"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e17-boot-r0/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "f20528eb35759cd70e34d4b2b65e4e83cbed92ea4fe9a076f793db93b10efca5"
+    }
+  ],
+  "member_hyperparameters": [
+    {
+      "learning_rate": 3e-05,
+      "entropy_weight": 0.003,
+      "kl_weight": 0.3
+    },
+    {
+      "learning_rate": 1e-05,
+      "entropy_weight": 0.001,
+      "kl_weight": 0.1
+    },
+    {
+      "learning_rate": 0.0001,
+      "entropy_weight": 0.01,
+      "kl_weight": 1.0
+    },
+    {
+      "learning_rate": 3e-06,
+      "entropy_weight": 0.0003,
+      "kl_weight": 0.03
+    },
+    {
+      "learning_rate": 0.0003,
+      "entropy_weight": 0.001,
+      "kl_weight": 3.0
+    },
+    {
+      "learning_rate": 0.0001,
+      "entropy_weight": 0.03,
+      "kl_weight": 0.1
+    }
+  ]
+}
