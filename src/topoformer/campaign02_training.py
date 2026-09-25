@@ -75,11 +75,15 @@ class Frame:
     target: int
 
 
+# d1 and its P1 ablation masks (same dimensions; see campaign03_depworld.FEATURE_MASKS).
+DEPWORLD_FEATURE_VERSIONS = ("d1", "d1-noapp", "d1-noattempt")
+
+
 def public_frame(observation, feature_version="v1"):
-    if feature_version == "d1" or getattr(observation, "version", "") == "depworld-v1":
+    if feature_version in DEPWORLD_FEATURE_VERSIONS or getattr(observation, "version", "") == "depworld-v1":
         from .campaign03_depworld import action_catalog as dep_catalog, encode_public as dep_encode
-        if feature_version != "d1" or getattr(observation, "version", "") != "depworld-v1":
-            raise ValueError("depworld-v1 observations require public feature version d1 (and vice versa)")
+        if feature_version not in DEPWORLD_FEATURE_VERSIONS or getattr(observation, "version", "") != "depworld-v1":
+            raise ValueError("depworld-v1 observations require a d1 public feature version (and vice versa)")
         actions = dep_catalog(observation)
         obs, features = dep_encode(observation, actions, feature_version)
         return actions, obs, features

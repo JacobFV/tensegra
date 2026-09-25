@@ -1484,11 +1484,97 @@ def encode_action_d1(o: DepObservation, action: Action, ctx: _Context | None = N
     return out
 
 
+# Semantic coordinate names (documentation + ablation masks; order = encoder order).
+OBSERVATION_NAMES_D1 = (
+    ("req.known", "req.capacity", "req.funds", "req.deadline", "req.slot_capacity", "req.n_closed_slots",
+     "req.n_incompatible", "req.version")
+    + tuple(f"req.changed.{n}" for n in REQUIREMENTS)
+    + ("plan.selection_committed", "plan.assignment_committed", "plan.finish_time", "plan.position",
+       "plan.destination", "plan.arrived", "plan.travel", "plan.deadline_slack",
+       "route.applicable_known", "route.distance", "route.plan_meets_deadline", "route.need_bound",
+       "progress.items_inspected", "progress.map_known",
+       "count.problems", "count.records", "count.retrieved", "count.pending", "count.pending_assignment",
+       "pending.weight", "pending.price", "pending.capacity_left", "pending.funds_left")
+    + tuple(f"event.last.{k}" for k in EVENT_KINDS)
+    + ("event.none", "event.selection_revoked", "event.assignment_revoked", "event.this_step",
+       "res.work", "res.steps", "res.travel", "price.action", "price.observation", "price.work", "price.travel",
+       "price.compute")
+    + tuple(f"feedback.status.{s}" for s in OUTCOMES[:-1]) + ("feedback.status.other",)
+    + tuple(f"feedback.reason.{r}" for r in REASONS)
+    + ("attempts.count", "attempts.rejected", "attempts.uncommits"))
+CANDIDATE_NAMES_D1 = (
+    tuple(f"kind.{k}" for k in KINDS) + tuple(f"use.{u}" for u in USES)
+    + ("inspect.item", "inspect.map", "inspect.requirements") + tuple(f"primitive.{p}" for p in PRIMITIVES)
+    + ("record.present", "record.type_match", "record.request_match", "record.canonical_match",
+       "record.dependency_match", "record.requirements_match", "record.selection_match", "record.usable")
+    + tuple(f"record.status.{s}" for s in RECORD_STATUSES)
+    + ("record.certificate_valid", "record.retrieved", "record.finish_by_option", "record.finish_by_value",
+       "record.n_excluded",
+       "payload.present", "payload.route_distance", "payload.route_starts_at_position",
+       "payload.route_ends_at_destination", "payload.route_meets_deadline", "payload.finish_or_total_duration",
+       "payload.meets_bound_or_selection_valid", "payload.csp_items_equal_selection",
+       "draft.present", "draft.request_match", "draft.dependency_match", "draft.has_capacity", "draft.has_funds",
+       "draft.has_incompatibility", "draft.has_conflicts", "draft.finish_by_option", "draft.finish_by_value",
+       "draft.n_excluded", "draft.size",
+       "call.budget", "call.budget_exceeds_most_work", "call.timed_out_at_budget", "call.usable_same_records",
+       "call.infeasible_same_record", "call.budget_is_remaining")
+    + tuple(f"constraint.{c}" for c in CONSTRAINT_NAMES)
+    + ("constraint.already_present", "constraint.bound", "constraint.bound_within_need",
+       "constraint.excluded_duration", "constraint.category_alternatives",
+       "start.n_drafts", "start.matching_drafts", "start.live_applicable_records",
+       "item.present", "item.known", "item.weight", "item.price", "item.duration", "item.n_slots", "item.pending",
+       "item.selected", "item.category_pending", "item.fits_capacity", "item.fits_funds", "item.conflicts_pending",
+       "item.duration_rank", "item.cost_rank",
+       "slot.present", "slot.duration", "slot.slot", "slot.allowed", "slot.closed", "slot.clash", "slot.finish",
+       "slot.meets_bound", "slot.same_as_pending", "slot.item_has_pending",
+       "move.present", "move.edge_weight", "move.is_destination", "move.direct_to_destination",
+       "move.min_outgoing", "move.meets_deadline", "move.step",
+       "commit.coverage", "commit.complete", "commit.weight_ok", "commit.price_ok", "commit.incompatibility",
+       "commit.assign_cover", "commit.assign_allowed", "commit.assign_clash", "commit.assign_finish",
+       "commit.assign_meets_bound_or_uncommit_target_committed",
+       "attempt.attempted", "attempt.count")
+    + tuple(f"attempt.last_outcome.{s}" for s in OUTCOMES[:-1]) + ("attempt.last_outcome.other",)
+    + tuple(f"attempt.last_reason.{r}" for r in REASONS) + ("attempt.dependencies_changed",))
+# NOTE: "commit.coverage" is also the uncommit block's "target committed" flag (same coordinate, index 114).
+
+# P1 input ablations (extended-03 protocol-P1, arms X3/X4). Same dimensions as d1; masked coordinates are zero.
+# d1-noapp: every request-match / dependency-match relation and its direct payload proxies
+# (route start==position and end==destination are the route request components; csp items==selection is
+# the selection dependency). Type match, usable status, certificates and feasibility facts are kept.
+NOAPP_CANDIDATE = ("record.request_match", "record.canonical_match", "record.dependency_match",
+                   "record.requirements_match", "record.selection_match",
+                   "payload.route_starts_at_position", "payload.route_ends_at_destination",
+                   "payload.csp_items_equal_selection",
+                   "draft.request_match", "draft.dependency_match",
+                   "start.matching_drafts", "start.live_applicable_records")
+NOAPP_OBSERVATION: tuple[str, ...] = ()
+# d1-noattempt: the per-candidate attempted-action block and the observation's attempt counters.
+# (The one-step feedback status/reason is last-step feedback, not attempt memory, and is kept.)
+NOATTEMPT_CANDIDATE = tuple(n for n in CANDIDATE_NAMES_D1 if n.startswith("attempt."))
+NOATTEMPT_OBSERVATION = ("attempts.count", "attempts.rejected", "attempts.uncommits")
+FEATURE_MASKS = {
+    "d1": ((), ()),
+    "d1-noapp": (tuple(OBSERVATION_NAMES_D1.index(n) for n in NOAPP_OBSERVATION),
+                 tuple(CANDIDATE_NAMES_D1.index(n) for n in NOAPP_CANDIDATE)),
+    "d1-noattempt": (tuple(OBSERVATION_NAMES_D1.index(n) for n in NOATTEMPT_OBSERVATION),
+                     tuple(CANDIDATE_NAMES_D1.index(n) for n in NOATTEMPT_CANDIDATE)),
+}
+FEATURE_VERSIONS = tuple(FEATURE_MASKS)
+
+
+def _masked(vector: list[float], indices) -> list[float]:
+    for i in indices:
+        vector[i] = 0.0
+    return vector
+
+
 def encode_public(o: DepObservation, actions: list[Action], version: str = "d1"):
-    if version != "d1":
+    if version not in FEATURE_MASKS:
         raise ValueError(f"unknown depworld feature version {version}")
     ctx = _Context(o)
-    return encode_observation_d1(o, ctx), [encode_action_d1(o, x, ctx) for x in actions]
+    obs_mask, cand_mask = FEATURE_MASKS[version]
+    return (_masked(encode_observation_d1(o, ctx), obs_mask),
+            [_masked(encode_action_d1(o, x, ctx), cand_mask) for x in actions])
 
 
 # ---------------------------------------------------------------------------
