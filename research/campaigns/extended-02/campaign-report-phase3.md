@@ -1,5 +1,15 @@
 # Extended-02 phase 3: depth-allocating selection, and composition across primitives
 
+> **Framing, after the external research audit.**
+> - **E15:** evidence for *adaptive allocation of training depth* under configuration uncertainty. It is not evidence for mutation or recombination (the arm has neither), and it did not validate the registered robust-strategy mechanism.
+> - **E16–E20:** *sequential composition of stage-level controller skills* under a public, environment-enforced stage order, with supplied stage-typed features. This is not discovery of stage order, and not functional composition in which one solver's output parameterizes another's input.
+> - **Gate outcomes:**
+>   - E16: "aggregate transfer criterion met under the stated interpretation; conditionwise robustness remains incomplete."
+>   - E17: "wrong-type return selection was eliminated in the audited runs; overall controller competence remains lineage-dependent."
+> - **Sealed-world reuse:** the E17, E19, E20 and E22 sealed worlds were reused after E16's failures motivated those interventions. These are paired interventions on fixed worlds, not fresh independent confirmations.
+> - **Shared training exposure:** RL lineage 0 shares its first 4,800 training worlds with bootstrap lineage 2 (E16–E22). The lineages are separately initialized, but not independent realizations of the data process; the effect was not measured.
+> - **Encoded-input check:** see [diagnostics/encoded-counterfactuals.md](diagnostics/encoded-counterfactuals.md).
+
 Phase 3 continued on user instruction after the phase-2 closure ([campaign-report-phase2.md](campaign-report-phase2.md)). The same ceilings and deadline apply, and device-occupancy GPU accounting was accepted by the user. Decisions are logged in [decisions.md](decisions.md) (phase-3 section).
 
 ## Summary so far
