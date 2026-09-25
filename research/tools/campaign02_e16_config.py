@@ -42,6 +42,16 @@ def distractor_conditions(start, examples):
     return rows
 
 
+def same_type_conditions(start, examples):
+    """Same sequences with 0-2 right-type, wrong-provenance prior returns (E19/E20)."""
+    rows = []
+    for i, st in enumerate(TRAIN[3:] + HELD_PAIRS + [("select",), ("assign",)]):
+        prefix = "same_iid" if st in TRAIN else "same_heldpair"
+        rows.append({"name": name(st, prefix), "world_family": "modular", "seed_start": start + 6_000_000 + 10_000*i,
+                     "examples": examples, "world": {**BASE, "stages": list(st), "same_type_distractors": 2}})
+    return rows
+
+
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--checkpoints", default="[]")
@@ -51,6 +61,8 @@ if __name__ == "__main__":
     p.add_argument("--output", required=True)
     p.add_argument("--only-distractors", action="store_true")
     p.add_argument("--with-distractors", action="store_true")
+    p.add_argument("--only-same-type", action="store_true")
+    p.add_argument("--with-same-type", action="store_true")
     a = p.parse_args()
     cks = json.loads(a.checkpoints) if a.checkpoints.startswith("[") else json.load(open(a.checkpoints))
     cfg = {"checkpoints": cks, "evaluation_batch": 32, "references": [r for r in a.references.split(",") if r],
@@ -60,4 +72,8 @@ if __name__ == "__main__":
         cfg["conditions"] = distractor_conditions(a.seed_base, a.examples)
     elif a.with_distractors:
         cfg["conditions"] += distractor_conditions(a.seed_base, a.examples)
+    if a.only_same_type:
+        cfg["conditions"] = same_type_conditions(a.seed_base, a.examples)
+    elif a.with_same_type:
+        cfg["conditions"] += same_type_conditions(a.seed_base, a.examples)
     json.dump(cfg, open(a.output, "w"), indent=2)

@@ -66,7 +66,7 @@ class ModularSpec:
 
 def generate_modular(seed: int, stages=("select", "route"), categories: int = 3, choices: int = 3,
                      locations: int = 7, tasks: int = 4, slots: int = 3, forbid: float = .3,
-                     distractors: int = 0, **overrides: Any) -> ModularSpec:
+                     distractors: int = 0, same_type_distractors: int = 0, **overrides: Any) -> ModularSpec:
     """Planted-feasible instances for every stage; planting is never public."""
     stages = tuple(stages)
     base = generate_world(seed, categories=categories, choices=choices, locations=locations, obstacle=False)
@@ -87,7 +87,8 @@ def generate_modular(seed: int, stages=("select", "route"), categories: int = 3,
     params = dict(stages=stages, items=base.items, categories=base.categories, capacity=base.capacity,
                   funds=base.funds, incompatible=base.incompatible, edges=base.edges, start=base.start,
                   destination=base.destination, domains=tuple(domains), forbidden=tuple(forbidden))
-    params["distractors"] = _distractors(seed, stages, base, domains, distractors)
+    params["distractors"] = (_distractors(seed, stages, base, domains, distractors)
+                             + _distractors(seed, stages, base, domains, same_type_distractors, same_type=True))
     params.update(overrides)
     if "call_budgets" in params:
         params["call_budgets"] = tuple(params["call_budgets"])
@@ -96,12 +97,14 @@ def generate_modular(seed: int, stages=("select", "route"), categories: int = 3,
     return ModularSpec(**params)
 
 
-def _distractors(seed, stages, base, domains, limit):
-    """0..limit prior results of primitives absent from the goal (typed wrong for every stage)."""
+def _distractors(seed, stages, base, domains, limit, same_type=False):
+    """0..limit prior results. Default: primitives absent from the goal (wrong type
+    for every stage). same_type=True: primitives IN the goal, solved for an
+    unrelated instance (right type, wrong provenance)."""
     if limit <= 0:
         return ()
-    rng = random.Random(f"modular-distractor-{seed}")
-    absent = [p for st, p in PRIMITIVE.items() if st not in stages]
+    rng = random.Random(f"modular-distractor-{'same-' if same_type else ''}{seed}")
+    absent = [p for st, p in PRIMITIVE.items() if (st in stages) == same_type]
     rows = []
     for _ in range(rng.randint(0, limit) if absent else 0):
         primitive = rng.choice(absent)
@@ -640,7 +643,22 @@ def encode_action(o: ModularObservation, action: Action) -> list[float]:
     return out
 
 
-def encode_public(o: ModularObservation, actions: list[Action]):
+def encode_action_m2(o: ModularObservation, action: Action) -> list[float]:
+    """m1 + supplied public provenance for record candidates: whether the record's
+    problem is one of this episode's drafts, and whether that draft is unchanged
+    since the call. Does not read the record's `prior` field or any hidden state."""
+    out = encode_action(o, action)
+    rec = (next((r for r in o.records if r["handle"] == action.arguments.get("handle")), None)
+           if action.kind in ("retrieve", "use_return") else None)
+    if rec is None:
+        return out + [0.0, 0.0, 0.0]
+    draft = o.problems.get(rec.get("problem"))
+    return out + [1.0, float(draft is not None), float(draft is not None and rec.get("problem_snapshot") == draft)]
+
+
+def encode_public(o: ModularObservation, actions: list[Action], version: str = "m1"):
+    if version == "m2":
+        return encode_observation(o), [encode_action_m2(o, x) for x in actions]
     return encode_observation(o), [encode_action(o, x) for x in actions]
 
 

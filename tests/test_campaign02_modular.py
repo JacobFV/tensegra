@@ -113,3 +113,24 @@ def test_distractor_returns_are_public_wrong_typed_and_harmless_to_teacher():
     solo = [generate_modular(s, stages=("select",), distractors=2) for s in range(30)]
     assert {p for x in solo for p, _, _ in x.distractors} <= {"csp", "shortest_path"}
     assert generate_modular(3, stages=("select",)).distractors == ()
+
+
+def test_same_type_distractors_and_m2_provenance():
+    from topoformer.campaign02_modular import encode_action_m2
+    specs = [generate_modular(s, stages=("select", "assign"), same_type_distractors=2) for s in range(30)]
+    kinds = {p for x in specs for p, _, _ in x.distractors}
+    assert kinds and kinds <= {"constrained_subset", "csp"}
+    assert generate_modular(4, stages=("select",)).distractors == generate_modular(4, stages=("select",), same_type_distractors=0).distractors
+    spec = next(x for x in specs if any(p == "csp" for p, _, _ in x.distractors))
+    env = ModularWorkshop(spec, executor=EXEC, address_seed=2)
+    prior = env.observe().records[0]["handle"]
+    ref = ModularReference("always_tool")
+    o = env.observe()
+    while not o.done and not any(r.get("problem") in o.problems for r in o.records):
+        o = env.step(ref.choose(o))
+    own = next(r["handle"] for r in o.records if r.get("problem") in o.problems)
+    f_prior = encode_action_m2(o, Action("retrieve", {"handle": prior}))
+    f_own = encode_action_m2(o, Action("retrieve", {"handle": own}))
+    assert f_prior[-2:] == [0.0, 0.0] and f_own[-2:] == [1.0, 1.0]
+    assert encode_action_m2(o, Action("verify"))[-3:] == [0.0, 0.0, 0.0]
+    assert sum(run(x, "cheap_first")["verified_success"] for x in specs) >= 29
