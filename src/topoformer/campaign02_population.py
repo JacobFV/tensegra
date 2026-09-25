@@ -68,7 +68,7 @@ class PopulationConfig:
     # SUPPLIED behavioral niche (greedy-first rate on public DEV trajectories).
     halving_survivors: tuple[int, ...] = ()
     niche_protection: bool = False
-    # World family: historical workshop-v1 or the modular staged workshop.
+    # World family: historical workshop-v1, the modular staged workshop, or depworld-v1.
     world_family: str = "workshop"
 
     def __post_init__(self):
@@ -101,7 +101,7 @@ class PopulationConfig:
         if self.member_hyperparameters and (len(self.member_hyperparameters) != 6 or any(
                 set(h) - {"learning_rate", "entropy_weight", "kl_weight"} for h in self.member_hyperparameters)):
             raise ValueError("Member hyperparameters need six {learning_rate, entropy_weight} rows")
-        if self.world_family not in {"workshop", "modular"}:
+        if self.world_family not in {"workshop", "modular", "depworld"}:
             raise ValueError("Unknown world family")
         if self.mode == "halving":
             k = self.halving_survivors
@@ -320,6 +320,8 @@ class PopulationRun:
             "campaign02_population.py", "campaign02_training.py", "campaign02_policy.py",
             "campaign02_world.py", "campaign02_protocol.py", "campaign02_references.py",
             "campaign02_memory.py", "campaign02_memory_policy.py", "campaign02_modular.py")}
+        if config.world_family == "depworld":  # only then, so historical resume hashes are unchanged
+            self.sources["campaign03_depworld.py"] = sha256(Path(__file__).with_name("campaign03_depworld.py"))
         if self.state_path.exists():
             self.state = json.loads(self.state_path.read_text())
             if self.state["source_hashes"] != self.sources:
@@ -609,6 +611,10 @@ def main():
             from .campaign02_modular import ModularWorkshop, generate_modular, modular_executor
             make_world, make_env = generate_modular, ModularWorkshop
             executor = partial(modular_executor, execute_call=solver.execute)
+        elif config.world_family == "depworld":
+            from .campaign03_depworld import DepWorkshop, depworld_executor, generate_depworld
+            make_world, make_env = generate_depworld, DepWorkshop
+            executor = partial(depworld_executor, execute_call=solver.execute)
         def component_factory(seed, index):
             return make_env(make_world(seed, **config.world_mix[index]), executor=executor,
                 address_seed=independent_address_seed(seed, config.address_namespace))

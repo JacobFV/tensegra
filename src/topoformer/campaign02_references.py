@@ -163,6 +163,9 @@ class FallbackReferencePolicy(ReferencePolicy):
 
 
 def make_reference(name):
+    if name.startswith("dep_"):
+        from .campaign03_depworld import DepReference
+        return DepReference(name.removeprefix("dep_"))
     if name.startswith("modular_"):
         from .campaign02_modular import ModularReference
         return ModularReference(name.removeprefix("modular_"))
