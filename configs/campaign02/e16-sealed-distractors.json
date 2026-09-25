@@ -1,0 +1,171 @@
+{
+  "checkpoints": [
+    {
+      "name": "rl-r0",
+      "path": "/home/brandonin/topoformer-campaign02/results/e16-rl-single-r0/checkpoints/round-4-slot-5-attempt-29.pt",
+      "sha256": "ef8cc20e62554435f38a9fce79fa08b3a5d4041aaf677a91f66417c84feeae88",
+      "development_utility": 0.97249328125,
+      "development_success": 1.0,
+      "slot": 5
+    },
+    {
+      "name": "rl-r1",
+      "path": "/home/brandonin/topoformer-campaign02/results/e16-rl-single-r1/checkpoints/round-4-slot-5-attempt-29.pt",
+      "sha256": "e637f11d8504120ed07b397b0cab06aff31f9419b1bd7c3aa3e642b242081d48",
+      "development_utility": 0.97295046875,
+      "development_success": 1.0,
+      "slot": 5
+    },
+    {
+      "name": "rl-r2",
+      "path": "/home/brandonin/topoformer-campaign02/results/e16-rl-single-r2/checkpoints/round-4-slot-5-attempt-29.pt",
+      "sha256": "53f916d54a78ae1602010e21b83d08a8f7ba6e7e8579d0b7a4311c5d6556a806",
+      "development_utility": 0.97123046875,
+      "development_success": 1.0,
+      "slot": 5
+    }
+  ],
+  "evaluation_batch": 32,
+  "references": [
+    "modular_cheap",
+    "modular_always_tool",
+    "modular_cheap_first"
+  ],
+  "reference_compute_tariff": 1.0,
+  "world_family": "modular",
+  "address_namespace": "e16-modular-90000000",
+  "conditions": [
+    {
+      "name": "distr_iid_S-R",
+      "world_family": "modular",
+      "seed_start": 95000000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "route"
+        ],
+        "distractors": 2
+      }
+    },
+    {
+      "name": "distr_iid_S-A",
+      "world_family": "modular",
+      "seed_start": 95010000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "assign"
+        ],
+        "distractors": 2
+      }
+    },
+    {
+      "name": "distr_iid_A-R",
+      "world_family": "modular",
+      "seed_start": 95020000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "route"
+        ],
+        "distractors": 2
+      }
+    },
+    {
+      "name": "distr_heldpair_R-S",
+      "world_family": "modular",
+      "seed_start": 95030000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "select"
+        ],
+        "distractors": 2
+      }
+    },
+    {
+      "name": "distr_heldpair_A-S",
+      "world_family": "modular",
+      "seed_start": 95040000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "select"
+        ],
+        "distractors": 2
+      }
+    },
+    {
+      "name": "distr_heldpair_R-A",
+      "world_family": "modular",
+      "seed_start": 95050000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "assign"
+        ],
+        "distractors": 2
+      }
+    }
+  ]
+}
