@@ -1,7 +1,7 @@
 import torch
-from topoformer.semantic_text_acquisition import prepare,fixed_corpus,corrected_losses
-from topoformer.semantic_curriculum import SemanticCurriculumActor
-from topoformer.thinking_language import ActorInput
+from tensegra.semantic_text_acquisition import prepare,fixed_corpus,corrected_losses
+from tensegra.semantic_curriculum import SemanticCurriculumActor
+from tensegra.thinking_language import ActorInput
 
 
 def test_fixed_public_targets_observable():

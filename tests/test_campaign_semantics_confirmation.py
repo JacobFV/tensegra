@@ -2,8 +2,8 @@
 import copy,gzip,json
 from pathlib import Path
 import pytest
-from topoformer.campaign_semantics import digest
-from topoformer.campaign_semantics_confirmation import validate,bind_parent
+from tensegra.campaign_semantics import digest
+from tensegra.campaign_semantics_confirmation import validate,bind_parent
 
 CONFIG=Path(__file__).resolve().parents[1]/'configs'
 
@@ -34,7 +34,7 @@ def test_binding_is_same_parent_and_byte_hash_only(tmp_path):
 
 def test_shared_event_interval_preserves_seed_correlation():
     import numpy as np
-    from topoformer.campaign_semantics_confirmation_analysis import paired_interval
+    from tensegra.campaign_semantics_confirmation_analysis import paired_interval
     delta=np.tile(np.r_[np.ones(512),np.zeros(512)],(3,1))
     result=paired_interval(delta,repetitions=128)
     assert result['per_seed_mean']==[.5,.5,.5]

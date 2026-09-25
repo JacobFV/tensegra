@@ -4,9 +4,9 @@ from dataclasses import asdict
 import pytest
 import torch
 
-from topoformer.campaign02_policy import CandidatePolicy, PolicyConfig
-from topoformer.campaign02_training import Frame, TrainConfig, Learner, collate, supervised_loss, batched_episodes, live_episode
-from topoformer.campaign02_world import Workshop, generate_world, encode_observation, encode_action, action_catalog
+from tensegra.campaign02_policy import CandidatePolicy, PolicyConfig
+from tensegra.campaign02_training import Frame, TrainConfig, Learner, collate, supervised_loss, batched_episodes, live_episode
+from tensegra.campaign02_world import Workshop, generate_world, encode_observation, encode_action, action_catalog
 
 
 def test_padding_and_targets():
@@ -78,13 +78,13 @@ def test_resume_requires_explicit_changes(tmp_path):
 
 
 def test_address_stream_independent_and_repeatable():
-    from topoformer.campaign02_training import independent_address_seed
+    from tensegra.campaign02_training import independent_address_seed
     assert independent_address_seed(1, "a") == independent_address_seed(1, "a")
     assert len({independent_address_seed(1, "a"), independent_address_seed(2, "a"), independent_address_seed(1, "b")}) == 3
 
 
 def test_batched_on_policy_hidden_identity_gradients_and_rewards():
-    from topoformer.campaign02_training import batched_on_policy, actor_critic_terms
+    from tensegra.campaign02_training import batched_on_policy, actor_critic_terms
     torch.manual_seed(12)
     def factory(seed):
         return Workshop(generate_world(seed, choices=1+seed%2, step_limit=2+seed%2))
@@ -116,7 +116,7 @@ def test_batched_on_policy_hidden_identity_gradients_and_rewards():
 
 
 def test_actor_critic_reward_to_go_not_repeated_total():
-    from topoformer.campaign02_training import actor_critic_terms
+    from tensegra.campaign02_training import actor_critic_terms
     cfg = TrainConfig(width=8, entropy_weight=0, value_weight=1)
     terms = [(torch.tensor(0.), torch.tensor(0.), torch.tensor(0.), -.1),
              (torch.tensor(0.), torch.tensor(0.), torch.tensor(0.), .9)]
@@ -125,7 +125,7 @@ def test_actor_critic_reward_to_go_not_repeated_total():
 
 def test_episode_mean_weights_policy_and_entropy_per_episode():
     from dataclasses import replace
-    from topoformer.campaign02_training import actor_critic_objective
+    from tensegra.campaign02_training import actor_critic_objective
     def term(reward):
         return (torch.tensor(1.), torch.tensor(0.), torch.tensor(2.), reward)
     episodes = [[term(0.), term(1.)], [term(2.)]]

@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-spec = importlib.util.spec_from_file_location('runtime_analysis', Path(__file__).parents[1]/'src/topoformer/runtime_analysis.py')
+spec = importlib.util.spec_from_file_location('runtime_analysis', Path(__file__).parents[1]/'src/tensegra/runtime_analysis.py')
 a = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(a)
 

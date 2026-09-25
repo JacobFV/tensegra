@@ -4,7 +4,7 @@ from copy import deepcopy
 import pytest
 import torch
 
-from topoformer.campaign02_population import (
+from tensegra.campaign02_population import (
     PopulationConfig, inherit_state, mix_index, selection_pairs, slot_member,
 )
 
@@ -69,13 +69,13 @@ def _tiny_runtime_config(mode="pbt", optimizer_policy="inherit"):
 
 
 def _runtime_factory(seed):
-    from topoformer.campaign02_world import Workshop, generate_world
+    from tensegra.campaign02_world import Workshop, generate_world
     # The mechanical teacher never needs a solver; no subprocess/GPU is started.
     return Workshop(generate_world(seed, categories=1, choices=2, locations=3), address_seed=seed + 17)
 
 
 def _runtime_teacher():
-    from topoformer.campaign02_references import ReferencePolicy
+    from tensegra.campaign02_references import ReferencePolicy
     return ReferencePolicy("cheap")
 
 
@@ -95,8 +95,8 @@ def _assert_tree_equal(a, b):
 
 
 def test_actual_runtime_interrupted_resume_matches_uninterrupted(tmp_path, monkeypatch):
-    from topoformer.campaign02_population import PopulationRun
-    from topoformer.campaign02_training import Learner
+    from tensegra.campaign02_population import PopulationRun
+    from tensegra.campaign02_training import Learner
     torch.set_num_threads(1)
     cfg = _tiny_runtime_config()
     straight = PopulationRun(cfg, tmp_path / "straight", _runtime_factory, _runtime_teacher)
@@ -128,7 +128,7 @@ def test_actual_runtime_interrupted_resume_matches_uninterrupted(tmp_path, monke
 
 @pytest.mark.parametrize("optimizer_policy", ["inherit", "reset"])
 def test_actual_replacement_retains_cursor_and_optimizer_contract(tmp_path, optimizer_policy):
-    from topoformer.campaign02_population import PopulationRun
+    from tensegra.campaign02_population import PopulationRun
     torch.set_num_threads(1)
     run = PopulationRun(_tiny_runtime_config(optimizer_policy=optimizer_policy),
         tmp_path / optimizer_policy, _runtime_factory, _runtime_teacher)
@@ -158,7 +158,7 @@ def test_actual_replacement_retains_cursor_and_optimizer_contract(tmp_path, opti
 
 @pytest.mark.parametrize("mode", ["multistart", "single"])
 def test_actual_control_allocation_and_finalist(tmp_path, mode):
-    from topoformer.campaign02_population import PopulationRun
+    from tensegra.campaign02_population import PopulationRun
     torch.set_num_threads(1)
     run = PopulationRun(_tiny_runtime_config(mode), tmp_path / mode, _runtime_factory, _runtime_teacher)
     run.run()

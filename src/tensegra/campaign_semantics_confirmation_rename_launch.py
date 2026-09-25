@@ -17,7 +17,7 @@ if subprocess.check_output(['nvidia-smi','--query-compute-apps=pid','--format=cs
 receipt=Path(a.prefix+'.occupancy.json');log=Path(a.prefix+'.log');started_receipt=Path(a.prefix+'.started.json')
 if receipt.exists() or log.exists() or started_receipt.exists():raise RuntimeError('immutable launch prefix already exists')
 env={**os.environ,'OMP_NUM_THREADS':'2','OPENBLAS_NUM_THREADS':'2','MKL_NUM_THREADS':'2','PYTHONPATH':'src'}
-command=[a.python,'-m','topoformer.campaign_semantics_confirmation_rename',a.config]
+command=[a.python,'-m','tensegra.campaign_semantics_confirmation_rename',a.config]
 started=datetime.datetime.now(datetime.timezone.utc).isoformat();tick=time.monotonic();timed_out=False
 persist(started_receipt,dict(started_utc=started,wrapper_pid=os.getpid(),cap_seconds=a.cap,command=command,config_sha256=hashlib.sha256(Path(a.config).read_bytes()).hexdigest(),wrapper_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()))
 with log.open('x') as stream:

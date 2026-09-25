@@ -1,7 +1,7 @@
 """Mechanical fixtures only: no campaign data generation or confirmation reads."""
 import unittest
 from unittest.mock import patch
-from topoformer import campaign_semantics_s21_data as data
+from tensegra import campaign_semantics_s21_data as data
 
 class S21DataTests(unittest.TestCase):
     def test_global_cell_offsets(self):
@@ -46,7 +46,7 @@ class S21DataTests(unittest.TestCase):
     def test_fp32_feature_target_collision_rejected(self):
         import torch
         audit=data.PublicFeatureAudit();x=torch.zeros(1,1,68)
-        with patch('topoformer.semantic_curriculum.encode_text',return_value=(x,1)),patch('topoformer.campaign_semantics_s19_codec.encode_row',side_effect=lambda row,v:[row['nodes'][0][1]]):
+        with patch('tensegra.semantic_curriculum.encode_text',return_value=(x,1)),patch('tensegra.campaign_semantics_s19_codec.encode_row',side_effect=lambda row,v:[row['nodes'][0][1]]):
             audit.add(self.feature_row())
             with self.assertRaisesRegex(ValueError,'feature sequence'):
                 audit.add(self.feature_row(value=2))
@@ -54,7 +54,7 @@ class S21DataTests(unittest.TestCase):
         import torch
         audit=data.PublicFeatureAudit();x=torch.zeros(1,1,68);x[:,:,64]=1.
         y=x.clone();y[:,:,64]=1.0001
-        with patch('topoformer.semantic_curriculum.encode_text',side_effect=[(x,1),(y,1)]),patch('topoformer.campaign_semantics_s19_codec.encode_row',side_effect=lambda row,v:[row['nodes'][0][1]]):
+        with patch('tensegra.semantic_curriculum.encode_text',side_effect=[(x,1),(y,1)]),patch('tensegra.campaign_semantics_s19_codec.encode_row',side_effect=lambda row,v:[row['nodes'][0][1]]):
             audit.add(self.feature_row())
             with self.assertRaisesRegex(ValueError,'feature sequence'):
                 audit.add(self.feature_row(value=2))
@@ -63,14 +63,14 @@ class S21DataTests(unittest.TestCase):
     def test_lexical_collision_rejected(self):
         import torch
         audit=data.PublicFeatureAudit();x=torch.zeros(1,1,68)
-        with patch('topoformer.semantic_curriculum.encode_text',return_value=(x,1)),patch('topoformer.campaign_semantics_s19_codec.encode_row',return_value=[1]):
+        with patch('tensegra.semantic_curriculum.encode_text',return_value=(x,1)),patch('tensegra.campaign_semantics_s19_codec.encode_row',return_value=[1]):
             audit.add(self.feature_row('x'))
             with self.assertRaisesRegex(ValueError,'lexical feature collision'):
                 audit.add(self.feature_row('y'))
     def test_feature_truncation_rejected(self):
         import torch
         for features,length in [(torch.zeros(1,1,68),1),(torch.zeros(1,1,68),2)]:
-            with patch('topoformer.semantic_curriculum.encode_text',return_value=(features,length)):
+            with patch('tensegra.semantic_curriculum.encode_text',return_value=(features,length)):
                 with self.assertRaisesRegex(ValueError,'truncation'):
                     data.PublicFeatureAudit().add(self.feature_row('x y'))
     def test_independent_answer(self):

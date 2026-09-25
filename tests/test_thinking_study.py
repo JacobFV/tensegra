@@ -1,6 +1,6 @@
 """Stage 6 runner contracts; execute Torch tests on the remote CPU host."""
 import pytest
-from topoformer.thinking_study import ThinkingStudyConfig, auxiliary_weights, VARIANTS, rate
+from tensegra.thinking_study import ThinkingStudyConfig, auxiliary_weights, VARIANTS, rate
 
 
 def test_resource_guard_and_step_zero():
@@ -34,9 +34,9 @@ def test_controls_and_undefined_denominators():
 
 def test_free_rollout_public_boundary_and_event_value_isolation():
     import torch
-    from topoformer.thinking_tasks import generate_episode
-    from topoformer.thinking_runtime import ProtectedSession, ValueRegister
-    from topoformer.thinking_study import actor_inputs, build_model, rollout
+    from tensegra.thinking_tasks import generate_episode
+    from tensegra.thinking_runtime import ProtectedSession, ValueRegister
+    from tensegra.thinking_study import actor_inputs, build_model, rollout
     cfg = ThinkingStudyConfig(steps=0,max_microsteps=4)
     episode = generate_episode(seed=1,depth=1)
     session = ProtectedSession(episode.public.initial_values)
@@ -53,8 +53,8 @@ def test_free_rollout_public_boundary_and_event_value_isolation():
 
 def test_teacher_training_has_finite_separate_losses():
     import torch
-    from topoformer.thinking_tasks import generate_episode
-    from topoformer.thinking_study import build_model, train_update
+    from tensegra.thinking_tasks import generate_episode
+    from tensegra.thinking_study import build_model, train_update
     cfg = ThinkingStudyConfig(steps=1,max_microsteps=6)
     model = build_model(cfg,0)
     losses,_ = train_update(model,torch.optim.Adam(model.parameters()),[generate_episode(depth=1)],cfg,'local',0,0.)
@@ -65,8 +65,8 @@ def test_teacher_training_has_finite_separate_losses():
 def test_all_hidden_target_mutations_leave_free_actor_identical():
     from dataclasses import replace
     import torch
-    from topoformer.thinking_tasks import generate_episode
-    from topoformer.thinking_study import build_model, rollout
+    from tensegra.thinking_tasks import generate_episode
+    from tensegra.thinking_study import build_model, rollout
     cfg = ThinkingStudyConfig(steps=0,max_microsteps=5)
     episode = generate_episode(seed=3,depth=1)
     mutated = replace(episode,gold=replace(episode.gold,result=-37,answer=1-episode.gold.answer,trace=(),readiness=(),hypotheses=(),expected_values=(),semantic_digest='changed',graph=None))
@@ -79,9 +79,9 @@ def test_all_hidden_target_mutations_leave_free_actor_identical():
 def test_future_frames_cannot_change_current_features_and_context_order_matters():
     from dataclasses import replace
     import torch
-    from topoformer.thinking_tasks import generate_episode, PublicFrame
-    from topoformer.thinking_runtime import ProtectedSession
-    from topoformer.thinking_study import actor_inputs
+    from tensegra.thinking_tasks import generate_episode, PublicFrame
+    from tensegra.thinking_runtime import ProtectedSession
+    from tensegra.thinking_study import actor_inputs
     cfg = ThinkingStudyConfig(steps=0)
     episode = generate_episode(seed=3,depth=1)
     public = episode.public
@@ -101,9 +101,9 @@ def test_anneal_finishes_before_training_ends():
 
 def test_event_reintegration_changes_future_actions_and_has_gradients():
     import torch
-    from topoformer.thinking_tasks import generate_episode
-    from topoformer.thinking_runtime import ProtectedSession
-    from topoformer.thinking_study import build_model, actor_inputs, inject_runtime_events, rollout
+    from tensegra.thinking_tasks import generate_episode
+    from tensegra.thinking_runtime import ProtectedSession
+    from tensegra.thinking_study import build_model, actor_inputs, inject_runtime_events, rollout
     cfg = ThinkingStudyConfig(steps=0,max_microsteps=6)
     episode = generate_episode(seed=7,depth=1)
     model = build_model(cfg,0)
@@ -126,8 +126,8 @@ def test_event_reintegration_changes_future_actions_and_has_gradients():
 
 
 def test_privileged_trace_audit_and_post_return_workspace_roundtrip():
-    from topoformer.thinking_tasks import generate_episode
-    from topoformer.thinking_study import build_model, evaluate
+    from tensegra.thinking_tasks import generate_episode
+    from tensegra.thinking_study import build_model, evaluate
     cfg = ThinkingStudyConfig(steps=0,max_microsteps=7)
     result = evaluate(build_model(cfg,0),[generate_episode(seed=7,depth=1)],cfg,'local',oracle_trace=True)
     example = result['examples'][0]
@@ -139,7 +139,7 @@ def test_privileged_trace_audit_and_post_return_workspace_roundtrip():
 
 def test_hazard_weights_conserve_survival_and_mask_post_event():
     import torch
-    from topoformer.thinking_study import halting_weights
+    from tensegra.thinking_study import halting_weights
     probabilities = torch.tensor([.8,.4,.7,.3],requires_grad=True)
     weights = halting_weights(probabilities,torch.tensor([False,True,False,True]))
     assert torch.allclose(weights,torch.tensor([0.,.4,0.,.6]))
@@ -148,8 +148,8 @@ def test_hazard_weights_conserve_survival_and_mask_post_event():
 
 def test_neural_recurrent_task_loss_trains_emit_without_oracle_execution():
     import torch
-    from topoformer.thinking_tasks import generate_episode
-    from topoformer.thinking_study import build_model, rollout
+    from tensegra.thinking_tasks import generate_episode
+    from tensegra.thinking_study import build_model, rollout
     cfg = ThinkingStudyConfig(steps=0,max_microsteps=6)
     model = build_model(cfg,0)
     episode = generate_episode(seed=7,depth=1)
@@ -167,9 +167,9 @@ def test_neural_recurrent_task_loss_trains_emit_without_oracle_execution():
 
 def test_context_arrival_is_exogenous_and_neural_pair_observables_match():
     import torch
-    from topoformer.thinking_tasks import generate_episode
-    from topoformer.thinking_runtime import ProtectedSession
-    from topoformer.thinking_study import actor_inputs
+    from tensegra.thinking_tasks import generate_episode
+    from tensegra.thinking_runtime import ProtectedSession
+    from tensegra.thinking_study import actor_inputs
     cfg = ThinkingStudyConfig(steps=0)
     episode = generate_episode(seed=7,depth=1)
     session = ProtectedSession(episode.public.initial_values)
@@ -183,7 +183,7 @@ def test_context_arrival_is_exogenous_and_neural_pair_observables_match():
 
 
 def test_final_grid_economy_and_new_controls():
-    from topoformer.thinking_study import evaluation_conditions
+    from tensegra.thinking_study import evaluation_conditions
     cfg = ThinkingStudyConfig(steps=24,eval_depths=[4,8,16,32],train_depth=4)
     assert [c['depth'] for c in evaluation_conditions(cfg,0)] == [4,32]
     assert [c['depth'] for c in evaluation_conditions(cfg,12)] == [4]
@@ -193,8 +193,8 @@ def test_final_grid_economy_and_new_controls():
 
 def test_free_emit_precedes_duplicate_execution(monkeypatch):
     import torch
-    import topoformer.thinking_study as study
-    from topoformer.thinking_tasks import generate_episode
+    import tensegra.thinking_study as study
+    from tensegra.thinking_tasks import generate_episode
     episode = generate_episode(seed=7,depth=1)
     cfg = ThinkingStudyConfig(steps=0,max_microsteps=8)
     model = study.build_model(cfg,0)
@@ -209,9 +209,9 @@ def test_free_emit_precedes_duplicate_execution(monkeypatch):
 
 def test_learned_protected_uses_typed_neural_values_without_exact_fallback(monkeypatch):
     import torch
-    from topoformer.thinking_runtime import ProtectedSession
-    from topoformer.thinking_tasks import generate_episode
-    from topoformer.thinking_study import build_model, rollout
+    from tensegra.thinking_runtime import ProtectedSession
+    from tensegra.thinking_tasks import generate_episode
+    from tensegra.thinking_study import build_model, rollout
     cfg = ThinkingStudyConfig(steps=0,max_microsteps=7)
     episode = generate_episode(seed=7,depth=1)
     model = build_model(cfg,0)
@@ -226,7 +226,7 @@ def test_learned_protected_uses_typed_neural_values_without_exact_fallback(monke
 
 
 def test_ambiguity_delay_preserves_gold_semantics_and_alignment():
-    from topoformer.thinking_study import evaluation_episode
+    from tensegra.thinking_study import evaluation_episode
     cfg = ThinkingStudyConfig(steps=24)
     condition = dict(depth=2,condition='ambiguity_delay',kwargs={'delay':4})
     delayed = evaluation_episode(cfg,0,0,condition)
@@ -237,8 +237,8 @@ def test_ambiguity_delay_preserves_gold_semantics_and_alignment():
 
 
 def test_training_hazard_matches_preexecution_emission_boundary():
-    from topoformer.thinking_tasks import generate_episode
-    from topoformer.thinking_study import build_model, rollout
+    from tensegra.thinking_tasks import generate_episode
+    from tensegra.thinking_study import build_model, rollout
     cfg = ThinkingStudyConfig(steps=0,max_microsteps=7)
     episode = generate_episode(seed=7,depth=1)
     result = rollout(build_model(cfg,0),episode.public,cfg,gold=episode.gold,teacher_forcing=True,training_unroll=True)

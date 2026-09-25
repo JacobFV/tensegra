@@ -1,7 +1,7 @@
 import pytest
 import torch
-from topoformer.semantic_contracts import SlotScorer,slot_objective,single_slot_labels
-from topoformer.semantic_graph import SemanticGraph,SemanticEdge
+from tensegra.semantic_contracts import SlotScorer,slot_objective,single_slot_labels
+from tensegra.semantic_graph import SemanticGraph,SemanticEdge
 
 
 def test_additive_xor_margin_identity():
@@ -36,7 +36,7 @@ def test_conflicting_multiedges_rejected_not_overwritten():
 
 
 def test_training_relation_thresholds_ties_and_absent_class():
-    from topoformer.semantic_contracts import train_relation_thresholds
+    from tensegra.semantic_contracts import train_relation_thresholds
     scores=torch.tensor([[0.,3.],[0.,2.],[2.,1.],[3.,0.]])
     labels=torch.tensor([[False,False],[True,False],[True,False],[True,False]])
     threshold,records=train_relation_thresholds(scores,labels)

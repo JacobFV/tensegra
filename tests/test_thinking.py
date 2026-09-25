@@ -5,7 +5,7 @@ import pytest
 
 
 def model_fixture():
-    from topoformer.thinking import ThinkingConfig, ThinkingModel
+    from tensegra.thinking import ThinkingConfig, ThinkingModel
     torch.manual_seed(12)
     model = ThinkingModel(ThinkingConfig(feature_dim=6, output_classes=7))
     context, memory = torch.randn(2, 4, 6), torch.randn(2, 5, 6)
@@ -13,7 +13,7 @@ def model_fixture():
 
 
 def test_module_exists():
-    assert importlib.util.find_spec('topoformer.thinking') is not None
+    assert importlib.util.find_spec('tensegra.thinking') is not None
 
 
 def test_recurrence_reuses_parameters_and_has_no_history():
@@ -163,7 +163,7 @@ def test_structural_geometry_preserves_relation_identity():
 
 def test_emission_prior_is_independent_of_nonbinding_hard_budget():
     from dataclasses import replace
-    from topoformer.thinking import ThinkingModel
+    from tensegra.thinking import ThinkingModel
     model,context,memory = model_fixture()
     short = ThinkingModel(replace(model.config,max_microsteps=12))
     long = ThinkingModel(replace(model.config,max_microsteps=80))

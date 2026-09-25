@@ -3,11 +3,11 @@ import dataclasses,tempfile,unittest
 from pathlib import Path
 from unittest.mock import patch
 import torch
-from topoformer import campaign_semantics_s22 as m
-from topoformer.campaign_semantics_s22_controller import NodeCount,NodeKinds,NodePrefix
-from topoformer.campaign_semantics_s19_codec import KINDS,records_to_targets
-from topoformer.semantic_curriculum import pack_graph
-from topoformer.thinking_language import ActorInput,state_hash
+from tensegra import campaign_semantics_s22 as m
+from tensegra.campaign_semantics_s22_controller import NodeCount,NodeKinds,NodePrefix
+from tensegra.campaign_semantics_s19_codec import KINDS,records_to_targets
+from tensegra.semantic_curriculum import pack_graph
+from tensegra.thinking_language import ActorInput,state_hash
 class Boundary(unittest.TestCase):
  def fixture(self):
   records=((1,KINDS.index('entity'),-1,0,-1),);gold=records_to_targets(list(records)+[(3,-1,-1,-1,-1)],token_count=1,vocab_size=4)

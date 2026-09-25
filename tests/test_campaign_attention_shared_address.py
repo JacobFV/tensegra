@@ -1,8 +1,8 @@
 import torch
 import pytest
-from topoformer.campaign_attention_records import RecordAttention,tokenize
-from topoformer.campaign_attention_shared_address import forward,POLICIES
-from topoformer.campaign_attention_selector import generate,oracle_successors,metrics,targets
+from tensegra.campaign_attention_records import RecordAttention,tokenize
+from tensegra.campaign_attention_shared_address import forward,POLICIES
+from tensegra.campaign_attention_selector import generate,oracle_successors,metrics,targets
 
 
 def fixture(primary=False):
@@ -51,7 +51,7 @@ def test_posthoc_oracle_does_not_route():
 
 def test_mechanical_export_roundtrip(tmp_path):
     import hashlib,json,numpy as np
-    from topoformer.campaign_attention_shared_address_study import run
+    from tensegra.campaign_attention_shared_address_study import run
     m,*_=fixture(True);checkpoint=tmp_path/'checkpoint.pt';torch.save(m.state_dict(),checkpoint)
     tensor=hashlib.sha256(b''.join(x.numpy().tobytes() for x in m.state_dict().values())).hexdigest()
     cfg=dict(checkpoint=str(checkpoint),checkpoint_sha256=hashlib.sha256(checkpoint.read_bytes()).hexdigest(),tensor_sha256=tensor,examples=2,batch=1,data_seed=31,order_seed=32,conditions=[dict(nodes=8,depth=2,groups=2)],device='cpu')

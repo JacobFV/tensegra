@@ -2,9 +2,9 @@
 import re
 import pytest
 import torch
-from topoformer.thinking_language import ActorInput
-from topoformer.semantic_curriculum import encode_text
-from topoformer.campaign_semantics_identity_contract import (
+from tensegra.thinking_language import ActorInput
+from tensegra.semantic_curriculum import encode_text
+from tensegra.campaign_semantics_identity_contract import (
     canonicalize_public_identifiers,restore_public_copy_tokens)
 
 

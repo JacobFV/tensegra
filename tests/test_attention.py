@@ -3,7 +3,7 @@ import math
 import pytest
 import torch
 
-from topoformer.attention import graph_structure, structural_attention
+from tensegra.attention import graph_structure, structural_attention
 
 
 def test_zero_bias_matches_scaled_dot_product_attention():

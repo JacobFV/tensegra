@@ -5,8 +5,8 @@ import hashlib
 import json
 from pathlib import Path
 import torch
-from topoformer.campaign_composition import make_lowering_batch, model_inputs
-from topoformer.campaign_composition_acquire import canonical_prediction, tensor_digest
+from tensegra.campaign_composition import make_lowering_batch, model_inputs
+from tensegra.campaign_composition_acquire import canonical_prediction, tensor_digest
 
 
 def export(run, output):

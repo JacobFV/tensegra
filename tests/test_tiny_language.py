@@ -1,6 +1,6 @@
 import pytest
-from topoformer.tiny_language import execute
-from topoformer.tiny_runtime import RuntimeFault
+from tensegra.tiny_language import execute
+from tensegra.tiny_runtime import RuntimeFault
 
 
 def test_nested_objects_arrays_and_aliases():

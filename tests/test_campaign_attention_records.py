@@ -1,8 +1,8 @@
 import torch
 from dataclasses import replace
-from topoformer.campaign_attention_records import RecordAttention,tokenize
-from topoformer.campaign_attention_selector import generate,permute_nodes,targets
-from topoformer.campaign_attention import restore_node_order
+from tensegra.campaign_attention_records import RecordAttention,tokenize
+from tensegra.campaign_attention_selector import generate,permute_nodes,targets
+from tensegra.campaign_attention import restore_node_order
 
 
 def fixture():
@@ -51,7 +51,7 @@ def test_consistent_key_reassignment_preserves_semantic_targets():
 
 def test_training_prefix_replay_and_resumable_state(tmp_path):
     import json
-    from topoformer.campaign_attention_records_study import run
+    from tensegra.campaign_attention_records_study import run
     # Mechanical one-update CPU check at required primary constructor width.
     torch.set_num_threads(2)
     cfg=dict(seed=3,width=1024,mode='records',steps=1,batch=1,nodes=8,groups=2,lr=.0003,

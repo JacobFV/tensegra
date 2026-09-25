@@ -1,8 +1,8 @@
 import torch
-from topoformer.campaign_composition_study import get_data
-from topoformer.campaign_composition_roles import reversed_supervision
-from topoformer.campaign_composition_rekey import rekey
-from topoformer.campaign_composition_confirm_data import signatures,numeric_overlap,causal_gate
+from tensegra.campaign_composition_study import get_data
+from tensegra.campaign_composition_roles import reversed_supervision
+from tensegra.campaign_composition_rekey import rekey
+from tensegra.campaign_composition_confirm_data import signatures,numeric_overlap,causal_gate
 
 
 def test_numeric_audit_ignores_nonce_codes_but_preserves_order_and_actual_visits():
@@ -43,8 +43,8 @@ def test_causal_gate_requires_both_changed_controls_and_sufficient_support():
 
 
 def test_requested_labels_replay_clean_and_reversed_runtime_without_gold_reset():
-    from topoformer.campaign_composition_confirm_data import requested_labels
-    from topoformer.campaign_composition_acquire import controlled_rows
+    from tensegra.campaign_composition_confirm_data import requested_labels
+    from tensegra.campaign_composition_acquire import controlled_rows
     data,public,labels=get_data(dict(seed=784,count=32))
     actual,bundle=requested_labels(data['public'])
     assert all(torch.equal(actual[k],labels[k]) for k in actual)

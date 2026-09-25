@@ -2,11 +2,11 @@
 import copy
 import pytest
 import torch
-from topoformer.semantic_curriculum import SemanticCurriculumActor
-from topoformer.campaign_semantics_grounded_actor import CopyConditionedActor
-from topoformer.campaign_semantics_s18_actor import S18Actor
-from topoformer.campaign_semantics_s18_compute import costs,plan
-from topoformer.thinking_language import ActorInput
+from tensegra.semantic_curriculum import SemanticCurriculumActor
+from tensegra.campaign_semantics_grounded_actor import CopyConditionedActor
+from tensegra.campaign_semantics_s18_actor import S18Actor
+from tensegra.campaign_semantics_s18_compute import costs,plan
+from tensegra.thinking_language import ActorInput
 
 
 def actor(cls=S18Actor,**kwargs):

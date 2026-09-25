@@ -1,8 +1,8 @@
 """A04 mechanical fixtures use width32; primary studies remain1024."""
 import torch
 from torch.nn import functional as F
-from topoformer.campaign_attention_selector import generate,targets,oracle_successors,SelectorModel,permute_nodes,swap_instruction,metrics
-from topoformer.campaign_attention import restore_node_order
+from tensegra.campaign_attention_selector import generate,targets,oracle_successors,SelectorModel,permute_nodes,swap_instruction,metrics
+from tensegra.campaign_attention import restore_node_order
 
 def test_unique_neighbor_and_globally_repeated_attributes():
     b=generate(4,16,3,seed=1)
@@ -59,7 +59,7 @@ def test_exact_gather_equals_neighbor_masking():
 def test_compact_supplied_and_swap_targets(tmp_path):
     import json
     import numpy as np
-    from topoformer.campaign_attention_selector_study import run
+    from tensegra.campaign_attention_selector_study import run
     cfg=dict(seed=1,width=32,steps=1,batch=2,nodes=16,groups=4,train_seed=1,eval_seed=200,
              eval_examples=8,eval_batch=4,checkpoints=[1],mode='hard',device='cpu',conditions=[
                  dict(nodes=16,depth=2,data_group=0),dict(nodes=16,depth=2,instruction_swap=True,data_group=0),
@@ -75,7 +75,7 @@ def test_compact_supplied_and_swap_targets(tmp_path):
     assert changed.sum()==rows[1]['changed_terminal_count']
 
 def test_regular_corruption_and_scale_override():
-    from topoformer.campaign_attention_selector import corrupt
+    from tensegra.campaign_attention_selector import corrupt
     b=generate(3,16,3,seed=99)
     for kind in ['wrong','identity']:
         c=corrupt(b,kind,100)
@@ -93,8 +93,8 @@ def test_regular_corruption_and_scale_override():
 
 def test_corruption_metric_references_and_curve_isolation(tmp_path):
     import json
-    from topoformer.campaign_attention_selector import corrupt
-    from topoformer.campaign_attention_selector_study import run
+    from tensegra.campaign_attention_selector import corrupt
+    from tensegra.campaign_attention_selector_study import run
     b=generate(8,16,2,seed=123);given=corrupt(b,'wrong',124);m=SelectorModel(width=32,heads=4)
     out=m(given,'hard');score=metrics(out,targets(b),b)
     assert torch.allclose(score['supplied_edge_mass'],torch.ones(8),atol=1e-6)
@@ -125,7 +125,7 @@ def test_balanced_generator_preserves_identity_cardinality():
 
 def test_context_override_and_frozen_inference(tmp_path):
     import hashlib,json
-    from topoformer.campaign_attention_selector_study import run
+    from tensegra.campaign_attention_selector_study import run
     b=generate(2,16,2,seed=7,balanced=True);m=SelectorModel(width=32)
     before={k:v.clone() for k,v in m.state_dict().items()}
     m(b,'context',selector_scale_override=16,context_scale_override=16)

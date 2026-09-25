@@ -1,6 +1,6 @@
 import torch
-from topoformer.campaign_semantics_identity_contract import derive_refers_to
-from topoformer.thinking_language import KINDS
+from tensegra.campaign_semantics_identity_contract import derive_refers_to
+from tensegra.thinking_language import KINDS
 
 
 def test_rule_uses_only_predicted_presence_type_and_identity():

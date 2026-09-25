@@ -1,6 +1,6 @@
 import torch
-from topoformer.belief_state import BeliefModel,collate,oracle
-from topoformer.belief_contracts import PriorContract,contract_episodes,empty_ledger_frames
+from tensegra.belief_state import BeliefModel,collate,oracle
+from tensegra.belief_contracts import PriorContract,contract_episodes,empty_ledger_frames
 
 def test_prior_public_only_and_full_retraction():
     batch=collate(contract_episodes(3,71,condition='full_retract'))

@@ -4,8 +4,8 @@ from copy import deepcopy
 import pytest
 import torch
 
-from topoformer.campaign02_memory_policy import MemoryCandidatePolicy, MemoryPolicyConfig, MemoryFrame
-from topoformer.campaign02_training import supervised_loss
+from tensegra.campaign02_memory_policy import MemoryCandidatePolicy, MemoryPolicyConfig, MemoryFrame
+from tensegra.campaign02_training import supervised_loss
 
 
 def fixture(zero=False, family="lightweight"):
@@ -61,8 +61,8 @@ def test_frame_accumulation_matches_full_decision_mean_gradient():
 
 
 def test_public_capacity_failure_stays_in_episode_denominator():
-    from topoformer.campaign02_training import PublicInterfaceCapacityError, batched_episodes
-    from topoformer.campaign02_world import Workshop, generate_world
+    from tensegra.campaign02_training import PublicInterfaceCapacityError, batched_episodes
+    from tensegra.campaign02_world import Workshop, generate_world
     model, _ = fixture()
     def reject(*args):
         raise PublicInterfaceCapacityError("declared test cap")

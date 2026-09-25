@@ -2,10 +2,10 @@ import pytest
 import torch
 from torch.nn import functional as F
 
-from topoformer.binding_model import BindingTransformer
-from topoformer.runtime_graph import RuntimeGraph
-from topoformer.traversal_data import make_batch
-from topoformer.traversal_model import TraversalTransformer
+from tensegra.binding_model import BindingTransformer
+from tensegra.runtime_graph import RuntimeGraph
+from tensegra.traversal_data import make_batch
+from tensegra.traversal_model import TraversalTransformer
 
 
 def test_mixed_dot_exact_stage3_compatibility():
@@ -153,7 +153,7 @@ def test_adaptive_disabled_preserves_parameters_rng_and_outputs():
 
 
 def test_confidence_real_uniform_null_and_gradients():
-    from topoformer.binding_model import binding_confidence
+    from tensegra.binding_model import binding_confidence
     probabilities = torch.tensor([[1., 0., 0.], [1/3, 1/3, 1/3], [0., 0., 1.]], requires_grad=True)
     confidence = binding_confidence(probabilities)
     assert torch.allclose(confidence, torch.tensor([1., 0., 0.]), atol=1e-7)

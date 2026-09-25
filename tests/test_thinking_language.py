@@ -1,8 +1,8 @@
 from dataclasses import replace
 import pytest
 import torch
-from topoformer.tcn_data import build_tcn_example
-from topoformer.thinking_language import (ActorInput, LanguageActor, public_input,
+from tensegra.tcn_data import build_tcn_example
+from tensegra.thinking_language import (ActorInput, LanguageActor, public_input,
     graph_targets, graph_losses, graph_metrics, build_splits)
 
 
@@ -54,7 +54,7 @@ def test_splits_identity_disjoint_and_surface_distinct():
 
 
 def test_unseen_lexical_renaming_preserves_choice_alignment():
-    from topoformer.thinking_language import rendered_answer
+    from tensegra.thinking_language import rendered_answer
     original=build_tcn_example('variable_binding',10)
     mapping={name:f'novelentity{i}' for i,name in enumerate(original.public[0].options)}
     renamed=build_tcn_example('variable_binding',10,identifier_renaming=mapping)
@@ -65,7 +65,7 @@ def test_unseen_lexical_renaming_preserves_choice_alignment():
 
 
 def test_empty_decoder_precision_is_undefined_with_raw_support():
-    from topoformer.thinking_language import _mean
+    from tensegra.thinking_language import _mean
     example=build_tcn_example('variable_binding',12)
     target=graph_targets(example.privileged.graph,128)
     output=dict(presence=torch.full((1,128),-100.),
@@ -83,7 +83,7 @@ def test_empty_decoder_precision_is_undefined_with_raw_support():
 
 
 def test_state_hash_pairs_initialization_and_detects_change():
-    from topoformer.thinking_language import state_hash
+    from tensegra.thinking_language import state_hash
     torch.manual_seed(42)
     a=LanguageActor(width=16,microsteps=1)
     torch.manual_seed(42)
@@ -95,7 +95,7 @@ def test_state_hash_pairs_initialization_and_detects_change():
 
 def test_choice_baselines_use_shuffled_positions():
     from collections import Counter
-    from topoformer.thinking_language import evaluate,rendered_answer
+    from tensegra.thinking_language import evaluate,rendered_answer
     examples=[build_tcn_example('variable_binding',i) for i in range(3)]
     model=LanguageActor(width=16,microsteps=1)
     result=evaluate(model,examples,'english',91)

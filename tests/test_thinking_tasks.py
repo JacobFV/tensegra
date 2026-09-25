@@ -1,7 +1,7 @@
 """Stdlib tests, run via package stub to avoid importing torch."""
 import dataclasses
 import unittest
-from topoformer.thinking_tasks import generate_episode, paired_contexts, audit_episode, render_frames
+from tensegra.thinking_tasks import generate_episode, paired_contexts, audit_episode, render_frames
 
 class ThinkingTaskTests(unittest.TestCase):
     def test_deep_exact_and_reproducible(self):
@@ -34,8 +34,8 @@ class ThinkingTaskTests(unittest.TestCase):
             with self.assertRaises(ValueError): generate_episode(**kwargs)
 
     def test_runtime_trace_and_context_readiness(self):
-        from topoformer.thinking_runtime import ProtectedSession
-        from topoformer.thinking_tasks import readiness_targets
+        from tensegra.thinking_runtime import ProtectedSession
+        from tensegra.thinking_tasks import readiness_targets
         episode = generate_episode(19,depth=8)
         session = ProtectedSession(episode.public.initial_values)
         for pair in episode.gold.trace[:-1]:
@@ -47,7 +47,7 @@ class ThinkingTaskTests(unittest.TestCase):
         self.assertEqual(int(event.value),episode.gold.answer)
 
     def test_cross_motif_has_real_merge(self):
-        from topoformer.thinking_runtime import ProtectedSession
+        from tensegra.thinking_runtime import ProtectedSession
         for depth in (2,8,32):
             e = generate_episode(42,depth=depth,motif='cross')
             prior = {'result:'+c.id for c in e.gold.trace[0]}
@@ -75,7 +75,7 @@ class ThinkingTaskTests(unittest.TestCase):
             with self.assertRaises(ValueError): generate_episode(**args)
 
     def test_completed_candidate_has_zero_readiness(self):
-        from topoformer.thinking_tasks import readiness_targets
+        from tensegra.thinking_tasks import readiness_targets
         e = generate_episode(4,depth=2)
         available = {v.id for v in e.public.initial_values}
         chosen = e.gold.trace[0][0]

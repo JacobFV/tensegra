@@ -1,8 +1,8 @@
 import pytest
 import torch
 
-from topoformer.traversal_data import make_batch
-from topoformer.traversal_oracle import exact_attention_traverse
+from tensegra.traversal_data import make_batch
+from tensegra.traversal_oracle import exact_attention_traverse
 
 INPUTS = {'entity_keys', 'adjacency', 'node_ids', 'token_keys', 'token_values', 'start_keys', 'relations'}
 

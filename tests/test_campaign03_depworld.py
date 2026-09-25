@@ -9,9 +9,9 @@ import random
 import pytest
 import torch
 
-from topoformer.campaign02_protocol import execute
-from topoformer.campaign02_world import Action
-from topoformer.campaign03_depworld import (ATTEMPT_BLOCK, EVENT_KINDS, FOREIGN_KINDS, REASONS, REFERENCE_MODES,
+from tensegra.campaign02_protocol import execute
+from tensegra.campaign02_world import Action
+from tensegra.campaign03_depworld import (ATTEMPT_BLOCK, EVENT_KINDS, FOREIGN_KINDS, REASONS, REFERENCE_MODES,
     DepItem, DepReference, DepSpec, DepWorkshop, action_catalog, action_key, applicable, audit_record,
     current_request, depworld_executor, encode_action_d1, encode_observation_d1, encode_public, generate_depworld,
     overlaps, relevant_dependencies, selection_id, PROGRESS_KINDS)
@@ -482,7 +482,7 @@ def test_references_are_public_and_in_catalogue():
             o = env.step(a)
     with pytest.raises(ValueError):
         DepReference("oracle")
-    from topoformer.campaign02_references import make_reference
+    from tensegra.campaign02_references import make_reference
     assert make_reference("dep_reuse").reference_name == "dep_reuse"
     assert make_reference("modular_cheap_first").reference_name == "modular_cheap_first"
 
@@ -548,8 +548,8 @@ def test_utility_accounting_matches_costs():
 # --- integration ---------------------------------------------------------------------------
 
 def test_training_integration_collect_teacher_d1():
-    from topoformer.campaign02_policy import CandidatePolicy, PolicyConfig
-    from topoformer.campaign02_training import collect_teacher, public_frame, supervised_loss
+    from tensegra.campaign02_policy import CandidatePolicy, PolicyConfig
+    from tensegra.campaign02_training import collect_teacher, public_frame, supervised_loss
     torch.set_num_threads(1)
     spec = generate_depworld(DEV + 60, p_event=1.0, foreign_records=2)
     actions, obs, cand = public_frame(DepWorkshop(spec).observe(), "d1")
@@ -564,8 +564,8 @@ def test_training_integration_collect_teacher_d1():
 
 
 def test_population_integration_depworld(tmp_path):
-    from topoformer.campaign02_population import PopulationConfig, PopulationRun
-    from topoformer.campaign02_references import make_reference
+    from tensegra.campaign02_population import PopulationConfig, PopulationRun
+    from tensegra.campaign02_references import make_reference
     torch.set_num_threads(1)
     mix = ({"categories": 2, "choices": 2, "locations": 5, "slots": 5, "p_event": 0.5, "foreign_records": 2},)
 

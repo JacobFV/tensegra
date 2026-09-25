@@ -1,7 +1,7 @@
 import inspect,unittest
 import torch
-from topoformer.campaign_semantics_contract_decode import decode,allowed
-from topoformer.thinking_language import KINDS,ROLES
+from tensegra.campaign_semantics_contract_decode import decode,allowed
+from tensegra.thinking_language import KINDS,ROLES
 
 class ContractTests(unittest.TestCase):
     def example(self):

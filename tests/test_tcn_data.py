@@ -1,7 +1,7 @@
 import dataclasses
 import unittest
 
-from topoformer.tcn_data import build_tcn_example, build_tcn_corpus, verify_vendor_manifest
+from tensegra.tcn_data import build_tcn_example, build_tcn_corpus, verify_vendor_manifest
 
 
 class TCNDataTests(unittest.TestCase):
@@ -29,8 +29,8 @@ class TCNDataTests(unittest.TestCase):
             build_tcn_example('variable_binding',0,languages=('fake',))
 
     def test_options_use_identifier_renderer_and_answer_index(self):
-        from topoformer._vendor.tcn_language._structure import Ident
-        from topoformer._vendor.tcn_language.languages import get_language
+        from tensegra._vendor.tcn_language._structure import Ident
+        from tensegra._vendor.tcn_language.languages import get_language
         for lesson in ('variable_binding','unification','set_operations'):
             example = build_tcn_example(lesson,17)
             index = example.privileged.answer_index

@@ -2,10 +2,10 @@
 import copy
 import pytest
 import torch
-from topoformer.campaign_semantics_s19_actor import TypedRecordActor
-from topoformer.campaign_semantics_s19_codec import BOS,NODE,EDGE,EOS,PAD,KINDS
-from topoformer.campaign_semantics_s22_controller import NodeCount,NodeKinds,NodePrefix,decode
-from topoformer.thinking_language import ActorInput,state_hash
+from tensegra.campaign_semantics_s19_actor import TypedRecordActor
+from tensegra.campaign_semantics_s19_codec import BOS,NODE,EDGE,EOS,PAD,KINDS
+from tensegra.campaign_semantics_s22_controller import NodeCount,NodeKinds,NodePrefix,decode
+from tensegra.thinking_language import ActorInput,state_hash
 
 
 def model(dtype=None):

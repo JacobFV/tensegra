@@ -1,5 +1,5 @@
 import torch
-from topoformer.interface_readiness import readiness_factors, make_readiness, Calibrator, select_threshold, readiness_metrics, gate_b
+from tensegra.interface_readiness import readiness_factors, make_readiness, Calibrator, select_threshold, readiness_metrics, gate_b
 
 
 def test_product_is_score_schema_rejection_and_stable_wrong():

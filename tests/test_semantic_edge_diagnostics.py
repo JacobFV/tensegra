@@ -1,5 +1,5 @@
 import torch
-from topoformer.semantic_edge_diagnostics import negative_gradient_direction
+from tensegra.semantic_edge_diagnostics import negative_gradient_direction
 
 
 def test_negative_gradient_direction_is_local_derivative():

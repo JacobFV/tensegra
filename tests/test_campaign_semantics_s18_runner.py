@@ -3,12 +3,12 @@ import copy,json
 from pathlib import Path
 import pytest
 import torch
-from topoformer.campaign_semantics_s18 import optimizer_update,selected_rows
-from topoformer.campaign_semantics_s18_freeze import validate,freeze,verify,SOURCES
-from topoformer.semantic_curriculum import SemanticCurriculumActor,curriculum_weights
-from topoformer.campaign_semantics_s18_actor import S18Actor
-from topoformer.semantic_text_acquisition import corrected_losses
-from topoformer.thinking_language import ActorInput,ROLES
+from tensegra.campaign_semantics_s18 import optimizer_update,selected_rows
+from tensegra.campaign_semantics_s18_freeze import validate,freeze,verify,SOURCES
+from tensegra.semantic_curriculum import SemanticCurriculumActor,curriculum_weights
+from tensegra.campaign_semantics_s18_actor import S18Actor
+from tensegra.semantic_text_acquisition import corrected_losses
+from tensegra.thinking_language import ActorInput,ROLES
 
 
 def test_exact_s15_update_order_and_adamw_differential():
@@ -62,7 +62,7 @@ def test_selection_uses_fixed_public_row_identity_and_mixture():
 def test_atomic_failed_lifecycle_receipt_no_retry(monkeypatch,tmp_path,timeout):
  import sys,subprocess
  from types import SimpleNamespace
- from topoformer import campaign_semantics_s18_launch as launch
+ from tensegra import campaign_semantics_s18_launch as launch
  config=tmp_path/'config.json';config.write_text(json.dumps({'output_dir':str(tmp_path/'new')}))
  monkeypatch.setitem(sys.modules,'campaign_semantics_s18_freeze',SimpleNamespace(verify=lambda *a:None))
  monkeypatch.setattr(sys,'argv',['launch',str(config),'--cap','180','--python','fake-python','--prefix',str(tmp_path/'attempt')])
@@ -80,12 +80,12 @@ def test_atomic_failed_lifecycle_receipt_no_retry(monkeypatch,tmp_path,timeout):
  receipt=json.loads((tmp_path/'attempt.occupancy.json').read_text())
  assert receipt['timed_out']==timeout and receipt['exit_code']==caught.value.code
  assert receipt['full_process_state']=='mock full process snapshot'
- assert len(calls)==1 and calls[0][2]=='topoformer.campaign_semantics_s18'
+ assert len(calls)==1 and calls[0][2]=='topoformer.campaign_semantics_s18'  # frozen launcher keeps its pre-rename module path
  assert (tmp_path/'attempt.started.json').exists() and not list(tmp_path.glob('*.tmp'))
 
 
 def test_replay_accepts_bijection_and_rejects_population_or_prediction_changes():
- from topoformer.campaign_semantics_s18 import verify_replay
+ from tensegra.campaign_semantics_s18 import verify_replay
  old=[dict(semantic_sha256=str(i),raw={'value':i},target={'value':i+1}) for i in range(4)]
  verify_replay(old[::-1],old)
  for wrong in (old[:-1],old+[old[0]],old[:-1]+[old[0]]):

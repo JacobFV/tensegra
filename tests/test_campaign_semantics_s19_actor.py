@@ -2,8 +2,8 @@
 import copy
 import pytest
 import torch
-from topoformer.campaign_semantics_s19_actor import TypedRecordActor,BOS,NODE,EDGE,EOS,PAD
-from topoformer.thinking_language import ActorInput,KINDS
+from tensegra.campaign_semantics_s19_actor import TypedRecordActor,BOS,NODE,EDGE,EOS,PAD
+from tensegra.thinking_language import ActorInput,KINDS
 
 
 def actor(**kwargs):

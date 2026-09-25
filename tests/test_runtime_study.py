@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from topoformer.runtime_study import RuntimeStudyConfig, conditions, curriculum, policy_loss, rate
+from tensegra.runtime_study import RuntimeStudyConfig, conditions, curriculum, policy_loss, rate
 
 
 def test_resource_and_protocol_validation():
@@ -43,7 +43,7 @@ def test_depth_size_cartesian_matrix():
 
 
 def test_equivalent_selector_supervision_and_null_are_finite():
-    from topoformer.runtime_study import lowering_loss
+    from tensegra.runtime_study import lowering_loss
     prediction = dict(op_logits=torch.zeros(1, 1, 2, requires_grad=True),
                       binding_logits=torch.zeros(1, 1, 3, requires_grad=True))
     gold = dict(ops=torch.zeros(1, 1, dtype=torch.long), selectors=torch.zeros(1, 1, dtype=torch.long),
@@ -56,7 +56,7 @@ def test_equivalent_selector_supervision_and_null_are_finite():
 
 
 def test_runtime_oracle_and_neural_metrics_are_separate():
-    from topoformer.runtime_study import build_model, evaluate
+    from tensegra.runtime_study import build_model, evaluate
     config = RuntimeStudyConfig(steps=0, warmup_steps=0, checkpoints=[0], eval_examples=2,
                                 eval_sizes=[8], eval_depths=[2], extra_evaluations=False)
     model = build_model(config, 0)
@@ -71,7 +71,7 @@ def test_runtime_oracle_and_neural_metrics_are_separate():
 
 
 def test_undefined_queries_are_not_successful_answers():
-    from topoformer.runtime_study import build_model, evaluate
+    from tensegra.runtime_study import build_model, evaluate
     config = RuntimeStudyConfig(steps=0, warmup_steps=0, checkpoints=[0], eval_examples=2)
     model = build_model(config, 0)
     for setting in ('ambiguous', 'invalid'):
@@ -83,7 +83,7 @@ def test_undefined_queries_are_not_successful_answers():
 
 
 def test_wrong_graph_changes_observable_data():
-    from topoformer.runtime_study import make_data, data_hash
+    from tensegra.runtime_study import make_data, data_hash
     config = RuntimeStudyConfig()
     clean = make_data(config, 5, nodes=8, depth=2, count=3)
     wrong = make_data(config, 5, nodes=8, depth=2, count=3, intervention='wrong_graph')
@@ -93,7 +93,7 @@ def test_wrong_graph_changes_observable_data():
 
 
 def test_style_counts_partition_only_defined_answers():
-    from topoformer.runtime_study import build_model, evaluate
+    from tensegra.runtime_study import build_model, evaluate
     config = RuntimeStudyConfig(steps=0, warmup_steps=0, checkpoints=[0], eval_examples=6)
     model = build_model(config, 0)
     row = evaluate(model, 'oracle', config, dict(name='test', nodes=8, depth=2), 12)
@@ -104,8 +104,8 @@ def test_style_counts_partition_only_defined_answers():
 
 
 def test_undefined_confidence_never_rewards_placeholder_completion(monkeypatch):
-    from topoformer.runtime_study import build_model, evaluate
-    from topoformer import runtime_execution
+    from tensegra.runtime_study import build_model, evaluate
+    from tensegra import runtime_execution
     original = runtime_execution.execute_batch
     def accidental_zero_completion(*args, **kwargs):
         rows = original(*args, **kwargs)
@@ -121,14 +121,14 @@ def test_undefined_confidence_never_rewards_placeholder_completion(monkeypatch):
 
 
 def test_selector_supplement_preserves_original_defaults():
-    from topoformer.runtime_study import MAIN_VARIANTS
+    from tensegra.runtime_study import MAIN_VARIANTS
     assert len(MAIN_VARIANTS) == 10
     assert RuntimeStudyConfig().variants == list(MAIN_VARIANTS)
     assert 'selector_graph_data' not in MAIN_VARIANTS
 
 
 def test_oracle_selector_supplies_equivalent_semantics_not_exact_node():
-    from topoformer.runtime_study import build_model, make_data, forward_model
+    from tensegra.runtime_study import build_model, make_data, forward_model
     config = RuntimeStudyConfig()
     batch = make_data(config, 3, nodes=8, depth=2, count=2)
     model = build_model(config, 0, 'oracle_selector_protected')
@@ -142,7 +142,7 @@ def test_oracle_selector_supplies_equivalent_semantics_not_exact_node():
 
 
 def test_selector_controls_keep_parameter_initialization_identical():
-    from topoformer.runtime_study import build_model
+    from tensegra.runtime_study import build_model
     config = RuntimeStudyConfig()
     normal = build_model(config, 0, 'graph_data').state_dict()
     selected = build_model(config, 0, 'selector_graph_data').state_dict()

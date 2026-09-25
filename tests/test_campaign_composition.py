@@ -1,7 +1,7 @@
 """CPU mechanical tests; small actor widths are explicitly test-only."""
 import torch
-from topoformer.campaign_composition import make_lowering_batch, model_inputs, execute_proposal
-from topoformer.interface_proposals import ProposalModel
+from tensegra.campaign_composition import make_lowering_batch, model_inputs, execute_proposal
+from tensegra.interface_proposals import ProposalModel
 
 
 def test_exact_original_mixture_fidelity_all_event_fields():

@@ -1,5 +1,5 @@
-from topoformer.campaign02_world import Action, Item, WorldSpec, Workshop, action_catalog, encode_observation
-from topoformer.campaign02_interventions import FaultedWorkshop, ReturnFault, without_tools, two_subset_return_script
+from tensegra.campaign02_world import Action, Item, WorldSpec, Workshop, action_catalog, encode_observation
+from tensegra.campaign02_interventions import FaultedWorkshop, ReturnFault, without_tools, two_subset_return_script
 
 
 def spec():

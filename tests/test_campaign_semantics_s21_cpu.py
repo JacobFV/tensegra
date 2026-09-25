@@ -4,15 +4,15 @@ from pathlib import Path
 from unittest.mock import patch
 import torch
 from torch import nn
-from topoformer import campaign_semantics_s21 as m
-from topoformer.campaign_semantics_s19_actor import TypedRecordActor
-from topoformer.thinking_language import ActorInput,state_hash
+from tensegra import campaign_semantics_s21 as m
+from tensegra.campaign_semantics_s19_actor import TypedRecordActor
+from tensegra.thinking_language import ActorInput,state_hash
 class Differential(unittest.TestCase):
  def test_one_update_identical_to_s19(self):
   torch.set_num_threads(2)
   def factory(**kwargs):return TypedRecordActor(value_count=4,width=16,heads=4,node_capacity=128,max_records=160,max_slot=32,autocast_dtype='bfloat16')
   # entity copies public token0; EOS. This fixture contains no privileged inference call.
-  from topoformer.campaign_semantics_s19_codec import KINDS
+  from tensegra.campaign_semantics_s19_codec import KINDS
   x=dict(public=ActorInput('alice',()),records=[(1,KINDS.index('entity'),-1,0,-1),(3,-1,-1,-1,-1)],row={'nodes':[1],'edges':[]})
   train=[x]*4096;c=dict(device='cpu',job='profile',updates=1,checkpoints=[0,1]);evaluations=[]
   def evaluate(model,examples,vocab,out,label,update,batch):evaluations.append((label,update,len(examples),batch));return {'mechanical_fixture':True}
@@ -37,7 +37,7 @@ class Differential(unittest.TestCase):
    self.assertEqual(evaluations,[('train',0,8,32),('development',0,8,32),('train',1,8,32),('development',1,8,32)]*2)
    self.assertEqual(set(result['losses'][0]['field_counts']),set(m.field_losses(outputs,records)[2]))
  def test_evaluator_public_only_greedy(self):
-  from topoformer.campaign_semantics_s19_codec import KINDS,records_to_targets
+  from tensegra.campaign_semantics_s19_codec import KINDS,records_to_targets
   torch.set_num_threads(2);torch.manual_seed(2101);model=TypedRecordActor(value_count=4,width=16,heads=4,autocast_dtype='bfloat16');records=[(1,KINDS.index('entity'),-1,0,-1),(3,-1,-1,-1,-1)];public=ActorInput('alice',());gold=records_to_targets(records,token_count=1,vocab_size=4)
   example=dict(public=public,records=records,gold=gold,row=dict(seed=1,semantic_sha256='a'*64,graph_sha256='b'*64,arity=3,facts=3));seen=[]
   def greedy(publics):

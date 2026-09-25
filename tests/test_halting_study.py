@@ -5,8 +5,8 @@ import torch
 
 
 def api():
-    assert importlib.util.find_spec('topoformer.halting_study'), 'halting diagnostic is missing'
-    from topoformer import halting_study
+    assert importlib.util.find_spec('tensegra.halting_study'), 'halting diagnostic is missing'
+    from tensegra import halting_study
     return halting_study
 
 

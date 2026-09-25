@@ -3,8 +3,8 @@ import json
 import pytest
 import torch
 
-from topoformer.binding_study import BindingStudyConfig, VARIANTS, build_model, conditions, model_inputs, run
-from topoformer.grounding_study import make_data
+from tensegra.binding_study import BindingStudyConfig, VARIANTS, build_model, conditions, model_inputs, run
+from tensegra.grounding_study import make_data
 
 
 def test_matrix_is_full_cartesian():
@@ -45,7 +45,7 @@ def test_adaptive_controls_have_identical_initial_parameters_and_frozen_strength
 
 @pytest.mark.parametrize('variant,strength,mode,content', [('stage3_soft4',4.,'soft',0.), ('stage3_soft8',8.,'soft',0.), ('known',8.,'known',0.), ('graph_input_keyed',16.,'graph_input',8.)])
 def test_stage3_baseline_logits_are_bitexact(variant,strength,mode,content):
-    from topoformer.traversal_model import TraversalTransformer
+    from tensegra.traversal_model import TraversalTransformer
     config = BindingStudyConfig()
     new, mode, _ = build_model(config, variant, 4)
     torch.manual_seed(4)

@@ -2,8 +2,8 @@ import json
 from pathlib import Path
 import pytest
 import torch
-from topoformer.campaign_semantics_motif_inference import compact,expand,expand_policies,validate
-from topoformer import semantic_scaling as base
+from tensegra.campaign_semantics_motif_inference import compact,expand,expand_policies,validate
+from tensegra import semantic_scaling as base
 
 
 def test_compact_preserves_metrics_and_shared_calibration_archive():

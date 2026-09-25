@@ -2,8 +2,8 @@
 import copy,json,unittest
 from pathlib import Path
 import importlib.util,sys,types
-package=types.ModuleType('s21_guard_package');package.__path__=[str(Path('src/topoformer').resolve())];sys.modules[package.__name__]=package
-spec=importlib.util.spec_from_file_location('s21_guard_package.campaign_semantics_s21_freeze',Path('src/topoformer/campaign_semantics_s21_freeze.py'));f=importlib.util.module_from_spec(spec);spec.loader.exec_module(f)
+package=types.ModuleType('s21_guard_package');package.__path__=[str(Path('src/tensegra').resolve())];sys.modules[package.__name__]=package
+spec=importlib.util.spec_from_file_location('s21_guard_package.campaign_semantics_s21_freeze',Path('src/tensegra/campaign_semantics_s21_freeze.py'));f=importlib.util.module_from_spec(spec);spec.loader.exec_module(f)
 class Guards(unittest.TestCase):
  def prepared(self):
   c=json.loads(Path('configs/campaign-s21-profile-prepared-v1.json').read_text())
@@ -20,7 +20,7 @@ class Guards(unittest.TestCase):
   c=json.loads(Path('configs/campaign-s21-profile-prepared-v1.json').read_text())
   c['inputs']['audit']['sha256']=None
   with self.assertRaises(ValueError):f.validate(c)
-  with self.assertRaises(ValueError):f.verify(self.prepared(),Path('src/topoformer'),180)
+  with self.assertRaises(ValueError):f.verify(self.prepared(),Path('src/tensegra'),180)
  def test_dynamic_exposure(self):
   c=self.prepared();c['expected_epoch_exposures']['broad']['tokens']=0
   with self.assertRaises(ValueError):f.validate(c)

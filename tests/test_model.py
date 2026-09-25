@@ -1,6 +1,6 @@
 import torch
 
-from topoformer.model import GraphPredictor
+from tensegra.model import GraphPredictor
 
 
 def chain(n):

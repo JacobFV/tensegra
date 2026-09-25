@@ -6,10 +6,10 @@ import itertools
 import pytest
 import torch
 
-from topoformer.campaign02_modular import (ModularReference, ModularWorkshop, STAGES, action_catalog,
+from tensegra.campaign02_modular import (ModularReference, ModularWorkshop, STAGES, action_catalog,
     encode_action, encode_observation, generate_modular, modular_executor, validate_assignment)
-from topoformer.campaign02_protocol import execute
-from topoformer.campaign02_world import Action
+from tensegra.campaign02_protocol import execute
+from tensegra.campaign02_world import Action
 
 EXEC = partial(modular_executor, execute_call=execute)
 ORDERS = [p for n in (1, 2, 3) for p in itertools.permutations(STAGES, n)]
@@ -74,9 +74,9 @@ def test_encoders_rename_invariant_and_stage_marked():
 
 
 def test_training_and_population_integration(tmp_path):
-    from topoformer.campaign02_policy import CandidatePolicy, PolicyConfig
-    from topoformer.campaign02_training import collect_teacher, public_frame
-    from topoformer.campaign02_population import PopulationConfig, PopulationRun
+    from tensegra.campaign02_policy import CandidatePolicy, PolicyConfig
+    from tensegra.campaign02_training import collect_teacher, public_frame
+    from tensegra.campaign02_population import PopulationConfig, PopulationRun
     torch.set_num_threads(1)
     spec = generate_modular(2, stages=("select", "route"), categories=2, choices=2, locations=5, step_limit=40)
     _, obs, cand = public_frame(ModularWorkshop(spec).observe(), "m1")
@@ -91,7 +91,7 @@ def test_training_and_population_integration(tmp_path):
     cfg = PopulationConfig(mode="single", rounds=1, updates_per_slot=1, development_examples=2, teacher="modular_cheap_first",
         world_family="modular", policy={"feature_version": "m1"},
         train={"width": 8, "device": "cpu", "batch_size": 1, "max_steps": 40, "evaluation_batch": 2}, world_mix=mix)
-    from topoformer.campaign02_references import make_reference
+    from tensegra.campaign02_references import make_reference
     run_ = PopulationRun(cfg, tmp_path / "m", factory, lambda: make_reference("modular_cheap_first"))
     run_.run()
     assert run_.state["status"] == "completed"
@@ -116,7 +116,7 @@ def test_distractor_returns_are_public_wrong_typed_and_harmless_to_teacher():
 
 
 def test_same_type_distractors_and_m2_provenance():
-    from topoformer.campaign02_modular import encode_action_m2
+    from tensegra.campaign02_modular import encode_action_m2
     specs = [generate_modular(s, stages=("select", "assign"), same_type_distractors=2) for s in range(30)]
     kinds = {p for x in specs for p, _, _ in x.distractors}
     assert kinds and kinds <= {"constrained_subset", "csp"}
@@ -137,7 +137,7 @@ def test_same_type_distractors_and_m2_provenance():
 
 
 def test_m3_stage_failure_counters_are_public_and_reset():
-    from topoformer.campaign02_modular import encode_action_m3, encode_observation_m3
+    from tensegra.campaign02_modular import encode_action_m3, encode_observation_m3
     spec = generate_modular(7, stages=("select", "route"))
     env = ModularWorkshop(spec, executor=EXEC)
     for r in env.observe().item_inventory:

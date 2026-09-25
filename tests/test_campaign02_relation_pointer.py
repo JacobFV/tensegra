@@ -5,15 +5,15 @@ from pathlib import Path
 import pytest
 import torch
 
-from topoformer.campaign02_relation import relation_loss
-from topoformer.campaign02_relation_pointer import (
+from tensegra.campaign02_relation import relation_loss
+from tensegra.campaign02_relation_pointer import (
     ARMS, MASK, PointerRecordActor, build_optimizer, historical_state_hash,
     load_historical, source_bindings, verify_config,
 )
-from topoformer.campaign_semantics_s19_actor import TypedRecordActor
-from topoformer.campaign_semantics_s19_codec import EDGE, EOS, KINDS, NODE, PAD
-from topoformer.campaign_semantics_s22_controller import NodePrefix, decode
-from topoformer.thinking_language import ActorInput, state_hash
+from tensegra.campaign_semantics_s19_actor import TypedRecordActor
+from tensegra.campaign_semantics_s19_codec import EDGE, EOS, KINDS, NODE, PAD
+from tensegra.campaign_semantics_s22_controller import NodePrefix, decode
+from tensegra.thinking_language import ActorInput, state_hash
 
 DIMS = dict(value_count=4, width=16, heads=2, node_capacity=8, max_records=24, max_slot=4)
 PRED = KINDS.index('pred')

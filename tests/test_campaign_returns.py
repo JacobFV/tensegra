@@ -1,5 +1,5 @@
 import pytest
-from topoformer.campaign_returns import selection_score,group_counts
+from tensegra.campaign_returns import selection_score,group_counts
 
 
 def test_selection_prioritizes_weakest_covered_cell():
@@ -65,8 +65,8 @@ def test_r04_pairs_nested_diversity_without_delayed_test_selection():
 
 def test_balanced_grid_uses_observed_typed_values_without_relabeling():
     import torch
-    from topoformer.retention_data import make_batch
-    from topoformer.campaign_returns_balanced import balanced_indices
+    from tensegra.retention_data import make_batch
+    from tensegra.campaign_returns_balanced import balanced_indices
     batch=make_batch(987612,1024,distractors=0)
     ids=balanced_indices(batch,2)
     assert len(ids)==104 and len(ids.unique())==104
@@ -77,8 +77,8 @@ def test_balanced_grid_uses_observed_typed_values_without_relabeling():
 
 def test_balanced_grid_preserves_exact_primitive_witnesses():
     import torch
-    from topoformer.retention_data import make_batch
-    from topoformer.campaign_returns_balanced import balanced_indices
+    from tensegra.retention_data import make_batch
+    from tensegra.campaign_returns_balanced import balanced_indices
     batch=make_batch(987612,1024,distractors=0)
     ids=balanced_indices(batch,2); event=batch['public']['event']
     op=event['operations'][ids,0];args=event['operand_values'][ids,0];value=event['values'][ids,0]
@@ -89,8 +89,8 @@ def test_balanced_grid_preserves_exact_primitive_witnesses():
 
 def test_r05_wrong_value_is_same_type_and_has_exact_witness():
     import torch
-    from topoformer.retention_data import make_batch
-    from topoformer.campaign_returns_use import alter_public
+    from tensegra.retention_data import make_batch
+    from tensegra.campaign_returns_use import alter_public
     batch=make_batch(71234,256,distractors=0)
     original=batch['public'];public=alter_public(original,'wrong');event=public['event']
     value=event['values'][:,0];typ=event['types'][:,0];op=event['operations'][:,0];args=event['operand_values'][:,0]
@@ -105,10 +105,10 @@ def test_r05_wrong_value_is_same_type_and_has_exact_witness():
 
 def test_r05_capture_matches_frozen_forward_and_drop_ignores_value():
     import torch
-    from topoformer.retention_data import make_batch
-    from topoformer.return_memory import ReturnMemoryModel
-    from topoformer.campaign_returns_use import workspace,alter_public
-    from topoformer.return_diagnostics_probe import capture
+    from tensegra.retention_data import make_batch
+    from tensegra.return_memory import ReturnMemoryModel
+    from tensegra.campaign_returns_use import workspace,alter_public
+    from tensegra.return_diagnostics_probe import capture
     # Explicitly small mechanical parity fixture; experimental width remains1024.
     torch.set_num_threads(2);torch.manual_seed(91)
     model=ReturnMemoryModel(width=32,encoding='factorized').eval()
@@ -138,8 +138,8 @@ def test_r05_confirmation_has_fixed_endpoints_and_postfit_extrapolation():
 
 def test_balanced_fitting_population_is_unique_and_nearly_uniform():
     import torch
-    from topoformer.retention_data import make_batch
-    from topoformer.campaign_returns_balanced_fit import fitting_indices
+    from tensegra.retention_data import make_batch
+    from tensegra.campaign_returns_balanced_fit import fitting_indices
     batch=make_batch(987612,1024,distractors=0)
     ids=fitting_indices(batch,105,51)
     assert len(ids)==105 and len(ids.unique())==105
@@ -150,10 +150,10 @@ def test_balanced_fitting_population_is_unique_and_nearly_uniform():
 
 def test_capture_selected_matches_existing_frozen_feature_path():
     import torch
-    from topoformer.retention_data import make_batch
-    from topoformer.return_memory import ReturnMemoryModel
-    from topoformer.return_crossdelay import feature_batch
-    from topoformer.campaign_returns_balanced import capture_selected
+    from tensegra.retention_data import make_batch
+    from tensegra.return_memory import ReturnMemoryModel
+    from tensegra.return_crossdelay import feature_batch
+    from tensegra.campaign_returns_balanced import capture_selected
     # Small mechanical fixture only; all experimental workspaces are1024.
     torch.set_num_threads(2);torch.manual_seed(17)
     model=ReturnMemoryModel(width=32,encoding='factorized').eval()
@@ -169,7 +169,7 @@ def test_capture_selected_matches_existing_frozen_feature_path():
 def test_residual_readout_initial_function_and_learning():
     """Small width is a mechanical fixture, not an experimental workspace."""
     import torch
-    from topoformer.campaign_returns_capacity import ResidualReadout
+    from tensegra.campaign_returns_capacity import ResidualReadout
     torch.manual_seed(7)
     linear = torch.nn.Linear(8, 3)
     model = ResidualReadout(linear, hidden=8)
@@ -203,7 +203,7 @@ def test_r08_optimizer_screen_preserves_fixed_capacity_and_exposure():
 
 def test_phase_readout_is_public_binary_selection():
     import torch
-    from topoformer.campaign_returns_phase import PhaseReadout
+    from tensegra.campaign_returns_phase import PhaseReadout
     torch.manual_seed(9)
     linear = torch.nn.Linear(8, 3)
     model = PhaseReadout(linear)

@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from topoformer.grounding_study import (GroundingStudyConfig, batch_hash, build_model,
+from tensegra.grounding_study import (GroundingStudyConfig, batch_hash, build_model,
                                        conditions, evaluate, make_data, model_inputs, run)
 
 

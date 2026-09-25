@@ -1,8 +1,8 @@
 """Width16 mechanical parity fixture; all research actors remain width1024."""
 import torch
-from topoformer.semantic_curriculum import SemanticCurriculumActor
-from topoformer.thinking_language import ActorInput
-from topoformer.campaign_semantics_edge_probe import edge_scores
+from tensegra.semantic_curriculum import SemanticCurriculumActor
+from tensegra.thinking_language import ActorInput
+from tensegra.campaign_semantics_edge_probe import edge_scores
 
 
 def test_frozen_node_readout_preserves_bfloat16_dense_and_sampled_scores():

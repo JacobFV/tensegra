@@ -1,6 +1,6 @@
 from dataclasses import replace
 from itertools import product
-from topoformer.campaign02_protocol import Budget, Call, execute, execute_isolated, validate_result
+from tensegra.campaign02_protocol import Budget, Call, execute, execute_isolated, validate_result
 
 
 def test_arithmetic_and_immutable_types():
@@ -76,7 +76,7 @@ def test_result_envelope_rejection():
 
 
 def test_persistent_solver_lifecycle():
-    from topoformer.campaign02_protocol import BoundedSolver
+    from tensegra.campaign02_protocol import BoundedSolver
     with BoundedSolver() as solver:
         for i in range(3):
             result = solver.execute(Call('add', (i, 2)))

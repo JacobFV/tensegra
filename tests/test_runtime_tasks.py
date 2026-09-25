@@ -1,5 +1,5 @@
-from topoformer.runtime_tasks import make_batch, FAMILIES
-from topoformer.runtime_execution import execute_batch
+from tensegra.runtime_tasks import make_batch, FAMILIES
+from tensegra.runtime_execution import execute_batch
 
 
 def test_oracle_all_families_and_public_has_no_future_nodes():
@@ -54,7 +54,7 @@ def test_lexical_equivalence_has_shared_keys_and_supervision():
 
 def test_all_initial_edges_and_payloads_are_public():
     batch=make_batch(1, nodes=3,depth=4,family='nested',seed=7)
-    from topoformer.runtime_tasks import RELATIONS
+    from tensegra.runtime_tasks import RELATIONS
     task=batch['tasks'][0]; table={node:i for i,node in enumerate(task.candidates)}
     assert len(table)==len(task.runtime.nodes)
     assert batch['public']['adjacency'].sum().item()==len(task.runtime.edges)
@@ -78,7 +78,7 @@ def test_wrong_binding_persists_and_world_is_immutable():
 
 
 def test_corruption_matches_symbolic_and_public_graphs():
-    from topoformer.runtime_tasks import RELATIONS
+    from tensegra.runtime_tasks import RELATIONS
     batch=make_batch(1,nodes=4,depth=4,family='nested',seed=33,corruption=1.)
     task=batch['tasks'][0]; ids={n:i for i,n in enumerate(task.candidates)}
     assert task.wrong_runtime is not None
@@ -100,7 +100,7 @@ def test_unbound_and_schema_stress_have_no_hidden_answer():
 
 
 def test_forward_execution_ignores_gold():
-    from topoformer.runtime_execution import run_actions
+    from tensegra.runtime_execution import run_actions
     batch=make_batch(1,seed=2)
     task=batch['tasks'][0]; actions=task.gold_actions
     before=run_actions(task,actions)
@@ -129,7 +129,7 @@ def test_deep_runtime_matches_independent_generator_result(family,depth):
 
 
 def test_generator_detects_executor_result_bug(monkeypatch):
-    import topoformer.runtime_execution as execution
+    import tensegra.runtime_execution as execution
     original=execution.run_actions
     def faulty(*args,**kwargs):
         result=original(*args,**kwargs)
@@ -142,7 +142,7 @@ def test_generator_detects_executor_result_bug(monkeypatch):
 
 
 def test_surface_and_output_decoders_reflect_observed_templates():
-    from topoformer.runtime_tasks import decode_surface, render_output
+    from tensegra.runtime_tasks import decode_surface, render_output
     for template in ('canonical','paraphrase','heldout'):
         batch=make_batch(1,seed=2,template=template,invalid=True)
         task=batch['tasks'][0]
@@ -158,7 +158,7 @@ def test_surface_and_output_decoders_reflect_observed_templates():
 @pytest.mark.parametrize('family', ['nested','aliases','mixed'])
 @pytest.mark.parametrize('depth', [4,16,32])
 def test_matched_decoy_requires_correct_root_despite_identical_path_labels(family,depth):
-    from topoformer.runtime_execution import run_actions
+    from tensegra.runtime_execution import run_actions
     batch=make_batch(1,nodes=2,depth=depth,family=family,seed=901)
     task=batch['tasks'][0]
     decoy_selector=next(i for i,node_id in enumerate(task.candidates)

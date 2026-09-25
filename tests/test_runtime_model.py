@@ -1,6 +1,6 @@
 import pytest
 import torch
-from topoformer.runtime_model import RuntimeBindingModel, binding_confidence
+from tensegra.runtime_model import RuntimeBindingModel, binding_confidence
 
 
 def sample():

@@ -1,5 +1,5 @@
 import pytest
-from topoformer.binding_analysis import trajectory_summary, stability_gate, pearson, feature_associations
+from tensegra.binding_analysis import trajectory_summary, stability_gate, pearson, feature_associations
 
 
 def test_conditional_transition_denominator_and_nonduplicated_product():
@@ -53,7 +53,7 @@ CONFIG = dict(seeds=[0, 1, 2], eval_sizes=[16], eval_depths=[2], steps=4)
 
 
 def test_aggregation_bitstrings_grid_and_paired_data():
-    from topoformer.binding_analysis import summarize
+    from tensegra.binding_analysis import summarize
     result = summarize(fixture_rows(), CONFIG)
     assert result['aggregates'][0]['metrics']['exact_path_completion']['mean'] == .5
     assert result['trajectories'][0]['complete_path'] == .5
@@ -70,7 +70,7 @@ def test_aggregation_bitstrings_grid_and_paired_data():
 
 
 def test_source_and_budget_validation():
-    from topoformer.binding_analysis import summarize
+    from tensegra.binding_analysis import summarize
     rows = fixture_rows()
     rows[-1]['source']['commit'] = 'changed'
     with pytest.raises(ValueError, match='source/config'):
@@ -83,7 +83,7 @@ def test_cli_provenance_and_report(tmp_path):
     import hashlib
     import json
     from pathlib import Path
-    import topoformer.binding_analysis as analysis
+    import tensegra.binding_analysis as analysis
     metrics = tmp_path/'metrics.jsonl'
     metrics.write_text('\n'.join(json.dumps(r) for r in fixture_rows()))
     (tmp_path/'config.json').write_text(json.dumps(CONFIG))
@@ -101,7 +101,7 @@ def test_gzip_input_hashes_compressed_file_and_preserves_results(tmp_path):
     import gzip
     import hashlib
     import json
-    from topoformer.binding_analysis import main
+    from tensegra.binding_analysis import main
     metrics = tmp_path/'metrics.jsonl.gz'
     with gzip.open(metrics, 'wt') as stream:
         stream.write('\n'.join(json.dumps(r) for r in fixture_rows()))
@@ -116,7 +116,7 @@ def test_standalone_help_without_site_packages(tmp_path):
     import subprocess
     import sys
     from pathlib import Path
-    import topoformer.binding_analysis as analysis
+    import tensegra.binding_analysis as analysis
     result = subprocess.run([sys.executable, '-S', str(Path(analysis.__file__)), '--help'],
                             cwd=tmp_path, capture_output=True, text=True)
     assert result.returncode == 0, result.stderr

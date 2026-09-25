@@ -4,13 +4,13 @@ import copy
 import pytest
 import torch
 
-from topoformer.campaign02_relation import (
+from tensegra.campaign02_relation import (
     ARMS, KNOWN_COUNTS, TRAIN_COUNTS, node_prefix, relation_loss,
     teacher_relation_rows, verify_sources,
 )
-from topoformer.campaign_semantics_s19 import field_losses
-from topoformer.campaign_semantics_s19_codec import EDGE, EOS, NODE, PAD, KINDS
-from topoformer.campaign_semantics_s22_controller import NodePrefix
+from tensegra.campaign_semantics_s19 import field_losses
+from tensegra.campaign_semantics_s19_codec import EDGE, EOS, NODE, PAD, KINDS
+from tensegra.campaign_semantics_s22_controller import NodePrefix
 
 
 def fixture():

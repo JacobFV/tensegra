@@ -1,11 +1,11 @@
 """C01 CPU mechanics; reduced hidden widths here are tests only."""
 import torch
 from torch import nn
-from topoformer.campaign_composition import make_lowering_batch, model_inputs
-from topoformer.campaign_composition_acquire import private_labels, controlled_rows
-from topoformer.campaign_composition_runtime import build_returns, consume, manipulate
-from topoformer.campaign_composition_models import NeuralOperandBaseline, ContextualBaseline
-from topoformer.campaign_composition_study import paired_metrics, counts
+from tensegra.campaign_composition import make_lowering_batch, model_inputs
+from tensegra.campaign_composition_acquire import private_labels, controlled_rows
+from tensegra.campaign_composition_runtime import build_returns, consume, manipulate
+from tensegra.campaign_composition_models import NeuralOperandBaseline, ContextualBaseline
+from tensegra.campaign_composition_study import paired_metrics, counts
 
 
 def test_actual_return_bundle_matches_every_event_field_and_refusal_stays_absent():
@@ -21,7 +21,7 @@ def test_actual_return_bundle_matches_every_event_field_and_refusal_stays_absent
 
 
 def test_drop_has_no_supplied_label_and_refusal_is_never_filled(monkeypatch):
-    import topoformer.campaign_composition_runtime as runtime
+    import tensegra.campaign_composition_runtime as runtime
     data = make_lowering_batch(512000002, 8); labels = private_labels(data['labels'])
     pointers = labels['targets'].clone(); pointers[0, 0] = pointers[0, 1]
     bundle = build_returns(data['public'], labels['primitive'], pointers)
@@ -57,7 +57,7 @@ def test_causal_metrics_keep_original_actual_changed_and_absence_separate():
 
 
 def test_tiny_n2_training_export_is_mechanical_only(tmp_path, monkeypatch):
-    import topoformer.campaign_composition_study as study
+    import tensegra.campaign_composition_study as study
     monkeypatch.setattr(study, 'ContextualBaseline', lambda: ContextualBaseline(hidden=16, heads=4))
     config = dict(seed=502, sample_seed=512000010, control_seed=512000011, interfaces={},
                   data={split:dict(seed=512000012+i,count=8) for i,split in enumerate(('train','calibration','validation'))},
@@ -71,9 +71,9 @@ def test_tiny_n2_training_export_is_mechanical_only(tmp_path, monkeypatch):
 
 
 def test_hybrid_runner_refusals_and_oracles_are_separate(tmp_path, monkeypatch):
-    import topoformer.campaign_composition_study as study
-    import topoformer.campaign_composition_runtime as runtime
-    from topoformer.interface_proposals import ProposalModel
+    import tensegra.campaign_composition_study as study
+    import tensegra.campaign_composition_runtime as runtime
+    from tensegra.interface_proposals import ProposalModel
     fake = dict(lowerer=ProposalModel(key_dim=32,hidden=16), backbone=None,
                 accessor=nn.Linear(16,33),mean=torch.zeros(16),scale=torch.ones(16),
                 consumer=nn.Linear(35,2),oracle=nn.Linear(35,2),query_only=nn.Linear(35,2))

@@ -2,7 +2,7 @@ import copy
 import numpy as np
 import pytest
 import torch
-from topoformer.campaign_semantics_lr import override_learning_rate,calibration_losses
+from tensegra.campaign_semantics_lr import override_learning_rate,calibration_losses
 
 
 def test_only_lr_changes_after_restored_moments():

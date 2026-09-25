@@ -1,5 +1,5 @@
 import pytest
-from topoformer.return_diagnostics import paired, analyze, FIELDS
+from tensegra.return_diagnostics import paired, analyze, FIELDS
 
 
 def row(values):
@@ -29,9 +29,9 @@ def test_exact_value_distinct_from_half_unit():
 
 def test_frozen_capture_matches_original():
     import torch
-    from topoformer.return_memory import ReturnMemoryModel
-    from topoformer.retention_data import make_batch
-    from topoformer.return_diagnostics_probe import capture
+    from tensegra.return_memory import ReturnMemoryModel
+    from tensegra.retention_data import make_batch
+    from tensegra.return_diagnostics_probe import capture
     # Explicit mechanical fixture; primary captures use width1024.
     torch.manual_seed(4)
     model=ReturnMemoryModel(width=24,heads=4).eval()
@@ -47,7 +47,7 @@ def test_frozen_capture_matches_original():
 
 
 def test_scalar_grid_has_valid_distinct_ordered_identities():
-    from topoformer.return_diagnostics_grid import batch
+    from tensegra.return_diagnostics_grid import batch
     public,y=batch(9400101,16,'cpu')
     event=public['event']
     assert (event['arguments'][:,:,0]!=event['arguments'][:,:,1]).any(-1).all()

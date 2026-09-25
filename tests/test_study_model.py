@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from topoformer.study_model import StudyPredictor
+from tensegra.study_model import StudyPredictor
 
 
 def paired(variant):
@@ -108,7 +108,7 @@ def test_invalid_inputs_and_empty_graph_input_are_handled():
 
 @pytest.mark.parametrize('variant', ['none', 'soft', 'hard'])
 def test_fixed_variants_match_pilot_and_singleton_batch_graphs(variant):
-    from topoformer.model import GraphPredictor
+    from tensegra.model import GraphPredictor
 
     torch.manual_seed(7)
     pilot = GraphPredictor(3, 8, 2, 2)
@@ -136,7 +136,7 @@ def test_node_identity_pairs_zero_alpha_and_receives_gradients():
 
 
 def test_node_identity_is_opt_in_and_validated():
-    from topoformer.model import GraphPredictor
+    from tensegra.model import GraphPredictor
 
     default = StudyPredictor(3, 8, 2, 2)
     assert set(default.state_dict()) == set(GraphPredictor(3, 8, 2, 2).state_dict())

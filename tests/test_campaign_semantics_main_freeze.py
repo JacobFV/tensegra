@@ -1,8 +1,8 @@
 import importlib.util,json,sys,tempfile,unittest
 from pathlib import Path
 from unittest.mock import patch
-sys.path.insert(0,str(Path('src/topoformer').resolve()))
-spec=importlib.util.spec_from_file_location('main_freeze','src/topoformer/campaign_semantics_main_freeze.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+sys.path.insert(0,str(Path('src/tensegra').resolve()))
+spec=importlib.util.spec_from_file_location('main_freeze','src/tensegra/campaign_semantics_main_freeze.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 
 class MainFreezeTests(unittest.TestCase):
     def test_exact_recipes_immutable_cap_source_and_primary_bindings(self):

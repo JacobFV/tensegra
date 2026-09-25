@@ -1,9 +1,9 @@
 """Small CPU mechanical checks, not experimental acquisition evidence."""
 import json
 import torch
-from topoformer.campaign_composition import make_lowering_batch, model_inputs
-from topoformer.campaign_composition_acquire import private_labels, labels_from_public, controlled_rows, score, run
-from topoformer.interface_proposals import ProposalModel
+from tensegra.campaign_composition import make_lowering_batch, model_inputs
+from tensegra.campaign_composition_acquire import private_labels, labels_from_public, controlled_rows, score, run
+from tensegra.interface_proposals import ProposalModel
 
 
 def test_public_control_targets_and_required_null_denominators():
@@ -30,7 +30,7 @@ def test_public_control_targets_and_required_null_denominators():
 
 
 def test_tiny_runner_artifact_selection_and_public_only_inputs(tmp_path, monkeypatch):
-    import topoformer.campaign_composition_acquire as module
+    import tensegra.campaign_composition_acquire as module
     # Architecture reduction solely tests I/O, backward, selection and exports.
     monkeypatch.setattr(module, 'make_model', lambda: ProposalModel(key_dim=32, hidden=16))
     config = dict(seed=400, hidden=1024, key_dim=32, cpu_threads=1, learning_rate=.001, weight_decay=.01,
@@ -52,8 +52,8 @@ def test_tiny_runner_artifact_selection_and_public_only_inputs(tmp_path, monkeyp
 
 
 def test_compact_export_replays_semantic_counts(tmp_path, monkeypatch):
-    import topoformer.campaign_composition_acquire as module
-    from topoformer.campaign_composition_export import export
+    import tensegra.campaign_composition_acquire as module
+    from tensegra.campaign_composition_export import export
     import gzip
     monkeypatch.setattr(module, 'make_model', lambda: ProposalModel(key_dim=32, hidden=16))
     config = dict(seed=401, hidden=1024, key_dim=32, cpu_threads=1, learning_rate=.001, weight_decay=.01,

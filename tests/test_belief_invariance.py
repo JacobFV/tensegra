@@ -1,8 +1,8 @@
 """Small widths below are explicitly mechanical fixtures, not study runs."""
 import torch
-from topoformer.belief_state import collate, loss, oracle
-from topoformer.belief_contracts import contract_episodes
-from topoformer.belief_invariance import InvariantBeliefModel, rename_observations, make_training_episodes, ARMS
+from tensegra.belief_state import collate, loss, oracle
+from tensegra.belief_contracts import contract_episodes
+from tensegra.belief_invariance import InvariantBeliefModel, rename_observations, make_training_episodes, ARMS
 
 def test_paired_initialization_inventory():
     states = []

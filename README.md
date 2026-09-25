@@ -1,4 +1,8 @@
-# Topoformer: programmable attention geometry
+# Tensegra: programmable attention geometry
+
+*A [Tensaco](https://tensaco.ai) research model. Formerly **Topoformer**: the old `topoformer` import path
+still works as an alias, and the research archive under `research/` keeps the old name
+so that its recorded paths and hashes stay valid.*
 
 
 Research reports, audits, and raw experiment artifacts are indexed in [research/](research/README.md).
@@ -41,7 +45,7 @@ Run the paired pilot:
 
 ```sh
 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
-  .venv/bin/python -m topoformer.experiment \
+  .venv/bin/python -m tensegra.experiment \
   --config configs/pilot.json --output results/pilot
 ```
 
@@ -58,12 +62,12 @@ and marks the summary incomplete rather than implying a matched comparison.
 
 ## Core attention API
 
-The public API is `topoformer.structural_attention` and
-`topoformer.graph_structure`:
+The public API is `tensegra.structural_attention` and
+`tensegra.graph_structure`:
 
 ```python
 import torch
-from topoformer import graph_structure, structural_attention
+from tensegra import graph_structure, structural_attention
 
 # read_graph[b, i, j] means query row i may read key column j.
 read_graph = torch.tensor([[[1, 1], [0, 1]]], dtype=torch.bool)
@@ -96,14 +100,14 @@ to directly memorize arbitrary adjacency. Transfer models remain identity-free.
 
 ```sh
 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
-  .venv/bin/python -m topoformer.study \
+  .venv/bin/python -m tensegra.study \
   --config configs/study-smoke.json --output results/study-smoke
 
 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
-  .venv/bin/python -m topoformer.study \
+  .venv/bin/python -m tensegra.study \
   --config configs/study.json --output results/study
 
-PYTHONPATH=src .venv/bin/python -m topoformer.study_analysis \
+PYTHONPATH=src .venv/bin/python -m tensegra.study_analysis \
   results/study/metrics.jsonl results/study-analysis
 ```
 
@@ -147,8 +151,8 @@ binding. `induce_bias` computes `Pq @ A_r @ Pk.transpose(-1, -2)`; gradients flo
 through both grounding roles and relation strengths.
 
 ```python
-from topoformer.runtime_graph import RuntimeGraph
-from topoformer.grounding import SoftGrounding, induce_bias
+from tensegra.runtime_graph import RuntimeGraph
+from tensegra.grounding import SoftGrounding, induce_bias
 
 # IDs [B,N], entity embeddings [B,N,D], directed adjacency [B,R,N,N].
 graph = RuntimeGraph(node_ids, entity_embeddings, adjacency)
@@ -167,11 +171,11 @@ model experiment. The original explicit-graph predictors and studies are unchang
 
 ```sh
 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
-  .venv/bin/python -m topoformer.grounding_study \
+  .venv/bin/python -m tensegra.grounding_study \
   --config configs/stage3-smoke.json --output results/grounding-smoke
 
 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
-  .venv/bin/python -m topoformer.grounding_study \
+  .venv/bin/python -m tensegra.grounding_study \
   --config configs/stage3.json --output results/grounding
 ```
 
@@ -198,15 +202,15 @@ Reproduce the supplemental control and analyze either family's metrics separatel
 
 ```sh
 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
-  .venv/bin/python -m topoformer.grounding_study \
+  .venv/bin/python -m tensegra.grounding_study \
   --config configs/stage3-keyed.json --output results/grounding-keyed
 
-PYTHONPATH=src .venv/bin/python -m topoformer.grounding_analysis \
+PYTHONPATH=src .venv/bin/python -m tensegra.grounding_analysis \
   results/grounding/metrics.jsonl results/grounding-analysis
 ```
 
 Figures use optional `matplotlib`; add `--no-plots` for tables and JSON only.
-Without Torch installed, invoke `python3 src/topoformer/grounding_analysis.py`
+Without Torch installed, invoke `python3 src/tensegra/grounding_analysis.py`
 directly with the same arguments to avoid importing the Torch-backed package.
 
 ## Stable binding substrate
@@ -226,14 +230,14 @@ analysis without counting a state twice.
 
 ```sh
 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
-  .venv/bin/python -m topoformer.binding_study \
+  .venv/bin/python -m tensegra.binding_study \
   --config configs/stage4-smoke.json --output results/binding-smoke
 
 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
-  .venv/bin/python -m topoformer.binding_study \
+  .venv/bin/python -m tensegra.binding_study \
   --config configs/stage4.json --output results/binding
 
-python3 src/topoformer/binding_analysis.py \
+python3 src/tensegra/binding_analysis.py \
   results/binding/metrics.jsonl results/binding-analysis
 ```
 
@@ -255,7 +259,7 @@ These results distinguish preserving supplied binding from learning it from scra
 The separately gated `configs/stage4-adaptive.json` compares two fresh pointer
 models with base strength frozen at 4: fixed versus null-aware entropy modulation.
 It changes content attention, while the explicit pointer transition remains intact.
-Run it with the same `topoformer.binding_study` command and a separate output directory.
+Run it with the same `tensegra.binding_study` command and a separate output directory.
 
 ## Minimal protected runtime
 
@@ -265,7 +269,7 @@ frames distinct, validates typed primitives, and rejects invalid operations
 without partial state changes. It never evaluates generated host-language code.
 
 ```python
-from topoformer.tiny_language import execute
+from tensegra.tiny_language import execute
 
 assert execute('let x = 5; let y = add(x, 3); mul(y, 2)').value == 16
 assert execute('let car = {wheels: [{radius: 10}, {radius: 13}]}; '
@@ -280,10 +284,10 @@ Matched neural controls receive the same initial graph as typed edge records.
 
 ```sh
 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
-  .venv/bin/python -m topoformer.runtime_study \
+  .venv/bin/python -m tensegra.runtime_study \
   --config configs/stage5-smoke.json --output results/runtime-smoke
 
-python3 src/topoformer/runtime_analysis.py \
+python3 src/tensegra/runtime_analysis.py \
   results/runtime/metrics.jsonl.gz results/runtime/analysis \
   --config results/runtime/config.json
 ```
@@ -308,11 +312,11 @@ The language decoder does not yet drive the runtime end to end.
 
 ```sh
 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
-  .venv/bin/python -m topoformer.thinking_study \
+  .venv/bin/python -m tensegra.thinking_study \
   --config configs/stage6-smoke.json --output results/thinking-smoke
 
 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 PYTHONPATH=src \
-  .venv/bin/python -m topoformer.thinking_language \
+  .venv/bin/python -m tensegra.thinking_language \
   --config configs/stage6-language-pilot.json
 ```
 

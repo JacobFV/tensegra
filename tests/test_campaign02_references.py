@@ -4,10 +4,10 @@ from functools import partial
 import unittest
 from dataclasses import replace
 
-from topoformer.campaign02_references import ReferencePolicy, FallbackReferencePolicy, make_reference, run_episode
-from topoformer.campaign02_world import (Action, Item, Workshop, WorldSpec,
+from tensegra.campaign02_references import ReferencePolicy, FallbackReferencePolicy, make_reference, run_episode
+from tensegra.campaign02_world import (Action, Item, Workshop, WorldSpec,
     action_catalog, protocol_executor)
-from topoformer.campaign02_protocol import execute
+from tensegra.campaign02_protocol import execute
 
 # Mechanical fixtures isolate policy contracts; process isolation is separately
 # tested by protocol tests. No empirical workload uses this direct executor.

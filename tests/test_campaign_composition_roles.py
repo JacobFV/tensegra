@@ -1,6 +1,6 @@
 import torch
-from topoformer.campaign_composition_study import get_data
-from topoformer.campaign_composition_roles import reverse_public, reversed_supervision, choose_views
+from tensegra.campaign_composition_study import get_data
+from tensegra.campaign_composition_roles import reverse_public, reversed_supervision, choose_views
 
 
 def test_public_swap_and_actual_supervision_match():

@@ -3,10 +3,10 @@ import json
 import pytest
 import torch
 
-import topoformer.experiment as experiment
-from topoformer.experiment import run, validate_config
-from topoformer.evaluation import rollout
-from topoformer.training import train_model
+import tensegra.experiment as experiment
+from tensegra.experiment import run, validate_config
+from tensegra.evaluation import rollout
+from tensegra.training import train_model
 
 
 def tiny_config():

@@ -1,6 +1,6 @@
 import unittest
 import torch
-from topoformer.campaign_returns_balanced_diversity import nested_indices,prefix_cache
+from tensegra.campaign_returns_balanced_diversity import nested_indices,prefix_cache
 
 
 class BalancedDiversityTests(unittest.TestCase):

@@ -1,5 +1,5 @@
 import pytest
-from topoformer.tiny_runtime import Runtime, RuntimeFault, PRIMITIVES
+from tensegra.tiny_runtime import Runtime, RuntimeFault, PRIMITIVES
 
 
 def test_aliases_slots_and_shadowing_have_distinct_nodes():
@@ -57,7 +57,7 @@ def test_return_rejects_second_write_and_lifting_is_read_only():
 
 
 def test_failed_user_call_rolls_back_partial_execution():
-    from topoformer.tiny_language import parse
+    from tensegra.tiny_language import parse
     r=Runtime(); a=r.scalar(2)
     f=r.define_function('f',['a'],parse('let b=3; missing'))
     before=(dict(r.nodes),list(r.edges),list(r.trace))

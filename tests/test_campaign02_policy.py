@@ -5,7 +5,7 @@ import random
 import pytest
 import torch
 
-from topoformer.campaign02_policy import (
+from tensegra.campaign02_policy import (
     CandidatePolicy, PolicyConfig, clone_checkpoint, equal_allocations,
     initial_population, offspring, restore_checkpoint,
 )

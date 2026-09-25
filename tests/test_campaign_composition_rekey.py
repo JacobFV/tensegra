@@ -1,7 +1,7 @@
 import torch
 import pytest
-from topoformer.campaign_composition import make_lowering_batch, model_inputs
-from topoformer.campaign_composition_rekey import identity_links, rekey, REFERENCES
+from tensegra.campaign_composition import make_lowering_batch, model_inputs
+from tensegra.campaign_composition_rekey import identity_links, rekey, REFERENCES
 
 
 def test_rekey_preserves_public_identity_graph_and_nonkey_evidence():

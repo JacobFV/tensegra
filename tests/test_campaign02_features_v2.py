@@ -4,7 +4,7 @@ from dataclasses import replace
 import pytest
 import torch
 
-from topoformer.campaign02_world import (Action, Item, WorldSpec, Workshop, action_catalog,
+from tensegra.campaign02_world import (Action, Item, WorldSpec, Workshop, action_catalog,
     encode_action, encode_action_v2, encode_observation, encode_observation_v2, encode_public,
     generate_world)
 
@@ -85,7 +85,7 @@ def test_v2_invariant_to_consistent_handle_renaming():
 
 
 def _config(interface, version, mode="pbt"):
-    from topoformer.campaign02_population import PopulationConfig
+    from tensegra.campaign02_population import PopulationConfig
     return PopulationConfig(mode=mode, rounds=2, updates_per_slot=1, development_examples=2,
         teacher="cheap", policy={"interface": interface, "feature_version": version},
         member_hyperparameters=tuple({"learning_rate": 1e-3*(i+1), "entropy_weight": .01} for i in range(6)),
@@ -98,13 +98,13 @@ def _factory(seed):
 
 
 def _teacher():
-    from topoformer.campaign02_references import ReferencePolicy
+    from tensegra.campaign02_references import ReferencePolicy
     return ReferencePolicy("cheap")
 
 
 @pytest.mark.parametrize("interface,version", [("legacy", "v2"), ("memory", "v1"), ("memory", "v2")])
 def test_population_runs_registered_interfaces_with_member_hyperparameters(tmp_path, interface, version):
-    from topoformer.campaign02_population import PopulationRun
+    from tensegra.campaign02_population import PopulationRun
     torch.set_num_threads(1)
     run = PopulationRun(_config(interface, version), tmp_path / "run", _factory, _teacher)
     run.run()
@@ -117,7 +117,7 @@ def test_population_runs_registered_interfaces_with_member_hyperparameters(tmp_p
 
 
 def test_population_rejects_unknown_interface_options():
-    from topoformer.campaign02_population import PopulationConfig
+    from tensegra.campaign02_population import PopulationConfig
     with pytest.raises(ValueError):
         PopulationConfig(policy={"interface": "graph_bias"})
     with pytest.raises(ValueError):
@@ -126,8 +126,8 @@ def test_population_rejects_unknown_interface_options():
 
 def test_actor_critic_v2_kl_is_zero_against_identical_reference_and_normalizes():
     from copy import deepcopy
-    from topoformer.campaign02_policy import CandidatePolicy, PolicyConfig
-    from topoformer.campaign02_training import TrainConfig, actor_critic_objective, batched_on_policy, public_frame
+    from tensegra.campaign02_policy import CandidatePolicy, PolicyConfig
+    from tensegra.campaign02_training import TrainConfig, actor_critic_objective, batched_on_policy, public_frame
     torch.manual_seed(0)
     _, obs, cand = public_frame(_factory(1).observe(), "v2")
     model = CandidatePolicy(PolicyConfig(len(obs), len(cand[0]), width=8, feature_version="v2"))
@@ -144,7 +144,7 @@ def test_actor_critic_v2_kl_is_zero_against_identical_reference_and_normalizes()
 
 
 def test_actor_critic_v1_defaults_unchanged():
-    from topoformer.campaign02_training import TrainConfig, actor_critic_objective
+    from tensegra.campaign02_training import TrainConfig, actor_critic_objective
     value = torch.tensor(0.2, requires_grad=True)
     logp = torch.tensor(-1.0, requires_grad=True)
     episode = [(logp, value, torch.tensor(1.0), 0.5)]
@@ -155,7 +155,7 @@ def test_actor_critic_v1_defaults_unchanged():
 
 
 def test_population_imports_bank_with_reset_optimizer_and_fresh_stream(tmp_path):
-    from topoformer.campaign02_population import PopulationConfig, PopulationRun, sha256
+    from tensegra.campaign02_population import PopulationConfig, PopulationRun, sha256
     torch.set_num_threads(1)
     source = PopulationRun(_config("legacy", "v2", mode="multistart"), tmp_path / "bank", _factory, _teacher)
     source.run()
@@ -190,7 +190,7 @@ def test_population_imports_bank_with_reset_optimizer_and_fresh_stream(tmp_path)
 
 
 def test_curriculum_mutation_changes_training_mixture_only(tmp_path):
-    from topoformer.campaign02_population import (PopulationConfig, PopulationRun, mutate_curriculum,
+    from tensegra.campaign02_population import (PopulationConfig, PopulationRun, mutate_curriculum,
                                                   weighted_index)
     import random as _random
     assert [weighted_index(s, [1, 0, 0]) for s in range(20)] == [0]*20
@@ -204,7 +204,7 @@ def test_curriculum_mutation_changes_training_mixture_only(tmp_path):
         seen.append(index)
         return Workshop(generate_world(seed, **mix[index]), address_seed=seed + 17)
     def factory(seed):
-        from topoformer.campaign02_population import mix_index
+        from tensegra.campaign02_population import mix_index
         return component_factory(seed, mix_index(seed, 2))
     cfg = PopulationConfig(mode="pbt", rounds=2, updates_per_slot=1, development_examples=2, teacher="cheap",
         curriculum_mutation=True, train={"width": 8, "device": "cpu", "batch_size": 1, "max_steps": 4, "evaluation_batch": 2},
@@ -226,7 +226,7 @@ def test_curriculum_mutation_changes_training_mixture_only(tmp_path):
 
 
 def test_separate_development_mixture_only_changes_selection_panel(tmp_path):
-    from topoformer.campaign02_population import PopulationConfig, PopulationRun
+    from tensegra.campaign02_population import PopulationConfig, PopulationRun
     torch.set_num_threads(1)
     dev_seen, train_seen = [], []
     def train_factory(seed):
@@ -248,7 +248,7 @@ def test_separate_development_mixture_only_changes_selection_panel(tmp_path):
 
 
 def test_halving_keep_rule_and_niche_protection():
-    from topoformer.campaign02_population import halving_keep
+    from tensegra.campaign02_population import halving_keep
     scores = [{"member": i, "utility": u, "behavior_greedy_first": g}
               for i, (u, g) in enumerate([(.9, 0), (.8, 0), (.7, 1), (.95, 0), (.6, 1), (.5, 0)])]
     assert halving_keep(scores, 3, False) == [0, 1, 3]
@@ -259,7 +259,7 @@ def test_halving_keep_rule_and_niche_protection():
 
 @pytest.mark.parametrize("niche", [False, True])
 def test_halving_gives_survivors_sequential_depth(tmp_path, niche):
-    from topoformer.campaign02_population import PopulationConfig, PopulationRun
+    from tensegra.campaign02_population import PopulationConfig, PopulationRun
     torch.set_num_threads(1)
     cfg = PopulationConfig(mode="halving", rounds=3, updates_per_slot=1, development_examples=2, teacher="cheap",
         halving_survivors=(6, 3, 2), niche_protection=niche,

@@ -3,7 +3,7 @@ import json
 import pytest
 import torch
 
-from topoformer.study import StudyConfig, first_crossing, run_study, tensor_hash
+from tensegra.study import StudyConfig, first_crossing, run_study, tensor_hash
 
 
 def test_first_crossing_is_censored():
@@ -60,7 +60,7 @@ def test_deadline_saves_partial_summary(tmp_path):
 
 
 def test_normalization_uses_only_smallest_subset():
-    from topoformer.study import _dataset
+    from tensegra.study import _dataset
     config = StudyConfig(counts=[2, 4], train_count=4, validation_count=2,
                         test_count=2, steps=8, horizon=2)
     train, validation, test, normalization = _dataset(config, 'sparse', 'uniform', 0)
@@ -88,7 +88,7 @@ def test_transfer_uses_shared_model_and_disjoint_graphs(tmp_path):
 
 
 def test_corruption_cases_and_clean_only_runtime(tmp_path):
-    from topoformer.study import _cases
+    from tensegra.study import _cases
     config = StudyConfig(suites=['corruption'], domains=['sparse'], seeds=[0],
                         modes=['hard'], counts=[2], train_count=2, validation_count=2,
                         test_count=2, checkpoints=[0, 1], steps=8, horizon=2,
@@ -114,7 +114,7 @@ def test_signed_typed_information_label(tmp_path):
 
 
 def test_schedule_indices_match_selected_graph_sizes():
-    from topoformer.study import _schedule
+    from tensegra.study import _schedule
     config = StudyConfig(checkpoints=[0, 50], batch_size=4)
     train = [{'x': torch.zeros(3, 9, 4)}, {'x': torch.zeros(17, 12, 4)}]
     graph_indices, indices = _schedule(config, train, 43)

@@ -1,8 +1,8 @@
 """Explicit width16 mechanical fixtures; primary experiments remain1024."""
 import torch
-from topoformer.semantic_curriculum import SemanticCurriculumActor
-from topoformer.campaign_semantics_grounded_actor import CopyConditionedActor
-from topoformer.thinking_language import ActorInput
+from tensegra.semantic_curriculum import SemanticCurriculumActor
+from tensegra.campaign_semantics_grounded_actor import CopyConditionedActor
+from tensegra.thinking_language import ActorInput
 
 
 def model(cls,**kw):

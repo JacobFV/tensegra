@@ -1,5 +1,5 @@
 import torch
-from topoformer.campaign_semantics_alignment import copy_statistics
+from tensegra.campaign_semantics_alignment import copy_statistics
 
 
 def test_occurrence_and_identity_are_scored_separately():

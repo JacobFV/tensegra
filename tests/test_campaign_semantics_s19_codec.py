@@ -1,7 +1,7 @@
 import unittest
 import os,json,gzip,hashlib,time,collections
 from pathlib import Path
-from topoformer.campaign_semantics_s19_codec import (
+from tensegra.campaign_semantics_s19_codec import (
     BOS,NODE,EDGE,EOS,PAD,EMPTY,KINDS,ROLES,CodecError,decode_records,
     records_to_targets,canonicalize_public_copies,teacher_forcing_inputs,encode_row,canonical_edge_order)
 
@@ -72,9 +72,9 @@ class TrainCacheAudit(unittest.TestCase):
     @unittest.skipUnless(os.environ.get('S19_TRAIN_CACHE'), 'explicit TRAIN cache audit only')
     def test_all_train_rows(self):
         import torch
-        from topoformer.campaign_semantics_data import target
-        from topoformer.semantic_scaling import tokens
-        from topoformer.thinking_language import ActorInput,KINDS as old_kinds,ROLES as old_roles
+        from tensegra.campaign_semantics_data import target
+        from tensegra.semantic_scaling import tokens
+        from tensegra.thinking_language import ActorInput,KINDS as old_kinds,ROLES as old_roles
         tick=time.monotonic(); torch.set_num_threads(2)
         path=Path(os.environ['S19_TRAIN_CACHE'])
         self.assertEqual(path.name,'train_mixed.jsonl.gz')

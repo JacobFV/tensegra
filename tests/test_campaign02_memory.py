@@ -6,11 +6,11 @@ from pathlib import Path
 import struct
 import unittest
 
-from topoformer.campaign02_memory import (
+from tensegra.campaign02_memory import (
     BYTE_START, ROW_DIM, MemoryCapacityError, MemoryLimits,
     decode_memory, encode_memory, normalized_document,
 )
-from topoformer.campaign02_world import Workshop, generate_world, action_catalog, Action, Observation
+from tensegra.campaign02_world import Workshop, generate_world, action_catalog, Action, Observation
 
 
 class PublicMemoryTests(unittest.TestCase):

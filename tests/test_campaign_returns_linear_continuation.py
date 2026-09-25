@@ -2,7 +2,7 @@ import copy
 import unittest
 import numpy as np
 import torch
-from topoformer.campaign_returns_linear_continuation import update,require_exact_replay,cpu_tree
+from tensegra.campaign_returns_linear_continuation import update,require_exact_replay,cpu_tree
 
 
 class ContinuationTests(unittest.TestCase):

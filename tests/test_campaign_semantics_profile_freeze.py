@@ -1,7 +1,7 @@
 """CPU-only immutable profile/source/matrix guards, no actor imports."""
 import gzip,importlib.util,json,tempfile,unittest
 from pathlib import Path
-spec=importlib.util.spec_from_file_location('profile_freeze','src/topoformer/campaign_semantics_profile_freeze.py')
+spec=importlib.util.spec_from_file_location('profile_freeze','src/tensegra/campaign_semantics_profile_freeze.py')
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 
 class ProfileFreezeTests(unittest.TestCase):

@@ -65,7 +65,7 @@ def test_resource_pairing_preserves_physical_semantics():
 
 def test_every_registered_sealed_condition_builds_through_evaluator():
     import json, sys
-    from topoformer.campaign02_world import generate_world
+    from tensegra.campaign02_world import generate_world
     m = evaluator()
     tools = Path(__file__).resolve().parents[1]/'research/tools'
     sys.path.insert(0, str(tools))

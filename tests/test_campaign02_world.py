@@ -1,7 +1,7 @@
 from dataclasses import replace
 from itertools import product
 
-from topoformer.campaign02_world import (Action,Workshop,generate_world,validate_subset,
+from tensegra.campaign02_world import (Action,Workshop,generate_world,validate_subset,
     action_catalog,encode_action,encode_observation)
 
 
@@ -135,7 +135,7 @@ def test_timeout_incumbent_and_no_remote_assembly():
     env=Workshop(spec)
     env.step(Action('move',{'destination':1}))
     assert env.step(Action('commit_subset',{'items':list(feasible(spec))})).feedback['reason']=='assembly_requires_workshop'
-    from topoformer.campaign02_world import reduction_matches_world
+    from tensegra.campaign02_world import reduction_matches_world
     assert not reduction_matches_world(spec,'shortest_path',{'edges':[1]}, {},0)
 
 
@@ -153,7 +153,7 @@ def test_executor_injection_keeps_lowering_and_validation_identical():
     import sys
     import types
     from unittest.mock import patch
-    from topoformer.campaign02_world import protocol_executor
+    from tensegra.campaign02_world import protocol_executor
     calls=[]
     validators=[]
     def dispatch(call):
@@ -163,13 +163,13 @@ def test_executor_injection_keeps_lowering_and_validation_identical():
     def validate(call,result):
         validators.append((call,result))
         return True
-    protocol=types.ModuleType('topoformer.campaign02_protocol')
+    protocol=types.ModuleType('tensegra.campaign02_protocol')
     protocol.Budget=lambda work: work
     protocol.Call=lambda primitive,args,budget: (primitive,args,budget)
     protocol.execute_isolated=dispatch
     protocol.validate_result=validate
     problem={'items':[[0,2,3,1]],'capacity':2,'max_cost':3}
-    with patch.dict(sys.modules,{'topoformer.campaign02_protocol':protocol}):
+    with patch.dict(sys.modules,{'tensegra.campaign02_protocol':protocol}):
         default=protocol_executor('constrained_subset',problem,16)
         injected=protocol_executor('constrained_subset',problem,16,execute_call=dispatch)
     assert default==injected

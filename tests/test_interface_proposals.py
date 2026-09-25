@@ -1,5 +1,5 @@
 import torch
-from topoformer.interface_proposals import make_proposals, collate_proposals, ProposalModel, proposal_metrics, arithmetic_delta
+from tensegra.interface_proposals import make_proposals, collate_proposals, ProposalModel, proposal_metrics, arithmetic_delta
 
 
 def test_proposals_keys_order_controls_and_ood():
@@ -45,12 +45,12 @@ def test_delta_order_and_existing_semantics():
 
 
 def test_empty_validation_cannot_pass_gate():
-    from topoformer.interface_proposals import gate_a
+    from tensegra.interface_proposals import gate_a
     assert not gate_a([])
 
 
 def test_strict_gate_rejects_missing_splits_and_boundary():
-    from topoformer.interface_proposals import gate_a, gate_a_matrix
+    from tensegra.interface_proposals import gate_a, gate_a_matrix
     good = dict(count=512, primitive=1., destination=1., operand1=1., operand2=1.,
                 full=1., noncommutative_count=100, noncommutative_order=1.)
     assert gate_a([good,good])
@@ -87,7 +87,7 @@ def test_boolean_comparison_results_never_feed_numeric_operands():
 
 
 def test_progressive_joint_support_has_no_crossed_impossible_pairs_or_future_input():
-    from topoformer.interface_proposals import joint_evidence, JointPosteriorModel
+    from tensegra.interface_proposals import joint_evidence, JointPosteriorModel
     episode = joint_evidence(seed=1, steps=4)
     assert episode['hypotheses'] == [('sub', 'd', 'a', 'b'), ('sub', 'd', 'b', 'a')]
     model = JointPosteriorModel(hidden=8)
@@ -99,7 +99,7 @@ def test_progressive_joint_support_has_no_crossed_impossible_pairs_or_future_inp
 
 
 def test_progressive_instruction_frames_keep_hidden_operation_and_order_private():
-    from topoformer.interface_proposals import progressive_instruction_episode, ProgressiveInstructionModel
+    from tensegra.interface_proposals import progressive_instruction_episode, ProgressiveInstructionModel
     a = progressive_instruction_episode(seed=8, operation_override=0, swap_override=0)
     b = progressive_instruction_episode(seed=8, operation_override=1, swap_override=1)
     assert torch.equal(a['frames'][0],b['frames'][0])
@@ -116,13 +116,13 @@ def test_progressive_instruction_frames_keep_hidden_operation_and_order_private(
 
 
 def test_progressive_no_matching_instruction_has_only_reject_support():
-    from topoformer.interface_proposals import progressive_instruction_episode
+    from tensegra.interface_proposals import progressive_instruction_episode
     episode = progressive_instruction_episode(seed=2,no_executable=True)
     assert episode['private_posterior'][:,-1].tolist() == [1.]*5
 
 
 def test_progressive_unary_hypotheses_and_records_mask_second_operand():
-    from topoformer.interface_proposals import progressive_instruction_episode
+    from tensegra.interface_proposals import progressive_instruction_episode
     episode = progressive_instruction_episode(seed=3,operation_override=3,no_executable=False)
     assert episode['hypotheses'][6:8,21:29].count_nonzero() == 0
     for frame in episode['frames']:

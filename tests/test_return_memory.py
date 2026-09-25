@@ -1,7 +1,7 @@
 import torch
-from topoformer.return_memory import ReturnMemoryModel, FIELDS
-from topoformer.retention_data import make_batch
-from topoformer.return_memory_study import gate
+from tensegra.return_memory import ReturnMemoryModel, FIELDS
+from tensegra.retention_data import make_batch
+from tensegra.return_memory_study import gate
 
 
 def model():
@@ -74,7 +74,7 @@ def test_paired_common_backbone_identical_across_encodings():
 
 
 def test_chunked_eval_matches_whole_batch():
-    from topoformer.return_memory_study import predict_chunked, counts
+    from tensegra.return_memory_study import predict_chunked, counts
     m=model(); b=make_batch(7,5,8)
     with torch.no_grad():
         whole=m(b['public'],1)

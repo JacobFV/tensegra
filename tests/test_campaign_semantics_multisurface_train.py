@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 import pytest
-from topoformer.campaign_semantics_multisurface_train import renderer_for, validate_config
+from tensegra.campaign_semantics_multisurface_train import renderer_for, validate_config
 
 
 def test_four_visits_balance_each_mixed_construction():

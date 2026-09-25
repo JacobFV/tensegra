@@ -1,6 +1,6 @@
 import torch
-from topoformer.retention_data import make_batch
-from topoformer.retention import ReturnRetentionModel, ReturnRegister
+from tensegra.retention_data import make_batch
+from tensegra.retention import ReturnRetentionModel, ReturnRegister
 
 
 def test_nonce_ordered_targets_and_float_integral():
@@ -58,7 +58,7 @@ def test_release_invalidates_storage_without_erasing_workspace():
 
 
 def test_counts_gate_requires_all_fields_seeds_and_conditions():
-    from topoformer.retention_study import competence_gate
+    from tensegra.retention_study import competence_gate
     counts={k:dict(correct=1000,total=1000) for k in ('type','operation','value','argument0','argument1','provenance')}
     rows=[dict(seed=s,distractors=d,delay=16,counts={k:dict(v) for k,v in counts.items()}) for s in (1,2) for d in (2,8)]
     assert competence_gate(rows,[1,2],[2,8])
@@ -68,7 +68,7 @@ def test_counts_gate_requires_all_fields_seeds_and_conditions():
 
 
 def test_empty_gate_support_never_passes():
-    from topoformer.retention_study import competence_gate, usage_gate
+    from tensegra.retention_study import competence_gate, usage_gate
     assert not competence_gate([],[],[])
     assert not usage_gate([],[],[])
 
@@ -87,7 +87,7 @@ def test_overwrite_preserves_free_workspace_and_validity_is_learned():
 
 
 def test_c1_loss_excludes_late_query_task_head():
-    from topoformer.retention_study import loss
+    from tensegra.retention_study import loss
     model=ReturnRetentionModel(feature_dim=16,width=16)
     batch=make_batch(32,4,feature_dim=16)
     output=model(batch['public'],1,'protected')
@@ -99,7 +99,7 @@ def test_c1_loss_excludes_late_query_task_head():
 
 
 def test_runner_zero_step_artifact_and_acquisition_cannot_compose(tmp_path):
-    from topoformer.retention_study import run
+    from tensegra.retention_study import run
     config=dict(seeds=[0],modes=['protected'],feature_dim=16,width=16,batch_size=2,steps=0,
                 fixed_set=True,validation_seeds=[900001],eval_size=2,eval_delays=[16],
                 eval_distractors=[0],interventions=['none','event_drop','wrong_value'],train_delays=[1])
@@ -110,7 +110,7 @@ def test_runner_zero_step_artifact_and_acquisition_cannot_compose(tmp_path):
 
 
 def test_every_perfect_event_matches_existing_exact_runtime():
-    from topoformer.thinking_runtime import ProtectedSession, ValueRegister, Candidate, PRIMITIVE_NAMES, VALUE_TYPES
+    from tensegra.thinking_runtime import ProtectedSession, ValueRegister, Candidate, PRIMITIVE_NAMES, VALUE_TYPES
     batch=make_batch(73,256)
     events=batch['public']['event']
     seen=set()
@@ -137,7 +137,7 @@ def test_zero_delay_still_requires_one_late_query_pass():
 
 
 def test_intervention_schedule_keeps_clean_curves_and_prespecified_control_delay():
-    from topoformer.retention_study import evaluation_interventions
+    from tensegra.retention_study import evaluation_interventions
     config={'interventions':['none','event_drop','wrong_value'],'intervention_delays':[16]}
     assert evaluation_interventions(config,0)==['none']
     assert evaluation_interventions(config,32)==['none']

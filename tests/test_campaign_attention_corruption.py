@@ -1,6 +1,6 @@
 import torch
-from topoformer.campaign_attention_selector import generate,oracle_successors,targets,SelectorModel
-from topoformer.campaign_attention_corruption import replace_edges
+from tensegra.campaign_attention_selector import generate,oracle_successors,targets,SelectorModel
+from tensegra.campaign_attention_corruption import replace_edges
 
 
 def test_replacement_keeps_all_regular_contracts():

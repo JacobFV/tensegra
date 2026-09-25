@@ -1,7 +1,7 @@
 """Small serialization fixtures; no primary model training or GPU use."""
 import copy,gzip,json
 import pytest
-from topoformer.campaign_semantics_continue import assert_replay
+from tensegra.campaign_semantics_continue import assert_replay
 
 
 def test_replay_checks_exact_predictions_and_thresholds(tmp_path):
@@ -21,7 +21,7 @@ def test_replay_checks_exact_predictions_and_thresholds(tmp_path):
 
 def test_next_batch_resume_preserves_shuffle_boundary():
     import torch
-    from topoformer.campaign_semantics_continue import next_indices
+    from tensegra.campaign_semantics_continue import next_indices
     original=torch.Generator().manual_seed(31);restored=torch.Generator();restored.set_state(original.get_state())
     a=next_indices([3,2,1,0],3,original,8);b=next_indices([3,2,1,0],3,restored,8)
     assert a==b

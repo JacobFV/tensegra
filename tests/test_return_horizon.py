@@ -1,4 +1,4 @@
-from topoformer.return_horizon import acquisition_gate, schedule_counts
+from tensegra.return_horizon import acquisition_gate, schedule_counts
 
 
 def test_schedule_matching_and_forbidden_horizon():
@@ -21,7 +21,7 @@ def test_main_configuration_and_hash_roundtrip(tmp_path):
     import hashlib
     import json
     from pathlib import Path
-    from topoformer.return_horizon_main import sha, write_json
+    from tensegra.return_horizon_main import sha, write_json
     path=tmp_path/'receipt.json'
     write_json(path, {'events':32,'seed':10})
     assert json.loads(path.read_text())=={'events':32,'seed':10}

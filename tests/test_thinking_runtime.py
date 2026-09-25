@@ -3,7 +3,7 @@ from dataclasses import FrozenInstanceError
 import math
 import unittest
 
-from topoformer.thinking_runtime import Candidate, ProtectedSession, ValueRegister, PRIMITIVES
+from tensegra.thinking_runtime import Candidate, ProtectedSession, ValueRegister, PRIMITIVES
 
 
 class ProtectedSessionTests(unittest.TestCase):

@@ -1,5 +1,5 @@
 import torch
-from topoformer.belief_state import make_episodes,collate,BeliefModel,loss,oracle
+from tensegra.belief_state import make_episodes,collate,BeliefModel,loss,oracle
 
 
 def test_oracle_conditions():
@@ -52,7 +52,7 @@ def test_episode_split_and_ambiguity():
 
 
 def test_gate_requires_every_validation_cell():
-    from topoformer.belief_study import gate
+    from tensegra.belief_study import gate
     assert not gate([],[])
     assert not gate([],[(0,'clean',8)])
     row=dict(seed=0,condition='clean',candidates=8,count=512,split='validation',regime='iid',frames=[dict(support_accuracy=1.,impossible_mass=0.,posterior_l1=0.)])
@@ -63,7 +63,7 @@ def test_gate_requires_every_validation_cell():
 
 
 def test_public_id_features_are_consumed_by_both_modes():
-    from topoformer.belief_state import observation_features
+    from tensegra.belief_state import observation_features
     ids=torch.tensor([[-1,3,3,12]])
     code=observation_features(ids)
     assert code.shape==(1,4,16) and not code[0,0].any()

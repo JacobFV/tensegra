@@ -1,5 +1,5 @@
 import torch
-from topoformer.campaign_attention import RoutingModel, RoutingBatch, generate, targets, permute_nodes, corrupt, metrics
+from tensegra.campaign_attention import RoutingModel, RoutingBatch, generate, targets, permute_nodes, corrupt, metrics
 
 
 def test_exact_oracle_and_relation_order():
@@ -86,7 +86,7 @@ def test_equal_content_mass_fixture():
 
 
 def test_restored_permutation_matches_all_metrics():
-    from topoformer.campaign_attention import restore_node_order
+    from tensegra.campaign_attention import restore_node_order
     b=generate(2,16,4,seed=1235)
     order=torch.rand(2,16).argsort(-1)
     model=RoutingModel(width=32,heads=2)
@@ -103,7 +103,7 @@ def test_restored_permutation_matches_all_metrics():
 
 def test_runner_keeps_confirmation_out_of_curves(tmp_path):
     import json
-    from topoformer.campaign_attention_study import run
+    from tensegra.campaign_attention_study import run
     cfg={'mode':'soft','width':32,'seed':9,'train_seed':100,'eval_seed':200,
          'curve_seed':300,'curve_examples':2,'curve_conditions':[{'nodes':4,'depth':1}],
          'steps':1,'checkpoints':[],'batch':2,'nodes':4,'eval_batch':2,'eval_examples':4,

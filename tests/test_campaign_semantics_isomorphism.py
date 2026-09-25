@@ -1,5 +1,5 @@
 import networkx as nx
-from topoformer.campaign_semantics_isomorphism import exact_equivalence
+from tensegra.campaign_semantics_isomorphism import exact_equivalence
 
 
 def test_exact_numbering_only_equivalence():

@@ -1,7 +1,7 @@
 import torch
-from topoformer.return_crossdelay import pooled_indices, feature_batch
-from topoformer.return_memory import ReturnMemoryModel
-from topoformer.retention_data import make_batch
+from tensegra.return_crossdelay import pooled_indices, feature_batch
+from tensegra.return_memory import ReturnMemoryModel
+from tensegra.retention_data import make_batch
 
 
 def test_shared_rows_are_balanced_unique_and_cover_every_event():

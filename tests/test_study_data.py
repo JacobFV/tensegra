@@ -1,8 +1,8 @@
 import pytest
 import torch
 
-from topoformer.data import dynamics_step, make_dynamics
-from topoformer.study_data import deterministic_future, graph_quality, make_system, supply_graph
+from tensegra.data import dynamics_step, make_dynamics
+from tensegra.study_data import deterministic_future, graph_quality, make_system, supply_graph
 
 
 def test_sparse_degree_stays_fixed_across_sizes_and_seeds_are_local():

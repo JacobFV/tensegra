@@ -1,8 +1,8 @@
 import pytest
 import torch
 
-from topoformer.runtime_graph import RuntimeGraph
-from topoformer.grounding import SoftGrounding, induce_bias
+from tensegra.runtime_graph import RuntimeGraph
+from tensegra.grounding import SoftGrounding, induce_bias
 
 
 def graph():

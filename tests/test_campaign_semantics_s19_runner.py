@@ -4,11 +4,11 @@ from unittest.mock import patch
 import torch
 from torch import nn
 from torch.nn import functional as F
-from topoformer.campaign_semantics_s19 import FIELDS,field_losses,learning_rate,padded_records,evaluate,decode_evaluation,worst_case_timing
-from topoformer.campaign_semantics_s19_codec import NODE,EDGE,EOS,PAD,KINDS,ROLES,records_to_targets
-from topoformer.campaign_semantics_s19_freeze import validate
-from topoformer import campaign_semantics_s19_freeze as freeze_module
-from topoformer.thinking_language import ActorInput
+from tensegra.campaign_semantics_s19 import FIELDS,field_losses,learning_rate,padded_records,evaluate,decode_evaluation,worst_case_timing
+from tensegra.campaign_semantics_s19_codec import NODE,EDGE,EOS,PAD,KINDS,ROLES,records_to_targets
+from tensegra.campaign_semantics_s19_freeze import validate
+from tensegra import campaign_semantics_s19_freeze as freeze_module
+from tensegra.thinking_language import ActorInput
 class S19Runner(unittest.TestCase):
  def logits(self,shape):
   return {k:torch.randn(*shape,c,requires_grad=True) for k,c in [('type',3),('kind',len(KINDS)),('value',3),('copy',5),('source',128),('target',128),('role',len(ROLES)),('slot',33)]}
@@ -32,14 +32,14 @@ class S19Runner(unittest.TestCase):
   for value in (0,4097):
    with self.assertRaises(ValueError):learning_rate(value)
  def test_exact_historical_construction_stream(self):
-  from topoformer.campaign_semantics_continue import next_indices
+  from tensegra.campaign_semantics_continue import next_indices
   g=torch.Generator().manual_seed(15115);order=torch.randperm(4096,generator=g).tolist();position=0;h=hashlib.sha256();visits=[0]*4096
   for _ in range(4096):
    indices,order,position=next_indices(order,position,g,8);h.update(json.dumps(indices).encode())
    for i in indices:visits[i]+=1
   self.assertEqual(set(visits),{8});self.assertEqual(h.hexdigest(),'85054bf25e3a3e2a5a9a932b441d6413fd0d7ad827df79e1583268aaddf5acd9')
  def test_forced_timing_is_public_only_and_160_steps(self):
-  from topoformer.campaign_semantics_s19_actor import TypedRecordActor
+  from tensegra.campaign_semantics_s19_actor import TypedRecordActor
   model=TypedRecordActor(value_count=3,width=16,heads=4,max_records=160);before={k:v.clone() for k,v in model.state_dict().items()}
   with patch('torch.cuda.synchronize'):result=worst_case_timing(model,[ActorInput('alice x',()),ActorInput('bob y',())])
   self.assertEqual(result['steps'],160);self.assertEqual([len(r) for r in result['records']],[160,160]);self.assertTrue(model.training);self.assertTrue(all(torch.equal(v,before[k]) for k,v in model.state_dict().items()))
@@ -68,7 +68,7 @@ class S19Runner(unittest.TestCase):
     (source/freeze_module.SOURCES[0]).write_text('changed')
     with self.assertRaises(ValueError):freeze_module.verify(config,source,180)
  def test_launcher_failure_and_timeout_are_durable(self):
-  import topoformer.campaign_semantics_s19_launch as launcher
+  import tensegra.campaign_semantics_s19_launch as launcher
   for body,expected in [('raise RuntimeError("synthetic child failure")',1),('import time;time.sleep(2)',124)]:
    with tempfile.TemporaryDirectory() as tmp:
     root=Path(tmp);package=root/'src/topoformer';package.mkdir(parents=True);(package/'__init__.py').write_text('');(package/'campaign_semantics_s19_launch.py').write_text(Path(launcher.__file__).read_text());(package/'campaign_semantics_s19_freeze.py').write_text('def verify(*args): return {}');(package/'campaign_semantics_s19.py').write_text(body)

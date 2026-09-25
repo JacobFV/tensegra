@@ -1,8 +1,8 @@
 """Width16 CPU mechanical fixtures only; primary workspace remains1024."""
 import torch
-from topoformer.campaign_semantics_token_actor import ContextualTokenActor
-from topoformer.semantic_curriculum import SemanticCurriculumActor
-from topoformer.thinking_language import ActorInput
+from tensegra.campaign_semantics_token_actor import ContextualTokenActor
+from tensegra.semantic_curriculum import SemanticCurriculumActor
+from tensegra.thinking_language import ActorInput
 
 
 def test_padding_batch_independence_and_unchanged_common_initialization():

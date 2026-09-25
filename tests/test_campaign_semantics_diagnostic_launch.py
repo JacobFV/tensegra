@@ -18,7 +18,7 @@ class DiagnosticReceiptTests(unittest.TestCase):
                     argv=[module,str(config),'--cap','1','--python','unused-python','--prefix',str(prefix)]
                     kwargs={'side_effect':subprocess.TimeoutExpired('fake',1)} if timeout else {'return_value':types.SimpleNamespace(returncode=0)}
                     with patch('sys.argv',argv),patch('subprocess.check_output',return_value=''),patch('subprocess.run',**kwargs),patch('builtins.print'),self.assertRaises(SystemExit) as exited:
-                        runpy.run_path(str(Path('src/topoformer')/module),run_name='__main__')
+                        runpy.run_path(str(Path('src/tensegra')/module),run_name='__main__')
                     self.assertEqual(exited.exception.code,124 if timeout else 0)
                     start=json.loads(Path(str(prefix)+'.started.json').read_text())
                     end=json.loads(Path(str(prefix)+'.occupancy.json').read_text())
@@ -28,7 +28,7 @@ class DiagnosticReceiptTests(unittest.TestCase):
                     self.assertFalse(list(root.glob('*.tmp')))
                     # Immutable start/receipt guard rejects any repeated launch before a child runs.
                     with patch('sys.argv',argv),patch('subprocess.check_output',return_value=''),patch('subprocess.run') as child,self.assertRaises(RuntimeError):
-                        runpy.run_path(str(Path('src/topoformer')/module),run_name='__main__')
+                        runpy.run_path(str(Path('src/tensegra')/module),run_name='__main__')
                     child.assert_not_called()
 
 if __name__=='__main__':unittest.main()

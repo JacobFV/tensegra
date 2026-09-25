@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from topoformer.study_analysis import (
+from tensegra.study_analysis import (
     analyze_runs,
     complete_normalized_auc,
     efficiency_thresholds,

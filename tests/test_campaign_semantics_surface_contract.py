@@ -1,8 +1,8 @@
 import unittest
 from dataclasses import replace
-from topoformer.tcn_data import build_tcn_example
-from topoformer.semantic_scaling import surface_input,targets
-from topoformer.campaign_semantics_surface_contract import validate_surface_copy_contract,register_surface_target,SurfaceCopyContractError
+from tensegra.tcn_data import build_tcn_example
+from tensegra.semantic_scaling import surface_input,targets
+from tensegra.campaign_semantics_surface_contract import validate_surface_copy_contract,register_surface_target,SurfaceCopyContractError
 
 class SurfaceContractTests(unittest.TestCase):
     def test_translated_identity_is_surface_local(self):

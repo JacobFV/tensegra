@@ -1,6 +1,6 @@
 import unittest
 
-from topoformer.semantic_graph import compile_term
+from tensegra.semantic_graph import compile_term
 
 
 class SemanticGraphTests(unittest.TestCase):

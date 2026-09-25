@@ -2,8 +2,8 @@ import pytest
 import torch
 import torch.nn.functional as F
 
-from topoformer.binding_metrics import binding_diagnostics, binding_losses, summarize_binding
-from topoformer.traversal_data import make_batch
+from tensegra.binding_metrics import binding_diagnostics, binding_losses, summarize_binding
+from tensegra.traversal_data import make_batch
 
 
 def fixture(paths_correct, distractors=1):

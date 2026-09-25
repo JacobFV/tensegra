@@ -1,6 +1,6 @@
 import math
 import pytest
-from topoformer.grounding_analysis import describe, paired_difference, validate_finite
+from tensegra.grounding_analysis import describe, paired_difference, validate_finite
 
 
 def test_sample_sd_and_single_seed_is_not_zero_uncertainty():
@@ -25,7 +25,7 @@ def test_pairing_preserves_direction_and_exposes_missing_seeds():
 
 
 def fixture_rows():
-    from topoformer.grounding_analysis import METRICS
+    from tensegra.grounding_analysis import METRICS
     rows = []
     for variant in ('soft', 'none'):
         for seed in (0, 1, 2):
@@ -41,7 +41,7 @@ def fixture_rows():
 
 
 def test_summarize_requires_complete_matched_seed_grid():
-    from topoformer.grounding_analysis import summarize
+    from tensegra.grounding_analysis import summarize
     rows = fixture_rows()
     result = summarize(rows, expected_seeds=[0, 1, 2])
     assert result['paired_task_differences'][0]['summary']['mean'] == pytest.approx(.2)
@@ -56,7 +56,7 @@ def test_summarize_requires_complete_matched_seed_grid():
 
 
 def test_no_distractors_is_unavailable_not_zero_accuracy():
-    from topoformer.grounding_analysis import summarize, render_report
+    from tensegra.grounding_analysis import summarize, render_report
     rows = fixture_rows()
     for row in rows:
         row['evaluations'][0].update(distractors=0, distractor_null_accuracy=None)
@@ -66,7 +66,7 @@ def test_no_distractors_is_unavailable_not_zero_accuracy():
 
 
 def test_mixed_source_or_config_rejected():
-    from topoformer.grounding_analysis import summarize
+    from tensegra.grounding_analysis import summarize
     rows = fixture_rows()
     rows[-1]['source']['commit'] = 'other'
     with pytest.raises(ValueError, match='mixed configuration or source'):
@@ -74,7 +74,7 @@ def test_mixed_source_or_config_rejected():
 
 
 def test_report_keeps_task_and_attention_path_separate():
-    from topoformer.grounding_analysis import summarize, render_report
+    from tensegra.grounding_analysis import summarize, render_report
     report = render_report(summarize(fixture_rows()))
     assert 'Complete attention trajectory' in report
     assert 'Exact pre-step grounding' in report
@@ -84,7 +84,7 @@ def test_report_keeps_task_and_attention_path_separate():
 
 def test_keyed_supplement_pairs_only_with_keyed_controls():
     import copy
-    from topoformer.grounding_analysis import summarize, render_report
+    from tensegra.grounding_analysis import summarize, render_report
     primary = fixture_rows()
     extra = copy.deepcopy(primary)
     for row in extra:
@@ -102,7 +102,7 @@ def test_cli_records_analysis_code_hash_separately_from_training_source(tmp_path
     import hashlib
     import json
     from pathlib import Path
-    import topoformer.grounding_analysis as analysis
+    import tensegra.grounding_analysis as analysis
     metrics = tmp_path / 'metrics.jsonl'
     metrics.write_text(''.join(json.dumps(row) + '\n' for row in fixture_rows()))
     output = tmp_path / 'report'
@@ -114,7 +114,7 @@ def test_cli_records_analysis_code_hash_separately_from_training_source(tmp_path
 
 
 def test_keyed_graph_input_example_is_rendered():
-    from topoformer.grounding_analysis import summarize, render_report
+    from tensegra.grounding_analysis import summarize, render_report
     rows = fixture_rows()
     for row in rows:
         row['variant'] = 'soft_keyed' if row['variant'] == 'soft' else 'graph_input_keyed'
@@ -126,7 +126,7 @@ def test_keyed_graph_input_example_is_rendered():
 
 
 def test_training_curves_preserve_nonmonotonic_deterioration_and_seed_sd():
-    from topoformer.grounding_analysis import summarize, training_curve_summary
+    from tensegra.grounding_analysis import summarize, training_curve_summary
     rows = fixture_rows()
     for row in rows:
         row['training']['curve'] = [dict(step=0, accuracy=.1 + .1*row['seed'], exact_path_completion=1.),
@@ -142,7 +142,7 @@ def test_training_curves_preserve_nonmonotonic_deterioration_and_seed_sd():
 
 
 def test_training_curves_reject_duplicate_checkpoints():
-    from topoformer.grounding_analysis import summarize, training_curve_summary
+    from tensegra.grounding_analysis import summarize, training_curve_summary
     rows = fixture_rows()
     for row in rows:
         row['training']['curve'] = [dict(step=0, accuracy=.1, exact_path_completion=1.)] * 2

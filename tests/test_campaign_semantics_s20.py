@@ -5,12 +5,12 @@ from unittest.mock import patch
 import pytest
 import torch
 from torch import nn
-from topoformer import campaign_semantics_s20 as run
-from topoformer import campaign_semantics_s20_freeze as guard
-from topoformer import campaign_semantics_s20_launch as launcher
-from topoformer.campaign_semantics_s19_actor import TypedRecordActor
-from topoformer.campaign_semantics_s19_codec import NODE,EOS,KINDS
-from topoformer.thinking_language import ActorInput,state_hash
+from tensegra import campaign_semantics_s20 as run
+from tensegra import campaign_semantics_s20_freeze as guard
+from tensegra import campaign_semantics_s20_launch as launcher
+from tensegra.campaign_semantics_s19_actor import TypedRecordActor
+from tensegra.campaign_semantics_s19_codec import NODE,EOS,KINDS
+from tensegra.thinking_language import ActorInput,state_hash
 
 
 def config(job='profile'):
@@ -92,7 +92,7 @@ def test_scratch_update_replays_exact_s19_adamw():
   assert torch.equal(loss,expected) and all(torch.equal(x,y) for x,y in zip(a.parameters(),b.parameters()))
   for x,y in zip(oa.state.values(),ob.state.values()):assert all(torch.equal(x[k],y[k]) for k in x)
  assert run.learning_rate(20)==3e-4*20/128
- from topoformer.campaign_semantics_s18 import optimizer_update
+ from tensegra.campaign_semantics_s18 import optimizer_update
  assert run.optimizer_update is optimizer_update
 
 

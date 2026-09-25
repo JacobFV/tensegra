@@ -1,12 +1,12 @@
 import hashlib
 import json
 import torch
-from topoformer.campaign_attention_records import RecordAttention,tokenize
-from topoformer.campaign_attention_selector import generate,oracle_successors,SelectorModel
-from topoformer.campaign_attention_confirmation_read import forward,POLICIES
-from topoformer.campaign_attention_shared_address import forward as a13_forward
-from topoformer.campaign_attention_record_diagnostic import forward as a12_forward
-from topoformer.campaign_attention_confirmation_study import run,evaluate
+from tensegra.campaign_attention_records import RecordAttention,tokenize
+from tensegra.campaign_attention_selector import generate,oracle_successors,SelectorModel
+from tensegra.campaign_attention_confirmation_read import forward,POLICIES
+from tensegra.campaign_attention_shared_address import forward as a13_forward
+from tensegra.campaign_attention_record_diagnostic import forward as a12_forward
+from tensegra.campaign_attention_confirmation_study import run,evaluate
 
 
 def fixture():

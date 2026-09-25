@@ -1,6 +1,6 @@
 import inspect
 import torch
-from topoformer import semantic_curriculum as m
+from tensegra import semantic_curriculum as m
 
 
 def test_default_width_and_exposure_axes():

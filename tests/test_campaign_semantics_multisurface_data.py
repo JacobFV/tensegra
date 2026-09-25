@@ -1,9 +1,9 @@
 import unittest
-from topoformer.campaign_semantics_multisurface_data import make_record,public_view,target,regenerate_allowed_train,run
-from topoformer.campaign_semantics_data import compact_example,target as old_target
-from topoformer.campaign_semantics_surface_contract import SurfaceCopyContractError
-from topoformer.semantic_scaling import surface_input
-from topoformer.tcn_data import build_tcn_example
+from tensegra.campaign_semantics_multisurface_data import make_record,public_view,target,regenerate_allowed_train,run
+from tensegra.campaign_semantics_data import compact_example,target as old_target
+from tensegra.campaign_semantics_surface_contract import SurfaceCopyContractError
+from tensegra.semantic_scaling import surface_input
+from tensegra.tcn_data import build_tcn_example
 import torch
 
 class MultisurfacePreparationTests(unittest.TestCase):
@@ -27,7 +27,7 @@ class MultisurfacePreparationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'not been released'):run({'generation_status':'prepared_not_authorized'})
 
     def test_actual_token_feature_collision_rejected(self):
-        from topoformer.campaign_semantics_multisurface_data import register_feature_target
+        from tensegra.campaign_semantics_multisurface_data import register_feature_target
         seen={}
         a=register_feature_target('alpha beta','target-a',seen)
         b=register_feature_target('alpha    beta','target-a',seen)
@@ -37,12 +37,12 @@ class MultisurfacePreparationTests(unittest.TestCase):
     def test_slot_conflict_rejected_before_target_assignment(self):
         from dataclasses import replace
         from unittest.mock import patch
-        from topoformer.semantic_graph import SemanticEdge
+        from tensegra.semantic_graph import SemanticEdge
         e=build_tcn_example('unification',900100001,difficulty=.5)
         graph=e.privileged.graph;edge=next(x for x in graph.edges if x.slot is not None)
         bad=replace(graph,edges=graph.edges+(SemanticEdge(edge.source,edge.target,'item',edge.slot+1),))
         bad_example=replace(e,privileged=replace(e.privileged,graph=bad))
-        with patch('topoformer.campaign_semantics_multisurface_data.targets',side_effect=AssertionError('target allocation before slot validation')):
+        with patch('tensegra.campaign_semantics_multisurface_data.targets',side_effect=AssertionError('target allocation before slot validation')):
             with self.assertRaisesRegex(ValueError,'multiple slot labels'):make_record(bad_example,self.vocab,{})
         # Several relation labels with the same slot remain representable.
         good=replace(graph,edges=graph.edges+(SemanticEdge(edge.source,edge.target,'item',edge.slot),))

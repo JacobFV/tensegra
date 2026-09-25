@@ -1,12 +1,12 @@
 import importlib
 import pytest
 import torch
-from topoformer.semantic_graph import compile_term
+from tensegra.semantic_graph import compile_term
 
 
 def module():
-    assert importlib.util.find_spec('topoformer.semantic_scaling') is not None, 'Stage7 semantic module is missing'
-    return importlib.import_module('topoformer.semantic_scaling')
+    assert importlib.util.find_spec('tensegra.semantic_scaling') is not None, 'Stage7 semantic module is missing'
+    return importlib.import_module('tensegra.semantic_scaling')
 
 
 def test_alpha_equivalence_preserves_order_and_identity():

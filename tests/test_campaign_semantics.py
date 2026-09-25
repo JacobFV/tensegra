@@ -1,7 +1,7 @@
 """Small CPU contract fixtures, not primary-width acquisition experiments."""
 import torch
-from topoformer import semantic_scaling as base
-from topoformer.campaign_semantics_data import compact_example,target
+from tensegra import semantic_scaling as base
+from tensegra.campaign_semantics_data import compact_example,target
 
 
 def test_compact_cache_preserves_compiler_targets():

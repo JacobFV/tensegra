@@ -9,11 +9,11 @@ import sys
 from types import SimpleNamespace
 import pytest
 import torch
-from topoformer.campaign_semantics_identity_contract import canonicalize_public_identifiers
-from topoformer.campaign_semantics_s16 import predict_public,tensor_hash
-from topoformer.campaign_semantics_s16_freeze import SOURCE_NAMES,freeze,verify,validate
-from topoformer.thinking_language import ActorInput,KINDS,ROLES
-from topoformer import campaign_semantics_s16_launch as launch
+from tensegra.campaign_semantics_identity_contract import canonicalize_public_identifiers
+from tensegra.campaign_semantics_s16 import predict_public,tensor_hash
+from tensegra.campaign_semantics_s16_freeze import SOURCE_NAMES,freeze,verify,validate
+from tensegra.thinking_language import ActorInput,KINDS,ROLES
+from tensegra import campaign_semantics_s16_launch as launch
 
 
 def test_predict_boundary_gets_only_normalized_text_and_preserves_wrong_copy():
@@ -66,9 +66,9 @@ def test_main_is_unlaunchable_without_postprofile_cap_freeze():
     config=json.loads(Path('research/campaigns/extended-01/semantics/S16-main-prepared.json').read_text())
     validate(config)
     assert config['proposed_cap_seconds'] is None
-    with pytest.raises(ValueError):verify(config,Path('src/topoformer'))
+    with pytest.raises(ValueError):verify(config,Path('src/tensegra'))
     config['budget_status']='frozen'
-    with pytest.raises(ValueError,match='positive frozen process cap'):verify(config,Path('src/topoformer'))
+    with pytest.raises(ValueError,match='positive frozen process cap'):verify(config,Path('src/tensegra'))
 
 
 @pytest.mark.parametrize('timeout',[False,True])
@@ -77,7 +77,7 @@ def test_lifecycle_receipt_records_failure_or_timeout_without_launch(monkeypatch
         root=Path(temporary);prepared=root/'prepared.json'
         config=json.loads(Path('research/campaigns/extended-01/semantics/S16-profile-prepared.json').read_text())
         config['output_dir']=str(root/'results');prepared.write_text(json.dumps(config))
-        freeze(prepared,root/'frozen.json',Path('src/topoformer'),60)
+        freeze(prepared,root/'frozen.json',Path('src/tensegra'),60)
         monkeypatch.setattr(sys,'argv',['launch',str(root/'frozen.json'),'--cap','60','--python','fake-python','--prefix',str(root/'attempt')])
         monkeypatch.setattr(launch.subprocess,'check_output',lambda command,**kw:'' if command[0]=='nvidia-smi' else 'mock full process snapshot')
         calls=[]
@@ -91,5 +91,5 @@ def test_lifecycle_receipt_records_failure_or_timeout_without_launch(monkeypatch
         receipt=json.loads((root/'attempt.occupancy.json').read_text())
         assert receipt['timed_out']==timeout and receipt['exit_code']==exit.value.code
         assert receipt['full_process_state']=='mock full process snapshot'
-        assert len(calls)==1 and calls[0][2]=='topoformer.campaign_semantics_s16'
+        assert len(calls)==1 and calls[0][2]=='topoformer.campaign_semantics_s16'  # frozen launcher keeps its pre-rename module path
         assert (root/'attempt.started.json').exists() and not list(root.glob('*.tmp'))

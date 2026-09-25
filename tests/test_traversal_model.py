@@ -1,6 +1,6 @@
 import torch
-from topoformer.traversal_data import make_batch
-from topoformer.traversal_model import TraversalTransformer
+from tensegra.traversal_data import make_batch
+from tensegra.traversal_model import TraversalTransformer
 
 
 def test_zero_strength_matches_ordinary_attention():

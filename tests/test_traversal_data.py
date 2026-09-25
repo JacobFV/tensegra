@@ -1,7 +1,7 @@
 import pytest
 import torch
 
-from topoformer.traversal_data import corrupt_adjacency, make_batch, oracle_traverse
+from tensegra.traversal_data import corrupt_adjacency, make_batch, oracle_traverse
 
 
 def test_reproducible_without_global_rng_changes():

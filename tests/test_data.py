@@ -1,8 +1,8 @@
 import pytest
 import torch
 
-from topoformer.data import Dynamics, dynamics_step, make_dynamics, trajectories, windows
-from topoformer.graphs import corrupt_graph
+from tensegra.data import Dynamics, dynamics_step, make_dynamics, trajectories, windows
+from tensegra.graphs import corrupt_graph
 
 
 def test_sparse_dynamics_are_reproducible_and_seeded():
