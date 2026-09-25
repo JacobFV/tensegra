@@ -1,0 +1,4500 @@
+{
+  "config": {
+    "checkpoints": [
+      {
+        "name": "rl-r0",
+        "path": "/home/brandonin/topoformer-campaign02/results/e16-rl-single-r0/checkpoints/round-4-slot-5-attempt-29.pt",
+        "sha256": "ef8cc20e62554435f38a9fce79fa08b3a5d4041aaf677a91f66417c84feeae88",
+        "development_utility": 0.97249328125,
+        "development_success": 1.0,
+        "slot": 5
+      },
+      {
+        "name": "rl-r1",
+        "path": "/home/brandonin/topoformer-campaign02/results/e16-rl-single-r1/checkpoints/round-4-slot-5-attempt-29.pt",
+        "sha256": "e637f11d8504120ed07b397b0cab06aff31f9419b1bd7c3aa3e642b242081d48",
+        "development_utility": 0.97295046875,
+        "development_success": 1.0,
+        "slot": 5
+      },
+      {
+        "name": "rl-r2",
+        "path": "/home/brandonin/topoformer-campaign02/results/e16-rl-single-r2/checkpoints/round-4-slot-5-attempt-29.pt",
+        "sha256": "53f916d54a78ae1602010e21b83d08a8f7ba6e7e8579d0b7a4311c5d6556a806",
+        "development_utility": 0.97123046875,
+        "development_success": 1.0,
+        "slot": 5
+      }
+    ],
+    "evaluation_batch": 32,
+    "references": [
+      "modular_cheap",
+      "modular_always_tool",
+      "modular_cheap_first"
+    ],
+    "reference_compute_tariff": 1.0,
+    "world_family": "modular",
+    "address_namespace": "e16-modular-90000000",
+    "conditions": [
+      {
+        "name": "distr_iid_S-R",
+        "world_family": "modular",
+        "seed_start": 95000000,
+        "examples": 256,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "select",
+            "route"
+          ],
+          "distractors": 2
+        }
+      },
+      {
+        "name": "distr_iid_S-A",
+        "world_family": "modular",
+        "seed_start": 95010000,
+        "examples": 256,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "select",
+            "assign"
+          ],
+          "distractors": 2
+        }
+      },
+      {
+        "name": "distr_iid_A-R",
+        "world_family": "modular",
+        "seed_start": 95020000,
+        "examples": 256,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "assign",
+            "route"
+          ],
+          "distractors": 2
+        }
+      },
+      {
+        "name": "distr_heldpair_R-S",
+        "world_family": "modular",
+        "seed_start": 95030000,
+        "examples": 256,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "route",
+            "select"
+          ],
+          "distractors": 2
+        }
+      },
+      {
+        "name": "distr_heldpair_A-S",
+        "world_family": "modular",
+        "seed_start": 95040000,
+        "examples": 256,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "assign",
+            "select"
+          ],
+          "distractors": 2
+        }
+      },
+      {
+        "name": "distr_heldpair_R-A",
+        "world_family": "modular",
+        "seed_start": 95050000,
+        "examples": 256,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "route",
+            "assign"
+          ],
+          "distractors": 2
+        }
+      }
+    ]
+  },
+  "config_sha256": "441301036e6773dfc54d0775d9c6c474d087ebf22aa84b999e7a5991f821a048",
+  "sources": {
+    "evaluator": "1c769e5d00abe4472246b53cd520221eb1777e07ec45a6fd048afa75457cad39",
+    "training": "229be75489628f5e665298c8599b722be41c8cce347d38084557bec24a5ecf3c",
+    "policy": "e08d8e46b352c7bb4b82290d8373365cd00efe2ad635792d42f9165b99abb80b",
+    "protocol": "4578545941f6efbe352c2c95334947960981994821020ebe208fd0a3f5509131",
+    "world": "455757373458cd5bf429d03618ffd88f177e821db13eb0229f0a3ce369455f45",
+    "references": "69e4a1b560a691c41f6d934ac5ce8ac4fdb228b9d2e0aa85f7c7807b65378981",
+    "interventions": "bd7993534e7b0b82e137b54db4310bb086e805c45652a1a871c6c3f56e38bcc1",
+    "population": "efef789d2fb543627525450d2f0aea84284035af097975463aea1c3f43aaf019",
+    "memory": "f61b856b5241683319390c2be50b5a73874a88ff9be99145e7e23573068656b0",
+    "memory_policy": "ce2e946f6713964745cfe726295c8a7d251a1858168c0d0574c0bda9e7efaa8f"
+  },
+  "checkpoints": [
+    {
+      "name": "rl-r0",
+      "path": "/home/brandonin/topoformer-campaign02/results/e16-rl-single-r0/checkpoints/round-4-slot-5-attempt-29.pt",
+      "sha256": "ef8cc20e62554435f38a9fce79fa08b3a5d4041aaf677a91f66417c84feeae88",
+      "development_utility": 0.97249328125,
+      "development_success": 1.0,
+      "slot": 5
+    },
+    {
+      "name": "rl-r1",
+      "path": "/home/brandonin/topoformer-campaign02/results/e16-rl-single-r1/checkpoints/round-4-slot-5-attempt-29.pt",
+      "sha256": "e637f11d8504120ed07b397b0cab06aff31f9419b1bd7c3aa3e642b242081d48",
+      "development_utility": 0.97295046875,
+      "development_success": 1.0,
+      "slot": 5
+    },
+    {
+      "name": "rl-r2",
+      "path": "/home/brandonin/topoformer-campaign02/results/e16-rl-single-r2/checkpoints/round-4-slot-5-attempt-29.pt",
+      "sha256": "53f916d54a78ae1602010e21b83d08a8f7ba6e7e8579d0b7a4311c5d6556a806",
+      "development_utility": 0.97123046875,
+      "development_success": 1.0,
+      "slot": 5
+    }
+  ],
+  "profile_limit": null,
+  "results": [
+    {
+      "condition": "distr_iid_S-R",
+      "arm": "rl-r0",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 98,
+      "success": 0.3828125,
+      "means": {
+        "utility": 0.3194051171875,
+        "cost": 0.06340738281250001,
+        "steps": 46.75,
+        "observations": 9.3828125,
+        "work_units": 5.26953125,
+        "travel_distance": 2.546875,
+        "compute_units": 46.75,
+        "modeled_compute_cost": 0.004675,
+        "solver_cpu_seconds": 0.00024581362499998503
+      },
+      "cost_per_success_including_failures": 0.16563561224489798,
+      "counts": {
+        "action/inspect": 2402,
+        "status/success": 3657,
+        "action/use_return": 8292,
+        "status/invalid_input": 8246,
+        "return_use_attempts": 8292,
+        "multiple_return_use_attempts": 26,
+        "return_address_contract_valid": 46,
+        "multiple_return_address_contract_valid": 26,
+        "return_application_success": 46,
+        "stale_return_use": 0,
+        "action/choose_item": 737,
+        "reductions": 70,
+        "correct_reductions": 70,
+        "certificate_valid_reductions": 46,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/commit_pending": 97,
+        "action/move": 114,
+        "action/verify": 98,
+        "status/rejected": 21,
+        "action/start_subset": 22,
+        "action/add_constraint": 66,
+        "action/call": 70,
+        "status/timeout": 44,
+        "action/retrieve": 46,
+        "action/build_route": 24
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 7.2406692686490715,
+      "artifact": "distr_iid_S-R/rl-r0.jsonl.gz",
+      "artifact_sha256": "01197d3366c69a662f2f16c58310d5ae19034869b3eb5f777a741a6ef86c2d74",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89000,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1040000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 320768
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "arm": "rl-r1",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 98,
+      "success": 0.3828125,
+      "means": {
+        "utility": 0.319550625,
+        "cost": 0.06326187500000001,
+        "steps": 46.65234375,
+        "observations": 9.3828125,
+        "work_units": 3.4140625,
+        "travel_distance": 2.52734375,
+        "compute_units": 46.65234375,
+        "modeled_compute_cost": 0.0046652343750000005,
+        "solver_cpu_seconds": 0.0001584386249999653
+      },
+      "cost_per_success_including_failures": 0.16525551020408166,
+      "counts": {
+        "action/inspect": 2402,
+        "status/success": 3200,
+        "action/use_return": 8723,
+        "status/invalid_input": 8690,
+        "return_use_attempts": 8723,
+        "multiple_return_use_attempts": 15,
+        "return_address_contract_valid": 33,
+        "multiple_return_address_contract_valid": 15,
+        "return_application_success": 33,
+        "stale_return_use": 0,
+        "reductions": 47,
+        "correct_reductions": 47,
+        "certificate_valid_reductions": 33,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/choose_item": 293,
+        "action/commit_pending": 97,
+        "action/move": 151,
+        "action/verify": 98,
+        "status/rejected": 21,
+        "action/start_subset": 22,
+        "action/add_constraint": 66,
+        "action/call": 47,
+        "status/timeout": 32,
+        "action/retrieve": 33,
+        "action/build_route": 11
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 6.918964644428343,
+      "artifact": "distr_iid_S-R/rl-r1.jsonl.gz",
+      "artifact_sha256": "0cb5ea506b3682a0a3644c62f7218fa35e69e898609d6bec9c7b118eeb7b4eed",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89100,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1060000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 320547
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "arm": "rl-r2",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 98,
+      "success": 0.3828125,
+      "means": {
+        "utility": 0.3188209765625,
+        "cost": 0.0639915234375,
+        "steps": 47.21875,
+        "observations": 9.3828125,
+        "work_units": 8.21484375,
+        "travel_distance": 2.5859375,
+        "compute_units": 47.21875,
+        "modeled_compute_cost": 0.004721875,
+        "solver_cpu_seconds": 0.00033370999999998143
+      },
+      "cost_per_success_including_failures": 0.1671615306122449,
+      "counts": {
+        "action/inspect": 2402,
+        "status/success": 3284,
+        "action/use_return": 8805,
+        "status/invalid_input": 8699,
+        "return_use_attempts": 8805,
+        "multiple_return_use_attempts": 26,
+        "return_address_contract_valid": 106,
+        "multiple_return_address_contract_valid": 17,
+        "return_application_success": 106,
+        "stale_return_use": 0,
+        "reductions": 122,
+        "correct_reductions": 122,
+        "certificate_valid_reductions": 106,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_subset": 98,
+        "action/add_constraint": 294,
+        "action/call": 122,
+        "status/timeout": 105,
+        "action/retrieve": 106,
+        "action/move": 155,
+        "action/verify": 98,
+        "action/build_route": 8
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 7.015071182511747,
+      "artifact": "distr_iid_S-R/rl-r2.jsonl.gz",
+      "artifact_sha256": "5babdc8316607bd8dcef468e4379724f578d57f44490b4e6f1635463a95587ca",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89200,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1080000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 329517
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 218,
+      "success": 0.8515625,
+      "means": {
+        "utility": 0.814401953125,
+        "cost": 0.037160546875000006,
+        "steps": 17.66015625,
+        "observations": 9.8515625,
+        "work_units": 0.0,
+        "travel_distance": 7.8828125,
+        "compute_units": 17.66015625,
+        "modeled_compute_cost": 0.001766015625,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.04363807339449542,
+      "counts": {
+        "action/inspect": 2522,
+        "status/success": 4483,
+        "action/choose_item": 654,
+        "action/commit_pending": 218,
+        "action/move": 871,
+        "action/verify": 218,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/abstain": 38,
+        "status/unknown": 38
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_iid_S-R/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "5b1bcec9864a3bf4989ed8dc54b2d1cdea7e4a5414f1ea5eabc9d96b89a210e8",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.054000064000000236
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 256,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9589240234375,
+        "cost": 0.0410759765625,
+        "steps": 22.0,
+        "observations": 10.0,
+        "work_units": 50.87890625,
+        "travel_distance": 6.3671875,
+        "compute_units": 22.0,
+        "modeled_compute_cost": 0.0022,
+        "solver_cpu_seconds": 0.0015290831250002182
+      },
+      "cost_per_success_including_failures": 0.0410759765625,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 5632,
+        "action/start_subset": 256,
+        "action/add_constraint": 768,
+        "action/call": 512,
+        "action/retrieve": 512,
+        "action/use_return": 512,
+        "return_use_attempts": 512,
+        "multiple_return_use_attempts": 256,
+        "return_address_contract_valid": 512,
+        "multiple_return_address_contract_valid": 256,
+        "return_application_success": 512,
+        "stale_return_use": 0,
+        "action/build_route": 256,
+        "action/verify": 256,
+        "reductions": 512,
+        "correct_reductions": 512,
+        "certificate_valid_reductions": 512,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_iid_S-R/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "e5b1530e82a13cf8acbee31e78834cb3d51986953df800e88108a8bb6494d7c2",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.07775249600000222
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 256,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9616457421875,
+        "cost": 0.0383542578125,
+        "steps": 19.6171875,
+        "observations": 10.0,
+        "work_units": 32.61328125,
+        "travel_distance": 6.44921875,
+        "compute_units": 19.6171875,
+        "modeled_compute_cost": 0.00196171875,
+        "solver_cpu_seconds": 0.0009779726249999942
+      },
+      "cost_per_success_including_failures": 0.0383542578125,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 4803,
+        "action/choose_item": 654,
+        "action/commit_pending": 218,
+        "action/move": 139,
+        "action/verify": 256,
+        "reductions": 412,
+        "correct_reductions": 412,
+        "certificate_valid_reductions": 223,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/build_route": 185,
+        "action/call": 412,
+        "status/timeout": 219,
+        "action/retrieve": 223,
+        "action/use_return": 223,
+        "return_use_attempts": 223,
+        "multiple_return_use_attempts": 191,
+        "return_address_contract_valid": 223,
+        "multiple_return_address_contract_valid": 191,
+        "return_application_success": 223,
+        "stale_return_use": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_subset": 38,
+        "action/add_constraint": 114
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_iid_S-R/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "c224f2c1fbacb57c2c4766f55732933af7923678fdee087133acc064bed4661c",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.06777019199997625
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "arm": "rl-r0",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 83,
+      "success": 0.32421875,
+      "means": {
+        "utility": 0.2583684765625,
+        "cost": 0.06585027343750001,
+        "steps": 50.7109375,
+        "observations": 9.32421875,
+        "work_units": 74.40234375,
+        "travel_distance": 0.0,
+        "compute_units": 50.7109375,
+        "modeled_compute_cost": 0.00507109375,
+        "solver_cpu_seconds": 0.0006275800000002285
+      },
+      "cost_per_success_including_failures": 0.20310445783132533,
+      "counts": {
+        "action/inspect": 2387,
+        "status/success": 3827,
+        "action/choose_item": 755,
+        "action/commit_pending": 81,
+        "action/start_assign": 83,
+        "action/add_constraint": 143,
+        "action/call": 217,
+        "status/timeout": 130,
+        "action/retrieve": 103,
+        "action/use_return": 9110,
+        "return_use_attempts": 9110,
+        "multiple_return_use_attempts": 82,
+        "return_address_contract_valid": 103,
+        "multiple_return_address_contract_valid": 82,
+        "return_application_success": 103,
+        "stale_return_use": 0,
+        "action/verify": 83,
+        "reductions": 217,
+        "correct_reductions": 217,
+        "certificate_valid_reductions": 103,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "status/invalid_input": 9007,
+        "status/rejected": 18,
+        "action/start_subset": 20
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 7.753366603516042,
+      "artifact": "distr_iid_S-A/rl-r0.jsonl.gz",
+      "artifact_sha256": "00eb75c678b9f46c41928e040bdfc8271e0a2ac9026dca26a1cce9c41fd8c579",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89000,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1040000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 320768
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "arm": "rl-r1",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 83,
+      "success": 0.32421875,
+      "means": {
+        "utility": 0.2584298828125,
+        "cost": 0.0657888671875,
+        "steps": 50.65625,
+        "observations": 9.32421875,
+        "work_units": 74.27734375,
+        "travel_distance": 0.0,
+        "compute_units": 50.65625,
+        "modeled_compute_cost": 0.005065625000000001,
+        "solver_cpu_seconds": 0.0006456948125003205
+      },
+      "cost_per_success_including_failures": 0.20291506024096387,
+      "counts": {
+        "action/inspect": 2387,
+        "status/success": 3309,
+        "action/choose_item": 247,
+        "action/commit_pending": 81,
+        "action/start_assign": 83,
+        "action/add_constraint": 137,
+        "action/call": 215,
+        "status/timeout": 128,
+        "action/retrieve": 101,
+        "action/use_return": 9616,
+        "return_use_attempts": 9616,
+        "multiple_return_use_attempts": 82,
+        "return_address_contract_valid": 101,
+        "multiple_return_address_contract_valid": 82,
+        "return_application_success": 101,
+        "stale_return_use": 0,
+        "action/verify": 83,
+        "reductions": 215,
+        "correct_reductions": 215,
+        "certificate_valid_reductions": 101,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "status/invalid_input": 9515,
+        "status/rejected": 16,
+        "action/start_subset": 18
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 7.63782321754843,
+      "artifact": "distr_iid_S-A/rl-r1.jsonl.gz",
+      "artifact_sha256": "00115e417b0b3c9f2e93404cbf8d2f0b7fbc7da289f0937ef5917f7fbc3ff4db",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89100,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1060000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 320547
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "arm": "rl-r2",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 83,
+      "success": 0.32421875,
+      "means": {
+        "utility": 0.2577298828125,
+        "cost": 0.06648886718750001,
+        "steps": 51.24609375,
+        "observations": 9.32421875,
+        "work_units": 79.39453125,
+        "travel_distance": 0.0,
+        "compute_units": 51.24609375,
+        "modeled_compute_cost": 0.005124609375,
+        "solver_cpu_seconds": 0.0008928131874995468
+      },
+      "cost_per_success_including_failures": 0.2050740963855422,
+      "counts": {
+        "action/inspect": 2387,
+        "status/success": 3397,
+        "action/start_subset": 83,
+        "action/add_constraint": 332,
+        "action/call": 290,
+        "status/timeout": 193,
+        "action/retrieve": 166,
+        "action/use_return": 9695,
+        "return_use_attempts": 9695,
+        "multiple_return_use_attempts": 111,
+        "return_address_contract_valid": 166,
+        "multiple_return_address_contract_valid": 97,
+        "return_application_success": 166,
+        "stale_return_use": 0,
+        "action/start_assign": 83,
+        "action/verify": 83,
+        "reductions": 290,
+        "correct_reductions": 290,
+        "certificate_valid_reductions": 166,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "status/invalid_input": 9529
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 7.850668976083398,
+      "artifact": "distr_iid_S-A/rl-r2.jsonl.gz",
+      "artifact_sha256": "9e7c17a7c045b19cc1ddcc6fa0c7e8780e209ca918e1f3e15be18312508c4cc6",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89200,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1080000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 329517
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 118,
+      "success": 0.4609375,
+      "means": {
+        "utility": 0.43236015625,
+        "cost": 0.02857734375,
+        "steps": 17.0234375,
+        "observations": 9.8515625,
+        "work_units": 0.0,
+        "travel_distance": 0.0,
+        "compute_units": 17.0234375,
+        "modeled_compute_cost": 0.00170234375,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.06199830508474576,
+      "counts": {
+        "action/inspect": 2522,
+        "status/success": 4220,
+        "action/choose_item": 654,
+        "action/commit_pending": 218,
+        "action/choose_slot": 590,
+        "action/commit_assignment": 118,
+        "action/verify": 118,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/abstain": 138,
+        "status/unknown": 138
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_iid_S-A/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "b2e40c83ee28f8106d54794dbf08e2bf3a12d850ae5b4bbdacc28e8f0c2dcf5b",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.06110039999998662
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 256,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9630865234375,
+        "cost": 0.0369134765625,
+        "steps": 23.0,
+        "observations": 10.0,
+        "work_units": 161.34765625,
+        "travel_distance": 0.0,
+        "compute_units": 23.0,
+        "modeled_compute_cost": 0.0023,
+        "solver_cpu_seconds": 0.0015057328749998752
+      },
+      "cost_per_success_including_failures": 0.0369134765625,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 5888,
+        "action/start_subset": 256,
+        "action/add_constraint": 1024,
+        "action/call": 512,
+        "action/retrieve": 512,
+        "action/use_return": 512,
+        "return_use_attempts": 512,
+        "multiple_return_use_attempts": 256,
+        "return_address_contract_valid": 512,
+        "multiple_return_address_contract_valid": 256,
+        "return_application_success": 512,
+        "stale_return_use": 0,
+        "action/start_assign": 256,
+        "action/verify": 256,
+        "reductions": 512,
+        "correct_reductions": 512,
+        "certificate_valid_reductions": 512,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_iid_S-A/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "cfceb7269146d0be03a616664f3d0c25dcc4eb502da5e5df86dfe5286f90779f",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.08318848000007506
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 256,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9644479687499999,
+        "cost": 0.03555203125,
+        "steps": 21.78125,
+        "observations": 10.0,
+        "work_units": 159.265625,
+        "travel_distance": 0.0,
+        "compute_units": 21.78125,
+        "modeled_compute_cost": 0.0021781250000000004,
+        "solver_cpu_seconds": 0.0008874782499999579
+      },
+      "cost_per_success_including_failures": 0.03555203125,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 5345,
+        "action/choose_item": 654,
+        "action/commit_pending": 218,
+        "action/choose_slot": 695,
+        "action/commit_assignment": 139,
+        "action/verify": 256,
+        "reductions": 358,
+        "correct_reductions": 358,
+        "certificate_valid_reductions": 155,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/start_subset": 38,
+        "action/add_constraint": 231,
+        "action/call": 358,
+        "status/timeout": 231,
+        "action/retrieve": 155,
+        "action/use_return": 155,
+        "return_use_attempts": 155,
+        "multiple_return_use_attempts": 127,
+        "return_address_contract_valid": 155,
+        "multiple_return_address_contract_valid": 127,
+        "return_application_success": 155,
+        "stale_return_use": 0,
+        "action/start_assign": 117,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_iid_S-A/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "a5e6b6086ec14ddc97363a449bfb26191d5aae48061090e36a3496b372b29e9a",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.08715368000004275
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "arm": "rl-r0",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 83,
+      "success": 0.32421875,
+      "means": {
+        "utility": 0.2685169140625,
+        "cost": 0.055701835937500006,
+        "steps": 47.18359375,
+        "observations": 0.6484375,
+        "work_units": 71.78515625,
+        "travel_distance": 2.43359375,
+        "compute_units": 47.18359375,
+        "modeled_compute_cost": 0.004718359375,
+        "solver_cpu_seconds": 0.0007189630625000559
+      },
+      "cost_per_success_including_failures": 0.1718032530120482,
+      "counts": {
+        "action/use_return": 11182,
+        "status/invalid_input": 11072,
+        "return_use_attempts": 11182,
+        "multiple_return_use_attempts": 103,
+        "return_address_contract_valid": 110,
+        "multiple_return_address_contract_valid": 103,
+        "return_application_success": 110,
+        "stale_return_use": 0,
+        "reductions": 247,
+        "correct_reductions": 247,
+        "certificate_valid_reductions": 110,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/inspect": 166,
+        "status/success": 870,
+        "action/start_assign": 83,
+        "action/add_constraint": 83,
+        "action/call": 247,
+        "status/timeout": 137,
+        "action/retrieve": 110,
+        "action/move": 98,
+        "action/verify": 83,
+        "action/build_route": 27
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 5.93040904449299,
+      "artifact": "distr_iid_A-R/rl-r0.jsonl.gz",
+      "artifact_sha256": "fa71b72a541ee3a6a4644ddce8f004e7a5a222facfcbfb78a204ea567553e812",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89000,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1040000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 320768
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "arm": "rl-r1",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 83,
+      "success": 0.32421875,
+      "means": {
+        "utility": 0.26861335937499997,
+        "cost": 0.055605390625,
+        "steps": 47.046875,
+        "observations": 0.6484375,
+        "work_units": 68.5859375,
+        "travel_distance": 2.51953125,
+        "compute_units": 47.046875,
+        "modeled_compute_cost": 0.0047046875000000005,
+        "solver_cpu_seconds": 0.0005571879999997954
+      },
+      "cost_per_success_including_failures": 0.17150578313253012,
+      "counts": {
+        "action/use_return": 11163,
+        "status/invalid_input": 11072,
+        "return_use_attempts": 11163,
+        "multiple_return_use_attempts": 84,
+        "return_address_contract_valid": 91,
+        "multiple_return_address_contract_valid": 84,
+        "return_application_success": 91,
+        "stale_return_use": 0,
+        "reductions": 208,
+        "correct_reductions": 208,
+        "certificate_valid_reductions": 91,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/inspect": 166,
+        "status/success": 855,
+        "action/start_assign": 83,
+        "action/add_constraint": 83,
+        "action/call": 208,
+        "status/timeout": 117,
+        "action/retrieve": 91,
+        "action/move": 159,
+        "action/verify": 83,
+        "action/build_route": 8
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 6.252910523675382,
+      "artifact": "distr_iid_A-R/rl-r1.jsonl.gz",
+      "artifact_sha256": "cd72e65bddb4b8605a3a2b67ef826c5dee63a19e9d581e3155fa019332140eb6",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89100,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1060000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 320547
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "arm": "rl-r2",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 83,
+      "success": 0.32421875,
+      "means": {
+        "utility": 0.2661508984375,
+        "cost": 0.0580678515625,
+        "steps": 47.35546875,
+        "observations": 1.32421875,
+        "work_units": 210.57421875,
+        "travel_distance": 2.546875,
+        "compute_units": 47.35546875,
+        "modeled_compute_cost": 0.004735546875000001,
+        "solver_cpu_seconds": 0.0016409393749997909
+      },
+      "cost_per_success_including_failures": 0.17910084337349397,
+      "counts": {
+        "action/use_return": 10160,
+        "status/invalid_input": 9890,
+        "return_use_attempts": 10160,
+        "multiple_return_use_attempts": 9116,
+        "return_address_contract_valid": 270,
+        "multiple_return_address_contract_valid": 251,
+        "return_application_success": 270,
+        "stale_return_use": 0,
+        "action/inspect": 339,
+        "status/success": 1883,
+        "action/start_assign": 256,
+        "action/add_constraint": 256,
+        "action/call": 620,
+        "action/retrieve": 270,
+        "reductions": 620,
+        "correct_reductions": 620,
+        "certificate_valid_reductions": 270,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "status/timeout": 350,
+        "action/move": 125,
+        "action/verify": 83,
+        "action/build_route": 14
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 9.02593717770651,
+      "artifact": "distr_iid_A-R/rl-r2.jsonl.gz",
+      "artifact_sha256": "2c13c69fbdb8779520cb8812c785284870965df23054eac8ea53a46b577721c2",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89200,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1080000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 329517
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 120,
+      "success": 0.46875,
+      "means": {
+        "utility": 0.4550375,
+        "cost": 0.0137125,
+        "steps": 7.1640625,
+        "observations": 1.46875,
+        "work_units": 0.0,
+        "travel_distance": 4.36328125,
+        "compute_units": 7.1640625,
+        "modeled_compute_cost": 0.00071640625,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.029253333333333336,
+      "counts": {
+        "action/inspect": 376,
+        "status/success": 1698,
+        "action/choose_slot": 600,
+        "action/commit_assignment": 120,
+        "action/move": 482,
+        "action/verify": 120,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/abstain": 136,
+        "status/unknown": 136
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_iid_A-R/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "9b875865117d017d0b0c35ea435d85ae23a66194fa4a70325e93b126c9a40b37",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.03303561599997806
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 256,
+      "success": 1.0,
+      "means": {
+        "utility": 0.97647578125,
+        "cost": 0.02352421875,
+        "steps": 12.0,
+        "observations": 2.0,
+        "work_units": 168.359375,
+        "travel_distance": 6.640625,
+        "compute_units": 12.0,
+        "modeled_compute_cost": 0.0012000000000000001,
+        "solver_cpu_seconds": 0.0014450011249989717
+      },
+      "cost_per_success_including_failures": 0.02352421875,
+      "counts": {
+        "action/inspect": 512,
+        "status/success": 3072,
+        "action/start_assign": 256,
+        "action/add_constraint": 256,
+        "action/call": 512,
+        "action/retrieve": 512,
+        "action/use_return": 512,
+        "return_use_attempts": 512,
+        "multiple_return_use_attempts": 256,
+        "return_address_contract_valid": 512,
+        "multiple_return_address_contract_valid": 256,
+        "return_application_success": 512,
+        "stale_return_use": 0,
+        "action/build_route": 256,
+        "action/verify": 256,
+        "reductions": 512,
+        "correct_reductions": 512,
+        "certificate_valid_reductions": 512,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_iid_A-R/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "1723e21b1539429e6e245fd611be17152c81ed228542c282ac4289ade70314e2",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.044494064000048184
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 256,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9742446875,
+        "cost": 0.025755312500000002,
+        "steps": 13.63671875,
+        "observations": 2.0,
+        "work_units": 205.1796875,
+        "travel_distance": 6.703125,
+        "compute_units": 13.63671875,
+        "modeled_compute_cost": 0.001363671875,
+        "solver_cpu_seconds": 0.0016651836249992613
+      },
+      "cost_per_success_including_failures": 0.025755312500000002,
+      "counts": {
+        "action/inspect": 512,
+        "status/success": 3072,
+        "action/choose_slot": 600,
+        "action/commit_assignment": 120,
+        "action/build_route": 190,
+        "action/call": 745,
+        "status/timeout": 419,
+        "action/retrieve": 326,
+        "action/use_return": 326,
+        "return_use_attempts": 326,
+        "multiple_return_use_attempts": 326,
+        "return_address_contract_valid": 326,
+        "multiple_return_address_contract_valid": 326,
+        "return_application_success": 326,
+        "stale_return_use": 0,
+        "action/verify": 256,
+        "reductions": 745,
+        "correct_reductions": 745,
+        "certificate_valid_reductions": 326,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_assign": 136,
+        "action/add_constraint": 136,
+        "action/move": 144
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_iid_A-R/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "93767daadc07f51ab99c3f5e60d1eaa28ab89ee0ae0eae0ba7857fd02e223300",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.05600807999985591
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "arm": "rl-r0",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 166,
+      "success": 0.6484375,
+      "means": {
+        "utility": 0.5938643359375,
+        "cost": 0.054573164062500006,
+        "steps": 37.890625,
+        "observations": 8.171875,
+        "work_units": 3.80078125,
+        "travel_distance": 4.68359375,
+        "compute_units": 37.890625,
+        "modeled_compute_cost": 0.0037890625000000003,
+        "solver_cpu_seconds": 0.00015779068749994293
+      },
+      "cost_per_success_including_failures": 0.08416102409638555,
+      "counts": {
+        "action/inspect": 2092,
+        "status/success": 3604,
+        "action/use_return": 6073,
+        "status/invalid_input": 6042,
+        "return_use_attempts": 6073,
+        "multiple_return_use_attempts": 20,
+        "return_address_contract_valid": 31,
+        "multiple_return_address_contract_valid": 20,
+        "return_application_success": 31,
+        "stale_return_use": 0,
+        "reductions": 51,
+        "correct_reductions": 51,
+        "certificate_valid_reductions": 31,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/move": 301,
+        "action/choose_item": 593,
+        "action/commit_pending": 187,
+        "action/verify": 166,
+        "action/retrieve": 173,
+        "action/build_route": 20,
+        "action/call": 51,
+        "status/timeout": 31,
+        "status/rejected": 23,
+        "action/start_subset": 11,
+        "action/add_constraint": 33
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 5.581548578571528,
+      "artifact": "distr_heldpair_R-S/rl-r0.jsonl.gz",
+      "artifact_sha256": "3d94d19a21f4de88a255269ce0e6bf6549211e7dbff80e999030007f3fa2b0a4",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89000,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1040000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 320768
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "arm": "rl-r1",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 80,
+      "success": 0.3125,
+      "means": {
+        "utility": 0.2448236328125,
+        "cost": 0.0676763671875,
+        "steps": 49.6015625,
+        "observations": 8.36328125,
+        "work_units": 0.91796875,
+        "travel_distance": 4.7421875,
+        "compute_units": 49.6015625,
+        "modeled_compute_cost": 0.00496015625,
+        "solver_cpu_seconds": 5.442137499950955e-05
+      },
+      "cost_per_success_including_failures": 0.216564375,
+      "counts": {
+        "action/inspect": 2141,
+        "status/success": 2967,
+        "action/use_return": 9725,
+        "status/invalid_input": 9712,
+        "return_use_attempts": 9725,
+        "multiple_return_use_attempts": 1,
+        "return_address_contract_valid": 13,
+        "multiple_return_address_contract_valid": 1,
+        "return_application_success": 13,
+        "stale_return_use": 0,
+        "reductions": 14,
+        "correct_reductions": 14,
+        "certificate_valid_reductions": 13,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/move": 365,
+        "action/choose_item": 237,
+        "action/commit_pending": 77,
+        "action/verify": 80,
+        "action/build_route": 2,
+        "action/call": 14,
+        "action/retrieve": 13,
+        "status/rejected": 8,
+        "action/start_subset": 11,
+        "action/add_constraint": 33,
+        "status/timeout": 11
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 7.252784601878375,
+      "artifact": "distr_heldpair_R-S/rl-r1.jsonl.gz",
+      "artifact_sha256": "3090ae1c35ada00ec6b127db5ef22e453272e2404cffce0a4f742ce5ed32bf86",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89100,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1060000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 320547
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "arm": "rl-r2",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 75,
+      "success": 0.29296875,
+      "means": {
+        "utility": 0.22298125,
+        "cost": 0.06998750000000001,
+        "steps": 51.05078125,
+        "observations": 8.62109375,
+        "work_units": 6.2109375,
+        "travel_distance": 5.1484375,
+        "compute_units": 51.05078125,
+        "modeled_compute_cost": 0.005105078125,
+        "solver_cpu_seconds": 0.0002690131250000574
+      },
+      "cost_per_success_including_failures": 0.2388906666666667,
+      "counts": {
+        "action/inspect": 2207,
+        "status/success": 3099,
+        "action/use_return": 9971,
+        "status/invalid_input": 9891,
+        "return_use_attempts": 9971,
+        "multiple_return_use_attempts": 206,
+        "return_address_contract_valid": 80,
+        "multiple_return_address_contract_valid": 12,
+        "return_application_success": 80,
+        "stale_return_use": 0,
+        "reductions": 92,
+        "correct_reductions": 92,
+        "certificate_valid_reductions": 80,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/move": 339,
+        "action/start_subset": 75,
+        "action/add_constraint": 225,
+        "action/call": 92,
+        "status/timeout": 79,
+        "action/retrieve": 80,
+        "action/verify": 75,
+        "action/build_route": 5
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 7.616420439444482,
+      "artifact": "distr_heldpair_R-S/rl-r2.jsonl.gz",
+      "artifact_sha256": "c7df1f6312d87bf0d2b7d8573de882f17f43d8017b1e1280f15b707027bf9124",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89200,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1080000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 329517
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 224,
+      "success": 0.875,
+      "means": {
+        "utility": 0.835587109375,
+        "cost": 0.039412890625,
+        "steps": 18.42578125,
+        "observations": 10.0,
+        "work_units": 0.0,
+        "travel_distance": 9.14453125,
+        "compute_units": 18.42578125,
+        "modeled_compute_cost": 0.001842578125,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.04504330357142857,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 4685,
+        "action/move": 1005,
+        "action/choose_item": 672,
+        "action/commit_pending": 224,
+        "action/verify": 224,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/abstain": 32,
+        "status/unknown": 32
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_heldpair_R-S/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "be98be2dea7d0c6f57063fba40ac4c6dbba969760f77da3fe246acb7b825451f",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.06400422399991612
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 256,
+      "success": 1.0,
+      "means": {
+        "utility": 0.95897359375,
+        "cost": 0.04102640625,
+        "steps": 22.0,
+        "observations": 10.0,
+        "work_units": 51.0,
+        "travel_distance": 6.31640625,
+        "compute_units": 22.0,
+        "modeled_compute_cost": 0.0022,
+        "solver_cpu_seconds": 0.001462918437499832
+      },
+      "cost_per_success_including_failures": 0.04102640625,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 5632,
+        "action/build_route": 256,
+        "action/call": 512,
+        "action/retrieve": 512,
+        "action/use_return": 512,
+        "return_use_attempts": 512,
+        "multiple_return_use_attempts": 256,
+        "return_address_contract_valid": 512,
+        "multiple_return_address_contract_valid": 256,
+        "return_application_success": 512,
+        "stale_return_use": 0,
+        "action/start_subset": 256,
+        "action/add_constraint": 768,
+        "action/verify": 256,
+        "reductions": 512,
+        "correct_reductions": 512,
+        "certificate_valid_reductions": 512,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_heldpair_R-S/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "fe1e46c987ff4fb54333f38cdc78af147752a3a22fdffa2e80a96371b141300e",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.07647470400010548
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 256,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9619619921875,
+        "cost": 0.0380380078125,
+        "steps": 19.4296875,
+        "observations": 10.0,
+        "work_units": 30.20703125,
+        "travel_distance": 6.36328125,
+        "compute_units": 19.4296875,
+        "modeled_compute_cost": 0.00194296875,
+        "solver_cpu_seconds": 0.0008695629999995761
+      },
+      "cost_per_success_including_failures": 0.0380380078125,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 4771,
+        "action/build_route": 176,
+        "action/call": 382,
+        "status/timeout": 203,
+        "action/retrieve": 208,
+        "action/use_return": 208,
+        "return_use_attempts": 208,
+        "multiple_return_use_attempts": 195,
+        "return_address_contract_valid": 208,
+        "multiple_return_address_contract_valid": 195,
+        "return_application_success": 208,
+        "stale_return_use": 0,
+        "action/choose_item": 672,
+        "action/commit_pending": 224,
+        "action/verify": 256,
+        "reductions": 382,
+        "correct_reductions": 382,
+        "certificate_valid_reductions": 208,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/move": 160,
+        "action/start_subset": 32,
+        "action/add_constraint": 96
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_heldpair_R-S/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "7dcc65a8e3a035b2fc6cfe6f874fdaeb4c8c28bff38a24a682ccaf3a557acd8d",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.07987931199997433
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "arm": "rl-r0",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 66,
+      "success": 0.2578125,
+      "means": {
+        "utility": 0.1956485546875,
+        "cost": 0.0621639453125,
+        "steps": 52.97265625,
+        "observations": 3.28125,
+        "work_units": 61.27734375,
+        "travel_distance": 0.0,
+        "compute_units": 52.97265625,
+        "modeled_compute_cost": 0.005297265625,
+        "solver_cpu_seconds": 0.0005031527499997504
+      },
+      "cost_per_success_including_failures": 0.2411207575757576,
+      "counts": {
+        "action/inspect": 840,
+        "status/success": 1642,
+        "action/start_assign": 84,
+        "action/add_constraint": 84,
+        "action/call": 187,
+        "status/timeout": 103,
+        "action/retrieve": 84,
+        "action/use_return": 11537,
+        "return_use_attempts": 11537,
+        "multiple_return_use_attempts": 474,
+        "return_address_contract_valid": 84,
+        "multiple_return_address_contract_valid": 76,
+        "return_application_success": 84,
+        "stale_return_use": 0,
+        "action/choose_item": 250,
+        "action/commit_pending": 429,
+        "status/rejected": 363,
+        "status/invalid_input": 11453,
+        "reductions": 187,
+        "correct_reductions": 187,
+        "certificate_valid_reductions": 84,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/verify": 66
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 7.359520314261317,
+      "artifact": "distr_heldpair_A-S/rl-r0.jsonl.gz",
+      "artifact_sha256": "62a1965c4f0d30eb2f4e87274eb4e5f33a7e63fc3e6f01a62e82df424016fe7f",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89000,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1040000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 320768
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "arm": "rl-r1",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 79,
+      "success": 0.30859375,
+      "means": {
+        "utility": 0.2483747265625,
+        "cost": 0.060219023437500005,
+        "steps": 51.19140625,
+        "observations": 3.28125,
+        "work_units": 62.72265625,
+        "travel_distance": 0.0,
+        "compute_units": 51.19140625,
+        "modeled_compute_cost": 0.005119140625,
+        "solver_cpu_seconds": 0.0006195800000000137
+      },
+      "cost_per_success_including_failures": 0.1951401265822785,
+      "counts": {
+        "action/inspect": 840,
+        "status/success": 1737,
+        "action/start_assign": 84,
+        "action/add_constraint": 123,
+        "action/call": 206,
+        "status/timeout": 116,
+        "action/retrieve": 97,
+        "action/use_return": 11336,
+        "return_use_attempts": 11336,
+        "multiple_return_use_attempts": 273,
+        "return_address_contract_valid": 97,
+        "multiple_return_address_contract_valid": 89,
+        "return_application_success": 97,
+        "stale_return_use": 0,
+        "action/choose_item": 248,
+        "action/commit_pending": 79,
+        "status/rejected": 13,
+        "action/start_subset": 13,
+        "action/verify": 79,
+        "reductions": 206,
+        "correct_reductions": 206,
+        "certificate_valid_reductions": 97,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "status/invalid_input": 11239
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 7.288655370939523,
+      "artifact": "distr_heldpair_A-S/rl-r1.jsonl.gz",
+      "artifact_sha256": "27ecf413bb991ea3afed1983ccac7de55e3f4c845655656addb967dc8bab01eb",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89100,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1060000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 320547
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "arm": "rl-r2",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 0,
+      "success": 0.0,
+      "means": {
+        "utility": -0.082286015625,
+        "cost": 0.082286015625,
+        "steps": 64.0,
+        "observations": 10.0,
+        "work_units": 188.6015625,
+        "travel_distance": 0.0,
+        "compute_units": 64.0,
+        "modeled_compute_cost": 0.0064,
+        "solver_cpu_seconds": 0.0013603145000004192
+      },
+      "cost_per_success_including_failures": null,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 3840,
+        "action/start_assign": 256,
+        "action/add_constraint": 256,
+        "action/call": 579,
+        "status/timeout": 323,
+        "action/retrieve": 256,
+        "action/use_return": 12477,
+        "return_use_attempts": 12477,
+        "multiple_return_use_attempts": 11377,
+        "return_address_contract_valid": 256,
+        "multiple_return_address_contract_valid": 234,
+        "return_application_success": 256,
+        "stale_return_use": 0,
+        "status/invalid_input": 12221,
+        "reductions": 579,
+        "correct_reductions": 579,
+        "certificate_valid_reductions": 256,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 12.454191994853318,
+      "artifact": "distr_heldpair_A-S/rl-r2.jsonl.gz",
+      "artifact_sha256": "2e4e60625da904f6a35239be8cd4f401eb0e87345aa46e1772b584c120ec3659",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89200,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1080000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 329517
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 109,
+      "success": 0.42578125,
+      "means": {
+        "utility": 0.407658984375,
+        "cost": 0.018122265624999998,
+        "steps": 11.37890625,
+        "observations": 5.60546875,
+        "work_units": 0.0,
+        "travel_distance": 0.0,
+        "compute_units": 11.37890625,
+        "modeled_compute_cost": 0.0011378906250000002,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.04256238532110091,
+      "counts": {
+        "action/inspect": 1435,
+        "status/success": 2766,
+        "action/abstain": 147,
+        "status/unknown": 147,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/choose_slot": 655,
+        "action/commit_assignment": 131,
+        "action/choose_item": 327,
+        "action/commit_pending": 109,
+        "action/verify": 109
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_heldpair_A-S/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "88a37b2eff7b4f519933f56bc8a736e82d8de8ecbf16c0fc3957c900e67ab631",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.0490995199999702
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 256,
+      "success": 1.0,
+      "means": {
+        "utility": 0.963135234375,
+        "cost": 0.036864765625000004,
+        "steps": 23.0,
+        "observations": 10.0,
+        "work_units": 156.4765625,
+        "travel_distance": 0.0,
+        "compute_units": 23.0,
+        "modeled_compute_cost": 0.0023,
+        "solver_cpu_seconds": 0.0016423399999985844
+      },
+      "cost_per_success_including_failures": 0.036864765625000004,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 5888,
+        "action/start_assign": 256,
+        "action/add_constraint": 1024,
+        "action/call": 512,
+        "action/retrieve": 512,
+        "action/use_return": 512,
+        "return_use_attempts": 512,
+        "multiple_return_use_attempts": 256,
+        "return_address_contract_valid": 512,
+        "multiple_return_address_contract_valid": 256,
+        "return_application_success": 512,
+        "stale_return_use": 0,
+        "action/start_subset": 256,
+        "action/verify": 256,
+        "reductions": 512,
+        "correct_reductions": 512,
+        "certificate_valid_reductions": 512,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_heldpair_A-S/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "964cbf315ffc457d28f0db797211cb5007e8fd05d625ff4545dc6486050b278f",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.12782919999989417
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 256,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9645073828125,
+        "cost": 0.0354926171875,
+        "steps": 21.76171875,
+        "observations": 10.0,
+        "work_units": 155.47265625,
+        "travel_distance": 0.0,
+        "compute_units": 21.76171875,
+        "modeled_compute_cost": 0.002176171875,
+        "solver_cpu_seconds": 0.0009213269999999735
+      },
+      "cost_per_success_including_failures": 0.0354926171875,
+      "counts": {
+        "action/inspect": 2560,
+        "status/success": 5327,
+        "action/start_assign": 125,
+        "action/add_constraint": 233,
+        "action/call": 373,
+        "status/timeout": 244,
+        "action/retrieve": 161,
+        "action/use_return": 161,
+        "return_use_attempts": 161,
+        "multiple_return_use_attempts": 141,
+        "return_address_contract_valid": 161,
+        "multiple_return_address_contract_valid": 141,
+        "return_application_success": 161,
+        "stale_return_use": 0,
+        "action/choose_item": 660,
+        "action/commit_pending": 220,
+        "action/verify": 256,
+        "reductions": 373,
+        "correct_reductions": 373,
+        "certificate_valid_reductions": 161,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/choose_slot": 655,
+        "action/commit_assignment": 131,
+        "action/start_subset": 36
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_heldpair_A-S/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "4407504b7d834840cecbfccf99046d68f966f0de6f55e51bcfe87c8841fd4176",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.10117481599996836
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "arm": "rl-r0",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 102,
+      "success": 0.3984375,
+      "means": {
+        "utility": 0.3437342578125,
+        "cost": 0.05470324218750001,
+        "steps": 43.1796875,
+        "observations": 1.3984375,
+        "work_units": 69.38671875,
+        "travel_distance": 5.11328125,
+        "compute_units": 43.1796875,
+        "modeled_compute_cost": 0.004317968750000001,
+        "solver_cpu_seconds": 0.0007844748750013893
+      },
+      "cost_per_success_including_failures": 0.13729441176470591,
+      "counts": {
+        "action/use_return": 9634,
+        "status/invalid_input": 9511,
+        "return_use_attempts": 9634,
+        "multiple_return_use_attempts": 118,
+        "return_address_contract_valid": 123,
+        "multiple_return_address_contract_valid": 118,
+        "return_application_success": 123,
+        "stale_return_use": 0,
+        "action/inspect": 358,
+        "status/success": 1397,
+        "action/move": 343,
+        "reductions": 269,
+        "correct_reductions": 269,
+        "certificate_valid_reductions": 123,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_assign": 102,
+        "action/add_constraint": 102,
+        "action/call": 269,
+        "status/timeout": 146,
+        "action/retrieve": 123,
+        "action/verify": 102,
+        "action/build_route": 21
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 5.91861009830609,
+      "artifact": "distr_heldpair_R-A/rl-r0.jsonl.gz",
+      "artifact_sha256": "4abe0442809640fa1ccc57e3cf83dcd3781b68a0e6ef84bb31bb6f25c68057d4",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89000,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1040000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 320768
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "arm": "rl-r1",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 102,
+      "success": 0.3984375,
+      "means": {
+        "utility": 0.34404578125,
+        "cost": 0.054391718750000005,
+        "steps": 43.0625,
+        "observations": 1.3984375,
+        "work_units": 66.75,
+        "travel_distance": 4.95703125,
+        "compute_units": 43.0625,
+        "modeled_compute_cost": 0.00430625,
+        "solver_cpu_seconds": 0.0007445669999988063
+      },
+      "cost_per_success_including_failures": 0.13651254901960785,
+      "counts": {
+        "action/inspect": 358,
+        "status/success": 1357,
+        "action/move": 367,
+        "action/use_return": 9645,
+        "status/invalid_input": 9538,
+        "return_use_attempts": 9645,
+        "multiple_return_use_attempts": 99,
+        "return_address_contract_valid": 107,
+        "multiple_return_address_contract_valid": 99,
+        "return_application_success": 107,
+        "stale_return_use": 0,
+        "reductions": 236,
+        "correct_reductions": 236,
+        "certificate_valid_reductions": 107,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_assign": 102,
+        "action/add_constraint": 102,
+        "action/call": 236,
+        "status/timeout": 129,
+        "action/retrieve": 107,
+        "action/verify": 102,
+        "action/build_route": 5
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 5.732371418271214,
+      "artifact": "distr_heldpair_R-A/rl-r1.jsonl.gz",
+      "artifact_sha256": "db2918c4ba6f333a437f03b71843cfe067b402887d07f64f26d234ee91d7dc9c",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89100,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1060000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 320547
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "arm": "rl-r2",
+      "kind": "learned",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 102,
+      "success": 0.3984375,
+      "means": {
+        "utility": 0.3439584765625,
+        "cost": 0.0544790234375,
+        "steps": 43.07421875,
+        "observations": 1.3984375,
+        "work_units": 67.16015625,
+        "travel_distance": 5.02734375,
+        "compute_units": 43.07421875,
+        "modeled_compute_cost": 0.004307421875,
+        "solver_cpu_seconds": 0.0007340793124996203
+      },
+      "cost_per_success_including_failures": 0.13673166666666667,
+      "counts": {
+        "action/use_return": 9670,
+        "status/invalid_input": 9560,
+        "return_use_attempts": 9670,
+        "multiple_return_use_attempts": 110,
+        "return_address_contract_valid": 110,
+        "multiple_return_address_contract_valid": 103,
+        "return_application_success": 110,
+        "stale_return_use": 0,
+        "action/inspect": 358,
+        "status/success": 1335,
+        "action/move": 333,
+        "reductions": 242,
+        "correct_reductions": 242,
+        "certificate_valid_reductions": 110,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_assign": 102,
+        "action/add_constraint": 102,
+        "action/call": 242,
+        "status/timeout": 132,
+        "action/retrieve": 110,
+        "action/verify": 102,
+        "action/build_route": 8
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 5.87734083738178,
+      "artifact": "distr_heldpair_R-A/rl-r2.jsonl.gz",
+      "artifact_sha256": "5f8f62a70bf3a43366a669f507665b11d032ce9133bb10da86395ad29b6de040",
+      "policy_config": {
+        "observation_dim": 36,
+        "candidate_dim": 75,
+        "width": 1024,
+        "family": "lightweight",
+        "workspace_rows": 4,
+        "heads": 8,
+        "feature_version": "m1"
+      },
+      "training_config": {
+        "seed": 89200,
+        "width": 1024,
+        "family": "lightweight",
+        "learning_rate": 3e-05,
+        "batch_size": 8,
+        "method": "actor_critic",
+        "entropy_weight": 0.003,
+        "value_weight": 0.5,
+        "gradient_clip": 1.0,
+        "device": "cuda",
+        "max_steps": 64,
+        "bptt_steps": 8,
+        "evaluation_batch": 32,
+        "training_seed_start": 1080000000,
+        "neural_work_per_forward": 1.0,
+        "rollout_mode": "batched",
+        "policy_loss_reduction": "decision_mean",
+        "kl_weight": 0.3,
+        "advantage_normalization": true
+      },
+      "actual_parameter_count": 2223106,
+      "checkpoint_updates": 2400,
+      "checkpoint_presentations": 329517
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 130,
+      "success": 0.5078125,
+      "means": {
+        "utility": 0.485825,
+        "cost": 0.0219875,
+        "steps": 9.9921875,
+        "observations": 2.0,
+        "work_units": 0.0,
+        "travel_distance": 8.99609375,
+        "compute_units": 9.9921875,
+        "modeled_compute_cost": 0.00099921875,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.043298461538461536,
+      "counts": {
+        "action/inspect": 512,
+        "status/success": 2432,
+        "action/move": 1010,
+        "action/abstain": 126,
+        "status/unknown": 126,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/choose_slot": 650,
+        "action/commit_assignment": 130,
+        "action/verify": 130
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_heldpair_R-A/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "9e5649cb24c143037096d4191ce8709b6587a4ef277d8402ebefa98180b3ffd1",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.048998592000032204
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 256,
+      "success": 1.0,
+      "means": {
+        "utility": 0.976912890625,
+        "cost": 0.023087109375,
+        "steps": 12.0,
+        "observations": 2.0,
+        "work_units": 142.6171875,
+        "travel_distance": 6.4609375,
+        "compute_units": 12.0,
+        "modeled_compute_cost": 0.0012000000000000001,
+        "solver_cpu_seconds": 0.0014969344999984802
+      },
+      "cost_per_success_including_failures": 0.023087109375,
+      "counts": {
+        "action/inspect": 512,
+        "status/success": 3072,
+        "action/build_route": 256,
+        "action/call": 512,
+        "action/retrieve": 512,
+        "action/use_return": 512,
+        "return_use_attempts": 512,
+        "multiple_return_use_attempts": 256,
+        "return_address_contract_valid": 512,
+        "multiple_return_address_contract_valid": 256,
+        "return_application_success": 512,
+        "stale_return_use": 0,
+        "action/start_assign": 256,
+        "action/add_constraint": 256,
+        "action/verify": 256,
+        "reductions": 512,
+        "correct_reductions": 512,
+        "certificate_valid_reductions": 512,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_heldpair_R-A/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "7c3d1d73867bc9a89153c1f9830e9628630a7a042c14e5297494c2336c8a6425",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.047560624000198004
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 256,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 256,
+      "success": 1.0,
+      "means": {
+        "utility": 0.975026171875,
+        "cost": 0.024973828125,
+        "steps": 13.4140625,
+        "observations": 2.0,
+        "work_units": 170.6640625,
+        "travel_distance": 6.51171875,
+        "compute_units": 13.4140625,
+        "modeled_compute_cost": 0.00134140625,
+        "solver_cpu_seconds": 0.001426141000001914
+      },
+      "cost_per_success_including_failures": 0.024973828125,
+      "counts": {
+        "action/inspect": 512,
+        "status/success": 3051,
+        "action/build_route": 179,
+        "action/call": 688,
+        "status/timeout": 383,
+        "action/retrieve": 305,
+        "action/use_return": 305,
+        "return_use_attempts": 305,
+        "multiple_return_use_attempts": 300,
+        "return_address_contract_valid": 305,
+        "multiple_return_address_contract_valid": 300,
+        "return_application_success": 305,
+        "stale_return_use": 0,
+        "action/start_assign": 126,
+        "action/add_constraint": 126,
+        "action/verify": 256,
+        "reductions": 688,
+        "correct_reductions": 688,
+        "certificate_valid_reductions": 305,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/move": 157,
+        "action/choose_slot": 650,
+        "action/commit_assignment": 130
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "distr_heldpair_R-A/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "f11c2d858e3af80cd392251349492a04fd0632c47ef62425b6e52830bf9e7238",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.04563240000021551
+    }
+  ],
+  "paired": [
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r0",
+      "comparator": "rl-r1",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 158,
+        "1->1": 98
+      },
+      "support": 256,
+      "mean_utility_difference": -0.00014550781250000002
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r0",
+      "comparator": "rl-r2",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 158,
+        "1->1": 98
+      },
+      "support": 256,
+      "mean_utility_difference": 0.0005841406249999983
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 132,
+        "1->1": 86,
+        "0->1": 12,
+        "0->0": 26
+      },
+      "support": 256,
+      "mean_utility_difference": -0.49499683593749993
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 158,
+        "1->1": 98
+      },
+      "support": 256,
+      "mean_utility_difference": -0.63951890625
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 158,
+        "1->1": 98
+      },
+      "support": 256,
+      "mean_utility_difference": -0.642240625
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r1",
+      "comparator": "rl-r0",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 158,
+        "1->1": 98
+      },
+      "support": 256,
+      "mean_utility_difference": 0.00014550781250000002
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r1",
+      "comparator": "rl-r2",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 158,
+        "1->1": 98
+      },
+      "support": 256,
+      "mean_utility_difference": 0.0007296484374999983
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 132,
+        "1->1": 86,
+        "0->1": 12,
+        "0->0": 26
+      },
+      "support": 256,
+      "mean_utility_difference": -0.49485132812499993
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 158,
+        "1->1": 98
+      },
+      "support": 256,
+      "mean_utility_difference": -0.6393733984375
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 158,
+        "1->1": 98
+      },
+      "support": 256,
+      "mean_utility_difference": -0.6420951171875
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r2",
+      "comparator": "rl-r0",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 158,
+        "1->1": 98
+      },
+      "support": 256,
+      "mean_utility_difference": -0.0005841406249999983
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r2",
+      "comparator": "rl-r1",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 158,
+        "1->1": 98
+      },
+      "support": 256,
+      "mean_utility_difference": -0.0007296484374999983
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 132,
+        "1->1": 86,
+        "0->1": 12,
+        "0->0": 26
+      },
+      "support": 256,
+      "mean_utility_difference": -0.49558097656249994
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 158,
+        "1->1": 98
+      },
+      "support": 256,
+      "mean_utility_difference": -0.640103046875
+    },
+    {
+      "condition": "distr_iid_S-R",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 158,
+        "1->1": 98
+      },
+      "support": 256,
+      "mean_utility_difference": -0.642824765625
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r0",
+      "comparator": "rl-r1",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 83,
+        "0->0": 173
+      },
+      "support": 256,
+      "mean_utility_difference": -6.14062499999994e-05
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r0",
+      "comparator": "rl-r2",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 83,
+        "0->0": 173
+      },
+      "support": 256,
+      "mean_utility_difference": 0.0006385937500000029
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 33,
+        "0->0": 88,
+        "1->0": 85,
+        "0->1": 50
+      },
+      "support": 256,
+      "mean_utility_difference": -0.1739916796875
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 83,
+        "1->0": 173
+      },
+      "support": 256,
+      "mean_utility_difference": -0.704718046875
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 83,
+        "1->0": 173
+      },
+      "support": 256,
+      "mean_utility_difference": -0.7060794921875
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r1",
+      "comparator": "rl-r0",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 83,
+        "0->0": 173
+      },
+      "support": 256,
+      "mean_utility_difference": 6.14062499999994e-05
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r1",
+      "comparator": "rl-r2",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 83,
+        "0->0": 173
+      },
+      "support": 256,
+      "mean_utility_difference": 0.0007000000000000023
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 33,
+        "0->0": 88,
+        "1->0": 85,
+        "0->1": 50
+      },
+      "support": 256,
+      "mean_utility_difference": -0.1739302734375
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 83,
+        "1->0": 173
+      },
+      "support": 256,
+      "mean_utility_difference": -0.704656640625
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 83,
+        "1->0": 173
+      },
+      "support": 256,
+      "mean_utility_difference": -0.7060180859375
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r2",
+      "comparator": "rl-r0",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 83,
+        "0->0": 173
+      },
+      "support": 256,
+      "mean_utility_difference": -0.0006385937500000029
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r2",
+      "comparator": "rl-r1",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 83,
+        "0->0": 173
+      },
+      "support": 256,
+      "mean_utility_difference": -0.0007000000000000023
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 33,
+        "0->0": 88,
+        "1->0": 85,
+        "0->1": 50
+      },
+      "support": 256,
+      "mean_utility_difference": -0.1746302734375
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 83,
+        "1->0": 173
+      },
+      "support": 256,
+      "mean_utility_difference": -0.705356640625
+    },
+    {
+      "condition": "distr_iid_S-A",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 83,
+        "1->0": 173
+      },
+      "support": 256,
+      "mean_utility_difference": -0.7067180859375
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r0",
+      "comparator": "rl-r1",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 173,
+        "1->1": 83
+      },
+      "support": 256,
+      "mean_utility_difference": -9.644531249999823e-05
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r0",
+      "comparator": "rl-r2",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 173,
+        "1->1": 83
+      },
+      "support": 256,
+      "mean_utility_difference": 0.0023660156250000022
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 84,
+        "0->1": 47,
+        "1->1": 36,
+        "0->0": 89
+      },
+      "support": 256,
+      "mean_utility_difference": -0.1865205859375
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 173,
+        "1->1": 83
+      },
+      "support": 256,
+      "mean_utility_difference": -0.7079588671875
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 173,
+        "1->1": 83
+      },
+      "support": 256,
+      "mean_utility_difference": -0.7057277734374999
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r1",
+      "comparator": "rl-r0",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 173,
+        "1->1": 83
+      },
+      "support": 256,
+      "mean_utility_difference": 9.644531249999823e-05
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r1",
+      "comparator": "rl-r2",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 173,
+        "1->1": 83
+      },
+      "support": 256,
+      "mean_utility_difference": 0.0024624609375000005
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 84,
+        "0->1": 47,
+        "1->1": 36,
+        "0->0": 89
+      },
+      "support": 256,
+      "mean_utility_difference": -0.186424140625
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 173,
+        "1->1": 83
+      },
+      "support": 256,
+      "mean_utility_difference": -0.7078624218749999
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 173,
+        "1->1": 83
+      },
+      "support": 256,
+      "mean_utility_difference": -0.705631328125
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r2",
+      "comparator": "rl-r0",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 173,
+        "1->1": 83
+      },
+      "support": 256,
+      "mean_utility_difference": -0.0023660156250000022
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r2",
+      "comparator": "rl-r1",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 173,
+        "1->1": 83
+      },
+      "support": 256,
+      "mean_utility_difference": -0.0024624609375000005
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 84,
+        "0->1": 47,
+        "1->1": 36,
+        "0->0": 89
+      },
+      "support": 256,
+      "mean_utility_difference": -0.1888866015625
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 173,
+        "1->1": 83
+      },
+      "support": 256,
+      "mean_utility_difference": -0.7103248828125001
+    },
+    {
+      "condition": "distr_iid_A-R",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 173,
+        "1->1": 83
+      },
+      "support": 256,
+      "mean_utility_difference": -0.7080937890625
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r0",
+      "comparator": "rl-r1",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 90,
+        "1->1": 80,
+        "0->1": 86
+      },
+      "support": 256,
+      "mean_utility_difference": 0.34904070312499996
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r0",
+      "comparator": "rl-r2",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 90,
+        "1->1": 75,
+        "0->1": 91
+      },
+      "support": 256,
+      "mean_utility_difference": 0.37088308593749997
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 72,
+        "1->1": 152,
+        "0->0": 18,
+        "0->1": 14
+      },
+      "support": 256,
+      "mean_utility_difference": -0.24172277343749998
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 90,
+        "1->1": 166
+      },
+      "support": 256,
+      "mean_utility_difference": -0.3651092578125
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 90,
+        "1->1": 166
+      },
+      "support": 256,
+      "mean_utility_difference": -0.36809765625
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r1",
+      "comparator": "rl-r0",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 90,
+        "1->1": 80,
+        "1->0": 86
+      },
+      "support": 256,
+      "mean_utility_difference": -0.34904070312499996
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r1",
+      "comparator": "rl-r2",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 176,
+        "1->1": 75,
+        "0->1": 5
+      },
+      "support": 256,
+      "mean_utility_difference": 0.021842382812499995
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 154,
+        "1->1": 70,
+        "0->0": 22,
+        "0->1": 10
+      },
+      "support": 256,
+      "mean_utility_difference": -0.5907634765625
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 176,
+        "1->1": 80
+      },
+      "support": 256,
+      "mean_utility_difference": -0.7141499609374999
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 176,
+        "1->1": 80
+      },
+      "support": 256,
+      "mean_utility_difference": -0.717138359375
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r2",
+      "comparator": "rl-r0",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 90,
+        "1->1": 75,
+        "1->0": 91
+      },
+      "support": 256,
+      "mean_utility_difference": -0.37088308593749997
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r2",
+      "comparator": "rl-r1",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 176,
+        "1->1": 75,
+        "1->0": 5
+      },
+      "support": 256,
+      "mean_utility_difference": -0.021842382812499995
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 159,
+        "1->1": 65,
+        "0->0": 22,
+        "0->1": 10
+      },
+      "support": 256,
+      "mean_utility_difference": -0.612605859375
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 181,
+        "1->1": 75
+      },
+      "support": 256,
+      "mean_utility_difference": -0.73599234375
+    },
+    {
+      "condition": "distr_heldpair_R-S",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 181,
+        "1->1": 75
+      },
+      "support": 256,
+      "mean_utility_difference": -0.7389807421875
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r0",
+      "comparator": "rl-r1",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 15,
+        "0->0": 175,
+        "1->1": 64,
+        "0->1": 2
+      },
+      "support": 256,
+      "mean_utility_difference": -0.052726171875
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r0",
+      "comparator": "rl-r2",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 190,
+        "0->1": 66
+      },
+      "support": 256,
+      "mean_utility_difference": 0.2779345703125
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 110,
+        "1->0": 80,
+        "1->1": 29,
+        "0->1": 37
+      },
+      "support": 256,
+      "mean_utility_difference": -0.21201042968749997
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 190,
+        "1->1": 66
+      },
+      "support": 256,
+      "mean_utility_difference": -0.7674866796875
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 190,
+        "1->1": 66
+      },
+      "support": 256,
+      "mean_utility_difference": -0.768858828125
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r1",
+      "comparator": "rl-r0",
+      "success_transitions_comparator_to_learned": {
+        "0->1": 15,
+        "0->0": 175,
+        "1->1": 64,
+        "1->0": 2
+      },
+      "support": 256,
+      "mean_utility_difference": 0.052726171875
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r1",
+      "comparator": "rl-r2",
+      "success_transitions_comparator_to_learned": {
+        "0->1": 79,
+        "0->0": 177
+      },
+      "support": 256,
+      "mean_utility_difference": 0.33066074218749997
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "0->1": 45,
+        "0->0": 102,
+        "1->0": 75,
+        "1->1": 34
+      },
+      "support": 256,
+      "mean_utility_difference": -0.15928425781249997
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 79,
+        "1->0": 177
+      },
+      "support": 256,
+      "mean_utility_difference": -0.7147605078125
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->1": 79,
+        "1->0": 177
+      },
+      "support": 256,
+      "mean_utility_difference": -0.7161326562499999
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r2",
+      "comparator": "rl-r0",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 190,
+        "1->0": 66
+      },
+      "support": 256,
+      "mean_utility_difference": -0.2779345703125
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r2",
+      "comparator": "rl-r1",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 79,
+        "0->0": 177
+      },
+      "support": 256,
+      "mean_utility_difference": -0.33066074218749997
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 147,
+        "1->0": 109
+      },
+      "support": 256,
+      "mean_utility_difference": -0.48994499999999996
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 256
+      },
+      "support": 256,
+      "mean_utility_difference": -1.04542125
+    },
+    {
+      "condition": "distr_heldpair_A-S",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 256
+      },
+      "support": 256,
+      "mean_utility_difference": -1.0467933984375
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r0",
+      "comparator": "rl-r1",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 154,
+        "1->1": 102
+      },
+      "support": 256,
+      "mean_utility_difference": -0.00031152343750000076
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r0",
+      "comparator": "rl-r2",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 154,
+        "1->1": 102
+      },
+      "support": 256,
+      "mean_utility_difference": -0.00022421875000000062
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 75,
+        "0->1": 51,
+        "1->0": 79,
+        "1->1": 51
+      },
+      "support": 256,
+      "mean_utility_difference": -0.1420907421875
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 154,
+        "1->1": 102
+      },
+      "support": 256,
+      "mean_utility_difference": -0.6331786328125
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r0",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 154,
+        "1->1": 102
+      },
+      "support": 256,
+      "mean_utility_difference": -0.6312919140625
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r1",
+      "comparator": "rl-r0",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 154,
+        "1->1": 102
+      },
+      "support": 256,
+      "mean_utility_difference": 0.00031152343750000076
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r1",
+      "comparator": "rl-r2",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 154,
+        "1->1": 102
+      },
+      "support": 256,
+      "mean_utility_difference": 8.730468750000014e-05
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 75,
+        "0->1": 51,
+        "1->0": 79,
+        "1->1": 51
+      },
+      "support": 256,
+      "mean_utility_difference": -0.14177921875
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 154,
+        "1->1": 102
+      },
+      "support": 256,
+      "mean_utility_difference": -0.632867109375
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r1",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 154,
+        "1->1": 102
+      },
+      "support": 256,
+      "mean_utility_difference": -0.630980390625
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r2",
+      "comparator": "rl-r0",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 154,
+        "1->1": 102
+      },
+      "support": 256,
+      "mean_utility_difference": 0.00022421875000000062
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r2",
+      "comparator": "rl-r1",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 154,
+        "1->1": 102
+      },
+      "support": 256,
+      "mean_utility_difference": -8.730468750000014e-05
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_cheap",
+      "success_transitions_comparator_to_learned": {
+        "0->0": 75,
+        "0->1": 51,
+        "1->0": 79,
+        "1->1": 51
+      },
+      "support": 256,
+      "mean_utility_difference": -0.1418665234375
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_always_tool",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 154,
+        "1->1": 102
+      },
+      "support": 256,
+      "mean_utility_difference": -0.6329544140625
+    },
+    {
+      "condition": "distr_heldpair_R-A",
+      "learned": "rl-r2",
+      "comparator": "reference-modular_cheap_first",
+      "success_transitions_comparator_to_learned": {
+        "1->0": 154,
+        "1->1": 102
+      },
+      "support": 256,
+      "mean_utility_difference": -0.6310676953125
+    }
+  ],
+  "paired_conditions": [],
+  "policy_input_scope": "public observation/candidate encodings only; no teacher at evaluation",
+  "address_metric_scope": "claimed role/status/retrieval/provenance validity, not independent validity of faulted payloads or task relevance",
+  "intervention_scope": "explicit public-ordinal post-validation return faults; canonical records and actual-world validators unchanged",
+  "selection_rule": "frozen supplied checkpoint, no selection",
+  "no_training": true,
+  "solver": {
+    "executor_version": "persistent-v1",
+    "startup_wall_seconds": 0.6366893909871578,
+    "startup_child_cpu_seconds": 0.6336299999999999,
+    "call_wall_seconds": 4.486296953633428,
+    "restarts": 0
+  },
+  "resources": {
+    "wall_seconds": 297.3050684258342,
+    "parent_cpu_seconds": 294.69183635200005,
+    "parent_peak_rss_kib": 2179016,
+    "cuda_peak_allocated_bytes": 85440000,
+    "cuda_peak_reserved_bytes": 100663296,
+    "cuda_device_capacity_bytes": 128453668864,
+    "accounting_scope": "parent CPU excludes solver process; authoritative inclusive workload ledger is external"
+  }
+}

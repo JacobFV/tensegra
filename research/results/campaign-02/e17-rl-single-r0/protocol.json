@@ -1,0 +1,252 @@
+{
+  "address_namespace": "e17-rl-r0",
+  "curriculum_mutation": false,
+  "development_examples": 128,
+  "development_seed_start": 1095000000,
+  "development_world_mix": [],
+  "halving_survivors": [],
+  "initial_checkpoints": [
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e17-boot-r0/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "f20528eb35759cd70e34d4b2b65e4e83cbed92ea4fe9a076f793db93b10efca5"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e17-boot-r0/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "f20528eb35759cd70e34d4b2b65e4e83cbed92ea4fe9a076f793db93b10efca5"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e17-boot-r0/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "f20528eb35759cd70e34d4b2b65e4e83cbed92ea4fe9a076f793db93b10efca5"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e17-boot-r0/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "f20528eb35759cd70e34d4b2b65e4e83cbed92ea4fe9a076f793db93b10efca5"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e17-boot-r0/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "f20528eb35759cd70e34d4b2b65e4e83cbed92ea4fe9a076f793db93b10efca5"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e17-boot-r0/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "f20528eb35759cd70e34d4b2b65e4e83cbed92ea4fe9a076f793db93b10efca5"
+    }
+  ],
+  "initialization_seeds": [
+    89000,
+    89001,
+    89002,
+    89003,
+    89004,
+    89005
+  ],
+  "member_hyperparameters": [
+    {
+      "entropy_weight": 0.003,
+      "kl_weight": 0.3,
+      "learning_rate": 3e-05
+    },
+    {
+      "entropy_weight": 0.001,
+      "kl_weight": 0.1,
+      "learning_rate": 1e-05
+    },
+    {
+      "entropy_weight": 0.01,
+      "kl_weight": 1.0,
+      "learning_rate": 0.0001
+    },
+    {
+      "entropy_weight": 0.0003,
+      "kl_weight": 0.03,
+      "learning_rate": 3e-06
+    },
+    {
+      "entropy_weight": 0.001,
+      "kl_weight": 3.0,
+      "learning_rate": 0.0003
+    },
+    {
+      "entropy_weight": 0.03,
+      "kl_weight": 0.1,
+      "learning_rate": 0.0001
+    }
+  ],
+  "methods": [
+    "actor_critic",
+    "actor_critic",
+    "actor_critic",
+    "actor_critic",
+    "actor_critic"
+  ],
+  "mode": "single",
+  "niche_protection": false,
+  "optimizer_policy": "inherit",
+  "policy": {
+    "feature_version": "m1",
+    "interface": "legacy"
+  },
+  "population_seed": 8900,
+  "population_size": 6,
+  "rounds": 5,
+  "teacher": "modular_cheap_first",
+  "threads": 1,
+  "train": {
+    "advantage_normalization": true,
+    "batch_size": 8,
+    "device": "cuda",
+    "evaluation_batch": 32,
+    "family": "lightweight",
+    "learning_rate": 0.0003,
+    "max_steps": 64,
+    "policy_loss_reduction": "decision_mean",
+    "rollout_mode": "batched",
+    "width": 1024
+  },
+  "training_seed_start": 1040000000,
+  "training_seed_stride": 1000000,
+  "updates_per_slot": 60,
+  "world_family": "modular",
+  "world_mix": [
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "slots": 3,
+      "stages": [
+        "select"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "slots": 3,
+      "stages": [
+        "route"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "slots": 3,
+      "stages": [
+        "assign"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "slots": 3,
+      "stages": [
+        "select",
+        "route"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "slots": 3,
+      "stages": [
+        "select",
+        "assign"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "slots": 3,
+      "stages": [
+        "assign",
+        "route"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "slots": 3,
+      "stages": [
+        "select",
+        "route"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "slots": 3,
+      "stages": [
+        "select",
+        "assign"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "slots": 3,
+      "stages": [
+        "assign",
+        "route"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    }
+  ]
+}
