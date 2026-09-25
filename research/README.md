@@ -19,7 +19,7 @@ Experiment designs, scientific reports, audits, and reproducibility artifacts fo
 |---|---|---|
 | extended-01 | Semantic acquisition, returns, composition and attention interventions | [Report](campaigns/extended-01/campaign-report.md) |
 | extended-02 | Evolving agents that learn when and how to use computation | [Synthesis](campaigns/extended-02/campaign-synthesis.md) · [Final report](campaigns/extended-02/final-report.md) · [Closeout](campaigns/extended-02/closeout.md) |
-| extended-03 (proposed) | Managing a changing dependency graph of computations | [Proposal](campaigns/extended-03-proposal.md) |
+| extended-03 (paused) | Managing a changing dependency graph of computations | [Proposal](campaigns/extended-03-proposal.md) · [Status/handoff](campaigns/extended-03/handoff.md) |
 
 ## Layout
 
