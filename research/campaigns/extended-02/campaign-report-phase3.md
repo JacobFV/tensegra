@@ -14,7 +14,10 @@ Phase 3 continued on user instruction after the phase-2 closure ([campaign-repor
    - They also solved most held-out orders and three-stage sequences, and the registered transfer rule passes (2/3 lineages).
    - **Where it fails:** select after assign, a transition never seen in training (0.00 / 0.77 / 0.94 across lineages).
    - **Mechanism:** the policy applies the previous stage's CSP return as the select result, over and over. This is a return-binding shortcut that only a novel composition exposes.
-3. **E17** tests whether training with wrong-typed distractor returns repairs that failure. *(In progress.)*
+3. **Wrong-type return exposure repairs it (E17).**
+   - **The E16 controllers are broadly brittle.** When 0–2 irrelevant prior solver results of the wrong type are present, success on *training* compositions falls from 1.000 to 0.32–0.38, while the teacher stays at 1.000.
+   - **The repair works.** Training with such distractors (E17; nothing else changed) lifts assign→select from 0.57 to 0.94 (lineage means) and distractor-world success to 1.000 in 2/3 lineages. The registered rule is met.
+   - **One lineage shows a separate weakness:** it perseverates on rejected direct commits.
 
 ## E15: depth versus breadth in selection
 
@@ -78,4 +81,28 @@ This is a concrete instance of the prompt's warning that copied or returned resu
 
 ## E17: wrong-type return exposure
 
-Protocol: [phase2/E17-protocol.md](phase2/E17-protocol.md). *(Results pending.)*
+Protocol: [phase2/E17-protocol.md](phase2/E17-protocol.md). E17 is identical to E16 (initialization seeds, recipes, streams, mixture, features, held-out splits). The one change: training worlds start with 0–2 public, certificate-valid prior computation records of primitives **absent from that goal**. These are wrong-typed for every stage, uninformative and uncharged, and the teacher ignores them.
+
+**Diagnostic on E16 first.** The same sealed worlds with distractors added cause the E16 controllers to fail on *training* compositions:
+- S→R 0.383, S→A 0.324 and A→R 0.324, identically in all three lineages. This equals the fraction of worlds that drew zero distractors, so almost any distractor causes failure.
+- The teacher stays at 1.000.
+- The E16 policies bind "the current stage" to "whatever computation record exists".
+
+| Sealed success | E16 RL r0 / r1 / r2 | E17 RL r0 / r1 / r2 |
+|---|---|---|
+| IID singles/pairs (no distractors) | 1.000 all | 1.000 all except r2 S→R 0.824 |
+| Held-out A→S | 0.773 / 0.941 / 0.000 | **1.000 / 1.000 / 0.805** |
+| Held-out R→S | 0.961 / 1.000 / 0.902 | 1.000 / 1.000 / 0.895 |
+| Triples with S after A | 0.78–0.93 / 0.00 (r2) | 1.000 / 1.000 / 0.82–0.85 |
+| Distractor worlds (3 IID + 3 held-out pairs) | 0.00–0.65 | **1.000 / 1.000** / 0.81–1.00 |
+| Hard assign (budget-bound) | = teacher | = teacher |
+
+**Registered rule: supported.**
+- The mean A→S gain is +0.36, above the required 0.2.
+- The minimum lineage is 0.805, clearing the 0.8 floor.
+- The IID-pair mean is 0.980 (≥0.95 required).
+- **Per-lineage caveat:** r2 individually drops to 0.824 on S→R.
+
+**The r2 residual failure is not about composition.** In ~18% of worlds containing select, r2 repeats a rejected direct commit (capacity/funds rejections, 25–35 per failed episode) instead of switching to the solver. This is the same perseveration pattern seen in phase 2's tool-first finalists after corrupted returns. It is a lineage-level weakness of the select stage.
+
+**Interpretation.** The failure boundary found in E16 was not a limit of "composition" as such. It was a missing *return-binding* skill that the training distribution never demanded. Exposing the controller to wrong-typed returns during training, without ever showing the held-out order, repaired both the held-out order and robustness to distractors. This is consistent with the prompt's emphasis on testing wrong, stale and absent results. The distractors vary type only. Same-type distractors, which would require provenance binding (e.g. an old subset result for a different draft), were **not** tested.
