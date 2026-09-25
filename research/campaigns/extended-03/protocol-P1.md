@@ -61,3 +61,22 @@ Each rule is reported with **both** the aggregate and the per-condition reading 
 - **Teacher labelling.** The teachers are privileged training supervision that uses only public observations. The X2 teacher never reuses, so any reuse in X2 is learned from reward.
 - **Sealed-world use.** Worlds are evaluated once per frozen endpoint. Any later researcher-adaptive intervention on the same worlds is labelled as paired and not confirmatory.
 - **Independent audit.** A raw-row reconstruction is done by a separate subagent before the claims are finalized.
+
+## Freeze amendment (recorded before any training; commit tagged P1-freeze in decisions.md)
+
+- **Condition values.**
+  - Training mixture: size s3 (3×3 items, 7 locations, 6 slots), p_event 0.5, foreign_records ∈ {0, 2}, event kinds {edge_closed, capacity_reduced, slot_closed}, `event_trigger="progress"`, work_price 2e-4 (DepSpec default), compute_price 1e-4.
+  - Sealed conditions (seeds 110,000,000 + 100,000·i, 256 worlds each):
+    - iid_f0, iid_f2, noevent_f2;
+    - events_train_kinds_p1;
+    - heldout_deadline_moved (p = 1, the kind never used in training);
+    - foreign4;
+    - larger_s4 (4×3, 8 locations, 7 slots);
+    - work_price_x4 (8e-4).
+  - The IID group = {iid_f0, iid_f2}.
+- **Step cap.** The learned-arm decision cap is 96, equal to the world step limit, so there is no cap asymmetry.
+- **Pairing, clarifying the "disjoint" rule.**
+  - Across lineage indices r, all initialization seeds and training/development streams are disjoint (verified by script).
+  - Within a lineage index, arms X1–X4 share initialization seeds and stream starts. That makes X3/X4 paired input ablations of X1, and X2 a paired teacher change.
+  - The protocol text said "disjoint for every lineage and arm". It is amended here, before training, because paired ablations are the stronger design for R3/R4.
+- **Configs.** `research/tools/campaign03_p1_configs.py` → `configs/campaign03/p1-*.json`.

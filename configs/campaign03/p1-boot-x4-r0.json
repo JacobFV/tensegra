@@ -1,0 +1,106 @@
+{
+  "mode": "single",
+  "population_seed": 30000,
+  "initialization_seeds": [
+    300000,
+    300001,
+    300002,
+    300003,
+    300004,
+    300005
+  ],
+  "optimizer_policy": "inherit",
+  "teacher": "dep_reuse",
+  "threads": 1,
+  "world_family": "depworld",
+  "policy": {
+    "interface": "legacy",
+    "feature_version": "d1-noattempt"
+  },
+  "world_mix": [
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "slots": 6,
+      "compute_price": 0.0001,
+      "event_trigger": "progress",
+      "p_event": 0.5,
+      "foreign_records": 0,
+      "event_kinds": [
+        "edge_closed",
+        "capacity_reduced",
+        "slot_closed"
+      ]
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "slots": 6,
+      "compute_price": 0.0001,
+      "event_trigger": "progress",
+      "p_event": 0.5,
+      "foreign_records": 2,
+      "event_kinds": [
+        "edge_closed",
+        "capacity_reduced",
+        "slot_closed"
+      ]
+    }
+  ],
+  "train": {
+    "width": 1024,
+    "family": "lightweight",
+    "device": "cuda",
+    "batch_size": 8,
+    "learning_rate": 0.0003,
+    "rollout_mode": "batched",
+    "max_steps": 96,
+    "evaluation_batch": 32,
+    "policy_loss_reduction": "decision_mean",
+    "advantage_normalization": true
+  },
+  "development_seed_start": 3900000000,
+  "development_examples": 128,
+  "training_seed_stride": 1000000,
+  "member_hyperparameters": [
+    {
+      "learning_rate": 3e-05,
+      "entropy_weight": 0.003,
+      "kl_weight": 0.3
+    },
+    {
+      "learning_rate": 3e-05,
+      "entropy_weight": 0.003,
+      "kl_weight": 0.3
+    },
+    {
+      "learning_rate": 3e-05,
+      "entropy_weight": 0.003,
+      "kl_weight": 0.3
+    },
+    {
+      "learning_rate": 3e-05,
+      "entropy_weight": 0.003,
+      "kl_weight": 0.3
+    },
+    {
+      "learning_rate": 3e-05,
+      "entropy_weight": 0.003,
+      "kl_weight": 0.3
+    },
+    {
+      "learning_rate": 3e-05,
+      "entropy_weight": 0.003,
+      "kl_weight": 0.3
+    }
+  ],
+  "rounds": 1,
+  "updates_per_slot": 100,
+  "methods": [
+    "supervised"
+  ],
+  "training_seed_start": 3000000000,
+  "address_namespace": "e03p1-boot-r0"
+}
