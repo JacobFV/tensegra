@@ -134,3 +134,22 @@ def test_same_type_distractors_and_m2_provenance():
     assert f_prior[-2:] == [0.0, 0.0] and f_own[-2:] == [1.0, 1.0]
     assert encode_action_m2(o, Action("verify"))[-3:] == [0.0, 0.0, 0.0]
     assert sum(run(x, "cheap_first")["verified_success"] for x in specs) >= 29
+
+
+def test_m3_stage_failure_counters_are_public_and_reset():
+    from topoformer.campaign02_modular import encode_action_m3, encode_observation_m3
+    spec = generate_modular(7, stages=("select", "route"))
+    env = ModularWorkshop(spec, executor=EXEC)
+    for r in env.observe().item_inventory:
+        env.step(Action("inspect", {"target": r["handle"]}))
+    o = env.step(Action("commit_pending"))          # nothing pending -> rejected
+    o = env.step(Action("commit_pending"))
+    o = env.step(Action("think"))                   # rejection no longer the last feedback
+    assert o.stage_rejections == 2 and o.feedback["status"] == "success"
+    assert encode_observation_m3(o)[-4:-2] == [2/8, 1.0]
+    assert encode_action_m3(o, Action("commit_pending"))[-3] == 2/8
+    ref = ModularReference()
+    while o.current_stage == "select" and not o.done:
+        o = env.step(ref.choose(o))
+    assert o.stage_rejections == 0 and o.stage_solver_calls == 0
+    assert "stage_rejections" in o.to_dict()

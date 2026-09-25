@@ -168,6 +168,10 @@ class ModularObservation:
     remaining_work: int
     prices: dict[str, float]
     feedback: dict[str, Any]
+    # Public episode counters since the current stage became current (the actor
+    # observed every underlying event; no hidden information).
+    stage_rejections: int = 0
+    stage_solver_calls: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         d = asdict(self)
@@ -199,6 +203,7 @@ class ModularWorkshop:
         self._reductions: list[dict[str, Any]] = []
         self._history: list[dict[str, Any]] = []
         self._feedback: dict[str, Any] = {"status": "ready"}
+        self._stage_rejections = self._stage_calls = 0
         self._handle_rng = random.Random(address_seed)
         for i, (primitive, payload, snapshot) in enumerate(spec.distractors):
             self._record("computation", payload, primitive=primitive, problem=f"prior_{i}", status="success",
@@ -234,7 +239,7 @@ class ModularWorkshop:
             max(0, s.step_limit-self._steps), max(0, s.travel_limit-self._travel), max(0, s.work_limit-self._work),
             {"observation": s.observation_price, "action": s.action_price, "work": s.work_price,
              "travel": s.travel_price, "compute": s.compute_price},
-            deepcopy(self._feedback))
+            deepcopy(self._feedback), self._stage_rejections, self._stage_calls)
 
     def _record(self, kind: str, payload: Any, **metadata: Any) -> str:
         handle = f"r{self._handle_rng.getrandbits(64):016x}"
@@ -246,10 +251,19 @@ class ModularWorkshop:
         if self._done:
             raise RuntimeError("episode finished")
         self._steps += 1
+        before = len(self._completed)
         try:
             self._feedback = self._apply(action)
         except (KeyError, TypeError, ValueError, IndexError) as exc:
             self._feedback = {"status": "invalid_input", "reason": str(exc)}
+        if len(self._completed) != before:
+            self._stage_rejections = self._stage_calls = 0
+        else:
+            if action.kind in ("commit_pending", "commit_assignment", "use_return", "deliver", "move") and \
+                    self._feedback.get("status") in ("rejected", "invalid_input"):
+                self._stage_rejections += 1
+            if action.kind == "call":
+                self._stage_calls += 1
         self._history.append({"action": asdict(action), "feedback": deepcopy(self._feedback),
                               "stage": self._current(), "work": self._work})
         if self._steps >= self._spec.step_limit:
@@ -656,7 +670,22 @@ def encode_action_m2(o: ModularObservation, action: Action) -> list[float]:
     return out + [1.0, float(draft is not None), float(draft is not None and rec.get("problem_snapshot") == draft)]
 
 
+def encode_observation_m3(o: ModularObservation) -> list[float]:
+    return encode_observation(o) + [min(o.stage_rejections, 16)/8, float(o.stage_rejections > 0),
+                                    float(o.stage_rejections >= 3), min(o.stage_solver_calls, 8)/4]
+
+
+def encode_action_m3(o: ModularObservation, action: Action) -> list[float]:
+    """m2 + public per-stage failure memory on completion/solver candidates."""
+    completion = action.kind in ("commit_pending", "commit_assignment", "use_return", "deliver", "move")
+    return encode_action_m2(o, action) + [
+        float(completion) * min(o.stage_rejections, 16)/8, float(completion and o.stage_rejections >= 3),
+        float(action.kind in ("call", "start_subset", "start_assign", "build_route")) * min(o.stage_rejections, 16)/8]
+
+
 def encode_public(o: ModularObservation, actions: list[Action], version: str = "m1"):
+    if version == "m3":
+        return encode_observation_m3(o), [encode_action_m3(o, x) for x in actions]
     if version == "m2":
         return encode_observation(o), [encode_action_m2(o, x) for x in actions]
     return encode_observation(o), [encode_action(o, x) for x in actions]
