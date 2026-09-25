@@ -1,0 +1,13 @@
+# Extended-02 phase-3 claim map
+
+It extends [claim-map-phase2.md](claim-map-phase2.md). All results come from sealed evaluations of frozen endpoints. Each experiment has three lineages unless stated otherwise.
+
+| Category | Claim | Evidence | Limit |
+|---|---|---|---|
+| f. Selection | Depth-allocating selection (successive halving) beats copy-based PBT and matched multistart at equal RL updates | E15: +0.0149 vs PBT and +0.0052 vs multistart pooled IID; 3/3 replicates each | Below the pre-tuned single learner (−0.006); registered robust-mode rule not supported (1/3); banks shared with E08 |
+| f. Diversity | Supplied behavioral-niche protection does not improve the selected finalist | E15 niche − plain −0.0024 | Niche descriptor supplied, not discovered |
+| e. Composition | Learned controllers execute unseen ordered pairs and 3-stage sequences of three primitives without a supplied schedule | E16: 1.000 IID; registered transfer rule passes 2/3 | Stage-typed features supplied; one environment family; distinct-stage sequences only |
+| e/c. Failure boundary | Novel composition exposes a return-binding shortcut (apply the existing return of the wrong type) | E16 A→S 0.00 in one lineage; 12,195 type-mismatch uses | Localized; see E17 |
+| c. Return binding | Wrong-typed distractor returns derail untrained controllers; training with them repairs both the distractors and the held-out order | E16 on distractor worlds 0.32–0.38; E17 A→S 0.57 → 0.94 (means); registered rule passes | Type-only distractors; provenance (same-type) binding untested |
+| d. Resource allocation | Budget-bound hard-assign region: learned controllers equal the teacher | E16/E17 hard assign = teacher (0.746 / 0.824) | Not superior |
+| e. New primitive | *(E18 pending)* | | |
