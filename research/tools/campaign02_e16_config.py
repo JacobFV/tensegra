@@ -32,6 +32,16 @@ def conditions(start, examples):
     return rows
 
 
+def distractor_conditions(start, examples):
+    """Same sequences with 0-2 wrong-typed prior returns (E17 evaluation)."""
+    rows = []
+    for i, st in enumerate(TRAIN[3:] + HELD_PAIRS):
+        prefix = "distr_iid" if st in TRAIN else "distr_heldpair"
+        rows.append({"name": name(st, prefix), "world_family": "modular", "seed_start": start + 5_000_000 + 10_000*i,
+                     "examples": examples, "world": {**BASE, "stages": list(st), "distractors": 2}})
+    return rows
+
+
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--checkpoints", default="[]")
@@ -39,9 +49,15 @@ if __name__ == "__main__":
     p.add_argument("--examples", type=int, default=256)
     p.add_argument("--references", default="modular_cheap,modular_always_tool,modular_cheap_first")
     p.add_argument("--output", required=True)
+    p.add_argument("--only-distractors", action="store_true")
+    p.add_argument("--with-distractors", action="store_true")
     a = p.parse_args()
     cks = json.loads(a.checkpoints) if a.checkpoints.startswith("[") else json.load(open(a.checkpoints))
     cfg = {"checkpoints": cks, "evaluation_batch": 32, "references": [r for r in a.references.split(",") if r],
            "reference_compute_tariff": 1.0, "world_family": "modular",
            "address_namespace": f"e16-modular-{a.seed_base}", "conditions": conditions(a.seed_base, a.examples)}
+    if a.only_distractors:
+        cfg["conditions"] = distractor_conditions(a.seed_base, a.examples)
+    elif a.with_distractors:
+        cfg["conditions"] += distractor_conditions(a.seed_base, a.examples)
     json.dump(cfg, open(a.output, "w"), indent=2)
