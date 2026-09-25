@@ -13,6 +13,14 @@ Experiment designs, scientific reports, audits, and reproducibility artifacts fo
 | 7 | Isolated proposal, readiness, and return interfaces | [Report](stages/stage-07/stage7-report.md) |
 | 8 | Protected beliefs and return access at width 1024 | [Report](stages/stage-08/stage8-report.md) |
 
+## Campaigns
+
+| Campaign | Question | Report |
+|---|---|---|
+| extended-01 | Semantic acquisition, returns, composition and attention interventions | [Report](campaigns/extended-01/campaign-report.md) |
+| extended-02 | Evolving agents that learn when and how to use computation | [Synthesis](campaigns/extended-02/campaign-synthesis.md) · [Final report](campaigns/extended-02/final-report.md) · [Closeout](campaigns/extended-02/closeout.md) |
+| extended-03 (proposed) | Managing a changing dependency graph of computations | [Proposal](campaigns/extended-03-proposal.md) |
+
 ## Layout
 
 - `stages/stage-NN/`: reports, plans, methods, notes, reviews, and stage-specific fixtures.

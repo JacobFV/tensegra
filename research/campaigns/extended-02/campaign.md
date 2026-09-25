@@ -5,6 +5,6 @@ Baseline `65d44ae6`; branch `campaign/extended-02`. The campaign began 2026-09-2
 - **Phase 2** resumed by user instruction at ~18:30Z and closed ~23:05Z at an evidential boundary (not a resource ceiling): [campaign-report-phase2.md](campaign-report-phase2.md), [claim-map-phase2.md](claim-map-phase2.md), [independent audit](review/phase2-independent-audit.md).
 - **Phase 3** continued on user instruction from ~23:10Z: [campaign-report-phase3.md](campaign-report-phase3.md), [claim-map-phase3.md](claim-map-phase3.md).
 - **Cross-phase synthesis:** [campaign-synthesis.md](campaign-synthesis.md).
-- **Final report:** [final-report.md](final-report.md).
+- **Final report:** [final-report.md](final-report.md). **Closeout:** [closeout.md](closeout.md). **Next campaign proposal:** [../extended-03-proposal.md](../extended-03-proposal.md).
 
 State: [budget.json](budget.json), [decisions.md](decisions.md), [experiment_registry.json](experiment_registry.json), [population_lineage.json](population_lineage.json), [environment_archive.json](environment_archive.json), [queue.json](queue.json), [handoff.md](handoff.md).

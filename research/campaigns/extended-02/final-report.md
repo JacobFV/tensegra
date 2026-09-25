@@ -4,7 +4,9 @@
 **Campaign:** topoformer extended-02, "evolving agents that learn when and how to use computation"
 **Branch:** `campaign/extended-02` (origin). Historical baseline `65d44ae6` preserved.
 
-**Status: closed at an evidential boundary.** No jobs are running on the GB10.
+**Status: closed.** See [closeout.md](closeout.md) for the Mother Agent's closing observations and [../extended-03-proposal.md](../extended-03-proposal.md) for the next campaign. The recommendations in section 6 below are superseded by that proposal.
+
+**Closed at an evidential boundary.** No jobs are running on the GB10.
 
 **Resources used:**
 
@@ -60,7 +62,7 @@ Failed and capped attempts are charged. Wall-clock time stayed within the 24-hou
 - whether and when to compute;
 - budget choice and escalation;
 - return use;
-- stage sequencing without a schedule.
+- low-level action sequencing within a supplied high-level stage order (the stage order is public and environment-enforced).
 
 **Absent:**
 - autonomous planning of stage order;
@@ -95,7 +97,7 @@ Failed and capped attempts are charged. Wall-clock time stayed within the 24-hou
 ## 6. Recommended next steps (not started; ~3.5 CPU core-h remain)
 
 The next steps follow the external audit's priorities:
-1. **A frozen-policy provenance test on fresh worlds.** Use randomized draft-like names for foreign records, wrong-type controls, stale-inapplicable results and old-but-still-valid results, each validated independently. Report selection errors separately from final success.
+1. **A frozen-policy provenance test on fresh worlds** that breaks the shortcut **relationally**. Renaming alone would not: m2 tests registry membership and snapshot equality, not names. The test needs foreign results for *registered* problems, stale versions of the same problem, and old-but-still-valid results, each validated independently. Report selection errors separately from final success, and measure validated reuse vs recomputation.
 2. **A deterministic identical-retry suppression diagnostic** on the E20-r2 lineage. This is a supplied progress monitor, used for localization only.
 3. **Registered adaptation metrics** before any new adaptation study: area under the adaptation curve, updates to sustained competence, retention, and post-adaptation composition.
 4. **A functional-composition task** (selected items → assignment domains → route timing constraints).

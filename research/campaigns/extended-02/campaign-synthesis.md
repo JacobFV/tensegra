@@ -39,7 +39,7 @@ Every number below comes from sealed, frozen-endpoint evaluations recorded in th
 - when and whether to compute;
 - budget choice and escalation;
 - return use;
-- stage sequencing without a schedule.
+- low-level action sequencing within a supplied high-level stage order (the stage order is public and environment-enforced).
 
 Several repairs in this campaign are **input-contract repairs**: budget relations (E07), provenance (E20) and failure memory (E22). Each removed a specific, localized failure. None is evidence of learned representation discovery.
 
