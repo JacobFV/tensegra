@@ -22,6 +22,7 @@ Phase 3 continued on user instruction after the phase-2 closure ([campaign-repor
    - Three lineages were trained without the assign stage. They score ~0 on it zero-shot, as expected: the new actions were never active, so zero-shot success is not identifiable.
    - After 20 supervised updates on the full mixture, they reach 0.67–0.98 on assign-containing sealed worlds, versus 0.02–0.19 for the same 20 updates from scratch. That point is unregistered and descriptive.
    - At the registered 120-update endpoint the difference is +0.02 / +0.46 / −0.19, so the rule outcome is **partial**.
+7. **Commit perseveration is a memory gap (E22).** Public per-stage counters of rejected completion attempts (m3) eliminated the recurring "repeat a rejected commit" failure: 126 → 0 perseveration failures over 22,272 sealed episodes per arm, with no retention loss. Most of the prior failures came from one lineage.
 6. **Depth + robustness-visible selection fails (E21).** Halving with no-tool/oversized worlds in the selection panel reached the combined policy in 0/3 runs and lowered sealed utility vs plain halving (0.822/0.928/0.888 vs 0.933/0.936/0.929).
 5. **Provenance binding needs a provenance input (E19/E20).** Prior results of the *right* type but for an unrelated instance collapse the E17 controllers (0.35 mean success, below the no-tool greedy's 0.63). Their m1 inputs carry no provenance. Adding public provenance features (m2), and training with same- and wrong-type distractors, restores 1.000 in all three lineages with no retention loss (registered rule supported 3/3). The two changes were made together.
 
@@ -160,6 +161,25 @@ The registered rule (+≥0.2 in ≥2/3 lineages, retention loss ≤0.05) is **su
 **Residual.** E20 r2 still fails 15–19% of the three triples in which select follows assign (0.809–0.852). Every failure is the direct-commit perseveration (37–45 rejected commits per failed episode), with no return-binding error.
 
 **Interpretation.** Return *type* binding could be learned from m1 inputs once wrong-type returns appeared in training (E17). Return *provenance* binding required a provenance input. Given that input plus exposure, all three lineages became fully robust to both kinds of irrelevant results.
+
+## E22: commit perseveration as a memory gap
+
+Protocol: [phase2/E22-protocol.md](phase2/E22-protocol.md). The lightweight controller is memoryless, and its observation shows only the last action's feedback. m3 adds public per-stage counters of rejected completion attempts and own solver calls; everything else is identical to E20 (seeds, streams, mixture, recipes).
+
+| Sealed (E16 set + wrong- and same-type distractor conditions; 29 non-hard conditions × 256 worlds per arm) | r0 | r1 | r2 |
+|---|---:|---:|---:|
+| E20 failures (perseveration: ≥10 rejected completion attempts) | 0 (0) | 1 (1) | 125 (125) |
+| E22 failures (perseveration) | 3 (0) | 0 (0) | 3 (0) |
+| E20 triple success | 1.000 | 0.999 | 0.919 |
+| E22 triple success | 0.999 | 1.000 | 0.999 |
+
+**Registered rule: supported.**
+- Pooled perseveration failures dropped 126 → 0, well past the required 50% reduction.
+- No condition-group mean dropped by more than 0.001.
+
+**Caveat.** The evidence is concentrated in lineage r2. The pairing makes it the same lineage (same initialization and streams) with only the feature input changed, but a single lineage's trajectory can still differ for idiosyncratic reasons.
+
+**Interpretation.** The failure recurred across phases (tool-first finalists under corrupted returns, E17-r2, E20-r2). It is consistent with a controller that cannot remember how many times its direct attempt has already failed. A supplied public counter, a form of exact typed memory, removes it. The recurrent workspace, which in principle could integrate this history, was not retested here: phase-2 E11 showed it collapsing under RL.
 
 ## E18: a held-out primitive
 

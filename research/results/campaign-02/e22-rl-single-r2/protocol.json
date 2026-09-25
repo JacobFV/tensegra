@@ -1,0 +1,261 @@
+{
+  "address_namespace": "e22-rl-r2",
+  "curriculum_mutation": false,
+  "development_examples": 128,
+  "development_seed_start": 1097000000,
+  "development_world_mix": [],
+  "halving_survivors": [],
+  "initial_checkpoints": [
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e22-boot-r2/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "cf3c5a95969e5a4c9d5ae2b24db272d2e1da38c7273ca9684368196cfac8cbb6"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e22-boot-r2/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "cf3c5a95969e5a4c9d5ae2b24db272d2e1da38c7273ca9684368196cfac8cbb6"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e22-boot-r2/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "cf3c5a95969e5a4c9d5ae2b24db272d2e1da38c7273ca9684368196cfac8cbb6"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e22-boot-r2/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "cf3c5a95969e5a4c9d5ae2b24db272d2e1da38c7273ca9684368196cfac8cbb6"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e22-boot-r2/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "cf3c5a95969e5a4c9d5ae2b24db272d2e1da38c7273ca9684368196cfac8cbb6"
+    },
+    {
+      "path": "/home/brandonin/topoformer-campaign02/results/e22-boot-r2/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "cf3c5a95969e5a4c9d5ae2b24db272d2e1da38c7273ca9684368196cfac8cbb6"
+    }
+  ],
+  "initialization_seeds": [
+    89200,
+    89201,
+    89202,
+    89203,
+    89204,
+    89205
+  ],
+  "member_hyperparameters": [
+    {
+      "entropy_weight": 0.003,
+      "kl_weight": 0.3,
+      "learning_rate": 3e-05
+    },
+    {
+      "entropy_weight": 0.001,
+      "kl_weight": 0.1,
+      "learning_rate": 1e-05
+    },
+    {
+      "entropy_weight": 0.01,
+      "kl_weight": 1.0,
+      "learning_rate": 0.0001
+    },
+    {
+      "entropy_weight": 0.0003,
+      "kl_weight": 0.03,
+      "learning_rate": 3e-06
+    },
+    {
+      "entropy_weight": 0.001,
+      "kl_weight": 3.0,
+      "learning_rate": 0.0003
+    },
+    {
+      "entropy_weight": 0.03,
+      "kl_weight": 0.1,
+      "learning_rate": 0.0001
+    }
+  ],
+  "methods": [
+    "actor_critic",
+    "actor_critic",
+    "actor_critic",
+    "actor_critic",
+    "actor_critic"
+  ],
+  "mode": "single",
+  "niche_protection": false,
+  "optimizer_policy": "inherit",
+  "policy": {
+    "feature_version": "m3",
+    "interface": "legacy"
+  },
+  "population_seed": 8902,
+  "population_size": 6,
+  "rounds": 5,
+  "teacher": "modular_cheap_first",
+  "threads": 1,
+  "train": {
+    "advantage_normalization": true,
+    "batch_size": 8,
+    "device": "cuda",
+    "evaluation_batch": 32,
+    "family": "lightweight",
+    "learning_rate": 0.0003,
+    "max_steps": 64,
+    "policy_loss_reduction": "decision_mean",
+    "rollout_mode": "batched",
+    "width": 1024
+  },
+  "training_seed_start": 1080000000,
+  "training_seed_stride": 1000000,
+  "updates_per_slot": 60,
+  "world_family": "modular",
+  "world_mix": [
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "same_type_distractors": 2,
+      "slots": 3,
+      "stages": [
+        "select"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "same_type_distractors": 2,
+      "slots": 3,
+      "stages": [
+        "route"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "same_type_distractors": 2,
+      "slots": 3,
+      "stages": [
+        "assign"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "same_type_distractors": 2,
+      "slots": 3,
+      "stages": [
+        "select",
+        "route"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "same_type_distractors": 2,
+      "slots": 3,
+      "stages": [
+        "select",
+        "assign"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "same_type_distractors": 2,
+      "slots": 3,
+      "stages": [
+        "assign",
+        "route"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "same_type_distractors": 2,
+      "slots": 3,
+      "stages": [
+        "select",
+        "route"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "same_type_distractors": 2,
+      "slots": 3,
+      "stages": [
+        "select",
+        "assign"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "compute_price": 0.0001,
+      "distractors": 2,
+      "forbid": 0.3,
+      "include_remaining_budget": true,
+      "locations": 7,
+      "same_type_distractors": 2,
+      "slots": 3,
+      "stages": [
+        "assign",
+        "route"
+      ],
+      "step_limit": 64,
+      "tasks": 5
+    }
+  ]
+}

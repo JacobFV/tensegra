@@ -1,0 +1,700 @@
+{
+  "checkpoints": [
+    {
+      "name": "e22rl-r0",
+      "path": "/home/brandonin/topoformer-campaign02/results/e22-rl-single-r0/checkpoints/round-4-slot-5-attempt-29.pt",
+      "sha256": "2468547611f4019b24f1c412f5aec767bb5148adcc06f5314b139e6596147246",
+      "development_utility": 0.96359078125,
+      "development_success": 0.9921875,
+      "slot": 5
+    },
+    {
+      "name": "e22rl-r1",
+      "path": "/home/brandonin/topoformer-campaign02/results/e22-rl-single-r1/checkpoints/round-4-slot-5-attempt-29.pt",
+      "sha256": "385c0783531d50dc3f15da35240393182d14e98e9c0771d626f20fc49f1f1b12",
+      "development_utility": 0.972041875,
+      "development_success": 1.0,
+      "slot": 5
+    },
+    {
+      "name": "e22rl-r2",
+      "path": "/home/brandonin/topoformer-campaign02/results/e22-rl-single-r2/checkpoints/round-4-slot-5-attempt-29.pt",
+      "sha256": "d1c9fc4aac30b72ac9885653be1ddbee5eb8bd534544af89ab68567f6973f8c9",
+      "development_utility": 0.972862578125,
+      "development_success": 1.0,
+      "slot": 5
+    }
+  ],
+  "evaluation_batch": 32,
+  "references": [],
+  "reference_compute_tariff": 1.0,
+  "world_family": "modular",
+  "address_namespace": "e16-modular-90000000",
+  "conditions": [
+    {
+      "name": "iid_S",
+      "world_family": "modular",
+      "seed_start": 90000000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select"
+        ]
+      }
+    },
+    {
+      "name": "iid_R",
+      "world_family": "modular",
+      "seed_start": 90010000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route"
+        ]
+      }
+    },
+    {
+      "name": "iid_A",
+      "world_family": "modular",
+      "seed_start": 90020000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign"
+        ]
+      }
+    },
+    {
+      "name": "iid_S-R",
+      "world_family": "modular",
+      "seed_start": 90030000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "route"
+        ]
+      }
+    },
+    {
+      "name": "iid_S-A",
+      "world_family": "modular",
+      "seed_start": 90040000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "assign"
+        ]
+      }
+    },
+    {
+      "name": "iid_A-R",
+      "world_family": "modular",
+      "seed_start": 90050000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "route"
+        ]
+      }
+    },
+    {
+      "name": "heldpair_R-S",
+      "world_family": "modular",
+      "seed_start": 91000000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "select"
+        ]
+      }
+    },
+    {
+      "name": "heldpair_A-S",
+      "world_family": "modular",
+      "seed_start": 91010000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "select"
+        ]
+      }
+    },
+    {
+      "name": "heldpair_R-A",
+      "world_family": "modular",
+      "seed_start": 91020000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "assign"
+        ]
+      }
+    },
+    {
+      "name": "triple_S-R-A",
+      "world_family": "modular",
+      "seed_start": 92000000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "route",
+          "assign"
+        ]
+      }
+    },
+    {
+      "name": "triple_S-A-R",
+      "world_family": "modular",
+      "seed_start": 92010000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "assign",
+          "route"
+        ]
+      }
+    },
+    {
+      "name": "triple_R-S-A",
+      "world_family": "modular",
+      "seed_start": 92020000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "select",
+          "assign"
+        ]
+      }
+    },
+    {
+      "name": "triple_R-A-S",
+      "world_family": "modular",
+      "seed_start": 92030000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "assign",
+          "select"
+        ]
+      }
+    },
+    {
+      "name": "triple_A-S-R",
+      "world_family": "modular",
+      "seed_start": 92040000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "select",
+          "route"
+        ]
+      }
+    },
+    {
+      "name": "triple_A-R-S",
+      "world_family": "modular",
+      "seed_start": 92050000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "route",
+          "select"
+        ]
+      }
+    },
+    {
+      "name": "hardassign_A",
+      "world_family": "modular",
+      "seed_start": 94000000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 6,
+        "slots": 4,
+        "forbid": 0.35,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign"
+        ]
+      }
+    },
+    {
+      "name": "hardassign_S-A",
+      "world_family": "modular",
+      "seed_start": 94010000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 6,
+        "slots": 4,
+        "forbid": 0.35,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "assign"
+        ]
+      }
+    },
+    {
+      "name": "distr_iid_S-R",
+      "world_family": "modular",
+      "seed_start": 95000000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "route"
+        ],
+        "distractors": 2
+      }
+    },
+    {
+      "name": "distr_iid_S-A",
+      "world_family": "modular",
+      "seed_start": 95010000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "assign"
+        ],
+        "distractors": 2
+      }
+    },
+    {
+      "name": "distr_iid_A-R",
+      "world_family": "modular",
+      "seed_start": 95020000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "route"
+        ],
+        "distractors": 2
+      }
+    },
+    {
+      "name": "distr_heldpair_R-S",
+      "world_family": "modular",
+      "seed_start": 95030000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "select"
+        ],
+        "distractors": 2
+      }
+    },
+    {
+      "name": "distr_heldpair_A-S",
+      "world_family": "modular",
+      "seed_start": 95040000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "select"
+        ],
+        "distractors": 2
+      }
+    },
+    {
+      "name": "distr_heldpair_R-A",
+      "world_family": "modular",
+      "seed_start": 95050000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "assign"
+        ],
+        "distractors": 2
+      }
+    },
+    {
+      "name": "same_iid_S-R",
+      "world_family": "modular",
+      "seed_start": 96000000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "route"
+        ],
+        "same_type_distractors": 2
+      }
+    },
+    {
+      "name": "same_iid_S-A",
+      "world_family": "modular",
+      "seed_start": 96010000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select",
+          "assign"
+        ],
+        "same_type_distractors": 2
+      }
+    },
+    {
+      "name": "same_iid_A-R",
+      "world_family": "modular",
+      "seed_start": 96020000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "route"
+        ],
+        "same_type_distractors": 2
+      }
+    },
+    {
+      "name": "same_heldpair_R-S",
+      "world_family": "modular",
+      "seed_start": 96030000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "select"
+        ],
+        "same_type_distractors": 2
+      }
+    },
+    {
+      "name": "same_heldpair_A-S",
+      "world_family": "modular",
+      "seed_start": 96040000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign",
+          "select"
+        ],
+        "same_type_distractors": 2
+      }
+    },
+    {
+      "name": "same_heldpair_R-A",
+      "world_family": "modular",
+      "seed_start": 96050000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "route",
+          "assign"
+        ],
+        "same_type_distractors": 2
+      }
+    },
+    {
+      "name": "same_iid_S",
+      "world_family": "modular",
+      "seed_start": 96060000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "select"
+        ],
+        "same_type_distractors": 2
+      }
+    },
+    {
+      "name": "same_iid_A",
+      "world_family": "modular",
+      "seed_start": 96070000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "tasks": 5,
+        "slots": 3,
+        "forbid": 0.3,
+        "step_limit": 64,
+        "compute_price": 0.0001,
+        "include_remaining_budget": true,
+        "stages": [
+          "assign"
+        ],
+        "same_type_distractors": 2
+      }
+    }
+  ]
+}
