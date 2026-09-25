@@ -51,6 +51,10 @@ class ModularSpec:
     compute_price: float = 0.0
     call_budgets: tuple[int, ...] = (16, 128, 1024)
     include_remaining_budget: bool = True
+    # Public prior computation records from primitives NOT in this goal
+    # (primitive, payload, problem_snapshot). Certificate-valid for their own
+    # snapshot, irrelevant to this goal. Present from t=0; never charged.
+    distractors: tuple = ()
 
     def __post_init__(self):
         if not self.stages or any(s not in STAGES for s in self.stages) or len(set(self.stages)) != len(self.stages):
@@ -62,7 +66,7 @@ class ModularSpec:
 
 def generate_modular(seed: int, stages=("select", "route"), categories: int = 3, choices: int = 3,
                      locations: int = 7, tasks: int = 4, slots: int = 3, forbid: float = .3,
-                     **overrides: Any) -> ModularSpec:
+                     distractors: int = 0, **overrides: Any) -> ModularSpec:
     """Planted-feasible instances for every stage; planting is never public."""
     stages = tuple(stages)
     base = generate_world(seed, categories=categories, choices=choices, locations=locations, obstacle=False)
@@ -83,12 +87,44 @@ def generate_modular(seed: int, stages=("select", "route"), categories: int = 3,
     params = dict(stages=stages, items=base.items, categories=base.categories, capacity=base.capacity,
                   funds=base.funds, incompatible=base.incompatible, edges=base.edges, start=base.start,
                   destination=base.destination, domains=tuple(domains), forbidden=tuple(forbidden))
+    params["distractors"] = _distractors(seed, stages, base, domains, distractors)
     params.update(overrides)
     if "call_budgets" in params:
         params["call_budgets"] = tuple(params["call_budgets"])
     if "stages" in overrides:
         params["stages"] = tuple(overrides["stages"])
     return ModularSpec(**params)
+
+
+def _distractors(seed, stages, base, domains, limit):
+    """0..limit prior results of primitives absent from the goal (typed wrong for every stage)."""
+    if limit <= 0:
+        return ()
+    rng = random.Random(f"modular-distractor-{seed}")
+    absent = [p for st, p in PRIMITIVE.items() if st not in stages]
+    rows = []
+    for _ in range(rng.randint(0, limit) if absent else 0):
+        primitive = rng.choice(absent)
+        if primitive == "csp":
+            d = [sorted(rng.sample(range(4), rng.randint(2, 4))) for _ in domains]
+            payload = tuple(rng.choice(x) for x in d)
+            snapshot = {"primitive": "csp", "problem": {"domains": d, "forbidden": [], "constraints": []}}
+        elif primitive == "shortest_path":
+            other = rng.randrange(1, base.destination)
+            path = tuple(range(other, base.destination+1))
+            w = {(a, b): c for a, b, c in base.edges}
+            payload = (path, sum(w[(a, b)] for a, b in zip(path, path[1:])))
+            snapshot = {"primitive": "shortest_path", "problem": {"n": base.destination+1,
+                        "edges": [list(e) for e in base.edges], "start": other, "goal": base.destination}}
+        else:
+            handles = [x.handle for x in base.items]
+            pick = [next(i for i, x in enumerate(base.items) if x.category == c and rng.random() < .6 or
+                         (x.category == c and all(y.category != c for y in base.items[i+1:]))) for c in base.categories]
+            payload = (tuple(pick), len(pick), sum(base.items[i].weight for i in pick), sum(base.items[i].price for i in pick))
+            snapshot = {"primitive": "constrained_subset", "problem": {"items": [[x.category, x.weight, x.price, 1] for x in base.items],
+                        "handles": handles, "constraints": []}}
+        rows.append((primitive, payload, snapshot))
+    return tuple(rows)
 
 
 def validate_assignment(spec: ModularSpec, assignment: Any) -> tuple[bool, str]:
@@ -161,6 +197,10 @@ class ModularWorkshop:
         self._history: list[dict[str, Any]] = []
         self._feedback: dict[str, Any] = {"status": "ready"}
         self._handle_rng = random.Random(address_seed)
+        for i, (primitive, payload, snapshot) in enumerate(spec.distractors):
+            self._record("computation", payload, primitive=primitive, problem=f"prior_{i}", status="success",
+                         work_units=0, budget=0, problem_snapshot=deepcopy(snapshot), call_position=None,
+                         certificate_valid=True, prior=True)
 
     def charge_compute(self, units: float) -> None:
         if isinstance(units, bool) or not isinstance(units, (int, float)) or not math.isfinite(units) or units < 0:

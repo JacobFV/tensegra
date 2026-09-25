@@ -1,0 +1,185 @@
+{
+  "mode": "single",
+  "population_seed": 8802,
+  "initialization_seeds": [
+    88200,
+    88201,
+    88202,
+    88203,
+    88204,
+    88205
+  ],
+  "rounds": 1,
+  "updates_per_slot": 100,
+  "population_size": 6,
+  "optimizer_policy": "inherit",
+  "training_seed_start": 1040000000,
+  "training_seed_stride": 1000000,
+  "development_seed_start": 1092000000,
+  "development_examples": 128,
+  "address_namespace": "e17-boot-r2",
+  "teacher": "modular_cheap_first",
+  "methods": [
+    "supervised"
+  ],
+  "threads": 1,
+  "train": {
+    "width": 1024,
+    "family": "lightweight",
+    "device": "cuda",
+    "batch_size": 8,
+    "learning_rate": 0.0003,
+    "rollout_mode": "batched",
+    "max_steps": 64,
+    "evaluation_batch": 32,
+    "policy_loss_reduction": "episode_mean"
+  },
+  "world_mix": [
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "select"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "route"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "assign"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "select",
+        "route"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "select",
+        "assign"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "assign",
+        "route"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "select",
+        "route"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "select",
+        "assign"
+      ],
+      "distractors": 2
+    },
+    {
+      "categories": 3,
+      "choices": 3,
+      "locations": 7,
+      "tasks": 5,
+      "slots": 3,
+      "forbid": 0.3,
+      "step_limit": 64,
+      "compute_price": 0.0001,
+      "include_remaining_budget": true,
+      "stages": [
+        "assign",
+        "route"
+      ],
+      "distractors": 2
+    }
+  ],
+  "policy": {
+    "interface": "legacy",
+    "feature_version": "m1"
+  },
+  "world_family": "modular"
+}

@@ -95,3 +95,21 @@ def test_training_and_population_integration(tmp_path):
     run_ = PopulationRun(cfg, tmp_path / "m", factory, lambda: make_reference("modular_cheap_first"))
     run_.run()
     assert run_.state["status"] == "completed"
+
+
+def test_distractor_returns_are_public_wrong_typed_and_harmless_to_teacher():
+    specs = [generate_modular(s, stages=("select", "assign"), distractors=2) for s in range(30)]
+    assert any(x.distractors for x in specs)
+    assert all(p == "shortest_path" for x in specs for p, _, _ in x.distractors)
+    spec = next(x for x in specs if x.distractors)
+    env = ModularWorkshop(spec, executor=EXEC, address_seed=4)
+    o = env.observe()
+    assert len(o.records) == len(spec.distractors) and not o.problems
+    rec = o.records[0]["handle"]
+    env.step(Action("retrieve", {"handle": rec}))
+    o = env.step(Action("use_return", {"handle": rec, "as": "select"}))
+    assert o.feedback["status"] == "invalid_input" and "mismatch" in o.feedback["reason"]
+    assert sum(run(x, "cheap_first")["verified_success"] for x in specs) >= 29
+    solo = [generate_modular(s, stages=("select",), distractors=2) for s in range(30)]
+    assert {p for x in solo for p, _, _ in x.distractors} <= {"csp", "shortest_path"}
+    assert generate_modular(3, stages=("select",)).distractors == ()
