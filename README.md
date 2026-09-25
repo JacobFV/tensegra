@@ -1,6 +1,6 @@
 # Tensegra: programmable attention geometry
 
-*A [Tensaco](https://tensaco.ai) research model. Formerly **Topoformer**: the old `topoformer` import path
+*Formerly **Topoformer**: the old `topoformer` import path
 still works as an alias, and the research archive under `research/` keeps the old name
 so that its recorded paths and hashes stay valid.*
 
