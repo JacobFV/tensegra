@@ -131,7 +131,7 @@ Protocol: [phase2/E21-protocol.md](phase2/E21-protocol.md). E21 is E15 halving-p
 **Registered outcome: mixed.**
 - **The combined policy was not reached:** 0/3 finalists meet the direct-first + tool-use + no-tools criteria.
 - **Not an over-correction either:** the finalists still call solvers, unlike E13's tool-avoiding populations.
-- **Worse than plain halving:** utility and transfer both drop.
+- **Worse than plain halving:** IID utility drops in all three replicates. Transfer drops on the mean (0.792 vs 0.855), though r2's transfer rises (0.829 vs 0.818).
 - **Development dynamics:** the surviving lineages oscillated between modes in the final rounds. Final-round greedy-first rates fell from ~1.0 to 0.07–0.37 in the selected member.
 
 Making robustness visible to depth-allocating selection added selection noise without selecting the robust mode. Across all five population designs tested (PBT, PBT + curriculum, PBT + robust fitness, halving, halving + robust fitness), **none** reliably produced the combined policy. Concentrated single-lineage training produced it in 5/7 lineages in phase 2 and in 2/3 fresh lineages in E14.
@@ -160,7 +160,12 @@ The registered rule (+≥0.2 in ≥2/3 lineages, retention loss ≤0.05) is **su
 
 **Residual.** E20 r2 still fails 15–19% of the three triples in which select follows assign (0.809–0.852). Every failure is the direct-commit perseveration (37–45 rejected commits per failed episode), with no return-binding error.
 
-**Interpretation.** Return *type* binding could be learned from m1 inputs once wrong-type returns appeared in training (E17). Return *provenance* binding required a provenance input. Given that input plus exposure, all three lineages became fully robust to both kinds of irrelevant results.
+**Audit qualifications (phase-3b).**
+- **Some distractors were accidentally correct.** 10.2% of the same-type distractors (every subset distractor is built over this episode's items with no constraints) are *valid answers* to the goal. E17 always used the prior record and succeeded only in those worlds: 116 successes per arm, all via a foreign record.
+- **The m2 bit is close to an oracle.** Prior records are named `prior_i` while the actor's drafts are `problem_n`, so the m2 bit "record's problem is one of my drafts" is effectively a supplied "not a prior record" oracle. Sealed same-type conditions use the training generator, so E20's 1.000 is IID robustness given that input.
+- **The input-requirement claim rests on code inspection.** m1 record features cannot separate own and prior same-type records; no m1 + same-type-training arm was run.
+
+**Interpretation.** Return *type* binding could be learned from m1 inputs once wrong-type returns appeared in training (E17). Return *provenance* binding was achieved with a supplied provenance input. That m1 cannot represent it follows from its features, not from an experiment. Given that input plus exposure, all three lineages became fully robust to both kinds of irrelevant results.
 
 ## E22: commit perseveration as a memory gap
 
@@ -175,7 +180,8 @@ Protocol: [phase2/E22-protocol.md](phase2/E22-protocol.md). The lightweight cont
 
 **Registered rule: supported.**
 - Pooled perseveration failures dropped 126 → 0, well past the required 50% reduction.
-- No condition-group mean dropped by more than 0.001.
+- No condition-group mean dropped by more than 0.0013 (E22 r0 IID pairs: one failure in 768). The threshold was 0.02.
+- **Metric-bound (audit).** Five of E22's six residual failures are a *different* loop that the registered metric does not count: after the inspections, 55 consecutive `choose_item` actions with no completion attempt, until the step cap. "Perseveration removed" refers to rejected-completion loops only.
 
 **Caveat.** The evidence is concentrated in lineage r2. The pairing makes it the same lineage (same initialization and streams) with only the feature input changed, but a single lineage's trajectory can still differ for idiosyncratic reasons.
 
@@ -232,3 +238,13 @@ Ledger: [budget.json](budget.json). Through E18 the campaign totals are **41.0 o
 - **Pairing across roots.** E16 and E17/E18 sealed worlds are identical in content and seeds, but their spec_hash differs because of an explicit empty `distractors` field. Pairing across these roots must use seeds.
 - **Shared training worlds.** RL lineage 0 of E16, E17 and E18-base starts its training stream at the same seed as bootstrap lineage 2 (e.g. 1.04e9), so those lineages share their first 4,800 training worlds. This weakens independence slightly and does not affect sealed evaluation.
 - **Step caps.** The modular experiments have no step-cap asymmetry (learned max_steps = world step_limit = 64).
+
+## Independent audit (E19–E22)
+
+[review/phase3b-independent-audit.md](review/phase3b-independent-audit.md) (24.7 CPU core-s) reconstructed every E19–E22 number from raw rows. It confirmed:
+- the config diffs (only the registered changes);
+- that the m2 encoder never reads the `prior` field;
+- the m3 counters, recomputed from traces and matching on 39,071/39,071 steps;
+- sealed-seed disjointness.
+
+Its qualifications are incorporated above: accidentally valid same-type distractors; m2 as a near-oracle provenance bit; the metric-bound perseveration claim; wording on E21 transfer and on E22's retention figure.

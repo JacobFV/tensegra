@@ -23,7 +23,7 @@ Every number below comes from sealed, frozen-endpoint evaluations recorded in th
 **Transfer beyond training combinations.**
 - **Resource conditions.** Direct-first controllers match the public teacher on unseen budget and price combinations (E09/E14). They are robust to tool removal and corrupted returns; tool-first controllers are not.
 - **New orders of known primitives.** In a three-primitive modular world, controllers execute unseen ordered pairs and three-stage sequences (E16). The registered rule passes on the aggregate reading.
-- **Where it breaks.** Transfer failed at a return-binding shortcut that only a novel order exposed: apply whatever solver result exists. Training with wrong-type distractor returns repaired it (E17). Same-type, wrong-provenance returns required a provenance input (E19→E20: 0.35 → 1.00).
+- **Where it breaks.** Transfer failed at a return-binding shortcut that only a novel order exposed: apply whatever solver result exists. Training with wrong-type distractor returns repaired it (E17). Same-type, wrong-provenance returns were handled once a supplied provenance input (effectively a "not a prior record" bit) was added together with exposure (E19→E20: 0.35 → 1.00). m1 cannot represent provenance by construction; no m1 + exposure arm was run.
 - **A new primitive** gave a large few-shot head start (0.67–0.98 vs 0.02–0.19 after 20 updates) that was not reliable at 120 updates (E18: partial). Zero-shot use of a never-seen primitive is not identifiable for these controllers.
 
 ## Supplied versus learned
@@ -52,7 +52,7 @@ Several repairs in this campaign are **input-contract repairs**: budget relation
 | Tool dependence | Training where tools are always available, plus selection | Long single-lineage training (not selection) |
 | Return-type shortcut | Training never had a wrong-type return present | Distractor exposure (E17) |
 | Provenance confusion | No provenance input | m2 features + exposure (E20) |
-| Commit perseveration | Memoryless controller | Public failure counters (E22) |
+| Commit perseveration | Memoryless controller | Public failure counters (E22). A residual `choose_item` loop remains in 5 of 22,272 episodes per arm. |
 | Omitted semantic composition (RL01/RL02) | Target addressing; pointer addressing produced duplicate edges instead | **Unresolved** |
 
 ## Not tested or not established

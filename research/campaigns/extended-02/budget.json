@@ -392,7 +392,7 @@
     }
   ],
   "accounting": "GPU whole experiment-process occupancy; CPU user+system including reaped children, no nested double counting. Profile/import/evaluation/export included. Coordinator shell/read-only inspection not experiment work.",
-  "status": "phase2_active",
+  "status": "phase3_closed",
   "closed_utc": "2026-09-24T17:29:21.081692+00:00",
   "phase2_jobs": [
     {
@@ -1782,13 +1782,25 @@
       ],
       "uses_gpu": true,
       "receipt": "research/results/campaign-02/rl02-profile-process/occupancy.json"
+    },
+    {
+      "id": "phase3b-independent-audit",
+      "status": "completed",
+      "cpu_core_seconds": 24.7,
+      "gpu_process_wall_seconds": 0.0,
+      "uses_gpu": false,
+      "interval_unix": [
+        0,
+        0
+      ],
+      "accounting": "auditor-measured CPU"
     }
   ],
   "phase2_charged_gpu_seconds": 32236.922578811646,
   "phase2_gpu_process_wall_sum_upper_bound": 134705.5309859868,
   "phase2_gpu_accounting": "device occupancy: union of CUDA-job wall intervals; per-process sum reported as upper bound",
-  "phase2_charged_cpu_core_seconds": 158270.868583504,
+  "phase2_charged_cpu_core_seconds": 158295.568583504,
   "total_charged_gpu_seconds": 33574.22451733053,
-  "total_charged_cpu_core_seconds": 159968.45987161598,
+  "total_charged_cpu_core_seconds": 159993.159871616,
   "phase2_closed_note": "Stopped at evidential boundary, not at a ceiling. GPU charge = device occupancy (union of GPU-job intervals); per-process wall sum reported as phase2_gpu_process_wall_sum_upper_bound (exceeds the 12 h ceiling if read per process)."
 }
