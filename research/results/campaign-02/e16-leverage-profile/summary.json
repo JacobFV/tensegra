@@ -1,0 +1,4083 @@
+{
+  "config": {
+    "checkpoints": [],
+    "evaluation_batch": 32,
+    "references": [
+      "modular_cheap",
+      "modular_always_tool",
+      "modular_cheap_first"
+    ],
+    "reference_compute_tariff": 1.0,
+    "world_family": "modular",
+    "address_namespace": "e16-modular-460000000",
+    "conditions": [
+      {
+        "name": "iid_S",
+        "world_family": "modular",
+        "seed_start": 460000000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "select"
+          ]
+        }
+      },
+      {
+        "name": "iid_R",
+        "world_family": "modular",
+        "seed_start": 460010000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "route"
+          ]
+        }
+      },
+      {
+        "name": "iid_A",
+        "world_family": "modular",
+        "seed_start": 460020000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "assign"
+          ]
+        }
+      },
+      {
+        "name": "iid_S-R",
+        "world_family": "modular",
+        "seed_start": 460030000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "select",
+            "route"
+          ]
+        }
+      },
+      {
+        "name": "iid_S-A",
+        "world_family": "modular",
+        "seed_start": 460040000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "select",
+            "assign"
+          ]
+        }
+      },
+      {
+        "name": "iid_A-R",
+        "world_family": "modular",
+        "seed_start": 460050000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "assign",
+            "route"
+          ]
+        }
+      },
+      {
+        "name": "heldpair_R-S",
+        "world_family": "modular",
+        "seed_start": 461000000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "route",
+            "select"
+          ]
+        }
+      },
+      {
+        "name": "heldpair_A-S",
+        "world_family": "modular",
+        "seed_start": 461010000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "assign",
+            "select"
+          ]
+        }
+      },
+      {
+        "name": "heldpair_R-A",
+        "world_family": "modular",
+        "seed_start": 461020000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "route",
+            "assign"
+          ]
+        }
+      },
+      {
+        "name": "triple_S-R-A",
+        "world_family": "modular",
+        "seed_start": 462000000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "select",
+            "route",
+            "assign"
+          ]
+        }
+      },
+      {
+        "name": "triple_S-A-R",
+        "world_family": "modular",
+        "seed_start": 462010000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "select",
+            "assign",
+            "route"
+          ]
+        }
+      },
+      {
+        "name": "triple_R-S-A",
+        "world_family": "modular",
+        "seed_start": 462020000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "route",
+            "select",
+            "assign"
+          ]
+        }
+      },
+      {
+        "name": "triple_R-A-S",
+        "world_family": "modular",
+        "seed_start": 462030000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "route",
+            "assign",
+            "select"
+          ]
+        }
+      },
+      {
+        "name": "triple_A-S-R",
+        "world_family": "modular",
+        "seed_start": 462040000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "assign",
+            "select",
+            "route"
+          ]
+        }
+      },
+      {
+        "name": "triple_A-R-S",
+        "world_family": "modular",
+        "seed_start": 462050000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 5,
+          "slots": 3,
+          "forbid": 0.3,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "assign",
+            "route",
+            "select"
+          ]
+        }
+      },
+      {
+        "name": "hardassign_A",
+        "world_family": "modular",
+        "seed_start": 464000000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 6,
+          "slots": 4,
+          "forbid": 0.35,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "assign"
+          ]
+        }
+      },
+      {
+        "name": "hardassign_S-A",
+        "world_family": "modular",
+        "seed_start": 464010000,
+        "examples": 128,
+        "world": {
+          "categories": 3,
+          "choices": 3,
+          "locations": 7,
+          "tasks": 6,
+          "slots": 4,
+          "forbid": 0.35,
+          "step_limit": 64,
+          "compute_price": 0.0001,
+          "include_remaining_budget": true,
+          "stages": [
+            "select",
+            "assign"
+          ]
+        }
+      }
+    ]
+  },
+  "config_sha256": "3ef8e48a03d50974c488d10b30fd153e103f8b278caecaf6b02eab110c5a45e3",
+  "sources": {
+    "evaluator": "1c769e5d00abe4472246b53cd520221eb1777e07ec45a6fd048afa75457cad39",
+    "training": "229be75489628f5e665298c8599b722be41c8cce347d38084557bec24a5ecf3c",
+    "policy": "e08d8e46b352c7bb4b82290d8373365cd00efe2ad635792d42f9165b99abb80b",
+    "protocol": "4578545941f6efbe352c2c95334947960981994821020ebe208fd0a3f5509131",
+    "world": "455757373458cd5bf429d03618ffd88f177e821db13eb0229f0a3ce369455f45",
+    "references": "69e4a1b560a691c41f6d934ac5ce8ac4fdb228b9d2e0aa85f7c7807b65378981",
+    "interventions": "bd7993534e7b0b82e137b54db4310bb086e805c45652a1a871c6c3f56e38bcc1",
+    "population": "efef789d2fb543627525450d2f0aea84284035af097975463aea1c3f43aaf019",
+    "memory": "f61b856b5241683319390c2be50b5a73874a88ff9be99145e7e23573068656b0",
+    "memory_policy": "ce2e946f6713964745cfe726295c8a7d251a1858168c0d0574c0bda9e7efaa8f"
+  },
+  "checkpoints": [],
+  "profile_limit": null,
+  "results": [
+    {
+      "condition": "iid_S",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 113,
+      "success": 0.8828125,
+      "means": {
+        "utility": 0.858928125,
+        "cost": 0.023884375,
+        "steps": 13.53125,
+        "observations": 9.0,
+        "work_units": 0.0,
+        "travel_distance": 0.0,
+        "compute_units": 13.53125,
+        "modeled_compute_cost": 0.001353125,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.027054867256637166,
+      "counts": {
+        "action/inspect": 1152,
+        "status/success": 1717,
+        "action/choose_item": 339,
+        "action/commit_pending": 113,
+        "action/verify": 113,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/abstain": 15,
+        "status/unknown": 15
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_S/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "532b2de3180e1ad5a641b1983b6f1454c992e17d5262f33eef07c6e5426d8c5b",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.04999969599999976
+    },
+    {
+      "condition": "iid_S",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.97203,
+        "cost": 0.027970000000000002,
+        "steps": 17.0,
+        "observations": 9.0,
+        "work_units": 27.0,
+        "travel_distance": 0.0,
+        "compute_units": 17.0,
+        "modeled_compute_cost": 0.0017000000000000001,
+        "solver_cpu_seconds": 0.0007820547500000108
+      },
+      "cost_per_success_including_failures": 0.027970000000000002,
+      "counts": {
+        "action/inspect": 1152,
+        "status/success": 2176,
+        "action/start_subset": 128,
+        "action/add_constraint": 384,
+        "action/call": 128,
+        "action/retrieve": 128,
+        "action/use_return": 128,
+        "return_use_attempts": 128,
+        "multiple_return_use_attempts": 0,
+        "return_address_contract_valid": 128,
+        "multiple_return_address_contract_valid": 0,
+        "return_application_success": 128,
+        "stale_return_use": 0,
+        "action/verify": 128,
+        "reductions": 128,
+        "correct_reductions": 128,
+        "certificate_valid_reductions": 128,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_S/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "b3308bbbe1f5762b1f55d19335a8bc9dd21094596afb0fc6a825dfef29d56674",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.022549007999999482
+    },
+    {
+      "condition": "iid_S",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.975162421875,
+        "cost": 0.024837578125,
+        "steps": 14.375,
+        "observations": 9.0,
+        "work_units": 2.5078125,
+        "travel_distance": 0.0,
+        "compute_units": 14.375,
+        "modeled_compute_cost": 0.0014375,
+        "solver_cpu_seconds": 0.00011923387499999938
+      },
+      "cost_per_success_including_failures": 0.024837578125,
+      "counts": {
+        "action/inspect": 1152,
+        "status/success": 1825,
+        "action/choose_item": 339,
+        "action/commit_pending": 113,
+        "action/verify": 128,
+        "reductions": 18,
+        "correct_reductions": 18,
+        "certificate_valid_reductions": 15,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/start_subset": 15,
+        "action/add_constraint": 45,
+        "action/call": 18,
+        "status/timeout": 15,
+        "action/retrieve": 15,
+        "action/use_return": 15,
+        "return_use_attempts": 15,
+        "multiple_return_use_attempts": 3,
+        "return_address_contract_valid": 15,
+        "multiple_return_address_contract_valid": 3,
+        "return_application_success": 15,
+        "stale_return_use": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_S/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "9a276d07f2d05bf437f38198dbfab76a1719864aacf508a40f015176b7e0a4c8",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.023528895999999744
+    },
+    {
+      "condition": "iid_R",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9822109375,
+        "cost": 0.0177890625,
+        "steps": 6.25,
+        "observations": 1.0,
+        "work_units": 0.0,
+        "travel_distance": 9.9140625,
+        "compute_units": 6.25,
+        "modeled_compute_cost": 0.000625,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.0177890625,
+      "counts": {
+        "action/inspect": 128,
+        "status/success": 800,
+        "action/move": 544,
+        "action/verify": 128,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_R/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "6c6e6da8ee45727e4afcb4de3aeb31a9bf60bf5914b1466393ac43acc1996703",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.006999903999999946
+    },
+    {
+      "condition": "iid_R",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.985687421875,
+        "cost": 0.014312578125000001,
+        "steps": 6.0,
+        "observations": 1.0,
+        "work_units": 23.6015625,
+        "travel_distance": 6.4765625,
+        "compute_units": 6.0,
+        "modeled_compute_cost": 0.0006000000000000001,
+        "solver_cpu_seconds": 0.0006102240000000047
+      },
+      "cost_per_success_including_failures": 0.014312578125000001,
+      "counts": {
+        "action/inspect": 128,
+        "status/success": 768,
+        "action/build_route": 128,
+        "action/call": 128,
+        "action/retrieve": 128,
+        "action/use_return": 128,
+        "return_use_attempts": 128,
+        "multiple_return_use_attempts": 0,
+        "return_address_contract_valid": 128,
+        "multiple_return_address_contract_valid": 0,
+        "return_application_success": 128,
+        "stale_return_use": 0,
+        "action/verify": 128,
+        "reductions": 128,
+        "correct_reductions": 128,
+        "certificate_valid_reductions": 128,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_R/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "a82efb1ce6d76cdbfbc6d8819df27b4b2988d35058a016e75a941a7f3028637a",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.005364479999999672
+    },
+    {
+      "condition": "iid_R",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.985351015625,
+        "cost": 0.014648984375,
+        "steps": 6.1953125,
+        "observations": 1.0,
+        "work_units": 27.9453125,
+        "travel_distance": 6.5546875,
+        "compute_units": 6.1953125,
+        "modeled_compute_cost": 0.00061953125,
+        "solver_cpu_seconds": 0.0006707897500000089
+      },
+      "cost_per_success_including_failures": 0.014648984375,
+      "counts": {
+        "action/inspect": 128,
+        "status/success": 704,
+        "action/build_route": 90,
+        "action/call": 179,
+        "status/timeout": 89,
+        "action/retrieve": 90,
+        "action/use_return": 90,
+        "return_use_attempts": 90,
+        "multiple_return_use_attempts": 89,
+        "return_address_contract_valid": 90,
+        "multiple_return_address_contract_valid": 89,
+        "return_application_success": 90,
+        "stale_return_use": 0,
+        "action/verify": 128,
+        "reductions": 179,
+        "correct_reductions": 179,
+        "certificate_valid_reductions": 90,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/move": 88
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_R/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "a690751c3e2f39cf9cbce4d9026bd17227ccdcc7aff445d1575ef5968bf5eda2",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.0052366399999994595
+    },
+    {
+      "condition": "iid_A",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 65,
+      "success": 0.5078125,
+      "means": {
+        "utility": 0.5012609375,
+        "cost": 0.006551562500000001,
+        "steps": 5.046875,
+        "observations": 1.0,
+        "work_units": 0.0,
+        "travel_distance": 0.0,
+        "compute_units": 5.046875,
+        "modeled_compute_cost": 0.0005046875,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.012901538461538464,
+      "counts": {
+        "action/inspect": 128,
+        "status/success": 583,
+        "action/abstain": 63,
+        "status/unknown": 63,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/choose_slot": 325,
+        "action/commit_assignment": 65,
+        "action/verify": 65
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_A/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "55854a011ce4de862e54ebb750e2532030f9ef16e2063bd137669451b831cc18",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.006000112000000168
+    },
+    {
+      "condition": "iid_A",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9899840625,
+        "cost": 0.010015937499999999,
+        "steps": 7.0,
+        "observations": 1.0,
+        "work_units": 131.59375,
+        "travel_distance": 0.0,
+        "compute_units": 7.0,
+        "modeled_compute_cost": 0.0007,
+        "solver_cpu_seconds": 0.0006211978749999904
+      },
+      "cost_per_success_including_failures": 0.010015937499999999,
+      "counts": {
+        "action/inspect": 128,
+        "status/success": 896,
+        "action/start_assign": 128,
+        "action/add_constraint": 128,
+        "action/call": 128,
+        "action/retrieve": 128,
+        "action/use_return": 128,
+        "return_use_attempts": 128,
+        "multiple_return_use_attempts": 0,
+        "return_address_contract_valid": 128,
+        "multiple_return_address_contract_valid": 0,
+        "return_application_success": 128,
+        "stale_return_use": 0,
+        "action/verify": 128,
+        "reductions": 128,
+        "correct_reductions": 128,
+        "certificate_valid_reductions": 128,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_A/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "61700f3d7af072cf82755144dbdd6b99cbf39263d7ebc1aebaafd35fef50982a",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.009340863999999893
+    },
+    {
+      "condition": "iid_A",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.988129296875,
+        "cost": 0.011870703125000001,
+        "steps": 8.390625,
+        "observations": 1.0,
+        "work_units": 164.1015625,
+        "travel_distance": 0.0,
+        "compute_units": 8.390625,
+        "modeled_compute_cost": 0.0008390625000000001,
+        "solver_cpu_seconds": 0.0007064002500000019
+      },
+      "cost_per_success_including_failures": 0.011870703125000001,
+      "counts": {
+        "action/inspect": 128,
+        "status/success": 961,
+        "action/start_assign": 63,
+        "action/add_constraint": 63,
+        "action/call": 176,
+        "status/timeout": 113,
+        "action/retrieve": 63,
+        "action/use_return": 63,
+        "return_use_attempts": 63,
+        "multiple_return_use_attempts": 63,
+        "return_address_contract_valid": 63,
+        "multiple_return_address_contract_valid": 63,
+        "return_application_success": 63,
+        "stale_return_use": 0,
+        "action/verify": 128,
+        "reductions": 176,
+        "correct_reductions": 176,
+        "certificate_valid_reductions": 63,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/choose_slot": 325,
+        "action/commit_assignment": 65
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_A/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "fda3effca8fe503fb8c3a9eba6d2ed9515a08dc4a3fe885c2631ff209c18014c",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.023193055999999546
+    },
+    {
+      "condition": "iid_S-R",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 113,
+      "success": 0.8828125,
+      "means": {
+        "utility": 0.8448749999999999,
+        "cost": 0.037937500000000006,
+        "steps": 17.96875,
+        "observations": 9.8828125,
+        "work_units": 0.0,
+        "travel_distance": 8.2890625,
+        "compute_units": 17.96875,
+        "modeled_compute_cost": 0.001796875,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.04297345132743363,
+      "counts": {
+        "action/inspect": 1265,
+        "status/success": 2285,
+        "action/choose_item": 339,
+        "action/commit_pending": 113,
+        "action/move": 455,
+        "action/verify": 113,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/abstain": 15,
+        "status/unknown": 15
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_S-R/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "63e8dd11b329dfdd81c395de567e3403747ba42a4304fb5e60abbcd48585dae7",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.03900219200000077
+    },
+    {
+      "condition": "iid_S-R",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.958812578125,
+        "cost": 0.041187421875,
+        "steps": 22.0,
+        "observations": 10.0,
+        "work_units": 51.0859375,
+        "travel_distance": 6.4765625,
+        "compute_units": 22.0,
+        "modeled_compute_cost": 0.0022,
+        "solver_cpu_seconds": 0.0013815365000000362
+      },
+      "cost_per_success_including_failures": 0.041187421875,
+      "counts": {
+        "action/inspect": 1280,
+        "status/success": 2816,
+        "action/start_subset": 128,
+        "action/add_constraint": 384,
+        "action/call": 256,
+        "action/retrieve": 256,
+        "action/use_return": 256,
+        "return_use_attempts": 256,
+        "multiple_return_use_attempts": 128,
+        "return_address_contract_valid": 256,
+        "multiple_return_address_contract_valid": 128,
+        "return_application_success": 256,
+        "stale_return_use": 0,
+        "action/build_route": 128,
+        "action/verify": 128,
+        "reductions": 256,
+        "correct_reductions": 256,
+        "certificate_valid_reductions": 256,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_S-R/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "79b4916530e4dac8c92e19de0a9ead01c70275c358086639bdc5393c9f69565b",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.04245412799999615
+    },
+    {
+      "condition": "iid_S-R",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9617271093749999,
+        "cost": 0.038272890625,
+        "steps": 19.4765625,
+        "observations": 10.0,
+        "work_units": 30.9609375,
+        "travel_distance": 6.5390625,
+        "compute_units": 19.4765625,
+        "modeled_compute_cost": 0.00194765625,
+        "solver_cpu_seconds": 0.0009745532499999838
+      },
+      "cost_per_success_including_failures": 0.038272890625,
+      "counts": {
+        "action/inspect": 1280,
+        "status/success": 2393,
+        "action/choose_item": 339,
+        "action/commit_pending": 113,
+        "action/build_route": 91,
+        "action/call": 193,
+        "status/timeout": 100,
+        "action/retrieve": 106,
+        "action/use_return": 106,
+        "return_use_attempts": 106,
+        "multiple_return_use_attempts": 87,
+        "return_address_contract_valid": 106,
+        "multiple_return_address_contract_valid": 87,
+        "return_application_success": 106,
+        "stale_return_use": 0,
+        "action/verify": 128,
+        "reductions": 193,
+        "correct_reductions": 193,
+        "certificate_valid_reductions": 106,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/move": 77,
+        "action/start_subset": 15,
+        "action/add_constraint": 45
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_S-R/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "752b428a23b5ae730ec6b87e6d7383373d39d1687ad9b8eca349c185e892b6a0",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.0380289760000001
+    },
+    {
+      "condition": "iid_S-A",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 58,
+      "success": 0.453125,
+      "means": {
+        "utility": 0.42464999999999997,
+        "cost": 0.028475,
+        "steps": 16.9375,
+        "observations": 9.84375,
+        "work_units": 0.0,
+        "travel_distance": 0.0,
+        "compute_units": 16.9375,
+        "modeled_compute_cost": 0.0016937500000000002,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.06284137931034482,
+      "counts": {
+        "action/inspect": 1260,
+        "status/success": 2098,
+        "action/choose_item": 324,
+        "action/commit_pending": 108,
+        "action/choose_slot": 290,
+        "action/commit_assignment": 58,
+        "action/verify": 58,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/abstain": 70,
+        "status/unknown": 70
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_S-A/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "52ab022b44cbdd7ee4a5443b9d90c6aedf707cabd88d19a10e4c1e74357be8ee",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.040989232000000264
+    },
+    {
+      "condition": "iid_S-A",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.963237734375,
+        "cost": 0.036762265625,
+        "steps": 23.0,
+        "observations": 10.0,
+        "work_units": 146.2265625,
+        "travel_distance": 0.0,
+        "compute_units": 23.0,
+        "modeled_compute_cost": 0.0023,
+        "solver_cpu_seconds": 0.0016130042500000497
+      },
+      "cost_per_success_including_failures": 0.036762265625,
+      "counts": {
+        "action/inspect": 1280,
+        "status/success": 2944,
+        "action/start_subset": 128,
+        "action/add_constraint": 512,
+        "action/call": 256,
+        "action/retrieve": 256,
+        "action/use_return": 256,
+        "return_use_attempts": 256,
+        "multiple_return_use_attempts": 128,
+        "return_address_contract_valid": 256,
+        "multiple_return_address_contract_valid": 128,
+        "return_application_success": 256,
+        "stale_return_use": 0,
+        "action/start_assign": 128,
+        "action/verify": 128,
+        "reductions": 256,
+        "correct_reductions": 256,
+        "certificate_valid_reductions": 256,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_S-A/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "3553a7e965b3bc28b8178ec0b0708fa0bb5cbf087b44ab41ce391d5e0fd2ea0a",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.07014255999999985
+    },
+    {
+      "condition": "iid_S-A",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.96461953125,
+        "cost": 0.03538046875,
+        "steps": 21.7890625,
+        "observations": 10.0,
+        "work_units": 141.25,
+        "travel_distance": 0.0,
+        "compute_units": 21.7890625,
+        "modeled_compute_cost": 0.0021789062500000003,
+        "solver_cpu_seconds": 0.0009233635000000014
+      },
+      "cost_per_success_including_failures": 0.03538046875,
+      "counts": {
+        "action/inspect": 1280,
+        "status/success": 2675,
+        "action/choose_item": 324,
+        "action/commit_pending": 108,
+        "action/choose_slot": 360,
+        "action/commit_assignment": 72,
+        "action/verify": 128,
+        "reductions": 173,
+        "correct_reductions": 173,
+        "certificate_valid_reductions": 76,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/start_assign": 56,
+        "action/add_constraint": 116,
+        "action/call": 173,
+        "status/timeout": 114,
+        "action/retrieve": 76,
+        "action/use_return": 76,
+        "return_use_attempts": 76,
+        "multiple_return_use_attempts": 59,
+        "return_address_contract_valid": 76,
+        "multiple_return_address_contract_valid": 59,
+        "return_application_success": 76,
+        "stale_return_use": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_subset": 20
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_S-A/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "759f64e1daa392fe51c45069c164e5266238e7554445ba814d332b54f11275bc",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.04265505600000141
+    },
+    {
+      "condition": "iid_A-R",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 66,
+      "success": 0.515625,
+      "means": {
+        "utility": 0.50061640625,
+        "cost": 0.01500859375,
+        "steps": 7.7421875,
+        "observations": 1.515625,
+        "work_units": 0.0,
+        "travel_distance": 4.9765625,
+        "compute_units": 7.7421875,
+        "modeled_compute_cost": 0.0007742187500000001,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.02910757575757576,
+      "counts": {
+        "action/inspect": 194,
+        "status/success": 929,
+        "action/choose_slot": 330,
+        "action/commit_assignment": 66,
+        "action/move": 273,
+        "action/verify": 66,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/abstain": 62,
+        "status/unknown": 62
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_A-R/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "6060a17af0c3edde7f139ceb8d4597ba87005c020ee01d3a3da4aba8ad79deb4",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.018000799999999817
+    },
+    {
+      "condition": "iid_A-R",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.976505859375,
+        "cost": 0.023494140625,
+        "steps": 12.0,
+        "observations": 2.0,
+        "work_units": 177.0703125,
+        "travel_distance": 6.5234375,
+        "compute_units": 12.0,
+        "modeled_compute_cost": 0.0012000000000000001,
+        "solver_cpu_seconds": 0.0015257668750000286
+      },
+      "cost_per_success_including_failures": 0.023494140625,
+      "counts": {
+        "action/inspect": 256,
+        "status/success": 1536,
+        "action/start_assign": 128,
+        "action/add_constraint": 128,
+        "action/call": 256,
+        "action/retrieve": 256,
+        "action/use_return": 256,
+        "return_use_attempts": 256,
+        "multiple_return_use_attempts": 128,
+        "return_address_contract_valid": 256,
+        "multiple_return_address_contract_valid": 128,
+        "return_application_success": 256,
+        "stale_return_use": 0,
+        "action/build_route": 128,
+        "action/verify": 128,
+        "reductions": 256,
+        "correct_reductions": 256,
+        "certificate_valid_reductions": 256,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_A-R/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "2a66411f2c6126da454505219279c2db212595bdfd670cb487c532ff7947c959",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.028603296000001777
+    },
+    {
+      "condition": "iid_A-R",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.974436328125,
+        "cost": 0.025563671875,
+        "steps": 13.3671875,
+        "observations": 2.0,
+        "work_units": 222.6953125,
+        "travel_distance": 6.6328125,
+        "compute_units": 13.3671875,
+        "modeled_compute_cost": 0.00133671875,
+        "solver_cpu_seconds": 0.0015136968749999927
+      },
+      "cost_per_success_including_failures": 0.025563671875,
+      "counts": {
+        "action/inspect": 256,
+        "status/success": 1521,
+        "action/choose_slot": 330,
+        "action/commit_assignment": 66,
+        "action/build_route": 84,
+        "action/call": 336,
+        "status/timeout": 190,
+        "action/retrieve": 146,
+        "action/use_return": 146,
+        "return_use_attempts": 146,
+        "multiple_return_use_attempts": 146,
+        "return_address_contract_valid": 146,
+        "multiple_return_address_contract_valid": 146,
+        "return_application_success": 146,
+        "stale_return_use": 0,
+        "action/verify": 128,
+        "reductions": 336,
+        "correct_reductions": 336,
+        "certificate_valid_reductions": 146,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_assign": 62,
+        "action/add_constraint": 62,
+        "action/move": 95
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "iid_A-R/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "4f38b506f660a37c7dfe2737a43afe67ae1384ccf6c1ddfaa85ed2c44fb146a3",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.023330431999999846
+    },
+    {
+      "condition": "heldpair_R-S",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 112,
+      "success": 0.875,
+      "means": {
+        "utility": 0.835103125,
+        "cost": 0.039896875000000005,
+        "steps": 18.578125,
+        "observations": 10.0,
+        "work_units": 0.0,
+        "travel_distance": 9.4609375,
+        "compute_units": 18.578125,
+        "modeled_compute_cost": 0.0018578125,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.04559642857142858,
+      "counts": {
+        "action/inspect": 1280,
+        "status/success": 2362,
+        "action/move": 522,
+        "action/choose_item": 336,
+        "action/commit_pending": 112,
+        "action/verify": 112,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/abstain": 16,
+        "status/unknown": 16
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "heldpair_R-S/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "2f098c8dc4efe97d58ba5a197179ede46104bb966b6c180fc4e649e466be18b9",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.06798175999999945
+    },
+    {
+      "condition": "heldpair_R-S",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.958626328125,
+        "cost": 0.041373671875000004,
+        "steps": 22.0,
+        "observations": 10.0,
+        "work_units": 51.7421875,
+        "travel_distance": 6.65625,
+        "compute_units": 22.0,
+        "modeled_compute_cost": 0.0022,
+        "solver_cpu_seconds": 0.0015844397500000733
+      },
+      "cost_per_success_including_failures": 0.041373671875000004,
+      "counts": {
+        "action/inspect": 1280,
+        "status/success": 2816,
+        "action/build_route": 128,
+        "action/call": 256,
+        "action/retrieve": 256,
+        "action/use_return": 256,
+        "return_use_attempts": 256,
+        "multiple_return_use_attempts": 128,
+        "return_address_contract_valid": 256,
+        "multiple_return_address_contract_valid": 128,
+        "return_application_success": 256,
+        "stale_return_use": 0,
+        "action/start_subset": 128,
+        "action/add_constraint": 384,
+        "action/verify": 128,
+        "reductions": 256,
+        "correct_reductions": 256,
+        "certificate_valid_reductions": 256,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "heldpair_R-S/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "c288477ebda50641bcbab028e11de56a30c69164ab05e3b1a6e8b4947b796fe2",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.04624999999999524
+    },
+    {
+      "condition": "heldpair_R-S",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.96154328125,
+        "cost": 0.03845671875,
+        "steps": 19.4765625,
+        "observations": 10.0,
+        "work_units": 30.59375,
+        "travel_distance": 6.7265625,
+        "compute_units": 19.4765625,
+        "modeled_compute_cost": 0.0019476562500000002,
+        "solver_cpu_seconds": 0.0009700842500000202
+      },
+      "cost_per_success_including_failures": 0.03845671875,
+      "counts": {
+        "action/inspect": 1280,
+        "status/success": 2392,
+        "action/build_route": 87,
+        "action/call": 189,
+        "status/timeout": 101,
+        "action/retrieve": 103,
+        "action/use_return": 103,
+        "return_use_attempts": 103,
+        "multiple_return_use_attempts": 95,
+        "return_address_contract_valid": 103,
+        "multiple_return_address_contract_valid": 95,
+        "return_application_success": 103,
+        "stale_return_use": 0,
+        "action/choose_item": 336,
+        "action/commit_pending": 112,
+        "action/verify": 128,
+        "reductions": 189,
+        "correct_reductions": 189,
+        "certificate_valid_reductions": 103,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_subset": 16,
+        "action/add_constraint": 48,
+        "action/move": 91
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "heldpair_R-S/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "fefe0a89f3ed8781444c5efa537665c48a01181d8427fd32a66351ca8dc3d50f",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.02805056000000139
+    },
+    {
+      "condition": "heldpair_A-S",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 52,
+      "success": 0.40625,
+      "means": {
+        "utility": 0.38871171875,
+        "cost": 0.01753828125,
+        "steps": 11.0078125,
+        "observations": 5.4296875,
+        "work_units": 0.0,
+        "travel_distance": 0.0,
+        "compute_units": 11.0078125,
+        "modeled_compute_cost": 0.0011007812500000002,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.043171153846153845,
+      "counts": {
+        "action/inspect": 695,
+        "status/success": 1333,
+        "action/abstain": 76,
+        "status/unknown": 76,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/choose_slot": 315,
+        "action/commit_assignment": 63,
+        "action/choose_item": 156,
+        "action/commit_pending": 52,
+        "action/verify": 52
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "heldpair_A-S/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "9a8210be37c5140b172011fea54b703b782b3163c393775563a49fd6016749db",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.023999280000001733
+    },
+    {
+      "condition": "heldpair_A-S",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.962788984375,
+        "cost": 0.037211015625,
+        "steps": 23.0,
+        "observations": 10.0,
+        "work_units": 191.1015625,
+        "travel_distance": 0.0,
+        "compute_units": 23.0,
+        "modeled_compute_cost": 0.0023,
+        "solver_cpu_seconds": 0.0015474308749999655
+      },
+      "cost_per_success_including_failures": 0.037211015625,
+      "counts": {
+        "action/inspect": 1280,
+        "status/success": 2944,
+        "action/start_assign": 128,
+        "action/add_constraint": 512,
+        "action/call": 256,
+        "action/retrieve": 256,
+        "action/use_return": 256,
+        "return_use_attempts": 256,
+        "multiple_return_use_attempts": 128,
+        "return_address_contract_valid": 256,
+        "multiple_return_address_contract_valid": 128,
+        "return_application_success": 256,
+        "stale_return_use": 0,
+        "action/start_subset": 128,
+        "action/verify": 128,
+        "reductions": 256,
+        "correct_reductions": 256,
+        "certificate_valid_reductions": 256,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "heldpair_A-S/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "94fe91116a00ec81272d370cc26de62ba844e2c97e50b382f18ccc11de987267",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.08092031999999794
+    },
+    {
+      "condition": "heldpair_A-S",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.963662578125,
+        "cost": 0.036337421875,
+        "steps": 22.0,
+        "observations": 10.0,
+        "work_units": 213.7421875,
+        "travel_distance": 0.0,
+        "compute_units": 22.0,
+        "modeled_compute_cost": 0.0022,
+        "solver_cpu_seconds": 0.0009468301250000252
+      },
+      "cost_per_success_including_failures": 0.036337421875,
+      "counts": {
+        "action/inspect": 1280,
+        "status/success": 2674,
+        "action/start_assign": 65,
+        "action/add_constraint": 134,
+        "action/call": 212,
+        "status/timeout": 142,
+        "action/retrieve": 88,
+        "action/use_return": 88,
+        "return_use_attempts": 88,
+        "multiple_return_use_attempts": 81,
+        "return_address_contract_valid": 88,
+        "multiple_return_address_contract_valid": 81,
+        "return_application_success": 88,
+        "stale_return_use": 0,
+        "action/choose_item": 315,
+        "action/commit_pending": 105,
+        "action/verify": 128,
+        "reductions": 212,
+        "correct_reductions": 212,
+        "certificate_valid_reductions": 88,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_subset": 23,
+        "action/choose_slot": 315,
+        "action/commit_assignment": 63
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "heldpair_A-S/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "0b46d0db34b7ebd27f384506e7f86508f72143bae1982ecac1db95b4cdf40d73",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.05864721600000067
+    },
+    {
+      "condition": "heldpair_R-A",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 70,
+      "success": 0.546875,
+      "means": {
+        "utility": 0.52466484375,
+        "cost": 0.02221015625,
+        "steps": 10.2265625,
+        "observations": 2.0,
+        "work_units": 0.0,
+        "travel_distance": 8.9609375,
+        "compute_units": 10.2265625,
+        "modeled_compute_cost": 0.0010226562500000001,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.040612857142857145,
+      "counts": {
+        "action/inspect": 256,
+        "status/success": 1251,
+        "action/move": 505,
+        "action/abstain": 58,
+        "status/unknown": 58,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/choose_slot": 350,
+        "action/commit_assignment": 70,
+        "action/verify": 70
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "heldpair_R-A/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "167b35cc86c42fd287784566462ef2cbe8db29541d082b7dff5fa79dc6d1908d",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.014998959999999784
+    },
+    {
+      "condition": "heldpair_R-A",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.97697140625,
+        "cost": 0.02302859375,
+        "steps": 12.0,
+        "observations": 2.0,
+        "work_units": 153.953125,
+        "travel_distance": 6.2890625,
+        "compute_units": 12.0,
+        "modeled_compute_cost": 0.0012000000000000001,
+        "solver_cpu_seconds": 0.0013921682500000442
+      },
+      "cost_per_success_including_failures": 0.02302859375,
+      "counts": {
+        "action/inspect": 256,
+        "status/success": 1536,
+        "action/build_route": 128,
+        "action/call": 256,
+        "action/retrieve": 256,
+        "action/use_return": 256,
+        "return_use_attempts": 256,
+        "multiple_return_use_attempts": 128,
+        "return_address_contract_valid": 256,
+        "multiple_return_address_contract_valid": 128,
+        "return_application_success": 256,
+        "stale_return_use": 0,
+        "action/start_assign": 128,
+        "action/add_constraint": 128,
+        "action/verify": 128,
+        "reductions": 256,
+        "correct_reductions": 256,
+        "certificate_valid_reductions": 256,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "heldpair_R-A/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "9fc4bccc40649acfa6c7e4d9823a196dd24ba826d273a31090028abcd3cb6da0",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.018511071999999018
+    },
+    {
+      "condition": "heldpair_R-A",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9752115625,
+        "cost": 0.0247884375,
+        "steps": 13.328125,
+        "observations": 2.0,
+        "work_units": 174.46875,
+        "travel_distance": 6.3828125,
+        "compute_units": 13.328125,
+        "modeled_compute_cost": 0.0013328125,
+        "solver_cpu_seconds": 0.0014636722500000372
+      },
+      "cost_per_success_including_failures": 0.0247884375,
+      "counts": {
+        "action/inspect": 256,
+        "status/success": 1529,
+        "action/build_route": 86,
+        "action/call": 321,
+        "status/timeout": 177,
+        "action/retrieve": 144,
+        "action/use_return": 144,
+        "return_use_attempts": 144,
+        "multiple_return_use_attempts": 142,
+        "return_address_contract_valid": 144,
+        "multiple_return_address_contract_valid": 142,
+        "return_application_success": 144,
+        "stale_return_use": 0,
+        "action/start_assign": 58,
+        "action/add_constraint": 58,
+        "action/verify": 128,
+        "reductions": 321,
+        "correct_reductions": 321,
+        "certificate_valid_reductions": 144,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/choose_slot": 350,
+        "action/commit_assignment": 70,
+        "action/move": 91
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "heldpair_R-A/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "b6c97f9c9e34ad8b07324cc74723c41b81abffca297da4781604eec450de3948",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.03220830399999741
+    },
+    {
+      "condition": "triple_S-R-A",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 47,
+      "success": 0.3671875,
+      "means": {
+        "utility": 0.32700703125,
+        "cost": 0.04018046875,
+        "steps": 20.2421875,
+        "observations": 10.625,
+        "work_units": 0.0,
+        "travel_distance": 7.2890625,
+        "compute_units": 20.2421875,
+        "modeled_compute_cost": 0.00202421875,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.10942765957446808,
+      "counts": {
+        "action/inspect": 1360,
+        "status/success": 2510,
+        "action/choose_item": 312,
+        "action/commit_pending": 104,
+        "action/move": 405,
+        "action/abstain": 81,
+        "status/unknown": 81,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/choose_slot": 235,
+        "action/commit_assignment": 47,
+        "action/verify": 47
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_S-R-A/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "ceec89dd9644bf8b8bf20ea0d9fa02bebae24a28332d312f6b6479ea37e19def",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.033997808000001406
+    },
+    {
+      "condition": "triple_S-R-A",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.95058546875,
+        "cost": 0.04941453125,
+        "steps": 28.0,
+        "observations": 11.0,
+        "work_units": 195.828125,
+        "travel_distance": 5.65625,
+        "compute_units": 28.0,
+        "modeled_compute_cost": 0.0028,
+        "solver_cpu_seconds": 0.00230106137499988
+      },
+      "cost_per_success_including_failures": 0.04941453125,
+      "counts": {
+        "action/inspect": 1408,
+        "status/success": 3584,
+        "action/start_subset": 128,
+        "action/add_constraint": 512,
+        "action/call": 384,
+        "action/retrieve": 384,
+        "action/use_return": 384,
+        "return_use_attempts": 384,
+        "multiple_return_use_attempts": 256,
+        "return_address_contract_valid": 384,
+        "multiple_return_address_contract_valid": 256,
+        "return_application_success": 384,
+        "stale_return_use": 0,
+        "action/build_route": 128,
+        "action/start_assign": 128,
+        "action/verify": 128,
+        "reductions": 384,
+        "correct_reductions": 384,
+        "certificate_valid_reductions": 384,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_S-R-A/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "b88fcf02278494ae3020713f73c466805b92da3d60cf04899786b06ecbda1029",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.09657464000000626
+    },
+    {
+      "condition": "triple_S-R-A",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.951484375,
+        "cost": 0.048515625,
+        "steps": 26.984375,
+        "observations": 11.0,
+        "work_units": 213.75,
+        "travel_distance": 5.6953125,
+        "compute_units": 26.984375,
+        "modeled_compute_cost": 0.0026984375000000003,
+        "solver_cpu_seconds": 0.0017406120000000545
+      },
+      "cost_per_success_including_failures": 0.048515625,
+      "counts": {
+        "action/inspect": 1408,
+        "status/success": 3227,
+        "action/choose_item": 312,
+        "action/commit_pending": 104,
+        "action/build_route": 88,
+        "action/call": 391,
+        "status/timeout": 227,
+        "action/retrieve": 184,
+        "action/use_return": 184,
+        "return_use_attempts": 184,
+        "multiple_return_use_attempts": 161,
+        "return_address_contract_valid": 184,
+        "multiple_return_address_contract_valid": 161,
+        "return_application_success": 184,
+        "stale_return_use": 0,
+        "action/start_assign": 72,
+        "action/add_constraint": 144,
+        "action/verify": 128,
+        "reductions": 391,
+        "correct_reductions": 391,
+        "certificate_valid_reductions": 184,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_subset": 24,
+        "action/choose_slot": 280,
+        "action/commit_assignment": 56,
+        "action/move": 79
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_S-R-A/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "509a78d8ba1719caff9525f710710e2d255bb2f5712d97ba613252e9a5746a15",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.04580153599999903
+    },
+    {
+      "condition": "triple_S-A-R",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 61,
+      "success": 0.4765625,
+      "means": {
+        "utility": 0.44016796875,
+        "cost": 0.03639453125,
+        "steps": 19.6484375,
+        "observations": 10.3671875,
+        "work_units": 0.0,
+        "travel_distance": 4.4140625,
+        "compute_units": 19.6484375,
+        "modeled_compute_cost": 0.00196484375,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.0763688524590164,
+      "counts": {
+        "action/inspect": 1327,
+        "status/success": 2448,
+        "action/choose_item": 342,
+        "action/commit_pending": 114,
+        "action/abstain": 67,
+        "status/unknown": 67,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/choose_slot": 305,
+        "action/commit_assignment": 61,
+        "action/move": 238,
+        "action/verify": 61
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_S-A-R/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "a9e36ef56070905b5763d585b69dddd7e4c6fac51b3f77c439f4fd4dbbd01ce2",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.045999951999998956
+    },
+    {
+      "condition": "triple_S-A-R",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.949614921875,
+        "cost": 0.050385078124999996,
+        "steps": 28.0,
+        "observations": 11.0,
+        "work_units": 196.7890625,
+        "travel_distance": 6.6171875,
+        "compute_units": 28.0,
+        "modeled_compute_cost": 0.0028,
+        "solver_cpu_seconds": 0.0023409212500001084
+      },
+      "cost_per_success_including_failures": 0.050385078124999996,
+      "counts": {
+        "action/inspect": 1408,
+        "status/success": 3584,
+        "action/start_subset": 128,
+        "action/add_constraint": 512,
+        "action/call": 384,
+        "action/retrieve": 384,
+        "action/use_return": 384,
+        "return_use_attempts": 384,
+        "multiple_return_use_attempts": 256,
+        "return_address_contract_valid": 384,
+        "multiple_return_address_contract_valid": 256,
+        "return_application_success": 384,
+        "stale_return_use": 0,
+        "action/start_assign": 128,
+        "action/build_route": 128,
+        "action/verify": 128,
+        "reductions": 384,
+        "correct_reductions": 384,
+        "certificate_valid_reductions": 384,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_S-A-R/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "f9759c61d18163909b6e703e455eb007382ed2d7feb0220ac0304d3531e5fc03",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.06122905599999484
+    },
+    {
+      "condition": "triple_S-A-R",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.95062078125,
+        "cost": 0.04937921875,
+        "steps": 26.859375,
+        "observations": 11.0,
+        "work_units": 216.984375,
+        "travel_distance": 6.6640625,
+        "compute_units": 26.859375,
+        "modeled_compute_cost": 0.0026859375,
+        "solver_cpu_seconds": 0.0017548496250001204
+      },
+      "cost_per_success_including_failures": 0.04937921875,
+      "counts": {
+        "action/inspect": 1408,
+        "status/success": 3224,
+        "action/choose_item": 342,
+        "action/commit_pending": 114,
+        "action/start_assign": 62,
+        "action/add_constraint": 104,
+        "action/call": 370,
+        "status/timeout": 214,
+        "action/retrieve": 168,
+        "action/use_return": 168,
+        "return_use_attempts": 168,
+        "multiple_return_use_attempts": 155,
+        "return_address_contract_valid": 168,
+        "multiple_return_address_contract_valid": 155,
+        "return_application_success": 168,
+        "stale_return_use": 0,
+        "action/build_route": 92,
+        "action/verify": 128,
+        "reductions": 370,
+        "correct_reductions": 370,
+        "certificate_valid_reductions": 168,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/choose_slot": 330,
+        "action/commit_assignment": 66,
+        "action/move": 72,
+        "action/start_subset": 14
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_S-A-R/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "2302fe07947b29620ccc05670004c0a7cf5a9e876fa264d01c151eaa8454d722",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.05936915199999504
+    },
+    {
+      "condition": "triple_R-S-A",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 46,
+      "success": 0.359375,
+      "means": {
+        "utility": 0.31604921875,
+        "cost": 0.04332578125,
+        "steps": 21.3046875,
+        "observations": 10.8515625,
+        "work_units": 0.0,
+        "travel_distance": 9.0390625,
+        "compute_units": 21.3046875,
+        "modeled_compute_cost": 0.00213046875,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.12055869565217392,
+      "counts": {
+        "action/inspect": 1389,
+        "status/success": 2645,
+        "action/move": 498,
+        "action/choose_item": 327,
+        "action/commit_pending": 109,
+        "action/abstain": 82,
+        "status/unknown": 82,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/choose_slot": 230,
+        "action/commit_assignment": 46,
+        "action/verify": 46
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_R-S-A/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "9d0fb75d8d33bb4758d81fb951d87ca67d751887448c32635b1a2d694fb70ebd",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.04499798399999477
+    },
+    {
+      "condition": "triple_R-S-A",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.949481484375,
+        "cost": 0.050518515624999996,
+        "steps": 28.0,
+        "observations": 11.0,
+        "work_units": 228.1015625,
+        "travel_distance": 6.4375,
+        "compute_units": 28.0,
+        "modeled_compute_cost": 0.0028,
+        "solver_cpu_seconds": 0.002389728375000023
+      },
+      "cost_per_success_including_failures": 0.050518515624999996,
+      "counts": {
+        "action/inspect": 1408,
+        "status/success": 3584,
+        "action/build_route": 128,
+        "action/call": 384,
+        "action/retrieve": 384,
+        "action/use_return": 384,
+        "return_use_attempts": 384,
+        "multiple_return_use_attempts": 256,
+        "return_address_contract_valid": 384,
+        "multiple_return_address_contract_valid": 256,
+        "return_application_success": 384,
+        "stale_return_use": 0,
+        "action/start_subset": 128,
+        "action/add_constraint": 512,
+        "action/start_assign": 128,
+        "action/verify": 128,
+        "reductions": 384,
+        "correct_reductions": 384,
+        "certificate_valid_reductions": 384,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_R-S-A/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "5d28b241ec7c5e01e3b03f5a0f3035040f7d67ac9155b7a99fa31c75a6a9ef8c",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.09685585599999946
+    },
+    {
+      "condition": "triple_R-S-A",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.950524609375,
+        "cost": 0.049475390625,
+        "steps": 26.8828125,
+        "observations": 11.0,
+        "work_units": 238.8671875,
+        "travel_distance": 6.515625,
+        "compute_units": 26.8828125,
+        "modeled_compute_cost": 0.00268828125,
+        "solver_cpu_seconds": 0.0017053317499998322
+      },
+      "cost_per_success_including_failures": 0.049475390625,
+      "counts": {
+        "action/inspect": 1408,
+        "status/success": 3216,
+        "action/build_route": 85,
+        "action/call": 385,
+        "status/timeout": 225,
+        "action/retrieve": 177,
+        "action/use_return": 177,
+        "return_use_attempts": 177,
+        "multiple_return_use_attempts": 170,
+        "return_address_contract_valid": 177,
+        "multiple_return_address_contract_valid": 170,
+        "return_application_success": 177,
+        "stale_return_use": 0,
+        "action/choose_item": 327,
+        "action/commit_pending": 109,
+        "action/start_assign": 73,
+        "action/add_constraint": 130,
+        "action/verify": 128,
+        "reductions": 385,
+        "correct_reductions": 385,
+        "certificate_valid_reductions": 177,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/move": 93,
+        "action/choose_slot": 275,
+        "action/commit_assignment": 55,
+        "action/start_subset": 19
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_R-S-A/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "61ba9a64b3a7617014ddc58afcce9e7086ff423a7134073896f60fb23d6812e7",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.04738079999999378
+    },
+    {
+      "condition": "triple_R-A-S",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 56,
+      "success": 0.4375,
+      "means": {
+        "utility": 0.40496171875000003,
+        "cost": 0.03253828125,
+        "steps": 16.0078125,
+        "observations": 6.5,
+        "work_units": 0.0,
+        "travel_distance": 8.4296875,
+        "compute_units": 16.0078125,
+        "modeled_compute_cost": 0.00160078125,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.07437321428571429,
+      "counts": {
+        "action/inspect": 832,
+        "status/success": 1977,
+        "action/move": 481,
+        "action/choose_slot": 320,
+        "action/commit_assignment": 64,
+        "action/choose_item": 168,
+        "action/commit_pending": 56,
+        "action/verify": 56,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/abstain": 72,
+        "status/unknown": 72
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_R-A-S/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "ce5b51375896ad404f5f517f281862b1b081798ed3d4412e969f94d49efcf703",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.034986176000003866
+    },
+    {
+      "condition": "triple_R-A-S",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.950825390625,
+        "cost": 0.049174609375,
+        "steps": 28.0,
+        "observations": 11.0,
+        "work_units": 162.4609375,
+        "travel_distance": 5.75,
+        "compute_units": 28.0,
+        "modeled_compute_cost": 0.0028,
+        "solver_cpu_seconds": 0.0021242093750000243
+      },
+      "cost_per_success_including_failures": 0.049174609375,
+      "counts": {
+        "action/inspect": 1408,
+        "status/success": 3584,
+        "action/build_route": 128,
+        "action/call": 384,
+        "action/retrieve": 384,
+        "action/use_return": 384,
+        "return_use_attempts": 384,
+        "multiple_return_use_attempts": 256,
+        "return_address_contract_valid": 384,
+        "multiple_return_address_contract_valid": 256,
+        "return_application_success": 384,
+        "stale_return_use": 0,
+        "action/start_assign": 128,
+        "action/add_constraint": 512,
+        "action/start_subset": 128,
+        "action/verify": 128,
+        "reductions": 384,
+        "correct_reductions": 384,
+        "certificate_valid_reductions": 384,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_R-A-S/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "e0e77c14022c4c2783cd0d6f7283a327e1b7eccb140645b56aa76dfda567596f",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.09869163200000308
+    },
+    {
+      "condition": "triple_R-A-S",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9523809375,
+        "cost": 0.0476190625,
+        "steps": 26.546875,
+        "observations": 11.0,
+        "work_units": 161.28125,
+        "travel_distance": 5.8046875,
+        "compute_units": 26.546875,
+        "modeled_compute_cost": 0.0026546875,
+        "solver_cpu_seconds": 0.0015057623750000058
+      },
+      "cost_per_success_including_failures": 0.0476190625,
+      "counts": {
+        "action/inspect": 1408,
+        "status/success": 3206,
+        "action/move": 116,
+        "action/choose_slot": 320,
+        "action/commit_assignment": 64,
+        "action/choose_item": 327,
+        "action/commit_pending": 109,
+        "action/verify": 128,
+        "reductions": 334,
+        "correct_reductions": 334,
+        "certificate_valid_reductions": 157,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/build_route": 74,
+        "action/call": 334,
+        "status/timeout": 192,
+        "action/retrieve": 157,
+        "action/use_return": 157,
+        "return_use_attempts": 157,
+        "multiple_return_use_attempts": 153,
+        "return_address_contract_valid": 157,
+        "multiple_return_address_contract_valid": 153,
+        "return_application_success": 157,
+        "stale_return_use": 0,
+        "action/start_assign": 64,
+        "action/add_constraint": 121,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_subset": 19
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_R-A-S/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "61e94323961e90a891a23c70cbbcaa27bd5c884a93c87e548e786876d62f8b7e",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.059507824000004206
+    },
+    {
+      "condition": "triple_A-S-R",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 51,
+      "success": 0.3984375,
+      "means": {
+        "utility": 0.3752671875,
+        "cost": 0.0231703125,
+        "steps": 12.796875,
+        "observations": 5.828125,
+        "work_units": 0.0,
+        "travel_distance": 3.265625,
+        "compute_units": 12.796875,
+        "modeled_compute_cost": 0.0012796875,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.058152941176470595,
+      "counts": {
+        "action/inspect": 746,
+        "status/success": 1561,
+        "action/choose_slot": 315,
+        "action/commit_assignment": 63,
+        "action/choose_item": 153,
+        "action/commit_pending": 51,
+        "action/move": 182,
+        "action/verify": 51,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/abstain": 77,
+        "status/unknown": 77
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_A-S-R/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "5b7b39aa40bb9c9eca1a52e77d1a39d9439a0d13006d02edfffcc6b40d78eb36",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.030000832000002475
+    },
+    {
+      "condition": "triple_A-S-R",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9498846875,
+        "cost": 0.050115312499999995,
+        "steps": 28.0,
+        "observations": 11.0,
+        "work_units": 197.15625,
+        "travel_distance": 6.34375,
+        "compute_units": 28.0,
+        "modeled_compute_cost": 0.0028,
+        "solver_cpu_seconds": 0.002316912124999968
+      },
+      "cost_per_success_including_failures": 0.050115312499999995,
+      "counts": {
+        "action/inspect": 1408,
+        "status/success": 3584,
+        "action/start_assign": 128,
+        "action/add_constraint": 512,
+        "action/call": 384,
+        "action/retrieve": 384,
+        "action/use_return": 384,
+        "return_use_attempts": 384,
+        "multiple_return_use_attempts": 256,
+        "return_address_contract_valid": 384,
+        "multiple_return_address_contract_valid": 256,
+        "return_application_success": 384,
+        "stale_return_use": 0,
+        "action/start_subset": 128,
+        "action/build_route": 128,
+        "action/verify": 128,
+        "reductions": 384,
+        "correct_reductions": 384,
+        "certificate_valid_reductions": 384,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_A-S-R/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "de854f673c70626f96e83c9f80c8da0fb2400ae75a618c97bd4d0760470ad723",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.07397161600000501
+    },
+    {
+      "condition": "triple_A-S-R",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.950880234375,
+        "cost": 0.049119765625,
+        "steps": 26.921875,
+        "observations": 11.0,
+        "work_units": 211.5078125,
+        "travel_distance": 6.390625,
+        "compute_units": 26.921875,
+        "modeled_compute_cost": 0.0026921875,
+        "solver_cpu_seconds": 0.001964611000000182
+      },
+      "cost_per_success_including_failures": 0.049119765625,
+      "counts": {
+        "action/inspect": 1408,
+        "status/success": 3229,
+        "action/choose_slot": 315,
+        "action/commit_assignment": 63,
+        "action/choose_item": 327,
+        "action/commit_pending": 109,
+        "action/build_route": 90,
+        "action/call": 375,
+        "status/timeout": 217,
+        "action/retrieve": 174,
+        "action/use_return": 174,
+        "return_use_attempts": 174,
+        "multiple_return_use_attempts": 165,
+        "return_address_contract_valid": 174,
+        "multiple_return_address_contract_valid": 165,
+        "return_application_success": 174,
+        "stale_return_use": 0,
+        "action/verify": 128,
+        "reductions": 375,
+        "correct_reductions": 375,
+        "certificate_valid_reductions": 174,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_assign": 65,
+        "action/add_constraint": 122,
+        "action/move": 77,
+        "action/start_subset": 19
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_A-S-R/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "bb2957bcb4705f1ba37e13840c1bcbe5c7ee4967b1eee55ed20417286d73d32c",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.06809569599999499
+    },
+    {
+      "condition": "triple_A-R-S",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 55,
+      "success": 0.4296875,
+      "means": {
+        "utility": 0.40486484375000004,
+        "cost": 0.02482265625,
+        "steps": 13.2265625,
+        "observations": 5.765625,
+        "work_units": 0.0,
+        "travel_distance": 4.5078125,
+        "compute_units": 13.2265625,
+        "modeled_compute_cost": 0.00132265625,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.0577690909090909,
+      "counts": {
+        "action/inspect": 738,
+        "status/success": 1620,
+        "action/choose_slot": 305,
+        "action/commit_assignment": 61,
+        "action/move": 241,
+        "action/choose_item": 165,
+        "action/commit_pending": 55,
+        "action/verify": 55,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/abstain": 73,
+        "status/unknown": 73
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_A-R-S/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "a9b6eaa5350f9b340f9598bb01be5605eba9a9be7f50205cca49df77e099a4e4",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.025003423999997665
+    },
+    {
+      "condition": "triple_A-R-S",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9503088281250001,
+        "cost": 0.049691171874999995,
+        "steps": 28.0,
+        "observations": 11.0,
+        "work_units": 192.2421875,
+        "travel_distance": 5.96875,
+        "compute_units": 28.0,
+        "modeled_compute_cost": 0.0028,
+        "solver_cpu_seconds": 0.0022604565000000822
+      },
+      "cost_per_success_including_failures": 0.049691171874999995,
+      "counts": {
+        "action/inspect": 1408,
+        "status/success": 3584,
+        "action/start_assign": 128,
+        "action/add_constraint": 512,
+        "action/call": 384,
+        "action/retrieve": 384,
+        "action/use_return": 384,
+        "return_use_attempts": 384,
+        "multiple_return_use_attempts": 256,
+        "return_address_contract_valid": 384,
+        "multiple_return_address_contract_valid": 256,
+        "return_application_success": 384,
+        "stale_return_use": 0,
+        "action/build_route": 128,
+        "action/start_subset": 128,
+        "action/verify": 128,
+        "reductions": 384,
+        "correct_reductions": 384,
+        "certificate_valid_reductions": 384,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_A-R-S/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "256c2aeeb02e9a65bc7e7f7d2c522b06327812305fb01ec9ca3655ead4e3b80b",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.06451828799999682
+    },
+    {
+      "condition": "triple_A-R-S",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 128,
+      "success": 1.0,
+      "means": {
+        "utility": 0.9517596875,
+        "cost": 0.0482403125,
+        "steps": 26.5546875,
+        "observations": 11.0,
+        "work_units": 202.234375,
+        "travel_distance": 6.0078125,
+        "compute_units": 26.5546875,
+        "modeled_compute_cost": 0.0026554687500000003,
+        "solver_cpu_seconds": 0.0015524648750001452
+      },
+      "cost_per_success_including_failures": 0.0482403125,
+      "counts": {
+        "action/inspect": 1408,
+        "status/success": 3199,
+        "action/choose_slot": 305,
+        "action/commit_assignment": 61,
+        "action/move": 100,
+        "action/choose_item": 330,
+        "action/commit_pending": 110,
+        "action/verify": 128,
+        "reductions": 347,
+        "correct_reductions": 347,
+        "certificate_valid_reductions": 163,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/start_assign": 67,
+        "action/add_constraint": 121,
+        "action/call": 347,
+        "status/timeout": 200,
+        "action/retrieve": 163,
+        "action/use_return": 163,
+        "return_use_attempts": 163,
+        "multiple_return_use_attempts": 157,
+        "return_address_contract_valid": 163,
+        "multiple_return_address_contract_valid": 157,
+        "return_application_success": 163,
+        "stale_return_use": 0,
+        "action/build_route": 78,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/start_subset": 18
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "triple_A-R-S/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "da037f8f343a3471df110c1a80c3e9406dc6d6d8eb7eec329dcaae6d18737507",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.09483278399999939
+    },
+    {
+      "condition": "hardassign_A",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 33,
+      "success": 0.2578125,
+      "means": {
+        "utility": 0.25262734375,
+        "cost": 0.0051851562500000005,
+        "steps": 3.8046875,
+        "observations": 1.0,
+        "work_units": 0.0,
+        "travel_distance": 0.0,
+        "compute_units": 3.8046875,
+        "modeled_compute_cost": 0.00038046875,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.020112121212121213,
+      "counts": {
+        "action/inspect": 128,
+        "status/success": 392,
+        "action/abstain": 95,
+        "status/unknown": 95,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/choose_slot": 198,
+        "action/commit_assignment": 33,
+        "action/verify": 33
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "hardassign_A/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "42ed4fb6bd85dc073155add73d63c73c5aebab992f9baff6c828e0d00b1f37dd",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.007999056000002724
+    },
+    {
+      "condition": "hardassign_A",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 114,
+      "success": 0.890625,
+      "means": {
+        "utility": 0.866906328125,
+        "cost": 0.023718671875,
+        "steps": 6.78125,
+        "observations": 1.0,
+        "work_units": 1525.9296875,
+        "travel_distance": 0.0,
+        "compute_units": 6.78125,
+        "modeled_compute_cost": 0.000678125,
+        "solver_cpu_seconds": 0.0010484043750000113
+      },
+      "cost_per_success_including_failures": 0.026631491228070174,
+      "counts": {
+        "action/inspect": 128,
+        "status/success": 840,
+        "action/start_assign": 128,
+        "action/add_constraint": 128,
+        "action/call": 128,
+        "action/retrieve": 114,
+        "action/use_return": 114,
+        "return_use_attempts": 114,
+        "multiple_return_use_attempts": 0,
+        "return_address_contract_valid": 114,
+        "multiple_return_address_contract_valid": 0,
+        "return_application_success": 114,
+        "stale_return_use": 0,
+        "action/verify": 114,
+        "reductions": 128,
+        "correct_reductions": 128,
+        "certificate_valid_reductions": 114,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "status/timeout": 14,
+        "action/abstain": 14,
+        "status/unknown": 14
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "hardassign_A/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "841ccb1cf463ad033cb2db818c63672bc027d4f4e3002b61212ee8bc48d23030",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.018183663999995048
+    },
+    {
+      "condition": "hardassign_A",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 104,
+      "success": 0.8125,
+      "means": {
+        "utility": 0.7823953124999999,
+        "cost": 0.030104687500000005,
+        "steps": 9.140625,
+        "observations": 1.0,
+        "work_units": 1905.0,
+        "travel_distance": 0.0,
+        "compute_units": 9.140625,
+        "modeled_compute_cost": 0.0009140625,
+        "solver_cpu_seconds": 0.002050379750000178
+      },
+      "cost_per_success_including_failures": 0.03705192307692308,
+      "counts": {
+        "action/inspect": 128,
+        "status/success": 866,
+        "action/start_assign": 95,
+        "action/add_constraint": 95,
+        "action/call": 351,
+        "status/timeout": 280,
+        "action/retrieve": 71,
+        "action/use_return": 71,
+        "return_use_attempts": 71,
+        "multiple_return_use_attempts": 71,
+        "return_address_contract_valid": 71,
+        "multiple_return_address_contract_valid": 71,
+        "return_application_success": 71,
+        "stale_return_use": 0,
+        "action/verify": 104,
+        "reductions": 351,
+        "correct_reductions": 351,
+        "certificate_valid_reductions": 71,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/choose_slot": 198,
+        "action/commit_assignment": 33,
+        "action/abstain": 24,
+        "status/unknown": 24
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "hardassign_A/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "dc3a248bb61186353a697f682b128a3dd5c5b35a3d86c619499d7de4e58f1b67",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.018094192000006615
+    },
+    {
+      "condition": "hardassign_S-A",
+      "arm": "reference-modular_cheap",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 28,
+      "success": 0.21875,
+      "means": {
+        "utility": 0.1914796875,
+        "cost": 0.0272703125,
+        "steps": 15.828125,
+        "observations": 9.859375,
+        "work_units": 0.0,
+        "travel_distance": 0.0,
+        "compute_units": 15.828125,
+        "modeled_compute_cost": 0.0015828125,
+        "solver_cpu_seconds": 0.0
+      },
+      "cost_per_success_including_failures": 0.12466428571428571,
+      "counts": {
+        "action/inspect": 1262,
+        "status/success": 1926,
+        "action/choose_item": 330,
+        "action/commit_pending": 110,
+        "action/abstain": 100,
+        "status/unknown": 100,
+        "reductions": 0,
+        "correct_reductions": 0,
+        "certificate_valid_reductions": 0,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "action/choose_slot": 168,
+        "action/commit_assignment": 28,
+        "action/verify": 28
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "hardassign_S-A/reference-modular_cheap.jsonl.gz",
+      "artifact_sha256": "69547efbddd60c47c11e4ca5784bda26af5f42268c4fc14329cc00b198d30e8d",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.0289999200000004
+    },
+    {
+      "condition": "hardassign_S-A",
+      "arm": "reference-modular_always_tool",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 112,
+      "success": 0.875,
+      "means": {
+        "utility": 0.823589765625,
+        "cost": 0.051410234375,
+        "steps": 22.75,
+        "observations": 10.0,
+        "work_units": 1638.5234375,
+        "travel_distance": 0.0,
+        "compute_units": 22.75,
+        "modeled_compute_cost": 0.002275,
+        "solver_cpu_seconds": 0.0017006892499998039
+      },
+      "cost_per_success_including_failures": 0.05875455357142857,
+      "counts": {
+        "action/inspect": 1280,
+        "status/success": 2880,
+        "action/start_subset": 128,
+        "action/add_constraint": 512,
+        "action/call": 256,
+        "action/retrieve": 240,
+        "action/use_return": 240,
+        "return_use_attempts": 240,
+        "multiple_return_use_attempts": 112,
+        "return_address_contract_valid": 240,
+        "multiple_return_address_contract_valid": 112,
+        "return_application_success": 240,
+        "stale_return_use": 0,
+        "action/start_assign": 128,
+        "action/verify": 112,
+        "reductions": 256,
+        "correct_reductions": 256,
+        "certificate_valid_reductions": 240,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "status/timeout": 16,
+        "action/abstain": 16,
+        "status/unknown": 16
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "hardassign_S-A/reference-modular_always_tool.jsonl.gz",
+      "artifact_sha256": "17946bcee695c1345e4ea3f65220716b30edf3ebf06267b36d7c7c53b7df70ee",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.04634089600001445
+    },
+    {
+      "condition": "hardassign_S-A",
+      "arm": "reference-modular_cheap_first",
+      "kind": "supplied_schedule",
+      "examples": 128,
+      "intervention_supports": {
+        "target_available": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "fault_applied": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "record_changed": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        },
+        "changed_return_used": {
+          "support": 0,
+          "successes": 0,
+          "success": null
+        }
+      },
+      "success_count": 105,
+      "success": 0.8203125,
+      "means": {
+        "utility": 0.765319375,
+        "cost": 0.054993125000000004,
+        "steps": 22.6171875,
+        "observations": 10.0,
+        "work_units": 2011.421875,
+        "travel_distance": 0.0,
+        "compute_units": 22.6171875,
+        "modeled_compute_cost": 0.0022617187500000003,
+        "solver_cpu_seconds": 0.0023267394999999316
+      },
+      "cost_per_success_including_failures": 0.0670392380952381,
+      "counts": {
+        "action/inspect": 1280,
+        "status/success": 2565,
+        "action/choose_item": 330,
+        "action/commit_pending": 110,
+        "action/start_assign": 98,
+        "action/add_constraint": 152,
+        "action/call": 383,
+        "status/timeout": 307,
+        "action/retrieve": 93,
+        "action/use_return": 93,
+        "return_use_attempts": 93,
+        "multiple_return_use_attempts": 76,
+        "return_address_contract_valid": 93,
+        "multiple_return_address_contract_valid": 76,
+        "return_application_success": 93,
+        "stale_return_use": 0,
+        "action/verify": 105,
+        "reductions": 383,
+        "correct_reductions": 383,
+        "certificate_valid_reductions": 93,
+        "fault_target_groups": 0,
+        "fault_applied_groups": 0,
+        "fault_changed_records": 0,
+        "fault_target_use_attempts": 0,
+        "fault_changed_use_attempts": 0,
+        "action/abstain": 23,
+        "status/unknown": 23,
+        "action/choose_slot": 180,
+        "action/commit_assignment": 30,
+        "action/start_subset": 18
+      },
+      "truncated": 0,
+      "neural_forward_wall_seconds": 0,
+      "artifact": "hardassign_S-A/reference-modular_cheap_first.jsonl.gz",
+      "artifact_sha256": "32d86520357fcb77ee91cdf898609cdce06be936dd62cb80a4cf6440d0c3d340",
+      "reference_compute_tariff": 1.0,
+      "controller_cpu_seconds": 0.046365600000005
+    }
+  ],
+  "paired": [],
+  "paired_conditions": [],
+  "policy_input_scope": "public observation/candidate encodings only; no teacher at evaluation",
+  "address_metric_scope": "claimed role/status/retrieval/provenance validity, not independent validity of faulted payloads or task relevance",
+  "intervention_scope": "explicit public-ordinal post-validation return faults; canonical records and actual-world validators unchanged",
+  "selection_rule": "frozen supplied checkpoint, no selection",
+  "no_training": true,
+  "solver": {
+    "executor_version": "persistent-v1",
+    "startup_wall_seconds": 0.6603208100423217,
+    "startup_child_cpu_seconds": 0.657883,
+    "call_wall_seconds": 4.294937063008547,
+    "restarts": 0
+  },
+  "resources": {
+    "wall_seconds": 20.514176405966282,
+    "parent_cpu_seconds": 17.712754592,
+    "parent_peak_rss_kib": 528652,
+    "cuda_peak_allocated_bytes": 0,
+    "cuda_peak_reserved_bytes": 0,
+    "cuda_device_capacity_bytes": 128453668864,
+    "accounting_scope": "parent CPU excludes solver process; authoritative inclusive workload ledger is external"
+  }
+}

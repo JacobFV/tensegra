@@ -1,0 +1,450 @@
+{
+  "checkpoints": [
+    {
+      "name": "halving-plain-r0",
+      "path": "/home/brandonin/topoformer-campaign02/results/e15-halving-plain-r0/checkpoints/round-4-slot-2-attempt-26.pt",
+      "sha256": "60abb8e0c1fab45d2f6716f1421b336089b07ed849388ba6f4664a56cdee41f3",
+      "development_utility": 0.947224453125,
+      "development_success": 1.0,
+      "slot": 2
+    },
+    {
+      "name": "halving-plain-r1",
+      "path": "/home/brandonin/topoformer-campaign02/results/e15-halving-plain-r1/checkpoints/round-4-slot-2-attempt-26.pt",
+      "sha256": "ad312a1882bb3cf07f651ab42afc76eb775c37b75630a8738290171d9a4c0aca",
+      "development_utility": 0.928744453125,
+      "development_success": 0.9921875,
+      "slot": 2
+    },
+    {
+      "name": "halving-plain-r2",
+      "path": "/home/brandonin/topoformer-campaign02/results/e15-halving-plain-r2/checkpoints/round-4-slot-2-attempt-26.pt",
+      "sha256": "05978a7b09f51c209265692f1220fa340cc5920063ed77420fee0ea3ee3ee6f7",
+      "development_utility": 0.923555390625,
+      "development_success": 1.0,
+      "slot": 2
+    },
+    {
+      "name": "halving-niche-r0",
+      "path": "/home/brandonin/topoformer-campaign02/results/e15-halving-niche-r0/checkpoints/round-4-slot-2-attempt-26.pt",
+      "sha256": "f9afebbba293369032d1f8ab05625a9d0f4c2a5e229e41ad8e23affc52759321",
+      "development_utility": 0.947224453125,
+      "development_success": 1.0,
+      "slot": 2
+    },
+    {
+      "name": "halving-niche-r1",
+      "path": "/home/brandonin/topoformer-campaign02/results/e15-halving-niche-r1/checkpoints/round-4-slot-2-attempt-26.pt",
+      "sha256": "0515cc2fe538706629f74c611a8d8a53d426906ad8134655ca2954080cce5b27",
+      "development_utility": 0.919453125,
+      "development_success": 0.9921875,
+      "slot": 2
+    },
+    {
+      "name": "halving-niche-r2",
+      "path": "/home/brandonin/topoformer-campaign02/results/e15-halving-niche-r2/checkpoints/round-4-slot-2-attempt-26.pt",
+      "sha256": "820a2f27772461eb7d01813e742b46473807b1cbfb75dcda12e05ff12c1780f7",
+      "development_utility": 0.923555390625,
+      "development_success": 1.0,
+      "slot": 2
+    }
+  ],
+  "evaluation_batch": 32,
+  "references": [],
+  "reference_compute_tariff": 1.0,
+  "address_namespace": "extended-02-phase2-sealed-v1",
+  "conditions": [
+    {
+      "name": "iid_3x3",
+      "seed_start": 70000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 3,
+        "choices": 3,
+        "locations": 7
+      }
+    },
+    {
+      "name": "iid_4x4",
+      "seed_start": 70100000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9
+      }
+    },
+    {
+      "name": "iid_4x4_tight128",
+      "seed_start": 70200000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_limit": 128
+      }
+    },
+    {
+      "name": "iid_4x4_expensive_work",
+      "seed_start": 70300000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_price": 0.002
+      }
+    },
+    {
+      "name": "iid_3x3_obstacle",
+      "seed_start": 70400000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "obstacle": true
+      }
+    },
+    {
+      "name": "iid_4x4_obstacle",
+      "seed_start": 70500000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "obstacle": true
+      }
+    },
+    {
+      "name": "iid_4x5",
+      "seed_start": 70600000,
+      "examples": 256,
+      "world": {
+        "step_limit": 64,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 5,
+        "locations": 9
+      }
+    },
+    {
+      "name": "iid_4x4_steps36",
+      "seed_start": 70700000,
+      "examples": 256,
+      "world": {
+        "step_limit": 36,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9
+      }
+    },
+    {
+      "name": "xfer_2x2_easy",
+      "seed_start": 70800000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 2,
+        "choices": 2,
+        "locations": 5
+      }
+    },
+    {
+      "name": "xfer_4x4_tight64",
+      "seed_start": 70900000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_limit": 64
+      }
+    },
+    {
+      "name": "xfer_4x4_work256",
+      "seed_start": 71000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_limit": 256
+      }
+    },
+    {
+      "name": "xfer_4x4_work_price_mid",
+      "seed_start": 71100000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_price": 0.0005
+      }
+    },
+    {
+      "name": "xfer_4x4_obstacle_tight128",
+      "seed_start": 71200000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "obstacle": true,
+        "work_limit": 128
+      }
+    },
+    {
+      "name": "xfer_3x3_obstacle_expensive_work",
+      "seed_start": 71300000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "obstacle": true,
+        "work_price": 0.002
+      }
+    },
+    {
+      "name": "xfer_3x3_expensive_travel",
+      "seed_start": 71400000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "travel_price": 0.01
+      }
+    },
+    {
+      "name": "xfer_4x4_budget_menu_32_256_2048",
+      "seed_start": 71500000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "call_budgets": [
+          32,
+          256,
+          2048
+        ]
+      }
+    },
+    {
+      "name": "xfer_5x4_larger",
+      "seed_start": 71600000,
+      "examples": 256,
+      "world": {
+        "step_limit": 64,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 5,
+        "choices": 4,
+        "locations": 11
+      }
+    },
+    {
+      "name": "xfer_5x5_subset_tool_invalid",
+      "seed_start": 71700000,
+      "examples": 256,
+      "world": {
+        "step_limit": 64,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 5,
+        "choices": 5,
+        "locations": 11
+      }
+    },
+    {
+      "name": "int_4x4_control",
+      "seed_start": 75000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9
+      }
+    },
+    {
+      "name": "int_4x4_no_tools",
+      "seed_start": 75000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_limit": 0
+      },
+      "paired_control": "int_4x4_control"
+    },
+    {
+      "name": "int_4x4_work_price_high",
+      "seed_start": 75000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_price": 0.002
+      },
+      "paired_control": "int_4x4_control"
+    },
+    {
+      "name": "int_4x4_work_limit_128",
+      "seed_start": 75000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9,
+        "work_limit": 128
+      },
+      "paired_control": "int_4x4_control"
+    },
+    {
+      "name": "int_4x4_subset_wrong_value",
+      "seed_start": 75000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9
+      },
+      "paired_control": "int_4x4_control",
+      "return_faults": [
+        {
+          "kind": "wrong_value",
+          "ordinal": 0,
+          "primitive": "constrained_subset",
+          "payload_path": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "int_4x4_subset_absent",
+      "seed_start": 75000000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 4,
+        "choices": 4,
+        "locations": 9
+      },
+      "paired_control": "int_4x4_control",
+      "return_faults": [
+        {
+          "kind": "absent",
+          "ordinal": 0,
+          "primitive": "constrained_subset"
+        }
+      ]
+    },
+    {
+      "name": "int_3x3_obstacle_control",
+      "seed_start": 75100000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "obstacle": true
+      }
+    },
+    {
+      "name": "int_3x3_obstacle_route_stale",
+      "seed_start": 75100000,
+      "examples": 256,
+      "world": {
+        "step_limit": 48,
+        "include_remaining_budget": true,
+        "compute_price": 0.0001,
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "obstacle": true
+      },
+      "paired_control": "int_3x3_obstacle_control",
+      "return_faults": [
+        {
+          "kind": "stale",
+          "ordinal": 0,
+          "primitive": "shortest_path"
+        }
+      ]
+    }
+  ],
+  "accounting": "Learned and reference controllers pay the same 1.0-unit modeled tariff per decision; actual neural/solver resources recorded separately."
+}
