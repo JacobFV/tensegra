@@ -22,6 +22,7 @@ Phase 3 continued on user instruction after the phase-2 closure ([campaign-repor
    - Three lineages were trained without the assign stage. They score ~0 on it zero-shot, as expected: the new actions were never active, so zero-shot success is not identifiable.
    - After 20 supervised updates on the full mixture, they reach 0.67–0.98 on assign-containing sealed worlds, versus 0.02–0.19 for the same 20 updates from scratch. That point is unregistered and descriptive.
    - At the registered 120-update endpoint the difference is +0.02 / +0.46 / −0.19, so the rule outcome is **partial**.
+5. **Provenance binding needs a provenance input (E19/E20).** Prior results of the *right* type but for an unrelated instance collapse the E17 controllers (0.35 mean success, below the no-tool greedy's 0.63). Their m1 inputs carry no provenance. Adding public provenance features (m2), and training with same- and wrong-type distractors, restores 1.000 in all three lineages with no retention loss (registered rule supported 3/3). The two changes were made together.
 
 ## E15: depth versus breadth in selection
 
@@ -111,6 +112,32 @@ Protocol: [phase2/E17-protocol.md](phase2/E17-protocol.md). E17 is identical to 
 **The r2 residual failure is not about composition.** In 13.2% of select-containing sealed worlds (10.5–19.5% by condition; corrected by the audit from my initial ~18%), r2 repeats a rejected direct commit instead of switching to the solver. Each failed episode has 38–50 capacity/funds rejections (corrected from 25–35). This is the same perseveration pattern seen in phase 2's tool-first finalists after corrupted returns. It is a lineage-level weakness of the select stage.
 
 **Interpretation.** The failure boundary found in E16 was not a limit of "composition" as such. It was a missing *return-binding* skill that the training distribution never demanded. Exposing the controller to wrong-typed returns during training, without ever showing the held-out order, repaired both the held-out order and robustness to distractors. This is consistent with the prompt's emphasis on testing wrong, stale and absent results. The distractors vary type only. Same-type distractors, which would require provenance binding (e.g. an old subset result for a different draft), were **not** tested.
+
+## E19/E20: provenance binding under same-type distractors
+
+Protocol: [phase2/E19-E20-protocol.md](phase2/E19-E20-protocol.md). **Same-type distractors** are 0–2 public, certificate-valid prior results of primitives *in* the goal, solved for unrelated instances: right type, wrong provenance. Sealed seeds are 96M+ (conditions S→R, S→A, A→R, R→S, A→S, R→A, S, A).
+
+| Sealed success (mean over lineages r0 / r1 / r2) | E17 (m1, wrong-type training) | E20 (m2 + both distractor types) |
+|---|---|---|
+| Same-type distractor conditions (8) | 0.367 / 0.367 / 0.347 | **1.000 / 1.000 / 1.000** |
+| Wrong-type distractor conditions (6) | 1.000 / 1.000 / 0.920 | 1.000 / 1.000 / 1.000 |
+| IID pairs | 1.000 / 1.000 / 0.941 | 1.000 / 1.000 / 1.000 |
+| Held-out pairs | 1.000 / 1.000 / 0.900 | 1.000 / 1.000 / 1.000 |
+| Triples | 1.000 / 1.000 / 0.837 | 1.000 / 0.999 / 0.919 |
+| Teacher on same-type conditions | 1.000 | 1.000 |
+| No-tool greedy on same-type conditions | 0.626 | 0.626 |
+
+**E19 diagnosis.** With a same-type prior record present, the E17 controllers fail almost exactly when any distractor exists. Their m1 candidate features cannot distinguish their own result from an unrelated same-type result, so this is an input gap, as predicted.
+
+**E20 repair.** It combines two supplied changes, as registered:
+- the m2 public provenance features (the record's problem is one of this episode's drafts, and that draft is unchanged since the call; the records' `prior` field is never read);
+- training worlds with both distractor types.
+
+The registered rule (+≥0.2 in ≥2/3 lineages, retention loss ≤0.05) is **supported 3/3**: +0.63 to +0.65 with no retention loss. The r2 commit perseveration on S→R also disappeared (0.824 → 1.000).
+
+**Residual.** E20 r2 still fails 15–19% of the three triples in which select follows assign (0.809–0.852). Every failure is the direct-commit perseveration (37–45 rejected commits per failed episode), with no return-binding error.
+
+**Interpretation.** Return *type* binding could be learned from m1 inputs once wrong-type returns appeared in training (E17). Return *provenance* binding required a provenance input. Given that input plus exposure, all three lineages became fully robust to both kinds of irrelevant results.
 
 ## E18: a held-out primitive
 

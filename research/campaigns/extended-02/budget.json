@@ -392,7 +392,7 @@
     }
   ],
   "accounting": "GPU whole experiment-process occupancy; CPU user+system including reaped children, no nested double counting. Profile/import/evaluation/export included. Coordinator shell/read-only inspection not experiment work.",
-  "status": "phase3_paused",
+  "status": "phase2_active",
   "closed_utc": "2026-09-24T17:29:21.081692+00:00",
   "phase2_jobs": [
     {
@@ -1475,6 +1475,110 @@
       "receipt": "research/results/campaign-02/e18-sealed-process/occupancy.json"
     },
     {
+      "id": "e19-sealed",
+      "status": "completed",
+      "cpu_core_seconds": 314.9164048,
+      "wall_seconds": 277.2269177408889,
+      "gpu_process_wall_seconds": 277.2269177408889,
+      "interval_unix": [
+        1790305599.9319215,
+        1790305877.15893
+      ],
+      "uses_gpu": true,
+      "receipt": "research/results/campaign-02/e19-sealed-process/occupancy.json"
+    },
+    {
+      "id": "e20-boot-r0",
+      "status": "completed",
+      "cpu_core_seconds": 95.078656816,
+      "wall_seconds": 89.26682507386431,
+      "gpu_process_wall_seconds": 89.26682507386431,
+      "interval_unix": [
+        1790305892.124105,
+        1790305981.391091
+      ],
+      "uses_gpu": true,
+      "receipt": "research/results/campaign-02/e20-boot-r0-process/occupancy.json"
+    },
+    {
+      "id": "e20-boot-r1",
+      "status": "completed",
+      "cpu_core_seconds": 102.897704752,
+      "wall_seconds": 92.82393107004464,
+      "gpu_process_wall_seconds": 92.82393107004464,
+      "interval_unix": [
+        1790305952.2717764,
+        1790306045.0958068
+      ],
+      "uses_gpu": true,
+      "receipt": "research/results/campaign-02/e20-boot-r1-process/occupancy.json"
+    },
+    {
+      "id": "e20-boot-r2",
+      "status": "completed",
+      "cpu_core_seconds": 100.971981624,
+      "wall_seconds": 91.97701070597395,
+      "gpu_process_wall_seconds": 91.97701070597395,
+      "interval_unix": [
+        1790306012.1190352,
+        1790306104.096141
+      ],
+      "uses_gpu": true,
+      "receipt": "research/results/campaign-02/e20-boot-r2-process/occupancy.json"
+    },
+    {
+      "id": "e20-rl-single-r0",
+      "status": "completed",
+      "cpu_core_seconds": 741.402556064,
+      "wall_seconds": 648.8408982711844,
+      "gpu_process_wall_seconds": 648.8408982711844,
+      "interval_unix": [
+        1790306134.330935,
+        1790306783.171994
+      ],
+      "uses_gpu": true,
+      "receipt": "research/results/campaign-02/e20-rl-single-r0-process/occupancy.json"
+    },
+    {
+      "id": "e20-rl-single-r1",
+      "status": "completed",
+      "cpu_core_seconds": 780.055051296,
+      "wall_seconds": 675.3000323418528,
+      "gpu_process_wall_seconds": 675.3000323418528,
+      "interval_unix": [
+        1790306194.4597049,
+        1790306869.7598407
+      ],
+      "uses_gpu": true,
+      "receipt": "research/results/campaign-02/e20-rl-single-r1-process/occupancy.json"
+    },
+    {
+      "id": "e20-rl-single-r2",
+      "status": "completed",
+      "cpu_core_seconds": 696.694359064,
+      "wall_seconds": 609.3493748330511,
+      "gpu_process_wall_seconds": 609.3493748330511,
+      "interval_unix": [
+        1790306254.322047,
+        1790306863.6715102
+      ],
+      "uses_gpu": true,
+      "receipt": "research/results/campaign-02/e20-rl-single-r2-process/occupancy.json"
+    },
+    {
+      "id": "e20-sealed",
+      "status": "completed",
+      "cpu_core_seconds": 670.401744048,
+      "wall_seconds": 628.0667462078854,
+      "gpu_process_wall_seconds": 628.0667462078854,
+      "interval_unix": [
+        1790306881.8782783,
+        1790307509.9451833
+      ],
+      "uses_gpu": true,
+      "receipt": "research/results/campaign-02/e20-sealed-process/occupancy.json"
+    },
+    {
       "id": "phase2-analysis-and-figures-upper-bound",
       "status": "completed",
       "cpu_core_seconds": 300.0,
@@ -1497,6 +1601,18 @@
         0
       ],
       "accounting": "auditor-measured remote+local CPU; no inference"
+    },
+    {
+      "id": "phase3-independent-audit",
+      "status": "completed",
+      "cpu_core_seconds": 475.0,
+      "gpu_process_wall_seconds": 0.0,
+      "uses_gpu": false,
+      "interval_unix": [
+        0,
+        0
+      ],
+      "accounting": "auditor-measured CPU; no inference"
     },
     {
       "id": "rl02-main",
@@ -1523,25 +1639,13 @@
       ],
       "uses_gpu": true,
       "receipt": "research/results/campaign-02/rl02-profile-process/occupancy.json"
-    },
-    {
-      "id": "phase3-independent-audit",
-      "status": "completed",
-      "cpu_core_seconds": 475.0,
-      "gpu_process_wall_seconds": 0.0,
-      "uses_gpu": false,
-      "interval_unix": [
-        0,
-        0
-      ],
-      "accounting": "auditor-measured CPU; no inference"
     }
   ],
-  "phase2_charged_gpu_seconds": 26484.654095172882,
-  "phase2_gpu_process_wall_sum_upper_bound": 124119.9257226889,
+  "phase2_charged_gpu_seconds": 28337.348950624466,
+  "phase2_gpu_process_wall_sum_upper_bound": 127232.77745893365,
   "phase2_gpu_accounting": "device occupancy: union of CUDA-job wall intervals; per-process sum reported as upper bound",
-  "phase2_charged_cpu_core_seconds": 146275.745469256,
-  "total_charged_gpu_seconds": 27821.956033691764,
-  "total_charged_cpu_core_seconds": 147973.336757368,
+  "phase2_charged_cpu_core_seconds": 149778.16392772,
+  "total_charged_gpu_seconds": 29674.650889143348,
+  "total_charged_cpu_core_seconds": 151475.75521583197,
   "phase2_closed_note": "Stopped at evidential boundary, not at a ceiling. GPU charge = device occupancy (union of GPU-job intervals); per-process wall sum reported as phase2_gpu_process_wall_sum_upper_bound (exceeds the 12 h ceiling if read per process)."
 }
