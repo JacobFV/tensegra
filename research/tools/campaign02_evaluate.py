@@ -43,27 +43,27 @@ def episode_counts(outcome):
     problem_types, returns, retrieved = {}, {}, {}
     for event in outcome["history"]:
         action, feedback = event["action"], event["feedback"]
-        kind, args = action["kind"], action["arguments"]
+        kind, args = action["kind"], action.get("arguments") or {}
         counts[f"action/{kind}"] += 1
         counts[f"status/{feedback.get('status', 'missing')}"] += 1
         if kind in {"start_subset", "build_route", "start_assign"} and feedback.get("status") == "success":
-            problem_types[args["handle"]] = {"start_subset": "constrained_subset", "build_route": "shortest_path",
+            problem_types[args.get("handle")] = {"start_subset": "constrained_subset", "build_route": "shortest_path",
                                              "start_assign": "csp"}[kind]
         if kind == "call" and "return" in feedback:
-            returns[feedback["return"]] = {"primitive": problem_types.get(args["problem"]),
+            returns[feedback["return"]] = {"primitive": problem_types.get(args.get("problem")),
                                           "version": event.get("state_version", event.get("stage"))}
         if kind == "retrieve" and "record" in feedback:
             record = feedback["record"]
-            retrieved[args["handle"]] = record
+            retrieved[args.get("handle")] = record
         if kind == "use_return":
             counts["return_use_attempts"] += 1
             multiple = len(returns) >= 2
             counts["multiple_return_use_attempts"] += int(multiple)
-            record = retrieved.get(args["handle"], {})
+            record = retrieved.get(args.get("handle"), {})
             expected = {"subset": "constrained_subset", "select": "constrained_subset", "route": "shortest_path",
                         "assign": "csp"}.get(args.get("as"))
             # Route execution itself may discover an obstacle and advance version.
-            stale = feedback.get("reason") == "stale_result"
+            stale = feedback.get("reason") in ("stale_result", "stale_dependency")
             valid = (bool(record) and record.get("primitive") == expected and not stale
                      and record.get("certificate_valid", False)
                      and record.get("status") in {"success", "timeout"})
@@ -71,6 +71,20 @@ def episode_counts(outcome):
             counts["multiple_return_address_contract_valid"] += int(valid and multiple)
             counts["return_application_success"] += int(feedback.get("status") == "success")
             counts["stale_return_use"] += int(stale)
+    if "reuse_audit" in outcome:  # depworld-v1: evaluator-side applicability audit of every use
+        for event in outcome["history"]:
+            reason = event["feedback"].get("reason")
+            if event["feedback"].get("status") in ("rejected", "incomplete") and reason:
+                counts[f"reason/{reason}"] += 1
+        for use in outcome["reuse_audit"]:
+            counts["dep_uses"] += 1
+            counts["dep_applicable_uses"] += int(use["applicable_hidden"])
+            counts["dep_invalid_uses"] += int(not use["applicable_hidden"])
+            counts["dep_foreign_uses"] += int(use["foreign"])
+            counts["dep_foreign_applicable_uses"] += int(use["foreign"] and use["applicable_hidden"])
+        counts["dep_revisions"] = sum(outcome.get("revisions", {}).values())
+        counts["dep_revocations"] = len(outcome.get("revocations", []))
+        counts["dep_calls"] = outcome.get("calls", 0)
     reductions = outcome.get("reductions", [])
     counts["reductions"] = len(reductions)
     counts["correct_reductions"] = sum(bool(row["correct"]) for row in reductions)
@@ -217,6 +231,8 @@ def main():
     import topoformer.campaign02_training as training
     for name in ("training", "policy", "protocol", "world", "references", "interventions", "population", "memory", "memory_policy"):
         sources[name] = file_hash(Path(training.__file__).with_name(f"campaign02_{name}.py"))
+    if any(c.get("world_family", cfg.get("world_family")) == "depworld" for c in cfg["conditions"]):
+        sources["depworld"] = file_hash(Path(training.__file__).with_name("campaign03_depworld.py"))
     bindings = []
     for binding in cfg["checkpoints"]:
         actual = file_hash(binding["path"])
@@ -240,8 +256,14 @@ def main():
             if n < 1 or Path(name).name != name:
                 raise ValueError("Invalid condition name or support")
             seeds = list(range(condition["seed_start"], condition["seed_start"]+n))
-            modular = condition.get("world_family", cfg.get("world_family", "workshop")) == "modular"
-            if modular:
+            family = condition.get("world_family", cfg.get("world_family", "workshop"))
+            modular = family == "modular"
+            depworld = family == "depworld"
+            if depworld:
+                from topoformer.campaign03_depworld import DepWorkshop, depworld_executor, generate_depworld
+                condition_executor = partial(depworld_executor, execute_call=solver.execute)
+                specs = [generate_depworld(seed, **world_kwargs(condition.get("world", {}))) for seed in seeds]
+            elif modular:
                 from topoformer.campaign02_modular import ModularWorkshop, generate_modular, modular_executor
                 condition_executor = partial(modular_executor, execute_call=solver.execute)
                 specs = [generate_modular(seed, **world_kwargs(condition.get("world", {}))) for seed in seeds]
@@ -252,10 +274,10 @@ def main():
             faults = condition_faults(condition)
             def factory(index):
                 kwargs = {"executor":condition_executor,"address_seed":independent_address_seed(seeds[index],namespace)}
-                if modular:
+                if modular or depworld:
                     if faults:
                         raise ValueError("Return faults are defined for workshop-v1 only")
-                    return ModularWorkshop(specs[index],**kwargs)
+                    return (DepWorkshop if depworld else ModularWorkshop)(specs[index],**kwargs)
                 return FaultedWorkshop(specs[index],**kwargs,faults=faults) if faults else Workshop(specs[index],**kwargs)
             folder = args.output/name
             folder.mkdir()

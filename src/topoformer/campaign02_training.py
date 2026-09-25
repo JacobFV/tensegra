@@ -76,6 +76,13 @@ class Frame:
 
 
 def public_frame(observation, feature_version="v1"):
+    if feature_version == "d1" or getattr(observation, "version", "") == "depworld-v1":
+        from .campaign03_depworld import action_catalog as dep_catalog, encode_public as dep_encode
+        if feature_version != "d1" or getattr(observation, "version", "") != "depworld-v1":
+            raise ValueError("depworld-v1 observations require public feature version d1 (and vice versa)")
+        actions = dep_catalog(observation)
+        obs, features = dep_encode(observation, actions, feature_version)
+        return actions, obs, features
     if feature_version in ("m1", "m2", "m3") or getattr(observation, "version", "") == "workshop-modular-v1":
         from .campaign02_modular import action_catalog as modular_catalog, encode_public as modular_encode
         if feature_version not in ("m1", "m2", "m3"):

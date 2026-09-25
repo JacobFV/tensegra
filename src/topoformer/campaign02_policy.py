@@ -26,7 +26,7 @@ class PolicyConfig:
     feature_version: str = "v1"
 
     def __post_init__(self):
-        if self.feature_version not in {"v1", "v2", "m1", "m2", "m3"}:
+        if self.feature_version not in {"v1", "v2", "m1", "m2", "m3", "d1"}:
             raise ValueError("Unknown public feature version")
         if min(self.observation_dim, self.candidate_dim, self.width, self.workspace_rows, self.heads) < 1:
             raise ValueError("Dimensions must be positive")
