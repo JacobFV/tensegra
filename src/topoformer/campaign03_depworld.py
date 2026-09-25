@@ -45,6 +45,10 @@ REQUIREMENTS = ("capacity", "funds", "incompatible", "slots", "deadline", "map")
 # Requirement names each primitive's *instance* is built from (dependency metadata).
 READS = {"constrained_subset": ("capacity", "funds", "incompatible"), "csp": ("slots",), "shortest_path": ("map",)}
 EVENT_KINDS = ("edge_closed", "capacity_reduced", "slot_closed", "deadline_moved")
+EVENT_TRIGGERS = ("step", "progress")
+# Progress trigger: kinds that can invalidate what is committed at the k-th completion
+# (k=1: a selection is committed; k=2: normally the assignment too).
+PROGRESS_KINDS = {1: ("capacity_reduced", "edge_closed"), 2: ("slot_closed", "deadline_moved", "edge_closed")}
 EVENT_AFFECTS = {"edge_closed": "map", "capacity_reduced": "capacity", "slot_closed": "slots",
                  "deadline_moved": "deadline"}
 SUBSET_CONSTRAINTS = ("capacity", "funds", "incompatibility")
@@ -99,8 +103,12 @@ class DepSpec:
     destination: int = -1
     slot_capacity: int = 1
     closed_slots: tuple[int, ...] = ()
-    # (kind, step, argument) or None. argument: int, or (u, v) for edge_closed.
+    # (kind, when, argument) or None. argument: int, or (u, v) for edge_closed.
+    # event_trigger "step": fires at the end of step `when`; "progress": fires right
+    # after the world's `when`-th successful completion commit (selection or
+    # assignment commit, directly or via use_return). Never after delivery.
     event: tuple | None = None
+    event_trigger: str = "step"
     # Foreign registered problems/records, each a dict with evaluator-only "label".
     foreign: tuple = ()
     # Planted plan (selection, ((handle, start), ...), route) valid after the event.
@@ -117,6 +125,8 @@ class DepSpec:
     include_remaining_budget: bool = True
 
     def __post_init__(self):
+        if self.event_trigger not in EVENT_TRIGGERS:
+            raise ValueError("event_trigger must be 'step' or 'progress'")
         if self.slot_capacity != 1:
             raise ValueError("depworld-v1 fixes slot_capacity=1 (binary CSP lowering)")
         if not isinstance(self.call_budgets, tuple) or not self.call_budgets or any(
@@ -273,8 +283,14 @@ def _solve_local(snapshot):
 def generate_depworld(seed: int, categories: int = 3, choices: int = 3, locations: int = 7, slots: int = 6,
                       deadline_slack: int = 1, p_event: float = 0.0, foreign_records: int = 0,
                       event_kinds=EVENT_KINDS, event_steps=None, slot_choices=(2, 4),
-                      shortcut: float = .25, **overrides: Any) -> DepSpec:
-    """Planted-feasible world; the plan stays feasible after the (single) event."""
+                      shortcut: float = .25, event_trigger: str = "progress", **overrides: Any) -> DepSpec:
+    """Planted-feasible world; the plan stays feasible after the (single) event.
+
+    event_trigger="step" reproduces the original step-scheduled worlds exactly;
+    "progress" (default for new calls) fires after the k-th completion commit,
+    k in {1, 2}, with a kind that can invalidate what is committed by then."""
+    if event_trigger not in EVENT_TRIGGERS:
+        raise ValueError("event_trigger must be 'step' or 'progress'")
     if min(categories, choices) < 1 or locations < 3 or slots < 2:
         raise ValueError("positive sizes, >=3 locations, >=2 slots required")
     rng = random.Random(f"depworld-v1-{seed}")
@@ -338,8 +354,12 @@ def generate_depworld(seed: int, categories: int = 3, choices: int = 3, location
         n = categories * choices
         event_steps = (n + 9, n + 19)
     if rng.random() < p_event:
-        step = rng.randint(*event_steps)
-        kinds = list(event_kinds)
+        if event_trigger == "step":
+            step = rng.randint(*event_steps)
+            kinds = list(event_kinds)
+        else:
+            step = rng.randint(1, 2)  # completion ordinal k
+            kinds = [k for k in PROGRESS_KINDS[step] if k in event_kinds] or list(event_kinds)
         rng.shuffle(kinds)
         for kind in kinds:
             if kind == "edge_closed":
@@ -393,6 +413,7 @@ def generate_depworld(seed: int, categories: int = 3, choices: int = 3, location
     params = dict(items=item_objs, categories=tuple(range(categories)), slots=slots, capacity=initial_capacity,
                   funds=funds, incompatible=incompatible, deadline=initial_deadline, edges=tuple(edge_list),
                   locations=locations, start=0, destination=dest, closed_slots=closed, event=event,
+                  event_trigger=event_trigger,
                   planted=(tuple(sorted(planted_handles)), tuple(sorted(starts.items())), tuple(route)))
     params.update(overrides)
     for key in ("call_budgets", "categories", "closed_slots"):
@@ -571,6 +592,7 @@ class DepWorkshop:
         self._uses: list[dict[str, Any]] = []
         self._revisions = {"select": 0, "assign": 0}
         self._revocations: list[str] = []
+        self._completions = 0
         self._feedback: dict[str, Any] = {"status": "ready"}
         self._handle_rng = random.Random(address_seed)
         for i, f in enumerate(spec.foreign):
@@ -649,10 +671,15 @@ class DepWorkshop:
                                    "reason": reason if reason in REASONS else None,
                                    "dependency_versions_at_attempt": relevant_dependencies(before, action),
                                    "step": self._steps})
+        if self._feedback.get("status") == "success" and (
+                "selection_id" in self._feedback or "assignment_id" in self._feedback):
+            self._completions += 1  # successful selection/assignment commit (direct or via use_return)
         ev = self._spec.event
         delivered = self._assignment is not None and self._position == self._spec.destination
+        due = ev is not None and (self._completions >= ev[1] if self._spec.event_trigger == "progress"
+                                  else self._steps >= ev[1])
         # A scheduled event is moot once the job is delivered (it would only punish speed).
-        if ev is not None and not self._events and self._steps >= ev[1] and not self._done and not delivered:
+        if due and not self._events and not self._done and not delivered:
             self._feedback = {**self._feedback, "event": self._fire(ev)}
         self._history.append({"action": {"kind": action.kind, "arguments": json.loads(json.dumps(dict(action.arguments)))},
                               "feedback": deepcopy(self._feedback), "step": self._steps,

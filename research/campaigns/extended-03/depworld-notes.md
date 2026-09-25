@@ -7,7 +7,7 @@ Status: Stage A build, branch `campaign/e03-depworld`. The build contract is [wo
 | File | Contents |
 |---|---|
 | `src/topoformer/campaign03_depworld.py` | `DepSpec`/`DepItem`, `generate_depworld`, `DepWorkshop`, `DepObservation`, `depworld_executor`, the public applicability rule (`current_request`, `current_dependencies`, `relations`, `applicable`), the evaluator-only audit (`audit_record`, per-call reduction audit), `relevant_dependencies` (attempt memory), `action_catalog`, the d1 encoders, `DepReference` (5 modes) |
-| `tests/test_campaign03_depworld.py` | 27 tests (see below) |
+| `tests/test_campaign03_depworld.py` | 32 tests (see below) |
 | `research/tools/campaign03_leverage_profile.py` | CPU-only leverage profiler (in-process `execute`) |
 | `campaign02_training.public_frame` | dispatches `feature_version == "d1"` or `observation.version == "depworld-v1"`; a mismatch raises |
 | `campaign02_policy.PolicyConfig` | accepts `"d1"` |
@@ -32,7 +32,13 @@ Status: Stage A build, branch `campaign/e03-depworld`. The build contract is [wo
 - **Verify.** Re-checks the selection and assignment against the *current* requirements, then the position and the deadline.
 
 ### Events
-There is at most one event per world, fixed at generation. It is independent of the agent, and it fires at the end of step k, with k sampled from `(n_items+9, n_items+19)`.
+There is at most one event per world, fixed at generation. Its timing is set by `event_trigger` (a generator argument and a `DepSpec` field):
+- **`"progress"`** (the generator default for new calls since the P1 amendment): the event fires immediately after the world's k-th successful completion commit, with k ∈ {1, 2} drawn from the generator RNG. A completion commit is a selection or assignment commit, made directly or through `use_return`; rejected commits do not count. The kind is chosen so it can invalidate what is committed by then:
+  - k = 1 (a selection is committed): `capacity_reduced` or `edge_closed`.
+  - k = 2 (normally the assignment too): `slot_closed`, `deadline_moved` or `edge_closed`.
+- **`"step"`** (the original behaviour, and the `DepSpec` default): fires at the end of step k, with k sampled from `(n_items+9, n_items+19)`. Step-mode worlds are identical to those at `6d918e52`: 600 worlds were checked field by field against that commit's generator.
+
+In both modes an event whose trigger comes after delivery is dropped.
 - `edge_closed` closes an edge on the pre-event shortest path, provided the destination stays reachable.
 - `capacity_reduced` lowers capacity below the canonical selection's weight when the planted weight allows it.
 - `slot_closed` closes a slot used by the canonical assignment that is not a planted start.
@@ -78,6 +84,7 @@ Each `commit_pending`, `commit_assignment`, `use_return`, `move`, `call`, `uncom
 7. **Extra declared rejection reasons:** `category_coverage`, `missing_dependency`, `incomplete`, `already_committed`, `retrieve_required`, `unknown_item`, `travel_budget`, `work_budget`. `REASONS` lists the spec's reasons first.
 8. **`commit_assignment` also rejects with `deadline`** if `T + travel > deadline`.
 9. **Events are aimed and scheduled deterministically** (see above), and **an event scheduled after delivery is moot.** Without that rule a faster agent that had already delivered lost to a later deadline move, which cost one development episode in the 64-per-cell profile.
+   - **P1 amendment: progress trigger.** The spec's "public step count" made exposure depend on agent speed (47% vs 83% of s3 reuse episodes, see below). `event_trigger="progress"` fires on the k-th completion commit instead. Every agent that reaches that commit sees the event at that step, so exposure no longer depends on speed. "step" is kept for back-compatibility.
 10. **Public versions start at 1.** Version 0 is reserved for foreign "earlier shift" records.
 11. **Attempt entries also carry `arguments` and `step`,** which the recompute reference and the evaluator use.
 12. **`dep_naive_reuse` does not re-apply a record it has already applied in the episode.** The literal "most recent same-type record" loops forever after the first assignment revision (measured: success 0.875 with no foreign records or events, all loop failures). It still performs no applicability check.
@@ -128,8 +135,127 @@ It costs about 0.8 ms per step to build the catalogue and encode it. The catalog
 - **Event aiming.** Initially events were random: capacity cuts rarely hit the committed selection, and closed slots were rarely used. They now target the canonical public pipeline's likely commitments, which is agent-independent.
 - **`slot_choices = (2, 4)`, durations 1–4, reference initial budget 128** (escalating to 1024, then the remaining work).
 
-## Leverage profile (128 development worlds per cell)
-Command: `PYTHONPATH=src python research/tools/campaign03_leverage_profile.py --examples 128`. Seeds are `2_000_000_000 + cell*100_000 + i`, and each cell pairs the same worlds across references. Sizes: s3 = 3 categories × 3 choices, 7 locations, 6 slots; s4 = 4 × 3, 8 locations, 7 slots. Utility and cost are at work_price 2e-4. "Invalid uses" counts uses of records that the hidden audit marks not applicable. Wall time was 75 s on CPU.
+## Leverage profile, progress trigger (128 development worlds per cell; the P1 configuration)
+Command: `PYTHONPATH=src python research/tools/campaign03_leverage_profile.py --examples 128 --world-json '{"event_trigger": "progress"}'`. Seeds, sizes and grid are the same as in the step-trigger profile below. Wall time was 75 s on CPU.
+
+| size | p_ev | foreign | reference | success | utility | cost | work | calls | revisions | revised eps | event fired | revoked eps | invalid uses | foreign uses |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| s3 | 0.0 | 0 | greedy | 0.312 | 0.279 | 0.0338 | 0 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s3 | 0.0 | 0 | recompute | 0.984 | 0.913 | 0.0717 | 123 | 3.32 | 0.15 | 0.12 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s3 | 0.0 | 0 | reuse | 0.984 | 0.914 | 0.0707 | 121 | 3.23 | 0.15 | 0.12 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s3 | 0.0 | 0 | naive_reuse | 0.984 | 0.914 | 0.0707 | 121 | 3.23 | 0.15 | 0.12 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s3 | 0.0 | 0 | reuse_norevise | 0.883 | 0.815 | 0.0675 | 113 | 3.02 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s3 | 0.0 | 2 | greedy | 0.273 | 0.239 | 0.0341 | 0 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s3 | 0.0 | 2 | recompute | 0.984 | 0.912 | 0.0720 | 124 | 3.37 | 0.16 | 0.12 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s3 | 0.0 | 2 | reuse | 0.984 | 0.921 | 0.0639 | 99 | 2.52 | 0.16 | 0.12 | 0.00 | 0.00 | 0.00 | 0.75 |
+| s3 | 0.0 | 2 | naive_reuse | 0.820 | 0.754 | 0.0662 | 104 | 2.66 | 0.76 | 0.29 | 0.00 | 0.00 | 0.88 | 1.59 |
+| s3 | 0.0 | 2 | reuse_norevise | 0.875 | 0.816 | 0.0593 | 86 | 2.29 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.71 |
+| s3 | 0.0 | 4 | greedy | 0.281 | 0.248 | 0.0330 | 0 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s3 | 0.0 | 4 | recompute | 0.992 | 0.920 | 0.0725 | 129 | 3.34 | 0.12 | 0.09 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s3 | 0.0 | 4 | reuse | 0.992 | 0.935 | 0.0570 | 73 | 2.05 | 0.12 | 0.09 | 0.00 | 0.00 | 0.00 | 1.16 |
+| s3 | 0.0 | 4 | naive_reuse | 0.820 | 0.762 | 0.0582 | 68 | 2.05 | 0.93 | 0.25 | 0.00 | 0.00 | 1.42 | 2.52 |
+| s3 | 0.0 | 4 | reuse_norevise | 0.906 | 0.853 | 0.0529 | 61 | 1.87 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 1.12 |
+| s3 | 0.5 | 0 | greedy | 0.352 | 0.318 | 0.0331 | 0 | 0.00 | 0.00 | 0.00 | 0.34 | 0.05 | 0.00 | 0.00 |
+| s3 | 0.5 | 0 | recompute | 0.984 | 0.912 | 0.0728 | 126 | 3.43 | 0.12 | 0.09 | 0.52 | 0.10 | 0.00 | 0.00 |
+| s3 | 0.5 | 0 | reuse | 0.984 | 0.913 | 0.0718 | 124 | 3.36 | 0.12 | 0.09 | 0.52 | 0.10 | 0.00 | 0.00 |
+| s3 | 0.5 | 0 | naive_reuse | 0.984 | 0.913 | 0.0718 | 124 | 3.36 | 0.12 | 0.09 | 0.52 | 0.10 | 0.00 | 0.00 |
+| s3 | 0.5 | 0 | reuse_norevise | 0.914 | 0.846 | 0.0686 | 115 | 3.18 | 0.00 | 0.00 | 0.52 | 0.10 | 0.00 | 0.00 |
+| s3 | 0.5 | 2 | greedy | 0.273 | 0.240 | 0.0337 | 0 | 0.00 | 0.00 | 0.00 | 0.27 | 0.03 | 0.00 | 0.00 |
+| s3 | 0.5 | 2 | recompute | 0.953 | 0.875 | 0.0780 | 148 | 3.52 | 0.23 | 0.12 | 0.45 | 0.05 | 0.00 | 0.00 |
+| s3 | 0.5 | 2 | reuse | 0.953 | 0.883 | 0.0696 | 121 | 2.85 | 0.23 | 0.12 | 0.45 | 0.05 | 0.00 | 0.56 |
+| s3 | 0.5 | 2 | naive_reuse | 0.875 | 0.806 | 0.0690 | 114 | 2.70 | 0.55 | 0.20 | 0.45 | 0.05 | 1.05 | 1.58 |
+| s3 | 0.5 | 2 | reuse_norevise | 0.859 | 0.798 | 0.0612 | 91 | 2.47 | 0.00 | 0.00 | 0.44 | 0.05 | 0.00 | 0.55 |
+| s3 | 0.5 | 4 | greedy | 0.266 | 0.231 | 0.0345 | 0 | 0.00 | 0.00 | 0.00 | 0.32 | 0.04 | 0.00 | 0.00 |
+| s3 | 0.5 | 4 | recompute | 0.969 | 0.894 | 0.0748 | 135 | 3.48 | 0.16 | 0.12 | 0.41 | 0.09 | 0.00 | 0.00 |
+| s3 | 0.5 | 4 | reuse | 0.969 | 0.909 | 0.0600 | 84 | 2.17 | 0.16 | 0.12 | 0.41 | 0.09 | 0.00 | 1.19 |
+| s3 | 0.5 | 4 | naive_reuse | 0.742 | 0.677 | 0.0649 | 90 | 2.49 | 1.12 | 0.32 | 0.41 | 0.09 | 1.70 | 2.76 |
+| s3 | 0.5 | 4 | reuse_norevise | 0.875 | 0.819 | 0.0564 | 76 | 1.95 | 0.00 | 0.00 | 0.41 | 0.09 | 0.00 | 1.14 |
+| s3 | 1.0 | 0 | greedy | 0.336 | 0.301 | 0.0352 | 0 | 0.00 | 0.00 | 0.00 | 0.73 | 0.09 | 0.00 | 0.00 |
+| s3 | 1.0 | 0 | recompute | 1.000 | 0.924 | 0.0763 | 134 | 3.59 | 0.16 | 0.14 | 1.00 | 0.20 | 0.00 | 0.00 |
+| s3 | 1.0 | 0 | reuse | 1.000 | 0.925 | 0.0747 | 132 | 3.48 | 0.16 | 0.14 | 1.00 | 0.20 | 0.00 | 0.00 |
+| s3 | 1.0 | 0 | naive_reuse | 1.000 | 0.925 | 0.0747 | 132 | 3.48 | 0.16 | 0.14 | 1.00 | 0.20 | 0.00 | 0.00 |
+| s3 | 1.0 | 0 | reuse_norevise | 0.859 | 0.790 | 0.0696 | 117 | 3.23 | 0.00 | 0.00 | 0.99 | 0.20 | 0.00 | 0.00 |
+| s3 | 1.0 | 2 | greedy | 0.242 | 0.209 | 0.0332 | 0 | 0.00 | 0.00 | 0.00 | 0.63 | 0.06 | 0.00 | 0.00 |
+| s3 | 1.0 | 2 | recompute | 0.984 | 0.906 | 0.0780 | 146 | 3.54 | 0.13 | 0.12 | 0.99 | 0.16 | 0.00 | 0.00 |
+| s3 | 1.0 | 2 | reuse | 0.984 | 0.914 | 0.0707 | 123 | 2.89 | 0.13 | 0.12 | 0.99 | 0.16 | 0.00 | 0.52 |
+| s3 | 1.0 | 2 | naive_reuse | 0.859 | 0.791 | 0.0686 | 107 | 2.81 | 0.51 | 0.20 | 0.99 | 0.16 | 1.18 | 1.70 |
+| s3 | 1.0 | 2 | reuse_norevise | 0.875 | 0.810 | 0.0653 | 104 | 2.71 | 0.00 | 0.00 | 0.99 | 0.16 | 0.00 | 0.52 |
+| s3 | 1.0 | 4 | greedy | 0.250 | 0.217 | 0.0335 | 0 | 0.00 | 0.00 | 0.00 | 0.62 | 0.04 | 0.00 | 0.00 |
+| s3 | 1.0 | 4 | recompute | 0.984 | 0.903 | 0.0814 | 157 | 3.61 | 0.18 | 0.15 | 1.00 | 0.14 | 0.00 | 0.00 |
+| s3 | 1.0 | 4 | reuse | 0.984 | 0.915 | 0.0696 | 119 | 2.57 | 0.18 | 0.15 | 1.00 | 0.14 | 0.00 | 0.91 |
+| s3 | 1.0 | 4 | naive_reuse | 0.797 | 0.721 | 0.0756 | 130 | 2.74 | 1.06 | 0.31 | 1.00 | 0.14 | 1.95 | 2.84 |
+| s3 | 1.0 | 4 | reuse_norevise | 0.852 | 0.789 | 0.0630 | 99 | 2.27 | 0.00 | 0.00 | 0.98 | 0.14 | 0.00 | 0.89 |
+| s4 | 0.0 | 0 | greedy | 0.148 | 0.111 | 0.0375 | 0 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s4 | 0.0 | 0 | recompute | 0.992 | 0.795 | 0.1968 | 715 | 4.07 | 0.16 | 0.12 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s4 | 0.0 | 0 | reuse | 0.992 | 0.796 | 0.1959 | 714 | 4.03 | 0.16 | 0.12 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s4 | 0.0 | 0 | naive_reuse | 0.992 | 0.796 | 0.1959 | 714 | 4.03 | 0.16 | 0.12 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s4 | 0.0 | 0 | reuse_norevise | 0.875 | 0.704 | 0.1707 | 599 | 3.55 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s4 | 0.0 | 2 | greedy | 0.133 | 0.096 | 0.0368 | 0 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s4 | 0.0 | 2 | recompute | 0.977 | 0.763 | 0.2139 | 797 | 4.18 | 0.20 | 0.14 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s4 | 0.0 | 2 | reuse | 0.977 | 0.786 | 0.1905 | 695 | 3.32 | 0.20 | 0.14 | 0.00 | 0.00 | 0.00 | 0.66 |
+| s4 | 0.0 | 2 | naive_reuse | 0.875 | 0.689 | 0.1859 | 674 | 3.07 | 0.47 | 0.20 | 0.00 | 0.00 | 0.79 | 1.44 |
+| s4 | 0.0 | 2 | reuse_norevise | 0.859 | 0.713 | 0.1460 | 486 | 2.82 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.65 |
+| s4 | 0.0 | 4 | greedy | 0.172 | 0.134 | 0.0379 | 0 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s4 | 0.0 | 4 | recompute | 0.969 | 0.803 | 0.1661 | 561 | 4.00 | 0.19 | 0.15 | 0.00 | 0.00 | 0.00 | 0.00 |
+| s4 | 0.0 | 4 | reuse | 0.969 | 0.851 | 0.1179 | 342 | 2.55 | 0.19 | 0.15 | 0.00 | 0.00 | 0.00 | 1.12 |
+| s4 | 0.0 | 4 | naive_reuse | 0.781 | 0.640 | 0.1413 | 447 | 2.71 | 0.98 | 0.30 | 0.00 | 0.00 | 1.35 | 2.46 |
+| s4 | 0.0 | 4 | reuse_norevise | 0.852 | 0.750 | 0.1020 | 275 | 2.15 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 1.10 |
+| s4 | 0.5 | 0 | greedy | 0.141 | 0.103 | 0.0380 | 0 | 0.00 | 0.00 | 0.00 | 0.21 | 0.05 | 0.00 | 0.00 |
+| s4 | 0.5 | 0 | recompute | 0.953 | 0.755 | 0.1983 | 719 | 4.22 | 0.23 | 0.17 | 0.45 | 0.07 | 0.00 | 0.00 |
+| s4 | 0.5 | 0 | reuse | 0.953 | 0.756 | 0.1968 | 718 | 4.16 | 0.23 | 0.17 | 0.45 | 0.07 | 0.00 | 0.00 |
+| s4 | 0.5 | 0 | naive_reuse | 0.953 | 0.756 | 0.1968 | 718 | 4.16 | 0.23 | 0.17 | 0.45 | 0.07 | 0.00 | 0.00 |
+| s4 | 0.5 | 0 | reuse_norevise | 0.828 | 0.661 | 0.1675 | 585 | 3.59 | 0.00 | 0.00 | 0.43 | 0.07 | 0.00 | 0.00 |
+| s4 | 0.5 | 2 | greedy | 0.164 | 0.127 | 0.0375 | 0 | 0.00 | 0.00 | 0.00 | 0.23 | 0.05 | 0.00 | 0.00 |
+| s4 | 0.5 | 2 | recompute | 0.977 | 0.809 | 0.1677 | 564 | 4.09 | 0.15 | 0.14 | 0.50 | 0.12 | 0.00 | 0.00 |
+| s4 | 0.5 | 2 | reuse | 0.977 | 0.832 | 0.1450 | 467 | 3.23 | 0.15 | 0.14 | 0.50 | 0.12 | 0.00 | 0.69 |
+| s4 | 0.5 | 2 | naive_reuse | 0.797 | 0.633 | 0.1638 | 546 | 3.89 | 0.88 | 0.31 | 0.50 | 0.12 | 0.91 | 1.53 |
+| s4 | 0.5 | 2 | reuse_norevise | 0.859 | 0.733 | 0.1261 | 383 | 2.86 | 0.00 | 0.00 | 0.50 | 0.12 | 0.00 | 0.67 |
+| s4 | 0.5 | 4 | greedy | 0.180 | 0.142 | 0.0373 | 0 | 0.00 | 0.00 | 0.00 | 0.26 | 0.02 | 0.00 | 0.00 |
+| s4 | 0.5 | 4 | recompute | 0.961 | 0.810 | 0.1511 | 482 | 3.90 | 0.16 | 0.13 | 0.56 | 0.03 | 0.00 | 0.00 |
+| s4 | 0.5 | 4 | reuse | 0.961 | 0.846 | 0.1147 | 320 | 2.58 | 0.16 | 0.13 | 0.56 | 0.03 | 0.00 | 1.03 |
+| s4 | 0.5 | 4 | naive_reuse | 0.773 | 0.630 | 0.1438 | 448 | 3.12 | 1.19 | 0.33 | 0.57 | 0.05 | 1.55 | 2.54 |
+| s4 | 0.5 | 4 | reuse_norevise | 0.859 | 0.763 | 0.0960 | 238 | 2.27 | 0.00 | 0.00 | 0.56 | 0.03 | 0.00 | 0.98 |
+| s4 | 1.0 | 0 | greedy | 0.203 | 0.164 | 0.0387 | 0 | 0.00 | 0.00 | 0.00 | 0.55 | 0.06 | 0.00 | 0.00 |
+| s4 | 1.0 | 0 | recompute | 0.961 | 0.776 | 0.1845 | 639 | 4.36 | 0.27 | 0.18 | 1.00 | 0.16 | 0.00 | 0.00 |
+| s4 | 1.0 | 0 | reuse | 0.961 | 0.778 | 0.1824 | 637 | 4.27 | 0.27 | 0.18 | 1.00 | 0.16 | 0.00 | 0.00 |
+| s4 | 1.0 | 0 | naive_reuse | 0.961 | 0.778 | 0.1824 | 637 | 4.27 | 0.27 | 0.18 | 1.00 | 0.16 | 0.00 | 0.00 |
+| s4 | 1.0 | 0 | reuse_norevise | 0.820 | 0.674 | 0.1460 | 471 | 3.62 | 0.00 | 0.00 | 0.98 | 0.16 | 0.00 | 0.00 |
+| s4 | 1.0 | 2 | greedy | 0.203 | 0.165 | 0.0385 | 0 | 0.00 | 0.00 | 0.00 | 0.55 | 0.07 | 0.00 | 0.00 |
+| s4 | 1.0 | 2 | recompute | 0.992 | 0.801 | 0.1911 | 678 | 4.14 | 0.13 | 0.12 | 1.00 | 0.17 | 0.00 | 0.00 |
+| s4 | 1.0 | 2 | reuse | 0.992 | 0.819 | 0.1732 | 604 | 3.41 | 0.13 | 0.12 | 1.00 | 0.17 | 0.00 | 0.59 |
+| s4 | 1.0 | 2 | naive_reuse | 0.852 | 0.660 | 0.1918 | 689 | 3.74 | 0.68 | 0.23 | 1.00 | 0.17 | 1.01 | 1.55 |
+| s4 | 1.0 | 2 | reuse_norevise | 0.883 | 0.722 | 0.1605 | 551 | 3.08 | 0.00 | 0.00 | 0.98 | 0.17 | 0.00 | 0.57 |
+| s4 | 1.0 | 4 | greedy | 0.172 | 0.134 | 0.0381 | 0 | 0.00 | 0.00 | 0.00 | 0.51 | 0.09 | 0.00 | 0.00 |
+| s4 | 1.0 | 4 | recompute | 0.953 | 0.726 | 0.2268 | 853 | 4.31 | 0.20 | 0.13 | 0.99 | 0.16 | 0.00 | 0.00 |
+| s4 | 1.0 | 4 | reuse | 0.953 | 0.766 | 0.1867 | 676 | 3.05 | 0.20 | 0.13 | 0.99 | 0.16 | 0.00 | 0.97 |
+| s4 | 1.0 | 4 | naive_reuse | 0.719 | 0.494 | 0.2243 | 837 | 3.84 | 1.30 | 0.36 | 0.99 | 0.17 | 1.63 | 2.57 |
+| s4 | 1.0 | 4 | reuse_norevise | 0.859 | 0.700 | 0.1589 | 549 | 2.61 | 0.00 | 0.00 | 0.95 | 0.16 | 0.00 | 0.94 |
+
+### Stage A gate (progress trigger)
+
+| Clause | Result (pooled over all 18 cells, 2,304 worlds per reference) | Holds? |
+|---|---|---|
+| `dep_reuse` success ≥ `dep_recompute` − 0.01, with materially lower cost | Success 0.976 vs 0.976; reuse never trails in any cell. Cost −11.1% pooled (−9.5% / −11.1% / −12.8% at work_price 1e-4 / 2e-4 / 5e-4). By foreign-record count: −9% to −14% at 2, −15% to −29% at 4, −0.4% to −2.0% at 0. | **Yes**, pooled and in the foreign-record region; small with no foreign records |
+| `dep_naive_reuse` substantially worse where stale or foreign records exist | Foreign > 0: success 0.809 vs 0.975, utility 0.688 vs 0.865. Events only (foreign = 0, p_event > 0): 0.975 vs 0.975. | **Yes for foreign records; no for event-staleness alone** (unchanged; see the limitations) |
+| `dep_greedy` materially worse where CSP/deadline coupling bites | 0.228 vs 0.976 pooled; 0.13–0.35 per cell | **Yes** |
+| Some worlds require revision | `dep_reuse_norevise` 0.866 vs 0.976 pooled; 0.82–0.91 per cell. 9–18% of reuse episodes revise. | **Yes** |
+
+### Event exposure by reference
+
+Share of p_event > 0 episodes in which the event fired, pooled:
+
+| Reference | Progress trigger (all) | Progress, p = 1 | Revocation episodes (progress) | Step trigger, p = 1, s3 foreign 0 / 2 / 4 |
+|---|---|---|---|---|
+| greedy | 0.436 | 0.598 | 0.054 | 0.32 / 0.27 / 0.19 |
+| recompute | 0.738 | 0.997 | 0.122 | 0.83 / 0.80 / 0.84 |
+| reuse | 0.738 | 0.997 | 0.122 | 0.83 / 0.64 / 0.47 |
+| naive_reuse | 0.739 | 0.997 | 0.124 | 0.83 / 0.55 / 0.41 |
+| reuse_norevise | 0.727 | 0.978 | 0.122 | 0.81 / 0.63 / 0.44 |
+
+Under the progress trigger, exposure at p = 1 is 0.99–1.00 in every cell for the four solver references, whatever the foreign-record count. The few misses are episodes that abstain before reaching the k-th completion. A test checks exactness: the event fires *iff* the reference makes the k-th completion commit, at exactly that step. Greedy's lower exposure is not a speed effect. Greedy abstains before committing (its direct selection fails) in about 40% of worlds.
+
+## Leverage profile, step trigger (128 development worlds per cell; the original Stage A run at `6d918e52`)
+Command: `PYTHONPATH=src python research/tools/campaign03_leverage_profile.py --examples 128 --world-json '{"event_trigger": "step"}'`. (Before the amendment the generator default was the step trigger.) Seeds are `2_000_000_000 + cell*100_000 + i`, and each cell pairs the same worlds across references. Sizes: s3 = 3 categories × 3 choices, 7 locations, 6 slots; s4 = 4 × 3, 8 locations, 7 slots. Utility and cost are at work_price 2e-4. "Invalid uses" counts uses of records that the hidden audit marks not applicable. Wall time was 75 s on CPU.
 
 | size | p_ev | foreign | reference | success | utility | cost | work | calls | revisions | revised eps | event fired | revoked eps | invalid uses | foreign uses |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -224,7 +350,7 @@ Command: `PYTHONPATH=src python research/tools/campaign03_leverage_profile.py --
 | s4 | 1.0 | 4 | naive_reuse | 0.719 | 0.510 | 0.2087 | 771 | 3.51 | 1.30 | 0.33 | 0.52 | 0.05 | 1.43 | 2.45 |
 | s4 | 1.0 | 4 | reuse_norevise | 0.883 | 0.724 | 0.1587 | 554 | 2.52 | 0.00 | 0.00 | 0.48 | 0.09 | 0.00 | 1.07 |
 
-### Stage A gate
+### Stage A gate (step trigger)
 
 | Clause | Result (pooled over all 18 cells, 2,304 worlds per reference) | Holds? |
 |---|---|---|
@@ -233,7 +359,7 @@ Command: `PYTHONPATH=src python research/tools/campaign03_leverage_profile.py --
 | `dep_greedy` materially worse where CSP/deadline coupling bites | 0.240 vs 0.975 pooled; 0.13–0.39 in every cell | **Yes** |
 | Some worlds require revision (reuse without revision is materially lower) | `dep_reuse_norevise` 0.871 vs 0.975 pooled; 0.76–0.91 per cell. 9–24% of reuse episodes revise. | **Yes** |
 
-## Tests (`tests/test_campaign03_depworld.py`, 27 tests)
+## Tests (`tests/test_campaign03_depworld.py`, 32 tests)
 - **Planted feasibility,** by brute force over all selections, assignments and shortest routes, before and after the event. It covers 60 worlds × 2 small sizes, all four event kinds, and the planted plan itself.
 - **Generation:** deterministic and JSON-safe.
 - **No hidden information before inspection,** including identical d1 encodings for worlds that differ only in hidden facts.
@@ -257,13 +383,19 @@ Command: `PYTHONPATH=src python research/tools/campaign03_leverage_profile.py --
 - **`collect_teacher`** with a width-8 `CandidatePolicy` (d1), plus `supervised_loss`.
 - **A tiny `PopulationRun`** with `world_family="depworld"`.
 - **`episode_counts`** on a depworld outcome.
+- **Progress trigger** (5 tests; the planted-feasibility test now runs under both triggers):
+  - Across 80 worlds × 5 references, the event fires iff the reference makes the k-th completion commit, at exactly that step. Solver references have identical exposure. Both k values and all four kinds occur.
+  - Tiny-world semantics: k = 1 fires right after the selection commit and can revoke it; a rejected commit does not count; k = 2 revokes the assignment.
+  - Invalid trigger values are rejected.
+  - Step-mode back-compatibility.
 
-The full campaign suite (`-k campaign0` plus this file) gives 168 passed. That is the 141 existing tests plus the 27 new ones, with no regressions.
+The full campaign suite (`-k campaign0` plus this file) gives 173 passed. That is the 141 existing tests plus the 32 new ones, with no regressions. The encoders were not changed by the amendment. The d1 code audited at `6d918e52` is unchanged, and event entries have the same keys.
 
 ## Known limitations and items for the coordinator
 - **Staleness is detected by the world.** Every commit or use is validated physically against the current requirements, so a stale own record yields an explicit rejection reason (`missing_edge`, `slot_unavailable`, `capacity`, `stale_dependency`), not silent harm. `dep_naive_reuse` also never re-applies a used record. Naive reuse therefore loses almost nothing when events are the only source of staleness. Its losses come from foreign request mismatches that are accepted physically: routes to another goal, earlier-map routes that are valid but not shortest, and valid-but-slow earlier-shift selections.
   - If Stage B/C needs staleness to cost success, either make naive literal (it loops after revisions) or add an event kind whose stale result stays physically valid but suboptimal, such as an edge that becomes *slower*.
-- **Event exposure depends on speed.** Faster references finish, or deliver, before a scheduled event more often: 47% vs 83% of s3 reuse episodes see the event at foreign = 4 vs 0. Paired comparisons share worlds but not event exposure. A progress-triggered event, for example after the Nth commit, would equalize exposure but departs from the spec's "public step count".
+- **Event exposure (resolved by the P1 amendment).** Under the step trigger, faster references finish or deliver before a scheduled event more often: 47% vs 83% of s3 reuse episodes see the event at foreign = 4 vs 0. Use `event_trigger="progress"` (now the generator default) for learned-vs-reference comparisons of revision behaviour.
+- **Progress-trigger caveat.** k = 2 counts the second completion commit, whatever it is. It is normally the assignment commit. For an agent that revises its selection before assigning, it is the re-selection, and the event kind, chosen for k = 2, may then have nothing to invalidate. Exposure is still defined identically for every agent.
 - **Foreign snapshots reveal facts before inspection.** Like any public record, they expose the item facts and requirements of the instance they solved. The d1 encoder exposes only relations, and request match needs a completed inspection.
 - **No reuse leverage without foreign records or events.** With foreign = 0 and no events, reuse and recompute differ by under 1.5% in cost. The leverage region is foreign-record conditions and revision- or event-heavy worlds.
 - **The revision search is a heuristic.** It excludes the longest-duration item of a selection shown dead by an exhaustive infeasible CSP. About 1–5% of worlds fail for recompute and reuse alike, although the planted plan exists.

@@ -14,7 +14,7 @@ from topoformer.campaign02_world import Action
 from topoformer.campaign03_depworld import (ATTEMPT_BLOCK, EVENT_KINDS, FOREIGN_KINDS, REASONS, REFERENCE_MODES,
     DepItem, DepReference, DepSpec, DepWorkshop, action_catalog, action_key, applicable, audit_record,
     current_request, depworld_executor, encode_action_d1, encode_observation_d1, encode_public, generate_depworld,
-    overlaps, relevant_dependencies, selection_id)
+    overlaps, relevant_dependencies, selection_id, PROGRESS_KINDS)
 
 EXEC = partial(depworld_executor, execute_call=execute)
 DEV = 2_000_000_000  # development seeds only
@@ -102,12 +102,16 @@ def _post_event(spec):
     return capacity, deadline, closed, edges
 
 
+@pytest.mark.parametrize("trigger", ["step", "progress"])
 @pytest.mark.parametrize("size", [dict(categories=3, choices=2, locations=6, slots=5),
                                   dict(categories=3, choices=3, locations=7, slots=6)])
-def test_planted_feasible_before_and_after_every_event_kind(size):
+def test_planted_feasible_before_and_after_every_event_kind(size, trigger):
     kinds = set()
     for seed in range(DEV, DEV + 60):
-        spec = generate_depworld(seed, p_event=1.0, foreign_records=2, **size)
+        spec = generate_depworld(seed, p_event=1.0, foreign_records=2, event_trigger=trigger, **size)
+        assert spec.event_trigger == trigger
+        if trigger == "progress":
+            assert spec.event[1] in (1, 2) and spec.event[0] in PROGRESS_KINDS[spec.event[1]]
         pre = (spec.capacity, spec.deadline, set(spec.closed_slots), list(spec.edges))
         assert _feasible(spec, *pre), seed
         assert spec.event is not None
@@ -592,3 +596,69 @@ def test_evaluator_episode_counts_accept_depworld_history():
     assert counts["dep_uses"] == len(outcome["reuse_audit"]) and counts["reductions"] == len(outcome["reductions"])
     assert counts["return_use_attempts"] >= counts["dep_uses"]
     json.dumps(counts)
+
+
+# --- progress-triggered events: exposure independent of agent speed -------------------------
+
+def _completion_steps(outcome):
+    return [h["step"] for h in outcome["history"] if h["feedback"].get("status") == "success"
+            and ("selection_id" in h["feedback"] or "assignment_id" in h["feedback"])]
+
+
+def test_progress_trigger_exposure_is_identical_across_references():
+    reached_by_mode = {m: 0 for m in REFERENCE_MODES}
+    kinds = set()
+    for i in range(80):
+        spec = generate_depworld(DEV + 3000 + i, p_event=1.0, foreign_records=(0, 2, 4)[i % 3],
+                                 event_trigger="progress")
+        k = spec.event[1]
+        kinds.add((k, spec.event[0]))
+        for mode in REFERENCE_MODES:
+            out = run(spec, mode, i)
+            steps = _completion_steps(out)
+            reached = len(steps) >= k
+            # Every reference that makes the k-th completion commit experiences the event,
+            # at exactly that step; none experiences it otherwise.
+            assert bool(out["events"]) == reached, (i, mode)
+            if reached:
+                reached_by_mode[mode] += 1
+                assert out["events"][0]["step"] == steps[k - 1], (i, mode)
+                assert out["events"][0]["kind"] == spec.event[0]
+    assert all(v > 40 for v in reached_by_mode.values()), reached_by_mode
+    # solver references all reach k whenever they commit anything: identical exposure
+    assert len({reached_by_mode[m] for m in ("recompute", "reuse", "reuse_norevise")}) == 1
+    assert {k for k, _ in kinds} == {1, 2}
+    assert {kind for _, kind in kinds} == set(EVENT_KINDS)
+
+
+def test_progress_trigger_semantics_on_tiny_world():
+    # k=1 fires right after the selection commit, even when the assignment is not reached
+    env = DepWorkshop(tiny(event=("capacity_reduced", 1, 4), event_trigger="progress"), executor=EXEC)
+    inspect_all(env)
+    o = env.step(Action("think"))
+    assert not o.events
+    o = commit(env, ["A1", "B2"])  # weight 5 > 4: revoked immediately
+    assert o.feedback["event"]["kind"] == "capacity_reduced" and o.events[0]["revoked"] == ["selection"]
+    assert o.selection_id is None
+    # a rejected commit is not a completion
+    env = DepWorkshop(tiny(event=("slot_closed", 2, 4), event_trigger="progress"), executor=EXEC)
+    inspect_all(env)
+    commit(env, ["A1", "B2"])
+    env.step(Action("choose_slot", {"item": "A1", "slot": 0}))
+    env.step(Action("choose_slot", {"item": "B2", "slot": 1}))
+    o = env.step(Action("commit_assignment"))
+    assert o.feedback["reason"] == "slot_conflict" and not o.events
+    env.step(Action("choose_slot", {"item": "B2", "slot": 4}))
+    o = env.step(Action("commit_assignment"))
+    assert o.events and o.events[0]["revoked"] == ["assignment"] and o.assignment is None
+    with pytest.raises(ValueError):
+        tiny(event_trigger="sometimes")
+    with pytest.raises(ValueError):
+        generate_depworld(DEV, event_trigger="sometimes")
+
+
+def test_step_trigger_is_backward_compatible():
+    spec = generate_depworld(DEV + 7, p_event=1.0, event_trigger="step")
+    n = 9
+    assert spec.event_trigger == "step" and n + 9 <= spec.event[1] <= n + 19
+    assert tiny().event_trigger == "step"

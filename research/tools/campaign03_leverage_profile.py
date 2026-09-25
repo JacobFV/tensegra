@@ -83,13 +83,14 @@ def main():
                                  **summarize(outcomes, specs[0].work_price)})
     wp = [f"utility@{p:g}" for p in WORK_PRICES]
     header = ("size", "p_ev", "forgn", "reference", "succ", "util", *[w.replace("utility", "u") for w in wp],
-              "cost", "work", "calls", "steps", "revis", "rev_ep", "revoke", "badUse", "frgnUse")
+              "cost", "work", "calls", "steps", "revis", "rev_ep", "evFire", "revoke", "badUse", "frgnUse")
     print(" ".join(f"{h:>10}" for h in header))
     for r in rows:
         vals = (r["size"], r["p_event"], r["foreign"], r["reference"], f"{r['success']:.3f}", f"{r['utility']:.4f}",
                 *[f"{r[w]:.4f}" for w in wp], f"{r['cost']:.4f}", f"{r['work']:.1f}", f"{r['calls']:.2f}",
                 f"{r['steps']:.1f}", f"{r['revisions']:.2f}", f"{r['revised_episodes']:.2f}",
-                f"{r['revocation_episodes']:.2f}", f"{r['invalid_uses']:.2f}", f"{r['foreign_uses']:.2f}")
+                f"{r['event_fired']:.2f}", f"{r['revocation_episodes']:.2f}", f"{r['invalid_uses']:.2f}",
+                f"{r['foreign_uses']:.2f}")
         print(" ".join(f"{v:>10}" for v in vals))
     print(f"# wall seconds {time.time() - start:.1f}; examples per cell {args.examples}; seeds from {SEED_BASE}")
     gate(rows)
@@ -133,6 +134,16 @@ def gate(rows):
     print(f"# G3 greedy vs reuse pooled: success {g['success']:.3f} vs {u['success']:.3f}")
     nr = pool(every, "reuse_norevise")
     print(f"# G4 reuse without revision vs reuse pooled: success {nr['success']:.3f} vs {u['success']:.3f}")
+    events = [r for r in rows if r["p_event"] > 0]
+    for ref in REFERENCE_MODES:
+        sel = [r for r in events if r["reference"] == ref]
+        n = sum(r["n"] for r in sel)
+        fired = sum(r["event_fired"] * r["n"] for r in sel) / n
+        revoked = sum(r["revocation_episodes"] * r["n"] for r in sel) / n
+        per_p = {p: sum(r["event_fired"] * r["n"] for r in sel if r["p_event"] == p) /
+                 sum(r["n"] for r in sel if r["p_event"] == p) for p in sorted({r["p_event"] for r in sel})}
+        print(f"# exposure {ref}: event fired {fired:.3f} of p_event>0 episodes "
+              f"({', '.join(f'p={p:g}: {v:.3f}' for p, v in per_p.items())}); revocation episodes {revoked:.3f}")
 
 
 if __name__ == "__main__":
