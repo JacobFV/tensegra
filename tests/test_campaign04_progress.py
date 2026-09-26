@@ -417,3 +417,25 @@ def test_clone_branch_copies_env_hidden_and_tracker():
     assert t2.summary() == tracker.summary() and t2 is not tracker
     assert e2.observe().to_dict() == env.observe().to_dict() and e2._executor is env._executor
     assert clone_branch(env)[1:] == (None, None)
+
+
+def test_rollout_mask_fn_matches_tracker_mask():
+    import random
+    from tensegra.campaign03_depworld import DepWorkshop, generate_depworld, action_catalog
+    from tensegra.campaign04_progress import ProgressTracker, rollout_mask_fn
+    rng = random.Random(3)
+    env = DepWorkshop(generate_depworld(2_000_123))
+    obs = env.observe()
+    fn = rollout_mask_fn(1)
+    ref = ProgressTracker(obs)
+    history = []
+    for _ in range(40):
+        cands = action_catalog(obs)
+        assert fn(0, obs, cands, history) == ref.mask(cands)
+        a = cands[0] if rng.random() < 0.5 else rng.choice(cands)  # bias toward repeats
+        after = env.step(a)
+        history.append((obs, a, after))
+        ref.update(after, a)
+        obs = after
+        if obs.done:
+            break

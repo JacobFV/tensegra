@@ -349,7 +349,9 @@ def test_registered_mask_rule_in_training(monkeypatch):
 
 
 def test_progress_v1_mask_absent_module_is_a_clear_error(monkeypatch):
+    import tensegra
     monkeypatch.setitem(sys.modules, "tensegra.campaign04_progress", None)
+    monkeypatch.delattr(tensegra, "campaign04_progress", raising=False)  # the module now exists (e04-infra)
     with pytest.raises(RuntimeError, match="campaign04_progress"):
         train(config(rollout_mask="progress_v1"), updates=1)
 
@@ -419,7 +421,9 @@ def test_population_flows_a2_options_teacher_and_dual(tmp_path):
 
 def test_population_refuses_an_unbuildable_mask_rule_before_training(tmp_path, monkeypatch):
     from tensegra.campaign02_population import PopulationConfig, PopulationRun
+    import tensegra
     monkeypatch.setitem(sys.modules, "tensegra.campaign04_progress", None)
+    monkeypatch.delattr(tensegra, "campaign04_progress", raising=False)  # the module now exists (e04-infra)
     raw = {"mode": "single", "population_seed": 7, "initialization_seeds": [70, 71, 72, 73, 74, 75],
            "teacher": "dep_reuse", "world_family": "depworld", "policy": {"interface": "legacy", "feature_version": "d1"},
            "world_mix": [WORLD], "train": {"width": 8, "device": "cpu", "batch_size": 2, "rollout_mode": "batched",

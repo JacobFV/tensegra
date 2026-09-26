@@ -39,3 +39,10 @@
   - **[protocol-B1.md](protocol-B1.md)** registered before any full-ladder run: B-H1…B-H6, best rung fixed as L4, transfer floor .8 × π* success.
   - The evaluation got first-action probe-rate metrics for B-H4 (added before any ladder output).
 - 2026-09-26T19:27Z: B1 labels launched (source-28152106). The first attempt failed in 0 s because launch-cmd's REMAINDER parsing captured the cap options. The helper is fixed; the failed receipt is kept as b-labels-launchfail-process (charged).
+- 2026-09-26T19:45Z: **Infra merged** (9559016b).
+  - Diagnostic v1 reproduces 52/52 registered P2a cells and agrees 99.2% per step; the documented differences are repeated identical calls and same-content retrievals now counted. The references score 0.
+  - Clone and cache are result-identical (0/49,346 mismatches).
+  - Root added `campaign04_progress.rollout_mask_fn`, the adapter matching A2's `progress_v1` contract; the infra tracker API differs from the stub contract. Two A2 tests that assumed the module was absent were fixed.
+  - The full suite is 363/363 (metered). An A2-dep CPU smoke masks actions (33 masked decisions in a batch).
+  - Diagnostic cost policy (F16) is registered in [protocol-A1.md](protocol-A1.md).
+- 2026-09-26T19:46Z: **B1 ladder trainings done:** 15/15 exit 0, 7,830 core-s total (above the 6k estimate). Evaluations and references launched next.

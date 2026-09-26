@@ -439,3 +439,21 @@ def classify_episode(observations, actions, **kwargs) -> ProgressTracker:
     for o, a in zip(observations[1:], actions):
         tracker.update(o, a)
     return tracker
+
+
+def rollout_mask_fn(batch_size: int):
+    """A2-dep adapter (campaign02_training ROLLOUT_MASKS["progress_v1"]): one ProgressTracker per
+    episode index, created from the episode's first observation; the training hook passes
+    ``history`` as (before, action, after) triples. Returns the R-mask flags (True = masked)
+    at the current public state, identical to campaign04_deploy's r_mask / masked_sampled."""
+    trackers: list = [None] * batch_size
+    consumed = [0] * batch_size
+
+    def mask(index, observation, candidates, history):
+        if trackers[index] is None:
+            trackers[index] = ProgressTracker(history[0][0] if history else observation)
+        for before, action, after in history[consumed[index]:]:
+            trackers[index].update(after, action)
+        consumed[index] = len(history)
+        return trackers[index].mask(candidates)
+    return mask
