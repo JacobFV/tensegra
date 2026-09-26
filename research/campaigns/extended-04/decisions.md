@@ -84,3 +84,12 @@
 - 2026-09-26T20:36Z: Track C label chunks 0–15 done for all 6 bases (12 jobs, exit 0, ~5.3k core-s < 8k), so the third chunk (16–23) was launched per protocol-C1.
 - 2026-09-26T21:00Z: **Correction to the 19:55Z B-H6 note.** The claim that the "L1–L4 value heads are trained toward V*" is **wrong**. No loss uses V*. The value head is trained on the Monte-Carlo return-to-go of the **sampled** training rollouts; only the Q head uses Q* (in L4). The B1 numbers also show value-vs-own-return and value-vs-V* errors to be nearly equal, and the in-distribution error is not small. The live hypotheses are a sampled-training vs greedy-evaluation continuation mismatch, generalization, or fit/capacity.
   - **B2** ([protocol-B2.md](protocol-B2.md), registered before any run by the builder) adds a stop-gradient `v_own` head trained on own-greedy returns. B1 parameters and evaluation are bit-identical when it is on. Merged (268c21ae); launched with 6 runs (L4 and L1 × 3 seeds, ~4k core-s).
+- 2026-09-26T21:05Z: **Independent B1 audit merged** (60785946).
+  - The rescoring matches b1-score.json exactly. Labels are verified by brute force (8 configs, 2e-10) and Monte Carlo (178 tests). There are 0 label conflicts across 9,786 histories, splits are disjoint by generator parameters, inputs contain 0 leaks (2,525 steps rebuilt from public information), and streams and initializations match across rungs.
+  - **Corrections adopted for the report:**
+    - **B-H1** is worded as "L1-level action-set supervision and above beats outcome-only actor-critic, which is stuck at a non-probing local optimum (prop → exact_b1 → commit)".
+    - **B-H2:** only L0→L1 is beyond noise; L1–L4 are all 1.75–4.06 with SE ≈ 1.
+    - **B-H4 and B-H5 are "supported when the held-out splits are pooled"**. On heldout_comp alone both fail in 3/3 seeds: uniquely-optimal probe rate .64–.77, justified-switch ratio .59–.67.
+    - **B-H6's cause is held-out generalization.** The value head over-predicts by +.03 to +.23 R, worst at k = 4, while being calibrated in-distribution (L4 dev .046) and on heldout_price. It is not a V* target, and not a sampled-vs-greedy mismatch (within ±.03). B2 still runs as registered; its "not continuation" outcome is now the expected one.
+    - The L0 identical behaviour holds on 3 of 5 splits.
+  - Audit CPU: 86 core-s metered, plus ~400 core-s local (estimate).
