@@ -97,3 +97,4 @@
   - Development readings (label development split; not an evaluation): ECE .011–.06.
   - The registered one-step gain over greedy + R-mask is ≈ 0 on the bootstraps and on P1-RL r0/r1 (several seeds registered m = ∞, i.e. never intervene). It is .017–.020 on P1-RL r2.
   - **Track C evaluation launched:** 24 tier-1 jobs (6 bases × 4 conditions; branch evaluation on the IID conditions) plus 6 causal jobs, on evaluation worlds from 161M. B2 evaluations launched: 6 jobs.
+- 2026-09-26T20:55Z: **A2 training done** (5 runs, exit 0, ~4.5–5k core-s each). Deployment rule (P2a rule): reh/imit/crit/dep deploy their finals (30/30 qualify). **a2-ent deploys attempt 24** (24/30 qualify). Screening configs (configs/campaign04/a2s-*.json): 9 policies + dep_reuse; seeds 140M per protocol-A2; modes greedy/sampled/r_mask. Launched.

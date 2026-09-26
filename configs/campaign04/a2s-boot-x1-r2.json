@@ -1,0 +1,342 @@
+{
+ "evaluation_batch": 32,
+ "references": [],
+ "reference_compute_tariff": 1.0,
+ "world_family": "depworld",
+ "progress_diagnostic": true,
+ "solver_cache": true,
+ "trace_observations": false,
+ "diagnostic_compute_units": 0.0,
+ "campaign": "extended-04",
+ "checkpoints": [
+  {
+   "name": "boot-x1-r2",
+   "path": "/home/brand/tensegra-campaign03/results/p1-boot-x1-r2/checkpoints/round-0-slot-5-attempt-5.pt",
+   "sha256": "74ff10a686c04b4face63ac2e666add7fd5a3c17509ec78c81f8aa954b5f2fc9",
+   "family": "bootstrap",
+   "lineage": 2,
+   "arm": "x1",
+   "feature_version": "d1"
+  }
+ ],
+ "address_namespace": "e04a2",
+ "experiment": "A2 screening (protocol-A2, exploratory)",
+ "conditions": [
+  {
+   "name": "iid_f0-greedy",
+   "base_condition": "iid_f0",
+   "mode": "greedy",
+   "world_family": "depworld",
+   "seed_start": 140000000,
+   "examples": 256,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 0,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "greedy",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "iid_f0-sampled",
+   "base_condition": "iid_f0",
+   "mode": "sampled",
+   "world_family": "depworld",
+   "seed_start": 140000000,
+   "examples": 256,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 0,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "sampled",
+   "progress_diagnostic": true,
+   "references": [],
+   "sampling_seed": 20260927
+  },
+  {
+   "name": "iid_f0-r_mask",
+   "base_condition": "iid_f0",
+   "mode": "r_mask",
+   "world_family": "depworld",
+   "seed_start": 140000000,
+   "examples": 256,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 0,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "r_mask",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "iid_f2-greedy",
+   "base_condition": "iid_f2",
+   "mode": "greedy",
+   "world_family": "depworld",
+   "seed_start": 140100000,
+   "examples": 256,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 2,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "greedy",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "iid_f2-sampled",
+   "base_condition": "iid_f2",
+   "mode": "sampled",
+   "world_family": "depworld",
+   "seed_start": 140100000,
+   "examples": 256,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 2,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "sampled",
+   "progress_diagnostic": true,
+   "references": [],
+   "sampling_seed": 20260927
+  },
+  {
+   "name": "iid_f2-r_mask",
+   "base_condition": "iid_f2",
+   "mode": "r_mask",
+   "world_family": "depworld",
+   "seed_start": 140100000,
+   "examples": 256,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 2,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "r_mask",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "events_train_kinds_p1-greedy",
+   "base_condition": "events_train_kinds_p1",
+   "mode": "greedy",
+   "world_family": "depworld",
+   "seed_start": 140200000,
+   "examples": 256,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 1.0,
+    "foreign_records": 2,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "greedy",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "events_train_kinds_p1-sampled",
+   "base_condition": "events_train_kinds_p1",
+   "mode": "sampled",
+   "world_family": "depworld",
+   "seed_start": 140200000,
+   "examples": 256,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 1.0,
+    "foreign_records": 2,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "sampled",
+   "progress_diagnostic": true,
+   "references": [],
+   "sampling_seed": 20260927
+  },
+  {
+   "name": "events_train_kinds_p1-r_mask",
+   "base_condition": "events_train_kinds_p1",
+   "mode": "r_mask",
+   "world_family": "depworld",
+   "seed_start": 140200000,
+   "examples": 256,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 1.0,
+    "foreign_records": 2,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "r_mask",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "foreign4-greedy",
+   "base_condition": "foreign4",
+   "mode": "greedy",
+   "world_family": "depworld",
+   "seed_start": 140300000,
+   "examples": 256,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 4,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "greedy",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "foreign4-sampled",
+   "base_condition": "foreign4",
+   "mode": "sampled",
+   "world_family": "depworld",
+   "seed_start": 140300000,
+   "examples": 256,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 4,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "sampled",
+   "progress_diagnostic": true,
+   "references": [],
+   "sampling_seed": 20260927
+  },
+  {
+   "name": "foreign4-r_mask",
+   "base_condition": "foreign4",
+   "mode": "r_mask",
+   "world_family": "depworld",
+   "seed_start": 140300000,
+   "examples": 256,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 4,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "r_mask",
+   "progress_diagnostic": true,
+   "references": []
+  }
+ ]
+}
