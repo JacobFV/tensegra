@@ -1,0 +1,6508 @@
+{
+ "gate": {
+  "d1_all_distinctions": true,
+  "ablations_exact": true,
+  "catalog": true,
+  "functional": true,
+  "dimensions_equal": true,
+  "pass": true
+ },
+ "summary": [
+  {
+   "distinction": 1,
+   "pairs": 12,
+   "passed": 12,
+   "d1_fail": [],
+   "ablation_fail": [],
+   "precondition_fail": []
+  },
+  {
+   "distinction": 2,
+   "pairs": 6,
+   "passed": 6,
+   "d1_fail": [],
+   "ablation_fail": [],
+   "precondition_fail": []
+  },
+  {
+   "distinction": 3,
+   "pairs": 7,
+   "passed": 7,
+   "d1_fail": [],
+   "ablation_fail": [],
+   "precondition_fail": []
+  },
+  {
+   "distinction": 4,
+   "pairs": 14,
+   "passed": 14,
+   "d1_fail": [],
+   "ablation_fail": [],
+   "precondition_fail": []
+  },
+  {
+   "distinction": 5,
+   "pairs": 8,
+   "passed": 8,
+   "d1_fail": [],
+   "ablation_fail": [],
+   "precondition_fail": []
+  },
+  {
+   "distinction": 6,
+   "pairs": 14,
+   "passed": 14,
+   "d1_fail": [],
+   "ablation_fail": [],
+   "precondition_fail": []
+  },
+  {
+   "distinction": 7,
+   "pairs": 7,
+   "passed": 7,
+   "d1_fail": [],
+   "ablation_fail": [],
+   "precondition_fail": []
+  },
+  {
+   "distinction": 8,
+   "pairs": 10,
+   "passed": 10,
+   "d1_fail": [],
+   "ablation_fail": [],
+   "precondition_fail": []
+  },
+  {
+   "distinction": 9,
+   "pairs": 10,
+   "passed": 10,
+   "d1_fail": [],
+   "ablation_fail": [],
+   "precondition_fail": []
+  },
+  {
+   "distinction": 10,
+   "pairs": 12,
+   "passed": 12,
+   "d1_fail": [],
+   "ablation_fail": [],
+   "precondition_fail": []
+  }
+ ],
+ "pairs": [
+  {
+   "id": "1a-unretrieved",
+   "distinction": 1,
+   "description": "use_return as select: own current result vs foreign registered same-type (subset_earlier), unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r244caf9c4dabb481\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rdb5b5fab8f4d3e27\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "all_registered": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "1b-unretrieved",
+   "distinction": 1,
+   "description": "use_return as select: own current result vs foreign registered same-type (subset_other_order), unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r244caf9c4dabb481\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r73ab48767734d7c1\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "all_registered": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "1c-unretrieved",
+   "distinction": 1,
+   "description": "use_return as select: own current result vs foreign registered same-type (subset_version_mismatch), unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r244caf9c4dabb481\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rc7fde805ec99108d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.dependency_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.dependency_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "all_registered": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "1d-unretrieved",
+   "distinction": 1,
+   "description": "use_return as assign: own current result vs foreign registered same-type (csp_other_selection), unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r89e7d15f17362f25\"}]",
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r7253edc618187993\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.selection_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.selection_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "all_registered": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "1e-unretrieved",
+   "distinction": 1,
+   "description": "use_return as route: own current result vs foreign registered same-type (route_other_goal), unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"re3eff9c0cf44dd3f\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r309d6b79965eda32\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "all_registered": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "1f-unretrieved",
+   "distinction": 1,
+   "description": "use_return as route: own current result vs foreign registered same-type (route_earlier), unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"re3eff9c0cf44dd3f\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rcdcc69292f45e678\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "all_registered": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4a-unretrieved",
+   "distinction": 4,
+   "description": "use_return as select: foreign applicable (subset_current) vs foreign not applicable (subset_version_mismatch): dependency-only mismatch, unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rdda1494c73cf256d\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rc7fde805ec99108d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.dependency_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.dependency_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4b-unretrieved",
+   "distinction": 4,
+   "description": "use_return as select: foreign applicable (subset_current) vs foreign not applicable (subset_earlier): request + dependency mismatch, unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rdda1494c73cf256d\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rdb5b5fab8f4d3e27\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4c-unretrieved",
+   "distinction": 4,
+   "description": "use_return as select: foreign applicable (subset_current) vs foreign not applicable (subset_other_order): request-only mismatch, unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rdda1494c73cf256d\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r73ab48767734d7c1\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4d-unretrieved",
+   "distinction": 4,
+   "description": "use_return as route: foreign applicable (route_current) vs foreign not applicable (route_other_goal): request-only mismatch (other goal), unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rdae445508201e2bd\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r309d6b79965eda32\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4e-unretrieved",
+   "distinction": 4,
+   "description": "use_return as route: foreign applicable (route_current) vs foreign not applicable (route_earlier): earlier map, version 0, unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rdae445508201e2bd\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rcdcc69292f45e678\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4f-unretrieved",
+   "distinction": 4,
+   "description": "use_return as route: foreign applicable (route_current) vs foreign not applicable (route_slow): request-only mismatch (wrong edge weight), unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rdae445508201e2bd\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r9d2c67eda13ffe79\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4g-unretrieved",
+   "distinction": 4,
+   "description": "use_return as assign: foreign applicable (csp_current) vs foreign not applicable (csp_other_selection): other selection, unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r2fa91425cb008853\"}]",
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r7253edc618187993\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.selection_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.selection_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "9o-a-unretrieved",
+   "distinction": 9,
+   "description": "ownership/age invariance: own current select result vs foreign APPLICABLE subset_current, unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r244caf9c4dabb481\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rdda1494c73cf256d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": "Age and ownership are irrelevant to applicability: the rows must be identical."
+  },
+  {
+   "id": "9o-b-unretrieved",
+   "distinction": 9,
+   "description": "ownership/age invariance: own current assign result vs foreign APPLICABLE csp_current, unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r89e7d15f17362f25\"}]",
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r2fa91425cb008853\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": "Age and ownership are irrelevant to applicability: the rows must be identical."
+  },
+  {
+   "id": "9o-c-unretrieved",
+   "distinction": 9,
+   "description": "ownership/age invariance: own current route result vs foreign APPLICABLE route_current, unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"re3eff9c0cf44dd3f\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rdae445508201e2bd\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": "Age and ownership are irrelevant to applicability: the rows must be identical."
+  },
+  {
+   "id": "5a-unretrieved",
+   "distinction": 5,
+   "description": "use_return as select: csp record (wrong type) vs subset record (right type), unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r89e7d15f17362f25\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r244caf9c4dabb481\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "primitive.constrained_subset",
+      "primitive.csp",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match",
+      "record.selection_match",
+      "record.type_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "primitive.constrained_subset",
+      "primitive.csp",
+      "record.type_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "primitive.constrained_subset",
+      "primitive.csp",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match",
+      "record.selection_match",
+      "record.type_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "5b-unretrieved",
+   "distinction": 5,
+   "description": "use_return as route: foreign applicable csp (wrong type) vs applicable route, unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r2fa91425cb008853\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rdae445508201e2bd\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "primitive.csp",
+      "primitive.shortest_path",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match",
+      "record.selection_match",
+      "record.type_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "primitive.csp",
+      "primitive.shortest_path",
+      "record.type_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "primitive.csp",
+      "primitive.shortest_path",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match",
+      "record.selection_match",
+      "record.type_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "5c-unretrieved",
+   "distinction": 5,
+   "description": "same subset record: use_return as assign (wrong) vs as select (right), unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r244caf9c4dabb481\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r244caf9c4dabb481\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match",
+      "record.selection_match",
+      "record.type_match",
+      "use.assign",
+      "use.select"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.type_match",
+      "use.assign",
+      "use.select"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match",
+      "record.selection_match",
+      "record.type_match",
+      "use.assign",
+      "use.select"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Trivially separated by the use one-hot; 5a/5b are the informative type pairs."
+  },
+  {
+   "id": "5d-unretrieved",
+   "distinction": 5,
+   "description": "type relation only: use_return as select of a csp record vs of a route record (both wrong type), unretrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; nothing retrieved",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r89e7d15f17362f25\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"re3eff9c0cf44dd3f\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "primitive.csp",
+      "primitive.shortest_path"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "primitive.csp",
+      "primitive.shortest_path"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "primitive.csp",
+      "primitive.shortest_path"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Both wrong type; they differ in primitive one-hot. Reported for completeness."
+  },
+  {
+   "id": "1a-retrieved",
+   "distinction": 1,
+   "description": "use_return as select: own current result vs foreign registered same-type (subset_earlier), retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r244caf9c4dabb481\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rdb5b5fab8f4d3e27\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "all_registered": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "1b-retrieved",
+   "distinction": 1,
+   "description": "use_return as select: own current result vs foreign registered same-type (subset_other_order), retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r244caf9c4dabb481\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r73ab48767734d7c1\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "all_registered": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "1c-retrieved",
+   "distinction": 1,
+   "description": "use_return as select: own current result vs foreign registered same-type (subset_version_mismatch), retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r244caf9c4dabb481\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rc7fde805ec99108d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.dependency_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.dependency_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "all_registered": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "1d-retrieved",
+   "distinction": 1,
+   "description": "use_return as assign: own current result vs foreign registered same-type (csp_other_selection), retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r89e7d15f17362f25\"}]",
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r7253edc618187993\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.csp_items_equal_selection",
+      "payload.finish_or_total_duration",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.selection_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.csp_items_equal_selection",
+      "payload.finish_or_total_duration",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.selection_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "all_registered": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "1e-retrieved",
+   "distinction": 1,
+   "description": "use_return as route: own current result vs foreign registered same-type (route_other_goal), retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"re3eff9c0cf44dd3f\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r309d6b79965eda32\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance",
+      "payload.route_ends_at_destination",
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance",
+      "payload.route_ends_at_destination",
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "all_registered": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "1f-retrieved",
+   "distinction": 1,
+   "description": "use_return as route: own current result vs foreign registered same-type (route_earlier), retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"re3eff9c0cf44dd3f\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rcdcc69292f45e678\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "all_registered": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4a-retrieved",
+   "distinction": 4,
+   "description": "use_return as select: foreign applicable (subset_current) vs foreign not applicable (subset_version_mismatch): dependency-only mismatch, retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rdda1494c73cf256d\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rc7fde805ec99108d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.dependency_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.dependency_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4b-retrieved",
+   "distinction": 4,
+   "description": "use_return as select: foreign applicable (subset_current) vs foreign not applicable (subset_earlier): request + dependency mismatch, retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rdda1494c73cf256d\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rdb5b5fab8f4d3e27\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4c-retrieved",
+   "distinction": 4,
+   "description": "use_return as select: foreign applicable (subset_current) vs foreign not applicable (subset_other_order): request-only mismatch, retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rdda1494c73cf256d\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r73ab48767734d7c1\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4d-retrieved",
+   "distinction": 4,
+   "description": "use_return as route: foreign applicable (route_current) vs foreign not applicable (route_other_goal): request-only mismatch (other goal), retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rdae445508201e2bd\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r309d6b79965eda32\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance",
+      "payload.route_ends_at_destination",
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance",
+      "payload.route_ends_at_destination",
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4e-retrieved",
+   "distinction": 4,
+   "description": "use_return as route: foreign applicable (route_current) vs foreign not applicable (route_earlier): earlier map, version 0, retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rdae445508201e2bd\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rcdcc69292f45e678\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4f-retrieved",
+   "distinction": 4,
+   "description": "use_return as route: foreign applicable (route_current) vs foreign not applicable (route_slow): request-only mismatch (wrong edge weight), retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rdae445508201e2bd\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r9d2c67eda13ffe79\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance",
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance",
+      "record.canonical_match",
+      "record.request_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "4g-retrieved",
+   "distinction": 4,
+   "description": "use_return as assign: foreign applicable (csp_current) vs foreign not applicable (csp_other_selection): other selection, retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r2fa91425cb008853\"}]",
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r7253edc618187993\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.csp_items_equal_selection",
+      "payload.finish_or_total_duration",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.selection_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.csp_items_equal_selection",
+      "payload.finish_or_total_duration",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.selection_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "9o-a-retrieved",
+   "distinction": 9,
+   "description": "ownership/age invariance: own current select result vs foreign APPLICABLE subset_current, retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r244caf9c4dabb481\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rdda1494c73cf256d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": "Age and ownership are irrelevant to applicability: the rows must be identical."
+  },
+  {
+   "id": "9o-b-retrieved",
+   "distinction": 9,
+   "description": "ownership/age invariance: own current assign result vs foreign APPLICABLE csp_current, retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r89e7d15f17362f25\"}]",
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r2fa91425cb008853\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": "Age and ownership are irrelevant to applicability: the rows must be identical."
+  },
+  {
+   "id": "9o-c-retrieved",
+   "distinction": 9,
+   "description": "ownership/age invariance: own current route result vs foreign APPLICABLE route_current, retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"re3eff9c0cf44dd3f\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rdae445508201e2bd\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": "Age and ownership are irrelevant to applicability: the rows must be identical."
+  },
+  {
+   "id": "5a-retrieved",
+   "distinction": 5,
+   "description": "use_return as select: csp record (wrong type) vs subset record (right type), retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r89e7d15f17362f25\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r244caf9c4dabb481\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.csp_items_equal_selection",
+      "primitive.constrained_subset",
+      "primitive.csp",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match",
+      "record.selection_match",
+      "record.type_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "primitive.constrained_subset",
+      "primitive.csp",
+      "record.type_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.csp_items_equal_selection",
+      "primitive.constrained_subset",
+      "primitive.csp",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match",
+      "record.selection_match",
+      "record.type_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "5b-retrieved",
+   "distinction": 5,
+   "description": "use_return as route: foreign applicable csp (wrong type) vs applicable route, retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r2fa91425cb008853\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rdae445508201e2bd\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.csp_items_equal_selection",
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "payload.route_distance",
+      "payload.route_ends_at_destination",
+      "payload.route_meets_deadline",
+      "payload.route_starts_at_position",
+      "primitive.csp",
+      "primitive.shortest_path",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match",
+      "record.selection_match",
+      "record.type_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "payload.route_distance",
+      "payload.route_meets_deadline",
+      "primitive.csp",
+      "primitive.shortest_path",
+      "record.type_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.csp_items_equal_selection",
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "payload.route_distance",
+      "payload.route_ends_at_destination",
+      "payload.route_meets_deadline",
+      "payload.route_starts_at_position",
+      "primitive.csp",
+      "primitive.shortest_path",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match",
+      "record.selection_match",
+      "record.type_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "5c-retrieved",
+   "distinction": 5,
+   "description": "same subset record: use_return as assign (wrong) vs as select (right), retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r244caf9c4dabb481\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r244caf9c4dabb481\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match",
+      "record.selection_match",
+      "record.type_match",
+      "use.assign",
+      "use.select"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.type_match",
+      "use.assign",
+      "use.select"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match",
+      "record.selection_match",
+      "record.type_match",
+      "use.assign",
+      "use.select"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Trivially separated by the use one-hot; 5a/5b are the informative type pairs."
+  },
+  {
+   "id": "5d-retrieved",
+   "distinction": 5,
+   "description": "type relation only: use_return as select of a csp record vs of a route record (both wrong type), retrieved",
+   "construction": "hand world, 11 registered foreign records; inspect all, commit {A1,B1}, assign A1:0 B1:2, own subset/csp/route drafts+calls; then retrieve every record",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r89e7d15f17362f25\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"re3eff9c0cf44dd3f\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.csp_items_equal_selection",
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "payload.route_distance",
+      "payload.route_ends_at_destination",
+      "payload.route_meets_deadline",
+      "payload.route_starts_at_position",
+      "primitive.csp",
+      "primitive.shortest_path"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "payload.route_distance",
+      "payload.route_meets_deadline",
+      "primitive.csp",
+      "primitive.shortest_path"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.csp_items_equal_selection",
+      "payload.finish_or_total_duration",
+      "payload.meets_bound_or_selection_valid",
+      "payload.route_distance",
+      "payload.route_ends_at_destination",
+      "payload.route_meets_deadline",
+      "payload.route_starts_at_position",
+      "primitive.csp",
+      "primitive.shortest_path"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Both wrong type; they differ in primitive one-hot. Reported for completeness."
+  },
+  {
+   "id": "2a-unretrieved",
+   "distinction": 2,
+   "description": "own subset result from before capacity_reduced(6->5) (stale: request+dependency) vs the same draft re-called after the event, unretrieved",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event; then recompute on the same draft",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r6b01a1c12a3a2107\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rd7e11b1b7aa6540d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "same_problem": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "2a-retrieved",
+   "distinction": 2,
+   "description": "own subset result from before capacity_reduced(6->5) (stale: request+dependency) vs the same draft re-called after the event, retrieved",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event; then recompute on the same draft",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r6b01a1c12a3a2107\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rd7e11b1b7aa6540d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "same_problem": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "2b",
+   "distinction": 2,
+   "description": "own subset result from before a same-value capacity event (dependency-only stale) vs re-called",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event; then recompute on the same draft",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r6b01a1c12a3a2107\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rd7e11b1b7aa6540d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.dependency_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.dependency_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "same_problem": true,
+    "same_snapshot": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "2c-unretrieved",
+   "distinction": 2,
+   "description": "own route from before edge_closed(1,2) (stale) vs route recomputed after, unretrieved",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event; then recompute on the same draft (a new route draft: route drafts take no constraints)",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r48007596a28f5b37\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rd7e11b1b7aa6540d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "2c-retrieved",
+   "distinction": 2,
+   "description": "own route from before edge_closed(1,2) (stale) vs route recomputed after, retrieved",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event; then recompute on the same draft (a new route draft: route drafts take no constraints)",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r48007596a28f5b37\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rd7e11b1b7aa6540d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance",
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "2d",
+   "distinction": 2,
+   "description": "own csp from before slot_closed(4) (slot unused by the selection: dependency-only stale) vs re-called",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event; then recompute on the same draft",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"r6b0404f2b09490b8\"}]",
+     "[\"use_return\", {\"as\": \"assign\", \"handle\": \"rd7e11b1b7aa6540d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.dependency_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "record.dependency_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_status_cert_retrieved": true,
+    "same_problem": true,
+    "same_snapshot": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "3a-unretrieved",
+   "distinction": 3,
+   "description": "selection result from before edge_closed (still applicable) vs the same result from before capacity_reduced (stale), unretrieved",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event; then recompute on the same draft",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r6b01a1c12a3a2107\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r6b01a1c12a3a2107\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 28
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 5
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 28
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Paired worlds; the observation also differs (event kind, capacity) by design, so carrier = row."
+  },
+  {
+   "id": "3b-unretrieved",
+   "distinction": 3,
+   "description": "route from before capacity_reduced (still applicable) vs the same route from before edge_closed (stale), unretrieved",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event; then recompute on the same draft",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r48007596a28f5b37\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r48007596a28f5b37\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": false,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 28
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 5
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 28
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "3a-retrieved",
+   "distinction": 3,
+   "description": "selection result from before edge_closed (still applicable) vs the same result from before capacity_reduced (stale), retrieved",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event; then recompute on the same draft",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r6b01a1c12a3a2107\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r6b01a1c12a3a2107\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "route.applicable_known",
+      "route.distance",
+      "route.plan_meets_deadline",
+      "route.need_bound",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 33
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 5
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "route.applicable_known",
+      "route.distance",
+      "route.plan_meets_deadline",
+      "route.need_bound",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 33
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Paired worlds; the observation also differs (event kind, capacity) by design, so carrier = row."
+  },
+  {
+   "id": "3b-retrieved",
+   "distinction": 3,
+   "description": "route from before capacity_reduced (still applicable) vs the same route from before edge_closed (stale), retrieved",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event; then recompute on the same draft",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r48007596a28f5b37\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r48007596a28f5b37\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": "residual",
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "route.applicable_known",
+      "route.distance",
+      "route.plan_meets_deadline",
+      "route.need_bound",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 33
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 5
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "route.applicable_known",
+      "route.distance",
+      "route.plan_meets_deadline",
+      "route.need_bound",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [
+      "record.canonical_match",
+      "record.dependency_match",
+      "record.request_match",
+      "record.requirements_match"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 33
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "3c",
+   "distinction": 3,
+   "description": "old-but-applicable selection result (pre-edge_closed) vs a fresh re-call after the event (same request)",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event; then recompute on the same draft",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r6b01a1c12a3a2107\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rd7e11b1b7aa6540d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Must be IDENTICAL: an old applicable result must not look stale."
+  },
+  {
+   "id": "3d",
+   "distinction": 3,
+   "description": "old-but-applicable route (pre-capacity_reduced) vs a fresh recompute after the event",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event; then recompute on the same draft",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r48007596a28f5b37\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rd7e11b1b7aa6540d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Must be IDENTICAL."
+  },
+  {
+   "id": "3e",
+   "distinction": 3,
+   "description": "old-but-applicable selection result (pre-slot_closed) vs a fresh re-call after the event",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event; then recompute on the same draft",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"r6b01a1c12a3a2107\"}]",
+     "[\"use_return\", {\"as\": \"select\", \"handle\": \"rd7e11b1b7aa6540d\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Must be IDENTICAL (slots do not feed the selection instance)."
+  },
+  {
+   "id": "6-capacity-funds-immediate",
+   "distinction": 6,
+   "description": "commit_pending rejected for capacity vs funds: the next decision",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "pending.weight",
+      "pending.price",
+      "pending.capacity_left",
+      "pending.funds_left",
+      "feedback.reason.capacity",
+      "feedback.reason.funds"
+     ],
+     "row_diff": [
+      "attempt.last_reason.capacity",
+      "attempt.last_reason.funds",
+      "commit.price_ok",
+      "commit.weight_ok"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 13
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "pending.weight",
+      "pending.price",
+      "pending.capacity_left",
+      "pending.funds_left",
+      "feedback.reason.capacity",
+      "feedback.reason.funds"
+     ],
+     "row_diff": [
+      "attempt.last_reason.capacity",
+      "attempt.last_reason.funds",
+      "commit.price_ok",
+      "commit.weight_ok"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 13
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "pending.weight",
+      "pending.price",
+      "pending.capacity_left",
+      "pending.funds_left",
+      "feedback.reason.capacity",
+      "feedback.reason.funds"
+     ],
+     "row_diff": [
+      "commit.price_ok",
+      "commit.weight_ok"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 13
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Immediate: the last feedback reason (observation) differs; that is not attempt memory, so both ablations keep it. The pending sets also differ."
+  },
+  {
+   "id": "6-capacity-funds-after1",
+   "distinction": 6,
+   "description": "commit_pending rejected for capacity vs funds, then one repair choose_item to the SAME pending set",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.capacity",
+      "attempt.last_reason.funds"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.capacity",
+      "attempt.last_reason.funds"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_pending": true,
+    "same_step": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "6-capacity-funds-after2",
+   "distinction": 6,
+   "description": "commit_pending rejected for capacity vs funds, repair + think (two intervening)",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.capacity",
+      "attempt.last_reason.funds"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.capacity",
+      "attempt.last_reason.funds"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_pending": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "6-capacity-incompatibility-immediate",
+   "distinction": 6,
+   "description": "commit_pending rejected for capacity vs incompatibility: the next decision",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "pending.weight",
+      "pending.capacity_left",
+      "feedback.reason.capacity",
+      "feedback.reason.incompatibility"
+     ],
+     "row_diff": [
+      "attempt.last_reason.capacity",
+      "attempt.last_reason.incompatibility",
+      "commit.incompatibility",
+      "commit.weight_ok"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 11
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "pending.weight",
+      "pending.capacity_left",
+      "feedback.reason.capacity",
+      "feedback.reason.incompatibility"
+     ],
+     "row_diff": [
+      "attempt.last_reason.capacity",
+      "attempt.last_reason.incompatibility",
+      "commit.incompatibility",
+      "commit.weight_ok"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 11
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "pending.weight",
+      "pending.capacity_left",
+      "feedback.reason.capacity",
+      "feedback.reason.incompatibility"
+     ],
+     "row_diff": [
+      "commit.incompatibility",
+      "commit.weight_ok"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 11
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Immediate: the last feedback reason (observation) differs; that is not attempt memory, so both ablations keep it. The pending sets also differ."
+  },
+  {
+   "id": "6-capacity-incompatibility-after1",
+   "distinction": 6,
+   "description": "commit_pending rejected for capacity vs incompatibility, then one repair choose_item to the SAME pending set",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.capacity",
+      "attempt.last_reason.incompatibility"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.capacity",
+      "attempt.last_reason.incompatibility"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_pending": true,
+    "same_step": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "6-capacity-incompatibility-after2",
+   "distinction": 6,
+   "description": "commit_pending rejected for capacity vs incompatibility, repair + think (two intervening)",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.capacity",
+      "attempt.last_reason.incompatibility"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.capacity",
+      "attempt.last_reason.incompatibility"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_pending": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "6-funds-incompatibility-immediate",
+   "distinction": 6,
+   "description": "commit_pending rejected for funds vs incompatibility: the next decision",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "pending.price",
+      "pending.funds_left",
+      "feedback.reason.funds",
+      "feedback.reason.incompatibility"
+     ],
+     "row_diff": [
+      "attempt.last_reason.funds",
+      "attempt.last_reason.incompatibility",
+      "commit.incompatibility",
+      "commit.price_ok"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 13
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "pending.price",
+      "pending.funds_left",
+      "feedback.reason.funds",
+      "feedback.reason.incompatibility"
+     ],
+     "row_diff": [
+      "attempt.last_reason.funds",
+      "attempt.last_reason.incompatibility",
+      "commit.incompatibility",
+      "commit.price_ok"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 13
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "pending.price",
+      "pending.funds_left",
+      "feedback.reason.funds",
+      "feedback.reason.incompatibility"
+     ],
+     "row_diff": [
+      "commit.incompatibility",
+      "commit.price_ok"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 13
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Immediate: the last feedback reason (observation) differs; that is not attempt memory, so both ablations keep it. The pending sets also differ."
+  },
+  {
+   "id": "6-funds-incompatibility-after1",
+   "distinction": 6,
+   "description": "commit_pending rejected for funds vs incompatibility, then one repair choose_item to the SAME pending set",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.funds",
+      "attempt.last_reason.incompatibility"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.funds",
+      "attempt.last_reason.incompatibility"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_pending": true,
+    "same_step": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "6-funds-incompatibility-after2",
+   "distinction": 6,
+   "description": "commit_pending rejected for funds vs incompatibility, repair + think (two intervening)",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.funds",
+      "attempt.last_reason.incompatibility"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.funds",
+      "attempt.last_reason.incompatibility"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_pending": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "6-slot_conflict-slot_unavailable-immediate",
+   "distinction": 6,
+   "description": "commit_assignment rejected for slot_conflict vs slot_unavailable: the next decision",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_assignment\", {}]",
+     "[\"commit_assignment\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "feedback.reason.slot_conflict",
+      "feedback.reason.slot_unavailable"
+     ],
+     "row_diff": [
+      "attempt.last_reason.slot_conflict",
+      "attempt.last_reason.slot_unavailable",
+      "commit.assign_allowed",
+      "commit.assign_clash",
+      "commit.assign_finish"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 6
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "feedback.reason.slot_conflict",
+      "feedback.reason.slot_unavailable"
+     ],
+     "row_diff": [
+      "attempt.last_reason.slot_conflict",
+      "attempt.last_reason.slot_unavailable",
+      "commit.assign_allowed",
+      "commit.assign_clash",
+      "commit.assign_finish"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 6
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "feedback.reason.slot_conflict",
+      "feedback.reason.slot_unavailable"
+     ],
+     "row_diff": [
+      "commit.assign_allowed",
+      "commit.assign_clash",
+      "commit.assign_finish"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 6
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "6-slot_conflict-slot_unavailable-after1",
+   "distinction": 6,
+   "description": "commit_assignment rejected for slot_conflict vs slot_unavailable, then choose_slot to the SAME pending assignment",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_assignment\", {}]",
+     "[\"commit_assignment\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.slot_conflict",
+      "attempt.last_reason.slot_unavailable"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.slot_conflict",
+      "attempt.last_reason.slot_unavailable"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_pending_assignment": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "6-slot_conflict-slot_unavailable-after2",
+   "distinction": 6,
+   "description": "as above, plus one think (two intervening actions)",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_assignment\", {}]",
+     "[\"commit_assignment\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.slot_conflict",
+      "attempt.last_reason.slot_unavailable"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.slot_conflict",
+      "attempt.last_reason.slot_unavailable"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "6-deliver-deadline-missing_edge-after1",
+   "distinction": 6,
+   "description": "deliver (use_return as route) rejected for deadline vs missing_edge, after one think: the attempted rows",
+   "construction": "hand world + foreign route_slow/route_missing_edge; chain to a committed assignment; retrieve both; deliver along one of them; think",
+   "actions": [
+    [
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"r550caef9618a9261\"}]",
+     "[\"use_return\", {\"as\": \"route\", \"handle\": \"rfe1b14343b106980\"}]"
+    ]
+   ],
+   "carrier": [
+    "attempt.last_reason.capacity",
+    "attempt.last_reason.funds",
+    "attempt.last_reason.incompatibility",
+    "attempt.last_reason.slot_conflict",
+    "attempt.last_reason.slot_unavailable",
+    "attempt.last_reason.deadline",
+    "attempt.last_reason.stale_dependency",
+    "attempt.last_reason.type_mismatch",
+    "attempt.last_reason.not_applicable",
+    "attempt.last_reason.missing_edge",
+    "attempt.last_reason.category_coverage",
+    "attempt.last_reason.missing_dependency",
+    "attempt.last_reason.incomplete",
+    "attempt.last_reason.already_committed",
+    "attempt.last_reason.retrieve_required",
+    "attempt.last_reason.unknown_item",
+    "attempt.last_reason.travel_budget",
+    "attempt.last_reason.work_budget"
+   ],
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.deadline",
+      "attempt.last_reason.missing_edge",
+      "payload.route_distance"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 2
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.last_reason.deadline",
+      "attempt.last_reason.missing_edge",
+      "payload.route_distance"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 2
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [
+      "payload.route_distance"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Carrier = attempt.last_reason.* only (the two records also differ in their own payload facts)."
+  },
+  {
+   "id": "6-move-deadline-vs-untried-after1",
+   "distinction": 6,
+   "description": "move(3) rejected for deadline, then think vs never tried (step-matched)",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"move\", {\"destination\": 3}]",
+     "[\"move\", {\"destination\": 3}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "attempts.count",
+      "attempts.rejected"
+     ],
+     "row_diff": [
+      "attempt.attempted",
+      "attempt.count",
+      "attempt.last_outcome.rejected",
+      "attempt.last_reason.deadline"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "attempts.count",
+      "attempts.rejected"
+     ],
+     "row_diff": [
+      "attempt.attempted",
+      "attempt.count",
+      "attempt.last_outcome.rejected",
+      "attempt.last_reason.deadline"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "A catalogue move can only be rejected for deadline/travel: moves are offered only along known, existing edges, so missing_edge arises only from use_return of a route (pair above)."
+  },
+  {
+   "id": "7a",
+   "distinction": 7,
+   "description": "commit_pending already rejected on this exact state (identical retry) vs never attempted (same state)",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "attempts.count",
+      "attempts.rejected"
+     ],
+     "row_diff": [
+      "attempt.attempted",
+      "attempt.count",
+      "attempt.last_outcome.rejected",
+      "attempt.last_reason.capacity"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "attempts.count",
+      "attempts.rejected"
+     ],
+     "row_diff": [
+      "attempt.attempted",
+      "attempt.count",
+      "attempt.last_outcome.rejected",
+      "attempt.last_reason.capacity"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "7b",
+   "distinction": 7,
+   "description": "retry after the pending set changed (rejected at another pending set, same reason) vs identical retry",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.dependencies_changed"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.dependencies_changed"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_pending": true,
+    "same_step": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "7b-bit",
+   "distinction": 7,
+   "description": "as 7b, carrier = attempt.dependencies_changed only",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": [
+    "attempt.dependencies_changed"
+   ],
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.dependencies_changed"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [],
+     "row_diff": [
+      "attempt.dependencies_changed"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "7c",
+   "distinction": 7,
+   "description": "commit_assignment rejected (slot_conflict), then a slot requirement revision (event) vs unchanged",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_assignment\", {}]",
+     "[\"commit_assignment\", {}]"
+    ]
+   ],
+   "carrier": [
+    "attempt.dependencies_changed"
+   ],
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.n_closed_slots",
+      "req.version",
+      "req.changed.slots",
+      "event.last.slot_closed",
+      "event.none"
+     ],
+     "row_diff": [
+      "attempt.dependencies_changed"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.n_closed_slots",
+      "req.version",
+      "req.changed.slots",
+      "event.last.slot_closed",
+      "event.none"
+     ],
+     "row_diff": [
+      "attempt.dependencies_changed"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [
+      "req.n_closed_slots",
+      "req.version",
+      "req.changed.slots",
+      "event.last.slot_closed",
+      "event.none"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "The observation differs (event) by design; carrier = the dependencies-changed coordinate."
+  },
+  {
+   "id": "7d",
+   "distinction": 7,
+   "description": "commit_assignment rejected, then a selection revision (uncommit + recommit) vs unchanged",
+   "construction": "hand world; inspect everything (8 steps); then the listed actions",
+   "actions": [
+    [
+     "[\"commit_assignment\", {}]",
+     "[\"commit_assignment\", {}]"
+    ]
+   ],
+   "carrier": [
+    "attempt.dependencies_changed"
+   ],
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "count.pending_assignment",
+      "attempts.count",
+      "attempts.uncommits"
+     ],
+     "row_diff": [
+      "attempt.dependencies_changed",
+      "commit.assign_allowed",
+      "commit.assign_clash",
+      "commit.assign_cover",
+      "commit.assign_finish",
+      "commit.assign_meets_bound"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 9
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "count.pending_assignment",
+      "attempts.count",
+      "attempts.uncommits"
+     ],
+     "row_diff": [
+      "attempt.dependencies_changed",
+      "commit.assign_allowed",
+      "commit.assign_clash",
+      "commit.assign_cover",
+      "commit.assign_finish",
+      "commit.assign_meets_bound"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 9
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [
+      "count.pending_assignment"
+     ],
+     "row_diff": [
+      "commit.assign_allowed",
+      "commit.assign_clash",
+      "commit.assign_cover",
+      "commit.assign_finish",
+      "commit.assign_meets_bound"
+     ],
+     "same_catalog": true,
+     "matrix_rows_differing": 7
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "same_step": true
+   },
+   "pass": true,
+   "notes": "Recommitting clears pending_assignment, so the relevant dependencies changed."
+  },
+  {
+   "id": "7e",
+   "distinction": 7,
+   "description": "commit_pending rejected (missing_dependency: requirements unknown), then inspect requirements vs think",
+   "construction": "hand world, nothing inspected; choose A1, B1; commit_pending; then inspect requirements vs think",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.known",
+      "req.capacity",
+      "req.funds",
+      "req.deadline",
+      "req.slot_capacity",
+      "req.n_closed_slots",
+      "req.n_incompatible",
+      "pending.capacity_left",
+      "pending.funds_left"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 2
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.known",
+      "req.capacity",
+      "req.funds",
+      "req.deadline",
+      "req.slot_capacity",
+      "req.n_closed_slots",
+      "req.n_incompatible",
+      "pending.capacity_left",
+      "pending.funds_left"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 2
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.known",
+      "req.capacity",
+      "req.funds",
+      "req.deadline",
+      "req.slot_capacity",
+      "req.n_closed_slots",
+      "req.n_incompatible",
+      "pending.capacity_left",
+      "pending.funds_left"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 2
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "The state differs through req.* (kept by both ablations)."
+  },
+  {
+   "id": "7e-bit",
+   "distinction": 7,
+   "description": "as 7e, carrier = attempt.dependencies_changed only (report)",
+   "construction": "",
+   "actions": [
+    [
+     "[\"commit_pending\", {}]",
+     "[\"commit_pending\", {}]"
+    ]
+   ],
+   "carrier": [
+    "attempt.dependencies_changed"
+   ],
+   "expected": {
+    "d1": null,
+    "d1-noapp": null,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "observation_diff": [
+      "req.known",
+      "req.capacity",
+      "req.funds",
+      "req.deadline",
+      "req.slot_capacity",
+      "req.n_closed_slots",
+      "req.n_incompatible",
+      "pending.capacity_left",
+      "pending.funds_left"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 2
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [
+      "req.known",
+      "req.capacity",
+      "req.funds",
+      "req.deadline",
+      "req.slot_capacity",
+      "req.n_closed_slots",
+      "req.n_incompatible",
+      "pending.capacity_left",
+      "pending.funds_left"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 2
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [
+      "req.known",
+      "req.capacity",
+      "req.funds",
+      "req.deadline",
+      "req.slot_capacity",
+      "req.n_closed_slots",
+      "req.n_incompatible",
+      "pending.capacity_left",
+      "pending.funds_left"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 2
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "REPORT: relevant_dependencies(commit_pending) = pending, requirement versions and selection; it does not include whether requirements are known, so this bit stays 0 after the resolving inspection."
+  },
+  {
+   "id": "8a",
+   "distinction": 8,
+   "description": "after the event: capacity_reduced(3) revokes selection vs capacity_reduced(5) no revocation",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event",
+   "actions": [
+    [
+     "[\"uncommit\", {\"target\": \"select\"}]",
+     "[\"uncommit\", {\"target\": \"select\"}]"
+    ],
+    [
+     "[\"uncommit\", {\"target\": \"assign\"}]",
+     "[\"uncommit\", {\"target\": \"assign\"}]"
+    ]
+   ],
+   "carrier": "observation",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "plan.selection_committed",
+      "plan.assignment_committed",
+      "plan.finish_time",
+      "plan.deadline_slack",
+      "count.pending_assignment",
+      "pending.capacity_left",
+      "event.selection_revoked",
+      "event.assignment_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "plan.selection_committed",
+      "plan.assignment_committed",
+      "plan.finish_time",
+      "plan.deadline_slack",
+      "count.pending_assignment",
+      "pending.capacity_left",
+      "event.selection_revoked",
+      "event.assignment_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "plan.selection_committed",
+      "plan.assignment_committed",
+      "plan.finish_time",
+      "plan.deadline_slack",
+      "count.pending_assignment",
+      "pending.capacity_left",
+      "event.selection_revoked",
+      "event.assignment_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "8b",
+   "distinction": 8,
+   "description": "after the event: slot_closed(2) revokes assignment vs slot_closed(4) no revocation",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event",
+   "actions": [
+    [
+     "[\"uncommit\", {\"target\": \"select\"}]",
+     "[\"uncommit\", {\"target\": \"select\"}]"
+    ],
+    [
+     "[\"uncommit\", {\"target\": \"assign\"}]",
+     "[\"uncommit\", {\"target\": \"assign\"}]"
+    ]
+   ],
+   "carrier": "observation",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "plan.assignment_committed",
+      "plan.finish_time",
+      "plan.deadline_slack",
+      "event.assignment_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "plan.assignment_committed",
+      "plan.finish_time",
+      "plan.deadline_slack",
+      "event.assignment_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "plan.assignment_committed",
+      "plan.finish_time",
+      "plan.deadline_slack",
+      "event.assignment_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "8c",
+   "distinction": 8,
+   "description": "after the event: capacity_reduced(5) no revocation vs slot_closed(4) no revocation",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event",
+   "actions": [
+    [
+     "[\"uncommit\", {\"target\": \"select\"}]",
+     "[\"uncommit\", {\"target\": \"select\"}]"
+    ],
+    [
+     "[\"uncommit\", {\"target\": \"assign\"}]",
+     "[\"uncommit\", {\"target\": \"assign\"}]"
+    ]
+   ],
+   "carrier": "observation",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.n_closed_slots",
+      "req.changed.capacity",
+      "req.changed.slots",
+      "pending.capacity_left",
+      "event.last.capacity_reduced",
+      "event.last.slot_closed"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 36
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.n_closed_slots",
+      "req.changed.capacity",
+      "req.changed.slots",
+      "pending.capacity_left",
+      "event.last.capacity_reduced",
+      "event.last.slot_closed"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 4
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.n_closed_slots",
+      "req.changed.capacity",
+      "req.changed.slots",
+      "pending.capacity_left",
+      "event.last.capacity_reduced",
+      "event.last.slot_closed"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 36
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "8d",
+   "distinction": 8,
+   "description": "after the event: edge_closed(1,2) vs deadline_moved(8)",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event",
+   "actions": [
+    [
+     "[\"uncommit\", {\"target\": \"select\"}]",
+     "[\"uncommit\", {\"target\": \"select\"}]"
+    ],
+    [
+     "[\"uncommit\", {\"target\": \"assign\"}]",
+     "[\"uncommit\", {\"target\": \"assign\"}]"
+    ]
+   ],
+   "carrier": "observation",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.deadline",
+      "req.changed.deadline",
+      "req.changed.map",
+      "plan.deadline_slack",
+      "event.last.edge_closed",
+      "event.last.deadline_moved"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 8
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.deadline",
+      "req.changed.deadline",
+      "req.changed.map",
+      "plan.deadline_slack",
+      "event.last.edge_closed",
+      "event.last.deadline_moved"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 1
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.deadline",
+      "req.changed.deadline",
+      "req.changed.map",
+      "plan.deadline_slack",
+      "event.last.edge_closed",
+      "event.last.deadline_moved"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 8
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "8e",
+   "distinction": 8,
+   "description": "after the event: capacity_reduced(5) no revocation vs edge_closed(1,2)",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event",
+   "actions": [
+    [
+     "[\"uncommit\", {\"target\": \"select\"}]",
+     "[\"uncommit\", {\"target\": \"select\"}]"
+    ],
+    [
+     "[\"uncommit\", {\"target\": \"assign\"}]",
+     "[\"uncommit\", {\"target\": \"assign\"}]"
+    ]
+   ],
+   "carrier": "observation",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 28
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 5
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.changed.capacity",
+      "req.changed.map",
+      "pending.capacity_left",
+      "event.last.edge_closed",
+      "event.last.capacity_reduced"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 28
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "8f",
+   "distinction": 8,
+   "description": "after the event: slot_closed(4) no revocation vs deadline_moved(8)",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event",
+   "actions": [
+    [
+     "[\"uncommit\", {\"target\": \"select\"}]",
+     "[\"uncommit\", {\"target\": \"select\"}]"
+    ],
+    [
+     "[\"uncommit\", {\"target\": \"assign\"}]",
+     "[\"uncommit\", {\"target\": \"assign\"}]"
+    ]
+   ],
+   "carrier": "observation",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.deadline",
+      "req.n_closed_slots",
+      "req.changed.slots",
+      "req.changed.deadline",
+      "plan.deadline_slack",
+      "event.last.slot_closed",
+      "event.last.deadline_moved"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 16
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.deadline",
+      "req.n_closed_slots",
+      "req.changed.slots",
+      "req.changed.deadline",
+      "plan.deadline_slack",
+      "event.last.slot_closed",
+      "event.last.deadline_moved"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.deadline",
+      "req.n_closed_slots",
+      "req.changed.slots",
+      "req.changed.deadline",
+      "plan.deadline_slack",
+      "event.last.slot_closed",
+      "event.last.deadline_moved"
+     ],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 16
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "8g",
+   "distinction": 8,
+   "description": "after the event: capacity_reduced(3) revokes selection vs slot_closed(2) revokes assignment",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event",
+   "actions": [
+    [
+     "[\"uncommit\", {\"target\": \"select\"}]",
+     "[\"uncommit\", {\"target\": \"select\"}]"
+    ],
+    [
+     "[\"uncommit\", {\"target\": \"assign\"}]",
+     "[\"uncommit\", {\"target\": \"assign\"}]"
+    ]
+   ],
+   "carrier": "observation",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.n_closed_slots",
+      "req.changed.capacity",
+      "req.changed.slots",
+      "plan.selection_committed",
+      "count.pending_assignment",
+      "pending.capacity_left",
+      "event.last.capacity_reduced",
+      "event.last.slot_closed",
+      "event.selection_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.n_closed_slots",
+      "req.changed.capacity",
+      "req.changed.slots",
+      "plan.selection_committed",
+      "count.pending_assignment",
+      "pending.capacity_left",
+      "event.last.capacity_reduced",
+      "event.last.slot_closed",
+      "event.selection_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.n_closed_slots",
+      "req.changed.capacity",
+      "req.changed.slots",
+      "plan.selection_committed",
+      "count.pending_assignment",
+      "pending.capacity_left",
+      "event.last.capacity_reduced",
+      "event.last.slot_closed",
+      "event.selection_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "8a-row",
+   "distinction": 8,
+   "description": "uncommit rows (target committed?) after: capacity_reduced(3) revokes selection vs capacity_reduced(5) no revocation",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event",
+   "actions": [
+    [
+     "[\"uncommit\", {\"target\": \"select\"}]",
+     "[\"uncommit\", {\"target\": \"select\"}]"
+    ],
+    [
+     "[\"uncommit\", {\"target\": \"assign\"}]",
+     "[\"uncommit\", {\"target\": \"assign\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "plan.selection_committed",
+      "plan.assignment_committed",
+      "plan.finish_time",
+      "plan.deadline_slack",
+      "count.pending_assignment",
+      "pending.capacity_left",
+      "event.selection_revoked",
+      "event.assignment_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "plan.selection_committed",
+      "plan.assignment_committed",
+      "plan.finish_time",
+      "plan.deadline_slack",
+      "count.pending_assignment",
+      "pending.capacity_left",
+      "event.selection_revoked",
+      "event.assignment_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "plan.selection_committed",
+      "plan.assignment_committed",
+      "plan.finish_time",
+      "plan.deadline_slack",
+      "count.pending_assignment",
+      "pending.capacity_left",
+      "event.selection_revoked",
+      "event.assignment_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "8b-row",
+   "distinction": 8,
+   "description": "uncommit rows (target committed?) after: slot_closed(2) revokes assignment vs slot_closed(4) no revocation",
+   "construction": "hand world; full chain (24 steps); think until the step-40 event",
+   "actions": [
+    [
+     "[\"uncommit\", {\"target\": \"select\"}]",
+     "[\"uncommit\", {\"target\": \"select\"}]"
+    ],
+    [
+     "[\"uncommit\", {\"target\": \"assign\"}]",
+     "[\"uncommit\", {\"target\": \"assign\"}]"
+    ]
+   ],
+   "carrier": "row",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "plan.assignment_committed",
+      "plan.finish_time",
+      "plan.deadline_slack",
+      "event.assignment_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "plan.assignment_committed",
+      "plan.finish_time",
+      "plan.deadline_slack",
+      "event.assignment_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "plan.assignment_committed",
+      "plan.finish_time",
+      "plan.deadline_slack",
+      "event.assignment_revoked"
+     ],
+     "row_diff": [
+      "commit.coverage_or_uncommit_target_committed"
+     ],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "8h",
+   "distinction": 8,
+   "description": "selection revoked by capacity_reduced(3) vs never committed (after the same inspection)",
+   "construction": "",
+   "actions": [],
+   "carrier": "observation",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.version",
+      "req.changed.capacity",
+      "count.problems",
+      "count.records",
+      "count.pending",
+      "pending.weight",
+      "pending.price",
+      "pending.capacity_left",
+      "pending.funds_left",
+      "event.last.capacity_reduced",
+      "event.none",
+      "event.selection_revoked",
+      "event.assignment_revoked",
+      "event.this_step",
+      "res.work",
+      "attempts.count"
+     ],
+     "row_diff": [],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.version",
+      "req.changed.capacity",
+      "count.problems",
+      "count.records",
+      "count.pending",
+      "pending.weight",
+      "pending.price",
+      "pending.capacity_left",
+      "pending.funds_left",
+      "event.last.capacity_reduced",
+      "event.none",
+      "event.selection_revoked",
+      "event.assignment_revoked",
+      "event.this_step",
+      "res.work",
+      "attempts.count"
+     ],
+     "row_diff": [],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "observation_diff": [
+      "req.capacity",
+      "req.version",
+      "req.changed.capacity",
+      "count.problems",
+      "count.records",
+      "count.pending",
+      "pending.weight",
+      "pending.price",
+      "pending.capacity_left",
+      "pending.funds_left",
+      "event.last.capacity_reduced",
+      "event.none",
+      "event.selection_revoked",
+      "event.assignment_revoked",
+      "event.this_step",
+      "res.work"
+     ],
+     "row_diff": [],
+     "same_catalog": false,
+     "matrix_rows_differing": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "9a-reuse",
+   "distinction": 9,
+   "description": "consistent renaming of item handles, record handles (address seed) and foreign snapshots/selection ids: observation, candidate set (mapped) and matrix identical at every step of a dep_reuse trajectory (capacity event after the first completion, 11 foreign records)",
+   "construction": "hand world vs renamed copy (address seeds 51 vs 9999); the reference acts in world a and the renamed action is replayed in world b",
+   "carrier": "state",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false
+    },
+    "d1-noapp": {
+     "distinguishable": false
+    },
+    "d1-noattempt": {
+     "distinguishable": false
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "event_fired": true,
+    "at_least_10_steps": true
+   },
+   "info": {
+    "steps_checked": 15,
+    "first_mismatch": null,
+    "verified_success": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "9a-naive_reuse",
+   "distinction": 9,
+   "description": "consistent renaming of item handles, record handles (address seed) and foreign snapshots/selection ids: observation, candidate set (mapped) and matrix identical at every step of a dep_naive_reuse trajectory (capacity event after the first completion, 11 foreign records)",
+   "construction": "hand world vs renamed copy (address seeds 51 vs 9999); the reference acts in world a and the renamed action is replayed in world b",
+   "carrier": "state",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false
+    },
+    "d1-noapp": {
+     "distinguishable": false
+    },
+    "d1-noattempt": {
+     "distinguishable": false
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "event_fired": true,
+    "at_least_10_steps": true
+   },
+   "info": {
+    "steps_checked": 96,
+    "first_mismatch": null,
+    "verified_success": false
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "9a-recompute",
+   "distinction": 9,
+   "description": "consistent renaming of item handles, record handles (address seed) and foreign snapshots/selection ids: observation, candidate set (mapped) and matrix identical at every step of a dep_recompute trajectory (capacity event after the first completion, 11 foreign records)",
+   "construction": "hand world vs renamed copy (address seeds 51 vs 9999); the reference acts in world a and the renamed action is replayed in world b",
+   "carrier": "state",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false
+    },
+    "d1-noapp": {
+     "distinguishable": false
+    },
+    "d1-noattempt": {
+     "distinguishable": false
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "event_fired": true,
+    "at_least_10_steps": true
+   },
+   "info": {
+    "steps_checked": 25,
+    "first_mismatch": null,
+    "verified_success": true
+   },
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "9b",
+   "distinction": 9,
+   "description": "problem-handle spelling: reverse the problem_n names so own drafts and foreign problems swap spellings (records, retrieved, attempts, action keys renamed)",
+   "construction": "the retrieved full-chain state of pairs 1/4",
+   "carrier": "state",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "observation_diff": [],
+     "row_diff": [],
+     "same_catalog": true,
+     "matrix_rows_differing": 0
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {
+    "own_and_foreign_problems": true
+   },
+   "pass": true,
+   "notes": "Foreign vs own cannot leak through 'problem_' spelling or numbering."
+  },
+  {
+   "id": "10a",
+   "distinction": 10,
+   "description": "uninspected item A1 (weight/price/duration/slots) differs; everything else inspected; A1 pending; own subset draft + call (the draft covers inspected items only)",
+   "construction": "13-action script, 14 states compared per version",
+   "carrier": "state",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "first_difference": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "10b",
+   "distinction": 10,
+   "description": "future event (slot_closed@60 vs deadline_moved@60, step trigger) and planted solution differ; full chain before the event",
+   "construction": "17-action script, 18 states compared per version",
+   "carrier": "state",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "first_difference": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "10c",
+   "distinction": 10,
+   "description": "future event under the progress trigger (capacity_reduced after completion 1 vs edge_closed after completion 2) vs no event; everything before the first completion commit",
+   "construction": "11-action script, 12 states compared per version",
+   "carrier": "state",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "first_difference": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "10d",
+   "distinction": 10,
+   "description": "no event scheduled vs capacity_reduced after completion 1 (progress); everything before that commit",
+   "construction": "11-action script, 12 states compared per version",
+   "carrier": "state",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "first_difference": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "10e",
+   "distinction": 10,
+   "description": "foreign route record with identical metadata but a different (hidden) payload; not retrieved; full inspection",
+   "construction": "8-action script, 9 states compared per version",
+   "carrier": "state",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "first_difference": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "10e-control",
+   "distinction": 10,
+   "description": "as 10e, then retrieve the record: the payload becomes public and must now be visible",
+   "construction": "9-action script, 10 states compared per version",
+   "carrier": "state",
+   "expected": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "first_difference": {
+      "step": 9,
+      "version": "d1",
+      "obs": [
+       "route.distance",
+       "route.need_bound"
+      ],
+      "rows": [
+       "payload.route_distance"
+      ],
+      "same_catalog": true
+     }
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "first_difference": {
+      "step": 9,
+      "version": "d1-noapp",
+      "obs": [],
+      "rows": [
+       "payload.route_distance"
+      ],
+      "same_catalog": true
+     }
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "first_difference": {
+      "step": 9,
+      "version": "d1-noattempt",
+      "obs": [
+       "route.distance",
+       "route.need_bound"
+      ],
+      "rows": [
+       "payload.route_distance"
+      ],
+      "same_catalog": true
+     }
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Sensitivity control for 10e."
+  },
+  {
+   "id": "10f",
+   "distinction": 10,
+   "description": "evaluator-only foreign label differs (route_current vs route_earlier) on an identical record",
+   "construction": "3-action script, 4 states compared per version",
+   "carrier": "state",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "first_difference": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "10g",
+   "distinction": 10,
+   "description": "uninspected A1's hidden facts differ while a foreign subset record (and its public snapshot) is identical in both worlds; everything but A1 inspected; retrieve the record",
+   "construction": "8-action script, 9 states compared per version",
+   "carrier": "state",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "first_difference": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "10x-csp",
+   "distinction": 10,
+   "description": "DISCLOSURE: foreign csp record for {A1,B1}; B1's hidden duration differs (2 vs 1) and so does the record's public snapshot; nothing inspected; retrieve the record; inspect requirements",
+   "construction": "2-action script, 3 states compared per version",
+   "carrier": "state",
+   "expected": {
+    "d1": null,
+    "d1-noapp": null,
+    "d1-noattempt": null
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "first_difference": {
+      "step": 1,
+      "version": "d1",
+      "obs": [],
+      "rows": [
+       "payload.finish_or_total_duration"
+      ],
+      "same_catalog": true
+     }
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "first_difference": {
+      "step": 1,
+      "version": "d1-noapp",
+      "obs": [],
+      "rows": [
+       "payload.finish_or_total_duration"
+      ],
+      "same_catalog": true
+     }
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "first_difference": {
+      "step": 1,
+      "version": "d1-noattempt",
+      "obs": [],
+      "rows": [
+       "payload.finish_or_total_duration"
+      ],
+      "same_catalog": true
+     }
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "10x-csp-meta",
+   "distinction": 10,
+   "description": "DISCLOSURE: as 10x-csp, record NOT retrieved (metadata only)",
+   "construction": "1-action script, 2 states compared per version",
+   "carrier": "state",
+   "expected": {
+    "d1": false,
+    "d1-noapp": false,
+    "d1-noattempt": false
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "first_difference": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": "Metadata only: relations need a completed inspection, so nothing may differ."
+  },
+  {
+   "id": "10x-route",
+   "distinction": 10,
+   "description": "DISCLOSURE: foreign current-route record; hidden edge (2,3) weight differs (1 vs 2) and so do the record's snapshot and payload; map NOT inspected; retrieve",
+   "construction": "2-action script, 3 states compared per version",
+   "carrier": "state",
+   "expected": {
+    "d1": null,
+    "d1-noapp": null,
+    "d1-noattempt": null
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": true,
+     "first_difference": {
+      "step": 1,
+      "version": "d1",
+      "obs": [],
+      "rows": [
+       "payload.route_distance"
+      ],
+      "same_catalog": true
+     }
+    },
+    "d1-noapp": {
+     "distinguishable": true,
+     "first_difference": {
+      "step": 1,
+      "version": "d1-noapp",
+      "obs": [],
+      "rows": [
+       "payload.route_distance"
+      ],
+      "same_catalog": true
+     }
+    },
+    "d1-noattempt": {
+     "distinguishable": true,
+     "first_difference": {
+      "step": 1,
+      "version": "d1-noattempt",
+      "obs": [],
+      "rows": [
+       "payload.route_distance"
+      ],
+      "same_catalog": true
+     }
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  },
+  {
+   "id": "10x-subset",
+   "distinction": 10,
+   "description": "DISCLOSURE: foreign current-subset record; hidden A1 weight differs (2 vs 3); A1 NOT inspected (others are); retrieve",
+   "construction": "7-action script, 8 states compared per version",
+   "carrier": "state",
+   "expected": {
+    "d1": null,
+    "d1-noapp": null,
+    "d1-noattempt": null
+   },
+   "versions": {
+    "d1": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noapp": {
+     "distinguishable": false,
+     "first_difference": null
+    },
+    "d1-noattempt": {
+     "distinguishable": false,
+     "first_difference": null
+    }
+   },
+   "version_pass": {
+    "d1": true,
+    "d1-noapp": true,
+    "d1-noattempt": true
+   },
+   "preconditions": {},
+   "pass": true,
+   "notes": ""
+  }
+ ],
+ "catalog_checks": {
+  "full_chain_with_foreign": {
+   "candidates": 216,
+   "duplicates": 0,
+   "missing": [],
+   "records": 14,
+   "problems": 14,
+   "pass": true
+  },
+  "full_chain_with_foreign_retrieved": {
+   "candidates": 216,
+   "duplicates": 0,
+   "missing": [],
+   "records": 14,
+   "problems": 14,
+   "pass": true
+  },
+  "after_selection_revocation": {
+   "candidates": 66,
+   "duplicates": 0,
+   "missing": [],
+   "records": 3,
+   "problems": 3,
+   "pass": true
+  },
+  "after_edge_closed": {
+   "candidates": 74,
+   "duplicates": 0,
+   "missing": [],
+   "records": 3,
+   "problems": 3,
+   "pass": true
+  }
+ },
+ "functional": {
+  "states": 523,
+  "candidates": 62152,
+  "noapp_invariant_to_relations": true,
+  "d1_sensitive_to_relations_states": 523,
+  "noattempt_invariant_to_attempts": true,
+  "d1_sensitive_to_attempts_states": 257,
+  "noattempt_equals_d1_off_mask": true,
+  "noapp_equals_d1_off_mask": true,
+  "noapp_offmask_differences": {
+   "constraint.bound_within_need": 1298,
+   "slot.meets_bound": 127,
+   "payload.meets_bound_or_selection_valid": 360
+  },
+  "masked_coordinates_zero": true,
+  "dimensions_equal": true,
+  "first_failure": null,
+  "pass": true
+ },
+ "dimensions": {
+  "d1": [
+   82,
+   153
+  ],
+  "d1-noapp": [
+   82,
+   153
+  ],
+  "d1-noattempt": [
+   82,
+   153
+  ]
+ },
+ "masks": {
+  "d1": {
+   "observation": [],
+   "candidate": [],
+   "observation_indices": [],
+   "candidate_indices": []
+  },
+  "d1-noapp": {
+   "observation": [
+    "route.applicable_known",
+    "route.distance",
+    "route.plan_meets_deadline",
+    "route.need_bound"
+   ],
+   "candidate": [
+    "record.request_match",
+    "record.canonical_match",
+    "record.dependency_match",
+    "record.requirements_match",
+    "record.selection_match",
+    "payload.route_starts_at_position",
+    "payload.route_ends_at_destination",
+    "payload.csp_items_equal_selection",
+    "draft.request_match",
+    "draft.dependency_match",
+    "start.matching_drafts",
+    "start.live_applicable_records"
+   ],
+   "observation_indices": [
+    22,
+    23,
+    24,
+    25
+   ],
+   "candidate_indices": [
+    28,
+    29,
+    30,
+    31,
+    32,
+    46,
+    47,
+    51,
+    53,
+    54,
+    81,
+    82
+   ]
+  },
+  "d1-noattempt": {
+   "observation": [
+    "attempts.count",
+    "attempts.rejected",
+    "attempts.uncommits"
+   ],
+   "candidate": [
+    "attempt.attempted",
+    "attempt.count",
+    "attempt.last_outcome.success",
+    "attempt.last_outcome.rejected",
+    "attempt.last_outcome.invalid_input",
+    "attempt.last_outcome.timeout",
+    "attempt.last_outcome.infeasible",
+    "attempt.last_outcome.incomplete",
+    "attempt.last_outcome.unavailable_resource",
+    "attempt.last_outcome.other",
+    "attempt.last_reason.capacity",
+    "attempt.last_reason.funds",
+    "attempt.last_reason.incompatibility",
+    "attempt.last_reason.slot_conflict",
+    "attempt.last_reason.slot_unavailable",
+    "attempt.last_reason.deadline",
+    "attempt.last_reason.stale_dependency",
+    "attempt.last_reason.type_mismatch",
+    "attempt.last_reason.not_applicable",
+    "attempt.last_reason.missing_edge",
+    "attempt.last_reason.category_coverage",
+    "attempt.last_reason.missing_dependency",
+    "attempt.last_reason.incomplete",
+    "attempt.last_reason.already_committed",
+    "attempt.last_reason.retrieve_required",
+    "attempt.last_reason.unknown_item",
+    "attempt.last_reason.travel_budget",
+    "attempt.last_reason.work_budget",
+    "attempt.dependencies_changed"
+   ],
+   "observation_indices": [
+    79,
+    80,
+    81
+   ],
+   "candidate_indices": [
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152
+   ]
+  }
+ },
+ "noapp_kept_payload_facts": [
+  "payload.route_distance",
+  "payload.route_meets_deadline",
+  "payload.finish_or_total_duration",
+  "payload.meets_bound_or_selection_valid"
+ ],
+ "need_bound_derived": [
+  "constraint.bound_within_need",
+  "slot.meets_bound",
+  "commit.assign_meets_bound",
+  "payload.meets_bound_or_selection_valid"
+ ]
+}
