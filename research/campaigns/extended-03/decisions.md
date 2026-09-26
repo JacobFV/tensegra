@@ -21,3 +21,10 @@
     - **F3** (the best-route deadline bound leaked applicability into X3): fixed in d1-noapp before any training.
     - **F4 and F5** (physical-fact and last-step residues in X3/X4): accepted by design. R3/R4 are to be read with them in mind. The R4 identical-retry comparison is primary on commits, use_return and moves.
   - **Training gate open.** Launching the 12 P1 bootstraps on the pro6000.
+- 2026-09-26T05:08–05:19Z: **12 P1 bootstraps done** on the pro6000 (source-4858b603). All exited 0, each in 532–617 s wall. The banks are each run's latest checkpoint, round-0-slot-5-attempt-5 (latest only, no selection); hashes are in configs/campaign03/p1-banks.json.
+  - Development readings (monitoring only; not an endpoint and not used for any choice), 128 dev worlds:
+    - X1: success .94–.95, utility .86–.88.
+    - X2: .92–.95, work per episode ~131–137 vs X1 ~111–113. The recompute teacher does more work, as designed.
+    - X3: .73–.79. Masked applicability hurts imitation.
+    - X4: .93–.95.
+- 2026-09-26T05:20Z: **12 P1 RL runs launched** (source-48d25e5a; 5 rounds × 60 updates × 6 slots = 1,800 AC updates each; caps 3 h wall and 6 h CPU per job).
