@@ -3,6 +3,7 @@
 See research/campaigns/extended-03/infrastructure.md. Subcommands:
   snapshot                 push the current worktree HEAD (must be clean) as source-<sha>
   launch SHA CONFIG...     launch each config as a detached job-wrapped systemd unit
+  launch-eval SHA CONFIG   launch a sealed evaluation (campaign02_evaluate.py, cuda) for one config
   status                   list campaign units and finished receipts
   fetch JOB...             copy launch/occupancy/state receipts to research/results/campaign-03/
 """
@@ -46,6 +47,13 @@ def launch(a):
     print(wsl("set -e\n" + "\n".join(lines) + "\n"))
 
 
+def launch_eval(a):
+    job = Path(a.config).stem
+    print(wsl(f"{ROOT}/bin/detach.sh {job} {ROOT}/source-{a.sha} {PY} research/tools/campaign02_job.py "
+              f"--output {ROOT}/results/{job}-process --wall-cap {a.wall_cap} --cpu-cap {a.cpu_cap} -- "
+              f"{PY} research/tools/campaign02_evaluate.py {a.config} --output {ROOT}/results/{job} --device cuda\n"))
+
+
 def status(_):
     print(wsl(f"""systemctl --user list-units --type=service --no-legend --plain 'p1-*' 'smoke*' 'e03-*' | awk '{{print $1, $3, $4}}'
 cd {ROOT}/results
@@ -70,6 +78,8 @@ def main():
     s.add_parser("snapshot").set_defaults(f=snapshot)
     l = s.add_parser("launch"); l.add_argument("sha"); l.add_argument("configs", nargs="+")
     l.add_argument("--wall-cap", type=float, default=5400); l.add_argument("--cpu-cap", type=float, default=7200); l.set_defaults(f=launch)
+    e = s.add_parser("launch-eval"); e.add_argument("sha"); e.add_argument("config")
+    e.add_argument("--wall-cap", type=float, default=14400); e.add_argument("--cpu-cap", type=float, default=28800); e.set_defaults(f=launch_eval)
     s.add_parser("status").set_defaults(f=status)
     f = s.add_parser("fetch"); f.add_argument("jobs", nargs="+"); f.set_defaults(f=fetch)
     a = p.parse_args(); a.f(a)
