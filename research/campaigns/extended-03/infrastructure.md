@@ -51,6 +51,7 @@ ssh -n pro6000 'wsl -d Ubuntu -- /home/brand/tensegra-campaign03/bin/detach.sh <
   --config configs/campaign03/<job>.json --output /home/brand/tensegra-campaign03/results/<job>'
 ```
 
+- **Helper:** `research/tools/campaign03_remote.py {snapshot,launch,status,fetch}` wraps the steps above (root only).
 - **Status:** `systemctl --user is-active <job>`, or check `occupancy.json` in `<job>-process`.
 - **Teardown after the campaign:** `schtasks /delete /tn TensegraWSLKeepalive /f` and `loginctl disable-linger brand`.
 
