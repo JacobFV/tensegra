@@ -169,3 +169,4 @@
 - 2026-09-26T21:52Z: **Housekeeping.**
   - Three decision entries (F2, F1, B2) carried timestamps ahead of wall-clock time (22:00–22:55Z). They are corrected to the actual times (21:42–21:50Z).
   - The ledger's 13 'running' entries are the failed launches (12 empty-SHA label jobs and b-labels-launchfail). They exited before the wrapper wrote occupancy receipts, and their CPU is negligible (< 1 core-s each).
+- 2026-09-26T21:55Z: **F1b registered** (protocol-F addendum; adaptive, labelled): the per-step no-progress clause on new sealed worlds from 180M with the same fresh bootstraps. Launched.

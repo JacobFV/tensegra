@@ -31,3 +31,14 @@ The confirmations target the two findings that met their screening criteria and 
 - F2 ≈ 5.5k (9 × ~530 training, 9 evaluations, references).
 - The independent audit of A2, C and F is ≈ 3k.
 - Projected total ≈ 125k of 172.8k (reserve intact).
+
+## F1b (registered 2026-09-26T21:55Z, AFTER F1 was scored; researcher-adaptive, labelled as such)
+
+F1 failed only on a mis-specified clause: the episode-level no-progress rate, which R-mask cannot reduce by construction (see decisions.md 21:50Z). F1b tests the originally intended A1 reading on **new sealed worlds**:
+- **Worlds:** seeds **180,000,000 + 100,000·i**, 512 per condition. The F1 worlds (170M) are not reused.
+- **Setup:** the same three fresh bootstraps (r3–r5); greedy vs r_mask.
+- **F1b-H (all in 3/3 lineages, IID group):**
+  - r_mask utility ≥ greedy − .005;
+  - r_mask success ≥ greedy − .01;
+  - the **per-step** no-progress rate under r_mask ≤ .5 × greedy's.
+- **Status:** F1 remains recorded as NOT SUPPORTED. F1b is a separate, adaptively registered test on fresh worlds; the report labels it as such.

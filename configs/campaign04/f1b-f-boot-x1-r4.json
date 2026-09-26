@@ -1,0 +1,234 @@
+{
+ "evaluation_batch": 32,
+ "references": [],
+ "reference_compute_tariff": 1.0,
+ "world_family": "depworld",
+ "progress_diagnostic": true,
+ "solver_cache": true,
+ "trace_observations": false,
+ "diagnostic_compute_units": 0.0,
+ "campaign": "extended-04",
+ "checkpoints": [
+  {
+   "name": "f-boot-x1-r4",
+   "path": "/home/brand/tensegra-campaign04/results/f-boot-x1-r4/checkpoints/round-0-slot-5-attempt-5.pt",
+   "sha256": "c7cd0d5bf49de07c6086741aa46139ed9bfe198a0b18762ce3d6dc219e50e881",
+   "family": "bootstrap",
+   "lineage": 4,
+   "arm": "x1",
+   "feature_version": "d1"
+  }
+ ],
+ "address_namespace": "e04f1b",
+ "experiment": "F1b confirmation (protocol-F, adaptive, fresh worlds)",
+ "conditions": [
+  {
+   "name": "iid_f0-greedy",
+   "base_condition": "iid_f0",
+   "mode": "greedy",
+   "world_family": "depworld",
+   "seed_start": 180000000,
+   "examples": 512,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 0,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "greedy",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "iid_f0-r_mask",
+   "base_condition": "iid_f0",
+   "mode": "r_mask",
+   "world_family": "depworld",
+   "seed_start": 180000000,
+   "examples": 512,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 0,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "r_mask",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "iid_f2-greedy",
+   "base_condition": "iid_f2",
+   "mode": "greedy",
+   "world_family": "depworld",
+   "seed_start": 180100000,
+   "examples": 512,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 2,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "greedy",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "iid_f2-r_mask",
+   "base_condition": "iid_f2",
+   "mode": "r_mask",
+   "world_family": "depworld",
+   "seed_start": 180100000,
+   "examples": 512,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 2,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "r_mask",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "events_train_kinds_p1-greedy",
+   "base_condition": "events_train_kinds_p1",
+   "mode": "greedy",
+   "world_family": "depworld",
+   "seed_start": 180200000,
+   "examples": 512,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 1.0,
+    "foreign_records": 2,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "greedy",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "events_train_kinds_p1-r_mask",
+   "base_condition": "events_train_kinds_p1",
+   "mode": "r_mask",
+   "world_family": "depworld",
+   "seed_start": 180200000,
+   "examples": 512,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 1.0,
+    "foreign_records": 2,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "r_mask",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "foreign4-greedy",
+   "base_condition": "foreign4",
+   "mode": "greedy",
+   "world_family": "depworld",
+   "seed_start": 180300000,
+   "examples": 512,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 4,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "greedy",
+   "progress_diagnostic": true,
+   "references": []
+  },
+  {
+   "name": "foreign4-r_mask",
+   "base_condition": "foreign4",
+   "mode": "r_mask",
+   "world_family": "depworld",
+   "seed_start": 180300000,
+   "examples": 512,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 4,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "r_mask",
+   "progress_diagnostic": true,
+   "references": []
+  }
+ ]
+}

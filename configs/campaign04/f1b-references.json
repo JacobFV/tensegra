@@ -1,0 +1,128 @@
+{
+ "evaluation_batch": 32,
+ "references": [],
+ "reference_compute_tariff": 1.0,
+ "world_family": "depworld",
+ "progress_diagnostic": true,
+ "solver_cache": true,
+ "trace_observations": false,
+ "diagnostic_compute_units": 0.0,
+ "campaign": "extended-04",
+ "checkpoints": [],
+ "address_namespace": "e04f1b",
+ "experiment": "F1b confirmation (protocol-F, adaptive, fresh worlds)",
+ "conditions": [
+  {
+   "name": "iid_f0-greedy",
+   "base_condition": "iid_f0",
+   "mode": "greedy",
+   "world_family": "depworld",
+   "seed_start": 180000000,
+   "examples": 512,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 0,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "greedy",
+   "progress_diagnostic": true,
+   "references": [
+    "dep_reuse"
+   ]
+  },
+  {
+   "name": "iid_f2-greedy",
+   "base_condition": "iid_f2",
+   "mode": "greedy",
+   "world_family": "depworld",
+   "seed_start": 180100000,
+   "examples": 512,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 2,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "greedy",
+   "progress_diagnostic": true,
+   "references": [
+    "dep_reuse"
+   ]
+  },
+  {
+   "name": "events_train_kinds_p1-greedy",
+   "base_condition": "events_train_kinds_p1",
+   "mode": "greedy",
+   "world_family": "depworld",
+   "seed_start": 180200000,
+   "examples": 512,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 1.0,
+    "foreign_records": 2,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "greedy",
+   "progress_diagnostic": true,
+   "references": [
+    "dep_reuse"
+   ]
+  },
+  {
+   "name": "foreign4-greedy",
+   "base_condition": "foreign4",
+   "mode": "greedy",
+   "world_family": "depworld",
+   "seed_start": 180300000,
+   "examples": 512,
+   "world": {
+    "categories": 3,
+    "choices": 3,
+    "locations": 7,
+    "slots": 6,
+    "compute_price": 0.0001,
+    "event_trigger": "progress",
+    "p_event": 0.5,
+    "foreign_records": 4,
+    "event_kinds": [
+     "edge_closed",
+     "capacity_reduced",
+     "slot_closed"
+    ]
+   },
+   "policy_mode": "greedy",
+   "progress_diagnostic": true,
+   "references": [
+    "dep_reuse"
+   ]
+  }
+ ]
+}
