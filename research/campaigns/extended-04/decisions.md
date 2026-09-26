@@ -122,3 +122,17 @@
     - (6) Every RL arm raises work per success over the bootstrap.
   - Conclusion: with this reward, recipe and horizon, on-policy actor-critic finds no deployable improvement over imitation. Improvement would require an objective that credits argmax/deployed behaviour, or a better teacher. dep_reuse is .04 above the bootstrap, and imitation leaves that gap open.
   - **No A2 Phase F.** Single lineage, exploratory; stated as screening evidence.
+- 2026-09-26T21:45Z: **Track C (protocol-C1) scored** (`campaign04_c1_score.py`; research/results/campaign-04/c1/). Evaluation CPU was 45.5k core-s, **~3× the 14k estimate**, the main budget overrun of the campaign (total 109.4k at 21:37Z).
+  - **C-H1 NOT SUPPORTED** (loop-prone):
+    - r0: learned .754 vs best fixed (R-sample) .781;
+    - r1: learned .798 vs .822;
+    - r2: learned .831 vs best fixed (R-mask) .813, i.e. **+.018 (< .02)**, cost .075 vs .099 (−24%), success .906 vs .912.
+  - **C-H2 passes by rule but trivially:** the learned controllers on bootstraps r1/r2 intervene at .006/.0004 of decisions, and r0 fails (.840 vs .851).
+  - **C-H3:** loop-prone NOT SUPPORTED (1/3). Competent passes only because matched-rate random intervention is harmful.
+  - **C-H4 SUPPORTED:** ECE .009–.026 on evaluation worlds; pooled predicted-vs-actual Spearman .55–.75 (CIs > 0). **Per intervention:** stop and mask-top effects are predicted (ρ .24–.57), while the sample-step effect is **not** (ρ ≈ −.18 to .23, mostly with CIs including 0).
+  - **C-H5:** mostly unevaluable (the learned gains are ≤ 0). On r2 the shuffled-target controller collapses (.374), so the only positive gain depends on trained appraisal. Appraisal-only equals the default (±1e-4, sanity).
+  - **Localized reading (registered):** calibrated appraisal of outcome and of stop/mask-top effects, but **no actionable headroom over simple public rules**, except a sub-threshold, single-lineage cost reduction on P1-RL r2.
+- 2026-09-26T21:50Z: **[protocol-F.md](protocol-F.md) registered.**
+  - F1: R-mask vs greedy on fresh bootstraps r3–r5, on sealed fresh worlds from 170M, 512 per condition.
+  - F2: probeworld L0/L1/L4 on fresh seeds 3–5 with fresh world draws (offset 700).
+  - Added `--world-offset` to the probeworld evaluation (default 500, so B1 is unchanged).

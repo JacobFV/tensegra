@@ -546,8 +546,12 @@ def rho_curve(rows, ref_rows):
     return out
 
 
-def eval_items(pool, split, worlds):
-    return [(cfg, s, pw.world_seed(split, idx, 500 + r)) for idx, cfg, s in pool for r in range(worlds)]
+EVAL_WORLD_OFFSET = 500  # B1 default; Phase F uses a fresh offset (--world-offset)
+
+
+def eval_items(pool, split, worlds, offset=None):
+    base = EVAL_WORLD_OFFSET if offset is None else offset
+    return [(cfg, s, pw.world_seed(split, idx, base + r)) for idx, cfg, s in pool for r in range(worlds)]
 
 
 def reference_policy_eval(items, name):
@@ -703,7 +707,7 @@ def cmd_eval(a):
     failure_records = {}
     for split in a.splits:
         pool = load_pool(a.labels, split)
-        items = eval_items(pool, split, a.worlds)
+        items = eval_items(pool, split, a.worlds, getattr(a, 'world_offset', None))
         ref_eps, ref_steps = reference_policy_eval(items, "pi_star")
         ref_rows = episode_metrics(items, ref_eps, ref_steps)
         free, rows = model_eval(model, items, "greedy")
@@ -731,7 +735,7 @@ def cmd_references(a):
     res = {}
     for split in a.splits:
         pool = load_pool(a.labels, split)
-        items = eval_items(pool, split, a.worlds)
+        items = eval_items(pool, split, a.worlds, getattr(a, 'world_offset', None))
         res[split] = {}
         for name in REFERENCE_POLICIES:
             eps, steps = reference_policy_eval(items, name)
@@ -804,11 +808,13 @@ def main(argv=None):
     s.add_argument("--run", required=True)
     s.add_argument("--worlds", type=int, default=4)
     s.add_argument("--splits", nargs="+", default=list(EVAL_SPLITS))
+    s.add_argument("--world-offset", type=int, default=None, help="eval world-seed offset (default 500 = B1)")
     s = sub.add_parser("references")
     s.add_argument("--labels", required=True)
     s.add_argument("--out", required=True)
     s.add_argument("--worlds", type=int, default=4)
     s.add_argument("--splits", nargs="+", default=list(EVAL_SPLITS))
+    s.add_argument("--world-offset", type=int, default=None, help="eval world-seed offset (default 500 = B1)")
     s = sub.add_parser("summarize")
     s.add_argument("--runs", nargs="+", required=True)
     s.add_argument("--out", required=True)
