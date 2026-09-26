@@ -89,3 +89,11 @@
   - **C1 (bootstrap anchor) development curve:** .95–.96 greedy success at every attempt, including 26–29.
   - **Registered deployment rule:** C0 deploys attempt 24 (24/30 qualify, the last before the collapse); C1 deploys attempt 29 (30/30 qualify), so C1's deployed checkpoint = its final.
   - Screening config: configs/campaign03/p2a-screening.json (6 checkpoints + dep_reuse; 4 conditions × greedy and sampled; seeds from 120M; 256 worlds each).
+- 2026-09-26T16:25Z: **Screening done** (exit 0; 2,825 core-s). The P2a analysis (research/results/campaign-03/p2a-analysis/) gives, pending independent audit:
+  - **S0 true** (C0 collapses: final greedy .000 on screening).
+  - **S1 true** (C1 greedy IID-group success .949 = bootstrap .949; no-progress .032 vs .037).
+  - **S2 false** (C1 utility .864 vs .872; work per success 166.8 vs 137.0, +22%).
+  - **S3:** C0 deployed at .900 vs final .000 is a deployment rule, not stable learning. C1's final is preserved and deployment adds nothing.
+  - Descriptive: sampled-mode work per success rises under every RL policy (bootstrap 163; C1 182; C0 234). RL improves sampled success slightly (.896 → .908–.916) while making it more expensive.
+  - Per the registered next-step rule, S1 holding means a confirmatory P2b for the anchor may be proposed (fresh lineages, sealed seeds, new budget). S2 failing means there is no improvement claim; the anchor preserves but does not improve.
+  - Independent audit commissioned (campaign/e03-p2a-audit).
