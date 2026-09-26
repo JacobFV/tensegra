@@ -39,3 +39,10 @@
   - **Evaluator changes are additive:** an audited DepWorkshop subclass logs facts only, verified identical to the plain world on the references. Training code is untouched.
 - 2026-09-26T07:51Z: **12 P1 RL runs done** (all exit 0, 6,944–8,800 s wall; the X3 runs were slowest). Endpoints are each run's latest checkpoint, round-4-slot-5-attempt-29 (latest only). The ledger stands at CPU 102.0k/172.8k core-s and GPU occupancy 9.7k/43.2k s.
 - 2026-09-26T07:52Z: **Sealed evaluation launched** (source-900d28da, configs/campaign03/p1-sealed.json): 24 endpoints (12 bootstraps + 12 RL) and 5 references over 8 conditions × 256 fresh worlds (seeds 110,000,000 + 100,000·i). Each sealed world is used once; there will be no re-evaluation after results are seen without a paired/non-confirmatory label.
+- 2026-09-26T10:41Z: **Sealed evaluation done** (exit 0, 10,158 s wall; all 8 conditions × 29 policies present). The registered analysis (research/results/campaign-03/p1-analysis/) gives, pending independent audit:
+  - R1 not supported, R2 not supported, R3 SUPPORTED, R4 SUPPORTED (retry clause; not supported on iid_f0), R5 not supported.
+  - **Dominant fact: late RL collapse.** Development curves (monitoring data) show X1-r0 and X1-r2 stable at ~.94–.95 for 25 of 30 attempts, then collapsing in attempts 26–29 (to .10 and .00). X4-r0 dipped to .23 at attempt 22 and partly recovered to .74. X4-r1 dropped to .48 in the last two attempts. X2-r0 drifted down to .70. X1-r1, X2-r1/r2, X3 (all) and X4-r2 are roughly stable.
+  - The registered latest-only endpoint rule (no checkpoint selection) captures the collapsed state. This is reported as-is; **no endpoint re-selection**. The AC v2 recipe from extended-02 is not stable over 1,800 updates in depworld.
+  - R3/R4 pair X3/X4 with X1 RL, two of whose lineages collapsed. The auditor is asked for descriptive bootstrap-endpoint and r1-only readings (not registered).
+  - An anomaly for the auditor: X2 bootstraps (recompute teacher, 0.000 correct reuse) show correct-reuse rates of .03–.97 on sealed conditions.
+  - Independent raw-row audit commissioned (campaign/e03-p1-audit).

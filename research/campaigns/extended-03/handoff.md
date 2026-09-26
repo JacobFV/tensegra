@@ -20,7 +20,8 @@ History:
 - **Stage B preflight: PASSED and merged** (a0fd65ab; [review/stage-b-preflight.md](review/stage-b-preflight.md)). `campaign/e03-preflight` (caf1a785) is superseded.
 - **P1 bootstraps:** done, 12/12 (banks in `configs/campaign03/p1-banks.json`).
 - **P1 RL:** done, 12/12.
-- **P1 sealed evaluation:** running on the pro6000 (launched 07:52Z; ~80 min).
+- **P1 sealed evaluation:** done (10,158 s). The analysis is in `research/results/campaign-03/p1-analysis/`: R3 and R4 supported; R1, R2 and R5 not supported, driven by late RL collapse in X1-r0/r2 (see decisions.md).
+- **Independent audit:** running on `campaign/e03-p1-audit`.
 - **Metrics and evaluator readiness: done** (merged 45d8b25a). See [protocol-P1-metrics.md](protocol-P1-metrics.md). The sealed-evaluation commands are below.
 
 ## Next (resume checklist)
