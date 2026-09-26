@@ -603,6 +603,12 @@ class DepWorkshop:
                          f["work_units"], 0, deepcopy(f["snapshot"]), deepcopy(f["depends_on"]), label=f["label"])
         self._cache = self.observe()
 
+    def clone(self) -> "DepWorkshop":
+        """Independent copy of the full episode state (spec, dynamics, handle RNG, history,
+        accounting) that SHARES the executor: the executor (and any solver worker, process
+        handle or pipe it holds) is never copied. extended-04 design v2 revision 5."""
+        return deepcopy(self, {id(self._executor): self._executor})
+
     # --- accounting -------------------------------------------------------
     def charge_compute(self, units: float) -> None:
         if isinstance(units, bool) or not isinstance(units, (int, float)) or not math.isfinite(units) or units < 0:

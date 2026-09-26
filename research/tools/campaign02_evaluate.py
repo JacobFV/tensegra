@@ -286,10 +286,25 @@ def main():
             # sample per world from a stream seeded by (world seed, sampling_seed) only.
             policy_mode = condition.get("policy_mode", cfg.get("policy_mode", "greedy"))
             sampling_seed = condition.get("sampling_seed", cfg.get("sampling_seed"))
-            if policy_mode not in ("greedy", "sampled"):
+            # extended-04 deployment procedures (campaign04_deploy): r_mask, r_sample, masked_sampled,
+            # and the opt-in progress diagnostic (depworld only). Unset = historical code path.
+            deploy_modes = ("r_mask", "r_sample", "masked_sampled")
+            diagnostic = policy_mode in deploy_modes or bool(condition.get("progress_diagnostic",
+                                                                             cfg.get("progress_diagnostic", False)))
+            if policy_mode not in ("greedy", "sampled") + deploy_modes:
                 raise ValueError(f"Unknown policy_mode {policy_mode!r}")
-            if policy_mode == "sampled" and not isinstance(sampling_seed, int):
+            if policy_mode in ("sampled", "r_sample", "masked_sampled") and not isinstance(sampling_seed, int):
                 raise ValueError("Sampled evaluation needs an explicit integer sampling_seed")
+            if diagnostic and not depworld:
+                raise ValueError("The progress diagnostic and deployment procedures are defined for depworld only")
+            if diagnostic:
+                from topoformer.campaign04_deploy import TrackedEnvironment, deploy_episodes
+                for module in ("campaign04_progress", "campaign04_deploy", "campaign04_branch"):
+                    sources[module] = file_hash(Path(training.__file__).with_name(f"{module}.py"))
+            solver_cache = None
+            if depworld and cfg.get("solver_cache", False):
+                from topoformer.campaign04_branch import SolverCache
+                solver_cache = condition_executor = SolverCache(condition_executor)  # exact memo, fresh per condition
             faults = condition_faults(condition)
             def factory(index):
                 kwargs = {"executor":condition_executor,"address_seed":independent_address_seed(seeds[index],namespace)}
@@ -319,17 +334,26 @@ def main():
                 with torch.no_grad():
                     for offset in range(0, n, batch_size):
                         indices = list(range(offset, min(n, offset+batch_size)))
-                        samplers = None if policy_mode == "greedy" else [
+                        samplers = None if policy_mode in ("greedy", "r_mask") else [
                             random.Random(sampling_rng_seed(seeds[i], sampling_seed)) for i in indices]
-                        outputs = batched_episodes(policy, [factory(i) for i in indices], device=args.device,
-                            max_steps=train_cfg.max_steps, neural_work_per_forward=train_cfg.neural_work_per_forward,
-                            **({} if samplers is None else {"samplers": samplers}))
+                        if diagnostic:
+                            outputs = deploy_episodes(policy, [factory(i) for i in indices], mode=policy_mode,
+                                device=args.device, max_steps=train_cfg.max_steps,
+                                neural_work_per_forward=train_cfg.neural_work_per_forward, samplers=samplers,
+                                diagnostic_compute_units=condition.get("diagnostic_compute_units",
+                                                                       cfg.get("diagnostic_compute_units", 0.0)))
+                        else:
+                            outputs = batched_episodes(policy, [factory(i) for i in indices], device=args.device,
+                                max_steps=train_cfg.max_steps, neural_work_per_forward=train_cfg.neural_work_per_forward,
+                                **({} if samplers is None else {"samplers": samplers}))
                         for i, result in zip(indices, outputs):
                             rows.append({"seed": seeds[i], "spec_hash": world_rows[i]["spec_hash"], "semantic_spec_hash":world_rows[i]["semantic_spec_hash"], **result,
                                          "counts": episode_counts(result["outcome"])})
                             if samplers is not None:
-                                rows[-1].update(policy_mode="sampled", sampling_seed=sampling_seed,
+                                rows[-1].update(policy_mode=policy_mode, sampling_seed=sampling_seed,
                                                 sampling_rng_seed=sampling_rng_seed(seeds[i], sampling_seed))
+                            elif policy_mode != "greedy":
+                                rows[-1].update(policy_mode=policy_mode)
                 if not cfg.get("trace_observations", True):
                     # Opt-in size control: drop the per-step public observation copies from learned
                     # traces (the exact action/feedback history and the P1 audit remain in the row).
@@ -346,16 +370,19 @@ def main():
                     "checkpoint_updates": checkpoint["updates"], "checkpoint_presentations": checkpoint["presentations"],
                     **({} if policy_mode == "greedy" else {"policy_mode": policy_mode, "sampling_seed": sampling_seed,
                         "sampling_rule": "one sample per world; random.Random(sampling_rng_seed(world seed, sampling_seed, 0)); "
-                                         "one uniform per decision through float64 softmax (inverse CDF)"})})
+                                         "one uniform per decision through float64 softmax (inverse CDF)"}),
+                    **({"progress_diagnostic": True, "deployment_rule": policy_mode} if diagnostic else {})})
                 by_arm[binding["name"]] = light_rows(rows)
                 del policy, checkpoint, rows
             for mode in condition.get("references", cfg.get("references", ["cheap", "always_tool", "cheap_first"])):
                 rows = []
                 for i, seed in enumerate(seeds):
-                    outcome = run_episode(factory(i), make_reference(mode), cfg.get("reference_compute_tariff", 0.0))
+                    world = TrackedEnvironment(factory(i)) if diagnostic else factory(i)
+                    outcome = run_episode(world, make_reference(mode), cfg.get("reference_compute_tariff", 0.0))
                     outcome.pop("trace", None)  # Same information retained once in exact history.
                     rows.append({"seed": seed, "spec_hash": world_rows[i]["spec_hash"], "semantic_spec_hash":world_rows[i]["semantic_spec_hash"], "outcome": outcome,
-                                 "counts": episode_counts(outcome), "truncated": False})
+                                 "counts": episode_counts(outcome), "truncated": False,
+                                 **({"progress": world.tracker.summary()} if diagnostic else {})})
                 artifact = folder/f"reference-{mode}.jsonl.gz"
                 write_rows(artifact, rows)
                 summary["results"].append({"condition": name, "arm": f"reference-{mode}", "kind": "supplied_schedule",
@@ -372,6 +399,8 @@ def main():
                     summary["paired"].append({"condition": name, "learned": binding["name"], "comparator": other_name,
                         "success_transitions_comparator_to_learned": dict(transitions), "support": n,
                         "mean_utility_difference": sum(x["outcome"]["utility"]-y["outcome"]["utility"] for x,y in zip(a,b))/n})
+            if solver_cache is not None:
+                summary.setdefault("solver_cache", {})[name] = solver_cache.stats()
             (args.output/"summary.partial.json").write_text(json.dumps(summary, indent=2))
         for condition in cfg["conditions"]:
             if "paired_control" not in condition:
