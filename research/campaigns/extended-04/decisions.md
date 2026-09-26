@@ -82,9 +82,9 @@
   - **(ii) R-mask does no harm to the competent policies:** bootstrap utility within ±.003 of greedy, with the no-progress rate cut 5–7× (.055–.115 → .008–.016). C1: .854 → .856. Sampled is the worst mode for every competent policy (−.06 to −.07 utility). No learned policy in any mode beats dep_reuse (.908) or dep_recompute (.904).
   - **(iii) Track C headroom:** on the loop-prone bases, default (R-mask) utility sits .04–.09 below the competent bootstrap, which is the space a metacontroller could recover. On the competent bases, the only room is the residual gap to dep_reuse (~.04).
 - 2026-09-26T20:36Z: Track C label chunks 0–15 done for all 6 bases (12 jobs, exit 0, ~5.3k core-s < 8k), so the third chunk (16–23) was launched per protocol-C1.
-- 2026-09-26T21:00Z: **Correction to the 19:55Z B-H6 note.** The claim that the "L1–L4 value heads are trained toward V*" is **wrong**. No loss uses V*. The value head is trained on the Monte-Carlo return-to-go of the **sampled** training rollouts; only the Q head uses Q* (in L4). The B1 numbers also show value-vs-own-return and value-vs-V* errors to be nearly equal, and the in-distribution error is not small. The live hypotheses are a sampled-training vs greedy-evaluation continuation mismatch, generalization, or fit/capacity.
+- 2026-09-26T20:38Z: **Correction to the 19:55Z B-H6 note.** The claim that the "L1–L4 value heads are trained toward V*" is **wrong**. No loss uses V*. The value head is trained on the Monte-Carlo return-to-go of the **sampled** training rollouts; only the Q head uses Q* (in L4). The B1 numbers also show value-vs-own-return and value-vs-V* errors to be nearly equal, and the in-distribution error is not small. The live hypotheses are a sampled-training vs greedy-evaluation continuation mismatch, generalization, or fit/capacity.
   - **B2** ([protocol-B2.md](protocol-B2.md), registered before any run by the builder) adds a stop-gradient `v_own` head trained on own-greedy returns. B1 parameters and evaluation are bit-identical when it is on. Merged (268c21ae); launched with 6 runs (L4 and L1 × 3 seeds, ~4k core-s).
-- 2026-09-26T21:05Z: **Independent B1 audit merged** (60785946).
+- 2026-09-26T20:39Z: **Independent B1 audit merged** (60785946).
   - The rescoring matches b1-score.json exactly. Labels are verified by brute force (8 configs, 2e-10) and Monte Carlo (178 tests). There are 0 label conflicts across 9,786 histories, splits are disjoint by generator parameters, inputs contain 0 leaks (2,525 steps rebuilt from public information), and streams and initializations match across rungs.
   - **Corrections adopted for the report:**
     - **B-H1** is worded as "L1-level action-set supervision and above beats outcome-only actor-critic, which is stuck at a non-probing local optimum (prop → exact_b1 → commit)".
@@ -97,9 +97,9 @@
   - Development readings (label development split; not an evaluation): ECE .011–.06.
   - The registered one-step gain over greedy + R-mask is ≈ 0 on the bootstraps and on P1-RL r0/r1 (several seeds registered m = ∞, i.e. never intervene). It is .017–.020 on P1-RL r2.
   - **Track C evaluation launched:** 24 tier-1 jobs (6 bases × 4 conditions; branch evaluation on the IID conditions) plus 6 causal jobs, on evaluation worlds from 161M. B2 evaluations launched: 6 jobs.
-- 2026-09-26T20:55Z: **A2 training done** (5 runs, exit 0, ~4.5–5k core-s each). Deployment rule (P2a rule): reh/imit/crit/dep deploy their finals (30/30 qualify). **a2-ent deploys attempt 24** (24/30 qualify). Screening configs (configs/campaign04/a2s-*.json): 9 policies + dep_reuse; seeds 140M per protocol-A2; modes greedy/sampled/r_mask. Launched.
-- 2026-09-26T21:00Z: **Phase F preparation:** three fresh X1 bootstraps (lineages r3–r5, the P1 recipe via campaign03_p1_configs.boot; training 3.06e9/3.08e9/3.10e9, development 3.903e9–3.905e9, initialization 300300+; disjoint from r0–r2 and all RL streams) launched now, so any promoted arm or controller can be confirmed on fresh lineages. The bootstrap recipe is unchanged; the fast path is result-identical.
-- 2026-09-26T21:35Z: **A2 screening done** (10 jobs, exit 0, 8.65k core-s). The registered promotion rule (`campaign04_a2_promote.py`; research/results/campaign-04/a2s/) **promotes no arm**. IID group, lineage X1-r2, screening seeds 140M:
+- 2026-09-26T20:51Z: **A2 training done** (5 runs, exit 0, ~4.5–5k core-s each). Deployment rule (P2a rule): reh/imit/crit/dep deploy their finals (30/30 qualify). **a2-ent deploys attempt 24** (24/30 qualify). Screening configs (configs/campaign04/a2s-*.json): 9 policies + dep_reuse; seeds 140M per protocol-A2; modes greedy/sampled/r_mask. Launched.
+- 2026-09-26T20:52Z: **Phase F preparation:** three fresh X1 bootstraps (lineages r3–r5, the P1 recipe via campaign03_p1_configs.boot; training 3.06e9/3.08e9/3.10e9, development 3.903e9–3.905e9, initialization 300300+; disjoint from r0–r2 and all RL streams) launched now, so any promoted arm or controller can be confirmed on fresh lineages. The bootstrap recipe is unchanged; the fast path is result-identical.
+- 2026-09-26T21:32Z: **A2 screening done** (10 jobs, exit 0, 8.65k core-s). The registered promotion rule (`campaign04_a2_promote.py`; research/results/campaign-04/a2s/) **promotes no arm**. IID group, lineage X1-r2, screening seeds 140M:
 
   | Policy | greedy | R-mask | sampled | work/success (greedy) |
   |---|---:|---:|---:|---:|
@@ -122,7 +122,7 @@
     - (6) Every RL arm raises work per success over the bootstrap.
   - Conclusion: with this reward, recipe and horizon, on-policy actor-critic finds no deployable improvement over imitation. Improvement would require an objective that credits argmax/deployed behaviour, or a better teacher. dep_reuse is .04 above the bootstrap, and imitation leaves that gap open.
   - **No A2 Phase F.** Single lineage, exploratory; stated as screening evidence.
-- 2026-09-26T21:45Z: **Track C (protocol-C1) scored** (`campaign04_c1_score.py`; research/results/campaign-04/c1/). Evaluation CPU was 45.5k core-s, **~3× the 14k estimate**, the main budget overrun of the campaign (total 109.4k at 21:37Z).
+- 2026-09-26T21:40Z: **Track C (protocol-C1) scored** (`campaign04_c1_score.py`; research/results/campaign-04/c1/). Evaluation CPU was 45.5k core-s, **~3× the 14k estimate**, the main budget overrun of the campaign (total 109.4k at 21:37Z).
   - **C-H1 NOT SUPPORTED** (loop-prone):
     - r0: learned .754 vs best fixed (R-sample) .781;
     - r1: learned .798 vs .822;
@@ -132,11 +132,11 @@
   - **C-H4 SUPPORTED:** ECE .009–.026 on evaluation worlds; pooled predicted-vs-actual Spearman .55–.75 (CIs > 0). **Per intervention:** stop and mask-top effects are predicted (ρ .24–.57), while the sample-step effect is **not** (ρ ≈ −.18 to .23, mostly with CIs including 0).
   - **C-H5:** mostly unevaluable (the learned gains are ≤ 0). On r2 the shuffled-target controller collapses (.374), so the only positive gain depends on trained appraisal. Appraisal-only equals the default (±1e-4, sanity).
   - **Localized reading (registered):** calibrated appraisal of outcome and of stop/mask-top effects, but **no actionable headroom over simple public rules**, except a sub-threshold, single-lineage cost reduction on P1-RL r2.
-- 2026-09-26T21:50Z: **[protocol-F.md](protocol-F.md) registered.**
+- 2026-09-26T21:40Z: **[protocol-F.md](protocol-F.md) registered.**
   - F1: R-mask vs greedy on fresh bootstraps r3–r5, on sealed fresh worlds from 170M, 512 per condition.
   - F2: probeworld L0/L1/L4 on fresh seeds 3–5 with fresh world draws (offset 700).
   - Added `--world-offset` to the probeworld evaluation (default 500, so B1 is unchanged).
-- 2026-09-26T21:55Z: Fresh bootstraps r3–r5 done (exit 0). F1 configs built (latest checkpoints, hashes recorded; sealed seeds 170M, 512 per condition, greedy + r_mask, plus a dep_reuse reference). F1 launched; F2 (9 trainings) launched.
+- 2026-09-26T21:40Z: Fresh bootstraps r3–r5 done (exit 0). F1 configs built (latest checkpoints, hashes recorded; sealed seeds 170M, 512 per condition, greedy + r_mask, plus a dep_reuse reference). F1 launched; F2 (9 trainings) launched.
 - 2026-09-26T21:42Z: **B2 scored** as registered (`campaign04_b2_score.py`; research/results/campaign-04/b2/). **Primary NOT SUPPORTED:** the own-greedy-return value head `v_own` is no better calibrated on held-out splits than V.
   - L4 v_own reliability error, per seed:
 
@@ -150,7 +150,7 @@
   - The policy is unchanged, as required: B1 parameters and evaluation keys are bit-identical, with 0 regret difference.
   - **Failure prediction:** commit-level AUROC .45–.65, CIs include .5 (9–20 wrong commits per seed); not supported.
   - **Registered reading:** "not continuation". The value estimates fail to generalize to held-out generator regions (k = 4 worst), matching the B1 auditor's diagnosis. **Deliverable 4 status:** calibration holds in-distribution in both tracks (probeworld test_iid; depworld Track C ECE ≤ .026 on fresh worlds of the training distribution), but not under generator-parameter shift in probeworld.
-- 2026-09-26T21:47Z: **F2 confirmation scored** (`campaign04_f2_score.py`; research/results/campaign-04/f2/). Fresh seeds 3–5, fresh world draws (offset 700), 512 per held-out split. All 9 trainings and 10 evaluations exited 0 (training 3.75k core-s).
+- 2026-09-26T21:49Z: **F2 confirmation scored** (`campaign04_f2_score.py`; research/results/campaign-04/f2/). Fresh seeds 3–5, fresh world draws (offset 700), 512 per held-out split. All 9 trainings and 10 evaluations exited 0 (training 3.75k core-s).
   - **F2-H1 SUPPORTED (3/3 pairs):** held-out regret L0 39.0/82.3/72.5 vs L1 1.9/2.6/2.0 and L4 2.6/1.7/1.5. π* ≈ 0; fixed rules 99–126. All pass the transfer floor.
   - **F2-H2 SUPPORTED (3/3):** ρ-bin deviation .016–.042.
   - **F2-H3 SUPPORTED (pooled, 3/3):** probe when not optimal ≤ .01, uniquely-optimal probe .83–.86.
@@ -166,17 +166,17 @@
   - **Mechanism (a specification error in protocol-F, not a rule failure):** R-mask masks an action only *after* the diagnostic flags its first stagnant repeat. An episode that stalls therefore always records at least that first no-progress step, and the episode rate cannot fall by construction. The A1 reading F1 was meant to confirm was the **per-step** rate. Protocol-F transcribed it as the episode rate.
   - **Descriptive, not registered:** the per-step no-progress rate falls 4–7× in every fresh lineage (.013 → .003, .052 → .013, .077 → .011), and on the events and foreign4 conditions (.022–.085 → .004–.015). All conditions meet the absolute floor (success ≥ .8 × dep_reuse).
   - The report states the registered failure and the per-step reading side by side; no pass is claimed.
-- 2026-09-26T21:52Z: **Housekeeping.**
+- 2026-09-26T21:51Z: **Housekeeping.**
   - Three decision entries (F2, F1, B2) carried timestamps ahead of wall-clock time (22:00–22:55Z). They are corrected to the actual times (21:42–21:50Z).
   - The ledger's 13 'running' entries are the failed launches (12 empty-SHA label jobs and b-labels-launchfail). They exited before the wrapper wrote occupancy receipts, and their CPU is negligible (< 1 core-s each).
-- 2026-09-26T21:55Z: **F1b registered** (protocol-F addendum; adaptive, labelled): the per-step no-progress clause on new sealed worlds from 180M with the same fresh bootstraps. Launched.
+- 2026-09-26T21:51Z: **F1b registered** (protocol-F addendum; adaptive, labelled): the per-step no-progress clause on new sealed worlds from 180M with the same fresh bootstraps. Launched.
 - 2026-09-26T21:58Z: **F1b SUPPORTED** (adaptive registration, fresh sealed worlds from 180M; 4 jobs, exit 0, 1.08k core-s). In 3/3 fresh lineages, IID group:
   - r_mask utility ≥ greedy: +.0002, +.0010, +.0019;
   - success: +.001, +.002, +.003;
   - per-step no-progress rate down 3.8–6.9×: .028 → .006, .047 → .013, .077 → .011.
 
   dep_reuse scores .901. Report wording: "a supplied public recovery rule (R-mask over diagnostic v1) removes most stagnant steps at no utility or success cost on fresh competent lineages and sealed worlds (F1b, registered after F1's mis-specified episode-level clause failed)". It is a supplied mechanism, not learned control.
-- 2026-09-26T22:05Z: **Independent A2/C/A1 audit merged** (388b212e). The A2 promotion (none) and C-H1…C-H4 reproduce exactly (≤ 1e-15). Integrity: all checks pass (seeds, identical worlds, deployment re-derivation, config diffs, hashes, 161M eval range, label/eval disjointness, appraisal-only ≡ R-mask on 6,144 worlds, meta charge once, 18/18 m/τ registrations, telemetry public-only). **Corrections adopted (they supersede the 21:35Z and 21:45Z readings):**
+- 2026-09-26T22:07Z: **Independent A2/C/A1 audit merged** (388b212e). The A2 promotion (none) and C-H1…C-H4 reproduce exactly (≤ 1e-15). Integrity: all checks pass (seeds, identical worlds, deployment re-derivation, config diffs, hashes, 161M eval range, label/eval disjointness, appraisal-only ≡ R-mask on 6,144 worlds, meta charge once, 18/18 m/τ registrations, telemetry public-only). **Corrections adopted (they supersede the 21:35Z and 21:45Z readings):**
   - **A2 reason (2) withdrawn as stated.** The sampled-mode gain is *not* attributable to RL: imitation-only (RL off) gives the largest sampled gain (+.047 ± .012), the RL arms +.022 to +.035, and C0 +.006.
   - **A2 reason (1)** is reworded as "not above the bootstrap's best mode" (dep greedy is +.002 ± .003 over bootstrap greedy).
   - **A2 reason (3)** holds (RL added to rehearsal: −.0019 ± .0005 greedy).
@@ -189,4 +189,19 @@
   - **C-H5 corrected:** it passes on P1-RL r2, **fails on boot r1** (the shuffled controller keeps 115% of a noise-level +.002 gain), and is unevaluable elsewhere. It should be computed on paired worlds. It is a weak test, because the shuffled controller intervenes at nearly every step.
   - **Accounting:** the 89 A1/A2/C jobs total 90,477 core-s; the Track C evaluation overrun is confirmed at 45.5k (3.25×). The empty-SHA launches never ran (argv[0] was `CUDA_VISIBLE_DEVICES=`).
   - Auditor CPU: 575 core-s metered, plus ~250 core-s local.
-- 2026-09-26T22:10Z: **[protocol-A3.md](protocol-A3.md) registered** (adaptive follow-up after the A2 audit): unanchored on-policy imitation (a2-imit minus the anchor), screening on fresh worlds from 190M, promotion rule, and pre-registered F3 confirmation (r3–r5, sealed 200M). Launched.
+- 2026-09-26T22:07Z: **[protocol-A3.md](protocol-A3.md) registered** (adaptive follow-up after the A2 audit): unanchored on-policy imitation (a2-imit minus the anchor), screening on fresh worlds from 190M, promotion rule, and pre-registered F3 confirmation (r3–r5, sealed 200M). Launched.
+- 2026-09-26T22:12Z: **Independent Phase F/B2 audit merged** (69c975bd). Every registered verdict for F1 (NOT supported), F1b (supported), F2 (supported pooled) and B2 (primary not supported) reproduces, and none is overturned.
+  - **Integrity confirmed:** fresh worlds (180M / 170M disjoint, identical across arms); bootstrap hashes and streams; registration order from git and snapshots; F2 offset-700 worlds share 0 of 1,536 with B1.
+  - F1's mechanism is confirmed at row level: the stalled-episode sets are identical across modes in 48/48 cells, and trajectories match through the first flagged step.
+  - **Corrections adopted for the report:**
+    - Deliverable 3:
+      - stagnant steps are down **73–86%**;
+      - "adaptively registered (a replication on fresh worlds, not blind)";
+      - R-mask does not reduce the share of stalled episodes;
+      - per-episode cost rises slightly (+.0003 to +.0015) in all 6 runs;
+      - "no utility or success cost" (F1 r4 −.0015 is significant but inside the margin);
+      - the step reduction is near-mechanical because the rule acts on the same diagnostic that scores it; the finding is that utility and success do not fall.
+    - Deliverable 4: "calibrated in-distribution" holds for **L4 only** (L1 .055–.16). heldout_price passes in 2/3 L4 seeds. B2's reading narrows to "a linear readout of the B1 trunk is no better calibrated than V", and seed 2's dev value is .051, at the edge.
+    - F2: the heldout_comp shortfall is **a probing limit**; switch-per-failed-probe is .90–.98 of π*. F2 freshness means "fresh training seeds and outcome draws on B1's held-out configurations".
+    - B2 failure prediction is uninformative (oracle Q*/V* AUROC is also only .49–.62).
+  - **Decision-log timestamps from ~20:38Z onward were hand estimates and drifted. All are now aligned to their git commit times.** The protocol-F registration (commit 21:40) preceded the F1/F2 launches (21:40–21:41).
