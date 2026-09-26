@@ -19,7 +19,8 @@ History:
 ## In progress
 - **Stage B preflight: PASSED and merged** (a0fd65ab; [review/stage-b-preflight.md](review/stage-b-preflight.md)). `campaign/e03-preflight` (caf1a785) is superseded.
 - **P1 bootstraps:** done, 12/12 (banks in `configs/campaign03/p1-banks.json`).
-- **P1 RL:** 12 running on the pro6000 (launched 05:20Z).
+- **P1 RL:** done, 12/12.
+- **P1 sealed evaluation:** running on the pro6000 (launched 07:52Z; ~80 min).
 - **Metrics and evaluator readiness: done** (merged 45d8b25a). See [protocol-P1-metrics.md](protocol-P1-metrics.md). The sealed-evaluation commands are below.
 
 ## Next (resume checklist)
