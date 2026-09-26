@@ -70,3 +70,14 @@
   - Dev smoke (descriptive): little one-step headroom over greedy + R-mask for sample and mask-top; "stop" beats the default at 22% of loop-prone label points, where the default then fails.
   - Integrity: a pre-registration smoke touched the first 16 registered evaluation worlds (160M), so the evaluation range was moved to **161M**. **[protocol-C1.md](protocol-C1.md)** registered: C-H1…C-H5, split by base type, with random and threshold controls, calibration and causal checks.
 - 2026-09-26T20:35Z: 12 Track C label launches went out with an **empty snapshot SHA** (the snapshot was refused because the ledger had dirtied budget.json, and the shell continued). They failed immediately; receipts renamed *-emptysha-process and charged. The helper now refuses a malformed or missing snapshot.
+- 2026-09-26T20:40Z: **A1 deployment matrix done** (8 jobs, exit 0, 4,844 core-s). Analysis: research/results/campaign-04/a1/. IID-group readings (descriptive, per protocol-A1):
+  - **(i) Public recovery rules rescue the collapsed P1-RL policies.**
+
+    | Policy | greedy | R-mask | R-sample | sampled |
+    |---|---:|---:|---:|---:|
+    | r0 success | .078 | .865 | .881 | .838 |
+    | r2 success | .000 | .918 | .920 | .885 |
+
+    Their utility is .77–.83, which is still **below the bootstrap greedy (.857–.871)**. P1-RL r1 (stable): greedy .825 → R-mask .836.
+  - **(ii) R-mask does no harm to the competent policies:** bootstrap utility within ±.003 of greedy, with the no-progress rate cut 5–7× (.055–.115 → .008–.016). C1: .854 → .856. Sampled is the worst mode for every competent policy (−.06 to −.07 utility). No learned policy in any mode beats dep_reuse (.908) or dep_recompute (.904).
+  - **(iii) Track C headroom:** on the loop-prone bases, default (R-mask) utility sits .04–.09 below the competent bootstrap, which is the space a metacontroller could recover. On the competent bases, the only room is the residual gap to dep_reuse (~.04).
