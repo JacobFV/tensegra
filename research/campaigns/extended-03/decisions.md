@@ -28,3 +28,12 @@
     - X3: .73–.79. Masked applicability hurts imitation.
     - X4: .93–.95.
 - 2026-09-26T05:20Z: **12 P1 RL runs launched** (source-48d25e5a; 5 rounds × 60 updates × 6 slots = 1,800 AC updates each; caps 3 h wall and 6 h CPU per job).
+- 2026-09-26: **P1 metric operationalization registered** ([protocol-P1-metrics.md](protocol-P1-metrics.md), merged 45d8b25a) while the RL runs were training and **before any sealed evaluation**. The only outputs anyone had seen were the bootstrap development summaries above; the author saw no p1-* outputs at all.
+  - **Accepted choices:**
+    - **Correct reuse:** per stage window. An opportunity is an applicable, pre-existing reusable record that is also completable, a hidden evaluator label. Reuse counts only if no solver call for that primitive came first in the window. Calibration: dep_reuse 1.00, dep_recompute 0.00.
+    - **Identical retry:** per rejection on commit/use_return/move, with the same action_key and an unchanged `relevant_dependencies` snapshot. This inherits F1; a secondary excludes missing_dependency.
+    - Stale use ⊂ invalid use.
+    - Revision quality: success without over-revision.
+    - Condition values are ratios of sums. Groups are equal-weighted, and undefined is not zero. Verdicts use point estimates; the bootstrap intervals are descriptive.
+    - Rule readings: R2 on the IID group. R3 on foreign4, events_train_kinds_p1 and heldout_deadline_moved, with per-condition readings reported. R4 on all eight conditions, with its success clause read at the lineage mean. R5 on heldout_deadline_moved against IID.
+  - **Evaluator changes are additive:** an audited DepWorkshop subclass logs facts only, verified identical to the plain world on the references. Training code is untouched.
