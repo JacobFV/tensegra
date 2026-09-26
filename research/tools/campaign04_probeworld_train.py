@@ -7,6 +7,9 @@ Subcommands (all deterministic given their arguments; see research/campaigns/ext
   train   --labels DIR --out DIR --rung L0..L4 --seed S [--updates U] [--batch B]
       One ladder run.  Every rung: identical model (all heads present), identical config/world stream,
       identical optimizer and number of updates/episodes; rungs differ only in which loss weights are > 0.
+      --own-value (protocol-B2, default off): add a separate head v_own on the stop-gradient trunk features,
+      trained on the realized return-to-go of the model's OWN free-running greedy rollouts at the current
+      parameters (continuation OWN_VALUE_CONTINUATION).  Off -> B1 behaviour bit-identical.
   eval    --labels DIR --run DIR [--worlds W]
       Free-running greedy and teacher-forced (pi* histories) evaluation on dev/test_iid/heldout_* pools.
   summarize --runs DIR... --out FILE
@@ -18,6 +21,7 @@ public config vector plus the visible step record and the public available-actio
 from __future__ import annotations
 
 import argparse
+import bisect
 import json
 import math
 import os
@@ -50,6 +54,10 @@ STEP_DIM = (pw.N_ACTIONS + 1) + (pw.N_OUTCOMES + 1) + 1 + (4 + 1)  # prev action
 IN_DIM = pw.PUBLIC_DIM + STEP_DIM + pw.N_ACTIONS + 1  # + available mask + queries_done/k
 HIDDEN = 128
 TRAIN_WORLD_BASE = 8_000_000_000
+# protocol-B2 own-greedy rollouts: world seeds TRAIN_WORLD_BASE + 1e8*seed + OWN_WORLD_OFFSET + n.  Inside the
+# seed's training band (1e8 wide) but disjoint from the sampled-training worlds (< 256k used per run).
+OWN_WORLD_OFFSET = 60_000_000
+OWN_VALUE_CONTINUATION = "own_greedy_policy_current_params_mc_v1"
 
 
 # ------------------------------------------------------------------------------------------------ labels
@@ -109,7 +117,7 @@ def load_pool(labels_dir, split):
 class ProbeNet(nn.Module):
     """GRU over visible-history tokens + public prices.  All heads exist in every rung (matched capacity)."""
 
-    def __init__(self, hidden=HIDDEN):
+    def __init__(self, hidden=HIDDEN, own_value=False):
         super().__init__()
         self.inp = nn.Linear(IN_DIM, hidden)
         self.gru = nn.GRUCell(hidden, hidden)
@@ -121,6 +129,8 @@ class ProbeNet(nn.Module):
         self.dep = nn.Linear(hidden, N_DEP)
         self.switch = nn.Linear(hidden, 1)
         self.case = nn.Linear(hidden, 4)
+        if own_value:  # protocol-B2; created LAST so every B1 parameter gets the identical initialization
+            self.v_own = nn.Linear(hidden, 1)
 
     def step(self, x, h):
         h = self.gru(torch.tanh(self.inp(x)), h)
@@ -315,8 +325,15 @@ def cmd_train(a):
     t_load = time.process_time() - t_start
     w = RUNG_WEIGHTS[a.rung]
     torch.manual_seed(1000 + a.seed)  # same init across rungs for a given seed
-    model = ProbeNet(a.hidden)
-    opt = torch.optim.Adam(model.parameters(), lr=a.lr)
+    model = ProbeNet(a.hidden, own_value=a.own_value)
+    # B1 parameters (everything except v_own): optimizer and gradient clipping see exactly these, so v_own can
+    # change neither the Adam state nor the clip coefficient of the policy/trunk.
+    main_params = [p for n, p in model.named_parameters() if not n.startswith("v_own.")]
+    opt = torch.optim.Adam(main_params, lr=a.lr)
+    own = None
+    if a.own_value:
+        own = {"opt": torch.optim.Adam(model.v_own.parameters(), lr=a.lr), "rng": random.Random(11_000 + a.seed),
+               "worlds": 0, "steps": 0, "cpu_s": 0.0, "log": []}
     data_rng = random.Random(7_000 + a.seed)  # same config/world stream across rungs for a given seed
     act_rng = random.Random(9_000 + a.seed)
     log = []
@@ -333,8 +350,10 @@ def cmd_train(a):
         total, parts = losses(model, items, eps, steps, ep_steps, w)
         opt.zero_grad()
         total.backward()
-        nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+        nn.utils.clip_grad_norm_(main_params, 1.0)
         opt.step()
+        if own is not None and (upd + 1) % a.own_every == 0:
+            own_value_update(model, pool, a, own, upd)
         if upd % a.log_every == 0 or upd == a.updates - 1:
             U = sum(e.utility for e in eps) / len(eps)
             Vs = sum(s.value(pw.initial_state(c)) for c, s, _ in items) / len(items)
@@ -347,8 +366,61 @@ def cmd_train(a):
             "episodes": a.updates * a.batch, "lr": a.lr, "hidden": a.hidden, "params": n_params(model),
             "in_dim": IN_DIM, "cpu_s_total": time.process_time() - t_start, "cpu_s_label_load": t_load,
             "version": pw.VERSION, "continuation": pw.CONTINUATION, "eps": pw.EPS}
+    if own is not None:  # key absent when off (B1 train_meta unchanged)
+        meta["own_value"] = {"continuation": OWN_VALUE_CONTINUATION, "every": a.own_every,
+                             "episodes_per_collection": a.own_episodes, "collections": own["steps"],
+                             "greedy_episodes_total": own["worlds"], "stop_gradient": True,
+                             "loss": "MSE(v_own(z.detach()), G_own/R), one Adam step per collection", "lr": a.lr,
+                             "world_seed_base": TRAIN_WORLD_BASE + a.seed * 100_000_000 + OWN_WORLD_OFFSET,
+                             "config_rng_seed": 11_000 + a.seed, "pool": "train", "cpu_s": own["cpu_s"]}
+        (out / "own_value_log.json").write_text(json.dumps(own["log"]))
     (out / "train_meta.json").write_text(json.dumps(meta, indent=1))
     (out / "train_log.json").write_text(json.dumps(log))
+
+
+def own_returns(ep_steps, R=100.0):
+    """{(step_row, row): realized return-to-go / R} of the rollout's own continuation."""
+    G = {}
+    for info_list in ep_steps:
+        g = 0.0
+        for info in reversed(info_list):
+            g += info["reward"]
+            G[(info["step_row"], info["row"])] = g / R
+    return G
+
+
+def own_value_update(model, pool, a, own, upd):
+    """protocol-B2: collect a.own_episodes free-running GREEDY episodes of the current model on train-pool configs
+    (own config RNG and world-seed range; the B1 data/action RNGs are untouched) and take one Adam step of v_own
+    toward their realized return-to-go.  Stop-gradient: v_own sees z.detach(), so the trunk/policy never receive
+    its gradient.  Labels are not computed (need_labels=False): the target is the model's own return only."""
+    t0 = time.process_time()
+    items = []
+    for _ in range(a.own_episodes):
+        idx, cfg, s = pool[own["rng"].randrange(len(pool))]
+        items.append((cfg, s, TRAIN_WORLD_BASE + a.seed * 100_000_000 + OWN_WORLD_OFFSET + own["worlds"]))
+        own["worlds"] += 1
+    with torch.no_grad():
+        eps, steps, ep_steps = run_batch(model, items, "greedy", need_labels=False)
+    G = own_returns(ep_steps)
+    preds, targets = [], []
+    for t, rec in enumerate(steps):
+        preds.append(model.v_own(rec["z"].detach()).squeeze(-1))
+        targets.append(torch.tensor([G[(t, j)] for j in range(len(rec["idx"]))]))
+    loss = ((torch.cat(preds) - torch.cat(targets)) ** 2).mean()
+    own["opt"].zero_grad()
+    loss.backward()
+    nn.utils.clip_grad_norm_(model.v_own.parameters(), 1.0)
+    own["opt"].step()
+    own["steps"] += 1
+    own["cpu_s"] += time.process_time() - t0
+    if upd % a.log_every < a.own_every or upd == a.updates - 1:
+        U = sum(e.utility for e in eps) / len(eps)
+        Vs = sum(s.value(pw.initial_state(c)) for c, s, _ in items) / len(items)
+        row = {"update": upd, "own_greedy_U": U, "own_greedy_regret": Vs - U, "v_own_mse": float(loss.detach()),
+               "cpu_s_own": own["cpu_s"]}
+        own["log"].append(row)
+        print(json.dumps(row), flush=True)
 
 
 # ------------------------------------------------------------------------------------------------ eval
@@ -519,6 +591,8 @@ REFERENCE_POLICIES = {"pi_star": lambda s, st, av: s.pi_star(st), "fixed_exact_b
 @torch.no_grad()
 def model_eval(model, items, mode, chunk=256):
     eps_all, steps_rows, ep_steps_all, calib_v, calib_vstar, calib_q = [], [], [], [], [], []
+    has_own = hasattr(model, "v_own")
+    b2 = {"v_own_own": [], "v_own_vstar": [], "vstar_own": [], "commit": [], "episode": []}
     tf = {"n": 0, "argmax_in_opt": 0, "q_gap": 0.0}
     for c0 in range(0, len(items), chunk):
         part = items[c0:c0 + chunk]
@@ -528,7 +602,10 @@ def model_eval(model, items, mode, chunk=256):
         for rec in steps:
             logits = model.pi(rec["z"]).masked_fill(~rec["mask"], -1e9)
             heads.append((model.v(rec["z"]).squeeze(-1), model.q(rec["z"]), logits.argmax(-1)))
+        vown = [model.v_own(rec["z"]).squeeze(-1) for rec in steps] if has_own else None
         for i, info_list in enumerate(ep_steps):
+            if has_own:
+                b2_episode_records(b2, info_list, steps, heads, vown)
             g = 0.0
             for info in reversed(info_list):
                 g += info["reward"]
@@ -539,6 +616,10 @@ def model_eval(model, items, mode, chunk=256):
                 calib_vstar.append((float(vhat[j]), float(rec["vstar"][j]) / 100.0))
                 a = info["a"]
                 calib_q.append((float(qhat[j, a]), float(rec["Q"][j, a]) / 100.0))
+                if has_own:
+                    b2["v_own_own"].append((float(vown[t][j]), g / 100.0))
+                    b2["v_own_vstar"].append((float(vown[t][j]), float(rec["vstar"][j]) / 100.0))
+                    b2["vstar_own"].append((float(rec["vstar"][j]) / 100.0, g / 100.0))
                 if mode == "teacher":
                     amj = int(am[j])
                     tf["n"] += 1
@@ -551,21 +632,75 @@ def model_eval(model, items, mode, chunk=256):
            "value_calibration_own_return": value_calibration(calib_v),
            "value_vs_vstar": value_calibration(calib_vstar),
            "q_head_vs_qstar_taken": value_calibration(calib_q)}
+    if has_own:  # protocol-B2 keys; absent for B1 models (eval.json unchanged)
+        res["v_own_calibration_own_return"] = value_calibration(b2["v_own_own"])
+        res["v_own_vs_vstar"] = value_calibration(b2["v_own_vstar"])
+        res["vstar_as_predictor_own_return"] = value_calibration(b2["vstar_own"])  # noise-floor reference
+        res["failure_prediction"] = failure_prediction(b2)
     if mode == "teacher":
         res["teacher_forced"] = {"n_steps": tf["n"], "argmax_in_opt_rate": tf["argmax_in_opt"] / max(tf["n"], 1),
                                  "mean_q_gap": tf["q_gap"] / max(tf["n"], 1)}
     return res, rows
 
 
+B2_PREDICTORS = ("v_own", "v", "q_head_taken", "qstar_taken", "vstar")
+
+
+def b2_episode_records(b2, info_list, steps, heads, vown):
+    """Failure-prediction records (protocol-B2).  Commit level: every commit / commit_infeasible the model takes;
+    positive = wrong (outcome O_WRONG); predictors read at the pre-commit state.  Episode level: predictors at the
+    episode's first step; positive = the episode has >= 1 wrong commit."""
+    def preds(info):
+        t, j, a = info["step_row"], info["row"], info["a"]
+        rec, (vhat, qhat, _) = steps[t], heads[t]
+        return {"v_own": float(vown[t][j]), "v": float(vhat[j]), "q_head_taken": float(qhat[j, a]),
+                "qstar_taken": float(rec["Q"][j, a]) / 100.0, "vstar": float(rec["vstar"][j]) / 100.0}
+    wrong_any = 0
+    for info in info_list:
+        if info["a"] in (pw.A_COMMIT, pw.A_COMMIT_INF):
+            wrong = int(info["rec"][1] == pw.O_WRONG)
+            wrong_any |= wrong
+            b2["commit"].append({"wrong": wrong, **preds(info)})
+    if info_list:
+        b2["episode"].append({"wrong": wrong_any, **preds(info_list[0])})
+
+
+def auroc(pos_scores, neg_scores):
+    """P(score_pos > score_neg) + .5 P(tie); None if a class is empty."""
+    if not pos_scores or not neg_scores:
+        return None
+    neg = sorted(neg_scores)
+    tot = 0.0
+    for x in pos_scores:
+        lo, hi = bisect.bisect_left(neg, x), bisect.bisect_right(neg, x)
+        tot += lo + 0.5 * (hi - lo)
+    return tot / (len(pos_scores) * len(neg))
+
+
+def failure_prediction(b2):
+    """AUROC of LOW predicted value for wrong commits (score = -prediction).  Raw records are returned under
+    '_records' (cmd_eval moves them to failure_records.json for the scorer's pooled statistics)."""
+    out = {"_records": {}}
+    for level in ("commit", "episode"):
+        recs = b2[level]
+        pos = [r for r in recs if r["wrong"]]
+        neg = [r for r in recs if not r["wrong"]]
+        out[level] = {"n_pos": len(pos), "n_neg": len(neg),
+                      "auroc": {k: auroc([-r[k] for r in pos], [-r[k] for r in neg]) for k in B2_PREDICTORS}}
+        out["_records"][level] = recs
+    return out
+
+
 def cmd_eval(a):
     torch.set_num_threads(1)
     run = Path(a.run)
     meta = json.loads((run / "train_meta.json").read_text())
-    model = ProbeNet(meta["hidden"])
+    model = ProbeNet(meta["hidden"], own_value="own_value" in meta)
     model.load_state_dict(torch.load(run / "model.pt"))
     model.eval()
     t0 = time.process_time()
     result = {"rung": meta["rung"], "seed": meta["seed"], "splits": {}}
+    failure_records = {}
     for split in a.splits:
         pool = load_pool(a.labels, split)
         items = eval_items(pool, split, a.worlds)
@@ -579,11 +714,16 @@ def cmd_eval(a):
             key = "+".join(n for n, f in zip(pw.FLAG_NAMES, r["flags"]) if f) or "none"
             by_combo.setdefault(key, []).append(r)
         free["by_condition"] = {k: summarize_rows(v) for k, v in by_combo.items()}
+        for mode, res in (("free_running_greedy", free), ("teacher_forced", teach)):
+            if "failure_prediction" in res:
+                failure_records.setdefault(split, {})[mode] = res["failure_prediction"].pop("_records")
         result["splits"][split] = {"free_running_greedy": free, "teacher_forced": teach}
         print(split, json.dumps({k: round(v, 3) if isinstance(v, float) else v
                                  for k, v in free["summary"].items()}), flush=True)
     result["cpu_s"] = time.process_time() - t0
     (run / "eval.json").write_text(json.dumps(result, indent=1))
+    if failure_records:  # protocol-B2 only
+        (run / "failure_records.json").write_text(json.dumps(failure_records))
 
 
 def cmd_references(a):
@@ -656,6 +796,9 @@ def main(argv=None):
     s.add_argument("--lr", type=float, default=1e-3)
     s.add_argument("--hidden", type=int, default=HIDDEN)
     s.add_argument("--log-every", type=int, default=100)
+    s.add_argument("--own-value", action="store_true", help="protocol-B2 v_own head (default off: B1 identical)")
+    s.add_argument("--own-every", type=int, default=1, help="collect own greedy rollouts every N updates")
+    s.add_argument("--own-episodes", type=int, default=64, help="greedy episodes per collection")
     s = sub.add_parser("eval")
     s.add_argument("--labels", required=True)
     s.add_argument("--run", required=True)

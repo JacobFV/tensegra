@@ -476,3 +476,163 @@ def test_training_smoke_if_torch(tmp_path):
     x1 = m.encode(cfg.public_vector(), (A_PROBE, pw.O_SOLVED, False, None), (A_COMMIT, A_ABSTAIN), 0.0)
     x2 = m.encode(cfg.public_vector(), (A_PROBE, pw.O_SOLVED, False, None), (A_COMMIT, A_ABSTAIN), 0.0)
     assert x1 == x2 and len(x1) == m.IN_DIM
+
+
+# ------------------------------------------------------------------ protocol-B2: own-greedy value head (v_own)
+
+def _train_module():
+    import importlib.util, pathlib
+    path = pathlib.Path(__file__).resolve().parents[1] / "research/tools/campaign04_probeworld_train.py"
+    spec = importlib.util.spec_from_file_location("pwtrain_b2", path)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
+TINY = ["--updates", "4", "--batch", "6", "--hidden", "16", "--log-every", "1"]
+# Digest of every state-dict tensor of the tiny L4 run below, produced by the UNMODIFIED B1 tool (48286d97) on
+# the pro6000 env.  Checked only on that torch build (CPU float results are not portable across builds).
+B1_GOLDEN = {"torch": "2.14.0+cu130", "L4": "37cc0f2d2ef73e01"}
+
+
+def _state_digest(sd):
+    import hashlib
+    h = hashlib.sha256()
+    for k in sorted(sd):
+        h.update(k.encode())
+        h.update(sd[k].detach().cpu().contiguous().numpy().tobytes())
+    return h.hexdigest()[:16]
+
+
+def test_b2_own_value_off_identical_on_stop_gradient(tmp_path):
+    torch = pytest.importorskip("torch")
+    import json
+    m = _train_module()
+    lab = tmp_path / "labels"
+    m.main(["labels", "--out", str(lab), "--n-train", "6", "--n-eval", "3"])
+    runs = {}
+    for name, extra in (("off", []), ("off2", []), ("on", ["--own-value", "--own-every", "1", "--own-episodes", "5"])):
+        run = tmp_path / name
+        m.main(["train", "--labels", str(lab), "--out", str(run), "--rung", "L4", "--seed", "0", *TINY, *extra])
+        m.main(["eval", "--labels", str(lab), "--run", str(run), "--worlds", "1", "--splits", "dev", "heldout_k"])
+        runs[name] = {"sd": torch.load(run / "model.pt"), "meta": json.loads((run / "train_meta.json").read_text()),
+                      "log": json.loads((run / "train_log.json").read_text()),
+                      "eval": json.loads((run / "eval.json").read_text()), "dir": run}
+    off, off2, on = runs["off"], runs["off2"], runs["on"]
+    # option off: no new state, keys or files; deterministic run to run
+    assert not any(k.startswith("v_own") for k in off["sd"]) and "own_value" not in off["meta"]
+    assert not (off["dir"] / "failure_records.json").exists() and not (off["dir"] / "own_value_log.json").exists()
+    for sp in off["eval"]["splits"].values():
+        assert "v_own_calibration_own_return" not in sp["free_running_greedy"]
+    assert off["sd"].keys() == off2["sd"].keys() and all(torch.equal(off["sd"][k], off2["sd"][k]) for k in off["sd"])
+    # golden: option off reproduces the unmodified B1 tool bit for bit (same torch build only)
+    if B1_GOLDEN["torch"] == torch.__version__:
+        assert _state_digest(off["sd"]) == B1_GOLDEN["L4"]
+    # option on (stop-gradient): every B1 parameter, the training log and every B1 eval key are bit-identical
+    assert set(on["sd"]) - set(off["sd"]) == {"v_own.weight", "v_own.bias"}
+    assert all(torch.equal(off["sd"][k], on["sd"][k]) for k in off["sd"])
+    strip = lambda rows: [{k: v for k, v in r.items() if k != "cpu_s"} for r in rows]
+    assert strip(off["log"]) == strip(on["log"])
+    for split, sp in off["eval"]["splits"].items():
+        for mode, res in sp.items():
+            res_on = on["eval"]["splits"][split][mode]
+            for key, val in res.items():
+                assert res_on[key] == val, (split, mode, key)
+    # the new head was trained and the B2 keys / records exist
+    own = on["meta"]["own_value"]
+    assert own["collections"] == 4 and own["greedy_episodes_total"] == 20 and own["stop_gradient"] is True
+    assert own["continuation"] == m.OWN_VALUE_CONTINUATION
+    torch.manual_seed(1000)
+    init = m.ProbeNet(16, own_value=True)
+    assert not torch.equal(init.v_own.weight, on["sd"]["v_own.weight"])
+    fr = on["eval"]["splits"]["dev"]["free_running_greedy"]
+    for key in ("v_own_calibration_own_return", "v_own_vs_vstar", "vstar_as_predictor_own_return",
+                "failure_prediction"):
+        assert key in fr
+    assert "_records" not in fr["failure_prediction"]
+    recs = json.loads((on["dir"] / "failure_records.json").read_text())
+    assert set(recs["dev"]["free_running_greedy"]) == {"commit", "episode"}
+
+
+class _NoLabels:
+    """Solver stand-in that fails on any access: proves a code path reads no privileged label."""
+    def __getattr__(self, name):
+        raise AssertionError(f"label access: solver.{name}")
+
+
+def test_b2_v_own_targets_are_own_greedy_returns_without_labels():
+    torch = pytest.importorskip("torch")
+    import types
+    m = _train_module()
+    torch.manual_seed(0)
+    model = m.ProbeNet(16, own_value=True)
+    pool = [(i, pw.split_config("train", i), _NoLabels()) for i in range(3)]
+    seen, captured = {}, {}
+    real_run_batch, real_own_returns = m.run_batch, m.own_returns
+
+    def run_batch_spy(model_, items, mode, rng=None, need_labels=True):
+        out = real_run_batch(model_, items, mode, rng, need_labels)
+        seen.update(mode=mode, need_labels=need_labels, rng=rng, items=items, out=out)
+        return out
+
+    def own_returns_spy(ep_steps, R=100.0):
+        captured["G"] = real_own_returns(ep_steps, R)
+        return captured["G"]
+
+    m.run_batch, m.own_returns = run_batch_spy, own_returns_spy
+    a = types.SimpleNamespace(own_episodes=4, seed=0, lr=1e-3, own_every=2, log_every=1000, updates=100)
+    own = {"opt": torch.optim.Adam(model.v_own.parameters(), lr=1e-3), "rng": random.Random(1), "worlds": 0,
+           "steps": 0, "cpu_s": 0.0, "log": []}
+    w_before = model.v_own.weight.detach().clone()
+    other_before = {k: v.clone() for k, v in model.state_dict().items() if not k.startswith("v_own")}
+    m.own_value_update(model, pool, a, own, upd=5)  # 5 % 1000 >= 2: no log row (the log reads V* for regret)
+    # free-running greedy rollouts of the model itself: no labels (solver untouched), no sampling RNG
+    assert seen["mode"] == "greedy" and seen["need_labels"] is False and seen["rng"] is None
+    # world seeds: the declared B2 range, disjoint from the sampled-training worlds (< 256k per seed band)
+    assert [ws for _, _, ws in seen["items"]] == [m.TRAIN_WORLD_BASE + m.OWN_WORLD_OFFSET + n for n in range(4)]
+    eps, steps, ep_steps = seen["out"]
+    for ep, info_list in zip(eps, ep_steps):
+        first = info_list[0]
+        assert captured["G"][(first["step_row"], first["row"])] == pytest.approx(ep.utility / 100.0)
+        g = 0.0
+        for info in reversed(info_list):
+            g += info["reward"]
+            assert captured["G"][(info["step_row"], info["row"])] == pytest.approx(g / 100.0)
+    # only v_own moved (stop-gradient)
+    assert not torch.equal(w_before, model.v_own.weight)
+    assert all(torch.equal(v, model.state_dict()[k]) for k, v in other_before.items())
+    assert own["worlds"] == 4 and own["steps"] == 1
+
+
+def test_b2_scorer_end_to_end(tmp_path):
+    torch = pytest.importorskip("torch")
+    import importlib.util, pathlib
+    m = _train_module()
+    path = pathlib.Path(__file__).resolve().parents[1] / "research/tools/campaign04_b2_score.py"
+    spec = importlib.util.spec_from_file_location("b2score", path)
+    sc = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(sc)
+    lab = tmp_path / "labels"
+    m.main(["labels", "--out", str(lab), "--n-train", "6", "--n-eval", "3"])
+    tiny = ["--updates", "2", "--batch", "4", "--hidden", "16", "--log-every", "1"]
+    for rung in ("L1", "L4"):
+        for s in (0, 1, 2):
+            for d, extra in ((tmp_path / "b1" / f"b-train-{rung}-s{s}/run", []),
+                             (tmp_path / "b2" / f"b2-train-{rung}-s{s}/run", ["--own-value", "--own-episodes", "4"])):
+                m.main(["train", "--labels", str(lab), "--out", str(d), "--rung", rung, "--seed", str(s), *tiny, *extra])
+                m.main(["eval", "--labels", str(lab), "--run", str(d), "--worlds", "1"])
+    res = sc.score(tmp_path / "b2", tmp_path / "b1", models=True)
+    for rung in ("L1", "L4"):
+        pu = res["hypotheses"][f"B2-policy-unchanged-{rung}"]
+        assert pu["b1_eval_keys_identical_all_splits"] == [True] * 3
+        assert pu["b1_params_bit_identical"] == [True] * 3 and pu["max_abs_regret_diff_heldout"] == [0.0] * 3
+        assert isinstance(res["hypotheses"][f"B2-primary-{rung}"]["supported"], bool)
+    assert res["hypotheses"]["reading_L4"]
+
+
+def test_b2_auroc():
+    pytest.importorskip("torch")
+    m = _train_module()
+    assert m.auroc([3, 4], [1, 2]) == 1.0 and m.auroc([1, 2], [3, 4]) == 0.0
+    assert m.auroc([1], [1]) == 0.5 and m.auroc([], [1]) is None
+    assert m.auroc([2, 0], [1, 1]) == 0.5
