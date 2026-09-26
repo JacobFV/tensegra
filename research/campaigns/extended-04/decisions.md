@@ -136,3 +136,4 @@
   - F1: R-mask vs greedy on fresh bootstraps r3–r5, on sealed fresh worlds from 170M, 512 per condition.
   - F2: probeworld L0/L1/L4 on fresh seeds 3–5 with fresh world draws (offset 700).
   - Added `--world-offset` to the probeworld evaluation (default 500, so B1 is unchanged).
+- 2026-09-26T21:55Z: Fresh bootstraps r3–r5 done (exit 0). F1 configs built (latest checkpoints, hashes recorded; sealed seeds 170M, 512 per condition, greedy + r_mask, plus a dep_reuse reference). F1 launched; F2 (9 trainings) launched.
