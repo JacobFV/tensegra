@@ -58,6 +58,7 @@ Part D is descriptive: it localizes where and how the collapse happens. It ident
 
 **Metrics:**
 - success; utility per episode (verified outcomes per total cost, failures included); work per success, which is never used alone;
+  - *Post-hoc wording note (audit):* "utility" is computed as verified success − cost per episode, as in P1 and the code. The phrase "per total cost" is inaccurate; the computation is unchanged.
 - correct reuse and invalid use (the P1 definitions);
 - **idempotent-repeat rate:** actions whose action_key equals the previous accepted action's, with the public state unchanged;
 - **short-cycle rate:** an accepted action that returns the public decision state (draft constraints, commitments, retrieved set, position) to a state already seen in the preceding 6 steps, without an intervening solver call or new inspection;

@@ -1,4 +1,6 @@
-# Handoff: extended-03 P1 COMPLETE; P2a (bounded diagnostic) ACTIVE on the pro6000 (2026-09-26)
+# Handoff: extended-03 P1 and P2a COMPLETE on the pro6000 (2026-09-26); P2b awaits a fresh budget
+
+**Read first: [report-P2a.md](report-P2a.md) (latest), then [report-P1.md](report-P1.md).**
 
 **P2a protocol: [protocol-P2a.md](protocol-P2a.md).** It runs within the current budget window; the full P2 is superseded (report-P1.md §8).
 

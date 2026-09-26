@@ -97,3 +97,9 @@
   - Descriptive: sampled-mode work per success rises under every RL policy (bootstrap 163; C1 182; C0 234). RL improves sampled success slightly (.896 → .908–.916) while making it more expensive.
   - Per the registered next-step rule, S1 holding means a confirmatory P2b for the anchor may be proposed (fresh lineages, sealed seeds, new budget). S2 failing means there is no improvement claim; the anchor preserves but does not improve.
   - Independent audit commissioned (campaign/e03-p2a-audit).
+- 2026-09-26: **Independent P2a audit merged** (2ea620d6). S0–S3 were reproduced from raw rows (2/627 values differ by more than .001, no reading affected). The replay is bit-exact, including optimizer state. C1 differs only in the anchor, which is active on 1,799/1,800 updates. The deployment decisions and screening integrity check out. **Corrections adopted:**
+  - **Part D reading 4 is withdrawn as stated.** The 30–80× critic/actor ratio is bootstrap-only (mostly 1.5–7× afterwards), and the stable r1 shows the same pattern. The clip-fraction argument is invalid (clipping rescales; AdamW normalizes). "Critic dominance" is at most a weak candidate.
+  - **S1 is worded as "collapse prevented, policy held within ~.02–.05 nats of the bootstrap"**, not RL preservation.
+  - C1's early loop signatures and the C0-deployed shortfall on new worlds are added.
+  - The protocol's utility wording is corrected (success − cost).
+- 2026-09-26: **P2a closed** with [report-P2a.md](report-P2a.md). P2a spent 13,111 core-s; the campaign total is 125,657/172,800 with the reserve intact. **P2b (targeting improvement, not preservation) is proposed and needs a fresh budget.**
