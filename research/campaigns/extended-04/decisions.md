@@ -81,3 +81,4 @@
     Their utility is .77–.83, which is still **below the bootstrap greedy (.857–.871)**. P1-RL r1 (stable): greedy .825 → R-mask .836.
   - **(ii) R-mask does no harm to the competent policies:** bootstrap utility within ±.003 of greedy, with the no-progress rate cut 5–7× (.055–.115 → .008–.016). C1: .854 → .856. Sampled is the worst mode for every competent policy (−.06 to −.07 utility). No learned policy in any mode beats dep_reuse (.908) or dep_recompute (.904).
   - **(iii) Track C headroom:** on the loop-prone bases, default (R-mask) utility sits .04–.09 below the competent bootstrap, which is the space a metacontroller could recover. On the competent bases, the only room is the residual gap to dep_reuse (~.04).
+- 2026-09-26T20:36Z: Track C label chunks 0–15 done for all 6 bases (12 jobs, exit 0, ~5.3k core-s < 8k), so the third chunk (16–23) was launched per protocol-C1.
