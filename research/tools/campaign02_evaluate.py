@@ -198,6 +198,12 @@ def paired_condition_outcomes(control, intervention):
             "scope":"paired task outcomes; changed/used subsets are descriptive post-treatment supports, not independent causal estimates"}
 
 
+def light_rows(rows):
+    """What within-condition pairing reads; full rows are already on disk."""
+    return [{"seed": row["seed"], "outcome": {"verified_success": row["outcome"]["verified_success"],
+                                              "utility": row["outcome"]["utility"]}} for row in rows]
+
+
 def read_rows(path):
     with gzip.open(path,"rt") as stream:
         return [json.loads(line) for line in stream]
@@ -233,6 +239,8 @@ def main():
         sources[name] = file_hash(Path(training.__file__).with_name(f"campaign02_{name}.py"))
     if any(c.get("world_family", cfg.get("world_family")) == "depworld" for c in cfg["conditions"]):
         sources["depworld"] = file_hash(Path(training.__file__).with_name("campaign03_depworld.py"))
+        # Evaluator-only P1 step audit (logging only; dynamics unchanged).
+        sources["p1_audit"] = file_hash(Path(training.__file__).with_name("campaign03_p1_audit.py"))
     bindings = []
     for binding in cfg["checkpoints"]:
         actual = file_hash(binding["path"])
@@ -260,7 +268,9 @@ def main():
             modular = family == "modular"
             depworld = family == "depworld"
             if depworld:
-                from topoformer.campaign03_depworld import DepWorkshop, depworld_executor, generate_depworld
+                from topoformer.campaign03_depworld import depworld_executor, generate_depworld
+                # Same dynamics as DepWorkshop plus the evaluator-only P1 audit (outcome["p1_audit"]).
+                from topoformer.campaign03_p1_audit import P1AuditedDepWorkshop as DepWorkshop
                 condition_executor = partial(depworld_executor, execute_call=solver.execute)
                 specs = [generate_depworld(seed, **world_kwargs(condition.get("world", {}))) for seed in seeds]
             elif modular:
@@ -305,15 +315,22 @@ def main():
                         for i, result in zip(indices, outputs):
                             rows.append({"seed": seeds[i], "spec_hash": world_rows[i]["spec_hash"], "semantic_spec_hash":world_rows[i]["semantic_spec_hash"], **result,
                                          "counts": episode_counts(result["outcome"])})
+                if not cfg.get("trace_observations", True):
+                    # Opt-in size control: drop the per-step public observation copies from learned
+                    # traces (the exact action/feedback history and the P1 audit remain in the row).
+                    for row in rows:
+                        for step in row.get("trace", []):
+                            step.pop("observation", None)
                 artifact = folder/f"{binding['name']}.jsonl.gz"
                 write_rows(artifact, rows)
                 summary["results"].append({"condition": name, "arm": binding["name"], "kind": "learned",
+                    "checkpoint_binding": {k: v for k, v in binding.items() if k != "path"},
                     **summarize(rows), "artifact": str(artifact.relative_to(args.output)), "artifact_sha256": file_hash(artifact),
                     "policy_config": asdict(policy_cfg), "training_config": asdict(train_cfg),
                     "actual_parameter_count": sum(p.numel() for p in policy.parameters()),
                     "checkpoint_updates": checkpoint["updates"], "checkpoint_presentations": checkpoint["presentations"]})
-                by_arm[binding["name"]] = rows
-                del policy, checkpoint
+                by_arm[binding["name"]] = light_rows(rows)
+                del policy, checkpoint, rows
             for mode in cfg.get("references", ["cheap", "always_tool", "cheap_first"]):
                 rows = []
                 for i, seed in enumerate(seeds):
@@ -327,7 +344,7 @@ def main():
                     **summarize(rows), "artifact": str(artifact.relative_to(args.output)), "artifact_sha256": file_hash(artifact),
                     "reference_compute_tariff": cfg.get("reference_compute_tariff", 0.0),
                     "controller_cpu_seconds": sum(r["outcome"]["controller_cpu_seconds"] for r in rows)})
-                by_arm[f"reference-{mode}"] = rows
+                by_arm[f"reference-{mode}"] = light_rows(rows)
             for binding in bindings:
                 a = by_arm[binding["name"]]
                 for other_name, b in by_arm.items():
