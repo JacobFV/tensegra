@@ -28,3 +28,8 @@
   The Phase A throughput work continues (e04-throughput). All remote dev work is metered.
 - 2026-09-26T19:11Z: A2 options merged (6cb0ecce; 268 tests on snapshot 71109534, metered). **Four A2 screens launched:** a2-reh, a2-imit, a2-crit, a2-ent. a2-dep waits for the infra progress tracker. [protocol-A2.md](protocol-A2.md) registered at 19:15Z, before any A2 output: registered modes, the promotion rule against same-mode and best-mode bootstraps, the imitation control, and screening seeds from 140M.
   - Metering note: metered.sh runs commands without a shell, so globs must go through `bash -c`.
+- 2026-09-26T19:20Z: **Phase A throughput merged** (449176be; [throughput.md](throughput.md)).
+  - GPU tranche 1.66–1.69×, sealed-style evaluation 1.8–2.0×; the Python side is 2.05× faster.
+  - The fast path is default. Encoded tensors, parameters, optimizer state, RNG and evaluation rows are bit-identical to the reference (`TENSEGRA_REFERENCE_PATH=1` or `campaign04_fast.set_default(False)`).
+  - One additive merge conflict with the A2 options was resolved. The post-merge suite passes 308/308 on **both** fast and reference paths (metered).
+  - The four running A2 screens finish on their launch source (71109534, reference path). Later launches use the fast path, which is result-identical by the equivalence tests, so A2 comparisons are unaffected.
