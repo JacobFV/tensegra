@@ -160,3 +160,9 @@
     - the justified-after-failed-probe ratio is .51–.58.
 
     It passes per split on heldout_price and heldout_k. Rational probing and switching therefore transfer to new price regions and reuse horizons, **but not to held-out combinations of conditions** (unreliable+events, side-effect+correlated).
+- 2026-09-26T22:55Z: **F1 scored** (4 jobs, exit 0, 1.32k core-s; research/results/campaign-04/f1/). **F1-H NOT SUPPORTED as registered.**
+  - The utility and success clauses pass in 3/3 fresh lineages: IID-group r_mask − greedy utility is +.0007, −.0014 and +.0030, and success is +.001, .000 and +.004.
+  - The registered **episode-level** no-progress clause fails in 3/3: the episode rate is identical under both modes (.033, .058, .060).
+  - **Mechanism (a specification error in protocol-F, not a rule failure):** R-mask masks an action only *after* the diagnostic flags its first stagnant repeat. An episode that stalls therefore always records at least that first no-progress step, and the episode rate cannot fall by construction. The A1 reading F1 was meant to confirm was the **per-step** rate. Protocol-F transcribed it as the episode rate.
+  - **Descriptive, not registered:** the per-step no-progress rate falls 4–7× in every fresh lineage (.013 → .003, .052 → .013, .077 → .011), and on the events and foreign4 conditions (.022–.085 → .004–.015). All conditions meet the absolute floor (success ≥ .8 × dep_reuse).
+  - The report states the registered failure and the per-step reading side by side; no pass is claimed.
