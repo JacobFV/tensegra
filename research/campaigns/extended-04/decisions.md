@@ -170,3 +170,9 @@
   - Three decision entries (F2, F1, B2) carried timestamps ahead of wall-clock time (22:00–22:55Z). They are corrected to the actual times (21:42–21:50Z).
   - The ledger's 13 'running' entries are the failed launches (12 empty-SHA label jobs and b-labels-launchfail). They exited before the wrapper wrote occupancy receipts, and their CPU is negligible (< 1 core-s each).
 - 2026-09-26T21:55Z: **F1b registered** (protocol-F addendum; adaptive, labelled): the per-step no-progress clause on new sealed worlds from 180M with the same fresh bootstraps. Launched.
+- 2026-09-26T21:58Z: **F1b SUPPORTED** (adaptive registration, fresh sealed worlds from 180M; 4 jobs, exit 0, 1.08k core-s). In 3/3 fresh lineages, IID group:
+  - r_mask utility ≥ greedy: +.0002, +.0010, +.0019;
+  - success: +.001, +.002, +.003;
+  - per-step no-progress rate down 3.8–6.9×: .028 → .006, .047 → .013, .077 → .011.
+
+  dep_reuse scores .901. Report wording: "a supplied public recovery rule (R-mask over diagnostic v1) removes most stagnant steps at no utility or success cost on fresh competent lineages and sealed worlds (F1b, registered after F1's mis-specified episode-level clause failed)". It is a supplied mechanism, not learned control.
