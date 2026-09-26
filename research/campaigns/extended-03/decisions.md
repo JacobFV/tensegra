@@ -61,3 +61,4 @@
     - Part C: one comparison on lineage X1-r2, the exact P1 replay (C0) vs a fixed bootstrap KL anchor (C1, weight 0.3). Both run the full horizon, and each reports its raw final and its separately registered deployed checkpoint.
     - Screening on fresh non-sealed seeds from 120M.
   - X2's reward-emergence premise is not re-run (P1 disproved it). A confirmatory P2b needs a fresh budget.
+- 2026-09-26T14:25Z: Part D tool merged (014427cf; 214 tests). **Part D audit launched** (source-50e9682c) with `--samples 2`: the tool's estimate of 4 sampled repeats was ~4.8k core-s, above the 3k Part D budget, and the protocol says to reduce sampled repeats first. The smoke (8 worlds; indicative only) already showed at attempt 29 greedy success 0.00 vs sampled .94–1.00 on r0/r2, with loops concentrated in greedy mode. The full audit tests this.
