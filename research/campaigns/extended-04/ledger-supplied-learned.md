@@ -10,7 +10,7 @@
 | A2 entropy regulation | entropy target = bootstrap entropy (measured) | policy update under the constraint | (A2 screen) |
 | probeworld env, prior table, outcome model, event invalidation subset | yes | - | - |
 | exact DP labels Q*, V*, optimal sets, case/switch/stage/dependency (oracle, offline) | yes (training targets only; L1–L4) | - | - |
-| belief tracking, dependency validity, when to switch, strategy vs ρ_k (probeworld) | - | learned (L0 from utility only; L1–L4 with supplied supervision) | (B1 held-out splits) |
+| belief tracking, dependency validity, when to switch, strategy vs ρ_k (probeworld) | - | learned (L0 from utility only; L1–L4 with supplied supervision) | B1 + F2 confirmed (fresh seeds and worlds): held-out price and k yes; held-out condition combinations no |
 | A1: recovery rules over frozen policies | rules and diagnostic supplied | - (no learning) | fresh worlds 130M; collapsed P1-RL recovered to .87–.92 success |
 | A2 RL variants (anchor/rehearsal/critic/entropy/masked) | recipes supplied | RL policy updates | none deployable: sampled-mode gains only (screening, one lineage) |
 | Track C metacontroller | telemetry (89 features), recovery rule, branch labels (oracle simulation, training only) | appraisal GRU (30k parameters) and intervention choice | calibrated on fresh worlds (C-H4); no utility gain over rules (C-H1 fail) |

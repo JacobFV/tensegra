@@ -150,3 +150,13 @@
   - The policy is unchanged, as required: B1 parameters and evaluation keys are bit-identical, with 0 regret difference.
   - **Failure prediction:** commit-level AUROC .45–.65, CIs include .5 (9–20 wrong commits per seed); not supported.
   - **Registered reading:** "not continuation". The value estimates fail to generalize to held-out generator regions (k = 4 worst), matching the B1 auditor's diagnosis. **Deliverable 4 status:** calibration holds in-distribution in both tracks (probeworld test_iid; depworld Track C ECE ≤ .026 on fresh worlds of the training distribution), but not under generator-parameter shift in probeworld.
+- 2026-09-26T22:20Z: **F2 confirmation scored** (`campaign04_f2_score.py`; research/results/campaign-04/f2/). Fresh seeds 3–5, fresh world draws (offset 700), 512 per held-out split. All 9 trainings and 10 evaluations exited 0 (training 3.75k core-s).
+  - **F2-H1 SUPPORTED (3/3 pairs):** held-out regret L0 39.0/82.3/72.5 vs L1 1.9/2.6/2.0 and L4 2.6/1.7/1.5. π* ≈ 0; fixed rules 99–126. All pass the transfer floor.
+  - **F2-H2 SUPPORTED (3/3):** ρ-bin deviation .016–.042.
+  - **F2-H3 SUPPORTED (pooled, 3/3):** probe when not optimal ≤ .01, uniquely-optimal probe .83–.86.
+  - **F2-H4 SUPPORTED (pooled, 3/3):** unjustified switches .041–.050, justified-after-failed-probe ratio .82–.86.
+  - **The composition limit replicates exactly.** On heldout_comp alone:
+    - the uniquely-optimal probe rate is .545 in all 3 seeds (threshold .80);
+    - the justified-after-failed-probe ratio is .51–.58.
+
+    It passes per split on heldout_price and heldout_k. Rational probing and switching therefore transfer to new price regions and reuse horizons, **but not to held-out combinations of conditions** (unreliable+events, side-effect+correlated).
