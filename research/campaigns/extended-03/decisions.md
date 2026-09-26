@@ -41,8 +41,16 @@
 - 2026-09-26T07:52Z: **Sealed evaluation launched** (source-900d28da, configs/campaign03/p1-sealed.json): 24 endpoints (12 bootstraps + 12 RL) and 5 references over 8 conditions × 256 fresh worlds (seeds 110,000,000 + 100,000·i). Each sealed world is used once; there will be no re-evaluation after results are seen without a paired/non-confirmatory label.
 - 2026-09-26T10:41Z: **Sealed evaluation done** (exit 0, 10,158 s wall; all 8 conditions × 29 policies present). The registered analysis (research/results/campaign-03/p1-analysis/) gives, pending independent audit:
   - R1 not supported, R2 not supported, R3 SUPPORTED, R4 SUPPORTED (retry clause; not supported on iid_f0), R5 not supported.
-  - **Dominant fact: late RL collapse.** Development curves (monitoring data) show X1-r0 and X1-r2 stable at ~.94–.95 for 25 of 30 attempts, then collapsing in attempts 26–29 (to .10 and .00). X4-r0 dipped to .23 at attempt 22 and partly recovered to .74. X4-r1 dropped to .48 in the last two attempts. X2-r0 drifted down to .70. X1-r1, X2-r1/r2, X3 (all) and X4-r2 are roughly stable.
+  - **Dominant fact: late RL collapse.** Development curves (monitoring data) show X1-r2 stable at .95 through attempt 24, then collapsing (.92, .61, .13, .00, .00). X1-r0 was already slipping to .84–.88 from attempt 21 before collapsing (.57, .21, .10, .10); this was corrected per the audit. X4-r0 dipped to .23 at attempt 22 and partly recovered to .74. X4-r1 dropped to .48 in the last two attempts. X2-r0 drifted down to .70. X1-r1, X2-r1/r2, X3 (all) and X4-r2 are roughly stable.
   - The registered latest-only endpoint rule (no checkpoint selection) captures the collapsed state. This is reported as-is; **no endpoint re-selection**. The AC v2 recipe from extended-02 is not stable over 1,800 updates in depworld.
   - R3/R4 pair X3/X4 with X1 RL, two of whose lineages collapsed. The auditor is asked for descriptive bootstrap-endpoint and r1-only readings (not registered).
   - An anomaly for the auditor: X2 bootstraps (recompute teacher, 0.000 correct reuse) show correct-reuse rates of .03–.97 on sealed conditions.
   - Independent raw-row audit commissioned (campaign/e03-p1-audit).
+- 2026-09-26: **Independent audit merged** (c5a2ed26; [review/p1-independent-audit.md](review/p1-independent-audit.md)). All five verdicts and every per-lineage value were reproduced (3,944 cells, no primary difference above 1e-9), and integrity is clean. The audit's corrections are adopted in [report-P1.md](report-P1.md):
+  - R2 is worded as "RL did not increase already-high reuse", because the X2 bootstraps reuse valid foreign records without demonstration.
+  - R4 is labelled fragile: only pair r1 is clean.
+  - R5's r0 pass is an artifact of collapse.
+  - R1's failure is RL degradation; the bootstraps would pass narrowly.
+  - The truncation column must not be cited.
+  - Collapse mechanism: reward-neutral no-progress loops that run to the step limit, which the identical-retry metric cannot see.
+- 2026-09-26: **P1 closed** with report-P1.md. Spent: CPU 112.5k/172.8k core-s and GPU 20.1k/43.2k s. P2 (RL stability) is proposed in the report §7 but **not started**: a full-scale P2 exceeds the remaining allowance above the 20% reserve, so it needs the user's budget decision.
