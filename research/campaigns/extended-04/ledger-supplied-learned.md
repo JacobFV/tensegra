@@ -8,3 +8,6 @@
 | recovery rules R-mask / R-sample | yes (hand-specified) | - | - |
 | A2 rehearsal (a2-reh, a2-imit) | dep_reuse teacher actions on the policy's own sampled states (public-only) | policy update | (A2 screen) |
 | A2 entropy regulation | entropy target = bootstrap entropy (measured) | policy update under the constraint | (A2 screen) |
+| probeworld env, prior table, outcome model, event invalidation subset | yes | - | - |
+| exact DP labels Q*, V*, optimal sets, case/switch/stage/dependency (oracle, offline) | yes (training targets only; L1–L4) | - | - |
+| belief tracking, dependency validity, when to switch, strategy vs ρ_k (probeworld) | - | learned (L0 from utility only; L1–L4 with supplied supervision) | (B1 held-out splits) |

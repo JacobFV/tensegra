@@ -33,3 +33,8 @@
   - The fast path is default. Encoded tensors, parameters, optimizer state, RNG and evaluation rows are bit-identical to the reference (`TENSEGRA_REFERENCE_PATH=1` or `campaign04_fast.set_default(False)`).
   - One additive merge conflict with the A2 options was resolved. The post-merge suite passes 308/308 on **both** fast and reference paths (metered).
   - The four running A2 screens finish on their launch source (71109534, reference path). Later launches use the fast path, which is result-identical by the equivalence tests, so A2 comparisons are unaffected.
+- 2026-09-26T19:40Z: Track B probeworld merged (a2e6a56b).
+  - Exact DP matches brute force on 7 cases. Labels are a function of visible history only. The 21-vs-100 worked example and its violation variants reproduce. The ρ_k/k build switch is shown from exact labels.
+  - Dev CPU: 467 core-s metered, plus ~300 core-s local (estimate).
+  - **[protocol-B1.md](protocol-B1.md)** registered before any full-ladder run: B-H1…B-H6, best rung fixed as L4, transfer floor .8 × π* success.
+  - The evaluation got first-action probe-rate metrics for B-H4 (added before any ladder output).

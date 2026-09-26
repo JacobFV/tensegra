@@ -363,9 +363,15 @@ def episode_metrics(items, eps, ep_steps, steps=None, model=None):
         sw = {f"{j}_{c}": 0 for j in ("just", "unjust") for c in "abcd"}
         built = 0
         prev = None
+        first = {"first_probe": None, "probe_eps_opt": None, "probe_unique_opt": None}
         for info in ep_steps[i]:
             st, a = info["state"], info["a"]
             q = s.q_values(st)
+            if first["first_probe"] is None:  # B-H4 (protocol-B1): first decision of the episode
+                v0 = s.value(st)
+                opt = {b for b, qb in q.items() if qb >= v0 - pw.EPS}
+                first = {"first_probe": int(a == pw.A_PROBE), "probe_eps_opt": int(pw.A_PROBE in opt),
+                         "probe_unique_opt": int(opt == {pw.A_PROBE})}
             gap += s.value(st) - q[a]
             case = info.get("case")
             if case is None:
@@ -383,7 +389,7 @@ def episode_metrics(items, eps, ep_steps, steps=None, model=None):
         rows.append({"cfg_k": cfg.k, "rho": cfg.rho(), "rho_eff": _rho_eff(cfg), "flags": list(cfg.flags), "U": ep.utility,
                      "V_star": s.value(s0), "gap_regret": gap, "success": ep.successes / cfg.k,
                      "cost": ep.total_cost, "wrong": ep.wrong, "built": built, "steps": len(ep_steps[i]),
-                     "cases": cases, "switches": sw})
+                     "cases": cases, "switches": sw, **first})
     return rows
 
 
@@ -430,6 +436,11 @@ def summarize_rows(rows):
            "success": mean(lambda r: r["success"]), "cost": mean(lambda r: r["cost"]),
            "wrong_per_ep": mean(lambda r: r["wrong"]), "build_rate": mean(lambda r: r["built"]),
            "steps": mean(lambda r: r["steps"])}
+    def cond_rate(sel):
+        sub = [r for r in rows if r.get("first_probe") is not None and sel(r)]
+        return (sum(r["first_probe"] for r in sub) / len(sub)) if sub else None, len(sub)
+    out["first_probe_rate_when_not_opt"], out["n_probe_not_opt"] = cond_rate(lambda r: not r["probe_eps_opt"])
+    out["first_probe_rate_when_unique_opt"], out["n_probe_unique_opt"] = cond_rate(lambda r: r["probe_unique_opt"])
     for c in "abcd":
         out[f"case_{c}"] = mean(lambda r: r["cases"][c])
     for key in rows[0]["switches"]:
