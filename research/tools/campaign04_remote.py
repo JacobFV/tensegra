@@ -56,7 +56,12 @@ def launch_eval(a):
 
 
 def launch_cmd(a):
-    cmd = " ".join(a.cmd)
+    args = list(a.cmd)  # argparse.REMAINDER also captures the cap options; parse them here
+    while args and args[0] in ("--wall-cap", "--cpu-cap"):
+        setattr(a, args[0][2:].replace("-", "_"), float(args[1])); args = args[2:]
+    if args and args[0] == "--":
+        args = args[1:]
+    cmd = " ".join(args)
     print(wsl(f"/home/brand/tensegra-campaign03/bin/detach.sh {a.job} {ROOT}/source-{a.sha} {PY} {ROOT}/bin/job.py "
               f"--output {ROOT}/results/{a.job}-process --wall-cap {a.wall_cap} --cpu-cap {a.cpu_cap} -- {cmd}\n"))
 

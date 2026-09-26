@@ -38,3 +38,4 @@
   - Dev CPU: 467 core-s metered, plus ~300 core-s local (estimate).
   - **[protocol-B1.md](protocol-B1.md)** registered before any full-ladder run: B-H1…B-H6, best rung fixed as L4, transfer floor .8 × π* success.
   - The evaluation got first-action probe-rate metrics for B-H4 (added before any ladder output).
+- 2026-09-26T19:27Z: B1 labels launched (source-28152106). The first attempt failed in 0 s because launch-cmd's REMAINDER parsing captured the cap options. The helper is fixed; the failed receipt is kept as b-labels-launchfail-process (charged).
