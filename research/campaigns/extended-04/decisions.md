@@ -176,3 +176,16 @@
   - per-step no-progress rate down 3.8–6.9×: .028 → .006, .047 → .013, .077 → .011.
 
   dep_reuse scores .901. Report wording: "a supplied public recovery rule (R-mask over diagnostic v1) removes most stagnant steps at no utility or success cost on fresh competent lineages and sealed worlds (F1b, registered after F1's mis-specified episode-level clause failed)". It is a supplied mechanism, not learned control.
+- 2026-09-26T22:05Z: **Independent A2/C/A1 audit merged** (388b212e). The A2 promotion (none) and C-H1…C-H4 reproduce exactly (≤ 1e-15). Integrity: all checks pass (seeds, identical worlds, deployment re-derivation, config diffs, hashes, 161M eval range, label/eval disjointness, appraisal-only ≡ R-mask on 6,144 worlds, meta charge once, 18/18 m/τ registrations, telemetry public-only). **Corrections adopted (they supersede the 21:35Z and 21:45Z readings):**
+  - **A2 reason (2) withdrawn as stated.** The sampled-mode gain is *not* attributable to RL: imitation-only (RL off) gives the largest sampled gain (+.047 ± .012), the RL arms +.022 to +.035, and C0 +.006.
+  - **A2 reason (1)** is reworded as "not above the bootstrap's best mode" (dep greedy is +.002 ± .003 over bootstrap greedy).
+  - **A2 reason (3)** holds (RL added to rehearsal: −.0019 ± .0005 greedy).
+  - **A2 reason (4):** entropy control costs **1.87×** the anchored C1's work per success (CI 1.47–2.28), with −.044 utility and similar training entropy. The dual is two-sided.
+  - **A2 reason (6)** applies to RL-on arms only.
+  - **Disclosed:** the no-progress-episode criterion cannot differ between greedy and R-mask (the same mechanism as F1).
+  - **C-H1:** learned control significantly *harms* P1-RL r0 (−.017 ± .005) and r1 (−.023 ± .006) against the default. The r2 gain (+.018 ± .005) comes mostly from early stops (cost −24%, success −.006).
+  - **C-H2 and competent C-H3 are degenerate passes.** They rest on ~25 early stops per base in one seed. The cost criterion has no margin, and boot r1's threshold arm has τ = 0 (so it is identical to the default).
+  - **C-H4:** within-type Spearman is only .18–.27. The pooled value mostly reflects "stop is bad". r0 mask-top has a CI including 0, and boot r2 sample-step is significantly negative (−.18).
+  - **C-H5 corrected:** it passes on P1-RL r2, **fails on boot r1** (the shuffled controller keeps 115% of a noise-level +.002 gain), and is unevaluable elsewhere. It should be computed on paired worlds. It is a weak test, because the shuffled controller intervenes at nearly every step.
+  - **Accounting:** the 89 A1/A2/C jobs total 90,477 core-s; the Track C evaluation overrun is confirmed at 45.5k (3.25×). The empty-SHA launches never ran (argv[0] was `CUDA_VISIBLE_DEVICES=`).
+  - Auditor CPU: 575 core-s metered, plus ~250 core-s local.
