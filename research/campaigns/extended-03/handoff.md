@@ -20,13 +20,20 @@ History:
 - **Stage B preflight: PASSED and merged** (a0fd65ab; [review/stage-b-preflight.md](review/stage-b-preflight.md)). `campaign/e03-preflight` (caf1a785) is superseded.
 - **P1 bootstraps:** done, 12/12 (banks in `configs/campaign03/p1-banks.json`).
 - **P1 RL:** 12 running on the pro6000 (launched 05:20Z).
-- **Metrics and evaluator readiness: done** (merged 45d8b25a). See [protocol-P1-metrics.md](protocol-P1-metrics.md). The sealed-evaluation commands are in its final section and in decisions.md.
+- **Metrics and evaluator readiness: done** (merged 45d8b25a). See [protocol-P1-metrics.md](protocol-P1-metrics.md). The sealed-evaluation commands are below.
 
 ## Next (resume checklist)
 1. Merge Stage B once every required d1 distinction passes and the ablation masks erase exactly the intended distinctions. If a distinction fails, register an encoder fix before training.
 2. Snapshot the source to the pro6000 (`source-<sha>`) and launch the 12 P1 bootstraps.
 3. Generate and launch the RL configs: `campaign03_p1_configs.py rl --banks ...`.
-4. Run the sealed evaluation: `... sealed --checkpoints ... --references dep_greedy,dep_recompute,dep_reuse,dep_naive_reuse,dep_reuse_norevise`.
+4. Run the sealed evaluation (all 24 endpoints + 5 references). Run the first two commands in the source snapshot on the pro6000, and the evaluation under the job wrapper (`campaign03_remote.py launch-eval`):
+   ```bash
+   python research/tools/campaign03_p1_configs.py checkpoints --results /home/brand/tensegra-campaign03/results --output configs/campaign03
+   python research/tools/campaign03_p1_configs.py sealed --checkpoints configs/campaign03/p1-sealed-checkpoints.json \
+     --references dep_greedy,dep_recompute,dep_reuse,dep_naive_reuse,dep_reuse_norevise --output configs/campaign03
+   python research/tools/campaign02_evaluate.py configs/campaign03/p1-sealed.json --output .../results/p1-sealed --device cuda --threads 1
+   python research/tools/campaign03_p1_analysis.py .../results/p1-sealed --output research/results/campaign-03/p1-analysis
+   ```
 5. Commission an independent raw-row audit, then write the report.
 
 ## Budget
