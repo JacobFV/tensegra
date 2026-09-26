@@ -180,7 +180,7 @@ No DAgger relabelling round is registered. If the budget permits, one may be add
 | p1-rl-x1-r1 | loop-prone | **stable** (shown separately) |
 
 **Evaluation worlds.**
-- **160,000,000 + 100,000·i** for conditions iid_f0, iid_f2, events_train_kinds_p1 and foreign4 (256 per condition); namespace `e04c-eval`.
+- **161,000,000 + 100,000·i** (moved by root from 160M, see §9 note) for conditions iid_f0, iid_f2, events_train_kinds_p1 and foreign4 (256 per condition); namespace `e04c-eval`.
 - Labels use only the IID mix, so events and foreign4 are transfer conditions.
 
 **Criterion** (v2 rev. 8, on the IID group, per lineage, using the seed-mean learned utility per world, paired with the best fixed rule by IID mean utility):
@@ -210,7 +210,7 @@ No DAgger relabelling round is registered. If the budget permits, one may be add
 | Eval, rl-r0, iid_f0, 64 dev worlds | fixed:greedy .000 / −.122, sampled .844 / .695, r_mask .891 / .780, r_sample .891 / .782, appraisal_only = learned (m = ∞) .891 / .7795, threshold (τ .8) .891 / .770 with no-progress 10.3 → 6.2. Cost per episode: r_mask 0.16, greedy 0.40, sampled 0.27, meta arms +0.01 core-s (plus branch-eval). |
 | Eval, boot-r0, 16 worlds | ≈ 0.07 core-s per episode. |
 
-Before the `--dev-worlds` switch existed, one 16-world smoke (boot-r0, iid_f0, arms fixed + core + 5 causal) ran on the **first 16 registered evaluation worlds** (160,000,000–160,000,015). It used a throwaway model trained on 40 label worlds. No registered constant was derived from it (m and τ come from dev labels; sizes come from timing only). It is disclosed here; root may exclude those 16 worlds or accept it.
+Before the `--dev-worlds` switch existed, one 16-world smoke (boot-r0, iid_f0, arms fixed + core + 5 causal) ran on the **first 16 registered evaluation worlds** (160,000,000–160,000,015). It used a throwaway model trained on 40 label worlds. No registered constant was derived from it (m and τ come from dev labels; sizes come from timing only). It is disclosed here. **Root decision (2026-09-26): the registered evaluation range was moved to 161,000,000 + 100,000·i, so no smoke-touched world is used.**
 
 ## 10. Budget (Track C ≈ 25k core-s; labels ≤ 12k; CPU only)
 

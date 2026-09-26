@@ -65,3 +65,7 @@
   - **B-H5 SUPPORTED:** L4 unjustified switches are .044–.050 of all switches.
   - **B-H6 NOT SUPPORTED:** value-head reliability error is .13–.29 R for the supervised rungs and .09–.13 R for L0, against a .05 R threshold. The likely cause, *not* validated: L1–L4 value heads are trained toward V* (the optimal continuation) while calibration is registered against the model's own realized return. This is a continuation mismatch of exactly the kind the brief warns about.
   - L0 seeds 0 and 1 have different weights (model.pt hashes differ) but identical greedy behaviour on the evaluation episodes: convergence to the same deterministic strategy, not a seeding fault.
+- 2026-09-26T20:30Z: **Track C merged** (36648c0f; 377/377 tests).
+  - The default runner is bit-identical to deploy_episodes. Labels are regression-only (paired advantages, K = 4). The appraisal GRU has 30,150 parameters.
+  - Dev smoke (descriptive): little one-step headroom over greedy + R-mask for sample and mask-top; "stop" beats the default at 22% of loop-prone label points, where the default then fails.
+  - Integrity: a pre-registration smoke touched the first 16 registered evaluation worlds (160M), so the evaluation range was moved to **161M**. **[protocol-C1.md](protocol-C1.md)** registered: C-H1…C-H5, split by base type, with random and threshold controls, calibration and causal checks.

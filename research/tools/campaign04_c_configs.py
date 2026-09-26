@@ -29,7 +29,7 @@ SEALED = dict(_load("campaign03_p1_configs").SEALED)
 # --- seeds --------------------------------------------------------------------------
 LABEL_SEED_BASE = 150_000_000          # label worlds (the same worlds for every base: paired)
 LABEL_SPAN = 1_000_000
-EVAL_SEED_BASE = 160_000_000           # Track C evaluation worlds, + 100,000 * condition index
+EVAL_SEED_BASE = 161_000_000           # Track C evaluation worlds, + 100,000 * condition index (moved from 160M: a pre-registration smoke touched 160,000,000-015)
 EVAL_STRIDE = 100_000
 DEV_TEST_BASE = 2_170_000_000          # tests / smokes (tests/test_campaign04_meta.py)
 DEV_TEST_SPAN = 1_000_000
