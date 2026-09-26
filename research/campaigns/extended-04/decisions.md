@@ -189,3 +189,4 @@
   - **C-H5 corrected:** it passes on P1-RL r2, **fails on boot r1** (the shuffled controller keeps 115% of a noise-level +.002 gain), and is unevaluable elsewhere. It should be computed on paired worlds. It is a weak test, because the shuffled controller intervenes at nearly every step.
   - **Accounting:** the 89 A1/A2/C jobs total 90,477 core-s; the Track C evaluation overrun is confirmed at 45.5k (3.25×). The empty-SHA launches never ran (argv[0] was `CUDA_VISIBLE_DEVICES=`).
   - Auditor CPU: 575 core-s metered, plus ~250 core-s local.
+- 2026-09-26T22:10Z: **[protocol-A3.md](protocol-A3.md) registered** (adaptive follow-up after the A2 audit): unanchored on-policy imitation (a2-imit minus the anchor), screening on fresh worlds from 190M, promotion rule, and pre-registered F3 confirmation (r3–r5, sealed 200M). Launched.
