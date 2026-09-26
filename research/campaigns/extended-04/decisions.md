@@ -93,3 +93,7 @@
     - **B-H6's cause is held-out generalization.** The value head over-predicts by +.03 to +.23 R, worst at k = 4, while being calibrated in-distribution (L4 dev .046) and on heldout_price. It is not a V* target, and not a sampled-vs-greedy mismatch (within ±.03). B2 still runs as registered; its "not continuation" outcome is now the expected one.
     - The L0 identical behaviour holds on 3 of 5 splits.
   - Audit CPU: 86 core-s metered, plus ~400 core-s local (estimate).
+- 2026-09-26T20:50Z: Track C labels complete: 18 jobs, all exit 0, ~7.4k core-s. Training complete: 6 jobs, ~1.0k core-s.
+  - Development readings (label development split; not an evaluation): ECE .011–.06.
+  - The registered one-step gain over greedy + R-mask is ≈ 0 on the bootstraps and on P1-RL r0/r1 (several seeds registered m = ∞, i.e. never intervene). It is .017–.020 on P1-RL r2.
+  - **Track C evaluation launched:** 24 tier-1 jobs (6 bases × 4 conditions; branch evaluation on the IID conditions) plus 6 causal jobs, on evaluation worlds from 161M. B2 evaluations launched: 6 jobs.
