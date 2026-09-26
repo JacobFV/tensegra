@@ -1,6 +1,6 @@
 # Extended-03 P1 report: acquisition, emergent reuse, and input ablations in depworld-v1
 
-**Status: final for P1.** The results were reproduced from raw rows by an independent auditor ([review/p1-independent-audit.md](review/p1-independent-audit.md)). The corrections the audit requested are applied below.
+**Status: final for P1.** The post-review corrections are in §3 and §8. The results were reproduced from raw rows by an independent auditor ([review/p1-independent-audit.md](review/p1-independent-audit.md)). The corrections the audit requested are applied below.
 
 **Design:**
 - Protocol: [protocol-P1.md](protocol-P1.md), frozen before training.
@@ -33,8 +33,12 @@ Imitation of a public validate-and-reuse teacher **acquires** the dependency-gra
    - **What the collapsed policies do.** They loop on actions that succeed but have no effect, until the 96-step limit. X1-rl-r0 alternates `add_constraint` on finish-by bounds 8 and 9 and never calls the csp solver. X1-rl-r2 retrieves the same route record repeatedly after committing the assignment. X4-rl-r1, X2-rl-r0 and X4-rl-r0 loop the same way. They do not abstain, accumulate rejections, or commit wrong answers.
    - **It was visible in development.** X1-r2 held .95 for 24 attempts, then fell to .92, .61, .13, .00, .00. X1-r0 was already slipping to .84–.88 from attempt 21, then fell to .57, .21, .10, .10. The action mix at the last development attempt matches the sealed loops.
    - **Stable runs.** X1-r1, X2-r1/r2, all X3 runs (which *improve* under RL: IID-group success .76–.78 → .79–.82) and X4-r2.
-   - **Implication.** The extended-02 AC v2 recipe (lr 3e-5, entropy .003, KL .3 to the previous policy) is **not stable over 1,800 updates in depworld**. A no-progress loop is a reachable, reward-neutral attractor. The step cost is small next to the success reward, so drift into it is not strongly penalized until success is already gone.
-2. **The identical-retry metric cannot see these loops.** It counts only rejected attempts. Collapsed X1 RL scores 0.000 while repeating one successful, no-effect action more than 70 times. Loop detection needs a separate metric, such as no-progress repeats.
+   - **Implication.** The extended-02 AC v2 recipe (lr 3e-5, entropy .003, KL .3) is **not stable over 1,800 updates in depworld**.
+     - **Correction after review:** an earlier draft called the loops a "reward-neutral attractor". That is too strong. Training reward is the increment in verified success minus resource costs. Accepted actions earn nothing, unnecessary actions still cost, and failing to finish forfeits the terminal reward. So the loops are *not* neutral under the task utility.
+     - **What is established:** the training dynamics produced policies that repeatedly take low-immediate-cost actions and never reach the high-value outcome. **Why** the updates became destructive is unresolved. Candidates: policy drift, critic error, advantage normalization, entropy pressure, a shifting state distribution.
+     - The KL term anchors only to a copy of the policy taken at the start of each 60-update tranche. It never anchors to the bootstrap, so small per-tranche drifts can accumulate.
+     - Training samples actions while evaluation is greedy; this difference has not been examined around the collapse boundary.
+2. **The identical-retry metric cannot see these loops.** It counts only rejected attempts. Collapsed X1 RL scores 0.000 while repeating one accepted action more than 70 times. Loop detection needs both **idempotent-repeat** detection and **short-cycle** detection. For example, alternating a finish-by bound between 8 and 9 changes the draft every time but returns to states already visited.
 3. **Imitation generalizes to reuse the teacher never showed.** X2's reuse is valid (0 invalid, 0 stale) and consistent across lineages at the select and assign stages. This reads as the teacher's use_return pattern for fresh results generalizing to foreign applicable records through the supplied applicability relations. It is a finding about imitation plus supplied relations. It is **not** a finding about reward-driven discovery.
 4. **Applicability relations are necessary and used.** X3 fails through exactly the predicted mechanism: invalid and stale reuse, with 0.52–0.88 success across conditions and endpoints. RL partly compensates (X3 RL improves) but does not close the gap. This validates the Stage B preflight design: when the relation is erased, the behaviour it supports disappears.
 
@@ -84,3 +88,13 @@ Imitation of a public validate-and-reuse teacher **acquires** the dependency-gra
 3. **X2-style reuse generalization:** test whether imitation-trained reuse survives foreign records whose applicability differs subtly (request match without dependency match), on fresh worlds.
 4. **R4 redesign.** A clean attempt-memory test needs a non-collapsed comparator and per-episode as well as per-rejection readings, with worlds where identical retry is tempting and costly.
 5. **Budget.** A full-scale P2 (≥ 6 RL lineages at 1,800 updates, ~8k core-s each) does not fit the remaining CPU allowance above the 20% reserve (~26k core-s usable). P2 therefore needs a new budget window or reduced scope, which is the user's decision.
+
+## 8. Post-review notes (2026-09-26)
+
+A review of P1 at fac0d822 accepted the findings and qualified them:
+- **Attempt memory.** R4 is **inconclusive**, not "supported with caveats". P1 does not robustly show that the controller uses the attempt record for recovery.
+- **Transfer metric.** A ratio over a collapsed IID baseline is meaningless. Future transfer criteria need an **absolute competence floor** in addition to a relative degradation bound. P1's registered verdicts stand.
+- **The X2 bootstraps' reuse** is useful generalization under supplied relations, not reward-driven discovery. The mechanism (applicability relations making "use a valid old result" resemble "use a fresh result") is plausible but not isolated.
+- **Supplied relations.** Request and dependency matching are supplied computations over public state. P1 shows the controller *uses* them; it does not show it could induce them.
+- **The capability exists in the saved bootstrap checkpoints; the failed component is the improvement procedure.** The bootstraps are kept as reference agents. The P1 endpoints and verdicts are not replaced.
+- **Next step.** The full P2 in §7 is superseded by a bounded diagnostic **P2a** ([protocol-P2a.md](protocol-P2a.md)): a collapse audit on archived checkpoints plus one controlled comparison of a fixed bootstrap anchor. A confirmatory P2b needs a fresh budget, only after P2a identifies a credible mechanism.

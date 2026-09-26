@@ -54,3 +54,10 @@
   - The truncation column must not be cited.
   - Collapse mechanism: reward-neutral no-progress loops that run to the step limit, which the identical-retry metric cannot see.
 - 2026-09-26: **P1 closed** with report-P1.md. Spent: CPU 112.5k/172.8k core-s and GPU 20.1k/43.2k s. P2 (RL stability) is proposed in the report §7 but **not started**: a full-scale P2 exceeds the remaining allowance above the 20% reserve, so it needs the user's budget decision.
+- 2026-09-26: **P1 review received and accepted.**
+  - Corrections applied to report-P1.md: the "reward-neutral attractor" wording is withdrawn; loop detection needs both idempotent-repeat and short-cycle measures; R4 is inconclusive; transfer needs an absolute floor; the relations are supplied, not induced.
+  - The full P2 is replaced by a bounded diagnostic **P2a** ([protocol-P2a.md](protocol-P2a.md)), registered before any implementation or run:
+    - Part D: collapse audit on archived X1 checkpoints. It covers greedy vs sampled rollouts, KL to the bootstrap and to the previous tranche, critic error and advantages on loop vs productive actions, and gradient contributions, plus reward-telescoping tests.
+    - Part C: one comparison on lineage X1-r2, the exact P1 replay (C0) vs a fixed bootstrap KL anchor (C1, weight 0.3). Both run the full horizon, and each reports its raw final and its separately registered deployed checkpoint.
+    - Screening on fresh non-sealed seeds from 120M.
+  - X2's reward-emergence premise is not re-run (P1 disproved it). A confirmatory P2b needs a fresh budget.
