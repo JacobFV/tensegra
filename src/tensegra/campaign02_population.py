@@ -431,6 +431,23 @@ class PopulationRun:
             self._save_state()
             del learner, model
         self.state.setdefault("initialization_attempt_costs", []).append(elapsed(start))
+        self._record_anchor()
+
+    def _record_anchor(self):
+        """P2a bootstrap anchor provenance (only when configured, so historical state is unchanged).
+
+        The anchor file is hash-verified here, before any training, and again by
+        every Learner that loads it. The anchor is fixed for the whole run."""
+        train = TrainConfig(**self.config.train)  # anchor fields are train-level (identical for all members)
+        checkpoint = train.anchor_checkpoint
+        if checkpoint is None:
+            return
+        if sha256(Path(checkpoint["path"])) != checkpoint["sha256"]:
+            raise ValueError("Anchor checkpoint hash mismatch")
+        self.state["anchor"] = {"checkpoint": checkpoint, "sha256_verified_at_initialization": True,
+                                "anchor_kl_weight": train.anchor_kl_weight,
+                                "objective": "anchor_kl_weight * mean KL(pi_anchor || pi_current) over rollout-visited states",
+                                "replaced": "never"}
 
     def _checkpoint(self, member):
         path = self.output / member["checkpoint"]
@@ -469,8 +486,13 @@ class PopulationRun:
             timing = learner.train_tranche(cfg.updates_per_slot, train_factory,
                 self.teacher_factory if learner.config.method == "supervised" else None)
             output = self.output / "development" / f"round-{r}-slot-{slot}-attempt-{attempt_id}.jsonl.gz"
+            development_clock = time.perf_counter(), time.process_time()
             metrics = learner.evaluate(range(cfg.development_seed_start,
                 cfg.development_seed_start + cfg.development_examples), self.development_factory, output)
+            if "phase_timing" in timing:  # observational only
+                timing["phase_timing"]["development_evaluation"] = {
+                    "wall_seconds": time.perf_counter() - development_clock[0],
+                    "process_cpu_seconds": time.process_time() - development_clock[1], "calls": 1}
             import gzip
             with gzip.open(output, "rt") as stream:
                 metrics["behavior_greedy_first"] = greedy_first_rate(json.loads(line) for line in stream)
@@ -479,8 +501,13 @@ class PopulationRun:
             for key in list(learner.optimizer.state):
                 learner.optimizer.state[key] = cpu_tree(learner.optimizer.state[key])
             path = self.output / "checkpoints" / f"round-{r}-slot-{slot}-attempt-{attempt_id}.pt"
+            save_clock = time.perf_counter(), time.process_time()
             learner.save(path, {"round": r, "slot": slot, "metrics": metrics,
                 "protocol_hash": self.protocol_hash, "individual_id": member["individual_id"]})
+            if "phase_timing" in timing:
+                timing["phase_timing"]["checkpoint_save"] = {
+                    "wall_seconds": time.perf_counter() - save_clock[0],
+                    "process_cpu_seconds": time.process_time() - save_clock[1], "calls": 1}
             member["checkpoint"], member["checkpoint_sha256"] = str(path.relative_to(self.output)), sha256(path)
             row = {"round": r, "slot": slot, "member": member_index, "member_id": member["individual_id"],
                 "training_seed_interval": [cursor_before, learner.seed_cursor],

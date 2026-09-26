@@ -7,7 +7,8 @@ not semantic correctness. The coordinator owns all experiment launches.
 from __future__ import annotations
 
 import argparse
-from contextlib import nullcontext
+from collections import defaultdict
+from contextlib import contextmanager, nullcontext
 from functools import partial
 from dataclasses import asdict, dataclass
 import gzip
@@ -52,10 +53,23 @@ class TrainConfig:
     # per-batch standardization of policy-gradient advantages.
     kl_weight: float = 0.0
     advantage_normalization: bool = False
+    # extended-03 P2a fixed bootstrap anchor (default off = historical code path):
+    # anchor_kl_weight * mean KL(pi_anchor || pi_current) over the rollout's visited
+    # states, pi_anchor = the frozen checkpoint {path, sha256} (verified on load,
+    # never replaced). Independent of the tranche-start KL above, which is kept.
+    anchor_kl_weight: float = 0.0
+    anchor_checkpoint: dict | None = None
 
     def __post_init__(self):
         if not math.isfinite(self.kl_weight) or self.kl_weight < 0:
             raise ValueError("Invalid KL anchor weight")
+        if not math.isfinite(self.anchor_kl_weight) or self.anchor_kl_weight < 0:
+            raise ValueError("Invalid bootstrap-anchor KL weight")
+        if self.anchor_checkpoint is not None and (not isinstance(self.anchor_checkpoint, dict)
+                                                   or set(self.anchor_checkpoint) != {"path", "sha256"}):
+            raise ValueError("anchor_checkpoint must be {path, sha256}")
+        if self.anchor_kl_weight > 0 and self.anchor_checkpoint is None:
+            raise ValueError("A positive anchor_kl_weight needs an anchor_checkpoint {path, sha256}")
         if not math.isfinite(self.neural_work_per_forward) or self.neural_work_per_forward < 0:
             raise ValueError("Invalid frozen neural tariff")
         if self.policy_loss_reduction not in {"decision_mean", "episode_mean"}:
@@ -66,6 +80,9 @@ class TrainConfig:
             raise ValueError("Unknown learning method")
         if min(self.width, self.batch_size, self.max_steps, self.bptt_steps, self.evaluation_batch) < 1 or self.learning_rate <= 0:
             raise ValueError("Invalid training dimensions/rate")
+
+
+ANCHOR_FIELD_DEFAULTS = {"anchor_kl_weight": 0.0, "anchor_checkpoint": None}
 
 
 @dataclass
@@ -242,8 +259,36 @@ def live_episode(model, env, *, device="cpu", max_steps=64, sample=False, gradie
             "episode_wall_seconds": time.perf_counter()-wall_start}, terms
 
 
-def batched_episodes(model, environments, *, device="cpu", max_steps=64, neural_work_per_forward=1.0):
-    """Batch current public states; hidden rows retain their own episode identity."""
+def sampling_rng_seed(world_seed: int, sampling_seed: int, sample: int = 0) -> int:
+    """Per-world policy-sampling stream for sampled evaluation: a function of the world
+    seed, the declared sampling seed and the sample index only (never of batch layout)."""
+    return int(digest({"world_seed": world_seed, "sampling_seed": sampling_seed, "sample": sample,
+                       "role": "policy-sampling"})[:16], 16)
+
+
+def inverse_cdf_choice(probabilities, u: float) -> int:
+    """Index i with cumsum(p)[i-1] <= u < cumsum(p)[i]; zero-probability (masked) entries are
+    never chosen, and float round-off beyond the last positive entry resolves to it."""
+    total, last = 0.0, None
+    for index, p in enumerate(probabilities):
+        if p <= 0:
+            continue
+        total += p
+        last = index
+        if u < total:
+            return index
+    if last is None:
+        raise ValueError("No positive-probability action")
+    return last
+
+
+def batched_episodes(model, environments, *, device="cpu", max_steps=64, neural_work_per_forward=1.0,
+                     samplers=None):
+    """Batch current public states; hidden rows retain their own episode identity.
+
+    samplers=None is the greedy (argmax) policy. Otherwise samplers[i] is a
+    random.Random for environment i: one uniform draw per decision of that episode,
+    mapped through the float64 action distribution (fixed-seed sampled evaluation)."""
     observations = [env.observe() for env in environments]
     traces = [[] for _ in environments]
     unsupported = {}
@@ -257,10 +302,15 @@ def batched_episodes(model, environments, *, device="cpu", max_steps=64, neural_
         batch = policy_batch(model, [frame for _, frame in public], device)
         current_hidden = None if hidden is None else hidden[active]
         logits, _, next_hidden = score_batch(model, batch, current_hidden)
-        # One device synchronization for all choices and probabilities in a step.
-        selected = logits.argmax(-1)
-        chosen = selected.cpu().tolist()
-        probabilities = logits.softmax(-1).gather(1, selected[:, None]).squeeze(1).cpu().tolist()
+        if samplers is None:
+            # One device synchronization for all choices and probabilities in a step.
+            selected = logits.argmax(-1)
+            chosen = selected.cpu().tolist()
+            probabilities = logits.softmax(-1).gather(1, selected[:, None]).squeeze(1).cpu().tolist()
+        else:
+            distribution = logits.double().softmax(-1).cpu().tolist()
+            chosen = [inverse_cdf_choice(distribution[row], samplers[index].random()) for row, index in enumerate(active)]
+            probabilities = [distribution[row][c] for row, c in enumerate(chosen)]
         neural_wall = time.perf_counter() - neural_start
         if next_hidden is not None:
             if hidden is None:
@@ -289,51 +339,108 @@ def batched_episodes(model, environments, *, device="cpu", max_steps=64, neural_
             for i, (trace, env, obs) in enumerate(zip(traces, environments, observations))]
 
 
+class PhaseClock:
+    """Observational wall/process-CPU accumulator per named phase (P2a profiling).
+
+    Reads clocks only: no RNG, no tensor or environment access, so it cannot
+    change results. On CUDA, kernel time lands in whichever phase first
+    synchronizes (the CPU copy of the sampled choices, inside "forward_policy").
+    """
+
+    def __init__(self):
+        self.wall, self.cpu, self.calls = defaultdict(float), defaultdict(float), defaultdict(int)
+
+    @contextmanager
+    def __call__(self, name):
+        wall, cpu = time.perf_counter(), time.process_time()
+        try:
+            yield
+        finally:
+            self.wall[name] += time.perf_counter() - wall
+            self.cpu[name] += time.process_time() - cpu
+            self.calls[name] += 1
+
+    def as_dict(self):
+        return {name: {"wall_seconds": self.wall[name], "process_cpu_seconds": self.cpu[name], "calls": self.calls[name]}
+                for name in sorted(self.wall)}
+
+
+def _no_phase(name):
+    return nullcontext()
+
+
+def _frozen_kl(frozen, batch, frozen_hidden, indices, rows, logits):
+    """KL(pi_frozen || pi_current) per active row on the current public states.
+
+    The frozen policy is scored without gradient; invalid (padding) candidates
+    contribute zero. frozen_hidden carries the frozen policy's own recurrent rows.
+    """
+    with torch.no_grad():
+        frozen_current = None if frozen_hidden is None else frozen_hidden.index_select(0, indices)
+        frozen_logits, _, frozen_next = score_batch(frozen, batch, frozen_current)
+        if frozen_next is not None:
+            if frozen_hidden is None:
+                frozen_hidden = frozen_next.new_zeros((rows, *frozen_next.shape[1:]))
+            frozen_hidden = frozen_hidden.index_copy(0, indices, frozen_next)
+    valid = batch[2]
+    p_ref = frozen_logits.log_softmax(-1).masked_fill(~valid, 0.0)
+    p_cur = logits.log_softmax(-1).masked_fill(~valid, 0.0)
+    return (p_ref.exp()*(p_ref-p_cur)).sum(-1), frozen_hidden
+
+
 def batched_on_policy(model, environments, *, device="cpu", max_steps=64,
-                      neural_work_per_forward=1.0, bptt_steps=8, sample=True, reference=None):
+                      neural_work_per_forward=1.0, bptt_steps=8, sample=True, reference=None,
+                      anchor=None, clock=None):
     """Differentiable current-state-only rollouts with one RNG draw per batch.
 
     This is an explicit alternative to serial episode sampling: categorical RNG
     draws are consumed by time then active episode, so identical seeds do not
     imply identical sampled trajectories across the two algorithms. Episodes
     retain independent hidden rows; gradients never cross episode identities.
+
+    reference: frozen tranche-start policy -> per-decision KL(reference || current).
+    anchor: frozen fixed bootstrap policy (P2a) -> per-decision KL(anchor || current),
+    computed exactly like the reference KL. Returns (results, terms) without either,
+    (results, terms, kls) with only a reference (historical signature), and
+    (results, terms, kls-or-None, anchor_kls) whenever an anchor is given.
+    clock: optional PhaseClock (observational timing only).
     """
+    phase = clock or _no_phase
     observations = [env.observe() for env in environments]
     traces, terms = [[] for _ in environments], [[] for _ in environments]
     kls = [[] for _ in environments]
+    anchor_kls = [[] for _ in environments]
     previous_utilities = [0.0 for _ in environments]
     unsupported = {}
-    hidden = reference_hidden = None
+    hidden = reference_hidden = anchor_hidden = None
     cpu_start, wall_start = time.process_time(), time.perf_counter()
     for step in range(max_steps):
-        active, public = prepare_active(model, observations, unsupported)
+        with phase("encode"):
+            active, public = prepare_active(model, observations, unsupported)
         if not active:
             break
         if hidden is not None and step % bptt_steps == 0:
             hidden = hidden.detach()
         neural_start = time.perf_counter()
-        batch = policy_batch(model, [frame for _, frame in public], device)
-        indices = torch.tensor(active, device=device)
-        current_hidden = None if hidden is None else hidden.index_select(0, indices)
-        logits, values, next_hidden = score_batch(model, batch, current_hidden)
-        distribution = torch.distributions.Categorical(logits=logits)
-        selected = distribution.sample() if sample else logits.argmax(-1)
-        logp, entropy = distribution.log_prob(selected), distribution.entropy()
-        if reference is not None:
-            # Frozen round-start policy on the same public states; no gradient.
-            with torch.no_grad():
-                reference_current = None if reference_hidden is None else reference_hidden.index_select(0, indices)
-                reference_logits, _, reference_next = score_batch(reference, batch, reference_current)
-                if reference_next is not None:
-                    if reference_hidden is None:
-                        reference_hidden = reference_next.new_zeros((len(environments), *reference_next.shape[1:]))
-                    reference_hidden = reference_hidden.index_copy(0, indices, reference_next)
-            valid = batch[2]
-            p_ref = reference_logits.log_softmax(-1).masked_fill(~valid, 0.0)
-            p_cur = logits.log_softmax(-1).masked_fill(~valid, 0.0)
-            kl = (p_ref.exp()*(p_ref-p_cur)).sum(-1)
-        chosen = selected.detach().cpu().tolist()
-        probabilities = distribution.probs.gather(1, selected[:, None]).squeeze(1).detach().cpu().tolist()
+        with phase("collate"):
+            batch = policy_batch(model, [frame for _, frame in public], device)
+            indices = torch.tensor(active, device=device)
+        with phase("forward_policy"):
+            current_hidden = None if hidden is None else hidden.index_select(0, indices)
+            logits, values, next_hidden = score_batch(model, batch, current_hidden)
+            distribution = torch.distributions.Categorical(logits=logits)
+            selected = distribution.sample() if sample else logits.argmax(-1)
+            logp, entropy = distribution.log_prob(selected), distribution.entropy()
+        with phase("forward_frozen"):
+            if reference is not None:
+                # Frozen round-start policy on the same public states; no gradient.
+                kl, reference_hidden = _frozen_kl(reference, batch, reference_hidden, indices, len(environments), logits)
+            if anchor is not None:
+                # Frozen bootstrap anchor (never replaced) on the same public states; no gradient.
+                anchor_kl, anchor_hidden = _frozen_kl(anchor, batch, anchor_hidden, indices, len(environments), logits)
+        with phase("forward_policy"):
+            chosen = selected.detach().cpu().tolist()
+            probabilities = distribution.probs.gather(1, selected[:, None]).squeeze(1).detach().cpu().tolist()
         neural_wall = time.perf_counter()-neural_start
         if next_hidden is not None:
             if hidden is None:
@@ -343,25 +450,31 @@ def batched_on_policy(model, environments, *, device="cpu", max_steps=64,
         for row, index in enumerate(active):
             before = observations[index]
             action = public[row][0][chosen[row]]
-            environments[index].charge_compute(neural_work_per_forward)
-            after = environments[index].step(action)
-            observations[index] = after
-            utility = float(environments[index].evaluate()["utility"])
+            with phase("environment_step"):
+                environments[index].charge_compute(neural_work_per_forward)
+                after = environments[index].step(action)
+                observations[index] = after
+                utility = float(environments[index].evaluate()["utility"])
             terms[index].append((logp[row], values[row], entropy[row], utility-previous_utilities[index]))
             if reference is not None:
                 kls[index].append(kl[row])
+            if anchor is not None:
+                anchor_kls[index].append(anchor_kl[row])
             previous_utilities[index] = utility
-            traces[index].append({"step": step, "observation": before.to_dict(), "action": asdict(action),
-                "action_index": chosen[row], "candidate_count": len(public[row][0]), "probability": probabilities[row],
-                "neural_work_units": neural_work_per_forward, "neural_forward_wall_seconds_allocated": neural_wall/len(active),
-                "active_batch_size": len(active), "remaining_steps": after.remaining_steps,
-                "remaining_work": after.remaining_work, "feedback": after.feedback})
+            with phase("trace_export"):
+                traces[index].append({"step": step, "observation": before.to_dict(), "action": asdict(action),
+                    "action_index": chosen[row], "candidate_count": len(public[row][0]), "probability": probabilities[row],
+                    "neural_work_units": neural_work_per_forward, "neural_forward_wall_seconds_allocated": neural_wall/len(active),
+                    "active_batch_size": len(active), "remaining_steps": after.remaining_steps,
+                    "remaining_work": after.remaining_work, "feedback": after.feedback})
     timing = {"batch_process_cpu_seconds": time.process_time()-cpu_start,
               "batch_wall_seconds": time.perf_counter()-wall_start, "batch_size": len(environments),
               "neural_timing_scope": "collate/device+model+CPU sampling sync; equally allocated, not serial latency"}
     results = [{"trace": trace, "outcome": env.evaluate(), "truncated": not observation.done,
                 "timing": timing if i == 0 else None, "unsupported_interface": unsupported.get(i)}
                for i, (trace, env, observation) in enumerate(zip(traces, environments, observations))]
+    if anchor is not None:
+        return results, terms, (kls if reference is not None else None), anchor_kls
     return (results, terms, kls) if reference is not None else (results, terms)
 
 
@@ -375,13 +488,17 @@ def actor_critic_terms(episode_terms, config):
     return losses
 
 
-def actor_critic_objective(episodes, config, kls=None):
+def actor_critic_objective(episodes, config, kls=None, anchor_kls=None):
     """Policy weighting is declared separately from critic regression weighting.
 
     decision_mean retains the historical per-decision objective. episode_mean
     sums policy-gradient and entropy terms within each episode, then averages
     episodes, including zero-decision episodes. In either mode, critic squared
     error is averaged over actual decisions; it is a separately weighted fit.
+
+    kls / anchor_kls: per-decision KL(tranche-start || current) and KL(fixed
+    anchor || current); each enters as weight * decision mean. anchor_kls=None
+    (no anchor) leaves the historical objective untouched.
     """
     policy_by_episode, entropy_by_episode, values = [], [], []
     if getattr(config, "advantage_normalization", False) and any(episodes):
@@ -428,7 +545,38 @@ def actor_critic_objective(episodes, config, kls=None):
         kl = torch.stack(flat).mean() if flat else zero
         loss = loss+config.kl_weight*kl
         parts["kl_to_round_start"] = kl
+    if anchor_kls is not None:
+        flat = [k for episode in anchor_kls for k in episode]
+        anchor_kl = torch.stack(flat).mean() if flat else zero
+        loss = loss+config.anchor_kl_weight*anchor_kl
+        parts["kl_to_anchor"] = anchor_kl
     return loss, parts
+
+
+def load_anchor(anchor_checkpoint: dict, model, device="cpu"):
+    """Frozen copy of `model`'s architecture holding the anchor checkpoint's weights.
+
+    The file's sha256 must match the registered value; the architecture must equal
+    the learner's. Returns (frozen policy, provenance). Consumes no RNG.
+    """
+    from copy import deepcopy
+    path = Path(anchor_checkpoint["path"])
+    value = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024*1024), b""):
+            value.update(block)
+    if value.hexdigest() != anchor_checkpoint["sha256"]:
+        raise ValueError(f"Anchor checkpoint hash mismatch: {path}")
+    saved = torch.load(path, map_location="cpu", weights_only=False)
+    if normalized_policy_config(saved["policy_config"]) != asdict(model.config):
+        raise ValueError("Anchor checkpoint architecture differs from the learner's")
+    anchor = deepcopy(model)
+    anchor.load_state_dict(saved["model"], strict=True)
+    anchor = anchor.to(device).eval()
+    for parameter in anchor.parameters():
+        parameter.requires_grad_(False)
+    return anchor, {"path": str(path), "sha256": value.hexdigest(), "verified": True,
+                    "source_updates": saved.get("updates"), "source_presentations": saved.get("presentations")}
 
 
 class Learner:
@@ -440,6 +588,16 @@ class Learner:
         self.resume_history: list[dict] = []
         self.curves: list[dict] = []
         self.data_hash = hashlib.sha256()
+        self.anchor = self.anchor_provenance = None
+
+    def anchor_policy(self):
+        """The frozen P2a bootstrap anchor, loaded (and hash-verified) once; None when off."""
+        cfg = self.config
+        if cfg.method != "actor_critic" or cfg.anchor_kl_weight <= 0:
+            return None
+        if self.anchor is None or self.anchor_provenance["sha256"] != cfg.anchor_checkpoint["sha256"]:
+            self.anchor, self.anchor_provenance = load_anchor(cfg.anchor_checkpoint, self.model, cfg.device)
+        return self.anchor
 
     def train_tranche(self, updates: int, world_factory: Callable, teacher_factory: Callable | None = None):
         cfg = self.config
@@ -453,21 +611,31 @@ class Learner:
             reference = deepcopy(self.model).eval()
             for parameter in reference.parameters():
                 parameter.requires_grad_(False)
-        batch_kls = None
+        anchor = self.anchor_policy()
+        if anchor is not None and cfg.rollout_mode != "batched":
+            raise ValueError("The bootstrap anchor is implemented for batched rollouts only")
+        batch_kls = anchor_kls = None
+        clock = PhaseClock()
         for _ in range(updates):
             trajectories, outcomes, rollout_episodes = [], [], []
             if cfg.method == "actor_critic" and cfg.rollout_mode == "batched":
                 seeds = list(range(self.seed_cursor, self.seed_cursor+cfg.batch_size))
                 self.seed_cursor += cfg.batch_size
-                rollout = batched_on_policy(self.model, [world_factory(seed) for seed in seeds],
-                    device=cfg.device, max_steps=cfg.max_steps, neural_work_per_forward=cfg.neural_work_per_forward,
-                    bptt_steps=cfg.bptt_steps, reference=reference)
+                with clock("world_construction"):
+                    worlds = [world_factory(seed) for seed in seeds]
+                with clock("rollout_total"):
+                    rollout = batched_on_policy(self.model, worlds,
+                        device=cfg.device, max_steps=cfg.max_steps, neural_work_per_forward=cfg.neural_work_per_forward,
+                        bptt_steps=cfg.bptt_steps, reference=reference,
+                        **({"anchor": anchor} if anchor is not None else {}), clock=clock)
                 results, all_terms = rollout[:2]
                 batch_kls = rollout[2] if reference is not None else None
-                for result, episode_terms in zip(results, all_terms):
-                    rollout_episodes.append(episode_terms)
-                    self.data_hash.update(json.dumps(result["trace"], sort_keys=True).encode())
-                    outcomes.append(result["outcome"])
+                anchor_kls = rollout[3] if anchor is not None else None
+                with clock("trace_hash_export"):
+                    for result, episode_terms in zip(results, all_terms):
+                        rollout_episodes.append(episode_terms)
+                        self.data_hash.update(json.dumps(result["trace"], sort_keys=True).encode())
+                        outcomes.append(result["outcome"])
             else:
                 for _ in range(cfg.batch_size):
                     seed = self.seed_cursor
@@ -495,12 +663,15 @@ class Learner:
                 else:
                     loss, count = supervised_loss(self.model, trajectories, cfg.device, cfg.bptt_steps)
             else:
-                loss, objective_parts = actor_critic_objective(rollout_episodes, cfg, batch_kls)
+                with clock("objective"):
+                    loss, objective_parts = actor_critic_objective(rollout_episodes, cfg, batch_kls, anchor_kls)
                 count = sum(map(len, rollout_episodes))
-            if not gradients_ready:
-                loss.backward()
-            norm = nn.utils.clip_grad_norm_(self.model.parameters(), cfg.gradient_clip)
-            self.optimizer.step()
+            with clock("backward"):
+                if not gradients_ready:
+                    loss.backward()
+                norm = nn.utils.clip_grad_norm_(self.model.parameters(), cfg.gradient_clip)
+            with clock("optimizer_step"):
+                self.optimizer.step()
             self.updates += 1
             self.presentations += count
             self.episodes += cfg.batch_size
@@ -516,8 +687,16 @@ class Learner:
                 "supervised_target_decisions": count if cfg.method == "supervised" else 0,
                 "on_policy_decisions": count if cfg.method == "actor_critic" else 0,
                 "solver_cpu_seconds": sum(o["solver_cpu_seconds"] for o in outcomes)})
-        return {"updates": updates, "process_cpu_seconds": time.process_time()-start_cpu,
-                "wall_seconds": time.perf_counter()-start_wall, "last": self.curves[-1] if updates else None}
+        result = {"updates": updates, "process_cpu_seconds": time.process_time()-start_cpu,
+                  "wall_seconds": time.perf_counter()-start_wall, "last": self.curves[-1] if updates else None}
+        if clock.wall:
+            # Observational only (batched actor-critic): nested phases -- rollout_total contains
+            # encode/collate/forward_*/environment_step/trace_export; objective/backward/optimizer_step
+            # and trace_hash_export are outside it.
+            result["phase_timing"] = clock.as_dict()
+        if anchor is not None:
+            result["anchor"] = {**self.anchor_provenance, "anchor_kl_weight": cfg.anchor_kl_weight}
+        return result
 
     def evaluate(self, seeds, world_factory, output: Path | None = None):
         self.model.eval()
@@ -559,8 +738,11 @@ class Learner:
         if normalized_policy_config(checkpoint["policy_config"]) != asdict(self.model.config):
             raise ValueError("Checkpoint architecture mismatch")
         current = asdict(self.config)
-        differences = {k: {"checkpoint": checkpoint["config"].get(k), "requested": v}
-                       for k, v in current.items() if checkpoint["config"].get(k) != v}
+        # Checkpoints predating the P2a anchor fields carry their (off) defaults, so
+        # the historical resume/import record is unchanged when the anchor is off.
+        saved_config = {**ANCHOR_FIELD_DEFAULTS, **checkpoint["config"]}
+        differences = {k: {"checkpoint": saved_config.get(k), "requested": v}
+                       for k, v in current.items() if saved_config.get(k) != v}
         semantic_changes = set(differences) - {"device", "evaluation_batch"}
         if semantic_changes and not allow_config_changes:
             raise ValueError(f"Explicit resume configuration change authorization required: {sorted(semantic_changes)}")

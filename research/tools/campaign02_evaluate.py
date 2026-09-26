@@ -215,7 +215,8 @@ def main():
     from topoformer.campaign02_protocol import BoundedSolver
     from topoformer.campaign02_references import make_reference, run_episode
     from topoformer.campaign02_population import build_policy
-    from topoformer.campaign02_training import TrainConfig, batched_episodes, independent_address_seed
+    from topoformer.campaign02_training import TrainConfig, batched_episodes, independent_address_seed, sampling_rng_seed
+    import random
     from topoformer.campaign02_world import Workshop, generate_world, protocol_executor
     from topoformer.campaign02_interventions import FaultedWorkshop
 
@@ -281,6 +282,14 @@ def main():
                 condition_executor = executor
                 specs = [generate_world(seed, **world_kwargs(condition.get("world", {}))) for seed in seeds]
             namespace = condition.get("address_namespace", cfg.get("address_namespace", "extended-02-frozen-eval-v1"))
+            # Learned-policy action choice: greedy (historical default) or fixed-seed sampled, one
+            # sample per world from a stream seeded by (world seed, sampling_seed) only.
+            policy_mode = condition.get("policy_mode", cfg.get("policy_mode", "greedy"))
+            sampling_seed = condition.get("sampling_seed", cfg.get("sampling_seed"))
+            if policy_mode not in ("greedy", "sampled"):
+                raise ValueError(f"Unknown policy_mode {policy_mode!r}")
+            if policy_mode == "sampled" and not isinstance(sampling_seed, int):
+                raise ValueError("Sampled evaluation needs an explicit integer sampling_seed")
             faults = condition_faults(condition)
             def factory(index):
                 kwargs = {"executor":condition_executor,"address_seed":independent_address_seed(seeds[index],namespace)}
@@ -310,11 +319,17 @@ def main():
                 with torch.no_grad():
                     for offset in range(0, n, batch_size):
                         indices = list(range(offset, min(n, offset+batch_size)))
+                        samplers = None if policy_mode == "greedy" else [
+                            random.Random(sampling_rng_seed(seeds[i], sampling_seed)) for i in indices]
                         outputs = batched_episodes(policy, [factory(i) for i in indices], device=args.device,
-                            max_steps=train_cfg.max_steps, neural_work_per_forward=train_cfg.neural_work_per_forward)
+                            max_steps=train_cfg.max_steps, neural_work_per_forward=train_cfg.neural_work_per_forward,
+                            **({} if samplers is None else {"samplers": samplers}))
                         for i, result in zip(indices, outputs):
                             rows.append({"seed": seeds[i], "spec_hash": world_rows[i]["spec_hash"], "semantic_spec_hash":world_rows[i]["semantic_spec_hash"], **result,
                                          "counts": episode_counts(result["outcome"])})
+                            if samplers is not None:
+                                rows[-1].update(policy_mode="sampled", sampling_seed=sampling_seed,
+                                                sampling_rng_seed=sampling_rng_seed(seeds[i], sampling_seed))
                 if not cfg.get("trace_observations", True):
                     # Opt-in size control: drop the per-step public observation copies from learned
                     # traces (the exact action/feedback history and the P1 audit remain in the row).
@@ -328,10 +343,13 @@ def main():
                     **summarize(rows), "artifact": str(artifact.relative_to(args.output)), "artifact_sha256": file_hash(artifact),
                     "policy_config": asdict(policy_cfg), "training_config": asdict(train_cfg),
                     "actual_parameter_count": sum(p.numel() for p in policy.parameters()),
-                    "checkpoint_updates": checkpoint["updates"], "checkpoint_presentations": checkpoint["presentations"]})
+                    "checkpoint_updates": checkpoint["updates"], "checkpoint_presentations": checkpoint["presentations"],
+                    **({} if policy_mode == "greedy" else {"policy_mode": policy_mode, "sampling_seed": sampling_seed,
+                        "sampling_rule": "one sample per world; random.Random(sampling_rng_seed(world seed, sampling_seed, 0)); "
+                                         "one uniform per decision through float64 softmax (inverse CDF)"})})
                 by_arm[binding["name"]] = light_rows(rows)
                 del policy, checkpoint, rows
-            for mode in cfg.get("references", ["cheap", "always_tool", "cheap_first"]):
+            for mode in condition.get("references", cfg.get("references", ["cheap", "always_tool", "cheap_first"])):
                 rows = []
                 for i, seed in enumerate(seeds):
                     outcome = run_episode(factory(i), make_reference(mode), cfg.get("reference_compute_tariff", 0.0))
