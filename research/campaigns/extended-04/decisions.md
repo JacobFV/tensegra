@@ -69,3 +69,4 @@
   - The default runner is bit-identical to deploy_episodes. Labels are regression-only (paired advantages, K = 4). The appraisal GRU has 30,150 parameters.
   - Dev smoke (descriptive): little one-step headroom over greedy + R-mask for sample and mask-top; "stop" beats the default at 22% of loop-prone label points, where the default then fails.
   - Integrity: a pre-registration smoke touched the first 16 registered evaluation worlds (160M), so the evaluation range was moved to **161M**. **[protocol-C1.md](protocol-C1.md)** registered: C-H1…C-H5, split by base type, with random and threshold controls, calibration and causal checks.
+- 2026-09-26T20:35Z: 12 Track C label launches went out with an **empty snapshot SHA** (the snapshot was refused because the ledger had dirtied budget.json, and the shell continued). They failed immediately; receipts renamed *-emptysha-process and charged. The helper now refuses a malformed or missing snapshot.

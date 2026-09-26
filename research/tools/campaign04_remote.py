@@ -96,7 +96,14 @@ def main():
     c.add_argument("--wall-cap", type=float, default=7200); c.add_argument("--cpu-cap", type=float, default=14400); c.set_defaults(f=launch_cmd)
     s.add_parser("status").set_defaults(f=status)
     f = s.add_parser("fetch"); f.add_argument("jobs", nargs="+"); f.set_defaults(f=fetch)
-    a = p.parse_args(); a.f(a)
+    a = p.parse_args()
+    if getattr(a, "sha", None) is not None:
+        import re
+        if not re.fullmatch(r"[0-9a-f]{7,40}", a.sha):
+            sys.exit(f"refusing to launch: bad snapshot sha {a.sha!r}")
+        if wsl(f"test -d {ROOT}/source-{a.sha} && echo ok\n").strip() != "ok":
+            sys.exit(f"refusing to launch: {ROOT}/source-{a.sha} does not exist")
+    a.f(a)
 
 
 if __name__ == "__main__":
