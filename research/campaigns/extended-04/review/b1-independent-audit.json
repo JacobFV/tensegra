@@ -1,0 +1,44 @@
+{
+ "audit": "extended-04 Track B1 independent audit",
+ "date": "2026-09-26",
+ "base": "campaign/extended-04 @ 48286d97",
+ "verdicts": {
+  "B-H1": {"root": "SUPPORTED", "auditor": "SUPPORTED", "match": true, "robust_to": ["realized vs gap regret"], "note": "effect is essentially L0->L1; L0 is a local optimum (never probes)"},
+  "B-H2": {"root": "L0->L1, L1->L2, L2->L3 add value; L3->L4 not", "auditor": "same under realized regret; under gap regret L1->L2 does NOT add value (1/3 seeds)", "match": true, "note": "L1..L4 held-out means 1.75-4.06 with per-split regret SE ~1.0-1.4; only L0->L1 exceeds noise"},
+  "B-H3": {"root": "SUPPORTED", "auditor": "SUPPORTED", "match": true, "robust_to": ["unweighted vs n-weighted bins", "each split vs split mean"], "L4_mad_range": [0.021, 0.045]},
+  "B-H4": {"root": "SUPPORTED (held-out pooled)", "auditor": "SUPPORTED only under pooling; per-split heldout_comp unique-opt probe rate .636/.636/.773 < .80 in 3/3 seeds", "match": true, "reading_dependent": true},
+  "B-H5": {"root": "SUPPORTED (held-out pooled)", "auditor": "SUPPORTED only under pooling; heldout_comp justified-after-b ratio .59/.67/.59 < .8 in 3/3 seeds", "match": true, "reading_dependent": true},
+  "B-H6": {"root": "NOT SUPPORTED (L4)", "auditor": "NOT SUPPORTED under every reading", "match": true, "L4_heldout_own_return": {"heldout_price": [0.032, 0.027, 0.052], "heldout_k": [0.148, 0.155, 0.128], "heldout_comp": [0.114, 0.081, 0.095]}}
+ },
+ "numeric_discrepancies_vs_b1_score_json": 0,
+ "label_integrity": {
+  "split_disjointness_generator_params": "pass (all 12 checks, 0 problems; train.pkl remote: 384 configs, ks {1,2,8}, 8 cells, no held-out param)",
+  "brute_force_k1_heldout": "8 configs (4 heldout_price, 4 heldout_comp; all flag types), V* and all root Q* and depth-1 V* agree, max abs err 1.9e-10",
+  "monte_carlo_rejection": "25 visible histories (heldout_k k=4, heldout_comp, heldout_price), 178 Q* tests, max |z| 3.54 (commit_infeasible, re-run at 20k/40k samples: |z| <= 0.7); belief follow-ups all |z| <= 1.8 on re-run",
+  "labels_function_of_visible_history": "9,786 distinct histories, 0 label conflicts, 0 state mismatches",
+  "pickled_labels_equal_fresh_dp": "9 held-out configs, identical state sets, max |dV| = 0.0",
+  "code_identity": "probeworld + trainer sha256 identical in label (28152106), train (28152106), eval (871a9a9d) snapshots and the audited tree"
+ },
+ "leakage": {
+  "input_rebuild_from_public_only": "2,525 steps (heldout_comp, heldout_k), 0 mismatches, max abs diff 0.0, in_dim 68",
+  "same_stream_and_init_across_rungs": "per seed: logged V_star stream identical at all 41 logged updates; update-0 U identical across all 5 rungs",
+  "final_checkpoint_only": "each run dir holds one model.pt (written at end of training), eval.json mtime later; eval loads run/model.pt"
+ },
+ "L0": {
+  "weights_differ": {"s0_vs_s1": 1.226, "s0_vs_s2": 1.146, "s1_vs_s2": 0.983},
+  "identical_trajectory_fraction_s0_vs_s1": {"dev": 1.0, "test_iid": 1.0, "heldout_price": 1.0, "heldout_k": 0.984, "heldout_comp": 0.992},
+  "identical_trajectory_fraction_s0_vs_s2": {"dev": 0.781, "test_iid": 0.797, "heldout_price": 0.742, "heldout_k": 1.0, "heldout_comp": 0.828},
+  "strategy": "never probe, never inspect, (almost) never b2: every query is prop -> exact_b1 -> commit (or commit_infeasible after conflict/timeout-after-reduction); s0/s1 additionally build+use when rho is high, s2 never builds. 100% success, 0 wrong commits, cost-inefficient."
+ },
+ "B-H6_cause": {
+  "root_hypothesis": "L1-L4 value heads trained toward V* while calibration is against own return",
+  "code_fact": "no rung trains the value head toward V*; value loss is (v - own sampled MC return-to-go)^2 in every rung; L4 supervises only the Q head",
+  "reliability_vs_Vstar_approx_equal_vs_own_return": true,
+  "own_return_minus_Vstar_bias_R": "supervised rungs -0.008 to -0.059 (greedy policies near-optimal)",
+  "vhat_minus_own_return_bias_R_heldout_k_comp": "L1 -0.017..+0.23, L4 +0.03..+0.13 (over-prediction)",
+  "sampled_policy_calibration": "within +-0.03 of greedy calibration -> not a greedy/sampled continuation mismatch",
+  "in_distribution_L4_dev": 0.0455,
+  "conclusion": "root hypothesis refuted; failure is held-out generalization (over-prediction) of the value head, worst on heldout_k"
+ },
+ "compute": {"remote_metered_core_s": 86.1, "remote_receipt": "~/tensegra-campaign04/results/dev/b1audit-remote-20260926T203508-533086-process", "local_cpu_core_s_estimate": 400, "local_note": "local Dell GB10 CPU, pure Python; includes ~300 core-s from an aborted non-memoized brute-force attempt and a timed-out probe"}
+}
