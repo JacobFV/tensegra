@@ -205,3 +205,4 @@
     - F2: the heldout_comp shortfall is **a probing limit**; switch-per-failed-probe is .90–.98 of π*. F2 freshness means "fresh training seeds and outcome draws on B1's held-out configurations".
     - B2 failure prediction is uninformative (oracle Q*/V* AUROC is also only .49–.62).
   - **Decision-log timestamps from ~20:38Z onward were hand estimates and drifted. All are now aligned to their git commit times.** The protocol-F registration (commit 21:40) preceded the F1/F2 launches (21:40–21:41).
+- 2026-09-26T22:39Z: A3 trained (exit 0, 1.81k core-s). The deployment rule keeps the final (30/30 qualify). A3 screening launched on fresh worlds from 190M: a3 final, bootstrap, a2-imit final and dep_reuse; greedy/sampled/r_mask.
