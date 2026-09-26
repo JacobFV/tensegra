@@ -137,3 +137,16 @@
   - F2: probeworld L0/L1/L4 on fresh seeds 3–5 with fresh world draws (offset 700).
   - Added `--world-offset` to the probeworld evaluation (default 500, so B1 is unchanged).
 - 2026-09-26T21:55Z: Fresh bootstraps r3–r5 done (exit 0). F1 configs built (latest checkpoints, hashes recorded; sealed seeds 170M, 512 per condition, greedy + r_mask, plus a dep_reuse reference). F1 launched; F2 (9 trainings) launched.
+- 2026-09-26T22:00Z: **B2 scored** as registered (`campaign04_b2_score.py`; research/results/campaign-04/b2/). **Primary NOT SUPPORTED:** the own-greedy-return value head `v_own` is no better calibrated on held-out splits than V.
+  - L4 v_own reliability error, per seed:
+
+    | Split | s0 | s1 | s2 |
+    |---|---:|---:|---:|
+    | heldout_k | .13 | .16 | .14 |
+    | heldout_comp | .10 | .08 | .09 |
+    | heldout_price | .03 | .03 | .06 |
+
+    It is calibrated in-distribution (test_iid .02–.04). The V* noise floor is ≤ .06 everywhere, so the metric is not noise-limited.
+  - The policy is unchanged, as required: B1 parameters and evaluation keys are bit-identical, with 0 regret difference.
+  - **Failure prediction:** commit-level AUROC .45–.65, CIs include .5 (9–20 wrong commits per seed); not supported.
+  - **Registered reading:** "not continuation". The value estimates fail to generalize to held-out generator regions (k = 4 worst), matching the B1 auditor's diagnosis. **Deliverable 4 status:** calibration holds in-distribution in both tracks (probeworld test_iid; depworld Track C ECE ≤ .026 on fresh worlds of the training distribution), but not under generator-parameter shift in probeworld.
