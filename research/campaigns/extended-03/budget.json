@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "started_utc": "2026-09-25T05:31:35Z",
-  "deadline_utc": "2026-09-26T05:31:35Z",
+  "started_utc": "2026-09-26T04:54:37Z",
+  "deadline_utc": "2026-09-27T04:54:37Z",
   "ceilings": {
     "cpu_core_seconds": 172800,
     "gpu_device_seconds": 43200,
@@ -9,10 +9,40 @@
   },
   "reserve_fraction": 0.2,
   "gpu_accounting": "device occupancy (union of GPU-job wall intervals)",
-  "jobs": [],
-  "charged_cpu_core_seconds": 0,
-  "charged_gpu_seconds": 0,
-  "status": "paused",
-  "paused_utc": "2026-09-25",
-  "note": "No remote jobs launched. Local CPU used by subagents for building/testing/profiling (~minutes) is not metered by the job wrapper; leverage profile ~75-150 s CPU. Wall window to be re-declared on resume."
+  "jobs": [
+    {
+      "job": "smoke-boot-envfail",
+      "host": "pro6000",
+      "kind": "smoke",
+      "wall_seconds": 0.2,
+      "cpu_core_seconds": 0.014,
+      "gpu_seconds": 0.2,
+      "exit_code": 1,
+      "note": "systemd-run env not inherited (PYTHONPATH missing); fixed in detach.sh"
+    },
+    {
+      "job": "smoke-boot",
+      "host": "pro6000",
+      "kind": "smoke",
+      "wall_seconds": 50.7,
+      "cpu_core_seconds": 51.24,
+      "gpu_seconds": 50.7,
+      "exit_code": 0,
+      "note": "X1-r0 bootstrap config, 6x5 updates, 32 dev examples"
+    }
+  ],
+  "charged_cpu_core_seconds": 51.25,
+  "charged_gpu_seconds": 50.9,
+  "status": "active",
+  "note": "Resumed 2026-09-26 on pro6000 (GB10s busy). Wall window re-declared from resume; pause not counted. Ceilings unchanged. Local/subagent CPU for building/testing is not metered by the job wrapper.",
+  "original_window": {
+    "started_utc": "2026-09-25T05:31:35Z",
+    "deadline_utc": "2026-09-26T05:31:35Z",
+    "paused_utc": "2026-09-25",
+    "charged_before_pause": {
+      "cpu_core_seconds": 0,
+      "gpu_seconds": 0
+    }
+  },
+  "host": "pro6000 (WSL2 Ubuntu, RTX PRO 6000 Blackwell); see infrastructure.md"
 }
