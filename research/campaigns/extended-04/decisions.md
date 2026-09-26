@@ -206,3 +206,15 @@
     - B2 failure prediction is uninformative (oracle Q*/V* AUROC is also only .49–.62).
   - **Decision-log timestamps from ~20:38Z onward were hand estimates and drifted. All are now aligned to their git commit times.** The protocol-F registration (commit 21:40) preceded the F1/F2 launches (21:40–21:41).
 - 2026-09-26T22:39Z: A3 trained (exit 0, 1.81k core-s). The deployment rule keeps the final (30/30 qualify). A3 screening launched on fresh worlds from 190M: a3 final, bootstrap, a2-imit final and dep_reuse; greedy/sampled/r_mask.
+- 2026-09-26T22:45Z: **A3 NOT PROMOTED** (4 screening jobs, exit 0, 814 core-s; fresh worlds from 190M; research/results/campaign-04/a3s/). IID group, greedy:
+
+  | Policy | Utility | Success | Work/success |
+  |---|---:|---:|---:|
+  | a3 (unanchored on-policy imitation) | .858 | .936 | 131 |
+  | bootstrap | .873 | .949 | 135 |
+  | a2-imit (anchored) | .860 | | |
+  | dep_reuse | .902 | | |
+
+  - Criteria: vs bootstrap ✗, vs best mode ✗, per-step no-progress ✓, vs a2-imit ✗.
+  - **Reading:** on-policy teacher supervision, anchored or not, mainly **sharpens the policy**. Sampled utility rises to .845–.853 from the bootstrap's .795, closing most of the sampled-greedy gap. It does not raise greedy utility above the bootstrap; greedy falls by −.013 to −.015. Removing the anchor does not help, and the ~.03 gap to the dep_reuse teacher stays open. **F3 is not triggered.**
+  - The Track A improvement result is final: **no deployable improvement over the imitation bootstrap** from any tested RL or on-policy-supervision variant on this lineage. The localized reason is extended with A3.
