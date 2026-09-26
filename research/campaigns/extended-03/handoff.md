@@ -17,7 +17,8 @@ History:
 - **pro6000 environment.** 173/173 campaign tests pass; the smoke bootstrap ran (receipts in `research/results/campaign-03/`).
 
 ## In progress
-- **Stage B preflight audit (training gate).** An independent auditor is on `campaign/e03-preflight-v2`. The earlier partial draft, `campaign/e03-preflight` (caf1a785, pre-rename), is superseded once v2 lands.
+- **Stage B preflight: PASSED and merged** (a0fd65ab; [review/stage-b-preflight.md](review/stage-b-preflight.md)). `campaign/e03-preflight` (caf1a785) is superseded.
+- **P1 bootstraps:** 12 running on the pro6000.
 
 ## Next (resume checklist)
 1. Merge Stage B once every required d1 distinction passes and the ablation masks erase exactly the intended distinctions. If a distinction fails, register an encoder fix before training.
