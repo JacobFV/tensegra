@@ -84,3 +84,8 @@
   - Of ~2.8k core-s: encoding ~22%, collate ~18%, environment step ~15%, development evaluation ~11%, trace export and hashing ~11%, neural policy forward ~9% (plus ~3% frozen-reference forward), backward ~6%, objective ~4%, optimizer ≈ 0%.
   - **Neural forward, backward and optimizer together are ~16–20% of CPU; the job is dominated by Python-side observation encoding, collation and environment stepping.** A larger GPU or more GPU concurrency would not change cost materially. Encoding and collation are the optimization target for any P2b.
   - C0 and C1 are running ~2× faster than P1's RL runs (24–28 of 30 tranches in ~50 min vs ~2 h), consistent with 2 concurrent jobs instead of 12.
+- 2026-09-26T15:35Z: **C0 and C1 done** (exit 0; C0 3,858 core-s, C1 3,177 core-s).
+  - **S0 (replay): collapse reproduces exactly.** C0's development success curve equals P1 X1-rl-r2's at all 30 attempts (…, .92, .61, .13, .00, .00), and the checkpoint weights are **bit-identical** at attempts 5 and 29. Only file metadata differs. The collapse is deterministic under this recipe, not GPU nondeterminism.
+  - **C1 (bootstrap anchor) development curve:** .95–.96 greedy success at every attempt, including 26–29.
+  - **Registered deployment rule:** C0 deploys attempt 24 (24/30 qualify, the last before the collapse); C1 deploys attempt 29 (30/30 qualify), so C1's deployed checkpoint = its final.
+  - Screening config: configs/campaign03/p2a-screening.json (6 checkpoints + dep_reuse; 4 conditions × greedy and sampled; seeds from 120M; 256 worlds each).

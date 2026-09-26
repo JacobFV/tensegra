@@ -1,0 +1,249 @@
+{
+  "checkpoints": [
+    {
+      "name": "p2a-bootstrap-x1-r2",
+      "role": "bootstrap",
+      "path": "/home/brand/tensegra-campaign03/results/p1-boot-x1-r2/checkpoints/round-0-slot-5-attempt-5.pt",
+      "sha256": "74ff10a686c04b4face63ac2e666add7fd5a3c17509ec78c81f8aa954b5f2fc9",
+      "arm": "x1",
+      "lineage": 2,
+      "feature_version": "d1"
+    },
+    {
+      "name": "p2a-c0-final",
+      "role": "c0_final",
+      "path": "/home/brand/tensegra-campaign03/results/p2a-c0-x1-r2/checkpoints/round-4-slot-5-attempt-29.pt",
+      "sha256": "e06ab86596d65644456d4c7b4a7316e56e368d76e63f3797a4ea400a4bc02caa",
+      "arm": "x1",
+      "lineage": 2,
+      "feature_version": "d1"
+    },
+    {
+      "name": "p2a-c0-deployed",
+      "role": "c0_deployed",
+      "path": "/home/brand/tensegra-campaign03/results/p2a-c0-x1-r2/checkpoints/round-4-slot-0-attempt-24.pt",
+      "sha256": "9acf814e2e57e22976f68f3c4dcd5d6b2beaeb9666fbdeda09000e143dc11a71",
+      "deployed_label": "round-4-slot-0-attempt-24",
+      "arm": "x1",
+      "lineage": 2,
+      "feature_version": "d1"
+    },
+    {
+      "name": "p2a-c1-final",
+      "role": "c1_final",
+      "path": "/home/brand/tensegra-campaign03/results/p2a-c1-x1-r2/checkpoints/round-4-slot-5-attempt-29.pt",
+      "sha256": "c3bb1bb11f1e792efa7af78b6b012492f0756026e040481ff3fbee3395eb531f",
+      "arm": "x1",
+      "lineage": 2,
+      "feature_version": "d1"
+    },
+    {
+      "name": "p2a-c1-deployed",
+      "role": "c1_deployed",
+      "path": "/home/brand/tensegra-campaign03/results/p2a-c1-x1-r2/checkpoints/round-4-slot-5-attempt-29.pt",
+      "sha256": "c3bb1bb11f1e792efa7af78b6b012492f0756026e040481ff3fbee3395eb531f",
+      "deployed_label": "round-4-slot-5-attempt-29",
+      "arm": "x1",
+      "lineage": 2,
+      "feature_version": "d1"
+    },
+    {
+      "name": "p1-rl-x1-r2",
+      "role": "p1_rl",
+      "path": "/home/brand/tensegra-campaign03/results/p1-rl-x1-r2/checkpoints/round-4-slot-5-attempt-29.pt",
+      "sha256": "d320a7ca3e272d27a31df2bfd9b2653af3ec6b55fa7fcd076184ecfd641c1537",
+      "arm": "x1",
+      "lineage": 2,
+      "feature_version": "d1"
+    }
+  ],
+  "evaluation_batch": 32,
+  "references": [
+    "dep_reuse"
+  ],
+  "reference_compute_tariff": 1.0,
+  "world_family": "depworld",
+  "address_namespace": "e03p2a-screening",
+  "conditions": [
+    {
+      "name": "iid_f0",
+      "world_family": "depworld",
+      "seed_start": 120000000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "slots": 6,
+        "compute_price": 0.0001,
+        "event_trigger": "progress",
+        "p_event": 0.5,
+        "foreign_records": 0,
+        "event_kinds": [
+          "edge_closed",
+          "capacity_reduced",
+          "slot_closed"
+        ]
+      }
+    },
+    {
+      "name": "iid_f0-sampled",
+      "world_family": "depworld",
+      "seed_start": 120000000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "slots": 6,
+        "compute_price": 0.0001,
+        "event_trigger": "progress",
+        "p_event": 0.5,
+        "foreign_records": 0,
+        "event_kinds": [
+          "edge_closed",
+          "capacity_reduced",
+          "slot_closed"
+        ]
+      },
+      "policy_mode": "sampled",
+      "sampling_seed": 20260926,
+      "references": []
+    },
+    {
+      "name": "iid_f2",
+      "world_family": "depworld",
+      "seed_start": 120100000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "slots": 6,
+        "compute_price": 0.0001,
+        "event_trigger": "progress",
+        "p_event": 0.5,
+        "foreign_records": 2,
+        "event_kinds": [
+          "edge_closed",
+          "capacity_reduced",
+          "slot_closed"
+        ]
+      }
+    },
+    {
+      "name": "iid_f2-sampled",
+      "world_family": "depworld",
+      "seed_start": 120100000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "slots": 6,
+        "compute_price": 0.0001,
+        "event_trigger": "progress",
+        "p_event": 0.5,
+        "foreign_records": 2,
+        "event_kinds": [
+          "edge_closed",
+          "capacity_reduced",
+          "slot_closed"
+        ]
+      },
+      "policy_mode": "sampled",
+      "sampling_seed": 20260926,
+      "references": []
+    },
+    {
+      "name": "events_train_kinds_p1",
+      "world_family": "depworld",
+      "seed_start": 120200000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "slots": 6,
+        "compute_price": 0.0001,
+        "event_trigger": "progress",
+        "p_event": 1.0,
+        "foreign_records": 2,
+        "event_kinds": [
+          "edge_closed",
+          "capacity_reduced",
+          "slot_closed"
+        ]
+      }
+    },
+    {
+      "name": "events_train_kinds_p1-sampled",
+      "world_family": "depworld",
+      "seed_start": 120200000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "slots": 6,
+        "compute_price": 0.0001,
+        "event_trigger": "progress",
+        "p_event": 1.0,
+        "foreign_records": 2,
+        "event_kinds": [
+          "edge_closed",
+          "capacity_reduced",
+          "slot_closed"
+        ]
+      },
+      "policy_mode": "sampled",
+      "sampling_seed": 20260926,
+      "references": []
+    },
+    {
+      "name": "foreign4",
+      "world_family": "depworld",
+      "seed_start": 120300000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "slots": 6,
+        "compute_price": 0.0001,
+        "event_trigger": "progress",
+        "p_event": 0.5,
+        "foreign_records": 4,
+        "event_kinds": [
+          "edge_closed",
+          "capacity_reduced",
+          "slot_closed"
+        ]
+      }
+    },
+    {
+      "name": "foreign4-sampled",
+      "world_family": "depworld",
+      "seed_start": 120300000,
+      "examples": 256,
+      "world": {
+        "categories": 3,
+        "choices": 3,
+        "locations": 7,
+        "slots": 6,
+        "compute_price": 0.0001,
+        "event_trigger": "progress",
+        "p_event": 0.5,
+        "foreign_records": 4,
+        "event_kinds": [
+          "edge_closed",
+          "capacity_reduced",
+          "slot_closed"
+        ]
+      },
+      "policy_mode": "sampled",
+      "sampling_seed": 20260926,
+      "references": []
+    }
+  ]
+}
