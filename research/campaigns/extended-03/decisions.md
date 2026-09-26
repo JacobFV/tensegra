@@ -62,3 +62,14 @@
     - Screening on fresh non-sealed seeds from 120M.
   - X2's reward-emergence premise is not re-run (P1 disproved it). A confirmatory P2b needs a fresh budget.
 - 2026-09-26T14:25Z: Part D tool merged (014427cf; 214 tests). **Part D audit launched** (source-50e9682c) with `--samples 2`: the tool's estimate of 4 sampled repeats was ~4.8k core-s, above the 3k Part D budget, and the protocol says to reduce sampled repeats first. The smoke (8 worlds; indicative only) already showed at attempt 29 greedy success 0.00 vs sampled .94–1.00 on r0/r2, with loops concentrated in greedy mode. The full audit tests this.
+- 2026-09-26T14:28Z: P2a implementation merged (784ffb27 → 8d191c82; 247 tests on the snapshot).
+  - With the anchor off, training is bit-identical to the old code (full digest probe plus tests).
+  - Reward accounting telescopes exactly to verified success − cost on success, step-cap, loop-to-cap and abstain paths. The truncation path is biased in principle but unused (max_steps = step_limit = 96).
+  - **No-progress operationalization, fixed before any P2a output:**
+    - decision state = draft (including pending choices and each draft's requirement versions), commitments (including verified), retrieved set and position;
+    - a solver call, a new inspection or an event step breaks a cycle;
+    - an accepted action with no effect counts as a cycle of length 1;
+    - rates are per decision, with per-episode counts and any-episode fractions reported.
+    - The references score 0.
+  - For S0, compare C0 with P1 on weights and traces with timing fields stripped (data_hash contains wall-clock fields).
+- 2026-09-26T14:28Z: **C0 and C1 launched** (source-8d191c82). C0 is byte-identical to p1-rl-x1-r2.json. C1 adds only anchor_kl_weight 0.3 and the x1-r2 bank anchor (sha 74ff10a6…). Both run concurrently with Part D.
