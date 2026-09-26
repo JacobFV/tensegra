@@ -137,7 +137,7 @@
   - F2: probeworld L0/L1/L4 on fresh seeds 3–5 with fresh world draws (offset 700).
   - Added `--world-offset` to the probeworld evaluation (default 500, so B1 is unchanged).
 - 2026-09-26T21:55Z: Fresh bootstraps r3–r5 done (exit 0). F1 configs built (latest checkpoints, hashes recorded; sealed seeds 170M, 512 per condition, greedy + r_mask, plus a dep_reuse reference). F1 launched; F2 (9 trainings) launched.
-- 2026-09-26T22:00Z: **B2 scored** as registered (`campaign04_b2_score.py`; research/results/campaign-04/b2/). **Primary NOT SUPPORTED:** the own-greedy-return value head `v_own` is no better calibrated on held-out splits than V.
+- 2026-09-26T21:42Z: **B2 scored** as registered (`campaign04_b2_score.py`; research/results/campaign-04/b2/). **Primary NOT SUPPORTED:** the own-greedy-return value head `v_own` is no better calibrated on held-out splits than V.
   - L4 v_own reliability error, per seed:
 
     | Split | s0 | s1 | s2 |
@@ -150,7 +150,7 @@
   - The policy is unchanged, as required: B1 parameters and evaluation keys are bit-identical, with 0 regret difference.
   - **Failure prediction:** commit-level AUROC .45–.65, CIs include .5 (9–20 wrong commits per seed); not supported.
   - **Registered reading:** "not continuation". The value estimates fail to generalize to held-out generator regions (k = 4 worst), matching the B1 auditor's diagnosis. **Deliverable 4 status:** calibration holds in-distribution in both tracks (probeworld test_iid; depworld Track C ECE ≤ .026 on fresh worlds of the training distribution), but not under generator-parameter shift in probeworld.
-- 2026-09-26T22:20Z: **F2 confirmation scored** (`campaign04_f2_score.py`; research/results/campaign-04/f2/). Fresh seeds 3–5, fresh world draws (offset 700), 512 per held-out split. All 9 trainings and 10 evaluations exited 0 (training 3.75k core-s).
+- 2026-09-26T21:47Z: **F2 confirmation scored** (`campaign04_f2_score.py`; research/results/campaign-04/f2/). Fresh seeds 3–5, fresh world draws (offset 700), 512 per held-out split. All 9 trainings and 10 evaluations exited 0 (training 3.75k core-s).
   - **F2-H1 SUPPORTED (3/3 pairs):** held-out regret L0 39.0/82.3/72.5 vs L1 1.9/2.6/2.0 and L4 2.6/1.7/1.5. π* ≈ 0; fixed rules 99–126. All pass the transfer floor.
   - **F2-H2 SUPPORTED (3/3):** ρ-bin deviation .016–.042.
   - **F2-H3 SUPPORTED (pooled, 3/3):** probe when not optimal ≤ .01, uniquely-optimal probe .83–.86.
@@ -160,9 +160,12 @@
     - the justified-after-failed-probe ratio is .51–.58.
 
     It passes per split on heldout_price and heldout_k. Rational probing and switching therefore transfer to new price regions and reuse horizons, **but not to held-out combinations of conditions** (unreliable+events, side-effect+correlated).
-- 2026-09-26T22:55Z: **F1 scored** (4 jobs, exit 0, 1.32k core-s; research/results/campaign-04/f1/). **F1-H NOT SUPPORTED as registered.**
+- 2026-09-26T21:50Z: **F1 scored** (4 jobs, exit 0, 1.32k core-s; research/results/campaign-04/f1/). **F1-H NOT SUPPORTED as registered.**
   - The utility and success clauses pass in 3/3 fresh lineages: IID-group r_mask − greedy utility is +.0007, −.0014 and +.0030, and success is +.001, .000 and +.004.
   - The registered **episode-level** no-progress clause fails in 3/3: the episode rate is identical under both modes (.033, .058, .060).
   - **Mechanism (a specification error in protocol-F, not a rule failure):** R-mask masks an action only *after* the diagnostic flags its first stagnant repeat. An episode that stalls therefore always records at least that first no-progress step, and the episode rate cannot fall by construction. The A1 reading F1 was meant to confirm was the **per-step** rate. Protocol-F transcribed it as the episode rate.
   - **Descriptive, not registered:** the per-step no-progress rate falls 4–7× in every fresh lineage (.013 → .003, .052 → .013, .077 → .011), and on the events and foreign4 conditions (.022–.085 → .004–.015). All conditions meet the absolute floor (success ≥ .8 × dep_reuse).
   - The report states the registered failure and the per-step reading side by side; no pass is claimed.
+- 2026-09-26T21:52Z: **Housekeeping.**
+  - Three decision entries (F2, F1, B2) carried timestamps ahead of wall-clock time (22:00–22:55Z). They are corrected to the actual times (21:42–21:50Z).
+  - The ledger's 13 'running' entries are the failed launches (12 empty-SHA label jobs and b-labels-launchfail). They exited before the wrapper wrote occupancy receipts, and their CPU is negligible (< 1 core-s each).
