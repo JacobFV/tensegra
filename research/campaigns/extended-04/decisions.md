@@ -46,3 +46,22 @@
   - The full suite is 363/363 (metered). An A2-dep CPU smoke masks actions (33 masked decisions in a batch).
   - Diagnostic cost policy (F16) is registered in [protocol-A1.md](protocol-A1.md).
 - 2026-09-26T19:46Z: **B1 ladder trainings done:** 15/15 exit 0, 7,830 core-s total (above the 6k estimate). Evaluations and references launched next.
+- 2026-09-26T19:55Z: **B1 ladder results**, scored as registered by `research/tools/campaign04_b1_score.py` (research/results/campaign-04/b1/b1-score.json). The independent audit is pending.
+  - **Held-out regret per episode** (mean of heldout_price/k/comp; V* ≈ 230–340), per seed:
+
+    | Rung | s0 | s1 | s2 |
+    |---|---:|---:|---:|
+    | L0 | 25.0 | 24.8 | 39.0 |
+    | L1 | 2.6 | 3.0 | 3.5 |
+    | L2 | 2.5 | 2.3 | 2.1 |
+    | L3 | 2.1 | 1.8 | 2.9 |
+    | L4 | 2.1 | 2.6 | 4.1 |
+
+    For comparison: fixed rules 104–127, π* ≈ 0. All runs pass the transfer floor.
+  - **B-H1 SUPPORTED.**
+  - **B-H2:** L0→L1 adds value, as do L1→L2 and L2→L3 (≥ 10% in 2/3 seeds); L3→L4 does not.
+  - **B-H3 SUPPORTED:** L4's build-rate deviation from π* across effective-ρ bins is .02–.05.
+  - **B-H4 SUPPORTED:** L4's first-probe rate is .03–.04 when probing is not ε-optimal and .88–.91 when it is uniquely optimal. L0 never probes (0/0), so outcome-only learning found no probing at all.
+  - **B-H5 SUPPORTED:** L4 unjustified switches are .044–.050 of all switches.
+  - **B-H6 NOT SUPPORTED:** value-head reliability error is .13–.29 R for the supervised rungs and .09–.13 R for L0, against a .05 R threshold. The likely cause, *not* validated: L1–L4 value heads are trained toward V* (the optimal continuation) while calibration is registered against the model's own realized return. This is a continuation mismatch of exactly the kind the brief warns about.
+  - L0 seeds 0 and 1 have different weights (model.pt hashes differ) but identical greedy behaviour on the evaluation episodes: convergence to the same deterministic strategy, not a seeding fault.
