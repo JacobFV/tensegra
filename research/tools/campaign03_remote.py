@@ -51,7 +51,7 @@ def launch_eval(a):
     job = Path(a.config).stem
     print(wsl(f"{ROOT}/bin/detach.sh {job} {ROOT}/source-{a.sha} {PY} research/tools/campaign02_job.py "
               f"--output {ROOT}/results/{job}-process --wall-cap {a.wall_cap} --cpu-cap {a.cpu_cap} -- "
-              f"{PY} research/tools/campaign02_evaluate.py {a.config} --output {ROOT}/results/{job} --device cuda\n"))
+              f"{PY} research/tools/campaign02_evaluate.py {a.config} --output {ROOT}/results/{job} --device cuda --threads 1\n"))
 
 
 def status(_):
