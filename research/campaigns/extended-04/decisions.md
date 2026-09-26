@@ -99,3 +99,26 @@
   - **Track C evaluation launched:** 24 tier-1 jobs (6 bases × 4 conditions; branch evaluation on the IID conditions) plus 6 causal jobs, on evaluation worlds from 161M. B2 evaluations launched: 6 jobs.
 - 2026-09-26T20:55Z: **A2 training done** (5 runs, exit 0, ~4.5–5k core-s each). Deployment rule (P2a rule): reh/imit/crit/dep deploy their finals (30/30 qualify). **a2-ent deploys attempt 24** (24/30 qualify). Screening configs (configs/campaign04/a2s-*.json): 9 policies + dep_reuse; seeds 140M per protocol-A2; modes greedy/sampled/r_mask. Launched.
 - 2026-09-26T21:00Z: **Phase F preparation:** three fresh X1 bootstraps (lineages r3–r5, the P1 recipe via campaign03_p1_configs.boot; training 3.06e9/3.08e9/3.10e9, development 3.903e9–3.905e9, initialization 300300+; disjoint from r0–r2 and all RL streams) launched now, so any promoted arm or controller can be confirmed on fresh lineages. The bootstrap recipe is unchanged; the fast path is result-identical.
+- 2026-09-26T21:35Z: **A2 screening done** (10 jobs, exit 0, 8.65k core-s). The registered promotion rule (`campaign04_a2_promote.py`; research/results/campaign-04/a2s/) **promotes no arm**. IID group, lineage X1-r2, screening seeds 140M:
+
+  | Policy | greedy | R-mask | sampled | work/success (greedy) |
+  |---|---:|---:|---:|---:|
+  | bootstrap | .857 | **.861** (best) | .794 | 143 |
+  | reh | .849 | .848 | .844 | 155 |
+  | imit | .851 | .850 | .842 | 145 |
+  | crit | .845 | .856 | .816 | 164 |
+  | ent (final; deployed attempt 24 similar) | .806 | .817 | .829 | 334 |
+  | dep | .859 | .858 | .824 | 164 |
+  | C1 | .851 | .851 | .828 | 179 |
+  | C0 | −.147 | .830 | .800 | – |
+  | dep_reuse | .900 | | | |
+
+  - **Localized reason (the Track A fallback deliverable, v2 rev. 12):**
+    - (1) Every stabilized RL variant (anchor, rehearsal, critic warm-up, entropy control, deployment-aligned masked sampling) **prevents the greedy collapse on this lineage**, but none exceeds the bootstrap in any deployment mode.
+    - (2) RL reliably improves the objective it optimizes, the **sampled** policy (.794 → .816–.844), yet the sampled policy's utility stays below the greedy/R-mask bootstrap (.857/.861). The available sampled-mode gain lies below what argmax deployment of the imitation policy already achieves.
+    - (3) Rehearsal ≈ imitation-only (.849 vs .851), so RL adds nothing on top of teacher supervision here.
+    - (4) Entropy control prevents collapse but **more than doubles work per success** (334 vs 143). The P2a anchor effect is therefore not "just entropy control": the anchor keeps work at ~180.
+    - (5) Training through the deployed recovery rule (dep) gives the best greedy/R-mask RL utility (.859/.858) but is still not above the bootstrap.
+    - (6) Every RL arm raises work per success over the bootstrap.
+  - Conclusion: with this reward, recipe and horizon, on-policy actor-critic finds no deployable improvement over imitation. Improvement would require an objective that credits argmax/deployed behaviour, or a better teacher. dep_reuse is .04 above the bootstrap, and imitation leaves that gap open.
+  - **No A2 Phase F.** Single lineage, exploratory; stated as screening evidence.
