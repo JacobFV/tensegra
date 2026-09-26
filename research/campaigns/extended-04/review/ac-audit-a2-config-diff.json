@@ -1,0 +1,147 @@
+{
+ "reh": {
+  "base": "p2a-c1",
+  "config_sha256": "ae55da9c86bb79a7c6e24b5af5b9f3326fd33cef47c6b5f5ca2e15729c1e47a8",
+  "diff": {
+   "train.rehearsal_weight": [
+    "<absent>",
+    0.5
+   ]
+  },
+  "run_a2_options": {
+   "critic_warmup_shared": false,
+   "critic_warmup_updates": 0,
+   "entropy_dual_init": 0.0,
+   "entropy_dual_lr": 0.0,
+   "entropy_dual_max": 1.0,
+   "entropy_target": null,
+   "rehearsal_weight": 0.5,
+   "rl_loss_weight": 1.0,
+   "rollout_mask": null
+  },
+  "run_teacher": "dep_reuse",
+  "run_member_hparams": [
+   "{\"kl_weight\": 0.3, \"entropy_weight\": 0.003, \"learning_rate\": 3e-05}"
+  ]
+ },
+ "imit": {
+  "base": "p2a-c1",
+  "config_sha256": "15f96dbd55c1df9fe13c415c070bff2328f2064bfc29f2821dc9f20c9f92052a",
+  "diff": {
+   "train.rehearsal_weight": [
+    "<absent>",
+    0.5
+   ],
+   "train.rl_loss_weight": [
+    "<absent>",
+    0.0
+   ]
+  },
+  "run_a2_options": {
+   "critic_warmup_shared": false,
+   "critic_warmup_updates": 0,
+   "entropy_dual_init": 0.0,
+   "entropy_dual_lr": 0.0,
+   "entropy_dual_max": 1.0,
+   "entropy_target": null,
+   "rehearsal_weight": 0.5,
+   "rl_loss_weight": 0.0,
+   "rollout_mask": null
+  },
+  "run_teacher": "dep_reuse",
+  "run_member_hparams": [
+   "{\"kl_weight\": 0.3, \"entropy_weight\": 0.003, \"learning_rate\": 3e-05}"
+  ]
+ },
+ "crit": {
+  "base": "p2a-c1",
+  "config_sha256": "6dc3ec637022924d7fd8d0eed7cef5bfd0b6d7ef53123b437e3f57fd1acc905a",
+  "diff": {
+   "train.critic_warmup_shared": [
+    "<absent>",
+    false
+   ],
+   "train.critic_warmup_updates": [
+    "<absent>",
+    300
+   ]
+  },
+  "run_a2_options": {
+   "critic_warmup_shared": false,
+   "critic_warmup_updates": 300,
+   "entropy_dual_init": 0.0,
+   "entropy_dual_lr": 0.0,
+   "entropy_dual_max": 1.0,
+   "entropy_target": null,
+   "rehearsal_weight": 0.0,
+   "rl_loss_weight": 1.0,
+   "rollout_mask": null
+  },
+  "run_teacher": null,
+  "run_member_hparams": [
+   "{\"kl_weight\": 0.3, \"entropy_weight\": 0.003, \"learning_rate\": 3e-05}"
+  ]
+ },
+ "dep": {
+  "base": "p2a-c1",
+  "config_sha256": "889699501f440887916658ef6fbcf917e2b16ca2f41fb1b6d35cd715bd7dd101",
+  "diff": {
+   "train.rollout_mask": [
+    "<absent>",
+    "progress_v1"
+   ]
+  },
+  "run_a2_options": {
+   "critic_warmup_shared": false,
+   "critic_warmup_updates": 0,
+   "entropy_dual_init": 0.0,
+   "entropy_dual_lr": 0.0,
+   "entropy_dual_max": 1.0,
+   "entropy_target": null,
+   "rehearsal_weight": 0.0,
+   "rl_loss_weight": 1.0,
+   "rollout_mask": "progress_v1"
+  },
+  "run_teacher": null,
+  "run_member_hparams": [
+   "{\"kl_weight\": 0.3, \"entropy_weight\": 0.003, \"learning_rate\": 3e-05}"
+  ]
+ },
+ "ent": {
+  "base": "p2a-c0",
+  "config_sha256": "ea0ee1d5e4f1bbac163ded5d193da60a5f54ad27fc43fc979e07ca80ee7f5569",
+  "diff": {
+   "train.entropy_dual_init": [
+    "<absent>",
+    0.0
+   ],
+   "train.entropy_dual_lr": [
+    "<absent>",
+    0.02
+   ],
+   "train.entropy_dual_max": [
+    "<absent>",
+    1.0
+   ],
+   "train.entropy_target": [
+    "<absent>",
+    0.8732
+   ]
+  },
+  "run_a2_options": {
+   "critic_warmup_shared": false,
+   "critic_warmup_updates": 0,
+   "entropy_dual_init": 0.0,
+   "entropy_dual_lr": 0.02,
+   "entropy_dual_max": 1.0,
+   "entropy_target": 0.8732,
+   "rehearsal_weight": 0.0,
+   "rl_loss_weight": 1.0,
+   "rollout_mask": null
+  },
+  "run_teacher": null,
+  "run_member_hparams": [
+   "{\"kl_weight\": 0.3, \"entropy_weight\": 0.003, \"learning_rate\": 3e-05}"
+  ]
+ }
+}
