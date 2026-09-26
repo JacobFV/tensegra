@@ -218,3 +218,4 @@
   - Criteria: vs bootstrap ✗, vs best mode ✗, per-step no-progress ✓, vs a2-imit ✗.
   - **Reading:** on-policy teacher supervision, anchored or not, mainly **sharpens the policy**. Sampled utility rises to .845–.853 from the bootstrap's .795, closing most of the sampled-greedy gap. It does not raise greedy utility above the bootstrap; greedy falls by −.013 to −.015. Removing the anchor does not help, and the ~.03 gap to the dep_reuse teacher stays open. **F3 is not triggered.**
   - The Track A improvement result is final: **no deployable improvement over the imitation bootstrap** from any tested RL or on-policy-supervision variant on this lineage. The localized reason is extended with A3.
+- 2026-09-26T22:50Z: **Campaign complete.** Final [report.md](report.md) and handoff written; README, queue and budget status updated. Merged to main.

@@ -1,6 +1,6 @@
 # Extended-04: metacognitive control, rational backtracking, and the value of structure
 
-**Status: ACTIVE**, started 2026-09-26T18:43Z on the pro6000. Design: [design.md](design.md). Decisions: [decisions.md](decisions.md). Ledger: [budget.json](budget.json).
+**Status: COMPLETE** (2026-09-26T22:50Z), started 2026-09-26T18:43Z on the pro6000. **Report: [report.md](report.md).** Design: [design.md](design.md). Decisions: [decisions.md](decisions.md). Ledger: [budget.json](budget.json).
 
 ## Mission (from the user's campaign brief, 2026-09-26)
 Extend Tensegra from competent but fragile computational orchestration toward a system that can **deliberately regulate its own computation**. It should use an accurate representation of its computational state to choose between these options:
