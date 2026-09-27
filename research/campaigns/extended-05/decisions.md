@@ -84,3 +84,9 @@
   - Fix: the union of both range sets was resolved by hand (28 ranges, verified pairwise disjoint), with no other markers in the tree.
   - Lesson recorded: never chain `commit -am` after a merge in the same command.
 - 2026-09-27T03:39Z: A-PI-T screen launched (12 jobs, source-55a66cec; 42 tests pass on the snapshot, metered). The two entries above were first hand-stamped 03:42/03:43Z, ahead of wall-clock; corrected to their commit time 03:34Z. Timestamps from here on come from `date`/git only.
+- 2026-09-27T03:40Z: **B-XC CONFIRMED** (adaptive registration, labelled). Fresh U+C configuration draws: b5c_hold_uc, seed base 5.9e9, 1,289 configurations, 60 eligible, 36 flag-sensitive eligible. Fresh training seeds 20–22 (B0 vs BX1, L1). Validity checks all pass. research/results/campaign-05/b-xc/bxc-score.json.
+  - Mean paired uniquely-optimal first-probe gain **+.206** (per pair +.167/+.233/+.217), all > 0.
+  - Gap regret lower in 3/3 (−.81/−1.09/−1.62).
+  - **Claim:** training exposure to more condition combinations improves value-of-computation decisions (whether to probe first) and gap regret on an unseen combination, replicated on fresh configurations and fresh initializations.
+  - **Caveats:** the U+C family had been inspected (B-X/B-Q); one held-out pair; a weak composition (the second flag matters in ~16% of configurations); the L1 recipe; the effect comes from **data exposure** (acquisition), not from supplied factorization (BX2) or modular structure (BX3).
+- 2026-09-27T03:40Z: **Incident:** the 12 A-PI-T jobs first failed at startup because the controller had never been staged (the staging step was in the command chain broken by the merge conflict). Their receipts were renamed *-nocontroller-process (charged, ~0 s). The controller was staged with its hash verified (dea16e83…), and the 12 jobs were relaunched on source-55a66cec.
