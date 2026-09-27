@@ -86,3 +86,7 @@
   - All new seed ranges are registered; each overlap is only with its parent sub-range.
   - **Concurrency raised to 6** (profiled ≤ 2.3 GB/job).
   - A b6d split implementation is commissioned so the confirmation labels can be built while the screen trains.
+- 2026-09-27T17:34Z: **P2-SCREEN launched** (snapshot c7d22aff; 81 jobs; stage runner with a one-job smoke per batch type; ≤ 6 concurrent).
+  - **Bank:** e07-p2-bank exited 0 in 6.8 core-s. 5,376 episodes / 57,315 decisions; sources: π* ×2, eps .1/.3 ×2, RAWF-s30 ×4, B0-s30 ×4. 896 episodes per training combination; sha256 3914ecaa…
+  - The builder's estimate (~210 core-s) was high, and the bank is complete.
+  - The b6d confirmation-split builder is commissioned (campaign/e07-b6d).
