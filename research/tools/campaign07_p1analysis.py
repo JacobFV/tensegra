@@ -57,7 +57,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import campaign07_diagscore as DS  # noqa: E402
 
-VERSION = "p1analysis-v1"
+VERSION = "p1analysis-v1.1"  # v1.1: Q4 cross-tab strata per population (bug fix after the v1 b6c run)
 KINDS = ("LRN", "SUP", "RAWF")
 IVS = ("exact", "iso:G1", "iso:G2", "iso:G3", "iso:G4", "dep:G1", "dep:G2", "dep:G3", "dep:G4", "up:G3", "up:G4",
        "keep:G1", "keep:G2", "keep:G3", "keep:G4", "gauss:1", "gauss_pred:1", "scale_err:0.5", "mirror", "pred")
@@ -698,7 +698,8 @@ def analyse(dirs, n_boot, boot_seed, do_reliance):
                 S = {keyf(c): c for c in data["SUP"]}
                 R = {keyf(c): c for c in data.get("RAWF", [])}
                 units = cf_units(lrn) if fam else None
-                want = q4_strata if fam else (lambda c: ["pistar_all"])
+                # v1.1 fix: strata carry the population (v1 pooled cf:SCE and cf:UCE decisions in one cross-tab)
+                want = (lambda c, _p=pop: [f"{_p}:{s}" for s in q4_strata(c)]) if fam else (lambda c, _p=pop: [f"{_p}:pistar_all"])
                 q4_xtab(L, S, R, X, fam, units, seed, tabs4, want)
                 # decision accuracy of the three arms on the same strata (seed-paired contrasts later)
                 for kind, recs in data.items():
@@ -1030,7 +1031,7 @@ def markdown(res):
           "|---|---|---|---|---|---|---|---|---|---|---|"]
     for k, t in res["q4"].items():
         st, rel, tn = k.split("|")
-        if rel not in ("DEC", "IX", "G1") or st.startswith(("inv", "pistar")) and rel != "DEC":
+        if rel not in ("DEC", "IX", "G1") or st.rsplit(":", 1)[-1].startswith(("inv", "pistar")) and rel != "DEC":
             continue
         for rk, r in q4_summary(t).items():
             pr, lr = rk.split("|")
