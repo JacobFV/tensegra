@@ -472,7 +472,20 @@ def _stats(rows):
             "delegated_step_fraction": sum(r["teacher_steps"] for r in rows) / max(1, sum(r["decisions"] for r in rows)),
             "controller_evals_per_episode": sum(r.get("controller_evals", 0) for r in rows) / n,
             "consults_per_episode": sum(r.get("consults", 0) for r in rows) / n,
-            "truncated": sum(bool(r["truncated"]) for r in rows), "unsupported": sum(bool(r["unsupported"]) for r in rows)}
+            "truncated": sum(bool(r["truncated"]) for r in rows), "unsupported": sum(bool(r["unsupported"]) for r in rows),
+            **({"by_anchor": {an: {"eligible": sum(r.get("eligible_by_anchor", {}).get(an, 0) for r in rows),
+                                   "delegations": sum(r.get("delegations_by_anchor", {}).get(an, 0) for r in rows)}
+                              for an in ("call", "reuse_recompute", "commit_revise")},
+                "delegation_ends": _sum_dicts(r.get("delegation_ends") for r in rows)}
+               if any("eligible_by_anchor" in r for r in rows) else {})}
+
+
+def _sum_dicts(ds):
+    out = {}
+    for d in ds:
+        for k, v in (d or {}).items():
+            out[k] = out.get(k, 0) + v
+    return out
 
 
 def _paired(rows_a, rows_b, key):
@@ -519,7 +532,8 @@ def score(evals, *, protocol=True):
         L = {"coverage": sorted(meta_seen[base]), "conditions": {}, "iid_group": {}}
         for group, conds in [("iid_group", IID)] + [(c, (c,)) for c in CONDITIONS]:
             sel = {p: [r for r in rs if r["condition"] in conds] for p, rs in pol.items()}
-            sel["teacher"] = [r for r in teacher_rows if r["condition"] in conds]
+            worlds = {(r["condition"], r["seed"]) for r in sel.get("d", [])}   # paired: the lineage's worlds only
+            sel["teacher"] = [r for r in teacher_rows if (r["condition"], r["seed"]) in worlds]
             if not sel.get("d"):
                 continue
             g = {"policies": {p: _stats(rs) for p, rs in sel.items() if rs}}
