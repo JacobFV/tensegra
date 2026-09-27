@@ -38,3 +38,8 @@
   - **b5_hold_se (S+E) shows NO FAILURE:** .983/.950/.967, reported as 'no failure to repair'.
   - U+C flag-sensitive subset: .727/.727/.576 (33 configurations), ambiguous.
   - B-X arms BX1/BX2/BX3 × seeds 10–12 launched. The primary endpoint is on U+C.
+- 2026-09-27T02:50Z: **A-HR2 tooling merged** (e6fa7e99; 20 hr tests).
+  - Option T (delegate to the public dep_reuse teacher until the next commit or 12 steps, then D). Option B is identical to the existing budget/call_now options, so it is read from the A-HR labels.
+  - Dev smoke (non-protocol): T's hindsight gain comes entirely from rare episodes D fails; G1b-multi is ≈ 0.
+  - The 5 pre-existing failures elsewhere in the full test suite (binding_study, main_freeze, s21_cpu, grounding_study, bf16) also fail on the base and are unrelated.
+  - Registered A-HR2 launched: 12 jobs on the A-HR worlds.
