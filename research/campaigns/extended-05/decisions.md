@@ -28,3 +28,8 @@
   - Full catalog vs O(I) per state: .0008 vs .0003.
   - **Reading:** one-step deviations from greedy + R-mask have negligible headroom.
   - Per design: register and test one bounded multi-step option class (**A-HR2**): (T) delegate to the public dep_reuse teacher until the next commit; (B) next-call budget override. Otherwise stop Track A.
+- 2026-09-27T02:27Z: **B-LOC final** (12 existing models plus 3 BO oracle-belief models on the ext-04 split; challenge pairs U+E and S+C; bloc-final exit 0; one earlier launch failed with a missing output dir, charged).
+  - First consequential error class in L4 (seeds 0–5): **value-estimate 57–66%**, ranking 23–38%, belief-dependent (fixed by oracle belief) 6–17%, deployment 0%.
+  - L1: belief-dependent 14–37%; the rest cannot be classified without a Q head.
+  - Realized regret .7–3.0, gap regret 1.8–3.0 per episode.
+  - **Reading:** the historical combination failure is mainly **wrong value estimates for computations** under unseen condition combinations, not belief tracking or deployment. This is consistent with the extended-04 B-H6 finding that the value head generalizes poorly under shift.

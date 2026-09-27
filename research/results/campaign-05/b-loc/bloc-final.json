@@ -1,0 +1,2999 @@
+{
+ "tool": "campaign05_bloc",
+ "version": "probeworld-e05-trackb-v1",
+ "split": "heldout_comp",
+ "eps": 0.5,
+ "labels": "/home/brand/structured-latent-dynamics-campaign04/results/b-labels/labels",
+ "bo_runs": [
+  "/home/brand/structured-latent-dynamics-campaign05/results/bx-bo-s0/run",
+  "/home/brand/structured-latent-dynamics-campaign05/results/bx-bo-s1/run",
+  "/home/brand/structured-latent-dynamics-campaign05/results/bx-bo-s2/run"
+ ],
+ "classes": [
+  "deployment",
+  "ranking",
+  "belief_dependent",
+  "value_estimate",
+  "unlocalized"
+ ],
+ "models": {
+  "b-train-L1-s0": {
+   "rung": "L1",
+   "seed": 0,
+   "world_offset": 500,
+   "inputs": "public",
+   "train_split": "train",
+   "all": {
+    "episodes": 512,
+    "configs": 128,
+    "episodes_with_consequential_error": 157,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 0,
+     "belief_dependent": 24,
+     "value_estimate": 0,
+     "unlocalized": 133
+    },
+    "first_error_class_fraction": {
+     "deployment": 0.0,
+     "ranking": 0.0,
+     "belief_dependent": 0.15286624203821655,
+     "value_estimate": 0.0,
+     "unlocalized": 0.8471337579617835
+    },
+    "first_error_patterns": {
+     "inspect (best probe)": 32,
+     "prop (best inspect)": 23,
+     "prop (best probe)": 20,
+     "inspect (best prop)": 18,
+     "exact_b1 (best inspect)": 10,
+     "exact_b1 (best probe)": 9,
+     "prop (best build)": 8,
+     "exact_b1 (best prop)": 6,
+     "probe (best exact_b1)": 6,
+     "inspect (best build)": 4,
+     "build (best inspect)": 4,
+     "inspect (best exact_b1)": 4,
+     "use (best inspect)": 4,
+     "commit (best exact_b1)": 3,
+     "prop (best exact_b1)": 2,
+     "build (best prop)": 1,
+     "build (best exact_b1)": 1,
+     "prop (best exact_b2)": 1,
+     "exact_b1 (best commit)": 1
+    },
+    "first_error_at_first_decision": 104,
+    "first_error_query_index": {
+     "0": 139,
+     "1": 9,
+     "2": 5,
+     "3": 2,
+     "4": 2
+    },
+    "first_error_step_in_query": {
+     "0": 112,
+     "1": 40,
+     "2": 5
+    },
+    "first_error_belief_moved": 42,
+    "consequential_errors_total": 468,
+    "realized_regret_mean": 0.9643505441148246,
+    "gap_regret_mean": 1.8458196711837065,
+    "gap_regret_first_error_mean": 0.6145661242259037,
+    "gap_regret_consequential_mean": 1.7752571456367727,
+    "realized_regret_mean_no_error_episodes": -1.9586243289085263,
+    "realized_regret_mean_error_episodes": 7.573624938530682,
+    "first_probe_rate_when_unique_opt": 0.5909090909090909,
+    "n_probe_unique_opt": 88,
+    "first_probe_rate_when_not_opt": 0.0,
+    "n_probe_not_opt": 336,
+    "q_head_trained": false,
+    "bo_available": true,
+    "bo_resolves_first_error": 0.15286624203821655
+   },
+   "by_pair": {
+    "side_effect+correlated": {
+     "episodes": 284,
+     "configs": 71,
+     "episodes_with_consequential_error": 88,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 0,
+      "belief_dependent": 15,
+      "value_estimate": 0,
+      "unlocalized": 73
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.0,
+      "belief_dependent": 0.17045454545454544,
+      "value_estimate": 0.0,
+      "unlocalized": 0.8295454545454546
+     },
+     "first_error_patterns": {
+      "inspect (best probe)": 24,
+      "inspect (best prop)": 18,
+      "prop (best inspect)": 11,
+      "exact_b1 (best prop)": 6,
+      "probe (best exact_b1)": 6,
+      "exact_b1 (best probe)": 6,
+      "inspect (best build)": 4,
+      "prop (best build)": 4,
+      "inspect (best exact_b1)": 4,
+      "exact_b1 (best inspect)": 3,
+      "build (best exact_b1)": 1,
+      "prop (best exact_b2)": 1
+     },
+     "first_error_at_first_decision": 56,
+     "first_error_query_index": {
+      "0": 74,
+      "1": 7,
+      "2": 4,
+      "3": 1,
+      "4": 2
+     },
+     "first_error_step_in_query": {
+      "0": 63,
+      "1": 22,
+      "2": 3
+     },
+     "first_error_belief_moved": 25,
+     "consequential_errors_total": 155,
+     "realized_regret_mean": -0.6026526329727374,
+     "gap_regret_mean": 1.4957992752084694,
+     "gap_regret_first_error_mean": 0.6573739726430886,
+     "gap_regret_consequential_mean": 1.4413446666939775,
+     "realized_regret_mean_no_error_episodes": -4.4677204255712955,
+     "realized_regret_mean_error_episodes": 8.005907450542233,
+     "first_probe_rate_when_unique_opt": 0.7857142857142857,
+     "n_probe_unique_opt": 56,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 204,
+     "q_head_trained": false,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.17045454545454544
+    },
+    "unreliable+events": {
+     "episodes": 228,
+     "configs": 57,
+     "episodes_with_consequential_error": 69,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 0,
+      "belief_dependent": 9,
+      "value_estimate": 0,
+      "unlocalized": 60
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.0,
+      "belief_dependent": 0.13043478260869565,
+      "value_estimate": 0.0,
+      "unlocalized": 0.8695652173913043
+     },
+     "first_error_patterns": {
+      "prop (best probe)": 20,
+      "prop (best inspect)": 12,
+      "inspect (best probe)": 8,
+      "exact_b1 (best inspect)": 7,
+      "prop (best build)": 4,
+      "build (best inspect)": 4,
+      "use (best inspect)": 4,
+      "exact_b1 (best probe)": 3,
+      "commit (best exact_b1)": 3,
+      "prop (best exact_b1)": 2,
+      "build (best prop)": 1,
+      "exact_b1 (best commit)": 1
+     },
+     "first_error_at_first_decision": 48,
+     "first_error_query_index": {
+      "0": 65,
+      "1": 2,
+      "2": 1,
+      "3": 1
+     },
+     "first_error_step_in_query": {
+      "0": 49,
+      "1": 18,
+      "2": 2
+     },
+     "first_error_belief_moved": 17,
+     "consequential_errors_total": 313,
+     "realized_regret_mean": 2.9162316945221387,
+     "gap_regret_mean": 2.281809988977423,
+     "gap_regret_first_error_mean": 0.5612440674255506,
+     "gap_regret_consequential_mean": 2.191183215898851,
+     "realized_regret_mean_no_error_episodes": 1.1343494757826857,
+     "realized_regret_mean_error_episodes": 7.0223081116174,
+     "first_probe_rate_when_unique_opt": 0.25,
+     "n_probe_unique_opt": 32,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 132,
+     "q_head_trained": false,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.13043478260869565
+    }
+   },
+   "reproduces_eval_json": {
+    "first_probe_rate_when_unique_opt": [
+     0.5909090909090909,
+     0.5909090909090909,
+     true
+    ],
+    "n_probe_unique_opt": [
+     88,
+     88,
+     true
+    ],
+    "first_probe_rate_when_not_opt": [
+     0.0,
+     0.0,
+     true
+    ],
+    "n_probe_not_opt": [
+     336,
+     336,
+     true
+    ],
+    "gap_regret": [
+     1.8458196711837065,
+     1.8458196711837065,
+     true
+    ]
+   },
+   "cpu_s": 0.8679880689999999
+  },
+  "b-train-L1-s1": {
+   "rung": "L1",
+   "seed": 1,
+   "world_offset": 500,
+   "inputs": "public",
+   "train_split": "train",
+   "all": {
+    "episodes": 512,
+    "configs": 128,
+    "episodes_with_consequential_error": 168,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 0,
+     "belief_dependent": 44,
+     "value_estimate": 0,
+     "unlocalized": 124
+    },
+    "first_error_class_fraction": {
+     "deployment": 0.0,
+     "ranking": 0.0,
+     "belief_dependent": 0.2619047619047619,
+     "value_estimate": 0.0,
+     "unlocalized": 0.7380952380952381
+    },
+    "first_error_patterns": {
+     "inspect (best probe)": 26,
+     "prop (best probe)": 20,
+     "inspect (best prop)": 20,
+     "prop (best inspect)": 15,
+     "exact_b1 (best inspect)": 14,
+     "probe (best exact_b1)": 14,
+     "inspect (best exact_b1)": 14,
+     "prop (best build)": 12,
+     "exact_b1 (best probe)": 8,
+     "build (best inspect)": 8,
+     "probe (best inspect)": 4,
+     "probe (best prop)": 4,
+     "use (best probe)": 3,
+     "exact_b1 (best prop)": 2,
+     "exact_b1 (best commit)": 2,
+     "prop (best exact_b1)": 1,
+     "prop (best use)": 1
+    },
+    "first_error_at_first_decision": 92,
+    "first_error_query_index": {
+     "0": 132,
+     "1": 27,
+     "2": 5,
+     "3": 2,
+     "4": 2
+    },
+    "first_error_step_in_query": {
+     "0": 115,
+     "1": 42,
+     "2": 10,
+     "3": 1
+    },
+    "first_error_belief_moved": 53,
+    "consequential_errors_total": 532,
+    "realized_regret_mean": 1.4564435128648239,
+    "gap_regret_mean": 2.670457644607705,
+    "gap_regret_first_error_mean": 0.8036072964193721,
+    "gap_regret_consequential_mean": 2.6034150031335628,
+    "realized_regret_mean_no_error_episodes": -2.3989083372594426,
+    "realized_regret_mean_error_episodes": 9.350735396452606,
+    "first_probe_rate_when_unique_opt": 0.5909090909090909,
+    "n_probe_unique_opt": 88,
+    "first_probe_rate_when_not_opt": 0.023809523809523808,
+    "n_probe_not_opt": 336,
+    "q_head_trained": false,
+    "bo_available": true,
+    "bo_resolves_first_error": 0.2619047619047619
+   },
+   "by_pair": {
+    "side_effect+correlated": {
+     "episodes": 284,
+     "configs": 71,
+     "episodes_with_consequential_error": 94,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 0,
+      "belief_dependent": 25,
+      "value_estimate": 0,
+      "unlocalized": 69
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.0,
+      "belief_dependent": 0.26595744680851063,
+      "value_estimate": 0.0,
+      "unlocalized": 0.7340425531914894
+     },
+     "first_error_patterns": {
+      "inspect (best prop)": 20,
+      "inspect (best probe)": 18,
+      "probe (best exact_b1)": 14,
+      "prop (best inspect)": 10,
+      "inspect (best exact_b1)": 6,
+      "prop (best probe)": 4,
+      "prop (best build)": 4,
+      "probe (best inspect)": 4,
+      "probe (best prop)": 4,
+      "build (best inspect)": 4,
+      "exact_b1 (best inspect)": 3,
+      "exact_b1 (best probe)": 3
+     },
+     "first_error_at_first_decision": 56,
+     "first_error_query_index": {
+      "0": 70,
+      "1": 18,
+      "2": 4,
+      "4": 2
+     },
+     "first_error_step_in_query": {
+      "0": 74,
+      "1": 16,
+      "2": 4
+     },
+     "first_error_belief_moved": 20,
+     "consequential_errors_total": 191,
+     "realized_regret_mean": -0.20385263297273823,
+     "gap_regret_mean": 1.9165841018688363,
+     "gap_regret_first_error_mean": 0.7779302119901335,
+     "gap_regret_consequential_mean": 1.8653505638092536,
+     "realized_regret_mean_no_error_episodes": -4.155979758536688,
+     "realized_regret_mean_error_episodes": 7.784489429337374,
+     "first_probe_rate_when_unique_opt": 0.7142857142857143,
+     "n_probe_unique_opt": 56,
+     "first_probe_rate_when_not_opt": 0.0392156862745098,
+     "n_probe_not_opt": 204,
+     "q_head_trained": false,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.26595744680851063
+    },
+    "unreliable+events": {
+     "episodes": 228,
+     "configs": 57,
+     "episodes_with_consequential_error": 74,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 0,
+      "belief_dependent": 19,
+      "value_estimate": 0,
+      "unlocalized": 55
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.0,
+      "belief_dependent": 0.25675675675675674,
+      "value_estimate": 0.0,
+      "unlocalized": 0.7432432432432432
+     },
+     "first_error_patterns": {
+      "prop (best probe)": 16,
+      "exact_b1 (best inspect)": 11,
+      "inspect (best probe)": 8,
+      "prop (best build)": 8,
+      "inspect (best exact_b1)": 8,
+      "prop (best inspect)": 5,
+      "exact_b1 (best probe)": 5,
+      "build (best inspect)": 4,
+      "use (best probe)": 3,
+      "exact_b1 (best prop)": 2,
+      "exact_b1 (best commit)": 2,
+      "prop (best exact_b1)": 1,
+      "prop (best use)": 1
+     },
+     "first_error_at_first_decision": 36,
+     "first_error_query_index": {
+      "0": 62,
+      "1": 9,
+      "2": 1,
+      "3": 2
+     },
+     "first_error_step_in_query": {
+      "0": 41,
+      "1": 26,
+      "2": 6,
+      "3": 1
+     },
+     "first_error_belief_moved": 33,
+     "consequential_errors_total": 341,
+     "realized_regret_mean": 3.524531694522138,
+     "gap_regret_mean": 3.609493110124541,
+     "gap_regret_first_error_mean": 0.8355910331645642,
+     "gap_regret_consequential_mean": 3.52275842755507,
+     "realized_regret_mean_no_error_episodes": -0.23109294737193128,
+     "realized_regret_mean_error_episodes": 11.340291084409795,
+     "first_probe_rate_when_unique_opt": 0.375,
+     "n_probe_unique_opt": 32,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 132,
+     "q_head_trained": false,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.25675675675675674
+    }
+   },
+   "reproduces_eval_json": {
+    "first_probe_rate_when_unique_opt": [
+     0.5909090909090909,
+     0.5909090909090909,
+     true
+    ],
+    "n_probe_unique_opt": [
+     88,
+     88,
+     true
+    ],
+    "first_probe_rate_when_not_opt": [
+     0.023809523809523808,
+     0.023809523809523808,
+     true
+    ],
+    "n_probe_not_opt": [
+     336,
+     336,
+     true
+    ],
+    "gap_regret": [
+     2.670457644607705,
+     2.670457644607705,
+     true
+    ]
+   },
+   "cpu_s": 0.4802954880000003
+  },
+  "b-train-L1-s2": {
+   "rung": "L1",
+   "seed": 2,
+   "world_offset": 500,
+   "inputs": "public",
+   "train_split": "train",
+   "all": {
+    "episodes": 512,
+    "configs": 128,
+    "episodes_with_consequential_error": 169,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 0,
+     "belief_dependent": 36,
+     "value_estimate": 0,
+     "unlocalized": 133
+    },
+    "first_error_class_fraction": {
+     "deployment": 0.0,
+     "ranking": 0.0,
+     "belief_dependent": 0.21301775147928995,
+     "value_estimate": 0.0,
+     "unlocalized": 0.7869822485207101
+    },
+    "first_error_patterns": {
+     "prop (best probe)": 22,
+     "inspect (best probe)": 21,
+     "probe (best exact_b1)": 20,
+     "prop (best inspect)": 18,
+     "inspect (best prop)": 14,
+     "prop (best build)": 13,
+     "exact_b1 (best inspect)": 10,
+     "inspect (best exact_b1)": 9,
+     "inspect (best build)": 8,
+     "exact_b1 (best prop)": 7,
+     "probe (best prop)": 6,
+     "exact_b1 (best probe)": 5,
+     "build (best inspect)": 4,
+     "probe (best inspect)": 4,
+     "prop (best exact_b1)": 2,
+     "build (best exact_b1)": 2,
+     "commit (best prop)": 1,
+     "use (best probe)": 1,
+     "use (best prop)": 1,
+     "exact_b1 (best commit)": 1
+    },
+    "first_error_at_first_decision": 100,
+    "first_error_query_index": {
+     "0": 139,
+     "1": 17,
+     "2": 5,
+     "3": 6,
+     "4": 2
+    },
+    "first_error_step_in_query": {
+     "0": 115,
+     "1": 37,
+     "2": 16,
+     "3": 1
+    },
+    "first_error_belief_moved": 54,
+    "consequential_errors_total": 528,
+    "realized_regret_mean": 1.871009333177324,
+    "gap_regret_mean": 2.866141424807943,
+    "gap_regret_first_error_mean": 0.7277500526395179,
+    "gap_regret_consequential_mean": 2.795241316606785,
+    "realized_regret_mean_no_error_episodes": -1.9352659808220412,
+    "realized_regret_mean_error_episodes": 9.596171656856509,
+    "first_probe_rate_when_unique_opt": 0.6818181818181818,
+    "n_probe_unique_opt": 88,
+    "first_probe_rate_when_not_opt": 0.023809523809523808,
+    "n_probe_not_opt": 336,
+    "q_head_trained": false,
+    "bo_available": true,
+    "bo_resolves_first_error": 0.21301775147928995
+   },
+   "by_pair": {
+    "side_effect+correlated": {
+     "episodes": 284,
+     "configs": 71,
+     "episodes_with_consequential_error": 101,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 0,
+      "belief_dependent": 28,
+      "value_estimate": 0,
+      "unlocalized": 73
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.0,
+      "belief_dependent": 0.27722772277227725,
+      "value_estimate": 0.0,
+      "unlocalized": 0.7227722772277227
+     },
+     "first_error_patterns": {
+      "probe (best exact_b1)": 20,
+      "inspect (best probe)": 16,
+      "inspect (best prop)": 14,
+      "prop (best inspect)": 10,
+      "inspect (best build)": 8,
+      "probe (best prop)": 6,
+      "inspect (best exact_b1)": 6,
+      "prop (best probe)": 4,
+      "prop (best build)": 4,
+      "probe (best inspect)": 4,
+      "exact_b1 (best inspect)": 3,
+      "exact_b1 (best probe)": 2,
+      "build (best exact_b1)": 2,
+      "exact_b1 (best prop)": 2
+     },
+     "first_error_at_first_decision": 60,
+     "first_error_query_index": {
+      "0": 76,
+      "1": 14,
+      "2": 4,
+      "3": 5,
+      "4": 2
+     },
+     "first_error_step_in_query": {
+      "0": 74,
+      "1": 17,
+      "2": 9,
+      "3": 1
+     },
+     "first_error_belief_moved": 27,
+     "consequential_errors_total": 179,
+     "realized_regret_mean": -0.29592199916992135,
+     "gap_regret_mean": 1.8574759649132837,
+     "gap_regret_first_error_mean": 0.8565455630580956,
+     "gap_regret_consequential_mean": 1.7979407388411792,
+     "realized_regret_mean_no_error_episodes": -5.031178625863478,
+     "realized_regret_mean_error_episodes": 8.283800403651076,
+     "first_probe_rate_when_unique_opt": 0.7857142857142857,
+     "n_probe_unique_opt": 56,
+     "first_probe_rate_when_not_opt": 0.0392156862745098,
+     "n_probe_not_opt": 204,
+     "q_head_trained": false,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.27722772277227725
+    },
+    "unreliable+events": {
+     "episodes": 228,
+     "configs": 57,
+     "episodes_with_consequential_error": 68,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 0,
+      "belief_dependent": 8,
+      "value_estimate": 0,
+      "unlocalized": 60
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.0,
+      "belief_dependent": 0.11764705882352941,
+      "value_estimate": 0.0,
+      "unlocalized": 0.8823529411764706
+     },
+     "first_error_patterns": {
+      "prop (best probe)": 18,
+      "prop (best build)": 9,
+      "prop (best inspect)": 8,
+      "exact_b1 (best inspect)": 7,
+      "exact_b1 (best prop)": 5,
+      "inspect (best probe)": 5,
+      "build (best inspect)": 4,
+      "exact_b1 (best probe)": 3,
+      "inspect (best exact_b1)": 3,
+      "prop (best exact_b1)": 2,
+      "commit (best prop)": 1,
+      "use (best probe)": 1,
+      "use (best prop)": 1,
+      "exact_b1 (best commit)": 1
+     },
+     "first_error_at_first_decision": 40,
+     "first_error_query_index": {
+      "0": 63,
+      "1": 3,
+      "2": 1,
+      "3": 1
+     },
+     "first_error_step_in_query": {
+      "0": 41,
+      "1": 20,
+      "2": 7
+     },
+     "first_error_belief_moved": 27,
+     "consequential_errors_total": 349,
+     "realized_regret_mean": 4.570169413820384,
+     "gap_regret_mean": 4.122549278360939,
+     "gap_regret_first_error_mean": 0.5673205572058508,
+     "gap_regret_consequential_mean": 4.037492913472715,
+     "realized_regret_mean_no_error_episodes": 1.6056841069441024,
+     "realized_regret_mean_error_episodes": 11.545428959411636,
+     "first_probe_rate_when_unique_opt": 0.5,
+     "n_probe_unique_opt": 32,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 132,
+     "q_head_trained": false,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.11764705882352941
+    }
+   },
+   "reproduces_eval_json": {
+    "first_probe_rate_when_unique_opt": [
+     0.6818181818181818,
+     0.6818181818181818,
+     true
+    ],
+    "n_probe_unique_opt": [
+     88,
+     88,
+     true
+    ],
+    "first_probe_rate_when_not_opt": [
+     0.023809523809523808,
+     0.023809523809523808,
+     true
+    ],
+    "n_probe_not_opt": [
+     336,
+     336,
+     true
+    ],
+    "gap_regret": [
+     2.866141424807943,
+     2.866141424807943,
+     true
+    ]
+   },
+   "cpu_s": 0.46937122900000006
+  },
+  "f-btrain-L1-s3": {
+   "rung": "L1",
+   "seed": 3,
+   "world_offset": 700,
+   "inputs": "public",
+   "train_split": "train",
+   "all": {
+    "episodes": 512,
+    "configs": 128,
+    "episodes_with_consequential_error": 199,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 0,
+     "belief_dependent": 44,
+     "value_estimate": 0,
+     "unlocalized": 155
+    },
+    "first_error_class_fraction": {
+     "deployment": 0.0,
+     "ranking": 0.0,
+     "belief_dependent": 0.22110552763819097,
+     "value_estimate": 0.0,
+     "unlocalized": 0.7788944723618091
+    },
+    "first_error_patterns": {
+     "inspect (best probe)": 42,
+     "inspect (best prop)": 32,
+     "prop (best probe)": 22,
+     "inspect (best exact_b1)": 17,
+     "prop (best build)": 16,
+     "inspect (best build)": 12,
+     "prop (best inspect)": 11,
+     "exact_b1 (best inspect)": 10,
+     "exact_b1 (best probe)": 8,
+     "probe (best exact_b1)": 8,
+     "exact_b1 (best prop)": 5,
+     "build (best inspect)": 4,
+     "probe (best inspect)": 2,
+     "prop (best exact_b1)": 2,
+     "exact_b2 (best prop)": 2,
+     "exact_b1 (best commit)": 2,
+     "exact_b1 (best build)": 2,
+     "commit (best prop)": 1,
+     "use (best probe)": 1
+    },
+    "first_error_at_first_decision": 124,
+    "first_error_query_index": {
+     "0": 171,
+     "1": 18,
+     "2": 5,
+     "3": 1,
+     "5": 2,
+     "6": 1,
+     "7": 1
+    },
+    "first_error_step_in_query": {
+     "0": 130,
+     "1": 46,
+     "2": 21,
+     "3": 2
+    },
+    "first_error_belief_moved": 69,
+    "consequential_errors_total": 587,
+    "realized_regret_mean": 2.494195270677325,
+    "gap_regret_mean": 2.7876302519473546,
+    "gap_regret_first_error_mean": 0.8913524429808393,
+    "gap_regret_consequential_mean": 2.7142682338549684,
+    "realized_regret_mean_no_error_episodes": -1.638455759637647,
+    "realized_regret_mean_error_episodes": 8.994294629916451,
+    "first_probe_rate_when_unique_opt": 0.5909090909090909,
+    "n_probe_unique_opt": 88,
+    "first_probe_rate_when_not_opt": 0.0,
+    "n_probe_not_opt": 336,
+    "q_head_trained": false,
+    "bo_available": true,
+    "bo_resolves_first_error": 0.22110552763819097
+   },
+   "by_pair": {
+    "side_effect+correlated": {
+     "episodes": 284,
+     "configs": 71,
+     "episodes_with_consequential_error": 122,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 0,
+      "belief_dependent": 26,
+      "value_estimate": 0,
+      "unlocalized": 96
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.0,
+      "belief_dependent": 0.21311475409836064,
+      "value_estimate": 0.0,
+      "unlocalized": 0.7868852459016393
+     },
+     "first_error_patterns": {
+      "inspect (best probe)": 32,
+      "inspect (best prop)": 30,
+      "inspect (best exact_b1)": 17,
+      "inspect (best build)": 12,
+      "probe (best exact_b1)": 8,
+      "prop (best inspect)": 6,
+      "exact_b1 (best inspect)": 4,
+      "prop (best build)": 4,
+      "exact_b1 (best probe)": 4,
+      "exact_b1 (best prop)": 3,
+      "exact_b2 (best prop)": 2
+     },
+     "first_error_at_first_decision": 84,
+     "first_error_query_index": {
+      "0": 107,
+      "1": 8,
+      "2": 4,
+      "3": 1,
+      "5": 1,
+      "6": 1
+     },
+     "first_error_step_in_query": {
+      "0": 87,
+      "1": 24,
+      "2": 9,
+      "3": 2
+     },
+     "first_error_belief_moved": 35,
+     "consequential_errors_total": 225,
+     "realized_regret_mean": 1.9630677895624737,
+     "gap_regret_mean": 1.9931870723277976,
+     "gap_regret_first_error_mean": 0.8912729549736683,
+     "gap_regret_consequential_mean": 1.9382136230418674,
+     "realized_regret_mean_no_error_episodes": -3.601078037759907,
+     "realized_regret_mean_error_episodes": 9.351523724203666,
+     "first_probe_rate_when_unique_opt": 0.7142857142857143,
+     "n_probe_unique_opt": 56,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 204,
+     "q_head_trained": false,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.21311475409836064
+    },
+    "unreliable+events": {
+     "episodes": 228,
+     "configs": 57,
+     "episodes_with_consequential_error": 77,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 0,
+      "belief_dependent": 18,
+      "value_estimate": 0,
+      "unlocalized": 59
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.0,
+      "belief_dependent": 0.23376623376623376,
+      "value_estimate": 0.0,
+      "unlocalized": 0.7662337662337663
+     },
+     "first_error_patterns": {
+      "prop (best probe)": 22,
+      "prop (best build)": 12,
+      "inspect (best probe)": 10,
+      "exact_b1 (best inspect)": 6,
+      "prop (best inspect)": 5,
+      "exact_b1 (best probe)": 4,
+      "build (best inspect)": 4,
+      "probe (best inspect)": 2,
+      "exact_b1 (best prop)": 2,
+      "prop (best exact_b1)": 2,
+      "inspect (best prop)": 2,
+      "exact_b1 (best commit)": 2,
+      "exact_b1 (best build)": 2,
+      "commit (best prop)": 1,
+      "use (best probe)": 1
+     },
+     "first_error_at_first_decision": 40,
+     "first_error_query_index": {
+      "0": 64,
+      "1": 10,
+      "2": 1,
+      "5": 1,
+      "7": 1
+     },
+     "first_error_step_in_query": {
+      "0": 43,
+      "1": 22,
+      "2": 12
+     },
+     "first_error_belief_moved": 34,
+     "consequential_errors_total": 362,
+     "realized_regret_mean": 3.1557751155747713,
+     "gap_regret_mean": 3.777199826561189,
+     "gap_regret_first_error_mean": 0.8914514543581924,
+     "gap_regret_consequential_mean": 3.6809327490783046,
+     "realized_regret_mean_no_error_episodes": 0.4671390023213346,
+     "realized_regret_mean_error_episodes": 8.428295285721122,
+     "first_probe_rate_when_unique_opt": 0.375,
+     "n_probe_unique_opt": 32,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 132,
+     "q_head_trained": false,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.23376623376623376
+    }
+   },
+   "reproduces_eval_json": {
+    "first_probe_rate_when_unique_opt": [
+     0.5909090909090909,
+     0.5909090909090909,
+     true
+    ],
+    "n_probe_unique_opt": [
+     88,
+     88,
+     true
+    ],
+    "first_probe_rate_when_not_opt": [
+     0.0,
+     0.0,
+     true
+    ],
+    "n_probe_not_opt": [
+     336,
+     336,
+     true
+    ],
+    "gap_regret": [
+     2.7876302519473546,
+     2.7876302519473546,
+     true
+    ]
+   },
+   "cpu_s": 0.4018495609999997
+  },
+  "f-btrain-L1-s4": {
+   "rung": "L1",
+   "seed": 4,
+   "world_offset": 700,
+   "inputs": "public",
+   "train_split": "train",
+   "all": {
+    "episodes": 512,
+    "configs": 128,
+    "episodes_with_consequential_error": 175,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 0,
+     "belief_dependent": 64,
+     "value_estimate": 0,
+     "unlocalized": 111
+    },
+    "first_error_class_fraction": {
+     "deployment": 0.0,
+     "ranking": 0.0,
+     "belief_dependent": 0.3657142857142857,
+     "value_estimate": 0.0,
+     "unlocalized": 0.6342857142857142
+    },
+    "first_error_patterns": {
+     "prop (best build)": 26,
+     "probe (best exact_b1)": 24,
+     "prop (best probe)": 21,
+     "inspect (best probe)": 12,
+     "prop (best inspect)": 12,
+     "inspect (best build)": 12,
+     "inspect (best prop)": 12,
+     "exact_b1 (best probe)": 10,
+     "inspect (best exact_b1)": 10,
+     "exact_b1 (best inspect)": 8,
+     "probe (best inspect)": 5,
+     "exact_b1 (best prop)": 5,
+     "build (best inspect)": 4,
+     "probe (best prop)": 3,
+     "exact_b1 (best commit)": 3,
+     "prop (best exact_b1)": 2,
+     "exact_b2 (best prop)": 2,
+     "exact_b1 (best build)": 2,
+     "commit (best prop)": 2
+    },
+    "first_error_at_first_decision": 96,
+    "first_error_query_index": {
+     "0": 148,
+     "1": 16,
+     "2": 5,
+     "3": 1,
+     "5": 3,
+     "6": 1,
+     "7": 1
+    },
+    "first_error_step_in_query": {
+     "0": 104,
+     "1": 54,
+     "2": 15,
+     "3": 2
+    },
+    "first_error_belief_moved": 71,
+    "consequential_errors_total": 544,
+    "realized_regret_mean": 2.2147616769273246,
+    "gap_regret_mean": 3.022359222167783,
+    "gap_regret_first_error_mean": 0.9297304554963773,
+    "gap_regret_consequential_mean": 2.9467335113378224,
+    "realized_regret_mean_no_error_episodes": -0.7570199376254202,
+    "realized_regret_mean_error_episodes": 7.93756398609461,
+    "first_probe_rate_when_unique_opt": 0.6818181818181818,
+    "n_probe_unique_opt": 88,
+    "first_probe_rate_when_not_opt": 0.011904761904761904,
+    "n_probe_not_opt": 336,
+    "q_head_trained": false,
+    "bo_available": true,
+    "bo_resolves_first_error": 0.3657142857142857
+   },
+   "by_pair": {
+    "side_effect+correlated": {
+     "episodes": 284,
+     "configs": 71,
+     "episodes_with_consequential_error": 98,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 0,
+      "belief_dependent": 42,
+      "value_estimate": 0,
+      "unlocalized": 56
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.0,
+      "belief_dependent": 0.42857142857142855,
+      "value_estimate": 0.0,
+      "unlocalized": 0.5714285714285714
+     },
+     "first_error_patterns": {
+      "probe (best exact_b1)": 24,
+      "inspect (best build)": 12,
+      "inspect (best prop)": 12,
+      "prop (best build)": 10,
+      "prop (best inspect)": 8,
+      "inspect (best exact_b1)": 7,
+      "probe (best inspect)": 5,
+      "prop (best probe)": 4,
+      "exact_b1 (best probe)": 4,
+      "inspect (best probe)": 4,
+      "probe (best prop)": 3,
+      "exact_b1 (best inspect)": 2,
+      "exact_b2 (best prop)": 2,
+      "exact_b1 (best prop)": 1
+     },
+     "first_error_at_first_decision": 52,
+     "first_error_query_index": {
+      "0": 79,
+      "1": 11,
+      "2": 4,
+      "3": 1,
+      "5": 2,
+      "6": 1
+     },
+     "first_error_step_in_query": {
+      "0": 60,
+      "1": 33,
+      "2": 3,
+      "3": 2
+     },
+     "first_error_belief_moved": 38,
+     "consequential_errors_total": 194,
+     "realized_regret_mean": 0.7439896205483885,
+     "gap_regret_mean": 2.0944909959103626,
+     "gap_regret_first_error_mean": 0.8090311312217537,
+     "gap_regret_consequential_mean": 2.0328441125273464,
+     "realized_regret_mean_no_error_episodes": -3.3289535964758747,
+     "realized_regret_mean_error_episodes": 8.474269603880154,
+     "first_probe_rate_when_unique_opt": 0.8571428571428571,
+     "n_probe_unique_opt": 56,
+     "first_probe_rate_when_not_opt": 0.0196078431372549,
+     "n_probe_not_opt": 204,
+     "q_head_trained": false,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.42857142857142855
+    },
+    "unreliable+events": {
+     "episodes": 228,
+     "configs": 57,
+     "episodes_with_consequential_error": 77,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 0,
+      "belief_dependent": 22,
+      "value_estimate": 0,
+      "unlocalized": 55
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.0,
+      "belief_dependent": 0.2857142857142857,
+      "value_estimate": 0.0,
+      "unlocalized": 0.7142857142857143
+     },
+     "first_error_patterns": {
+      "prop (best probe)": 17,
+      "prop (best build)": 16,
+      "inspect (best probe)": 8,
+      "exact_b1 (best probe)": 6,
+      "exact_b1 (best inspect)": 6,
+      "prop (best inspect)": 4,
+      "build (best inspect)": 4,
+      "exact_b1 (best prop)": 4,
+      "exact_b1 (best commit)": 3,
+      "inspect (best exact_b1)": 3,
+      "prop (best exact_b1)": 2,
+      "exact_b1 (best build)": 2,
+      "commit (best prop)": 2
+     },
+     "first_error_at_first_decision": 44,
+     "first_error_query_index": {
+      "0": 69,
+      "1": 5,
+      "2": 1,
+      "5": 1,
+      "7": 1
+     },
+     "first_error_step_in_query": {
+      "0": 44,
+      "1": 21,
+      "2": 12
+     },
+     "first_error_belief_moved": 33,
+     "consequential_errors_total": 350,
+     "realized_regret_mean": 4.046775992767754,
+     "gap_regret_mean": 4.178124907505974,
+     "gap_regret_first_error_mean": 1.0800752278384522,
+     "gap_regret_consequential_mean": 4.08508697301403,
+     "realized_regret_mean_no_error_episodes": 2.4110572845347424,
+     "realized_regret_mean_error_episodes": 7.25448410891301,
+     "first_probe_rate_when_unique_opt": 0.375,
+     "n_probe_unique_opt": 32,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 132,
+     "q_head_trained": false,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.2857142857142857
+    }
+   },
+   "reproduces_eval_json": {
+    "first_probe_rate_when_unique_opt": [
+     0.6818181818181818,
+     0.6818181818181818,
+     true
+    ],
+    "n_probe_unique_opt": [
+     88,
+     88,
+     true
+    ],
+    "first_probe_rate_when_not_opt": [
+     0.011904761904761904,
+     0.011904761904761904,
+     true
+    ],
+    "n_probe_not_opt": [
+     336,
+     336,
+     true
+    ],
+    "gap_regret": [
+     3.022359222167783,
+     3.022359222167783,
+     true
+    ]
+   },
+   "cpu_s": 0.4861606740000006
+  },
+  "f-btrain-L1-s5": {
+   "rung": "L1",
+   "seed": 5,
+   "world_offset": 700,
+   "inputs": "public",
+   "train_split": "train",
+   "all": {
+    "episodes": 512,
+    "configs": 128,
+    "episodes_with_consequential_error": 180,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 0,
+     "belief_dependent": 46,
+     "value_estimate": 0,
+     "unlocalized": 134
+    },
+    "first_error_class_fraction": {
+     "deployment": 0.0,
+     "ranking": 0.0,
+     "belief_dependent": 0.25555555555555554,
+     "value_estimate": 0.0,
+     "unlocalized": 0.7444444444444445
+    },
+    "first_error_patterns": {
+     "inspect (best probe)": 24,
+     "prop (best inspect)": 22,
+     "inspect (best prop)": 21,
+     "prop (best probe)": 20,
+     "probe (best exact_b1)": 14,
+     "inspect (best exact_b1)": 11,
+     "exact_b1 (best probe)": 10,
+     "exact_b1 (best inspect)": 8,
+     "prop (best build)": 8,
+     "inspect (best build)": 8,
+     "probe (best prop)": 6,
+     "build (best inspect)": 4,
+     "build (best exact_b1)": 4,
+     "exact_b1 (best prop)": 4,
+     "use (best inspect)": 4,
+     "probe (best inspect)": 3,
+     "exact_b1 (best commit)": 3,
+     "prop (best commit_infeasible)": 2,
+     "build (best prop)": 2,
+     "prop (best exact_b1)": 2
+    },
+    "first_error_at_first_decision": 116,
+    "first_error_query_index": {
+     "0": 157,
+     "1": 14,
+     "2": 4,
+     "5": 3,
+     "6": 1,
+     "7": 1
+    },
+    "first_error_step_in_query": {
+     "0": 123,
+     "1": 44,
+     "2": 11,
+     "3": 2
+    },
+    "first_error_belief_moved": 54,
+    "consequential_errors_total": 558,
+    "realized_regret_mean": 1.954253473802324,
+    "gap_regret_mean": 2.639248299566538,
+    "gap_regret_first_error_mean": 0.8574858869463957,
+    "gap_regret_consequential_mean": 2.5710561963417855,
+    "realized_regret_mean_no_error_episodes": -0.9998204262099998,
+    "realized_regret_mean_error_episodes": 7.402878667158388,
+    "first_probe_rate_when_unique_opt": 0.6363636363636364,
+    "n_probe_unique_opt": 88,
+    "first_probe_rate_when_not_opt": 0.023809523809523808,
+    "n_probe_not_opt": 336,
+    "q_head_trained": false,
+    "bo_available": true,
+    "bo_resolves_first_error": 0.25555555555555554
+   },
+   "by_pair": {
+    "side_effect+correlated": {
+     "episodes": 284,
+     "configs": 71,
+     "episodes_with_consequential_error": 100,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 0,
+      "belief_dependent": 26,
+      "value_estimate": 0,
+      "unlocalized": 74
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.0,
+      "belief_dependent": 0.26,
+      "value_estimate": 0.0,
+      "unlocalized": 0.74
+     },
+     "first_error_patterns": {
+      "inspect (best prop)": 21,
+      "inspect (best probe)": 16,
+      "probe (best exact_b1)": 14,
+      "inspect (best build)": 8,
+      "inspect (best exact_b1)": 7,
+      "prop (best inspect)": 6,
+      "probe (best prop)": 6,
+      "prop (best probe)": 4,
+      "prop (best build)": 4,
+      "build (best exact_b1)": 4,
+      "exact_b1 (best probe)": 4,
+      "probe (best inspect)": 3,
+      "exact_b1 (best inspect)": 2,
+      "exact_b1 (best prop)": 1
+     },
+     "first_error_at_first_decision": 68,
+     "first_error_query_index": {
+      "0": 88,
+      "1": 9,
+      "2": 1,
+      "5": 1,
+      "6": 1
+     },
+     "first_error_step_in_query": {
+      "0": 74,
+      "1": 21,
+      "2": 5
+     },
+     "first_error_belief_moved": 26,
+     "consequential_errors_total": 214,
+     "realized_regret_mean": 1.2918498318159939,
+     "gap_regret_mean": 2.333492373770022,
+     "gap_regret_first_error_mean": 1.0026190378038233,
+     "gap_regret_consequential_mean": 2.278799613545683,
+     "realized_regret_mean_no_error_episodes": -2.0177764068652957,
+     "realized_regret_mean_error_episodes": 7.381562110989567,
+     "first_probe_rate_when_unique_opt": 0.7857142857142857,
+     "n_probe_unique_opt": 56,
+     "first_probe_rate_when_not_opt": 0.0392156862745098,
+     "n_probe_not_opt": 204,
+     "q_head_trained": false,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.26
+    },
+    "unreliable+events": {
+     "episodes": 228,
+     "configs": 57,
+     "episodes_with_consequential_error": 80,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 0,
+      "belief_dependent": 20,
+      "value_estimate": 0,
+      "unlocalized": 60
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.0,
+      "belief_dependent": 0.25,
+      "value_estimate": 0.0,
+      "unlocalized": 0.75
+     },
+     "first_error_patterns": {
+      "prop (best inspect)": 16,
+      "prop (best probe)": 16,
+      "inspect (best probe)": 8,
+      "exact_b1 (best probe)": 6,
+      "exact_b1 (best inspect)": 6,
+      "prop (best build)": 4,
+      "build (best inspect)": 4,
+      "inspect (best exact_b1)": 4,
+      "use (best inspect)": 4,
+      "exact_b1 (best prop)": 3,
+      "exact_b1 (best commit)": 3,
+      "prop (best commit_infeasible)": 2,
+      "build (best prop)": 2,
+      "prop (best exact_b1)": 2
+     },
+     "first_error_at_first_decision": 48,
+     "first_error_query_index": {
+      "0": 69,
+      "1": 5,
+      "2": 3,
+      "5": 2,
+      "7": 1
+     },
+     "first_error_step_in_query": {
+      "0": 49,
+      "1": 23,
+      "2": 6,
+      "3": 2
+     },
+     "first_error_belief_moved": 28,
+     "consequential_errors_total": 344,
+     "realized_regret_mean": 2.779352747153718,
+     "gap_regret_mean": 3.020102172049917,
+     "gap_regret_first_error_mean": 0.6767059972818806,
+     "gap_regret_consequential_mean": 2.9350950977193864,
+     "realized_regret_mean_no_error_episodes": 0.2657464686587466,
+     "realized_regret_mean_error_episodes": 7.429524362369415,
+     "first_probe_rate_when_unique_opt": 0.375,
+     "n_probe_unique_opt": 32,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 132,
+     "q_head_trained": false,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.25
+    }
+   },
+   "reproduces_eval_json": {
+    "first_probe_rate_when_unique_opt": [
+     0.6363636363636364,
+     0.6363636363636364,
+     true
+    ],
+    "n_probe_unique_opt": [
+     88,
+     88,
+     true
+    ],
+    "first_probe_rate_when_not_opt": [
+     0.023809523809523808,
+     0.023809523809523808,
+     true
+    ],
+    "n_probe_not_opt": [
+     336,
+     336,
+     true
+    ],
+    "gap_regret": [
+     2.639248299566538,
+     2.639248299566538,
+     true
+    ]
+   },
+   "cpu_s": 0.5065604539999997
+  },
+  "b-train-L4-s0": {
+   "rung": "L4",
+   "seed": 0,
+   "world_offset": 500,
+   "inputs": "public",
+   "train_split": "train",
+   "all": {
+    "episodes": 512,
+    "configs": 128,
+    "episodes_with_consequential_error": 176,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 40,
+     "belief_dependent": 20,
+     "value_estimate": 116,
+     "unlocalized": 0
+    },
+    "first_error_class_fraction": {
+     "deployment": 0.0,
+     "ranking": 0.22727272727272727,
+     "belief_dependent": 0.11363636363636363,
+     "value_estimate": 0.6590909090909091,
+     "unlocalized": 0.0
+    },
+    "first_error_patterns": {
+     "inspect (best prop)": 27,
+     "inspect (best probe)": 25,
+     "prop (best probe)": 25,
+     "prop (best inspect)": 23,
+     "probe (best exact_b1)": 12,
+     "exact_b1 (best inspect)": 10,
+     "exact_b1 (best probe)": 9,
+     "build (best prop)": 9,
+     "prop (best build)": 8,
+     "inspect (best build)": 8,
+     "build (best inspect)": 4,
+     "inspect (best exact_b1)": 4,
+     "use (best inspect)": 4,
+     "probe (best inspect)": 3,
+     "commit (best exact_b1)": 3,
+     "prop (best exact_b1)": 2
+    },
+    "first_error_at_first_decision": 124,
+    "first_error_query_index": {
+     "0": 152,
+     "1": 17,
+     "2": 4,
+     "3": 1,
+     "4": 2
+    },
+    "first_error_step_in_query": {
+     "0": 139,
+     "1": 30,
+     "2": 7
+    },
+    "first_error_belief_moved": 34,
+    "consequential_errors_total": 534,
+    "realized_regret_mean": 0.7223431222398241,
+    "gap_regret_mean": 2.3974899489416104,
+    "gap_regret_first_error_mean": 0.7161876484773464,
+    "gap_regret_consequential_mean": 2.324092722462346,
+    "realized_regret_mean_no_error_episodes": -1.5867575251391588,
+    "realized_regret_mean_error_episodes": 5.130626176326973,
+    "first_probe_rate_when_unique_opt": 0.6363636363636364,
+    "n_probe_unique_opt": 88,
+    "first_probe_rate_when_not_opt": 0.011904761904761904,
+    "n_probe_not_opt": 336,
+    "q_head_trained": true,
+    "q_head_argmax_eps_opt_at_first_error": 0.22727272727272727,
+    "misorders_chosen_at_first_error": 0.6704545454545454,
+    "bo_available": true,
+    "bo_resolves_first_error": 0.14204545454545456
+   },
+   "by_pair": {
+    "side_effect+correlated": {
+     "episodes": 284,
+     "configs": 71,
+     "episodes_with_consequential_error": 104,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 21,
+      "belief_dependent": 12,
+      "value_estimate": 71,
+      "unlocalized": 0
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.20192307692307693,
+      "belief_dependent": 0.11538461538461539,
+      "value_estimate": 0.6826923076923077,
+      "unlocalized": 0.0
+     },
+     "first_error_patterns": {
+      "inspect (best prop)": 27,
+      "inspect (best probe)": 25,
+      "probe (best exact_b1)": 12,
+      "prop (best inspect)": 11,
+      "inspect (best build)": 8,
+      "exact_b1 (best probe)": 6,
+      "prop (best build)": 4,
+      "inspect (best exact_b1)": 4,
+      "exact_b1 (best inspect)": 3,
+      "probe (best inspect)": 3,
+      "build (best prop)": 1
+     },
+     "first_error_at_first_decision": 72,
+     "first_error_query_index": {
+      "0": 84,
+      "1": 15,
+      "2": 3,
+      "4": 2
+     },
+     "first_error_step_in_query": {
+      "0": 86,
+      "1": 12,
+      "2": 6
+     },
+     "first_error_belief_moved": 18,
+     "consequential_errors_total": 202,
+     "realized_regret_mean": -1.3197360836769632,
+     "gap_regret_mean": 1.79844852333668,
+     "gap_regret_first_error_mean": 0.8124940234661299,
+     "gap_regret_consequential_mean": 1.7462334735286533,
+     "realized_regret_mean_no_error_episodes": -3.6745470168144156,
+     "realized_regret_mean_error_episodes": 2.7558982236763203,
+     "first_probe_rate_when_unique_opt": 0.7857142857142857,
+     "n_probe_unique_opt": 56,
+     "first_probe_rate_when_not_opt": 0.0196078431372549,
+     "n_probe_not_opt": 204,
+     "q_head_trained": true,
+     "q_head_argmax_eps_opt_at_first_error": 0.20192307692307693,
+     "misorders_chosen_at_first_error": 0.6923076923076923,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.16346153846153846
+    },
+    "unreliable+events": {
+     "episodes": 228,
+     "configs": 57,
+     "episodes_with_consequential_error": 72,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 19,
+      "belief_dependent": 8,
+      "value_estimate": 45,
+      "unlocalized": 0
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.2638888888888889,
+      "belief_dependent": 0.1111111111111111,
+      "value_estimate": 0.625,
+      "unlocalized": 0.0
+     },
+     "first_error_patterns": {
+      "prop (best probe)": 25,
+      "prop (best inspect)": 12,
+      "build (best prop)": 8,
+      "exact_b1 (best inspect)": 7,
+      "prop (best build)": 4,
+      "build (best inspect)": 4,
+      "use (best inspect)": 4,
+      "exact_b1 (best probe)": 3,
+      "commit (best exact_b1)": 3,
+      "prop (best exact_b1)": 2
+     },
+     "first_error_at_first_decision": 52,
+     "first_error_query_index": {
+      "0": 68,
+      "1": 2,
+      "2": 1,
+      "3": 1
+     },
+     "first_error_step_in_query": {
+      "0": 53,
+      "1": 18,
+      "2": 1
+     },
+     "first_error_belief_moved": 16,
+     "consequential_errors_total": 332,
+     "realized_regret_mean": 3.2659856418905595,
+     "gap_regret_mean": 3.1436643562740674,
+     "gap_regret_first_error_mean": 0.5962270761228969,
+     "gap_regret_consequential_mean": 3.043882313239402,
+     "realized_regret_mean_no_error_episodes": 0.8222303498707537,
+     "realized_regret_mean_error_episodes": 8.560788774600137,
+     "first_probe_rate_when_unique_opt": 0.375,
+     "n_probe_unique_opt": 32,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 132,
+     "q_head_trained": true,
+     "q_head_argmax_eps_opt_at_first_error": 0.2638888888888889,
+     "misorders_chosen_at_first_error": 0.6388888888888888,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.1111111111111111
+    }
+   },
+   "reproduces_eval_json": {
+    "first_probe_rate_when_unique_opt": [
+     0.6363636363636364,
+     0.6363636363636364,
+     true
+    ],
+    "n_probe_unique_opt": [
+     88,
+     88,
+     true
+    ],
+    "first_probe_rate_when_not_opt": [
+     0.011904761904761904,
+     0.011904761904761904,
+     true
+    ],
+    "n_probe_not_opt": [
+     336,
+     336,
+     true
+    ],
+    "gap_regret": [
+     2.3974899489416104,
+     2.3974899489416104,
+     true
+    ]
+   },
+   "cpu_s": 0.4868983129999993
+  },
+  "b-train-L4-s1": {
+   "rung": "L4",
+   "seed": 1,
+   "world_offset": 500,
+   "inputs": "public",
+   "train_split": "train",
+   "all": {
+    "episodes": 512,
+    "configs": 128,
+    "episodes_with_consequential_error": 166,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 57,
+     "belief_dependent": 14,
+     "value_estimate": 95,
+     "unlocalized": 0
+    },
+    "first_error_class_fraction": {
+     "deployment": 0.0,
+     "ranking": 0.3433734939759036,
+     "belief_dependent": 0.08433734939759036,
+     "value_estimate": 0.572289156626506,
+     "unlocalized": 0.0
+    },
+    "first_error_patterns": {
+     "inspect (best probe)": 24,
+     "prop (best probe)": 22,
+     "inspect (best prop)": 22,
+     "probe (best exact_b1)": 21,
+     "prop (best inspect)": 18,
+     "inspect (best exact_b1)": 10,
+     "probe (best inspect)": 8,
+     "exact_b1 (best inspect)": 8,
+     "prop (best build)": 8,
+     "exact_b1 (best probe)": 7,
+     "probe (best prop)": 7,
+     "build (best inspect)": 4,
+     "commit (best prop)": 3,
+     "use (best inspect)": 2,
+     "prop (best exact_b1)": 1,
+     "use (best prop)": 1
+    },
+    "first_error_at_first_decision": 104,
+    "first_error_query_index": {
+     "0": 139,
+     "1": 20,
+     "2": 5,
+     "3": 1,
+     "4": 1
+    },
+    "first_error_step_in_query": {
+     "0": 125,
+     "1": 24,
+     "2": 16,
+     "3": 1
+    },
+    "first_error_belief_moved": 41,
+    "consequential_errors_total": 531,
+    "realized_regret_mean": 0.9143761300523242,
+    "gap_regret_mean": 2.7141221027345037,
+    "gap_regret_first_error_mean": 0.8661222787036508,
+    "gap_regret_consequential_mean": 2.6440382643066473,
+    "realized_regret_mean_no_error_episodes": -1.3001342267852622,
+    "realized_regret_mean_error_episodes": 5.530162777436692,
+    "first_probe_rate_when_unique_opt": 0.6363636363636364,
+    "n_probe_unique_opt": 88,
+    "first_probe_rate_when_not_opt": 0.03571428571428571,
+    "n_probe_not_opt": 336,
+    "q_head_trained": true,
+    "q_head_argmax_eps_opt_at_first_error": 0.3433734939759036,
+    "misorders_chosen_at_first_error": 0.5301204819277109,
+    "bo_available": true,
+    "bo_resolves_first_error": 0.18072289156626506
+   },
+   "by_pair": {
+    "side_effect+correlated": {
+     "episodes": 284,
+     "configs": 71,
+     "episodes_with_consequential_error": 107,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 35,
+      "belief_dependent": 14,
+      "value_estimate": 58,
+      "unlocalized": 0
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.32710280373831774,
+      "belief_dependent": 0.1308411214953271,
+      "value_estimate": 0.5420560747663551,
+      "unlocalized": 0.0
+     },
+     "first_error_patterns": {
+      "inspect (best probe)": 22,
+      "inspect (best prop)": 22,
+      "probe (best exact_b1)": 21,
+      "inspect (best exact_b1)": 10,
+      "prop (best inspect)": 10,
+      "probe (best inspect)": 8,
+      "probe (best prop)": 7,
+      "prop (best build)": 4,
+      "prop (best probe)": 2,
+      "exact_b1 (best inspect)": 1
+     },
+     "first_error_at_first_decision": 64,
+     "first_error_query_index": {
+      "0": 87,
+      "1": 16,
+      "2": 3,
+      "4": 1
+     },
+     "first_error_step_in_query": {
+      "0": 81,
+      "1": 14,
+      "2": 12
+     },
+     "first_error_belief_moved": 26,
+     "consequential_errors_total": 219,
+     "realized_regret_mean": -0.5641519287473856,
+     "gap_regret_mean": 2.6364140814545967,
+     "gap_regret_first_error_mean": 1.2032353685850743,
+     "gap_regret_consequential_mean": 2.58605311727495,
+     "realized_regret_mean_no_error_episodes": -3.790918094995546,
+     "realized_regret_mean_error_episodes": 4.773582757476206,
+     "first_probe_rate_when_unique_opt": 0.7857142857142857,
+     "n_probe_unique_opt": 56,
+     "first_probe_rate_when_not_opt": 0.058823529411764705,
+     "n_probe_not_opt": 204,
+     "q_head_trained": true,
+     "q_head_argmax_eps_opt_at_first_error": 0.32710280373831774,
+     "misorders_chosen_at_first_error": 0.5794392523364486,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.2523364485981308
+    },
+    "unreliable+events": {
+     "episodes": 228,
+     "configs": 57,
+     "episodes_with_consequential_error": 59,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 22,
+      "belief_dependent": 0,
+      "value_estimate": 37,
+      "unlocalized": 0
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.3728813559322034,
+      "belief_dependent": 0.0,
+      "value_estimate": 0.6271186440677966,
+      "unlocalized": 0.0
+     },
+     "first_error_patterns": {
+      "prop (best probe)": 20,
+      "prop (best inspect)": 8,
+      "exact_b1 (best probe)": 7,
+      "exact_b1 (best inspect)": 7,
+      "prop (best build)": 4,
+      "build (best inspect)": 4,
+      "commit (best prop)": 3,
+      "inspect (best probe)": 2,
+      "use (best inspect)": 2,
+      "prop (best exact_b1)": 1,
+      "use (best prop)": 1
+     },
+     "first_error_at_first_decision": 40,
+     "first_error_query_index": {
+      "0": 52,
+      "1": 4,
+      "2": 2,
+      "3": 1
+     },
+     "first_error_step_in_query": {
+      "0": 44,
+      "1": 10,
+      "2": 4,
+      "3": 1
+     },
+     "first_error_belief_moved": 15,
+     "consequential_errors_total": 312,
+     "realized_regret_mean": 2.7560514313642437,
+     "gap_regret_mean": 2.8109163046796515,
+     "gap_regret_first_error_mean": 0.446209482535562,
+     "gap_regret_consequential_mean": 2.7162653772759544,
+     "realized_regret_mean_no_error_episodes": 1.3085565700976975,
+     "realized_regret_mean_error_episodes": 6.902265525500621,
+     "first_probe_rate_when_unique_opt": 0.375,
+     "n_probe_unique_opt": 32,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 132,
+     "q_head_trained": true,
+     "q_head_argmax_eps_opt_at_first_error": 0.3728813559322034,
+     "misorders_chosen_at_first_error": 0.4406779661016949,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.05084745762711865
+    }
+   },
+   "reproduces_eval_json": {
+    "first_probe_rate_when_unique_opt": [
+     0.6363636363636364,
+     0.6363636363636364,
+     true
+    ],
+    "n_probe_unique_opt": [
+     88,
+     88,
+     true
+    ],
+    "first_probe_rate_when_not_opt": [
+     0.03571428571428571,
+     0.03571428571428571,
+     true
+    ],
+    "n_probe_not_opt": [
+     336,
+     336,
+     true
+    ],
+    "gap_regret": [
+     2.7141221027345037,
+     2.7141221027345037,
+     true
+    ]
+   },
+   "cpu_s": 0.3716816610000002
+  },
+  "b-train-L4-s2": {
+   "rung": "L4",
+   "seed": 2,
+   "world_offset": 500,
+   "inputs": "public",
+   "train_split": "train",
+   "all": {
+    "episodes": 512,
+    "configs": 128,
+    "episodes_with_consequential_error": 158,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 50,
+     "belief_dependent": 10,
+     "value_estimate": 98,
+     "unlocalized": 0
+    },
+    "first_error_class_fraction": {
+     "deployment": 0.0,
+     "ranking": 0.31645569620253167,
+     "belief_dependent": 0.06329113924050633,
+     "value_estimate": 0.620253164556962,
+     "unlocalized": 0.0
+    },
+    "first_error_patterns": {
+     "inspect (best probe)": 33,
+     "inspect (best prop)": 24,
+     "prop (best inspect)": 15,
+     "prop (best probe)": 13,
+     "probe (best exact_b1)": 13,
+     "exact_b1 (best inspect)": 10,
+     "prop (best build)": 8,
+     "build (best prop)": 6,
+     "exact_b1 (best probe)": 6,
+     "inspect (best exact_b1)": 6,
+     "inspect (best build)": 4,
+     "build (best inspect)": 4,
+     "probe (best prop)": 4,
+     "exact_b1 (best prop)": 3,
+     "commit (best prop)": 3,
+     "prop (best exact_b1)": 2,
+     "use (best inspect)": 2,
+     "build (best exact_b1)": 1,
+     "use (best prop)": 1
+    },
+    "first_error_at_first_decision": 96,
+    "first_error_query_index": {
+     "0": 124,
+     "1": 21,
+     "2": 10,
+     "3": 1,
+     "4": 2
+    },
+    "first_error_step_in_query": {
+     "0": 118,
+     "1": 26,
+     "2": 11,
+     "3": 3
+    },
+    "first_error_belief_moved": 40,
+    "consequential_errors_total": 475,
+    "realized_regret_mean": 2.3440835519273246,
+    "gap_regret_mean": 2.4891482231230104,
+    "gap_regret_first_error_mean": 0.7186710746081355,
+    "gap_regret_consequential_mean": 2.4159639817193987,
+    "realized_regret_mean_no_error_episodes": -2.261844335895942,
+    "realized_regret_mean_error_episodes": 12.663694136037682,
+    "first_probe_rate_when_unique_opt": 0.7727272727272727,
+    "n_probe_unique_opt": 88,
+    "first_probe_rate_when_not_opt": 0.023809523809523808,
+    "n_probe_not_opt": 336,
+    "q_head_trained": true,
+    "q_head_argmax_eps_opt_at_first_error": 0.31645569620253167,
+    "misorders_chosen_at_first_error": 0.6012658227848101,
+    "bo_available": true,
+    "bo_resolves_first_error": 0.11392405063291139
+   },
+   "by_pair": {
+    "side_effect+correlated": {
+     "episodes": 284,
+     "configs": 71,
+     "episodes_with_consequential_error": 102,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 23,
+      "belief_dependent": 8,
+      "value_estimate": 71,
+      "unlocalized": 0
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.22549019607843138,
+      "belief_dependent": 0.0784313725490196,
+      "value_estimate": 0.696078431372549,
+      "unlocalized": 0.0
+     },
+     "first_error_patterns": {
+      "inspect (best probe)": 28,
+      "inspect (best prop)": 24,
+      "probe (best exact_b1)": 13,
+      "prop (best inspect)": 11,
+      "inspect (best exact_b1)": 6,
+      "inspect (best build)": 4,
+      "prop (best build)": 4,
+      "probe (best prop)": 4,
+      "exact_b1 (best inspect)": 3,
+      "exact_b1 (best probe)": 3,
+      "build (best exact_b1)": 1,
+      "exact_b1 (best prop)": 1
+     },
+     "first_error_at_first_decision": 68,
+     "first_error_query_index": {
+      "0": 78,
+      "1": 13,
+      "2": 9,
+      "4": 2
+     },
+     "first_error_step_in_query": {
+      "0": 83,
+      "1": 15,
+      "2": 3,
+      "3": 1
+     },
+     "first_error_belief_moved": 19,
+     "consequential_errors_total": 183,
+     "realized_regret_mean": -0.8442818583248501,
+     "gap_regret_mean": 1.968045456038312,
+     "gap_regret_first_error_mean": 0.9007782281460753,
+     "gap_regret_consequential_mean": 1.9197770873703353,
+     "realized_regret_mean_no_error_episodes": -5.271421020102818,
+     "realized_regret_mean_error_episodes": 7.055123312690739,
+     "first_probe_rate_when_unique_opt": 0.7857142857142857,
+     "n_probe_unique_opt": 56,
+     "first_probe_rate_when_not_opt": 0.0392156862745098,
+     "n_probe_not_opt": 204,
+     "q_head_trained": true,
+     "q_head_argmax_eps_opt_at_first_error": 0.22549019607843138,
+     "misorders_chosen_at_first_error": 0.6666666666666666,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.12745098039215685
+    },
+    "unreliable+events": {
+     "episodes": 228,
+     "configs": 57,
+     "episodes_with_consequential_error": 56,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 27,
+      "belief_dependent": 2,
+      "value_estimate": 27,
+      "unlocalized": 0
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.48214285714285715,
+      "belief_dependent": 0.03571428571428571,
+      "value_estimate": 0.48214285714285715,
+      "unlocalized": 0.0
+     },
+     "first_error_patterns": {
+      "prop (best probe)": 13,
+      "exact_b1 (best inspect)": 7,
+      "build (best prop)": 6,
+      "inspect (best probe)": 5,
+      "prop (best inspect)": 4,
+      "prop (best build)": 4,
+      "build (best inspect)": 4,
+      "commit (best prop)": 3,
+      "exact_b1 (best probe)": 3,
+      "exact_b1 (best prop)": 2,
+      "prop (best exact_b1)": 2,
+      "use (best inspect)": 2,
+      "use (best prop)": 1
+     },
+     "first_error_at_first_decision": 28,
+     "first_error_query_index": {
+      "0": 46,
+      "1": 8,
+      "2": 1,
+      "3": 1
+     },
+     "first_error_step_in_query": {
+      "0": 35,
+      "1": 11,
+      "2": 8,
+      "3": 2
+     },
+     "first_error_belief_moved": 21,
+     "consequential_errors_total": 292,
+     "realized_regret_mean": 6.315556255925648,
+     "gap_regret_mean": 3.138241143526757,
+     "gap_regret_first_error_mean": 0.49183584827140336,
+     "gap_regret_consequential_mean": 3.034021341347179,
+     "realized_regret_mean_no_error_episodes": 0.922707736927613,
+     "realized_regret_mean_error_episodes": 22.87930527856247,
+     "first_probe_rate_when_unique_opt": 0.75,
+     "n_probe_unique_opt": 32,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 132,
+     "q_head_trained": true,
+     "q_head_argmax_eps_opt_at_first_error": 0.48214285714285715,
+     "misorders_chosen_at_first_error": 0.48214285714285715,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.08928571428571429
+    }
+   },
+   "reproduces_eval_json": {
+    "first_probe_rate_when_unique_opt": [
+     0.7727272727272727,
+     0.7727272727272727,
+     true
+    ],
+    "n_probe_unique_opt": [
+     88,
+     88,
+     true
+    ],
+    "first_probe_rate_when_not_opt": [
+     0.023809523809523808,
+     0.023809523809523808,
+     true
+    ],
+    "n_probe_not_opt": [
+     336,
+     336,
+     true
+    ],
+    "gap_regret": [
+     2.4891482231230104,
+     2.4891482231230104,
+     true
+    ]
+   },
+   "cpu_s": 0.47961421200000043
+  },
+  "f-btrain-L4-s3": {
+   "rung": "L4",
+   "seed": 3,
+   "world_offset": 700,
+   "inputs": "public",
+   "train_split": "train",
+   "all": {
+    "episodes": 512,
+    "configs": 128,
+    "episodes_with_consequential_error": 187,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 48,
+     "belief_dependent": 30,
+     "value_estimate": 109,
+     "unlocalized": 0
+    },
+    "first_error_class_fraction": {
+     "deployment": 0.0,
+     "ranking": 0.25668449197860965,
+     "belief_dependent": 0.16042780748663102,
+     "value_estimate": 0.5828877005347594,
+     "unlocalized": 0.0
+    },
+    "first_error_patterns": {
+     "inspect (best prop)": 38,
+     "inspect (best probe)": 36,
+     "prop (best probe)": 20,
+     "prop (best inspect)": 20,
+     "inspect (best exact_b1)": 11,
+     "exact_b1 (best probe)": 10,
+     "exact_b1 (best inspect)": 9,
+     "probe (best exact_b1)": 9,
+     "prop (best build)": 8,
+     "inspect (best build)": 8,
+     "build (best inspect)": 4,
+     "exact_b1 (best prop)": 3,
+     "prop (best exact_b1)": 2,
+     "build (best probe)": 2,
+     "exact_b1 (best commit)": 2,
+     "use (best inspect)": 2,
+     "probe (best prop)": 1,
+     "commit (best prop)": 1,
+     "use (best probe)": 1
+    },
+    "first_error_at_first_decision": 128,
+    "first_error_query_index": {
+     "0": 152,
+     "1": 21,
+     "2": 7,
+     "3": 1,
+     "5": 3,
+     "6": 1,
+     "7": 2
+    },
+    "first_error_step_in_query": {
+     "0": 143,
+     "1": 26,
+     "2": 17,
+     "3": 1
+    },
+    "first_error_belief_moved": 44,
+    "consequential_errors_total": 508,
+    "realized_regret_mean": 2.9588382394273247,
+    "gap_regret_mean": 2.722655879559516,
+    "gap_regret_first_error_mean": 0.812691880049332,
+    "gap_regret_consequential_mean": 2.640664442602918,
+    "realized_regret_mean_no_error_episodes": -0.5102989456643372,
+    "realized_regret_mean_error_episodes": 8.988087357902138,
+    "first_probe_rate_when_unique_opt": 0.5454545454545454,
+    "n_probe_unique_opt": 88,
+    "first_probe_rate_when_not_opt": 0.011904761904761904,
+    "n_probe_not_opt": 336,
+    "q_head_trained": true,
+    "q_head_argmax_eps_opt_at_first_error": 0.25668449197860965,
+    "misorders_chosen_at_first_error": 0.6577540106951871,
+    "bo_available": true,
+    "bo_resolves_first_error": 0.20855614973262032
+   },
+   "by_pair": {
+    "side_effect+correlated": {
+     "episodes": 284,
+     "configs": 71,
+     "episodes_with_consequential_error": 122,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 38,
+      "belief_dependent": 21,
+      "value_estimate": 63,
+      "unlocalized": 0
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.3114754098360656,
+      "belief_dependent": 0.1721311475409836,
+      "value_estimate": 0.5163934426229508,
+      "unlocalized": 0.0
+     },
+     "first_error_patterns": {
+      "inspect (best prop)": 37,
+      "inspect (best probe)": 32,
+      "inspect (best exact_b1)": 11,
+      "probe (best exact_b1)": 9,
+      "prop (best inspect)": 8,
+      "inspect (best build)": 8,
+      "exact_b1 (best probe)": 6,
+      "prop (best build)": 4,
+      "exact_b1 (best inspect)": 3,
+      "exact_b1 (best prop)": 3,
+      "probe (best prop)": 1
+     },
+     "first_error_at_first_decision": 84,
+     "first_error_query_index": {
+      "0": 96,
+      "1": 16,
+      "2": 6,
+      "3": 1,
+      "5": 1,
+      "6": 1,
+      "7": 1
+     },
+     "first_error_step_in_query": {
+      "0": 97,
+      "1": 16,
+      "2": 9
+     },
+     "first_error_belief_moved": 25,
+     "consequential_errors_total": 207,
+     "realized_regret_mean": 2.8007396205483883,
+     "gap_regret_mean": 2.503232847113887,
+     "gap_regret_first_error_mean": 0.8917515068730056,
+     "gap_regret_consequential_mean": 2.4306623829384937,
+     "realized_regret_mean_no_error_episodes": -2.659833872488248,
+     "realized_regret_mean_error_episodes": 10.051665078515072,
+     "first_probe_rate_when_unique_opt": 0.6428571428571429,
+     "n_probe_unique_opt": 56,
+     "first_probe_rate_when_not_opt": 0.0196078431372549,
+     "n_probe_not_opt": 204,
+     "q_head_trained": true,
+     "q_head_argmax_eps_opt_at_first_error": 0.3114754098360656,
+     "misorders_chosen_at_first_error": 0.680327868852459,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.22950819672131148
+    },
+    "unreliable+events": {
+     "episodes": 228,
+     "configs": 57,
+     "episodes_with_consequential_error": 65,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 10,
+      "belief_dependent": 9,
+      "value_estimate": 46,
+      "unlocalized": 0
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.15384615384615385,
+      "belief_dependent": 0.13846153846153847,
+      "value_estimate": 0.7076923076923077,
+      "unlocalized": 0.0
+     },
+     "first_error_patterns": {
+      "prop (best probe)": 20,
+      "prop (best inspect)": 12,
+      "exact_b1 (best inspect)": 6,
+      "prop (best build)": 4,
+      "inspect (best probe)": 4,
+      "exact_b1 (best probe)": 4,
+      "build (best inspect)": 4,
+      "prop (best exact_b1)": 2,
+      "build (best probe)": 2,
+      "exact_b1 (best commit)": 2,
+      "use (best inspect)": 2,
+      "commit (best prop)": 1,
+      "use (best probe)": 1,
+      "inspect (best prop)": 1
+     },
+     "first_error_at_first_decision": 44,
+     "first_error_query_index": {
+      "0": 56,
+      "1": 5,
+      "2": 1,
+      "5": 2,
+      "7": 1
+     },
+     "first_error_step_in_query": {
+      "0": 46,
+      "1": 10,
+      "2": 8,
+      "3": 1
+     },
+     "first_error_belief_moved": 19,
+     "consequential_errors_total": 301,
+     "realized_regret_mean": 3.1557680980309115,
+     "gap_regret_mean": 2.9959722883952993,
+     "gap_regret_first_error_mean": 0.7142140992689666,
+     "gap_regret_consequential_mean": 2.9022459555182536,
+     "realized_regret_mean_no_error_episodes": 1.6260486503201634,
+     "realized_regret_mean_error_episodes": 6.991833789982479,
+     "first_probe_rate_when_unique_opt": 0.375,
+     "n_probe_unique_opt": 32,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 132,
+     "q_head_trained": true,
+     "q_head_argmax_eps_opt_at_first_error": 0.15384615384615385,
+     "misorders_chosen_at_first_error": 0.6153846153846154,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.16923076923076924
+    }
+   },
+   "reproduces_eval_json": {
+    "first_probe_rate_when_unique_opt": [
+     0.5454545454545454,
+     0.5454545454545454,
+     true
+    ],
+    "n_probe_unique_opt": [
+     88,
+     88,
+     true
+    ],
+    "first_probe_rate_when_not_opt": [
+     0.011904761904761904,
+     0.011904761904761904,
+     true
+    ],
+    "n_probe_not_opt": [
+     336,
+     336,
+     true
+    ],
+    "gap_regret": [
+     2.722655879559516,
+     2.722655879559516,
+     true
+    ]
+   },
+   "cpu_s": 0.5321041460000009
+  },
+  "f-btrain-L4-s4": {
+   "rung": "L4",
+   "seed": 4,
+   "world_offset": 700,
+   "inputs": "public",
+   "train_split": "train",
+   "all": {
+    "episodes": 512,
+    "configs": 128,
+    "episodes_with_consequential_error": 167,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 48,
+     "belief_dependent": 21,
+     "value_estimate": 98,
+     "unlocalized": 0
+    },
+    "first_error_class_fraction": {
+     "deployment": 0.0,
+     "ranking": 0.2874251497005988,
+     "belief_dependent": 0.12574850299401197,
+     "value_estimate": 0.5868263473053892,
+     "unlocalized": 0.0
+    },
+    "first_error_patterns": {
+     "inspect (best probe)": 32,
+     "prop (best probe)": 28,
+     "prop (best inspect)": 20,
+     "probe (best exact_b1)": 15,
+     "exact_b1 (best inspect)": 11,
+     "inspect (best exact_b1)": 10,
+     "inspect (best prop)": 10,
+     "prop (best build)": 8,
+     "build (best inspect)": 8,
+     "exact_b1 (best probe)": 6,
+     "exact_b1 (best prop)": 5,
+     "build (best exact_b1)": 3,
+     "exact_b1 (best commit)": 3,
+     "prop (best exact_b1)": 2,
+     "exact_b2 (best prop)": 2,
+     "use (best probe)": 2,
+     "use (best inspect)": 1,
+     "commit (best prop)": 1
+    },
+    "first_error_at_first_decision": 100,
+    "first_error_query_index": {
+     "0": 137,
+     "1": 19,
+     "2": 6,
+     "3": 1,
+     "5": 2,
+     "6": 1,
+     "7": 1
+    },
+    "first_error_step_in_query": {
+     "0": 114,
+     "1": 38,
+     "2": 11,
+     "3": 4
+    },
+    "first_error_belief_moved": 53,
+    "consequential_errors_total": 458,
+    "realized_regret_mean": 1.507338630052325,
+    "gap_regret_mean": 2.106557010652157,
+    "gap_regret_first_error_mean": 0.8108737801213929,
+    "gap_regret_consequential_mean": 2.035854313213473,
+    "realized_regret_mean_no_error_episodes": -1.3222483127905285,
+    "realized_regret_mean_error_episodes": 7.352892494009119,
+    "first_probe_rate_when_unique_opt": 0.5454545454545454,
+    "n_probe_unique_opt": 88,
+    "first_probe_rate_when_not_opt": 0.011904761904761904,
+    "n_probe_not_opt": 336,
+    "q_head_trained": true,
+    "q_head_argmax_eps_opt_at_first_error": 0.2874251497005988,
+    "misorders_chosen_at_first_error": 0.5688622754491018,
+    "bo_available": true,
+    "bo_resolves_first_error": 0.16167664670658682
+   },
+   "by_pair": {
+    "side_effect+correlated": {
+     "episodes": 284,
+     "configs": 71,
+     "episodes_with_consequential_error": 100,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 22,
+      "belief_dependent": 17,
+      "value_estimate": 61,
+      "unlocalized": 0
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.22,
+      "belief_dependent": 0.17,
+      "value_estimate": 0.61,
+      "unlocalized": 0.0
+     },
+     "first_error_patterns": {
+      "inspect (best probe)": 32,
+      "probe (best exact_b1)": 15,
+      "prop (best inspect)": 11,
+      "inspect (best exact_b1)": 10,
+      "inspect (best prop)": 10,
+      "exact_b1 (best inspect)": 5,
+      "prop (best probe)": 4,
+      "prop (best build)": 4,
+      "build (best inspect)": 4,
+      "exact_b1 (best probe)": 2,
+      "exact_b2 (best prop)": 2,
+      "exact_b1 (best prop)": 1
+     },
+     "first_error_at_first_decision": 60,
+     "first_error_query_index": {
+      "0": 80,
+      "1": 14,
+      "2": 3,
+      "3": 1,
+      "5": 1,
+      "6": 1
+     },
+     "first_error_step_in_query": {
+      "0": 72,
+      "1": 21,
+      "2": 5,
+      "3": 2
+     },
+     "first_error_belief_moved": 28,
+     "consequential_errors_total": 175,
+     "realized_regret_mean": 1.4332783529427557,
+     "gap_regret_mean": 1.8511030469796994,
+     "gap_regret_first_error_mean": 0.9786225308595121,
+     "gap_regret_consequential_mean": 1.7953093899330796,
+     "realized_regret_mean_no_error_episodes": -3.1136613966643027,
+     "realized_regret_mean_error_episodes": 9.799647492219743,
+     "first_probe_rate_when_unique_opt": 0.6428571428571429,
+     "n_probe_unique_opt": 56,
+     "first_probe_rate_when_not_opt": 0.0196078431372549,
+     "n_probe_not_opt": 204,
+     "q_head_trained": true,
+     "q_head_argmax_eps_opt_at_first_error": 0.22,
+     "misorders_chosen_at_first_error": 0.63,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.21
+    },
+    "unreliable+events": {
+     "episodes": 228,
+     "configs": 57,
+     "episodes_with_consequential_error": 67,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 26,
+      "belief_dependent": 4,
+      "value_estimate": 37,
+      "unlocalized": 0
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.3880597014925373,
+      "belief_dependent": 0.05970149253731343,
+      "value_estimate": 0.5522388059701493,
+      "unlocalized": 0.0
+     },
+     "first_error_patterns": {
+      "prop (best probe)": 24,
+      "prop (best inspect)": 9,
+      "exact_b1 (best inspect)": 6,
+      "prop (best build)": 4,
+      "exact_b1 (best probe)": 4,
+      "build (best inspect)": 4,
+      "exact_b1 (best prop)": 4,
+      "build (best exact_b1)": 3,
+      "exact_b1 (best commit)": 3,
+      "prop (best exact_b1)": 2,
+      "use (best probe)": 2,
+      "use (best inspect)": 1,
+      "commit (best prop)": 1
+     },
+     "first_error_at_first_decision": 40,
+     "first_error_query_index": {
+      "0": 57,
+      "1": 5,
+      "2": 3,
+      "5": 1,
+      "7": 1
+     },
+     "first_error_step_in_query": {
+      "0": 42,
+      "1": 17,
+      "2": 6,
+      "3": 2
+     },
+     "first_error_belief_moved": 25,
+     "consequential_errors_total": 283,
+     "realized_regret_mean": 1.5995891506624902,
+     "gap_regret_mean": 2.424754053121358,
+     "gap_regret_first_error_mean": 0.6019235818335601,
+     "gap_regret_consequential_mean": 2.3354804457206297,
+     "realized_regret_mean_no_error_episodes": 0.7250809259223561,
+     "realized_regret_mean_error_episodes": 3.7010193623514693,
+     "first_probe_rate_when_unique_opt": 0.375,
+     "n_probe_unique_opt": 32,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 132,
+     "q_head_trained": true,
+     "q_head_argmax_eps_opt_at_first_error": 0.3880597014925373,
+     "misorders_chosen_at_first_error": 0.47761194029850745,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.08955223880597014
+    }
+   },
+   "reproduces_eval_json": {
+    "first_probe_rate_when_unique_opt": [
+     0.5454545454545454,
+     0.5454545454545454,
+     true
+    ],
+    "n_probe_unique_opt": [
+     88,
+     88,
+     true
+    ],
+    "first_probe_rate_when_not_opt": [
+     0.011904761904761904,
+     0.011904761904761904,
+     true
+    ],
+    "n_probe_not_opt": [
+     336,
+     336,
+     true
+    ],
+    "gap_regret": [
+     2.106557010652157,
+     2.106557010652157,
+     true
+    ]
+   },
+   "cpu_s": 0.4965132179999987
+  },
+  "f-btrain-L4-s5": {
+   "rung": "L4",
+   "seed": 5,
+   "world_offset": 700,
+   "inputs": "public",
+   "train_split": "train",
+   "all": {
+    "episodes": 512,
+    "configs": 128,
+    "episodes_with_consequential_error": 212,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 80,
+     "belief_dependent": 21,
+     "value_estimate": 111,
+     "unlocalized": 0
+    },
+    "first_error_class_fraction": {
+     "deployment": 0.0,
+     "ranking": 0.37735849056603776,
+     "belief_dependent": 0.09905660377358491,
+     "value_estimate": 0.5235849056603774,
+     "unlocalized": 0.0
+    },
+    "first_error_patterns": {
+     "inspect (best prop)": 42,
+     "inspect (best probe)": 32,
+     "prop (best inspect)": 27,
+     "prop (best probe)": 22,
+     "exact_b1 (best probe)": 18,
+     "inspect (best exact_b1)": 14,
+     "inspect (best build)": 12,
+     "prop (best build)": 8,
+     "exact_b1 (best inspect)": 7,
+     "exact_b1 (best prop)": 6,
+     "build (best inspect)": 4,
+     "probe (best exact_b1)": 4,
+     "build (best exact_b1)": 3,
+     "prop (best commit_infeasible)": 2,
+     "prop (best exact_b1)": 2,
+     "probe (best prop)": 2,
+     "exact_b2 (best prop)": 2,
+     "use (best prop)": 2,
+     "use (best commit_infeasible)": 1,
+     "use (best probe)": 1,
+     "use (best inspect)": 1
+    },
+    "first_error_at_first_decision": 144,
+    "first_error_query_index": {
+     "0": 181,
+     "1": 21,
+     "2": 5,
+     "3": 2,
+     "5": 2,
+     "7": 1
+    },
+    "first_error_step_in_query": {
+     "0": 160,
+     "1": 34,
+     "2": 15,
+     "3": 3
+    },
+    "first_error_belief_moved": 52,
+    "consequential_errors_total": 606,
+    "realized_regret_mean": 0.7821358956773233,
+    "gap_regret_mean": 2.6304507644932986,
+    "gap_regret_first_error_mean": 0.8125492635334801,
+    "gap_regret_consequential_mean": 2.5512090096152367,
+    "realized_regret_mean_no_error_episodes": -0.7780667494122916,
+    "realized_regret_mean_error_episodes": 2.9899698274079105,
+    "first_probe_rate_when_unique_opt": 0.5454545454545454,
+    "n_probe_unique_opt": 88,
+    "first_probe_rate_when_not_opt": 0.0,
+    "n_probe_not_opt": 336,
+    "q_head_trained": true,
+    "q_head_argmax_eps_opt_at_first_error": 0.37735849056603776,
+    "misorders_chosen_at_first_error": 0.5047169811320755,
+    "bo_available": true,
+    "bo_resolves_first_error": 0.19339622641509435
+   },
+   "by_pair": {
+    "side_effect+correlated": {
+     "episodes": 284,
+     "configs": 71,
+     "episodes_with_consequential_error": 131,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 58,
+      "belief_dependent": 9,
+      "value_estimate": 64,
+      "unlocalized": 0
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.44274809160305345,
+      "belief_dependent": 0.06870229007633588,
+      "value_estimate": 0.48854961832061067,
+      "unlocalized": 0.0
+     },
+     "first_error_patterns": {
+      "inspect (best prop)": 42,
+      "inspect (best probe)": 28,
+      "inspect (best exact_b1)": 14,
+      "inspect (best build)": 12,
+      "prop (best inspect)": 11,
+      "exact_b1 (best probe)": 6,
+      "prop (best build)": 4,
+      "probe (best exact_b1)": 4,
+      "exact_b1 (best prop)": 3,
+      "prop (best probe)": 2,
+      "probe (best prop)": 2,
+      "exact_b2 (best prop)": 2,
+      "exact_b1 (best inspect)": 1
+     },
+     "first_error_at_first_decision": 88,
+     "first_error_query_index": {
+      "0": 108,
+      "1": 18,
+      "2": 2,
+      "3": 2,
+      "5": 1
+     },
+     "first_error_step_in_query": {
+      "0": 103,
+      "1": 17,
+      "2": 9,
+      "3": 2
+     },
+     "first_error_belief_moved": 28,
+     "consequential_errors_total": 284,
+     "realized_regret_mean": 1.2403515923793729,
+     "gap_regret_mean": 2.5858278359235256,
+     "gap_regret_first_error_mean": 0.9564770837646185,
+     "gap_regret_consequential_mean": 2.5126446677863226,
+     "realized_regret_mean_no_error_episodes": -2.714420928459045,
+     "realized_regret_mean_error_episodes": 5.859284383892945,
+     "first_probe_rate_when_unique_opt": 0.7857142857142857,
+     "n_probe_unique_opt": 56,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 204,
+     "q_head_trained": true,
+     "q_head_argmax_eps_opt_at_first_error": 0.44274809160305345,
+     "misorders_chosen_at_first_error": 0.4732824427480916,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.19083969465648856
+    },
+    "unreliable+events": {
+     "episodes": 228,
+     "configs": 57,
+     "episodes_with_consequential_error": 81,
+     "first_error_class_counts": {
+      "deployment": 0,
+      "ranking": 22,
+      "belief_dependent": 12,
+      "value_estimate": 47,
+      "unlocalized": 0
+     },
+     "first_error_class_fraction": {
+      "deployment": 0.0,
+      "ranking": 0.2716049382716049,
+      "belief_dependent": 0.14814814814814814,
+      "value_estimate": 0.5802469135802469,
+      "unlocalized": 0.0
+     },
+     "first_error_patterns": {
+      "prop (best probe)": 20,
+      "prop (best inspect)": 16,
+      "exact_b1 (best probe)": 12,
+      "exact_b1 (best inspect)": 6,
+      "prop (best build)": 4,
+      "inspect (best probe)": 4,
+      "build (best inspect)": 4,
+      "build (best exact_b1)": 3,
+      "exact_b1 (best prop)": 3,
+      "prop (best commit_infeasible)": 2,
+      "prop (best exact_b1)": 2,
+      "use (best prop)": 2,
+      "use (best commit_infeasible)": 1,
+      "use (best probe)": 1,
+      "use (best inspect)": 1
+     },
+     "first_error_at_first_decision": 56,
+     "first_error_query_index": {
+      "0": 73,
+      "1": 3,
+      "2": 3,
+      "5": 1,
+      "7": 1
+     },
+     "first_error_step_in_query": {
+      "0": 57,
+      "1": 17,
+      "2": 6,
+      "3": 1
+     },
+     "first_error_belief_moved": 24,
+     "consequential_errors_total": 322,
+     "realized_regret_mean": 0.21137599276775298,
+     "gap_regret_mean": 2.686033710606525,
+     "gap_regret_first_error_mean": 0.6332707506139921,
+     "gap_regret_consequential_mean": 2.5992452950512517,
+     "realized_regret_mean_no_error_episodes": 1.2373222940853497,
+     "realized_regret_mean_error_episodes": -1.6505265540678855,
+     "first_probe_rate_when_unique_opt": 0.125,
+     "n_probe_unique_opt": 32,
+     "first_probe_rate_when_not_opt": 0.0,
+     "n_probe_not_opt": 132,
+     "q_head_trained": true,
+     "q_head_argmax_eps_opt_at_first_error": 0.2716049382716049,
+     "misorders_chosen_at_first_error": 0.5555555555555556,
+     "bo_available": true,
+     "bo_resolves_first_error": 0.19753086419753085
+    }
+   },
+   "reproduces_eval_json": {
+    "first_probe_rate_when_unique_opt": [
+     0.5454545454545454,
+     0.5454545454545454,
+     true
+    ],
+    "n_probe_unique_opt": [
+     88,
+     88,
+     true
+    ],
+    "first_probe_rate_when_not_opt": [
+     0.0,
+     0.0,
+     true
+    ],
+    "n_probe_not_opt": [
+     336,
+     336,
+     true
+    ],
+    "gap_regret": [
+     2.6304507644932986,
+     2.6304507644932986,
+     true
+    ]
+   },
+   "cpu_s": 0.3885460529999989
+  }
+ },
+ "by_rung": {
+  "L1": {
+   "side_effect+correlated": {
+    "models": 6,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 0,
+     "belief_dependent": 162,
+     "value_estimate": 0,
+     "unlocalized": 441
+    },
+    "episodes_with_consequential_error": 603,
+    "realized_regret_per_model": [
+     -0.6026526329727374,
+     -0.20385263297273823,
+     -0.29592199916992135,
+     1.9630677895624737,
+     0.7439896205483885,
+     1.2918498318159939
+    ],
+    "gap_regret_per_model": [
+     1.4957992752084694,
+     1.9165841018688363,
+     1.8574759649132837,
+     1.9931870723277976,
+     2.0944909959103626,
+     2.333492373770022
+    ],
+    "unique_opt_probe_rate_per_model": [
+     0.7857142857142857,
+     0.7142857142857143,
+     0.7857142857142857,
+     0.7142857142857143,
+     0.8571428571428571,
+     0.7857142857142857
+    ],
+    "n_probe_unique_opt_per_model": [
+     56,
+     56,
+     56,
+     56,
+     56,
+     56
+    ]
+   },
+   "unreliable+events": {
+    "models": 6,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 0,
+     "belief_dependent": 96,
+     "value_estimate": 0,
+     "unlocalized": 349
+    },
+    "episodes_with_consequential_error": 445,
+    "realized_regret_per_model": [
+     2.9162316945221387,
+     3.524531694522138,
+     4.570169413820384,
+     3.1557751155747713,
+     4.046775992767754,
+     2.779352747153718
+    ],
+    "gap_regret_per_model": [
+     2.281809988977423,
+     3.609493110124541,
+     4.122549278360939,
+     3.777199826561189,
+     4.178124907505974,
+     3.020102172049917
+    ],
+    "unique_opt_probe_rate_per_model": [
+     0.25,
+     0.375,
+     0.5,
+     0.375,
+     0.375,
+     0.375
+    ],
+    "n_probe_unique_opt_per_model": [
+     32,
+     32,
+     32,
+     32,
+     32,
+     32
+    ]
+   }
+  },
+  "L4": {
+   "side_effect+correlated": {
+    "models": 6,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 197,
+     "belief_dependent": 81,
+     "value_estimate": 388,
+     "unlocalized": 0
+    },
+    "episodes_with_consequential_error": 666,
+    "realized_regret_per_model": [
+     -1.3197360836769632,
+     -0.5641519287473856,
+     -0.8442818583248501,
+     2.8007396205483883,
+     1.4332783529427557,
+     1.2403515923793729
+    ],
+    "gap_regret_per_model": [
+     1.79844852333668,
+     2.6364140814545967,
+     1.968045456038312,
+     2.503232847113887,
+     1.8511030469796994,
+     2.5858278359235256
+    ],
+    "unique_opt_probe_rate_per_model": [
+     0.7857142857142857,
+     0.7857142857142857,
+     0.7857142857142857,
+     0.6428571428571429,
+     0.6428571428571429,
+     0.7857142857142857
+    ],
+    "n_probe_unique_opt_per_model": [
+     56,
+     56,
+     56,
+     56,
+     56,
+     56
+    ]
+   },
+   "unreliable+events": {
+    "models": 6,
+    "first_error_class_counts": {
+     "deployment": 0,
+     "ranking": 126,
+     "belief_dependent": 35,
+     "value_estimate": 239,
+     "unlocalized": 0
+    },
+    "episodes_with_consequential_error": 400,
+    "realized_regret_per_model": [
+     3.2659856418905595,
+     2.7560514313642437,
+     6.315556255925648,
+     3.1557680980309115,
+     1.5995891506624902,
+     0.21137599276775298
+    ],
+    "gap_regret_per_model": [
+     3.1436643562740674,
+     2.8109163046796515,
+     3.138241143526757,
+     2.9959722883952993,
+     2.424754053121358,
+     2.686033710606525
+    ],
+    "unique_opt_probe_rate_per_model": [
+     0.375,
+     0.375,
+     0.75,
+     0.375,
+     0.375,
+     0.125
+    ],
+    "n_probe_unique_opt_per_model": [
+     32,
+     32,
+     32,
+     32,
+     32,
+     32
+    ]
+   }
+  }
+ },
+ "cpu_s": 8.98126349,
+ "cpu_s_label_load": 1.474132001
+}
