@@ -25,3 +25,4 @@
     - The margin over the strongest individual simple family is only +.010–.012.
   - Generator revisions v1 (headroom .0016) → v2 (.0084) → v3 are documented in portworld.md.
   - **Disclosure:** ~3,000 core-s were spent **unmetered** on the pro6000 by a builder analysis run whose wrapper was killed (no receipt; marker file left). Added to the local/unmetered estimate. The registry addendum reports the margin vs the strongest individual family alongside GA (gates unchanged).
+- 2026-09-27T06:59Z: GA one-job smoke passed (40 episodes on non-gate seeds 304.99M; pipeline OK; numbers not used). **Registered A-HS gate run launched:** 4 chunks × 160 episodes on dev_gate seeds from 305M (source-8e8ac6fa); analysis follows.
