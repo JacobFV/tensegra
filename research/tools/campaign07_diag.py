@@ -28,14 +28,18 @@ Subcommands
            prediction-error RMS (the observed error scale), covariance for Mahalanobis distance, a kNN sample, and the
            reference's own distance quantiles.
 
-Interventions (names; groups from research/campaigns/extended-07/factor-contract.json if present, else the
-PROVISIONAL groups below, and every record says which)
+Interventions (names; groups and dependencies from research/campaigns/extended-07/factor-contract.json (P0a) if
+present, else the PROVISIONAL groups below; every file header says which)
   none                  predicted phi (identity; bit-identical to the unmodified model)
   pred                  phi := the prediction passed through the replacement path (identity check)
   exact                 all 23 coordinates replaced by the exact targets
   iso:<G>               group G replaced by exact values, the rest predicted
-  dep:<G>               group G plus its upstream dependency closure replaced by exact values (dependency-consistent)
+  dep:<G>               dependency-consistent: group G plus every coordinate computed from it (the contract's
+                        replacement_closure) replaced by exact values
+  up:<G>                group G plus every coordinate it is computed from (upstream inputs)
   keep:<G>              everything exact except group G (predicted): leave-one-group-predicted
+  (duplicates by definition -- p_probe_resolves == belief_H -- are always replaced together; G = G1..G4 of the
+  contract; the injection point is the auxiliary output, before the fusion layer shared by the policy and value heads)
   gauss:<s>             exact + s * sigma_c * N(0,1) per coordinate (sigma_c = the LRN's own error RMS on training
                         states; deterministic per decision); needs --support-ref
   gauss_pred:<s>        predicted + s * sigma_c * N(0,1)
@@ -91,10 +95,10 @@ HIST_P_LOW, HIST_P_UNSUPPORTED = 0.05, 1e-3
 # ------------------------------------------------------------------------------------------------ factor groups
 
 PROVISIONAL_GROUPS = {  # design.md P0a thematic groups (provisional until factor-contract.json is merged)
-    "prob": FEATS[0:8],     # posterior / outcome probabilities
-    "cost": FEATS[8:11],    # side / event costs
-    "strat": FEATS[11:16],  # one-query strategy-cost estimates (myopic closed forms, not Q*)
-    "build": FEATS[16:23],  # amortized build quantities and bookkeeping
+    "G1": FEATS[0:8],     # posterior / outcome probabilities
+    "G2": FEATS[8:11],    # side / event costs
+    "G3": FEATS[11:16],   # one-query strategy-cost estimates (myopic closed forms, not Q*)
+    "G4": FEATS[16:23],   # amortized build quantities and bookkeeping
 }
 PROVISIONAL_DEPS = {  # coordinate -> direct inputs among the coordinates (from campaign06_probeworld.factor_features)
     "p_probe_resolves": ["belief_H"], "p_probe_false_solved": ["belief_H"], "p_H_given_solved": ["belief_H"],
@@ -114,38 +118,97 @@ PROB_COORDS = ("belief_H", "belief_M", "belief_F", "belief_X", "p_probe_resolves
                "p_H_given_solved", "p_b1_resolves", "event_hazard_active", "candidate_trust")
 
 
-def load_groups(path=CONTRACT):
-    """(groups {name: [coords]}, deps {coord: [coords]}, provenance).  Reads factor-contract.json when merged
-    (accepted forms: {"groups": {name: [coord] | {"coordinates": [...]}}} and/or {"coordinates": [{"name", "group",
-    "depends_on" | "dependencies" | "inputs"}]}); otherwise the provisional groups defined here."""
-    if Path(path).exists():
-        d = json.loads(Path(path).read_text())
-        groups, deps = {}, {}
-        for name, v in (d.get("groups") or {}).items():
-            coords = v.get("coordinates", v.get("members")) if isinstance(v, dict) else v
-            if coords:
-                groups[name] = [c for c in coords if c in FI]
-        for c in d.get("coordinates", []) if isinstance(d.get("coordinates"), list) else []:
-            if not isinstance(c, dict) or c.get("name") not in FI:
-                continue
-            if c.get("group") and c["name"] not in groups.get(c["group"], []):
-                groups.setdefault(c["group"], []).append(c["name"])
-            dd = c.get("depends_on", c.get("dependencies", c.get("inputs")))
-            if isinstance(dd, list):
-                deps[c["name"]] = [x for x in dd if x in FI]
-        if groups and sorted(x for g in groups.values() for x in g) == sorted(FEATS):
-            return groups, (deps or PROVISIONAL_DEPS), f"factor-contract.json sha256:{_sha_file(path)[:16]}"
-    return {k: list(v) for k, v in PROVISIONAL_GROUPS.items()}, PROVISIONAL_DEPS, "provisional (campaign07_diag.py)"
+class Contract:
+    """Factor groups and dependencies: research/campaigns/extended-07/factor-contract.json (P0a, merged) when present,
+    else the PROVISIONAL definitions above.  groups: short name (G1..G4; the contract's long names are accepted too)
+    -> coordinates; up: coordinate -> its upstream coordinate inputs (transitive); down: coordinate -> the coordinates
+    that must be replaced with it for a dependency-consistent vector (the contract's replacement_closure, transitive);
+    dups: coordinates identical by definition (p_probe_resolves == belief_H), always replaced together."""
+
+    def __init__(self, path=CONTRACT):
+        path = Path(path)
+        if path.exists():
+            d = json.loads(path.read_text())
+            names = {c["index"]: c["name"] for c in d["coordinates"]}
+            assert [names[j] for j in range(NF)] == list(FEATS), "factor-contract coordinate order != FACTOR_FEATURES"
+            self.long = {}
+            self.groups = {}
+            for gname, idx in d["groups"].items():
+                short = gname.split("_")[0]
+                self.groups[short] = [names[j] for j in idx]
+                self.long[gname] = short
+            direct = {c["name"]: [names[int(x[1:])] for x in c["depends_on"] if x[:1] == "f" and x[1:].isdigit()]
+                      for c in d["coordinates"]}
+            down = {names[int(k)]: [names[j] for j in v] for k, v in d["replacement_closure"].items()}
+            self.dups = {}
+            for c in d["coordinates"]:
+                if c.get("duplicate_of"):
+                    self.dups.setdefault(c["name"], set()).add(c["duplicate_of"])
+                    self.dups.setdefault(c["duplicate_of"], set()).add(c["name"])
+            self.constant = sorted(d.get("b6_constants", {}))
+            self.source = f"factor-contract.json {d.get('version')} sha256:{_sha_file(path)[:16]}"
+        else:
+            self.groups = {k: list(v) for k, v in PROVISIONAL_GROUPS.items()}
+            self.long = {}
+            direct = PROVISIONAL_DEPS
+            inv = {}
+            for c, ins in direct.items():
+                for x in ins:
+                    inv.setdefault(x, []).append(c)
+            down = {c: inv.get(c, []) for c in FEATS}
+            self.dups = {"belief_H": {"p_probe_resolves"}, "p_probe_resolves": {"belief_H"}}
+            self.constant = []
+            self.source = "provisional (campaign07_diag.py)"
+        assert sorted(x for g in self.groups.values() for x in g) == sorted(FEATS)
+        self.up = {c: _closure([c], direct) for c in FEATS}
+        self.down = {c: _closure([c], down) for c in FEATS}
+
+    def group(self, g):
+        g = self.long.get(g, g)
+        if g not in self.groups:
+            raise ValueError(f"unknown factor group {g!r} (have {sorted(self.groups)})")
+        return self.groups[g]
+
+    def with_dups(self, coords):
+        out = set(coords)
+        for c in coords:
+            out |= self.dups.get(c, set())
+        return _order(out)
+
+    def iso(self, g):
+        return self.with_dups(self.group(g))
+
+    def dep(self, g):
+        """Dependency-consistent: the group and every coordinate computed from it (replacement_closure)."""
+        return self.with_dups(set().union(*(self.down[c] for c in self.group(g))))
+
+    def upstream(self, g):
+        """The group and every coordinate it is computed from."""
+        return self.with_dups(set().union(*(self.up[c] for c in self.group(g))))
+
+    def keep(self, g):
+        """Everything exact except the group (and its duplicates) kept predicted."""
+        kept = set(self.with_dups(self.group(g)))
+        return [c for c in FEATS if c not in kept]
 
 
-def dep_closure(coords, deps):
+def _order(cs):
+    return sorted(set(cs), key=FI.get)
+
+
+def _closure(coords, edges):
     out, todo = set(coords), list(coords)
     while todo:
-        for d in deps.get(todo.pop(), []):
+        for d in edges.get(todo.pop(), []):
             if d not in out:
                 out.add(d)
                 todo.append(d)
-    return sorted(out, key=FI.get)
+    return _order(out)
+
+
+def load_groups(path=CONTRACT):
+    c = Contract(path)
+    return c.groups, c.down, c.source
 
 
 # ------------------------------------------------------------------------------------------------ io guards
@@ -252,7 +315,8 @@ class Intervener:
             what = ("RAWF's fusion channel was never trained (it is fed zeros)" if kind == "RAWF" else
                     f"{kind} is not the learned-factor consumer")
             raise ValueError(f"refusing factor injection into {kind}: {what}; interventions are LRN-only")
-        self.groups, self.deps, self.group_source = load_groups()
+        self.contract = Contract()
+        self.group_source = self.contract.source
         self.support = support
         self.seed = seed
         for n in self.names:
@@ -267,15 +331,10 @@ class Intervener:
             return []
         if base == "exact":
             return list(FEATS)
-        if base in ("iso", "dep", "keep"):
+        if base in ("iso", "dep", "up", "keep"):
             g = name.split(":", 1)[1]
-            if g not in self.groups:
-                raise ValueError(f"unknown factor group {g!r} (have {sorted(self.groups)})")
-            if base == "iso":
-                return list(self.groups[g])
-            if base == "dep":
-                return dep_closure(self.groups[g], self.deps)
-            return [c for c in FEATS if c not in self.groups[g]]
+            return {"iso": self.contract.iso, "dep": self.contract.dep, "up": self.contract.upstream,
+                    "keep": self.contract.keep}[base](g)
         if base in ("gauss", "gauss_pred", "scale_err", "mirror"):
             if base != "mirror":
                 float(name.split(":", 1)[1])
@@ -545,10 +604,13 @@ def episode_record_forced(t, meta_rec):
 
 # ------------------------------------------------------------------------------------------------ run: pool protocols
 
-def shards(labels, pool, n_configs=None):
-    """(part, [(idx, cfg, solver)], selected idx set) shard by shard; stops after the shard holding the n-th config."""
+def shards(labels, pool, n_configs=None, only=None):
+    """(part, [(idx, cfg, solver)], selected idx set) shard by shard; stops after the shard holding the n-th config.
+    only: shard indices to process (subsampling by whole shards keeps the historical batch composition)."""
     seen = 0
-    for part in T.pool_parts(labels, pool):
+    for j, part in enumerate(T.pool_parts(labels, pool)):
+        if only is not None and j not in only:
+            continue
         if n_configs is not None and seen >= n_configs:
             break
         rows = T.load_pool(labels, part)
@@ -560,7 +622,7 @@ def shards(labels, pool, n_configs=None):
 def run_pool(a, models, writers, headers, ivns, supports, report):
     protos = a.protocols
     per_model_b = {name: [] for name in models}
-    for part, rows, sel in shards(a.labels, a.pool, a.n_configs):
+    for part, rows, sel in shards(a.labels, a.pool, a.n_configs, set(a.shards) if a.shards else None):
         t0 = time.process_time()
         items = T.eval_items(rows, a.pool, a.worlds, a.world_offset)  # (cfg, solver, ws): the historical eval order
         ids = [f"{a.pool}:{idx}" for idx, _, _ in rows for _ in range(a.worlds)]
@@ -699,6 +761,9 @@ def run_cf(a, models, writers, ivns, supports, report):
     for path in a.cf:
         fam_file = Path(path).stem  # cf_SCE
         sets = json.loads(Path(path).read_text())
+        if a.octets:
+            lo, hi = (int(x) for x in a.octets.split(":"))
+            sets = [cs for cs in sets if lo <= cs["index"] < hi]
         if a.n_octets is not None:
             sets = sets[:a.n_octets]
         for name, (model, meta) in models.items():
@@ -806,9 +871,9 @@ def cmd_run(a):
     clash = [str(p) for p in list(paths.values()) + [summary_path] if p.exists()]
     if clash:
         raise SystemExit(f"refusing to overwrite existing outputs: {clash}")
-    groups, deps, gsrc = load_groups()
+    groups, _, gsrc = load_groups()
     header = {"version": VERSION, "tag": a.tag, "labels": a.labels, "pool": a.pool, "cf": a.cf,
-              "worlds": a.worlds, "world_offset": a.world_offset, "n_configs": a.n_configs, "n_octets": a.n_octets,
+              "worlds": a.worlds, "world_offset": a.world_offset, "n_configs": a.n_configs, "shards": a.shards, "n_octets": a.n_octets, "octets": a.octets,
               "eps": EPS, "actions": list(pw.ACTIONS), "features": list(FEATS), "ivs": a.ivs, "ivs_applied_to": sorted(ivns), "rollout": a.rollout,
               "groups": groups, "group_source": gsrc, "latent": "z_pre = trunk output before fusion, float16 base64"
               if a.latent else None, "noise_seed": a.noise_seed,
@@ -823,7 +888,7 @@ def cmd_run(a):
             run_pool(a, models, writers, header, ivns, supports, report)
             if a.check_historical:
                 report["historical_check"] = {n: historical_check(runs[n], n, report["B_summary"][n], a.pool)
-                                              for n in models} if a.n_configs is None else "skipped (subset)"
+                                              for n in models} if a.n_configs is None and not a.shards else "skipped (subset)"
         if a.cf:
             run_cf(a, models, writers, ivns, supports, report)
     finally:
@@ -880,9 +945,10 @@ def cmd_support(a):
     mean = P.mean(0)
     d = P - mean
     maha = np.sqrt(np.maximum(np.einsum("ij,jk,ik->i", d, prec, d), 0))
+    U = np.unique(P, axis=0)  # distinct prediction vectors (pi* and own histories share states, e.g. every s0)
     srng = np.random.default_rng(a.sample_seed)
-    ksel = srng.choice(len(P), size=min(a.knn_size, len(P)), replace=False)
-    K = P[ksel]
+    ksel = np.sort(srng.choice(len(U), size=min(a.knn_size, len(U)), replace=False))
+    K = U[ksel]
     # leave-one-out nearest-neighbour distance of the kNN sample (reference scale for kNN distances)
     nn = []
     for j in range(len(K)):
@@ -892,7 +958,7 @@ def cmd_support(a):
     nn = np.array(nn)
     q = lambda x: {f"q{p}": float(np.quantile(x, p / 100)) for p in (50, 90, 95, 99)}  # noqa: E731
     ref = {"version": VERSION, "model": name, "run": run, "model_sha256": _sha_file(Path(run) / "model.pt"),
-           "labels": a.labels, "pool": a.pool, "configs": ids, "n_states": int(len(P)),
+           "labels": a.labels, "pool": a.pool, "configs": ids, "n_states": int(len(P)), "n_distinct": int(len(U)),
            "sources": {s: srcs.count(s) for s in sorted(set(srcs))},
            "world_seed_base": T.TRAIN_WORLD_BASE + meta["seed"] * 100_000_000 + SUPPORT_WORLD_OFFSET,
            "features": list(FEATS), "min": P.min(0).tolist(), "max": P.max(0).tolist(), "mean": mean.tolist(),
@@ -919,7 +985,9 @@ def main(argv=None):
     s.add_argument("--rollout", nargs="*", default=[])
     s.add_argument("--support-ref", action="append", default=None, metavar="NAME=FILE")
     s.add_argument("--n-configs", type=int, default=None)
+    s.add_argument("--shards", type=int, nargs="*", default=None, help="process only these shard indices")
     s.add_argument("--n-octets", type=int, default=None)
+    s.add_argument("--octets", default=None, metavar="LO:HI", help="octet index range (subsampling / splitting)")
     s.add_argument("--worlds", type=int, default=1)
     s.add_argument("--world-offset", type=int, default=0, help="b6c eval used --world-offset 0 --worlds 1")
     s.add_argument("--no-latent", dest="latent", action="store_false")

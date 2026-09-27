@@ -29,6 +29,7 @@ import argparse
 import gzip
 import json
 import math
+import warnings
 from collections import defaultdict
 from pathlib import Path
 
@@ -313,15 +314,19 @@ def score(files, tol=0.05, supports=None, n_boot=N_BOOT, boot_seed=7, contrasts=
                                         "rescue": S["rescue"], "harm": S["harm"],
                                         "in_support": _r(S["in"] / S["in_n"]) if S["in_n"] else None,
                                         "xtab": dict(sorted(S["xtab"].items()))} for n, S in sorted(A["iv"].items())}
-        ent["bootstrap"] = {e: boot_endpoint(boot[(proto, arm)][e], n_boot, boot_seed)
+        useeds = sorted(seeds_of[(proto, arm)])
+        ucls = sorted({c for cells in boot[(proto, arm)].values() for _, c in cells})
+        ent["bootstrap"] = {e: boot_endpoint(boot[(proto, arm)][e], n_boot, boot_seed, useeds, ucls)
                             for e in sorted(boot[(proto, arm)])}
         out["cells"][f"{proto}|{arm}"] = ent
     for a_arm, b_arm in contrasts:
         for proto in sorted({p for p, _ in full}):
             if (proto, a_arm) in full and (proto, b_arm) in full:
                 Ba, Bb = boot[(proto, a_arm)], boot[(proto, b_arm)]
+                common = sorted(seeds_of[(proto, a_arm)] & seeds_of[(proto, b_arm)])
+                ucls = sorted({c for B_ in (Ba, Bb) for cells in B_.values() for s_, c in cells if s_ in common})
                 out["contrasts"][f"{proto}|{a_arm}-{b_arm}"] = {
-                    e: boot_contrast(Ba[e], Bb[e], n_boot, boot_seed) for e in sorted(set(Ba) & set(Bb))
+                    e: boot_contrast(Ba[e], Bb[e], n_boot, boot_seed, common, ucls) for e in sorted(set(Ba) & set(Bb))
                     if not e.startswith(("nmae_", "mae_", "hit_", "iv_"))}
     return out
 
@@ -333,7 +338,7 @@ def _tstd(supports, model):
 
 def _iv_coords(name, groups):
     base = name.split(":")[0]
-    if base in ("iso", "dep", "keep"):
+    if base in ("iso", "dep", "up", "keep"):
         g = name.split(":", 1)[1]
         cs = groups.get(g, [])
         if base == "keep":
@@ -350,28 +355,45 @@ def _acc(B, e, seed, cl, num, den):
 
 # ------------------------------------------------------------------------------------------------ bootstrap
 
-def _matrix(cells):
-    seeds = sorted({s for s, _ in cells})
-    cls = sorted({c for _, c in cells})
+def _matrix(cells, seeds=None, cls=None):
+    """(seeds, clusters, num, den) over the given universes (a cell's full seed / cluster sets: every endpoint of a
+    cell then shares the same bootstrap draws; clusters absent from an endpoint carry zero weight in it)."""
+    seeds = seeds if seeds is not None else sorted({s for s, _ in cells})
+    cls = cls if cls is not None else sorted({c for _, c in cells})
     si, ci = {s: j for j, s in enumerate(seeds)}, {c: j for j, c in enumerate(cls)}
     num, den = np.zeros((len(seeds), len(cls))), np.zeros((len(seeds), len(cls)))
     for (s, c), (n, d) in cells.items():
-        num[si[s], ci[c]], den[si[s], ci[c]] = n, d
+        if s in si:
+            num[si[s], ci[c]], den[si[s], ci[c]] = n, d
     return seeds, cls, num, den
 
 
-def two_level(ratio_fn, S, C, n_boot, seed, chunk=2000):
-    """Draws: seed indices with replacement (S) and multinomial cluster weights (C, shared by the drawn seeds).
-    ratio_fn(W) -> (nb, S) per-seed statistic under cluster weights W (nb, C)."""
-    rng = np.random.default_rng(seed)
+_DRAWS: dict = {}
+
+
+def draws(S, C, n_boot, seed):
+    """Fixed-seed two-level draws: seed indices with replacement (n_boot, S) and multinomial cluster weights
+    (n_boot, C) shared by the drawn seeds.  Cached: endpoints over the same universe share the draws."""
+    key = (S, C, n_boot, seed)
+    if key not in _DRAWS:
+        rng = np.random.default_rng(seed)
+        W = rng.multinomial(C, np.full(C, 1.0 / C), size=n_boot).astype(np.float32)
+        pix = rng.integers(0, S, size=(n_boot, S))
+        _DRAWS.clear()
+        _DRAWS[key] = (W, pix)
+    return _DRAWS[key]
+
+
+def two_level(ratio_fn, S, C, n_boot, seed, chunk=4000):
+    """ratio_fn(W) -> (nb, S) per-seed statistic under cluster weights W (nb, C); statistic = mean over the drawn
+    seeds (nan-safe).  Returns the finite bootstrap values."""
+    W, pix = draws(S, C, n_boot, seed)
     out = []
     for b0 in range(0, n_boot, chunk):
-        nb = min(chunk, n_boot - b0)
-        W = rng.multinomial(C, np.full(C, 1.0 / C), size=nb).astype(float)
-        pix = rng.integers(0, S, size=(nb, S))
-        R = ratio_fn(W)
-        with np.errstate(invalid="ignore"):
-            out.append(np.nanmean(np.take_along_axis(R, pix, 1), 1))
+        R = ratio_fn(W[b0:b0 + chunk].astype(float))
+        with np.errstate(invalid="ignore"), warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)
+            out.append(np.nanmean(np.take_along_axis(R, pix[b0:b0 + chunk], 1), 1))
     v = np.concatenate(out)
     return v[~np.isnan(v)]
 
@@ -391,8 +413,8 @@ def _ratio(num, den):
     return f
 
 
-def boot_endpoint(cells, n_boot, seed):
-    seeds, cls, num, den = _matrix(cells)
+def boot_endpoint(cells, n_boot, seed, seeds=None, cls=None):
+    seeds, cls, num, den = _matrix(cells, seeds, cls)
     with np.errstate(invalid="ignore", divide="ignore"):
         per = num.sum(1) / np.where(den.sum(1) > 0, den.sum(1), np.nan)
     ok = ~np.isnan(per)
@@ -406,12 +428,12 @@ def boot_endpoint(cells, n_boot, seed):
     return res
 
 
-def boot_contrast(ca, cb, n_boot, seed):
+def boot_contrast(ca, cb, n_boot, seed, common=None, cls=None):
     """Seed-paired A - B (seeds present in both; clusters = union, shared weights)."""
-    common = sorted({s for s, _ in ca} & {s for s, _ in cb})
+    common = common if common is not None else sorted({s for s, _ in ca} & {s for s, _ in cb})
     if not common:
         return None
-    cls = sorted({c for s, c in list(ca) + list(cb) if s in common})
+    cls = cls if cls is not None else sorted({c for s, c in list(ca) + list(cb) if s in common})
     ci_ = {c: j for j, c in enumerate(cls)}
     mats = []
     for cells in (ca, cb):

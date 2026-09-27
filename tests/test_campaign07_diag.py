@@ -22,7 +22,7 @@ import campaign07_diagscore as S  # noqa: E402
 
 T, pw, pw6 = D.T, D.pw, D.pw6
 E06 = Path(os.environ.get("E06_RESULTS", os.path.expanduser("~/structured-latent-dynamics-campaign06/results")))
-DEV_SEED = 6_860_000_000  # dev_smoke sub-range
+DEV_SEED = 6_882_000_000  # dev_smoke sub-range, block 6.880-6.890e9 (P0 uses 6.870-6.880e9)
 
 
 def _configs(n=6):
@@ -82,11 +82,11 @@ def _labels(tmp, pool_rows, split="b6_dev"):
 
 @pytest.fixture
 def dev_worlds(monkeypatch):
-    monkeypatch.setattr(T, "split_world_seed", lambda split, idx, rep: 6_880_000_000 + 1000 * idx + rep)
+    monkeypatch.setattr(T, "split_world_seed", lambda split, idx, rep: 6_886_000_000 + 1000 * idx + rep)
 
 
 def _items(pool_rows):
-    return [(c, s, 6_880_000_000 + 1000 * i) for i, c, s in pool_rows]
+    return [(c, s, 6_886_000_000 + 1000 * i) for i, c, s in pool_rows]
 
 
 def _recs(path):
@@ -191,12 +191,12 @@ def test_exact_replacement_changes_only_phi(pool):
     a = [D.Track(c, s, "x", ws) for c, s, ws in items]
     b = [D.Track(c, s, "x", ws) for c, s, ws in items]
     D.drive(m, a, {})
-    D.drive(m, b, {}, D.Intervener(["exact", "iso:prob", "dep:strat", "keep:build", "mirror"], "LRN"))
+    D.drive(m, b, {}, D.Intervener(["exact", "iso:G1", "dep:G3", "keep:G4", "mirror"], "LRN"))
     assert [t.prefix for t in a] == [t.prefix for t in b]
     for ta, tb in zip(a, b):
         for ra, rb in zip(ta.recs, tb.recs):
             assert ra["z_pre"] == rb["z_pre"] and ra["probs"] == rb["probs"]
-            assert set(rb["iv"]) == {"exact", "iso:prob", "dep:strat", "keep:build", "mirror"}
+            assert set(rb["iv"]) == {"exact", "iso:G1", "dep:G3", "keep:G4", "mirror"}
 
 
 @pytest.mark.parametrize("kind", ["RAWF", "SUP", "B0"])
@@ -204,18 +204,26 @@ def test_non_lrn_refuses_exact_injection(kind):
     with pytest.raises(ValueError, match="refusing factor injection"):
         D.Intervener(["exact"], kind)
     with pytest.raises(ValueError, match="refusing"):
-        D.Intervener(["none", "iso:prob"], kind)
+        D.Intervener(["none", "iso:G1"], kind)
     D.Intervener(["none"], kind)  # no injection: allowed
 
 
 def test_group_definitions():
-    groups, deps, src = D.load_groups(Path("/nonexistent"))
-    assert sorted(x for g in groups.values() for x in g) == sorted(D.FEATS) and src.startswith("provisional")
-    iv = D.Intervener(["dep:strat"], "LRN")
-    cl = iv.coords("dep:strat")
-    assert set(groups["strat"]) <= set(cl) and "belief_H" in cl and "exp_side_cost_rel" in cl
-    assert iv.coords("iso:strat") == list(groups["strat"])
-    assert set(iv.coords("keep:prob")) == set(D.FEATS) - set(groups["prob"])
+    c = D.Contract()  # the merged P0a factor contract
+    assert c.source.startswith("factor-contract.json") and sorted(c.groups) == ["G1", "G2", "G3", "G4"]
+    assert sorted(x for g in c.groups.values() for x in g) == sorted(D.FEATS)
+    assert c.group("G1_posterior_outcome_probabilities") == c.group("G1")
+    iv = D.Intervener(["dep:G2"], "LRN")
+    # dependency-consistent: G2 plus everything computed from it (strategy costs, build value), never its inputs
+    dep = iv.coords("dep:G2")
+    assert set(c.group("G2")) <= set(dep) and "cost_probe_first_rel" in dep and "build_value_rel" in dep
+    assert "belief_H" not in dep
+    up = iv.coords("up:G3")
+    assert "belief_H" in up and "p_probe_resolves" in up  # duplicates travel together
+    assert set(iv.coords("iso:G1")) == set(c.group("G1"))
+    assert set(iv.coords("keep:G1")) == set(D.FEATS) - set(c.group("G1"))
+    p = D.Contract(Path("/nonexistent"))  # provisional fallback stays usable
+    assert p.source.startswith("provisional") and "cost_probe_first_rel" in p.down["belief_H"]
     with pytest.raises(ValueError):
         D.Intervener(["iso:nope"], "LRN")
     with pytest.raises(ValueError):
@@ -241,7 +249,7 @@ def test_run_end_to_end_and_no_overwrite(tmp_path, pool, dev_worlds):
     raw = _save_run(tmp_path, "rawf", "RAWF", 1)
     out = tmp_path / "out"
     argv = ["run", "--labels", str(lab), "--pool", "b6_dev", "--model", f"LRN-s1={lrn}", "--model", f"RAWF-s1={raw}",
-            "--ivs", "none", "exact", "iso:prob", "dep:strat", "--rollout", "exact", "--out", str(out), "--tag", "t"]
+            "--ivs", "none", "exact", "iso:G1", "dep:G3", "--rollout", "exact", "--out", str(out), "--tag", "t"]
     D.main(argv)
     files = sorted(p.name for p in out.iterdir())
     for proto in ("B", "A-pistar", "A-own_LRN-s1", "A-own_RAWF-s1", "R-exact"):
@@ -253,6 +261,13 @@ def test_run_end_to_end_and_no_overwrite(tmp_path, pool, dev_worlds):
     od = [r for r in own if r["kind"] == "decision"]
     assert [(r["z_pre"], r["probs"], r["a"]) for r in bd] == [(r["z_pre"], r["probs"], r["a"]) for r in od]
     assert all("iv" in r for r in bd) and all(r["iv"]["exact"]["ok"] in (True, False) for r in bd)
+    # rollout consistency: on every decision whose history prefix equals the free run's, the rollout action is the
+    # immediate-intervention action logged in B
+    _, rr = _recs(out / "diag-v1-R-exact-LRN-s1.jsonl.gz")
+    rd_ = [r for r in rr if r["kind"] == "decision"]
+    shared = [(x, y) for x, y in zip(bd, rd_) if x["cfg_id"] == y["cfg_id"] and x["hist_id"] == y["hist_id"]]
+    assert shared and all(x["iv"]["exact"]["a"] == y["a"] for x, y in shared)
+    assert all(y["iv_applied"] == {"name": "exact", "mode": "rollout"} for y in rd_)
     _, rb = _recs(out / "diag-v1-B-RAWF-s1.jsonl.gz")
     assert all("iv" not in r and r["pred"] is None for r in rb if r["kind"] == "decision")  # never injected into RAWF
     eps = [r for r in own if r["kind"] == "episode"]
@@ -282,7 +297,7 @@ def test_run_end_to_end_and_no_overwrite(tmp_path, pool, dev_worlds):
 
 def test_cf_path(tmp_path, pool):
     """Counterfactual-only path: labels' eps-optimal sets reproduced; members x decision types logged."""
-    base = 6_830_000_000
+    base = 6_884_000_000
     idx = next(i for i in range(100) if pw6.draw_params(base + i, pw.TRAIN_CELLS, pw6.V3_K, ("SCE",))[1] == 2)
     cs = pw6.counterfactual_set("SCE", idx, base=base)
     (tmp_path / "cflabels").mkdir()
