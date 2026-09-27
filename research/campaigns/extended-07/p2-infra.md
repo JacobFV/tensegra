@@ -108,7 +108,7 @@ Populations: b6c_hold_SCE, SCE octets and UCE octets. Protocols B (free-running)
   - `pred` is always logged. In R0 it is the disconnected probe of the trunk.
   - Interventions are allowed only where the policy reads the prediction (S0R1, S1R1, CONS-pred). R0 is refused, like RAWF.
 
-## 5. Tests (`tests/test_campaign07_p2.py`, 26 tests; all pass on pro6000)
+## 5. Tests (`tests/test_campaign07_p2.py`, 26 tests at aca42d90, 31 after §10; all pass on pro6000)
 
 The mechanical tests:
 
@@ -198,5 +198,62 @@ Predictor cost can be halved with `--bank-updates 2000` for predictors. The job 
 
 | where | what | core-s |
 |---|---|---|
-| metered, pro6000 | golden 3.0; pytest1–3: 3.7 + 5.4 + 260.1; smokes ≈ 126; final pytest (recorded in the final message) | ≈ 398 before the final pytest (dev cap 3,000) |
+| metered, pro6000 | golden 3.0; pytests 3.7 + 5.4 + 260.1 + 44.7 + 6.0 + 113.9; smokes ≈ 147 | ≈ 584 (dev cap 3,000) |
 | local (GB10 host; editing and compiling only, no torch) | | ≈ 5 |
+
+## 10. Revision after the P1 diagnosis (coordinator priorities: consumers, then separate-predictor READ arm, then 2×2)
+
+This revision builds on top of the snapshot c7d22aff that was launched as P2-SCREEN. Everything in §1–§9 is unchanged; everything here is additive, and the historical goldens still pass.
+
+**Priority 1: controlled consumers whose training contract forces factor reliance.** These were already built (§3): the exact and exact+noise (`mix`) contracts, evaluated on both exact and predicted inputs. The predictor used for the predicted inputs is **never the consumer's own trunk**. Two predictor sources are now supported:
+- **Separately trained predictor** with its own encoder: K-fold out-of-fold on the training configurations for training, and the full-data predictor at evaluation (`::pred=<pred-ffull run>`).
+- **Historical LRN aux predictions**, new: `::pred=<e06-tb-lrn-sXX/run>`. The LRN's own encoder, trunk and aux head are replayed on the same public history.
+  - The test asserts the prediction equals the historical LRN's `last_aux` bitwise.
+  - The job matrix pairs P2 seed 40+i with LRN lineage 35+i, in stage `evalX`.
+
+**Priority 2: separate-predictor READ arm** (`--arch fuse --factor-mode sep`, kind `SEP`). The predictor has its own recurrent encoder, `pinp/pgru/ptrunk + aux`, trained by the factor MSE only. Its **detached** outputs feed the fusion layer read by the policy and value heads. The factor channel is therefore not a function of the policy trunk.
+- The recurrent state is [policy h | predictor h] (`state_size`).
+- By default it uses the split optimizer and clip: X = aux + the predictor's encoder, A = everything else.
+- Shared tensors are copied from the seed's common S×R `init.pt` (`--init-from` accepts the S×R init for `sep`). The predictor encoder keeps its own construction draw.
+- It trains on the bank (imitation + aux) or on-policy (`--updates`, RL + imitation + aux), like LRN.
+- Tests:
+  - the actor loss puts exactly zero gradient on the predictor;
+  - the aux loss reaches only the predictor, never inp/gru/trunk;
+  - the policy reads the prediction;
+  - one actor step does not depend on w_aux (0 / 1 / 1000);
+  - bank replay equals the on-policy forward bitwise;
+  - the diag runner accepts it, and interventions are allowed.
+
+**Priority 3: the S×R 2×2** is unchanged (§1).
+
+**Near-miss.** The diag runner logs every octet member, including `role = near_miss`, for every evaluated model, so near-miss accuracy is first-class in the per-decision records. It is scored as in P1.
+
+**Job matrix.** `campaign07_p2.py jobs SHA [--stages …]`. Stages run in priority order:
+1. bank, init;
+2. P1-predictor, P1-oof, P1-consumer;
+3. P2-sep (+ P2-sep-onpolicy with `--onpolicy U`);
+4. P3-2x2-bank (+ P3-2x2-onpolicy);
+5. evaluation:
+   - evalA: consumers on exact and own-predictor inputs;
+   - evalX: consumers on historical-LRN predictions, plus SEP;
+   - evalB: the 2×2.
+
+The launched P2-SCREEN (c7d22aff) already has bank, init, predictors, oof, consumers, the 2×2 and a combined `e07-p2-eval-s*`. **The only additions it needs are `--stages P2-sep evalX`** (10 jobs, names `e07-p2-sep-bank-s4x` and `e07-p2-evalX-s4x`).
+
+**Smoke (metered, seed 47, all exit 0):**
+
+| job | CPU (core-s) | peak RSS | unit cost |
+|---|---|---|---|
+| `e07-dev-p2-smoke-sep-bank` (20 bank updates) | 6.9 | 2,281 MiB | 0.052 core-s/update |
+| `e07-dev-p2-smoke-sep-onp` (10 on-policy updates) | 6.6 | 2,284 MiB | 0.116 core-s/update |
+| `e07-dev-p2-smoke-eval` (15 model entries on 24 b6c configurations + 8 SCE octets: 4 S×R arms, SEP-bank, SEP-onp, 3 contracts × {exact, own predictor, historical LRN s35}) | 7.2 | 984 MiB | — |
+
+**Added cost for 5 seeds:**
+
+| addition | estimate (core-s) |
+|---|---|
+| SEP bank arm (4,000 updates) | 5 × ~215 = **~1,080** |
+| evalX (4 model entries) | 5 × ~60 = **~300** |
+| optional SEP on-policy arm (4,000 updates) | +5 × ~470 = ~2,350, plus its evalX entry |
+
+**Seed-range note.** The smoke bank used worlds 12,950,000,000 + 1e6·j + 1000·idx + r with j < 3. That is **up to 12,952,024,000**, which is beyond the registered smoke-bank entry [12.950e9, 12.951e9). Please widen that entry to [12.95e9, 12.96e9) as originally proposed in §7. The dev test seed 97 (worlds [1.77e10, 1.78e10)) is also still unregistered.

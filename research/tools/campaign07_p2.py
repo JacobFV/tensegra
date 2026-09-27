@@ -303,6 +303,8 @@ def check_ranges(proposed, path=SEED_RANGES):
     clashes = []
     for p in proposed:
         for r in reg:
+            if r["name"].startswith("ext07 P2"):  # these proposals as registered by the root (c7d22aff)
+                continue
             if p["lo"] < r["hi"] and r["lo"] < p["hi"]:
                 if "dev" in p["status"] and r["name"] in containers and r["lo"] <= p["lo"] and p["hi"] <= r["hi"]:
                     continue
@@ -430,7 +432,8 @@ def job_matrix(sha, smoke=False, seeds=P2_SEEDS, bank_updates=4000, finetune=0, 
                      str(rd), "--init-from", init, "--updates", "10" if smoke else str(onpolicy), *le,
                      "--out", f"{o}/run"])
     # evaluation (diag runner): b6c_hold_SCE + SCE octets (+ UCE); B free-running + A-pistar; ivs none / exact.
-    # Near-miss members of every octet are logged (cf role 'near_miss').  evalA = priorities 1-2, evalB = the 2x2.
+    # Near-miss members of every octet are logged (cf role 'near_miss').  evalA = consumers (exact / own predictor),
+    # evalX = consumers on historical-LRN predictions + SEP, evalB = the 2x2.
     sub = ["--n-configs", "24", "--n-octets", "8"] if smoke else []
     pops = ["--labels", TBC, "--pool", "b6c_hold_SCE", "--cf", f"{TBC}/cf_SCE.json", *([] if smoke else ["--cf", UCE])]
     tail = ["--protocols", "B", "A-pistar", "--ivs", "none", "exact", "--no-latent", *sub]
@@ -441,16 +444,24 @@ def job_matrix(sha, smoke=False, seeds=P2_SEEDS, bank_updates=4000, finetune=0, 
         lrn = f"{R6}/e06-tb-lrn-s{35 + i}/run"  # historical LRN of the paired lineage: its aux predictions
         for c in CONTRACTS:
             run = f"{R7}/{tag}-cons-{c}-s{s}/run"
-            m += ["--model", f"CONS-{c}-exact-s{s}={run}::exact", "--model", f"CONS-{c}-pred-s{s}={run}::pred={pred}",
-                  "--model", f"CONS-{c}-predLRN{35 + i}-s{s}={run}::pred={lrn}"]
+            m += ["--model", f"CONS-{c}-exact-s{s}={run}::exact", "--model", f"CONS-{c}-pred-s{s}={run}::pred={pred}"]
+            needs.append(f"{run}/model.pt")
+        o = f"{R7}/{tag}-evalA-s{s}"
+        add("evalA", f"{tag}-evalA-s{s}", (7200, 7200), needs + [f"{pred}/model.pt"] + popneeds, [o],
+            [DIAG, "run", *pops, *m, *tail, "--tag", f"{tag}-A-s{s}", "--out", o])
+        # evalX: the consumers on the historical LRN's own aux predictions (paired lineage 35 + i, replayed on the
+        # same public history; the predictor is not the consumer's trunk) + the separate-predictor READ arm
+        m, needs = [], []
+        for c in CONTRACTS:
+            run = f"{R7}/{tag}-cons-{c}-s{s}/run"
+            m += ["--model", f"CONS-{c}-predLRN{35 + i}-s{s}={run}::pred={lrn}"]
             needs.append(f"{run}/model.pt")
         for kind in ("bank",) + (("onp",) if smoke or onpolicy else ()):
             m += ["--model", f"SEP-{kind}-s{s}={R7}/{tag}-sep-{kind}-s{s}/run"]
             needs.append(f"{R7}/{tag}-sep-{kind}-s{s}/run/model.pt")
-        needs += [f"{pred}/model.pt", f"{lrn}/model.pt"]
-        o = f"{R7}/{tag}-evalA-s{s}"
-        add("evalA", f"{tag}-evalA-s{s}", (7200, 7200), needs + popneeds, [o],
-            [DIAG, "run", *pops, *m, *tail, "--tag", f"{tag}-A-s{s}", "--out", o])
+        o = f"{R7}/{tag}-evalX-s{s}"
+        add("evalX", f"{tag}-evalX-s{s}", (7200, 7200), needs + [f"{lrn}/model.pt"] + popneeds, [o],
+            [DIAG, "run", *pops, *m, *tail, "--tag", f"{tag}-X-s{s}", "--out", o])
         m, needs = [], []
         for arm in ARMS:
             for kind in ("bank",) + (("onp",) if smoke or onpolicy else ()):
@@ -464,6 +475,8 @@ def job_matrix(sha, smoke=False, seeds=P2_SEEDS, bank_updates=4000, finetune=0, 
 
 def cmd_jobs(a):
     jobs = job_matrix(a.sha, smoke=a.smoke, finetune=a.finetune, bank_updates=a.bank_updates, onpolicy=a.onpolicy)
+    if a.stages:
+        jobs = [j for j in jobs if j[0] in set(a.stages)]
     for stage, name, argv in jobs:
         print(f"# [{stage}] {name}")
         print("python research/tools/campaign07_remote.py launch-cmd " + shlex.join(argv))
@@ -495,6 +508,8 @@ def main(argv=None):
     s.add_argument("--finetune", type=int, default=0)
     s.add_argument("--bank-updates", type=int, default=4000)
     s.add_argument("--onpolicy", type=int, default=0, help="also the historical-style on-policy 2x2 (U updates)")
+    s.add_argument("--stages", nargs="*", default=None,
+                   help="only these stages (e.g. P2-sep evalX: the additions to the launched P2-SCREEN)")
     a = p.parse_args(argv)
     {"init": cmd_init, "bank": cmd_bank, "oof": cmd_oof, "seeds": cmd_seeds, "jobs": cmd_jobs}[a.cmd](a)
 
