@@ -28,6 +28,10 @@ extended-04 table (``pw.SPLITS``, seeds 4.1e9-4.6e9) is untouched and still repr
   cell), the unseen intermediate horizon (b5_heldout_k, k = 4), omitted combinations (b5_hold_uc, b5_hold_se).
 Configuration seeds 5.1e9-5.8e9 + i and world seeds base + 5e7 + 1000 i + r are disjoint from every extended-04
 range (4.1e9-4.65e9, training worlds 8e9+).
+
+B-XC (registry entry B-XC, adaptive confirmation): ``SPLITS5C['b5c_hold_uc']`` = fresh U+C draws of the b5_hold_uc
+family, configuration seed base 5.9e9, same sizing rule (>= 60 eligible, >= 20 of them sensitive to the correlated
+flag), 1 world per configuration.  Deliberately outside SPLITS5 so split table v2 and its audits are unchanged.
 """
 from __future__ import annotations
 
@@ -85,6 +89,23 @@ B5_EVAL_SPLITS = ("b5_dev", "b5_test_iid", "b5_heldout_price", "b5_heldout_k", "
                   CHALLENGE_SPLIT)
 B5_WORLD_OFFSET = 900  # eval world offset for B-X (B1 used 500, F2 700 on heldout_comp)
 
+# B-XC (registry entry B-XC, adaptive confirmation): FRESH U+C configuration draws of the b5_hold_uc family (same cells,
+# k and combo; new configuration seed base 5.9e9, never generated before), sized by the same exact-solver rule and
+# evaluated with 1 world per configuration at world offset 900.  Kept OUT of SPLITS5 on purpose: split table v2, its
+# audits and every b5 output stay bit-identical; split_params / generator_params / split_config / world_seed consult
+# SPLITS5C after SPLITS5.
+SPLITS5C = {
+    "b5c_hold_uc": (pw.TRAIN_CELLS, pw.TRAIN_K, (combo(U, C),), 5_900_000_000),
+}
+B5C_LABEL_SPLITS = (("b5c_hold_uc", "sized"),)
+B5C_EVAL_SPLITS = ("b5c_hold_uc",)
+B5C_SOURCE_SPLIT = {"b5c_hold_uc": "b5_hold_uc"}  # fresh draws of this split's generator family
+SENSITIVITY_FLAGS["b5c_hold_uc"] = SENSITIVITY_FLAGS["b5_hold_uc"]  # (correlated,)
+HOLD_TARGET_SENSITIVE["b5c_hold_uc"] = HOLD_TARGET_SENSITIVE["b5_hold_uc"]  # 20
+# split sets of the trainer's --split-set option (b1 = the extended-04 EVAL_SPLITS, handled by the trainer itself)
+SPLIT_SETS = {"b5": {"label_splits": B5_LABEL_SPLITS, "eval_splits": B5_EVAL_SPLITS},
+              "b5c": {"label_splits": B5C_LABEL_SPLITS, "eval_splits": B5C_EVAL_SPLITS}}
+
 
 def s0_record(solver: pw.ExactSolver) -> dict:
     """Configuration-level facts at the initial state (the s0 endpoint): eps-optimal set, probe uniquely optimal."""
@@ -133,6 +154,8 @@ def family(split: str) -> str:
 def split_params(split: str) -> tuple:
     if split in SPLITS5:
         return SPLITS5[split]
+    if split in SPLITS5C:
+        return SPLITS5C[split]
     return pw.SPLITS[split]
 
 
@@ -140,7 +163,7 @@ def generator_params(split: str, index: int) -> tuple:
     """(cell, k, combo, config_seed); for extended-04 split names this is exactly ``pw.generator_params``."""
     if split in pw.SPLITS:
         return pw.generator_params(split, index)
-    cells, ks, combos, base = SPLITS5[split]
+    cells, ks, combos, base = split_params(split)  # SPLITS5, or SPLITS5C (B-XC)
     seed = base + index
     rng = random.Random(seed)
     return rng.choice(cells), rng.choice(ks), rng.choice(combos), seed

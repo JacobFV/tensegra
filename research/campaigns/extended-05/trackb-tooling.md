@@ -234,3 +234,122 @@ Unit costs come from the B1 receipts and this branch's metered smoke (`trackb-sm
   - triviality 53;
   - hold sizing 253 (+ an earlier 71 rate probe);
   - checks ~5.
+
+## 9. B-XC tooling (registry entry B-XC; branch `campaign/e05-b5c`)
+Additive; every b5 / b1 path is bit-identical (section 9.3). No b5c label, training or evaluation has been run.
+
+### 9.1 What changed
+- **Split `b5c_hold_uc`** (`pw5.SPLITS5C`): `(TRAIN_CELLS, TRAIN_K, (U+C,), 5_900_000_000)`.
+  - It is a fresh draw of the b5_hold_uc family: same cells, k and combo, but a configuration seed base never used before.
+  - It is kept **outside** `SPLITS5`, so split table v2, `split_of_params`, `family_params` and the B-SPLIT audit are
+    unchanged. `split_params`, `generator_params`, `split_config` and `world_seed` consult `SPLITS5C` after `SPLITS5`.
+  - Sizing: the same registered rule (`SENSITIVITY_FLAGS` / `HOLD_TARGET_SENSITIVE` entries copied from b5_hold_uc):
+    the smallest prefix with >= 60 s0-uniquely-probe-optimal configurations, >= 20 of them flag-sensitive for the
+    correlated flag; cap 4,000; 1 world per configuration.
+- **Trainer** `--split-set b5c` (`campaign04_probeworld_train.py`):
+  - `labels` builds ONLY `b5c_hold_uc` (shards + `_s0.json` + `labels_meta.json` with `split_set.name = b5c`); no b5
+    pool is rebuilt.
+  - `eval` and `references` default to `b5c_hold_uc` only. `--episode-rows`, `--world-offset`, `--split-worlds` and
+    `--out-name` work as for b5.
+  - Models trained on `bx-labels/labels` (b5_train / b5x_train) are evaluated with `--labels <b5c labels dir>`: eval
+    reads only the run's `train_meta.json`/`model.pt` and the evaluation pools from `--labels`.
+- **Scorer** (`campaign05_bx_score.py`):
+  - New groups `b5c_hold_uc`, `b5c_uc_flag_sensitive`, `b5c_uc_k1`, `b5c_uc_k_gt1`, with the same metrics as
+    b5_hold_uc (the first two with configuration-clustered CIs). They select no b5 row, so b5 outputs are unchanged.
+  - `--bxc` implements the registered primary exactly: mean paired (BX1 - B0) s0 uniquely-optimal first-probe rate
+    >= +.10 with all 3 pair differences > 0, AND gap regret lower for BX1 in 3/3 pairs.
+  - Secondaries: BX1 not-optimal probe <= .10 per seed; success floor (>= .8 x pi*) per arm and seed;
+    flag-sensitive subset readings (gain, gap regret, CIs); configuration-clustered 95% CIs per pair and for the mean
+    paired difference (configurations resampled jointly across the 6 runs).
+  - Validity checks are reported, and the verdict is `invalid` if any fails: 3 + 3 runs, paired seeds {20, 21, 22},
+    train splits b5_train / b5x_train, L1 public flat, world offset 900, rows only on b5c_hold_uc with 1 world, and the
+    same configurations in every run.
+  - `--episodes-name` reads a non-default episode file.
+- **Seed-range registry** (`seed-ranges.json`) gains four entries, all pairwise disjoint (checked by
+  `campaign05_hr.check_seed_ranges` and `test_campaign05_bxc.py`):
+  - b5 split table v2 [5.1e9, 5.9e9);
+  - **B-XC b5c_hold_uc [5.9e9, 6.0e9)**;
+  - B-X/B-Q training worlds (seeds 10-12) [9.0e9, 9.3e9);
+  - B-XC training worlds (seeds 20-22) [1.0e10, 1.03e10).
+
+  Note: `campaign05_hr.source_hashes()` records this file's hash, so future A-HR receipts will show the new hash.
+- **Split-support audit** `campaign05_bsplit_audit.py audit-b5c`: **11/11 PASS** at 4,000 configurations (local,
+  pure Python, ~1 core-s; `research/results/campaign-05/b-xc/b5c-split-audit.json`).
+  - E1-E4 definition:
+    - same family as b5_hold_uc, new base;
+    - generator parameters absent from every b5 training/selection/test family;
+    - sizing rule identical;
+    - seed registry disjoint.
+  - F1-F5 configurations: land in their generator parameters; seeds disjoint from every earlier pool; **no
+    configuration equal to any of 10,688 earlier configurations** (split table v2 incl. the first 4,000 of each hold
+    stream, and the extended-04 pools); `split_of_params` finds only the U+C hold family; eval worlds (offsets
+    500/700/900) unique and disjoint from every earlier eval world.
+  - G1-G2: labels are functions of the visible history (713 distinct random-policy histories, 0 conflicts); simulator
+    state = public state rebuilt from the history.
+
+### 9.2 Tests (`tests/test_campaign05_bxc.py`, 9 tests)
+- `test_b5_split_table_unchanged`: split table v2 digest equals the one computed with the unmodified module.
+- `test_b5_paths_bit_identical`: the b5 labels (every pickle, shard, s0 file, labels_meta), B0/BX1 training (state
+  dict, log, meta), `eval --split-set b5 --episode-rows` (eval.json and episode rows), `references --split-set b5`,
+  `score()` and `--bhr-only` on tiny runs are identical to goldens captured with the **unmodified** tools of base
+  0923cff2 (pro6000, torch 2.14.0+cu130, metered `b5c-golden-20260927T031610`).
+- `test_scorer_b5_outputs_unaffected_by_b5c_groups`: `score()` on synthetic b5 runs equals the unmodified scorer's
+  output digest.
+- `test_b5c_end_to_end_tiny`: labels b5c -> only b5c files; 6 trainings on a b5 labels dir -> eval/references on the
+  b5c labels dir (offset 900, 1 world) -> `--bxc` valid.
+- Also: the b5c definition, seed ranges, a small b5c audit, the b5c group metrics (= b5_hold_uc metrics on the same
+  rows), and the B-XC primary rule (confirmed / mean below .10 / a zero pair / gap regret 2/3 / invalid offset).
+- The existing `test_campaign05_trackb.py` (incl. the B1/B2/F2 goldens) passes unchanged.
+
+### 9.3 Launch sequence (root; CPU only; 1 thread per job; <= 3 concurrent)
+Shorthands as in section 7 (`SHA`, `PY`, `R`, `T`, `E`, `L`). Trainings use the existing `bx-labels` (b5_train /
+b5x_train); only the evaluation uses the b5c labels. Seeds 20, 21, 22 are fresh.
+```
+# 1. labels: ONLY b5c_hold_uc (sized; ~0.9k core-s, range ~0.5-1.3k)
+$L bxc-labels $SHA --cpu-cap 3000 -- $E $PY $T labels --split-set b5c --out $R/bxc-labels/labels
+
+# 2. trainings (independent of 1; may start in parallel; <= 3 concurrent)
+for s in 20 21 22; do
+  $L bxc-b0-s$s  $SHA -- $E $PY $T train --labels $R/bx-labels/labels --train-split b5_train  --out $R/bxc-b0-s$s/run  --rung L1 --seed $s
+  $L bxc-bx1-s$s $SHA -- $E $PY $T train --labels $R/bx-labels/labels --train-split b5x_train --out $R/bxc-bx1-s$s/run --rung L1 --seed $s
+done
+
+# 3. evaluations on the fresh U+C configurations (after 1 and the matching training)
+EVC="--split-set b5c --episode-rows --world-offset 900 --split-worlds b5c_hold_uc=1"
+for s in 20 21 22; do
+  $L bxc-b0-eval-s$s  $SHA -- $E $PY $T eval --labels $R/bxc-labels/labels --run $R/bxc-b0-s$s/run  $EVC
+  $L bxc-bx1-eval-s$s $SHA -- $E $PY $T eval --labels $R/bxc-labels/labels --run $R/bxc-bx1-s$s/run $EVC
+done
+
+# 4. references (after 1)
+$L bxc-refs $SHA -- $E $PY $T references --labels $R/bxc-labels/labels --out $R/bxc-refs.json --split-set b5c --world-offset 900 --split-worlds b5c_hold_uc=1
+
+# 5. score (after 3; metered)
+$PY research/tools/campaign05_bx_score.py --bxc --arm B0 $R/bxc-b0-s20/run $R/bxc-b0-s21/run $R/bxc-b0-s22/run \
+   --arm BX1 $R/bxc-bx1-s20/run $R/bxc-bx1-s21/run $R/bxc-bx1-s22/run --out $R/bxc-score.json
+```
+(Expand the loops explicitly when a command goes through `metered.sh` or `launch-cmd`: they run without a shell.)
+
+### 9.4 Compute estimate (from the B-X receipts)
+| item | basis | core-s |
+|---|---|---:|
+| labels b5c_hold_uc | b5_hold_uc: 1,528 configurations, 857 core-s (0.56 per configuration); pool size is stream-dependent (projection 924-2,244) | ~0.9k (0.5-1.3k) |
+| B0 x 3 trainings | bx-b0-s10/s11: 381 / 377 | ~1.15k |
+| BX1 x 3 trainings | bx-bx1-s10/s12: 470 / 462 | ~1.40k |
+| 6 evaluations (b5c only, ~1.5k episodes each) | U+C share of the 77-106 core-s b5 evaluations | ~0.25k |
+| references | U+C share of bx-refs (63) | ~0.03k |
+| scoring (`--bxc`, 1,000 resamples) | | ~0.02k |
+| **total** | | **~3.75k (~4.7k with 25% contingency)** |
+
+- **Wall time:** labels ~15 min, trainings ~7-8 min each.
+- **Memory:** training RSS ~2.5 GB (B0) and ~5 GB (BX1).
+
+### 9.5 Bit-identity evidence and spent
+- **Goldens.** Captured with the unmodified base tools (`b5c-golden`, 37.4 core-s). The new tools reproduce them:
+  `b5c-tests`, 159.1 core-s, 22 passed (9 new + 13 existing Track B tests, incl. the B1/B2/F2 goldens).
+- **Other suites.** `tests/test_campaign04_probeworld.py`: 26 passed (41.3). `test_campaign05_hr.py -k seed_range`:
+  2 passed (1.4).
+- **Real B-X data.** The B-X scoring of the 12 real B-X runs, re-run with the old and the new scorer
+  (`b5c-rescore`, 38.8), gives byte-identical output (sha256 `8d554f73...`). This equals the committed
+  `research/results/campaign-05/b-x/bx-score.json`.
+- **Spent.** Remote, metered: **278 core-s**. Local, pure Python: **~5 core-s** (b5c audit ~1, digests/checks).

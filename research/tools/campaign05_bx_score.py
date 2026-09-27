@@ -32,8 +32,15 @@ B-X primary (per evaluable cell and on the pooled holds): arm probe_unique >= B0
 probe_not_opt <= .10, and realized regret non-inferior to B0 (upper 95% CI of arm - B0 <= --ni-regret, a tolerance
 to be registered before scoring; default 1.0 per episode).
 
+B-XC (registry entry B-XC, adaptive confirmation; eval --split-set b5c): groups b5c_hold_uc (fresh U+C configurations,
+seed base 5.9e9), b5c_uc_flag_sensitive, b5c_uc_k1 / b5c_uc_k_gt1 -- same metrics as b5_hold_uc.  ``--bxc`` scores the
+registered primary exactly: mean paired (BX1 - B0) s0 uniquely-optimal first-probe rate >= +.10 with all 3 seed-pair
+differences > 0, AND gap regret lower for BX1 in 3/3 pairs; secondaries: BX1 not-optimal probe <= .10, success floor,
+flag-sensitive subset readings, configuration-clustered CIs (per pair and for the mean paired difference).
+
 Usage: campaign05_bx_score.py --arm B0 RUN RUN RUN --arm BX1 RUN... [--arm BX2 ...] [--arm BX3 ...] --out FILE
        campaign05_bx_score.py --bhr-only --arm B0 RUN RUN RUN --out FILE      (headroom gate before training arms)
+       campaign05_bx_score.py --bxc --arm B0 RUN RUN RUN --arm BX1 RUN RUN RUN --out FILE   (B-XC)
 """
 from __future__ import annotations
 
@@ -67,9 +74,22 @@ GROUPS = {
     "test_iid": lambda r: r["split"] == "b5_test_iid",
     "heldout_price": lambda r: r["split"] == "b5_heldout_price",
     "heldout_k": lambda r: r["split"] == "b5_heldout_k",
+    # B-XC (fresh U+C configurations, eval --split-set b5c); these groups select no b5 row, so b5 outputs are unchanged
+    "b5c_hold_uc": lambda r: r["split"] == "b5c_hold_uc",
+    "b5c_uc_flag_sensitive": lambda r: r["split"] == "b5c_hold_uc" and bool(r.get("flag_sensitive")),
+    "b5c_uc_k1": lambda r: r["split"] == "b5c_hold_uc" and r["k"] == 1,
+    "b5c_uc_k_gt1": lambda r: r["split"] == "b5c_hold_uc" and r["k"] > 1,
 }
-CI_GROUPS = ("new_holds", "b5_hold_uc", "b5_hold_se", "uc_flag_sensitive", "challenge")
+CI_GROUPS = ("new_holds", "b5_hold_uc", "b5_hold_se", "uc_flag_sensitive", "challenge", "b5c_hold_uc",
+             "b5c_uc_flag_sensitive")
 PRIMARY_CELLS = ("b5_hold_uc", "b5_hold_se")
+# B-XC (registry entry B-XC): BX1 vs B0, L1, fresh seeds 20-22 paired, on b5c_hold_uc at world offset 900
+BXC_CELL = "b5c_hold_uc"
+BXC_GROUPS = ("b5c_hold_uc", "b5c_uc_flag_sensitive", "b5c_uc_k1", "b5c_uc_k_gt1")
+BXC_LIFT = 0.10
+BXC_SEEDS = (20, 21, 22)
+BXC_WORLD_OFFSET = 900
+BXC_TRAIN_SPLITS = {"B0": "b5_train", "BX1": "b5x_train"}
 
 
 def read_rows(run: Path, name="eval_episodes.jsonl.gz"):
@@ -183,9 +203,8 @@ def _n_cfg_pu(cl):
     return sum(1 for v in cl.values() if v.get("pu_n", 0) > 0)
 
 
-def bootstrap(cl_list, q_list, n_boot=1000, seed=20260927):
-    """Percentile CIs of SCALARS for each clusters dict in cl_list (common cluster keys, resampled jointly) and of
-    the paired differences cl_list[i] - cl_list[0].  numpy for the resampling sums."""
+def _boot_draws(cl_list, q_list, n_boot, seed):
+    """Joint configuration resampling (common cluster keys): per clusters dict, the SCALARS of every draw."""
     import numpy as np
     keys = sorted(set.intersection(*[set(c) for c in cl_list]))
     rng = np.random.default_rng(seed)
@@ -197,12 +216,21 @@ def bootstrap(cl_list, q_list, n_boot=1000, seed=20260927):
         M = np.array([[cl[k].get(f, 0.0) for f in fields] for k in keys])
         T = W @ M
         draws.append([{s: m[s] for s in SCALARS} for m in (metrics(dict(zip(fields, row)), q_list[i]) for row in T)])
+    return keys, draws
 
-    def ci(vals):
-        vals = sorted(v for v in vals if isinstance(v, (int, float)))
-        if not vals:
-            return None
-        return [vals[int(0.025 * (len(vals) - 1))], vals[int(0.975 * (len(vals) - 1))]]
+
+def _ci(vals):
+    vals = sorted(v for v in vals if isinstance(v, (int, float)))
+    if not vals:
+        return None
+    return [vals[int(0.025 * (len(vals) - 1))], vals[int(0.975 * (len(vals) - 1))]]
+
+
+def bootstrap(cl_list, q_list, n_boot=1000, seed=20260927):
+    """Percentile CIs of SCALARS for each clusters dict in cl_list (common cluster keys, resampled jointly) and of
+    the paired differences cl_list[i] - cl_list[0].  numpy for the resampling sums."""
+    keys, draws = _boot_draws(cl_list, q_list, n_boot, seed)
+    ci = _ci
     out = []
     for i in range(len(cl_list)):
         ent = {s: ci([d[s] for d in draws[i]]) for s in SCALARS}
@@ -214,12 +242,12 @@ def bootstrap(cl_list, q_list, n_boot=1000, seed=20260927):
     return out, len(keys)
 
 
-def load_arms(arms: dict):
+def load_arms(arms: dict, name="eval_episodes.jsonl.gz"):
     data = {}
     for arm, runs in arms.items():
         lst = []
         for run in runs:
-            head, rows = read_rows(run)
+            head, rows = read_rows(run, name)
             lst.append((head["seed"], head, rows))
         data[arm] = sorted(lst, key=lambda x: x[0])
     return data
@@ -329,6 +357,111 @@ def score(arms: dict, n_boot=1000, ni_regret=1.0) -> dict:
     return res
 
 
+def _num(x):
+    return isinstance(x, (int, float)) and not isinstance(x, bool)
+
+
+def bxc_score(arms: dict, n_boot=1000, name="eval_episodes.jsonl.gz") -> dict:
+    """Registry entry B-XC (adaptive confirmation), scored exactly as registered on b5c_hold_uc:
+      primary    mean over the 3 seed pairs of (BX1 - B0) s0 uniquely-optimal first-probe rate >= +.10, all 3 pair
+                 differences > 0, AND gap regret (per episode) lower for BX1 in 3/3 pairs
+      secondary  BX1 not-optimal probe <= .10; success >= .8 x pi* success (same worlds); flag-sensitive subset
+                 readings; configuration-clustered 95% CIs (per pair, and for the mean paired difference)
+    Validity checks (reported; the primary is only 'confirmed' when valid): arms B0 and BX1 with 3 runs each, paired
+    seeds {20, 21, 22}, train splits b5_train / b5x_train, world offset 900, every row on b5c_hold_uc with 1 world per
+    configuration, and the same configurations in every run."""
+    data = load_arms({k: arms[k] for k in ("B0", "BX1")}, name)
+    b0, bx = data["B0"], data["BX1"]
+    q = {arm: [h["q_head_trained"] for _, h, _ in lst] for arm, lst in data.items()}
+    cfgsets = [frozenset((r["split"], r["cfg_idx"]) for r in rows) for lst in (b0, bx) for _, _, rows in lst]
+    validity = {
+        "three_pairs": len(b0) == 3 and len(bx) == 3,
+        "seeds_paired": [s for s, _, _ in b0] == [s for s, _, _ in bx],
+        "seeds_registered": sorted(s for s, _, _ in b0) == list(BXC_SEEDS) and sorted(s for s, _, _ in bx) == list(BXC_SEEDS),
+        "train_splits": all(h["train_split"] == BXC_TRAIN_SPLITS[arm] for arm, lst in data.items() for _, h, _ in lst),
+        "rung_L1_public_flat": all(h["rung"] == "L1" and h.get("inputs", "public") == "public"
+                                   and h.get("arch", "flat") == "flat" for lst in data.values() for _, h, _ in lst),
+        "world_offset_900": all(h.get("world_offset") == BXC_WORLD_OFFSET for lst in data.values() for _, h, _ in lst),
+        "rows_b5c_only_one_world": all(r["split"] == BXC_CELL and r["rep"] == 0 for lst in data.values()
+                                       for _, _, rows in lst for r in rows)
+        and all(len(rows) == len({r["cfg_idx"] for r in rows}) for lst in data.values() for _, _, rows in lst),
+        "same_configurations": len(set(cfgsets)) == 1 and bool(cfgsets[0]),
+    }
+    out = {"registry": "B-XC", "cell": BXC_CELL, "lift": BXC_LIFT, "validity": validity,
+           "valid": all(validity.values()), "n_configurations": len(cfgsets[0]) if cfgsets else 0, "groups": {}}
+    for gname in BXC_GROUPS:
+        sel = GROUPS[gname]
+        pairs, cls0, cls1 = [], [], []
+        for (s0, h0, r0), (s1, h1, r1) in zip(b0, bx):
+            c0, c1 = clusters_of(r0, h0["q_head_trained"], sel), clusters_of(r1, h1["q_head_trained"], sel)
+            if not c0 or not c1:
+                continue
+            cls0.append(c0)
+            cls1.append(c1)
+            m0 = metrics(_total(c0), h0["q_head_trained"], _n_cfg_pu(c0))
+            m1 = metrics(_total(c1), h1["q_head_trained"], _n_cfg_pu(c1))
+            e = {"seed_B0": s0, "seed_BX1": s1,
+                 "B0": {s: m0[s] for s in SCALARS + ("pi_star_success", "success_floor_pass")},
+                 "BX1": {s: m1[s] for s in SCALARS + ("pi_star_success", "success_floor_pass")},
+                 "diff": {s: (m1[s] - m0[s]) if _num(m1[s]) and _num(m0[s]) else None for s in SCALARS},
+                 "support_configs": {"B0": m0["n_probe_unique_configs"], "BX1": m1["n_probe_unique_configs"]},
+                 "n_clusters": len(c0), "insufficient": {"B0": m0["insufficient"], "BX1": m1["insufficient"]},
+                 "by_depth": {"B0": m0["by_depth"], "BX1": m1["by_depth"]}}
+            if n_boot:
+                cis, _ = bootstrap([c0, c1], [h0["q_head_trained"], h1["q_head_trained"]], n_boot)
+                e["ci95"] = {"B0": {s: cis[0][s] for s in SCALARS}, "BX1": {s: cis[1][s] for s in SCALARS},
+                             "diff": cis[1]["diff_vs_first"]}
+            pairs.append(e)
+        if not pairs:
+            continue
+        d_pu = [p["diff"]["probe_unique"] for p in pairs]
+        d_gap = [p["diff"]["gap_regret"] for p in pairs]
+        g = {"pairs": pairs,
+             "mean_diff": {s: (sum(p["diff"][s] for p in pairs) / len(pairs))
+                           if all(_num(p["diff"][s]) for p in pairs) else None for s in SCALARS}}
+        if n_boot and len(cls0) == len(pairs):  # CI of the mean paired difference, configurations resampled jointly
+            _, draws = _boot_draws(cls0 + cls1, q["B0"][:len(cls0)] + q["BX1"][:len(cls1)], n_boot, 20260927)
+            n = len(cls0)
+            g["mean_diff_ci95"] = {s: _ci([sum(draws[n + i][j][s] - draws[i][j][s] for i in range(n)) / n
+                                           if all(_num(draws[n + i][j][s]) and _num(draws[i][j][s]) for i in range(n))
+                                           else None for j in range(n_boot)]) for s in SCALARS}
+        g["probe_unique_gain"] = {"per_pair": d_pu, "mean": g["mean_diff"]["probe_unique"],
+                                  "all_pairs_positive": len(d_pu) == 3 and all(_num(d) and d > 0 for d in d_pu)}
+        g["gap_regret_lower"] = {"per_pair": d_gap, "n_lower": sum(_num(d) and d < 0 for d in d_gap)}
+        g["BX1_not_opt_le_10"] = [(_num(p["BX1"]["probe_not_opt"]) and p["BX1"]["probe_not_opt"] <= NOT_OPT_MAX)
+                                  for p in pairs]
+        g["success_floor_pass"] = {"B0": [p["B0"]["success_floor_pass"] for p in pairs],
+                                   "BX1": [p["BX1"]["success_floor_pass"] for p in pairs]}
+        out["groups"][gname] = g
+    cell = out["groups"].get(BXC_CELL)
+    if cell is None:
+        out["primary"] = {"evaluable": False}
+        return out
+    mean = cell["probe_unique_gain"]["mean"]
+    prim = {"mean_probe_unique_gain": mean, "per_pair_gain": cell["probe_unique_gain"]["per_pair"],
+            "mean_gain_ge_lift": _num(mean) and mean >= BXC_LIFT,
+            "all_3_pairs_positive": cell["probe_unique_gain"]["all_pairs_positive"],
+            "gap_regret_lower_3_of_3": len(cell["pairs"]) == 3 and cell["gap_regret_lower"]["n_lower"] == 3,
+            "per_pair_gap_regret_diff": cell["gap_regret_lower"]["per_pair"],
+            "rule": "mean paired (BX1 - B0) s0 uniquely-optimal first-probe rate >= +.10 with all 3 seed-pair "
+                    "differences > 0, AND gap regret lower for BX1 in 3/3 pairs"}
+    prim["pass"] = bool(prim["mean_gain_ge_lift"] and prim["all_3_pairs_positive"] and prim["gap_regret_lower_3_of_3"])
+    prim["verdict"] = "invalid" if not out["valid"] else ("confirmed" if prim["pass"] else "not_confirmed")
+    out["primary"] = prim
+    sens = out["groups"].get("b5c_uc_flag_sensitive", {})
+    out["secondary"] = {
+        "BX1_not_opt_le_10_all_seeds": all(cell["BX1_not_opt_le_10"]) and len(cell["BX1_not_opt_le_10"]) == 3,
+        "BX1_not_opt_per_seed": [p["BX1"]["probe_not_opt"] for p in cell["pairs"]],
+        "success_floor_BX1_all_seeds": all(cell["success_floor_pass"]["BX1"]),
+        "success_floor_B0_all_seeds": all(cell["success_floor_pass"]["B0"]),
+        "flag_sensitive": {k: sens.get(k) for k in ("probe_unique_gain", "gap_regret_lower", "mean_diff",
+                                                    "mean_diff_ci95")} if sens else None,
+        "flag_sensitive_support_configs": [p["support_configs"] for p in sens.get("pairs", [])],
+        "mean_diff_ci95": cell.get("mean_diff_ci95"),
+    }
+    return out
+
+
 def main(argv=None):
     p = argparse.ArgumentParser()
     p.add_argument("--arm", nargs="+", action="append", required=True, metavar=("NAME", "RUN"))
@@ -336,8 +469,25 @@ def main(argv=None):
     p.add_argument("--n-boot", type=int, default=1000)
     p.add_argument("--ni-regret", type=float, default=1.0, help="regret non-inferiority tolerance (register first)")
     p.add_argument("--bhr-only", action="store_true", help="B-HR gate from B0 alone (before training other arms)")
+    p.add_argument("--bxc", action="store_true",
+                   help="registry B-XC: B0 vs BX1 (seeds 20-22) on b5c_hold_uc (eval --split-set b5c)")
+    p.add_argument("--episodes-name", default="eval_episodes.jsonl.gz",
+                   help="episode-rows file inside each run dir (eval --out-name X.json -> X_episodes.jsonl.gz)")
     a = p.parse_args(argv)
     arms = {x[0]: x[1:] for x in a.arm}
+    if a.bxc:
+        data = load_arms({k: arms[k] for k in ("B0", "BX1")}, a.episodes_name)
+        res = {"tool": "campaign05_bx_score --bxc", "eps": EPS, "min_support": MIN_SUPPORT, "n_boot": a.n_boot,
+               "episodes_name": a.episodes_name,
+               "runs": {k: [str(r) for r in arms[k]] for k in ("B0", "BX1")},
+               "arms": {arm: {"seeds": [s for s, _, _ in lst], "train_split": lst[0][1]["train_split"],
+                              "groups": {g: v for g, v in arm_groups(lst, a.n_boot).items() if g in BXC_GROUPS}}
+                        for arm, lst in data.items()},
+               "B_XC": bxc_score(arms, a.n_boot, a.episodes_name)}
+        Path(a.out).write_text(json.dumps(res, indent=1))
+        print("B-XC validity:", res["B_XC"]["validity"])
+        print("B-XC primary:", {k: v for k, v in res["B_XC"]["primary"].items() if k != "rule"})
+        return
     if a.bhr_only:
         data = load_arms({"B0": arms["B0"]})
         groups = arm_groups(data["B0"], a.n_boot)

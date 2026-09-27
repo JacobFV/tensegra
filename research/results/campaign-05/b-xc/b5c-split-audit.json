@@ -1,0 +1,147 @@
+{
+ "tool": "campaign05_bsplit_audit audit-b5c",
+ "version": "probeworld-e05-trackb-v1",
+ "split": "b5c_hold_uc",
+ "all_pass": true,
+ "checks": [
+  {
+   "check": "E1 b5c_hold_uc = fresh draws of the b5_hold_uc generator family (same cells / k / combo; new config seed base 5.9e9, not in split table v2 or the extended-04 table)",
+   "pass": true,
+   "detail": {
+    "combo": [
+     "unreliable+correlated"
+    ],
+    "config_seed_base": 5900000000
+   }
+  },
+  {
+   "check": "E2 b5c generator parameters absent from every b5 training/selection/test family (b5_train, b5x_train, b5_dev, b5_test_iid, b5_heldout_price, b5_heldout_k)",
+   "pass": true,
+   "detail": [
+    "b5_heldout_k",
+    "b5_heldout_price",
+    "b5_iid",
+    "b5x_train"
+   ]
+  },
+  {
+   "check": "E3 sizing rule identical to b5_hold_uc (>= HOLD_TARGET_ELIGIBLE s0-uniquely-probe-optimal, >= 20 flag-sensitive for the correlated flag, 1 world per configuration)",
+   "pass": true,
+   "detail": {
+    "target_eligible": 60,
+    "target_flag_sensitive": 20
+   }
+  },
+  {
+   "check": "E4 seed-range registry: pairwise disjoint; [5.9e9, 6.0e9) registered and disjoint from every b5 / extended-04 probeworld range",
+   "pass": true,
+   "detail": {
+    "overlaps": [],
+    "probeworld_ranges": [
+     "ext04 probeworld splits 4.1e9-4.7e9",
+     "ext04 probeworld training 8e9 (8e9 + 1e8*seed, seeds 0-5 incl. own-world offset)",
+     "ext05 probeworld split table v2 (b5_*, b5x_train) 5.1e9-5.8e9: configs base + i, eval worlds base + 5e7 + 1000 i + r (i < 4000)",
+     "ext05 probeworld training worlds B-X/B-Q seeds 10-12 (8e9 + 1e8*seed)",
+     "ext05 probeworld training worlds B-XC seeds 20-22 (8e9 + 1e8*seed)"
+    ]
+   }
+  },
+  {
+   "check": "F1 generated b5c configs land in their generator parameters (cell ranges / k / flags U+C)",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "check": "F2 b5c configuration seeds disjoint from every earlier pool's configuration seeds",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "check": "F3 no b5c configuration equals any earlier configuration (split table v2 incl. the first 4000 of each hold stream, extended-04 pools)",
+   "pass": true,
+   "detail": {
+    "dups": [],
+    "earlier": 10688
+   }
+  },
+  {
+   "check": "F4 split_of_params: every b5c configuration lies only in the U+C hold family (no training/selection family)",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "check": "F5 b5c eval world seeds (offsets 500/700/900) unique, inside [5.9e9, 6.0e9), disjoint from every earlier eval world and below the training band (8e9+)",
+   "pass": true
+  },
+  {
+   "check": "G1 b5c labels (V*, Q*, A*) are functions of the visible history (0 conflicts)",
+   "pass": true,
+   "detail": {
+    "configs": 8,
+    "distinct_histories": 713,
+    "conflicts": 0
+   }
+  },
+  {
+   "check": "G2 simulator state == public state rebuilt from the visible history",
+   "pass": true,
+   "detail": {
+    "mismatches": 0
+   }
+  }
+ ],
+ "split_definition": {
+  "cells": [
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    2,
+    2
+   ]
+  ],
+  "k": [
+   1,
+   2,
+   8
+  ],
+  "combos": [
+   "unreliable+correlated"
+  ],
+  "config_seed_base": 5900000000,
+  "configs_checked": 4000,
+  "fresh_draws_of": "b5_hold_uc"
+ },
+ "k_counts_checked": {
+  "1": 1306,
+  "2": 1367,
+  "4": 0,
+  "8": 1327
+ },
+ "cpu_s": 0.705337664
+}
