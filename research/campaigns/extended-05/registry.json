@@ -136,6 +136,22 @@
    "status": "registered (gated on B-X promotion)",
    "hypothesis": "The promoted arm's gain replicates on fresh seeds and fresh configuration draws of the new holds.",
    "worlds": "new configuration draws from the new-hold families (registered generator seed), not only new outcome draws"
+  },
+  {
+   "id": "A-HR2",
+   "status": "registered (after A-HR G1 failed)",
+   "hypothesis": "A bounded multi-step option class has headroom over D where one-step deviations do not.",
+   "intervention": "options: (T) hand control to the public dep_reuse teacher until the next successful commit (or 12 steps), then D; (B) budget override: for the next solver call use budget b in {16,1024,remaining} then D (b=128 is D's usual) \u2014 both at publicly sampled points; single deviation per episode",
+   "comparator": "D",
+   "input_contract": "public; the teacher is a public-information reference (supplied sub-policy, disclosed)",
+   "label_privilege": "true-world branching (hindsight bound G1a-multi) + cross-fitted same-information estimate G1b-multi",
+   "gate": "G1a-multi (hindsight single-deviation, excl abstain) >= .02 per episode AND G1b-multi >= .01 with CI90 excluding 0",
+   "next_branch": {
+    "pass": "A-PI with the option class that passed (learned choice of WHEN to invoke the option)",
+    "fail": "stop Track A: no permitted class shows headroom; report limitation"
+   },
+   "worlds": "same A-HR worlds (220M; r0-r2; iid_f0/iid_f2; 256 each) for pairing",
+   "metric_checks": "option T uses a supplied better sub-policy: a pass would show value in learning WHEN to delegate, not in learning the teacher's skill"
   }
  ]
 }

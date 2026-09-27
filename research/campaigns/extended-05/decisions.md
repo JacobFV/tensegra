@@ -21,3 +21,10 @@
   - The G1a hindsight bound and the G1b cross-fitted ridge estimate are implemented. r3–r5 are refused.
   - Dev smoke (non-protocol): single-deviation H excl. abstain = .0013 per episode (90% CI .0004–.0024); G1b −.0005. Both suggest little headroom.
   - Registered A-HR launched: r0–r2 × iid_f0/iid_f2 × 256 worlds on seeds from 220M, plus the full-catalog subsample (~3.9k core-s).
+- 2026-09-27T02:24Z: **A-HR gate G1 FAILS** (16 jobs, exit 0, 5.2k core-s; research/results/campaign-05/a-hr/analysis.json; 1,536 episodes, 512 world clusters).
+  - Hindsight single-deviation H excl. abstain = **.0077 per episode** (90% CI .0041–.0122), below .02; incl. abstain .0134.
+  - Per-state H excl. abstain .0014: median 0, p99 .027, 1.8% of states ≥ .01.
+  - **G1b** (cross-fitted same-information single deviation) = **−.0021** (CI −.0042 to −.0004). Deviating from D on public estimates is harmful; the harmful rate is .11.
+  - Full catalog vs O(I) per state: .0008 vs .0003.
+  - **Reading:** one-step deviations from greedy + R-mask have negligible headroom.
+  - Per design: register and test one bounded multi-step option class (**A-HR2**): (T) delegate to the public dep_reuse teacher until the next commit; (B) next-call budget override. Otherwise stop Track A.
