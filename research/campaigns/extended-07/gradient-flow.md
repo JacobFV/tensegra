@@ -238,5 +238,6 @@ loss   = actor_L1(z_f) + w_aux * MSE(pred, factor_features(public state))   # w_
 | | e07-dev-contracts-gradreport2 | 3.1 |
 | | e07-dev-contracts-coupling-final | 10.0 |
 | | e07-dev-contracts-coupling-init | 41.7 |
-| | final re-run of the test suite | see the branch commit message |
+| | e07-dev-contracts-pytest-final (17 passed, including `test_campaign06_trackb::test_factor_features_public`) | 7.4 |
+| | **total metered** | **72.6** (dev budget 1,500) |
 | local | pure-Python audit, Q\* comparison, contract tests, development | ≈ 25 |
