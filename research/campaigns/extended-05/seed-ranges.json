@@ -1,0 +1,29 @@
+{
+  "description": "World/initialization seed-range registry (half-open [lo, hi)). Every new extended-05 range must be disjoint from every other entry; asserted by research/tools/campaign05_hr.py (check_seed_ranges) and tests/test_campaign05_hr.py. Sources: extended-03/04 configs (configs/campaign03, configs/campaign04), research/tools/campaign04_a1_configs.py EXT03_RANGES, campaign04_c_configs.py OTHER_RANGES/ranges(), extended-04 protocols (F3 200M, A3 190M) and probeworld tools.",
+  "version": 1,
+  "ranges": [
+    {"name": "ext03 training (boot 3.0e9+, rl 3.4e9+; ext04 f-boot r3-r5 3.06/3.08/3.10e9; A2/A3 training 3.44e9)", "campaign": "extended-03/04", "lo": 3000000000, "hi": 3900000000},
+    {"name": "ext03/04 development 3.9e9+ (lineage dev 3.900-3.905e9, bootstrap entropy 3.97e9)", "campaign": "extended-03/04", "lo": 3900000000, "hi": 4000000000},
+    {"name": "ext03 P1 sealed 110M", "campaign": "extended-03", "lo": 110000000, "hi": 111000000},
+    {"name": "ext03 P2a screening 120M", "campaign": "extended-03", "lo": 120000000, "hi": 121000000},
+    {"name": "ext03 P2a Part D probe 1.99e9", "campaign": "extended-03", "lo": 1990000000, "hi": 2000000000},
+    {"name": "ext03 calibration/smoke/leverage 2.0-2.1e9", "campaign": "extended-03", "lo": 2000000000, "hi": 2100000000},
+    {"name": "ext04 A1 deployment matrix 130M", "campaign": "extended-04", "lo": 130000000, "hi": 131000000},
+    {"name": "ext04 A2 screening 140M", "campaign": "extended-04", "lo": 140000000, "hi": 141000000},
+    {"name": "ext04 Track C labels 150M", "campaign": "extended-04", "lo": 150000000, "hi": 151000000},
+    {"name": "ext04 Track C smoke-touched 160M", "campaign": "extended-04", "lo": 160000000, "hi": 161000000},
+    {"name": "ext04 Track C evaluation 161M", "campaign": "extended-04", "lo": 161000000, "hi": 162000000},
+    {"name": "ext04 F1 sealed 170M", "campaign": "extended-04", "lo": 170000000, "hi": 171000000},
+    {"name": "ext04 F1b sealed 180M", "campaign": "extended-04", "lo": 180000000, "hi": 181000000},
+    {"name": "ext04 A3 screening 190M", "campaign": "extended-04", "lo": 190000000, "hi": 191000000},
+    {"name": "ext04 F3 sealed 200M", "campaign": "extended-04", "lo": 200000000, "hi": 201000000},
+    {"name": "ext04 deploy/progress tests 2.15e9", "campaign": "extended-04", "lo": 2150000000, "hi": 2151000000},
+    {"name": "ext04 Track C dev/tests 2.17e9", "campaign": "extended-04", "lo": 2170000000, "hi": 2171000000},
+    {"name": "ext04 probeworld splits 4.1e9-4.7e9", "campaign": "extended-04", "lo": 4100000000, "hi": 4700000000},
+    {"name": "ext04 probeworld training 8e9 (8e9 + 1e8*seed, seeds 0-5 incl. own-world offset)", "campaign": "extended-04", "lo": 8000000000, "hi": 8600000000},
+    {"name": "ext05 A-CF sealed (reserved by registry: >= 210M)", "campaign": "extended-05", "lo": 210000000, "hi": 211000000, "status": "reserved"},
+    {"name": "ext05 A-HR states/branches 220M (+100,000*i; i=0 iid_f0, 1 iid_f2; same worlds for every base)", "campaign": "extended-05", "lo": 220000000, "hi": 220200000, "status": "registered"},
+    {"name": "ext05 A-HR reserve 230M (originally the online oracle policy, dropped in design v2; reserved for the G1-fail bounded multi-step option test)", "campaign": "extended-05", "lo": 230000000, "hi": 230200000, "status": "reserved"},
+    {"name": "ext05 A-HR development/tests/smokes 2.25e9 (non-protocol)", "campaign": "extended-05", "lo": 2250000000, "hi": 2251000000, "status": "development"}
+  ]
+}
