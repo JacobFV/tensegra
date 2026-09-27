@@ -22,6 +22,8 @@ Extended-05 Track B additions (all default off; defaults reproduce B1/B2/F2 bit 
                                  features); a deterministic public computation, labelled supplied
   eval   --split-set b5 --episode-rows   b5 eval splits; per-episode decision records (episodes.jsonl.gz) for the
                                  B-X scorer (campaign05_bx_score.py)
+  labels/eval/references --split-set b5c   B-XC: ONLY the fresh sized U+C hold b5c_hold_uc (seed base 5.9e9); models
+                                 trained on a b5 labels dir are evaluated with --labels pointing at the b5c labels dir
 
 Privileged labels (Q*, A*, stage, dependency, switch, case) enter ONLY training losses; model inputs are the
 public config vector plus the visible step record and the public available-action mask.
@@ -85,8 +87,9 @@ def cmd_labels(a):
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     meta = {}
-    if getattr(a, "split_set", "b1") == "b5":
-        todo = [(s, None if opt == "sized" else getattr(a, opt)) for s, opt in pw5.B5_LABEL_SPLITS]
+    sset = getattr(a, "split_set", "b1")
+    if sset in pw5.SPLIT_SETS:  # b5 (B-SPLIT pools) or b5c (B-XC: ONLY the fresh sized U+C hold)
+        todo = [(s, None if opt == "sized" else getattr(a, opt)) for s, opt in pw5.SPLIT_SETS[sset]["label_splits"]]
     else:
         todo = [("train", a.n_train)] + [(s, a.n_eval) for s in EVAL_SPLITS]
     for split, n in todo:
@@ -109,6 +112,11 @@ def cmd_labels(a):
     if getattr(a, "split_set", "b1") == "b5":  # key absent for the B1 split set (labels_meta unchanged)
         meta["split_set"] = {"name": "b5", "version": pw5.VERSION, "split_table": pw5.SPLIT_TABLE_VERSION,
                              "hold_target_eligible": a.hold_target}
+    elif sset == "b5c":  # B-XC labels dir: evaluation pool only (models are trained on the b5 labels dir)
+        meta["split_set"] = {"name": "b5c", "registry": "B-XC", "version": pw5.VERSION,
+                             "split_table": pw5.SPLIT_TABLE_VERSION, "hold_target_eligible": a.hold_target,
+                             "splits": {s: {"config_seed_base": pw5.SPLITS5C[s][3], "fresh_draws_of": src}
+                                        for s, src in pw5.B5C_SOURCE_SPLIT.items()}}
     meta["eps"] = pw.EPS
     meta["continuation"] = pw.CONTINUATION
     (out / "labels_meta.json").write_text(json.dumps(meta, indent=1))
@@ -905,7 +913,7 @@ def cmd_eval(a):
     ep_rows = [] if getattr(a, "episode_rows", False) else None
     splits = a.splits
     if splits is None:
-        splits = list(pw5.B5_EVAL_SPLITS) if getattr(a, "split_set", "b1") == "b5" else list(EVAL_SPLITS)
+        splits = default_eval_splits(a)
     split_worlds = dict(x.split("=") for x in (getattr(a, "split_worlds", None) or []))
     for split in splits:
         worlds = int(split_worlds.get(split, a.worlds))
@@ -953,6 +961,13 @@ def cmd_eval(a):
     (run / out_name).write_text(json.dumps(result, indent=1))
     if failure_records:  # protocol-B2 only
         (run / "failure_records.json").write_text(json.dumps(failure_records))
+
+
+def default_eval_splits(a):
+    """Eval/references splits when --splits is not given: extended-04 EVAL_SPLITS (b1), the b5 eval splits, or the
+    B-XC fresh U+C hold only (b5c)."""
+    sset = getattr(a, "split_set", "b1")
+    return list(pw5.SPLIT_SETS[sset]["eval_splits"]) if sset in pw5.SPLIT_SETS else list(EVAL_SPLITS)
 
 
 def eps_u(ep):
@@ -1013,7 +1028,7 @@ def cmd_references(a):
     res = {}
     splits = a.splits
     if splits is None:
-        splits = list(pw5.B5_EVAL_SPLITS) if getattr(a, "split_set", "b1") == "b5" else list(EVAL_SPLITS)
+        splits = default_eval_splits(a)
     split_worlds = dict(x.split("=") for x in (getattr(a, "split_worlds", None) or []))
     for split in splits:
         acc = {name: [] for name in REFERENCE_POLICIES}
@@ -1077,7 +1092,8 @@ def main(argv=None):
     s.add_argument("--out", required=True)
     s.add_argument("--n-train", type=int, default=384)
     s.add_argument("--n-eval", type=int, default=128)
-    s.add_argument("--split-set", choices=("b1", "b5"), default="b1", help="extended-05: b5 = B-SPLIT pools")
+    s.add_argument("--split-set", choices=("b1", "b5", "b5c"), default="b1",
+                   help="extended-05: b5 = B-SPLIT pools; b5c = B-XC fresh U+C hold only (b5c_hold_uc)")
     s.add_argument("--n-train-x", type=int, default=768, help="b5: exposure (BX1) training pool size")
     s.add_argument("--hold-target", type=int, default=pw5.HOLD_TARGET_ELIGIBLE,
                    help="b5: new-hold pool = smallest prefix with this many s0-uniquely-probe-optimal configs")
@@ -1109,7 +1125,7 @@ def main(argv=None):
     s.add_argument("--worlds", type=int, default=4)
     s.add_argument("--splits", nargs="+", default=None, help="default: B1 eval splits (or b5 eval splits)")
     s.add_argument("--world-offset", type=int, default=None, help="eval world-seed offset (default 500 = B1)")
-    s.add_argument("--split-set", choices=("b1", "b5"), default="b1")
+    s.add_argument("--split-set", choices=("b1", "b5", "b5c"), default="b1")
     s.add_argument("--episode-rows", action="store_true", help="extended-05: write <out>_episodes.jsonl.gz")
     s.add_argument("--out-name", default=None, help="extended-05: eval file name inside the run dir (eval.json)")
     s.add_argument("--split-worlds", nargs="*", default=None, metavar="SPLIT=N",
@@ -1120,7 +1136,7 @@ def main(argv=None):
     s.add_argument("--worlds", type=int, default=4)
     s.add_argument("--splits", nargs="+", default=None)
     s.add_argument("--world-offset", type=int, default=None, help="eval world-seed offset (default 500 = B1)")
-    s.add_argument("--split-set", choices=("b1", "b5"), default="b1")
+    s.add_argument("--split-set", choices=("b1", "b5", "b5c"), default="b1")
     s.add_argument("--split-worlds", nargs="*", default=None, metavar="SPLIT=N")
     s = sub.add_parser("summarize")
     s.add_argument("--runs", nargs="+", required=True)

@@ -3,6 +3,7 @@
   campaign05_bsplit_audit.py audit --out FILE [--n-pair 32] [--n-hist 8]
   campaign05_bsplit_audit.py triviality --out FILE [--n-hold 40] [--n-train 80] [--worlds 8]
   campaign05_bsplit_audit.py sizing --out FILE [--n-uc 480] [--n-se 160]
+  campaign05_bsplit_audit.py audit-b5c --out FILE [--n-b5c 4000] [--n-hist 8]     (B-XC split b5c_hold_uc)
 
 audit:
   A. pair definability under the flag semantics (every pair generable; composition interaction of the first decision)
@@ -338,9 +339,146 @@ def sizing(a):
     return res
 
 
+# ------------------------------------------------------------------------------------------------ B-XC (b5c)
+
+SEED_RANGES = REPO / "research/campaigns/extended-05/seed-ranges.json"
+EXT04_POOL_SIZES = {"train": 384, "dev": 128, "test_iid": 128, "heldout_price": 128, "heldout_k": 128,
+                    "heldout_comp": 128}
+EVAL_OFFSETS = (500, 700, 900)
+
+
+def seed_range_overlaps(ranges):
+    return [(a["name"], b["name"]) for i, a in enumerate(ranges) for b in ranges[i + 1:]
+            if a["lo"] < b["hi"] and b["lo"] < a["hi"]]
+
+
+def audit_b5c(a):
+    """Split-support audit of the B-XC split b5c_hold_uc (fresh U+C draws, seed base 5.9e9) against every earlier pool:
+    split table v2 (b5_*, b5x_train; holds to HOLD_MAX_CONFIGS) and the extended-04 table."""
+    t0 = time.process_time()
+    checks = []
+    names = pw5.combo_name
+    split = "b5c_hold_uc"
+    src = pw5.B5C_SOURCE_SPLIT[split]
+    n = a.n_b5c
+    cells, ks, combos, base = pw5.SPLITS5C[split]
+    # ---------------------------------------------------------------- E. definition and seed ranges
+    checks.append(check("E1 b5c_hold_uc = fresh draws of the b5_hold_uc generator family (same cells / k / combo; "
+                        "new config seed base 5.9e9, not in split table v2 or the extended-04 table)",
+                        (cells, ks, combos) == pw5.SPLITS5[src][:3] and split not in pw5.SPLITS5
+                        and split not in pw.SPLITS
+                        and base not in {v[3] for v in list(pw5.SPLITS5.values()) + list(pw.SPLITS.values())},
+                        {"combo": [names(c) for c in combos], "config_seed_base": base}))
+    fam = set(itertools.product(cells, ks, combos))
+    train_fams = pw5.family_params([s for s in pw5.SPLITS5 if s not in pw5.NEW_HOLD_SPLITS])
+    checks.append(check("E2 b5c generator parameters absent from every b5 training/selection/test family "
+                        "(b5_train, b5x_train, b5_dev, b5_test_iid, b5_heldout_price, b5_heldout_k)",
+                        all(not (fam & v) for v in train_fams.values()), sorted(train_fams)))
+    checks.append(check("E3 sizing rule identical to b5_hold_uc (>= HOLD_TARGET_ELIGIBLE s0-uniquely-probe-optimal, "
+                        ">= 20 flag-sensitive for the correlated flag, 1 world per configuration)",
+                        pw5.SENSITIVITY_FLAGS[split] == pw5.SENSITIVITY_FLAGS[src] == (2,)
+                        and pw5.HOLD_TARGET_SENSITIVE[split] == pw5.HOLD_TARGET_SENSITIVE[src] == 20
+                        and pw5.HOLD_TARGET_ELIGIBLE == 60,
+                        {"target_eligible": pw5.HOLD_TARGET_ELIGIBLE,
+                         "target_flag_sensitive": pw5.HOLD_TARGET_SENSITIVE[split]}))
+    ranges = json.loads(SEED_RANGES.read_text())["ranges"]
+    ov = seed_range_overlaps(ranges)
+    mine = [r for r in ranges if r["lo"] <= base and base + 100_000_000 <= r["hi"]]
+    probe_ranges = [r for r in ranges if "probeworld" in r["name"] and r not in mine]
+    checks.append(check("E4 seed-range registry: pairwise disjoint; [5.9e9, 6.0e9) registered and disjoint from every "
+                        "b5 / extended-04 probeworld range", not ov and len(mine) == 1
+                        and all(not (base < r["hi"] and r["lo"] < base + 100_000_000) for r in probe_ranges),
+                        {"overlaps": ov, "probeworld_ranges": [r["name"] for r in probe_ranges]}))
+    # ---------------------------------------------------------------- F. generated configurations vs earlier pools
+    earlier_cfg, earlier_seed = {}, {}
+    for s, m in POOL_SIZES.items():
+        for idx in range(m):
+            earlier_cfg.setdefault(pw5.split_config(s, idx), (s, idx))
+            earlier_seed[pw5.generator_params(s, idx)[3]] = (s, idx)
+    for s, m in EXT04_POOL_SIZES.items():
+        for idx in range(m):
+            earlier_cfg.setdefault(pw.split_config(s, idx), (s, idx))
+            earlier_seed[pw.generator_params(s, idx)[3]] = (s, idx)
+    new_cfgs, problems, dup_cfg, dup_seed, leak = [], [], [], [], []
+    for idx in range(n):
+        cell, k, cmb, seed = pw5.generator_params(split, idx)
+        cfg = pw5.split_config(split, idx)
+        if not cell_consistent(cfg, cell) or cfg.k != k or cfg.flags != tuple(cmb) or seed != base + idx:
+            problems.append(idx)
+        if cfg in earlier_cfg:
+            dup_cfg.append((idx, earlier_cfg[cfg]))
+        if seed in earlier_seed:
+            dup_seed.append((idx, earlier_seed[seed]))
+        if pw5.split_of_params(cell, k, cmb) - {pw5.family(src)}:
+            leak.append(idx)
+        new_cfgs.append(cfg)
+    checks.append(check("F1 generated b5c configs land in their generator parameters (cell ranges / k / flags U+C)",
+                        not problems, problems[:5]))
+    checks.append(check("F2 b5c configuration seeds disjoint from every earlier pool's configuration seeds",
+                        not dup_seed, dup_seed[:5]))
+    checks.append(check("F3 no b5c configuration equals any earlier configuration (split table v2 incl. the first "
+                        f"{pw5.HOLD_MAX_CONFIGS} of each hold stream, extended-04 pools)", not dup_cfg
+                        and len(set(new_cfgs)) == len(new_cfgs), {"dups": dup_cfg[:5], "earlier": len(earlier_cfg)}))
+    checks.append(check("F4 split_of_params: every b5c configuration lies only in the U+C hold family (no training/"
+                        "selection family)", not leak, leak[:5]))
+    ws_new = [pw5.world_seed(split, i, off + r) for i in range(n) for off in EVAL_OFFSETS for r in range(4)]
+    ws_old = {pw5.world_seed(s, i, off + r) for s, m in POOL_SIZES.items() for i in range(m)
+              for off in EVAL_OFFSETS for r in range(4)}
+    ws_old |= {pw.world_seed(s, i, off + r) for s, m in EXT04_POOL_SIZES.items() for i in range(m)
+               for off in EVAL_OFFSETS for r in range(4)}
+    in_range = all(base <= w < base + 100_000_000 for w in ws_new)
+    checks.append(check("F5 b5c eval world seeds (offsets 500/700/900) unique, inside [5.9e9, 6.0e9), disjoint from "
+                        "every earlier eval world and below the training band (8e9+)",
+                        len(ws_new) == len(set(ws_new)) and not (set(ws_new) & ws_old) and in_range
+                        and max(ws_new) < 8_000_000_000))
+    # ---------------------------------------------------------------- G. labels depend only on visible information
+    n_hist, conflicts, state_mismatch = 0, 0, 0
+    seen_lab = {}
+    rng = random.Random(5959)
+    used = 0
+    for idx in range(n):
+        if used >= a.n_hist:
+            break
+        cfg = new_cfgs[idx]
+        if cfg.k > 2:
+            continue  # keep the audit DP cheap
+        used += 1
+        s = pw.ExactSolver(cfg)
+        for w in range(40):
+            ep = pw.Episode(cfg, 9_500_000 + 1000 * idx + w)
+            while not ep.done:
+                st = ep.state
+                if pw.public_state_from_history(cfg, ep.history) != st:
+                    state_mismatch += 1
+                key = (idx, tuple(ep.history))
+                lab = (round(s.value(st), 9), tuple(sorted((a_, round(v, 9)) for a_, v in s.q_values(st).items())),
+                       tuple(sorted(s.opt_set(st))))
+                if key in seen_lab:
+                    conflicts += seen_lab[key] != lab
+                else:
+                    seen_lab[key] = lab
+                    n_hist += 1
+                ep.step(rng.choice(ep.available()))
+    checks.append(check("G1 b5c labels (V*, Q*, A*) are functions of the visible history (0 conflicts)",
+                        conflicts == 0 and n_hist > 0, {"configs": used, "distinct_histories": n_hist,
+                                                        "conflicts": conflicts}))
+    checks.append(check("G2 simulator state == public state rebuilt from the visible history", state_mismatch == 0,
+                        {"mismatches": state_mismatch}))
+    cnt_k = {k: sum(c.k == k for c in new_cfgs) for k in pw.K_VALUES}
+    return {"tool": "campaign05_bsplit_audit audit-b5c", "version": pw5.VERSION, "split": split,
+            "all_pass": all(c["pass"] for c in checks), "checks": checks,
+            "split_definition": {"cells": [list(c) for c in cells], "k": list(ks), "combos": [names(c) for c in combos],
+                                 "config_seed_base": base, "configs_checked": n, "fresh_draws_of": src},
+            "k_counts_checked": cnt_k, "cpu_s": time.process_time() - t0}
+
+
 def main(argv=None):
     p = argparse.ArgumentParser()
     sub = p.add_subparsers(dest="cmd", required=True)
+    s = sub.add_parser("audit-b5c")
+    s.add_argument("--out", required=True)
+    s.add_argument("--n-b5c", type=int, default=pw5.HOLD_MAX_CONFIGS, help="b5c configurations checked (cap 4,000)")
+    s.add_argument("--n-hist", type=int, default=8)
     s = sub.add_parser("audit")
     s.add_argument("--out", required=True)
     s.add_argument("--n-pair", type=int, default=32)
@@ -355,13 +493,14 @@ def main(argv=None):
     s.add_argument("--n-uc", type=int, default=480)
     s.add_argument("--n-se", type=int, default=160)
     a = p.parse_args(argv)
-    res = {"audit": audit, "triviality": triviality, "sizing": sizing}[a.cmd](a)
+    res = {"audit": audit, "audit-b5c": audit_b5c, "triviality": triviality, "sizing": sizing}[a.cmd](a)
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(res, indent=1, default=list))
-    if a.cmd == "audit":
+    if a.cmd in ("audit", "audit-b5c"):
         for c in res["checks"]:
             print(("PASS " if c["pass"] else "FAIL ") + c["check"])
-        print(json.dumps(res["pairs"], indent=1))
+        if "pairs" in res:
+            print(json.dumps(res["pairs"], indent=1))
     elif a.cmd == "triviality":
         print(json.dumps(res["keys"], indent=1))
     else:
