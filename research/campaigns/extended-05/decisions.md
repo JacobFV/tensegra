@@ -118,3 +118,15 @@
 - 2026-09-27T04:22Z: **A-PI-C screen launched** (12 jobs, both costs on the same 270M worlds, source-da722185).
   - The first smoke job failed because snapshots exclude research/results, so the controllers were not staged. The receipt is kept (apic-r0-iid_f0-nocontroller). The controllers were staged via tar with hashes verified (7b7928c6…, e251ff5f…).
   - Smoke-then-launch discipline was used: one job was verified running before the other 11.
+- 2026-09-27T04:33Z: **Independent Track B audit merged** (db1522c3). 750 point values reproduce within 1e-14; B-HR, B-X (not supported) and B-XC (confirmed; mean +.206, 95% CI .113–.307) stand.
+  - **Integrity:** the split pools equal the registered generator; U+C and S+E appear 0 times in training/selection; b5c shares 0 of 10,688 earlier configurations; labels depend only on visible history (65 re-simulated episodes, own DP, 0 mismatches); the hold sizing reproduces; B-XC registration (03:08:34Z) precedes all B-XC trainings, labels and evaluations.
+  - **Corrections adopted:**
+    1. **B-LOC's 'belief-dependent' class is withdrawn as named.** Other seeds of the same public-input model fix first errors as often as the belief-supplied BO models (27% vs 21%), and 36% of the belief-classed errors sit at the first decision, where belief = prior. **No belief effect is detectable.**
+    2. The B-LOC value-estimate share is **52–66%**, not 57–66%.
+    3. "Not a lack of factorized inputs" is too strong. BX2 (supplied belief) lowers gap regret in 3/3 pairs (CI excludes 0), about as much as BX1, through **later** decisions; it does not fix the first-probe decision.
+    4. B-Q's registered mechanism (exposure works through better value estimates) is **not supported**: the first-decision Q choice improves clearly in 1/3 seeds.
+    5. B-XC caveats:
+       - BX1 roughly doubles the overall first-probe rate, and its not-optimal probing rises in 3/3 pairs (still ≤ .10);
+       - most of the gap-regret gain comes from later decisions;
+       - the adaptive rule would also have passed on the inspected B-X data, so the evidence rests on the fresh replication;
+       - B-XC also passes the stricter original B-X rule.
