@@ -54,6 +54,19 @@ per-(world, base) stream), ``always`` (the teacher chooses every decision; D onl
 the proposal is outside the catalog). The evaluation's always-teacher comparator is
 the dep_reuse reference evaluation itself (``run_episode``), tested equal to ``always``.
 
+Delegation cost (registry A-PI-C; additive, off by default)
+------------------------------------------------------------
+``Delegator(..., delegation_cost=c)`` charges an EXTERNAL utility cost c per teacher-controlled step:
+``episode_row`` then reports ``utility`` = environment utility - c x teacher_steps, with the gross
+environment utility (``utility_gross``), ``delegation_cost`` c and the charged ``delegation_charge``
+recorded separately (``apply_delegation_cost``; charging an already-charged row raises, so the charge
+lands exactly once). The cost is never charged to the environment, so behaviour (actions, telemetry,
+compute) is unchanged by c except through the controller's decisions. Every comparator that delegates
+pays it on its own teacher steps (R1, R2, random, pi_T); always-teacher pays it on every step of the
+episode; D pays nothing (no teacher steps). With ``delegation_cost=None`` (the default, A-PI-T/A-CF-T)
+rows and behaviour are exactly the A-PI-T ones. A cost-trained controller (artifact field
+``delegation_cost``) refuses to run under a different cost.
+
 Torch is imported lazily (actor forwards only); numpy for the controller.
 """
 from __future__ import annotations
@@ -75,6 +88,7 @@ TRIGGERS = ("call", "reuse_recompute", "commit_revise")
 DELEGATE_MAX_STEPS = 12
 POLICIES = ("d", "pit", "r1", "r2", "random", "always")
 RULE_TRIGGERS = {"d": (), "pit": TRIGGERS, "random": TRIGGERS, "r1": ("call",), "r2": ("commit_revise",)}
+DELEGATION_COSTS = (0.001, 0.003)   # registry A-PI-C: per teacher-controlled step (registered before any run)
 # identical to research/tools/campaign05_hr.py FEATURE_KEYS / DELEGATE_KEYS (tested)
 FEATURE_KEYS = ("prob", "logit_gap", "rank_frac", "budget_log", "budget_frac", "budget_vs_d_log", "problem_latest",
                 "prev_calls", "prev_timeouts", "prev_max_budget_log", "rel_type_match", "rel_request_match",
@@ -175,6 +189,35 @@ def predict_model(model, X):
     return H @ np.asarray(model["W2"]) + float(model["b2"])
 
 
+# ---------------------------------------------------------------------------
+# Delegation cost (A-PI-C)
+# ---------------------------------------------------------------------------
+
+def check_cost(c) -> float:
+    c = float(c)
+    if not math.isfinite(c) or c < 0:
+        raise ValueError("delegation cost must be finite and >= 0")
+    return c
+
+
+def cost_adjusted_label(dU: float, q_d: float, teacher_steps: int, c: float) -> float:
+    """A-HR2 option-T label under cost c: (dU(delegate) - c x teacher steps in that branch) - q_d.
+    The D branch has no teacher steps, so only the delegate branch is charged; c = 0 gives dU - q_d exactly."""
+    if teacher_steps is None or int(teacher_steps) != teacher_steps or teacher_steps < 1:
+        raise ValueError(f"delegate branch needs its recorded teacher step count (got {teacher_steps!r})")
+    return (dU - check_cost(c) * teacher_steps) - q_d
+
+
+def apply_delegation_cost(row: dict, c: float) -> dict:
+    """Charge the external delegation cost once: utility -= c x teacher_steps (gross kept as utility_gross)."""
+    if "delegation_cost" in row or "utility_gross" in row:
+        raise ValueError("delegation cost already charged on this row")
+    c = check_cost(c)
+    charge = c * row["teacher_steps"]
+    return {**row, "utility_gross": row["utility"], "delegation_cost": c, "delegation_charge": charge,
+            "utility": row["utility"] - charge}
+
+
 def canonical_hash(obj) -> str:
     return hashlib.sha256(json.dumps(obj, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
@@ -193,6 +236,7 @@ class Controller:
         self.family = c["family"]
         self.margin = float(c["margin"] if margin is None else margin)
         self.n_parameters = sum(model_parameters(m) for m in self.models.values())
+        self.delegation_cost = c.get("delegation_cost")      # None: A-PI-T controller (no cost in its labels)
 
     @classmethod
     def from_file(cls, path, **kw):
@@ -218,7 +262,8 @@ class Delegator:
 
     def __init__(self, policy: str, *, controller: Controller | None = None, controller_units: float = 0.0,
                  rate: float | None = None, rng_key: str = "", teacher_factory=make_teacher,
-                 max_steps: int = DELEGATE_MAX_STEPS, record_predictions: bool = False):
+                 max_steps: int = DELEGATE_MAX_STEPS, record_predictions: bool = False,
+                 delegation_cost: float | None = None):
         if policy not in POLICIES:
             raise ValueError(policy)
         if policy == "pit" and controller is None:
@@ -231,11 +276,17 @@ class Delegator:
         self.rate, self.rng_key, self.teacher_factory, self.max_steps = rate, rng_key, teacher_factory, max_steps
         self.record_predictions = record_predictions
         self.triggers = RULE_TRIGGERS.get(policy, ())
+        self.delegation_cost = None if delegation_cost is None else check_cost(delegation_cost)
+        trained = getattr(controller, "delegation_cost", None) if policy == "pit" else None
+        if trained is not None and trained != self.delegation_cost:
+            raise ValueError(f"controller trained under delegation cost {trained}, run under {self.delegation_cost}")
 
     def attach(self, ep: Ep, seed: int) -> Ep:
         rng = random.Random(digest_seed("e05-apit-random", self.rng_key, seed)) if self.policy == "random" else None
         ep.info["seed"] = seed
         ep.info["apit"] = _new_state(rng)
+        if self.delegation_cost is not None:
+            ep.info["apit_cost"] = self.delegation_cost
         if self.policy == "always":
             ep.info["apit"]["teacher"] = self.teacher_factory()
         return ep
@@ -316,7 +367,7 @@ def episode_row(ep: Ep, policy: str) -> dict[str, Any]:
         last = ep.env.observe()
         why = "commit" if committed(last) else ("episode_end" if last.done else "cap")
         ends[why] = ends.get(why, 0) + 1
-    return {"seed": ep.info.get("seed"), "policy": policy, **o, "decisions": ep.taken,
+    row = {"seed": ep.info.get("seed"), "policy": policy, **o, "decisions": ep.taken,
             "truncated": not ep.env.observe().done, "unsupported": ep.unsupported,
             "delegations": st["starts"], "eligible": st["eligible"], "teacher_steps": st["teacher_steps"],
             "controller_evals": st["controller_evals"], "consults": st["consults"],
@@ -324,6 +375,9 @@ def episode_row(ep: Ep, policy: str) -> dict[str, Any]:
             "delegation_out_of_catalog": st["delegation_out_of_catalog"],
             "eligible_by_anchor": st["eligible_by_anchor"], "delegations_by_anchor": st["starts_by_anchor"],
             "delegation_ends": ends, **({"predictions": st["preds"]} if st["preds"] else {})}
+    if ep.info.get("apit_cost") is not None:
+        row = apply_delegation_cost(row, ep.info["apit_cost"])
+    return row
 
 
 def run_delegator(actor, envs, seeds, delegator: Delegator, *, cap=96, neural_work_per_forward=1.0, device="cpu",
@@ -366,14 +420,17 @@ class RegretHook:
                             "pred": last["pred"], "teacher_index": last["teacher_index"], "d_index": d.default,
                             "choice": choice, "actions": d.actions, "env": env, "hidden": hidden, "tracker": tracker,
                             "recorder": ep.recorder.copy(), "U_t": env.current_utility(), "cap": ep.cap - ep.taken,
-                            "ep": ep})
+                            "ep": ep, "teacher_steps_before": st["teacher_steps"] - int(last["fired"])})
 
 
 def run_regret_branches(actor, delegator: Delegator, points, *, neural_work_per_forward=1.0, device="cpu",
                         batch=64, check=False):
     """For each snapshot, branch the alternative (fired -> D now; not fired -> delegate now) and continue
     with pi_T; the main line is the chosen action's continuation. ``check`` also branches the chosen
-    action (determinism check). Returns rows with Q(delegate), Q(D) (utility-to-go from U_t)."""
+    action (determinism check). Returns rows with Q(delegate), Q(D) (utility-to-go from U_t). Under a delegation cost
+    (``delegator.delegation_cost``) each Q is net of c x the teacher steps from the point on in that line
+    (a branched line's teacher steps: its first step if it delegates + its pi_T continuation's)."""
+    cost = delegator.delegation_cost
     jobs = []
     for p in points:
         jobs.append((p, "delegate" if not p["fired"] else "D"))
@@ -402,19 +459,25 @@ def run_regret_branches(actor, delegator: Delegator, points, *, neural_work_per_
                             neural_work_per_forward)
             eps.append(ep)
         run_policy(actor, eps, delegator, device=device, neural_work_per_forward=neural_work_per_forward)
-        results += [ep.env.evaluate()["utility"] for ep in eps]
+        results += [(ep.env.evaluate()["utility"], ep.info["apit"]["teacher_steps"] + (alt == "delegate"))
+                    for ep, (_, alt) in zip(eps, chunk)]
+
+    def togo(u, n, p):     # utility-to-go from U_t; under a cost net of c x teacher steps (same formula every line)
+        return u - p["U_t"] if cost is None else (u - p["U_t"]) - cost * n
     rows, k = [], 0
     for p in points:
-        main = p["ep"].env.evaluate()["utility"] - p["U_t"]
-        alt = results[k] - p["U_t"]
+        main = togo(p["ep"].env.evaluate()["utility"], p["ep"].info["apit"]["teacher_steps"] - p["teacher_steps_before"],
+                    p)
+        alt = togo(*results[k], p)
         k += 1
         chk = None
         if check:
-            chk = results[k] - p["U_t"]
+            chk = togo(*results[k], p)
             k += 1
         q_del, q_d = (main, alt) if p["fired"] else (alt, main)
         rows.append({"seed": p["seed"], "step": p["step"], "anchor": p["anchor"], "fired": p["fired"],
                      "pred": p["pred"], "q_delegate": q_del, "q_d": q_d, "adv_delegate": q_del - q_d,
                      "regret": max(q_del, q_d) - (q_del if p["fired"] else q_d),
-                     **({"check_equal": chk == main} if check else {})})
+                     **({"check_equal": chk == main} if check else {}),
+                     **({"delegation_cost": cost} if cost is not None else {})})
     return rows
