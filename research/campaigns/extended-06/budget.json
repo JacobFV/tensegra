@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "campaign": "extended-06",
+  "started_utc": "2026-09-27T05:51:06Z",
+  "deadline_utc": "2026-09-27T17:51:06Z",
+  "ceilings": {
+    "cpu_core_seconds": 172800,
+    "gpu_device_seconds": 43200,
+    "elapsed_seconds": 43200
+  },
+  "reserve_fraction": 0.2,
+  "gpu_accounting": "device occupancy: union of wall intervals of GPU-using main jobs (dev jobs tagged gpu-*)",
+  "cpu_accounting": "all remote work via job-wrapper receipts under ~/structured-latent-dynamics-campaign06/results (main) and results/dev (metered.sh); local no-torch work estimated",
+  "host": "pro6000 WSL2; root ~/structured-latent-dynamics-campaign06; env ~/structured-latent-dynamics-campaign03/env",
+  "historical_note": "extended-03/04/05 ledgers unchanged; no carry-over",
+  "charged_cpu_core_seconds": 79116.3,
+  "charged_gpu_seconds": 17402.8,
+  "local_cpu_estimate_core_seconds": 11010,
+  "status": "closed",
+  "local_cpu_notes": [
+    "design reviewer ~7.0k core-s local exact-DP screening (unmetered; disclosed)",
+    "portworld builder: ~3,000 core-s UNMETERED remote (killed analysis run, wrapper killed; dir results/dev/e06-pw-hr-v3-20260927T063553-1107346-process has KILLED_NO_RECEIPT.txt)",
+    "portworld builder ~300 core-s local",
+    "independent audits A/B/B-FACT-C ~320+190+260 core-s local; bfactc/acfsmall builders ~8 local (total added 710 incl. rounding)"
+  ],
+  "charged_breakdown": {
+    "main_cpu": 70323.3,
+    "dev_cpu": 8793.1,
+    "receipts": 176,
+    "running_unreceipted": [
+      "e06-tb-dose2-eval-s30-oomkilled-process",
+      "dev/e06-pw-hr-v3-20260927T063553-1107346-process"
+    ]
+  },
+  "jobs": "see research/results/campaign-06/receipts.json",
+  "gpu_note": "charged_gpu_seconds is a conservative wall-clock union of main jobs; actual GPU use was zero (all jobs CUDA_VISIBLE_DEVICES empty or pure Python)"
+}

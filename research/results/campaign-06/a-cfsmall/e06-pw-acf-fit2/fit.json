@@ -1,0 +1,108 @@
+{
+ "registry": "A-CF-SMALL",
+ "lineage": 2,
+ "smoke": false,
+ "populations": {
+  "train0": [
+   310000000,
+   310000640
+  ],
+  "train1": [
+   311000000,
+   311000640
+  ],
+  "train2": [
+   312000000,
+   312000640
+  ],
+  "select": [
+   320000000,
+   320000640
+  ],
+  "confirm": [
+   330000000,
+   330000640
+  ]
+ },
+ "train": {
+  "range": [
+   312000000,
+   312000640
+  ],
+  "episodes": 640,
+  "instances": 2836,
+  "uncertified_episodes_legacy": 0,
+  "episode_list_sha256": "6e1d43e4fa6fc48b6a541186c00670a113c0ba201689d2405772052486bfb01c",
+  "files": {
+   "/home/brand/structured-latent-dynamics-campaign06/results/e06-pw-acf-train2-c0/records.jsonl.gz": "29305daa2daf12031e0a46492f78c39c71f56dff87cff7d7294166eaca2849a2",
+   "/home/brand/structured-latent-dynamics-campaign06/results/e06-pw-acf-train2-c1/records.jsonl.gz": "62eed2fc7d2c65126acac8a583b01b09f877b9dac1be8bc4df4913b40f4de549"
+  }
+ },
+ "select": {
+  "range": [
+   320000000,
+   320000640
+  ],
+  "episodes": 640,
+  "instances": 2917,
+  "uncertified_episodes_legacy": 0,
+  "episode_list_sha256": "571fc6bb464d4aa9df740c6d619e9ce78c9ac3da0dcab55cbf324265c6ef6389",
+  "files": {
+   "/home/brand/structured-latent-dynamics-campaign06/results/e06-pw-acf-select-c0/records.jsonl.gz": "05ba4dda5ef6ea11448af94cf7dab54079f8e2f563de75290e580f777dc53cc9",
+   "/home/brand/structured-latent-dynamics-campaign06/results/e06-pw-acf-select-c1/records.jsonl.gz": "e27f6e3372a09063de230c0100dc61dd1a66f557c23275f60c7bc5b6096d2aa6"
+  }
+ },
+ "confirm_touched": false,
+ "min_leaf": 85,
+ "chosen": {
+  "logistic_tuned": "logistic[lam=0.001]",
+  "learned_oneshot": "learned_oneshot[cfg=100x3]",
+  "best_simple": "tree_d3",
+  "best_single": "A0_single"
+ },
+ "select_scores": {
+  "learned_seq[cons:GR]": 0.9599309996400799,
+  "learned_seq[cons:RV+cons:GR]": 0.9594011293078631,
+  "learned_sequential": 0.9593120603050667,
+  "learned_oneshot[cfg=100x3]": 0.959106233604077,
+  "learned_oneshot": 0.959106233604077,
+  "learned_oneshot[cfg=200x3]": 0.9579800749072606,
+  "learned_oneshot_direct": 0.95525138981864,
+  "tree_d3": 0.9549410837442711,
+  "tree_d2": 0.9535015130363594,
+  "learned_seq[cons:PD1000]": 0.9514028585044259,
+  "logistic[lam=0.001]": 0.9489996082920347,
+  "logistic_tuned": 0.9489996082920347,
+  "threshold_any": 0.9475499474519977,
+  "strong_baseline": 0.9426583837582082,
+  "hand": 0.9318557255727354,
+  "logistic[lam=0.01]": 0.9313689610753938,
+  "learned_seq[opt:GR]": 0.9313471346813791,
+  "cascade_tuned": 0.9252454101575291,
+  "logistic[lam=0.1]": 0.9235683150024201,
+  "A0_single": 0.9216201758582976
+ },
+ "artifact_sha256": {
+  "A0_single": "241428ad517a65802772a7104d926d00ad8d62d754c9d5e90a3980b7582cf271",
+  "cascade_tuned": "35ffb06b8c49b75e433510c9187e1456edb50de195a5459ed3ff53a98be1425c",
+  "strong_baseline": "5a5608859f3c252fd7151033a6429fb11ed82557c19a7bd29373a4c5c9b9bf34",
+  "hand": "b13a7087c513c4e69de1c1d97d0ef1ca34a14239c2c79989c15ff9d3f2505d79",
+  "threshold_any": "f9e8c5afe6f3ba4a2a81b9ae22320303d38892f0bdcd03f1c19566e9b367a5c2",
+  "tree_d2": "7c50779370c3322df365ab4a4e51f4f03225adcf318179ee0fcaa60e9f36c637",
+  "tree_d3": "9aac8c993a619506e2b2dd0fd958b9ffb3afe5c214236886f238a31ad2747a38",
+  "logistic[lam=0.001]": "35311b5b46fcf5195194ab60214cd6f8082baa61f8efe740cb488f482d2c9325",
+  "logistic[lam=0.01]": "fa034afb824662903670fb40b5f7b3c0ba6a7e3d96826cb2c47c96c1050ed67d",
+  "logistic[lam=0.1]": "8dc057a325855bf5dcf06c218bf0a5da1d3664e66ac5209a8c852f4055e0b8a1",
+  "learned_oneshot[cfg=100x3]": "e14b719f0c68016236f16b764e084ea7b1c5ba60b82df1b4211eecd7afae884f",
+  "learned_oneshot[cfg=200x3]": "02aa6b6932658034fded754a76648d95bb6043d7723bbfc280c1ef28cebc616e",
+  "learned_oneshot_direct": "7bd41ab9dfe07fb0c183bc8f74212877f4d1bc139dc86c4518be0c5f25bf1804",
+  "learned_seq[cons:GR]": "5c6b8d6fa7bfbfd6b3acdb6b34e8129a6c7ad0580d99d742c4b97de9ff96c62e",
+  "learned_seq[cons:PD1000]": "e84e7d74e93db323111df4b74d5ec50f8da3081400a794f870ed3a674c51129a",
+  "learned_seq[cons:RV+cons:GR]": "2adb891a8015f3c5c463aae823d10e150aa1ce13d3e0c7e6b1d45d9c2eb4fe5a",
+  "learned_seq[opt:GR]": "7ff9097e21a861a8c5db50560434a94e77ac9392116a39922f146a725c9bd079",
+  "learned_sequential": "6a772551b84944507db2c0dfec9800a6725d3cabe89667bddc69a414b212d328"
+ },
+ "fit_pkl_sha256": "924604941e1a86ac724b03ef286271f030488d952be84dc8f2e298a255cb4848",
+ "tool_sha256": "b18279af30f9d3ba3c3e010f2a4663636b7d5e90f92a2e62b760486613c04ba3",
+ "cpu_s": 374.8
+}

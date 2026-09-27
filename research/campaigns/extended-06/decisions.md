@@ -1,0 +1,96 @@
+# Decisions (extended-06)
+
+- 2026-09-27T05:52Z: **Brief adopted** (the user's extended-06 brief, sent in reply to the extended-05 offer). Window 05:51:06Z → 17:51:06Z.
+  - **State reconciled:** main 58b231d6. The stale extended-05 Track B audit worktree was locked by pid 590201, identified as **this Claude session** (not a stray process). Its branch db1522c3 was already merged and the worktree was clean, so it was unlocked and removed; no process was killed.
+  - **pro6000:** idle (load 0), 60 GB RAM free, 188 GB disk free, keep-alive Running, no campaign units.
+  - **New root** ~/structured-latent-dynamics-campaign06 with job.py and metered.sh (self-test OK: torch 2.14.0+cu130, numpy 2.5.3).
+  - **Tooling:** campaign06_remote.py adds a conflict-marker refusal and an e06- job-name guard; campaign06_ledger.py.
+- 2026-09-27T05:53Z: Design v1 written (portworld for Track A with headroom gate GA; probeworld-v3 screening, balanced counterfactuals, matched-volume arms B0–B3 and factorized arms for Track B; Track C conditional). Internal review and two Phase-1 builders launched in parallel. The builders start with the model-independent headroom and screening work, which the review cannot invalidate cheaply.
+- 2026-09-27T06:22Z: **Internal design review** (2 BLOCKER, several MAJOR) **adopted as design v2** (design.md, v2 revisions 1–13):
+  - probeworld-v3 range revision with S+C+E expected primary, chosen by the registered rule;
+  - octets;
+  - matched arms with frequency/share/first-action matching;
+  - factorized arms on derived decision quantities;
+  - GA-1/GA-2 replace GA;
+  - mandatory strong simple baselines;
+  - an exact oracle via hand B&B with trace-based evaluation;
+  - checkpoints and a concrete Track C trigger.
+  - **Disclosures:** the reviewer ran ~7.0k core-s of **unmetered local** pure-Python screening and ~2 core-s of unmetered remote import checks, and consumed dev seeds 2.3000e9+i and 2.3005e9+i (recorded as used). Both builders were notified of v2.
+- 2026-09-27T06:22Z: Prospective registry (A-HS, A-SEL, B-SCREEN, B-ARMS, B-FACT, C-TRIGGER) and a preliminary job plan (~19.5 core-h estimated of the 38.4 usable) written.
+- 2026-09-27T06:58Z: **Track A portworld merged** (751c3e62; 21 tests).
+  - Generator pw-v3: Pisinger correlation classes, hidden capacities and conflicts with explicit posteriors, stale or valid caches, crossover-centred prices. Methods have explicit contracts and deterministic work units; trace-based budgets; exact oracle B&B, with uncertified instances kept.
+  - **Dev headroom** (1,801 instances): best single .918, best simple (inner-fold) .931, strong v2 baseline .939, tree depth 2 .942, one-shot learned .949, sequential learned .952, hidden oracle .979.
+    - GA-1: sequential +.0204 [.011, .031], a marginal pass; one-shot +.0175, fail.
+    - GA-2 passes for both.
+    - The margin over the strongest individual simple family is only +.010–.012.
+  - Generator revisions v1 (headroom .0016) → v2 (.0084) → v3 are documented in portworld.md.
+  - **Disclosure:** ~3,000 core-s were spent **unmetered** on the pro6000 by a builder analysis run whose wrapper was killed (no receipt; marker file left). Added to the local/unmetered estimate. The registry addendum reports the margin vs the strongest individual family alongside GA (gates unchanged).
+- 2026-09-27T06:59Z: GA one-job smoke passed (40 episodes on non-gate seeds 304.99M; pipeline OK; numbers not used). **Registered A-HS gate run launched:** 4 chunks × 160 episodes on dev_gate seeds from 305M (source-8e8ac6fa); analysis follows.
+- 2026-09-27T07:05Z: **Track B merged** (83df7d12; 33 tests pass after the merge, metered).
+  - The seed-ranges merge conflict was resolved **by hand, without chained commits**: the union of both sides, with the Track B parent entry deduplicated. There are 48 ranges; leaves are disjoint and contained in their parents; the conflict-marker check is clean.
+  - **Official screen:** **S+C+E primary** (min relevance .66, GS .26), **U+C+E secondary** (.55, GS .27). Registered at 06:58Z by the builder, before any model.
+  - **B-ARMS primary thresholds registered now, before any Track B training:** P1 gap regret, P2 later-decision accuracy, P3 not-a-global-shift, with all three required (registry).
+  - Octets are 320 for both families. The 17/84 unmatched first-action replacements in B2 are accepted and disclosed. Label parts launched.
+- 2026-09-27T07:10Z: **A-HS registered gate FAILS GA-1** (dev_gate 305M, 640 episodes / 2,891 instances; oracle certified 100%; research/results/campaign-06/a-hs/).
+  - Learned one-shot .9601, sequential .9602 vs best simple (inner-selected trees) .9544: **+.0057/+.0058** (CI .003–.009), below .02.
+  - GA-2 passes (+.040 vs best single .920).
+  - The hidden-state oracle is .9835, so **the oracle–best-simple gap is only .029**. Sequential telemetry adds nothing over one-shot.
+  - **Decision: no generator revision** (it would be manufacturing headroom), and Track A Phase 2 (large learned controllers) is not run. **Brief-sanctioned negative:** a strong simple portfolio (depth-2/3 trees over public features) captures ~80% of even the hidden-state headroom.
+  - **A-CF-SMALL registered** (labelled, after the gate): confirm the small learned-selector margin on 3 disjoint training populations, selection on 320M and fresh confirm instances 330M, primary U(learned) − U(best simple) > 0 in 3/3. Tool extension commissioned.
+- 2026-09-27T07:29Z: A-CF-SMALL tooling merged (f2701dbd). The builder's metered dev cost was 549 core-s, and its dev_builder smoke is development-only. All 8 train/select evaluate chunks launched after a one-job smoke (train0-c0). The confirm chunks will launch only after the 3 fits are frozen and their hashes recorded.
+- 2026-09-27T07:29Z: Track B training labels done (e06-tb-labels-train, 1,100 core-s). Smoke e06-tb-b0-s30 started cleanly (L1, b6_B0). B0/B2 seeds 30–32 launched; seeds 33–34 follow as slots free (<= 6 trainings concurrently, well below the 57 GB free / 24 cores, and there are no other user workloads at load ~3.4).
+- 2026-09-27T07:40Z: A-CF-SMALL fits frozen before any confirm data exists: fit0 e0ff1ace…c63c, fit1 1bff3f53…1986, fit2 92460494…4848 (full sha256 in results fit.json). Confirm chunks launched now.
+- 2026-09-27T08:03Z: **A-CF-SMALL passes (small).**
+  - One-shot − best simple (tree_d3, chosen on the select set) is positive in 3/3 lineages; paired mean +.0033 [.0016, .0055]; sequential +.0039.
+  - This is about 1/6 of the .02 practical threshold, so **Track A closes** with the finding: a real but practically negligible learned-selection margin over a tuned depth-3 tree portfolio.
+  - Track C is not triggered (GA-1 failed).
+  - Artifacts are staged in research/results/campaign-06/a-cfsmall; sha256 verified against the remote.
+  - An independent audit of Track A is queued for close-out.
+- 2026-09-27T08:17Z: **Independent Track A audit merged and adopted** (review/a-independent-audit.md). All numbers reproduce, and there is no leakage. Corrections:
+  - **(i)** The 07:10Z entry's "~80% of even the hidden-state headroom" is **wrong**. Correct: the simple portfolio captures ~54% of the hidden-state oracle's gain over the best single method, and ~86–91% of the learned public-information selector's gain.
+  - **(ii)** The 08:03Z "real but practically negligible" **overstates "real"**. The A-CF-SMALL pass depends on the charge convention (1/3 at 2× charge; 0/3 under per-output GBT charging) and on the untuned tree (2/3 vs a select-tuned tree; zero vs an in-sample depth-3 tree).
+    - Adopted reading: **no practically or robustly detectable learned-selector advantage** over a tuned depth-3 tree portfolio.
+  - **(iii)** A-HS explicitly declined the optional generator revision.
+  - **(iv)** The strong baseline's inspect-rule deviation is disclosed in portworld.md.
+  - The registry has been updated. Track A stays closed.
+- 2026-09-27T09:23Z: **e06-tb-labels-cf hit its 8,000 core-s cap** (exit −9, receipted and charged).
+  - cf_SCE.json (320 octets, the primary family) was complete, written at 3,020 core-s. The secondary UCE family was not.
+  - Per trackb-screen §8's allowance, UCE is relaunched at 160 octets into a separate labels dir, e06-tb-labels-uce: cap 14k core-s, deterministic seeds; its SCE sets 0–159 are regenerated and ignored.
+  - Model evals proceed now on the main labels dir (SCE counterfactuals only). The UCE counterfactual scoring is a secondary endpoint, added by a later cf pass.
+  - Smoke: e06-tb-b0-eval-s30.
+- 2026-09-27T10:03Z: **Incident: 1 eval OOM-killed.**
+  - Cause: I launched 33 evals concurrently, against the plan's 4–8 limit.
+  - e06-tb-dose2-eval-s30 was killed by the global OOM killer at 09:33Z (about 180 core-s, no occupancy receipt; relabelled *-oomkilled-process with OOM_KILLED.txt).
+  - The kernel log shows this one kill only; no non-campaign process was affected.
+  - It is rerun alone. **Rule going forward:** at most 8 concurrent Track B jobs, with memory checked first.
+- 2026-09-27T10:25Z: e06-tb-score failed at its final write because the output directory was missing (exit 1, 1,068 core-s, charged). The directory was created and the job relaunched as e06-tb-score2, with identical inputs.
+- 2026-09-27T10:47Z: **B-ARMS primary NOT SUPPORTED** (research/tools/campaign06_bprimary.py pools the pairs, as registered; campaign06_bscore reports per pair only).
+  - B2 − B0 over 5 pairs: gap regret −1.65 [−6.1, +3.1]; later-decision accuracy +.010 [−.002, +.022]; near-miss accuracy −.085.
+  - Broader variety at matched volume **did not** yield composition on the untouched S+C+E triple. B2's first-decision gain (+.075) is on non-flip units (first-decision flip accuracy .59 vs .68) and comes from a higher build rate (first-action build 28% vs 10%; B1 shows the same rise with no added variety). The same preference costs after a solved probe (commit accuracy .52 vs .81). Balanced octet accuracy is lower in 5/5 pairs (−.075), and near-miss accuracy is lower by .085 (4/5 pairs). This is an input-specific action-preference change concentrated on S∧C inputs, not a global action-rate shift (false change +.006) and not composition. *(Corrected per the independent Track B audit.)*
+  - **Descriptive:** LRN (learned derived-quantity heads) is the only arm with a consistent sign on gap, later accuracy and near-miss across its 3 pairs.
+  - **Caveat:** the configuration-only CIs omit seed variance, which is large: B0 gap regret per seed 20.2/29.9/40.9/41.2/29.0 (SD 8.9), B2 20.0/62.2/15.6/31.8/23.3 (SD 18.7). The B2−B0 per-pair swing (+32.4 / −25.3) comes from B2 seed 31 and B0 seed 32. A two-level (seed pair + configuration) bootstrap gives gap −1.6 [−17.5, +19.3] and later-decision +.010 [−.009, +.030]; the verdict is unchanged. The descriptive gap-regret wins vs B0 do not depend on B0 seed 32 (they are unchanged vs B0 without s32 or vs all five B0 seeds). What is seed-fragile is near-miss accuracy (B0 per seed .47–.80). *(Corrected per the independent Track B audit.)*
+  - **Adaptive B-FACT-C registered before any new data:** LRN vs RAWF (same architecture) on fresh seeds 35–39 and a fresh S+C+E pool and octets, with a two-level bootstrap and ≥ 4/5 pair sign consistency.
+  - Budget: 65k / 172.8k core-s used. Estimate ~21k core-s (20 trainings ~10k, labels ~7k, evals ~4k), leaving > 34.5k reserve.
+- 2026-09-27T11:04Z: **UCE octets built** (e06-tb-labels-cf-uce, 160 octets, 4,634 core-s). **UCE octet evaluation not run.**
+  - Reason: cf_eval runs only inside a full eval, which would rewrite the runs' primary eval.json / episode files, and it is a descriptive secondary endpoint.
+  - U+C+E is reported from the held-out pool (b6_hold_UCE regret and accuracy, already in score.json).
+  - Also: the b6c fresh-confirm tooling was merged (9795f9a2). Hold base moved to 6.42e9, CF base 6.65e9, and the training-world range for seeds 35–39 is registered. Snapshot 096b6ff5.
+  - e06-tbc-labels-eval and e06-tbc-labels-cf launched (caps 8,000 core-s each).
+- 2026-09-27T11:17Z: **Independent Track B audit merged and adopted** (review/b-independent-audit.md).
+  - B-ARMS NOT SUPPORTED reproduces exactly, and holds under alternative later-decision definitions and a two-level bootstrap.
+  - Matching and disjointness are confirmed. Corrections C1–C5 are applied to the 10:47Z entry and to registry B-ARMS / B-FACT.
+  - cf_SCE.json sha256 prefix: c365186f; it is identical across all 34 evals.
+  - B2 − B0 also changes the single-type mix (S 106 vs 64; C and E 43 vs 64).
+  - Note for B-FACT-C: on the development split, LRN − RAWF near-miss is −.022, just outside Q3's −.02 margin. Q3 is registered and unchanged.
+  - Commit e8537d2d is misnamed: it holds only ledger budget/receipt updates. The corrections are in the next commit.
+- 2026-09-27T11:59Z: **B-FACT-C (adaptive) SUPPORTED by its registered rule as executed; Q1 borderline (not robust to bootstrap Monte Carlo error, independent audit).** *(heading corrected per audit)* Setup: fresh configurations and octets, seeds 35–39, two-level CI.
+  - **LRN − RAWF:** gap −2.65 [−5.87, −0.03] (5/5 pairs); later-decision accuracy +.018 [+.002, +.034] (4/5); near-miss +.105; false-change −.032.
+  - **Caveat, reported prominently:** flip-set accuracy is lower (−.048, 5/5). The learned derived-quantity heads improve the first decision of later queries (fewer redundant inspects) and change actions less often under one-factor interventions (both false and correct changes; no better discrimination), but do not help the interaction-dependent flips.
+  - **SUP (exact quantities)** raises flip accuracy (+.109), but near-miss falls (−.108), so it is not supported.
+  - The 20 evals and 2 scoring jobs all exited 0. Artifacts are staged in research/results/campaign-06/b-factc; sha256 verified.
+  - Independent audit commissioned. Next: final report.
+- 2026-09-27T12:11Z: **Independent B-FACT-C audit merged and adopted** (review/bfc-independent-audit.md). All numbers reproduce, and the protocol is followed.
+  - **Q1 is borderline:** at a converged bootstrap the gap upper bound is > 0 (n_boot 20k: +.02 to +.06). Q2 and Q3 are robust.
+  - Flip loss is located in the query-2 decisions. LRN is less responsive to one-factor changes in both directions, not better at discriminating.
+  - Registry C1–C4 and decisions C5 applied; the report is revised accordingly.
+  - The B-FACT-C claim now reads: a small, robust later-decision improvement (+.018); regret gain suggestive (5/5 pairs, CI not excluding 0); no interaction composition.

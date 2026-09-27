@@ -1,0 +1,119 @@
+{
+ "campaign": "extended-06",
+ "entries": [
+  {
+   "id": "A-HS",
+   "status": "registered",
+   "track": "A",
+   "hypothesis": "portworld has computational-strategy headroom: a cross-fitted public-information portfolio beats the best simple rule and best single method",
+   "gates": {
+    "GA-1": "U_hat - best simple rule >= .02 absolute, 95% LB > .005 (one-shot and sequential separately)",
+    "GA-2": "U_hat - best single method >= .02, 95% LB > .005"
+   },
+   "baselines": "single methods (trace-read budgets), cascades, cheap/expensive-first, thresholds, depth<=3 trees, tuned logistic, strong hand portfolio incl. preprocessing, certified-gap stop, node-count switch, reuse verify/repair, inspect rule; hidden-state oracle ceiling only",
+   "selection": "best simple rule chosen on inner folds; episode-clustered cross-fitting",
+   "worlds": "fresh dev population in the 300M-340M range (sub-range assigned by builder)",
+   "next": {
+    "pass": "A-SEL (learned selectors A2/A3, >=3 lineages, fresh instances; promotion margin <= half measured headroom)",
+    "fail": "one principled generator revision then close Track A"
+   },
+   "addendum_before_gate_run": "Registered before the gate run on fresh dev_gate seeds (305M-310M, 640 episodes): GA-1/GA-2 unchanged. ALSO REPORTED (not a gate): margin of each learned estimate over the strongest individual simple family (dev: tree depth 2). Dev numbers (builder, 300M seeds, 1,801 instances): sequential GA-1 +.0204 [.0114,.0310] marginal pass, one-shot +.0175 fail; vs tree-depth-2 only +.010-.012. Generator pw-v3; revisions v1 (headroom .0016) and v2 (.0084) documented in portworld.md.",
+   "result": "REGISTERED GATE RUN (dev_gate 305M, 640 episodes, 2,891 instances, oracle certified 100%): GA-1 FAILS (one-shot +.0057 [.0030,.0087]; sequential +.0058 [.0032,.0088]); GA-2 passes (+.040 [.034,.046]). Best simple (inner-selected; trees d2/d3 per fold) .9544; strong v2 baseline .9460; learned one-shot .9601, sequential .9602; hidden-state oracle .9835 (oracle - best simple only .029). Dev estimate (+.020) did not hold on fresh gate instances.",
+   "decision": "No generator revision: the hidden-state ceiling above the best simple portfolio is only .029, so GA-1's .02 would require public information to capture >2/3 of hidden-state headroom; revising the generator now to create headroom would be manufacturing. Track A Phase-2 (A2/A3 learned controllers with large margin) not run. (Declines the optional one-revision branch in next.fail; design v1 permits but does not require it.)"
+  },
+  {
+   "id": "A-SEL",
+   "status": "registered (gated on A-HS)",
+   "track": "A",
+   "arms": [
+    "A0 best single",
+    "A1 best tuned simple portfolio",
+    "A2 learned contextual selector",
+    "A3 learned sequential option policy",
+    "A4 privileged ceiling"
+   ],
+   "primary": "U(A2 or A3) >= U(A1) + margin (<= half of GA-1 headroom; fixed before evaluation) at comparable or lower total compute incl. selector charges, 3/3 lineages, fresh instances; also >= max single method",
+   "switch_metrics": "unnecessary/justified switches, latency, wasted work, case types (a)-(d) with belief-conditioned values"
+  },
+  {
+   "id": "B-SCREEN",
+   "status": "registered",
+   "track": "B",
+   "rule": "primary challenge family = untouched triple (probeworld-v3 ranges) with largest minimum per-factor decision relevance subject to global-shift closable fraction <= .5; second passing triple = secondary holdout; historical U+E/S+C/U+C challenge only",
+   "expected": "S+C+E primary (reviewer local screen), U+C+E secondary \u2014 to be confirmed by the official screen before any model run",
+   "result": "OFFICIAL screen (builder, 80 configs/family, probeworld-v3 ranges): S+C+E min relevance .66 [.55,.76], GS .26 -> PRIMARY; U+C+E .55 [.44,.65], GS .27 -> SECONDARY; U+S+E fails GS (.60); U+S+C min .18. Registered 06:58Z before any model."
+  },
+  {
+   "id": "B-ARMS",
+   "status": "complete: PRIMARY NOT SUPPORTED",
+   "track": "B",
+   "arms": {
+    "B0": "N configs base combinations",
+    "B1": "2N base",
+    "B2": "N broader variety, built by replacement matching B0 per-factor frequency, per-combination share, optimal-first-action mix",
+    "B3": "2N broader",
+    "dose": "0-3 constituent pairs of the held triple in training"
+   },
+   "primary": "B2 vs B0 at matched volume on the primary held-out triple: octet-conditional accuracy and gap regret (5 seed pairs; >=200 eligible configs; configuration-clustered CIs); must not be explained by global-shift (closable fraction test)",
+   "threshold": "to be fixed in the protocol addendum after power from dev numbers, before any held-out evaluation",
+   "primary_registered": {
+    "contrast": "B2 vs B0 (N=384; seeds 30-34 paired) evaluated on the S+C+E held-out pool (400 configs) and 320 S+C+E octets",
+    "P1": "gap regret: seed-paired mean(B2-B0) < 0 with configuration-clustered 95% CI upper bound < 0",
+    "P2": "later-decision accuracy (decisions after the first, context classes as defined in trackb-screen.md): paired mean(B2-B0) > 0 with 95% CI lower bound > 0",
+    "P3": "not a global shift: octet near-miss accuracy and one-factor false-change rate not worse for B2 by more than .02 (paired mean)",
+    "decision": "B-ARMS primary SUPPORTED iff P1 and P2 and P3; octet flip accuracy and first-decision accuracies are secondary; U+C+E secondary holdout reported with the pair-exposure confound (B2 trains on U+C, U+E)"
+   },
+   "settings": "octets: 320 for both families (U+C+E descriptive); --hold-relevance not used (cost); B2 first-action replacement residual imbalance accepted and disclosed (17/84 unmatched; <=13/384 per class)",
+   "result": "Pooled over 5 seed pairs (campaign06_bprimary.py; joint configuration/octet bootstrap), b6_hold_SCE 400 configs, 320 SCE octets. B2-B0: gap regret -1.65 [-6.10,+3.08] (P1 fail; per pair -0.1/+32.4/-25.3/-9.5/-5.7); later-decision acc +.010 [-.002,+.022] (P2 fail); near-miss acc -.085 [-.155,-.005] (P3 fail); false-change +.006. First-decision acc +.075 [.041,.106] (secondary). Broader combination variety at matched volume does NOT improve composition on the untouched S+C+E triple by the registered rule; its first-decision gain is on non-flip units and comes from a higher build rate, with worse balanced (5/5 pairs) and near-miss (4/5) octet accuracy and a large loss after a solved probe: an action-preference change on S\u2227C inputs, not systematic use of the interacting factors. Descriptive arms (3 pairs vs B0 seeds 30-32): B3, dose2, dose3 pass P1/P2 but fail near-miss (P3); dose1, SUP, LRN pass all three; RAWF passes P1 and P3 (fails P2). CAVEAT: the CI resamples configurations only. Under the independent audit (two-level bootstrap; B0 reference = all five seeds or seeds without s32), only LRN still passes all three: dose1 and SUP fail P3 (near-miss \u2212.067 vs pooled B0), and B3 loses P1. The gap-regret wins of dose1-3/SUP/LRN/RAWF are robust to the B0 reference; near-miss is the seed-fragile endpoint.",
+   "audit": "review/b-independent-audit.md (C3, C4 applied)"
+  },
+  {
+   "id": "B-FACT",
+   "status": "descriptive complete (3 seeds); adaptive confirmation B-FACT-C registered",
+   "track": "B",
+   "arms": [
+    "PUBLIC-RAW",
+    "SUPPLIED derived quantities (posterior, expected remaining cost per strategy, P(probe resolves), amortized build value) \u2014 localization ceiling",
+    "LEARNED: auxiliary heads predicting those quantities, downstream policy consumes predictions"
+   ],
+   "causal": "on-manifold interventions changing one factor via valid configurations; policy changes only where expected utility changes",
+   "result": "vs B0 (seeds 30-32): LRN gap -14.9, later +.030, near-miss +.098, false-change -.017 (all 3 pairs same sign for gap/later/near-miss); SUP gap -17.3, later +.051, near-miss -.013 (per pair +.24/-.03/-.25); RAWF (same fuse arch, raw inputs) gap -9.4, later +.001, near-miss +.120. LRN-vs-RAWF isolates the auxiliary derived-quantity heads: later-decision accuracy +.030 (3/3 pairs; concentrated in the first decision of later queries, +.126), gap \u22125.5 (3/3), false change \u2212.019 (3/3), near-miss \u2212.022 (2/3 pairs negative). LRN's near-miss advantage over B0 is shared by RAWF (+.120) and is therefore a fuse-architecture effect."
+  },
+  {
+   "id": "C-TRIGGER",
+   "status": "registered (conditional)",
+   "track": "C",
+   "trigger": "A2/A3 shows headroom over A1 per GA AND >=50% of learned-selector regret localized to value misestimates of candidate methods",
+   "arms": [
+    "C0 monolithic",
+    "C1 decomposed",
+    "C2 normalized",
+    "C3 pairwise advantage"
+   ]
+  },
+  {
+   "id": "A-CF-SMALL",
+   "status": "complete: registered PASS, not robust (audit)",
+   "track": "A",
+   "hypothesis": "A learned public-information method/budget selector beats the best tuned simple portfolio (inner-selected among thresholds, depth<=3 trees, tuned logistic, strong v2 baseline, hand portfolio, cascades) on fresh instances, charging selector compute \u2014 a small but real margin (gate estimate +.006)",
+   "design": "3 lineages = 3 disjoint training populations from the train range (310M-320M); all selectors (learned one-shot, learned sequential, and every simple family) fit on the lineage's training population, hyperparameters/family chosen on the select range (320M-330M, shared), evaluated once on the untouched confirm range (330M-340M, 640 episodes, shared across lineages; paired)",
+   "primary": "per lineage: U(learned one-shot) - U(best simple chosen on select range) > 0 with episode-clustered 95% LB > 0, in 3/3 lineages; same reported for sequential; GA-2 analogue vs best single reported",
+   "practical_note": "a pass establishes a small margin below the registered .02 practical-headroom threshold; it is reported as such, not as meaningful metacontrol headroom",
+   "metric_checks": "selector feature/inference work charged; oracle certified fraction reported; uncertified instances scored vs UB",
+   "result": "Confirm population 330M (640 episodes, 2,852 instances, oracle certified .999). Best simple chosen on select = tree_d3 in all 3 lineages. One-shot \u2212 best simple: +.0032 [.0006,.0067], +.0025 [.0005,.0046], +.0043 [.0014,.0080]: 3/3 PASS; paired mean +.0033 [.0016,.0055]. Sequential +.0039 [.0021,.0062], 3/3. GA-2 analogue +.035. Learned ~.959 vs tree_d3 ~.956 vs hidden-state oracle .9826. Artifacts: research/results/campaign-06/a-cfsmall (hash-checked). AUDIT (review/a-independent-audit.md): The margin is conditional on the registered selector-charge convention (GBT inference = rounds x depth x models units): it passes 3/3 at zero charge, only 1/3 at 2x selector charge, and reverses (-.010 to -.012, 0/3) if the GBT's 45-output leaf accumulation is charged per output as the logistic's multiply-adds are; the mean margin vanishes at ~2,400-4,000 extra inference units per instance. The registered depth-3 tree used a fixed min_leaf (87) and 16 bins; with min_leaf/bins chosen on the select population (audit, post hoc) one-shot - tree is +.0014 [-.0005,+.0036] / +.0030 [+.0007,+.0053] / +.0023 [+.00002,+.0052] (2/3). The learned one-shot equals a depth-3 tree fit in-sample on confirm (-.0002 [-.0012,+.0008]). ~5% of episodes carry the whole net margin.",
+   "interpretation": "The registered A-CF-SMALL test passes 3/3 (+.0033 [.0016,.0055]), but the margin is not robust: it fails at 2x selector charge (1/3), reverses under per-output GBT inference charging (0/3), falls to 2/3 against a select-tuned depth-3 tree, and is zero against a depth-3 tree fit in-sample. We read this as no practically or robustly detectable learned-selector advantage over a tuned depth-3 tree portfolio in portworld. A strong simple portfolio captures ~54% of the hidden-state oracle's gain over the best single method and ~86-91% of the gain a cross-fitted learned public-information selector achieves."
+  },
+  {
+   "id": "B-FACT-C",
+   "status": "complete: SUPPORTED by the registered procedure as executed (adaptive; n_boot 1,000, bootstrap seed 1000). Q1 is borderline: at a converged bootstrap the gap-regret upper bound is > 0 (independent audit, review/bfc-independent-audit.md)",
+   "track": "B",
+   "hypothesis": "Auxiliary heads trained to predict derived decision quantities (LRN) improve later decisions on the untouched S+C+E triple relative to the identical fuse architecture without them (RAWF)",
+   "design": "fresh initialization seeds 35-39 (5 pairs) for LRN, RAWF, SUP, B0 (same b6_B0 training pool, L1 recipe, final checkpoint, snapshot f5ff2d64 trainer); evaluated on a FRESH S+C+E held-out pool (400 configs, new base in the hold sub-range, never used) and FRESH S+C+E octets (320, new base in the cf sub-range); labels built before any confirm evaluation; no model selection",
+   "primary": "LRN - RAWF, mean over 5 seed pairs, TWO-LEVEL bootstrap (resample seed pairs, then configurations/octets): Q1 gap regret < 0 with 95% upper bound < 0 and >=4/5 pairs negative; Q2 later-decision accuracy > 0 with 95% lower bound > 0 and >=4/5 pairs positive; Q3 near-miss accuracy not worse by > .02 and false-change rate not higher by > .02 (paired means). SUPPORTED iff Q1 and Q2 and Q3.",
+   "secondary": "SUP - RAWF (ceiling), LRN - B0, RAWF - B0 with the same statistics; per-seed values always reported",
+   "notes": "The two-level bootstrap addresses the seed variance the B-ARMS configuration-only CI omitted. Old b6_hold_SCE results are not reused for this test. Fresh pool b6c_hold_SCE at config base 6.42e9 (worlds 6.47e9) and octets at CF base 6.65e9; 6.45e9 was rejected by the builder because it coincides with b6_hold_SCE eval worlds. Evaluated with the b6c-aware tools merged from campaign/e06-bfactc (9795f9a2); trainings use snapshot f5ff2d64. Adaptive selection: LRN \u2212 RAWF and the later-decision endpoint were chosen after inspecting ~9 descriptive contrasts \u00d7 several endpoints on b6_hold_SCE (seeds 30\u201332). The development effects (later +.030, gap \u22125.5) were about twice the confirmed ones. n_boot was not registered; the tool default of 1,000 was fixed at 9795f9a2 before any b6c data. The b6c bases and the seed-range entry for training worlds 35\u201339 were committed at 11:02Z, after training started (10:48Z) and before any b6c labels or eval.",
+   "result": "Fresh b6c_hold_SCE (400 configs, base 6.42e9) + 320 fresh SCE octets (6.65e9); seeds 35-39; two-level bootstrap. LRN - RAWF: gap regret -2.65 [-5.87,-0.03] (5/5 pairs negative; RAWF mean 17.09) Q1 PASS; later-decision acc +.018 [+.002,+.034] (4/5 positive) Q2 PASS; near-miss +.105 [+.017,+.212], false-change -.032 [-.056,-.009] Q3 PASS -> SUPPORTED. BUT octet flip-set full-member accuracy (the decisions that require the interaction) is LOWER: -.048 [-.091,-.003] (5/5 pairs), balanced +.025 [-.020,+.077]; first-decision acc +.001. Secondary: SUP - RAWF not supported (near-miss -.108, flip +.109: the supplied-quantity ceiling improves interaction-dependent flips but over-changes near-misses); LRN - B0 supported (gap -6.73 [-12.18,-2.40], later +.020, 5/5); RAWF - B0 not supported (gap -4.09 [-10.04,+1.80]); SUP - B0 fails Q3 (near-miss -.112). Artifacts research/results/campaign-06/b-factc (hash-checked). AUDIT (review/bfc-independent-audit.md): all numbers reproduce exactly from raw rows. Q1's CI condition is within Monte Carlo error. With the same tool the gap upper bound ranges from \u22120.14 to +0.35 across 20 bootstrap seeds at n_boot 1,000 (passes in 8/20), and is +0.02 to +0.06 at n_boot 20,000 (0/2). P(bootstrap \u2265 0) = 2.7%. The across-pair t(4) CI is [\u22125.5, +0.2]; 5/5 pairs are negative (sign test p = .031). The gap gain is concentrated: 5% of configurations carry more than all of it. Q2 (lower bound +.001 to +.003) and Q3 are robust. The flip-set loss (\u2212.048) sits in the query-2 decisions (q2_after_H \u2212.22, 5/5 pairs; q2_after_notH \u2212.05); first-decision flips are +.03. LRN changes its action less under one-factor interventions both when the optimum changes (\u2212.046, 5/5) and when it does not (\u2212.032); discrimination .364 vs RAWF .378. Build and probe rates are unchanged (.350 vs .364; 3.00 vs 3.04 probes). The Q2 gain is the first decision of later queries (+.079; RAWF's redundant 'inspect' errors 1.28 \u2192 0.79 per episode).",
+   "interpretation": "On a fresh S+C+E pool and fresh seeds, auxiliary heads trained to predict derived decision quantities (LRN) improve later-decision accuracy over the identical fuse architecture without them (RAWF). The improvement is small (+.018; 4/5 pairs) and robust, and comes almost entirely from the first decision of later queries, where LRN makes fewer redundant 'inspect' actions. Held-out gap regret is lower in all 5 pairs (\u22122.65), but the 95% two-level CI only just touches zero and does not exclude it at a converged bootstrap, so the regret gain is suggestive, not established. LRN does NOT use the interacting factors better. It is less responsive to one-factor changes overall (fewer false and fewer correct changes; discrimination unchanged). It is more ablation-like exactly in the query-2 decisions: near-miss accuracy is higher, and accuracy is lower on octet flips that require the full interaction (\u2212.048 overall; \u2212.22 after the verifier reveals H). The heads' loss also trains the shared trunk, so representation shaping and reading the predictions are not separated. Supplying the exact quantities (SUP) improves flip accuracy (+.109) and interaction discrimination (.469 vs .378) at a near-miss cost. The quantities therefore carry interaction-relevant information that the learned route did not deliver on the held-out triple. Whether that is because the heads mispredict on S+C+E or because the policy does not use them was not measured."
+  }
+ ]
+}

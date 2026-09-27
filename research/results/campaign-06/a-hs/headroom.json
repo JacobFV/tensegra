@@ -1,0 +1,840 @@
+{
+ "generator": "pw-v3",
+ "N": 2891,
+ "episodes": 640,
+ "folds": 5,
+ "inner_folds": 4,
+ "boot": 2000,
+ "uncertified_episodes_legacy": 0,
+ "oracle_certified_fraction": 1.0,
+ "uncertified_instances_scored_vs_UB": 0,
+ "utilities": {
+  "A0_single": {
+   "mean": 0.9198237382871113,
+   "lo": 0.9120214365690267,
+   "hi": 0.92722668632345
+  },
+  "cascade_tuned": {
+   "mean": 0.9239992529160519,
+   "lo": 0.9165195177344376,
+   "hi": 0.9314225937331304
+  },
+  "strong_baseline": {
+   "mean": 0.9460303131357366,
+   "lo": 0.9403697658685977,
+   "hi": 0.9511825959385425
+  },
+  "hand": {
+   "mean": 0.9387925347956376,
+   "lo": 0.9291877340290309,
+   "hi": 0.9471369318281704
+  },
+  "threshold_any": {
+   "mean": 0.9463933708124775,
+   "lo": 0.9395201360852722,
+   "hi": 0.9525516883607332
+  },
+  "tree_d2": {
+   "mean": 0.9536382208636133,
+   "lo": 0.9478874721025919,
+   "hi": 0.9586482872875077
+  },
+  "tree_d3": {
+   "mean": 0.9541373806197606,
+   "lo": 0.9482029147604927,
+   "hi": 0.959195988328814
+  },
+  "logistic_tuned": {
+   "mean": 0.9473740517368853,
+   "lo": 0.9398741921036398,
+   "hi": 0.9537990407924266
+  },
+  "best_simple_inner": {
+   "mean": 0.9543938340524507,
+   "lo": 0.9488623339049529,
+   "hi": 0.9593320240351101
+  },
+  "best_single_inner": {
+   "mean": 0.9198237382871113,
+   "lo": 0.9120214365690267,
+   "hi": 0.92722668632345
+  },
+  "learned_oneshot": {
+   "mean": 0.9600921585193096,
+   "lo": 0.9552101034992238,
+   "hi": 0.9645132777755687
+  },
+  "learned_oneshot_direct": {
+   "mean": 0.9484104253618529,
+   "lo": 0.9397067391102039,
+   "hi": 0.9557988056481176
+  },
+  "learned_seq[cons:GR]": {
+   "mean": 0.9613202505661632,
+   "lo": 0.9565336597192193,
+   "hi": 0.965672282693923
+  },
+  "learned_seq[cons:PD1000]": {
+   "mean": 0.9527519611472536,
+   "lo": 0.9477516102173706,
+   "hi": 0.957261148614536
+  },
+  "learned_seq[cons:RV+cons:GR]": {
+   "mean": 0.9608047104267675,
+   "lo": 0.9559602569516499,
+   "hi": 0.965100222078889
+  },
+  "learned_seq[opt:GR]": {
+   "mean": 0.9322715914682522,
+   "lo": 0.9221461409280194,
+   "hi": 0.9412336614558823
+  },
+  "learned_sequential": {
+   "mean": 0.9602317173895747,
+   "lo": 0.9553985143350077,
+   "hi": 0.964454934434335
+  },
+  "oracle_arms (hidden-state, non-deployable)": {
+   "mean": 0.9835442402342215,
+   "lo": 0.9809469749773189,
+   "hi": 0.985993668583121
+  }
+ },
+ "gates": {
+  "learned_oneshot": {
+   "GA1_vs_best_simple": {
+    "mean": 0.005698324466858892,
+    "lo": 0.0030137508621642713,
+    "hi": 0.008707639802029927,
+    "pass": false
+   },
+   "GA2_vs_best_single": {
+    "mean": 0.04026842023219858,
+    "lo": 0.034497974579517164,
+    "hi": 0.046314935000538036,
+    "pass": true
+   },
+   "phase2_margin_max": 0.002849162233429446
+  },
+  "learned_sequential": {
+   "GA1_vs_best_simple": {
+    "mean": 0.005837883337123934,
+    "lo": 0.003209897899687796,
+    "hi": 0.008832821801743643,
+    "pass": false
+   },
+   "GA2_vs_best_single": {
+    "mean": 0.04040797910246362,
+    "lo": 0.034794304290133804,
+    "hi": 0.046485826684554345,
+    "pass": true
+   },
+   "phase2_margin_max": 0.002918941668561967
+  }
+ },
+ "best_simple_minus_best_single": {
+  "mean": 0.03457009576533969,
+  "lo": 0.02786550016239367,
+  "hi": 0.04180954557506306
+ },
+ "oracle_minus_best_simple": {
+  "mean": 0.02915040618177059,
+  "lo": 0.025501015669741885,
+  "hi": 0.03312965777172528
+ },
+ "best_simple_family_per_fold": {
+  "0": "tree_d2",
+  "1": "tree_d2",
+  "2": "tree_d3",
+  "3": "tree_d3",
+  "4": "tree_d3"
+ },
+ "fold_info": {
+  "0": {
+   "best_simple_family": "tree_d2",
+   "inner_scores": {
+    "A0_single": 0.9172330759850618,
+    "cascade_tuned": 0.9214314005323957,
+    "strong_baseline": 0.9446603176925623,
+    "hand": 0.9391345774267192,
+    "threshold_any": 0.9433597544569502,
+    "tree_d2": 0.9513311723968876,
+    "tree_d3": 0.9485278230168088,
+    "logistic_tuned": 0.9401089998716383
+   },
+   "oneshot_cfg": [
+    100,
+    3
+   ],
+   "first_call_share": {
+    "learned_oneshot": 0.027257240204429302,
+    "learned_seq[cons:GR]": 0.43100511073253833,
+    "learned_seq[cons:PD1000]": 0.11243611584327087,
+    "learned_seq[cons:RV+cons:GR]": 0.2010221465076661,
+    "learned_seq[opt:GR]": 0.2282793867120954
+   }
+  },
+  "1": {
+   "best_simple_family": "tree_d2",
+   "inner_scores": {
+    "A0_single": 0.923815813762257,
+    "cascade_tuned": 0.9281273459863465,
+    "strong_baseline": 0.9457173238597549,
+    "hand": 0.9408605261190416,
+    "threshold_any": 0.9498540521409387,
+    "tree_d2": 0.9547475827422398,
+    "tree_d3": 0.9519071819603148,
+    "logistic_tuned": 0.9493919319314078
+   },
+   "oneshot_cfg": [
+    200,
+    3
+   ],
+   "first_call_share": {
+    "learned_oneshot": 0.056218057921635436,
+    "learned_seq[cons:GR]": 0.42589437819420783,
+    "learned_seq[cons:PD1000]": 0.008517887563884156,
+    "learned_seq[cons:RV+cons:GR]": 0.2504258943781942,
+    "learned_seq[opt:GR]": 0.25894378194207834
+   }
+  },
+  "2": {
+   "best_simple_family": "tree_d3",
+   "inner_scores": {
+    "A0_single": 0.9178626099352161,
+    "cascade_tuned": 0.9226896564274903,
+    "strong_baseline": 0.9441541534827078,
+    "hand": 0.9386818512710291,
+    "threshold_any": 0.9479693887077388,
+    "tree_d2": 0.9542852448751972,
+    "tree_d3": 0.9561475885453592,
+    "logistic_tuned": 0.9456935768627772
+   },
+   "oneshot_cfg": [
+    100,
+    3
+   ],
+   "first_call_share": {
+    "learned_oneshot": 0.03793103448275862,
+    "learned_seq[cons:GR]": 0.24310344827586206,
+    "learned_seq[cons:PD1000]": 0.0,
+    "learned_seq[cons:RV+cons:GR]": 0.4517241379310345,
+    "learned_seq[opt:GR]": 0.2672413793103448
+   }
+  },
+  "3": {
+   "best_simple_family": "tree_d3",
+   "inner_scores": {
+    "A0_single": 0.9197028696801657,
+    "cascade_tuned": 0.9237158584630105,
+    "strong_baseline": 0.9462533969119348,
+    "hand": 0.9413090028137925,
+    "threshold_any": 0.9470416343223723,
+    "tree_d2": 0.953871307027281,
+    "tree_d3": 0.9547689994508974,
+    "logistic_tuned": 0.9495513264184765
+   },
+   "oneshot_cfg": [
+    100,
+    3
+   ],
+   "first_call_share": {
+    "learned_oneshot": 0.4850615114235501,
+    "learned_seq[cons:GR]": 0.24956063268892795,
+    "learned_seq[cons:PD1000]": 0.014059753954305799,
+    "learned_seq[cons:RV+cons:GR]": 0.13005272407732865,
+    "learned_seq[opt:GR]": 0.12126537785588752
+   }
+  },
+  "4": {
+   "best_simple_family": "tree_d3",
+   "inner_scores": {
+    "A0_single": 0.9197021889084809,
+    "cascade_tuned": 0.9240378774804143,
+    "strong_baseline": 0.9416811445009919,
+    "hand": 0.9355034114533664,
+    "threshold_any": 0.945991206965079,
+    "tree_d2": 0.9511114622353773,
+    "tree_d3": 0.9527943868644991,
+    "logistic_tuned": 0.947285004142158
+   },
+   "oneshot_cfg": [
+    100,
+    3
+   ],
+   "first_call_share": {
+    "learned_oneshot": 0.017605633802816902,
+    "learned_seq[cons:GR]": 0.7746478873239436,
+    "learned_seq[cons:PD1000]": 0.0035211267605633804,
+    "learned_seq[cons:RV+cons:GR]": 0.02112676056338028,
+    "learned_seq[opt:GR]": 0.18309859154929578
+   }
+  }
+ },
+ "best_arm_frequency": {
+  "opt:RV": 0.21584226911103424,
+  "cons:RV": 0.20442753372535455,
+  "cons:GR": 0.08405396056727776,
+  "insp:RV": 0.06295399515738499,
+  "cons:G": 0.05811138014527845,
+  "cons:BM4": 0.053268765133171914,
+  "opt:BM4": 0.038395019024558975,
+  "opt:GR": 0.03631961259079903,
+  "insp:GR": 0.02767208578346593,
+  "opt:G": 0.025942580421999307,
+  "cons:PD10000": 0.022137668626772744,
+  "cons:RU": 0.020754064337599448,
+  "insp:G": 0.018332756831546178,
+  "opt:RU": 0.014527845036319613,
+  "insp:BM4": 0.013836042891732965,
+  "cons:PD1000": 0.012106537530266344,
+  "opt:BM16": 0.01176063645797302,
+  "opt:PD10000": 0.010377032168799724,
+  "cons:BM16": 0.010031131096506399,
+  "insp:RU": 0.008647526807333102,
+  "cons:PD100000": 0.007609823590453131,
+  "insp:PD10000": 0.006572120373573158,
+  "opt:PD1000": 0.006572120373573158,
+  "insp:PD1000": 0.004842615012106538,
+  "insp:BM16": 0.0041508128675198895,
+  "cons:RUPD10000": 0.0038049117952265654,
+  "opt:PD0": 0.002421307506053269,
+  "opt:PD100000": 0.002421307506053269,
+  "opt:RUPD10000": 0.0017295053614666206,
+  "cons:PD0": 0.0013836042891732965,
+  "cons:RUPD100000": 0.0013836042891732965,
+  "insp:PD100000": 0.0013836042891732965,
+  "insp:RUPD1000": 0.0013836042891732965,
+  "cons:RUPD1000": 0.0010377032168799724,
+  "opt:RUPD1000": 0.0010377032168799724,
+  "opt:RUPD100000": 0.0010377032168799724,
+  "cons:PD1000000": 0.0006918021445866483,
+  "insp:PD0": 0.0003459010722933241,
+  "insp:RUPD10000": 0.0003459010722933241,
+  "insp:RUPD100000": 0.0003459010722933241
+ },
+ "best_method_share": {
+  "RV": 0.4832237979937738,
+  "GR": 0.14804565894154273,
+  "BM": 0.13144240747146316,
+  "G": 0.10238671739882393,
+  "PD": 0.0788654444828779,
+  "RU": 0.04392943618125216,
+  "RUPD": 0.012106537530266345
+ },
+ "methods_below_5pct": [
+  "RU",
+  "RUPD"
+ ],
+ "best_mode_share": {
+  "cons": 0.4808024904877205,
+  "insp": 0.15081286751988932,
+  "opt": 0.3683846419923901
+ },
+ "drivers": {
+  "n": [
+   {
+    "bin": 0,
+    "range": [
+     16.0,
+     24.0
+    ],
+    "n": 913,
+    "best_single_inner": 0.9126711026953253,
+    "best_simple_inner": 0.961449327473761,
+    "hand": 0.9352197868963309,
+    "strong_baseline": 0.9555374338284156,
+    "learned_oneshot": 0.9667907827022174,
+    "learned_sequential": 0.9662865274266729,
+    "oracle_arms (hidden-state, non-deployable)": 0.9875660414481545,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.24315443592552027
+   },
+   {
+    "bin": 1,
+    "range": [
+     25.0,
+     34.0
+    ],
+    "n": 959,
+    "best_single_inner": 0.9222241715752677,
+    "best_simple_inner": 0.954706124417233,
+    "hand": 0.9419180928275948,
+    "strong_baseline": 0.9483669960992133,
+    "learned_oneshot": 0.959176113818144,
+    "learned_sequential": 0.9591304397752513,
+    "oracle_arms (hidden-state, non-deployable)": 0.9842933946379854,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.22940563086548488
+   },
+   {
+    "bin": 2,
+    "range": [
+     35.0,
+     50.0
+    ],
+    "n": 1019,
+    "best_single_inner": 0.9239732385539988,
+    "best_simple_inner": 0.9477783758056576,
+    "hand": 0.9390521115173457,
+    "strong_baseline": 0.9353130607761779,
+    "learned_oneshot": 0.9549524558592736,
+    "learned_sequential": 0.9558431832073037,
+    "oracle_arms (hidden-state, non-deployable)": 0.9792357578185878,
+    "modal_best_arm": "cons:RV",
+    "modal_best_frac": 0.23748773307163887
+   }
+  ],
+  "corr_class": [
+   {
+    "bin": 0,
+    "range": [
+     0.0,
+     0.0
+    ],
+    "n": 602,
+    "best_single_inner": 0.932882357943436,
+    "best_simple_inner": 0.9661794421812373,
+    "hand": 0.9409943981964675,
+    "strong_baseline": 0.9565172905688379,
+    "learned_oneshot": 0.9749999155167377,
+    "learned_sequential": 0.973520868636931,
+    "oracle_arms (hidden-state, non-deployable)": 0.9905241577093625,
+    "modal_best_arm": "cons:RV",
+    "modal_best_frac": 0.23421926910299004
+   },
+   {
+    "bin": 1,
+    "range": [
+     1.0,
+     2.0
+    ],
+    "n": 1216,
+    "best_single_inner": 0.9203796857937394,
+    "best_simple_inner": 0.95704981491893,
+    "hand": 0.9360234998089514,
+    "strong_baseline": 0.951080765370588,
+    "learned_oneshot": 0.9620903035506556,
+    "learned_sequential": 0.9630257464271033,
+    "oracle_arms (hidden-state, non-deployable)": 0.9839609252290591,
+    "modal_best_arm": "cons:RV",
+    "modal_best_frac": 0.20476973684210525
+   },
+   {
+    "bin": 2,
+    "range": [
+     3.0,
+     4.0
+    ],
+    "n": 1073,
+    "best_single_inner": 0.9118672413615121,
+    "best_simple_inner": 0.9447716450243351,
+    "hand": 0.9406952605892175,
+    "strong_baseline": 0.9344231273647146,
+    "learned_oneshot": 0.9494638136259567,
+    "learned_sequential": 0.9496095287963381,
+    "oracle_arms (hidden-state, non-deployable)": 0.9791559836883152,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.22460391425908668
+   }
+  ],
+  "tight_loc_mean": [
+   {
+    "bin": 0,
+    "range": [
+     0.05054945054945055,
+     0.3423760783542673
+    ],
+    "n": 964,
+    "best_single_inner": 0.873601818170703,
+    "best_simple_inner": 0.9411593998707148,
+    "hand": 0.9309383922551049,
+    "strong_baseline": 0.928622100375706,
+    "learned_oneshot": 0.9445427307788763,
+    "learned_sequential": 0.9440637931885151,
+    "oracle_arms (hidden-state, non-deployable)": 0.9746678633365122,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.19605809128630705
+   },
+   {
+    "bin": 1,
+    "range": [
+     0.34249585241635533,
+     0.5283661588009414
+    ],
+    "n": 963,
+    "best_single_inner": 0.9288468751947712,
+    "best_simple_inner": 0.9576429257916008,
+    "hand": 0.9354668191722697,
+    "strong_baseline": 0.9520836209087724,
+    "learned_oneshot": 0.9628343817484015,
+    "learned_sequential": 0.9636594646421163,
+    "oracle_arms (hidden-state, non-deployable)": 0.9848216270815054,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.22533748701973
+   },
+   {
+    "bin": 2,
+    "range": [
+     0.5285472972972973,
+     0.9786223277909739
+    ],
+    "n": 964,
+    "best_single_inner": 0.957031881596386,
+    "best_simple_inner": 0.9643825469221522,
+    "hand": 0.949968943047066,
+    "strong_baseline": 0.957391497487641,
+    "learned_oneshot": 0.9729022076605572,
+    "learned_sequential": 0.9729754500925043,
+    "oracle_arms (hidden-state, non-deployable)": 0.9911445553747372,
+    "modal_best_arm": "cons:RV",
+    "modal_best_frac": 0.24481327800829875
+   }
+  ],
+  "tight_glob": [
+   {
+    "bin": 0,
+    "range": [
+     0.162534435261708,
+     0.5556561085972851
+    ],
+    "n": 963,
+    "best_single_inner": 0.9273896336556641,
+    "best_simple_inner": 0.9561109097239151,
+    "hand": 0.9492442365010324,
+    "strong_baseline": 0.946889298570918,
+    "learned_oneshot": 0.9600346900389608,
+    "learned_sequential": 0.9605820369576824,
+    "oracle_arms (hidden-state, non-deployable)": 0.9854096349083673,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.23468328141225336
+   },
+   {
+    "bin": 1,
+    "range": [
+     0.5564142194744977,
+     0.9694868238557559
+    ],
+    "n": 964,
+    "best_single_inner": 0.9117720418520046,
+    "best_simple_inner": 0.9472849448627505,
+    "hand": 0.918891357591863,
+    "strong_baseline": 0.938697421862243,
+    "learned_oneshot": 0.9566878872907435,
+    "learned_sequential": 0.9570656425183663,
+    "oracle_arms (hidden-state, non-deployable)": 0.980983325632682,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.21887966804979253
+   },
+   {
+    "bin": 2,
+    "range": [
+     0.9696734059097978,
+     1.5614678899082568
+    ],
+    "n": 964,
+    "best_single_inner": 0.9203173877928439,
+    "best_simple_inner": 0.9597874287695164,
+    "hand": 0.9482528523082349,
+    "strong_baseline": 0.9525051100377782,
+    "learned_oneshot": 0.9635538386136187,
+    "learned_sequential": 0.9630478360947171,
+    "oracle_arms (hidden-state, non-deployable)": 0.9842416952183308,
+    "modal_best_arm": "cons:RV",
+    "modal_best_frac": 0.21784232365145229
+   }
+  ],
+  "conf_density": [
+   {
+    "bin": 0,
+    "range": [
+     0.0,
+     0.13253012048192772
+    ],
+    "n": 963,
+    "best_single_inner": 0.9221046049843645,
+    "best_simple_inner": 0.9631036690288892,
+    "hand": 0.9541229651120897,
+    "strong_baseline": 0.9582939497555522,
+    "learned_oneshot": 0.9682561557024189,
+    "learned_sequential": 0.9678426547470631,
+    "oracle_arms (hidden-state, non-deployable)": 0.9865811881843787,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.1952232606438214
+   },
+   {
+    "bin": 1,
+    "range": [
+     0.13333333333333333,
+     0.25609756097560976
+    ],
+    "n": 959,
+    "best_single_inner": 0.9156182518820007,
+    "best_simple_inner": 0.9480526668940814,
+    "hand": 0.9242200579089974,
+    "strong_baseline": 0.934713479920027,
+    "learned_oneshot": 0.9516116593482744,
+    "learned_sequential": 0.9515018709852925,
+    "oracle_arms (hidden-state, non-deployable)": 0.9792186262303139,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.205422314911366
+   },
+   {
+    "bin": 2,
+    "range": [
+     0.2563265306122449,
+     0.5932203389830508
+    ],
+    "n": 969,
+    "best_single_inner": 0.9217190807360749,
+    "best_simple_inner": 0.9520136567795572,
+    "hand": 0.9379791198725671,
+    "strong_baseline": 0.945042656777618,
+    "learned_oneshot": 0.9603716935220846,
+    "learned_sequential": 0.9613076616893121,
+    "oracle_arms (hidden-state, non-deployable)": 0.9848070709398414,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.24664602683178535
+   }
+  ],
+  "n_comp": [
+   {
+    "bin": 1,
+    "range": [
+     1.0,
+     9.0
+    ],
+    "n": 2891,
+    "best_single_inner": 0.9198237382871113,
+    "best_simple_inner": 0.9543938340524507,
+    "hand": 0.9387925347956376,
+    "strong_baseline": 0.9460303131357366,
+    "learned_oneshot": 0.9600921585193096,
+    "learned_sequential": 0.9602317173895747,
+    "oracle_arms (hidden-state, non-deployable)": 0.9835442402342215,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.21584226911103424
+   }
+  ],
+  "hidden_frac": [
+   {
+    "bin": 0,
+    "range": [
+     0.0,
+     0.02702702702702703
+    ],
+    "n": 964,
+    "best_single_inner": 0.9754455080531536,
+    "best_simple_inner": 0.9830809099512723,
+    "hand": 0.9777353813489774,
+    "strong_baseline": 0.9786569121191102,
+    "learned_oneshot": 0.9845505556886067,
+    "learned_sequential": 0.9854930313906395,
+    "oracle_arms (hidden-state, non-deployable)": 0.9951996577237772,
+    "modal_best_arm": "cons:RV",
+    "modal_best_frac": 0.4636929460580913
+   },
+   {
+    "bin": 1,
+    "range": [
+     0.027777777777777776,
+     0.12195121951219512
+    ],
+    "n": 936,
+    "best_single_inner": 0.9190950653415495,
+    "best_simple_inner": 0.955766735542821,
+    "hand": 0.9341558776753182,
+    "strong_baseline": 0.9548113829309693,
+    "learned_oneshot": 0.9656930834835756,
+    "learned_sequential": 0.9645937121044174,
+    "oracle_arms (hidden-state, non-deployable)": 0.9885173555953427,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.30235042735042733
+   },
+   {
+    "bin": 2,
+    "range": [
+     0.125,
+     0.42857142857142855
+    ],
+    "n": 991,
+    "best_single_inner": 0.8664056271090899,
+    "best_simple_inner": 0.9251916373204122,
+    "hand": 0.9052900191419542,
+    "strong_baseline": 0.9059989077388545,
+    "learned_oneshot": 0.9310100589857527,
+    "learned_sequential": 0.9315387469050953,
+    "oracle_arms (hidden-state, non-deployable)": 0.9675092670375097,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.3148335015136226
+   }
+  ],
+  "m": [
+   {
+    "bin": 0,
+    "range": [
+     0.0,
+     0.21163824822259442
+    ],
+    "n": 964,
+    "best_single_inner": 0.924405502636731,
+    "best_simple_inner": 0.9614952993310996,
+    "hand": 0.9328662318873644,
+    "strong_baseline": 0.9491378669525181,
+    "learned_oneshot": 0.9644918281364213,
+    "learned_sequential": 0.963923845886408,
+    "oracle_arms (hidden-state, non-deployable)": 0.9889843763624269,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.4118257261410788
+   },
+   {
+    "bin": 1,
+    "range": [
+     0.21164305850547815,
+     0.5999345611694182
+    ],
+    "n": 963,
+    "best_single_inner": 0.9121618193305652,
+    "best_simple_inner": 0.9491897357730363,
+    "hand": 0.9425420822292383,
+    "strong_baseline": 0.9435263770713624,
+    "learned_oneshot": 0.956332506666801,
+    "learned_sequential": 0.956702340753213,
+    "oracle_arms (hidden-state, non-deployable)": 0.979199867762925,
+    "modal_best_arm": "cons:RV",
+    "modal_best_frac": 0.16822429906542055
+   },
+   {
+    "bin": 2,
+    "range": [
+     0.6000195527815887,
+     0.9996331393520246
+    ],
+    "n": 964,
+    "best_single_inner": 0.9228959448453271,
+    "best_simple_inner": 0.952491068611018,
+    "hand": 0.940973179842337,
+    "strong_baseline": 0.945424097939279,
+    "learned_oneshot": 0.959448240700918,
+    "learned_sequential": 0.9600653043500199,
+    "oracle_arms (hidden-state, non-deployable)": 0.9824439699668648,
+    "modal_best_arm": "cons:GR",
+    "modal_best_frac": 0.1483402489626556
+   }
+  ],
+  "log_c": [
+   {
+    "bin": 0,
+    "range": [
+     -7.297936824867069,
+     -6.696713638393225
+    ],
+    "n": 964,
+    "best_single_inner": 0.9313625748725065,
+    "best_simple_inner": 0.9635340086263193,
+    "hand": 0.9459816259747963,
+    "strong_baseline": 0.9514597667385796,
+    "learned_oneshot": 0.9672274446270461,
+    "learned_sequential": 0.9665900918480697,
+    "oracle_arms (hidden-state, non-deployable)": 0.9858455042694524,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.21473029045643152
+   },
+   {
+    "bin": 1,
+    "range": [
+     -6.695120969521234,
+     -6.01533838618736
+    ],
+    "n": 962,
+    "best_single_inner": 0.928206964346843,
+    "best_simple_inner": 0.9599264141342398,
+    "hand": 0.9500639361408616,
+    "strong_baseline": 0.9571520264035749,
+    "learned_oneshot": 0.9640641179378961,
+    "learned_sequential": 0.9641326868273651,
+    "oracle_arms (hidden-state, non-deployable)": 0.9860888663416643,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.21413721413721415
+   },
+   {
+    "bin": 2,
+    "range": [
+     -6.012959995864456,
+     -5.309892430560956
+    ],
+    "n": 965,
+    "best_single_inner": 0.8999396948282685,
+    "best_simple_inner": 0.939747750811114,
+    "hand": 0.9203745327326177,
+    "strong_baseline": 0.9295193479162536,
+    "learned_oneshot": 0.949004655132224,
+    "learned_sequential": 0.9499910898484935,
+    "oracle_arms (hidden-state, non-deployable)": 0.9787086455758559,
+    "modal_best_arm": "cons:RV",
+    "modal_best_frac": 0.23316062176165803
+   }
+  ],
+  "log_o": [
+   {
+    "bin": 0,
+    "range": [
+     -2.9996675801918036,
+     -2.2646202252981915
+    ],
+    "n": 961,
+    "best_single_inner": 0.9171435836017807,
+    "best_simple_inner": 0.9783925395995662,
+    "hand": 0.948628166505064,
+    "strong_baseline": 0.9736951729033215,
+    "learned_oneshot": 0.9790407641155151,
+    "learned_sequential": 0.9785958421705779,
+    "oracle_arms (hidden-state, non-deployable)": 0.9920406555720365,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.2133194588969823
+   },
+   {
+    "bin": 1,
+    "range": [
+     -2.263196625455306,
+     -1.6774234763116755
+    ],
+    "n": 965,
+    "best_single_inner": 0.9142772212063396,
+    "best_simple_inner": 0.9549700008451317,
+    "hand": 0.9439016520787709,
+    "strong_baseline": 0.9436469319551485,
+    "learned_oneshot": 0.9604632589138089,
+    "learned_sequential": 0.9610136637495329,
+    "oracle_arms (hidden-state, non-deployable)": 0.9818397609546066,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.19585492227979276
+   },
+   {
+    "bin": 2,
+    "range": [
+     -1.6759810139014373,
+     -1.0060423790728847
+    ],
+    "n": 965,
+    "best_single_inner": 0.9280393006037402,
+    "best_simple_inner": 0.9299184382123319,
+    "hand": 0.9238885552609412,
+    "strong_baseline": 0.9208635075425948,
+    "learned_oneshot": 0.9408509959714909,
+    "learned_sequential": 0.9411617669730943,
+    "oracle_arms (hidden-state, non-deployable)": 0.9767875224779398,
+    "modal_best_arm": "opt:RV",
+    "modal_best_frac": 0.23834196891191708
+   }
+  ]
+ },
+ "exact_work": {
+  "mean": 363528.54514008993,
+  "p50": 22237.0,
+  "p99": 6781487.399999926,
+  "max": 58087203.0
+ },
+ "selector_feature_work_mean": 474.8706329989623,
+ "cpu_s_main": 16.2
+}

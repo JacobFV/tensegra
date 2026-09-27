@@ -1,0 +1,106 @@
+{
+ "registry": "A-CF-SMALL",
+ "lineage": 2,
+ "smoke": true,
+ "populations": {
+  "train0": [
+   303000000,
+   303000120
+  ],
+  "train1": [
+   303010000,
+   303010120
+  ],
+  "train2": [
+   303020000,
+   303020120
+  ],
+  "select": [
+   303100000,
+   303100120
+  ],
+  "confirm": [
+   303200000,
+   303200120
+  ]
+ },
+ "train": {
+  "range": [
+   303020000,
+   303020120
+  ],
+  "episodes": 120,
+  "instances": 538,
+  "uncertified_episodes_legacy": 0,
+  "episode_list_sha256": "d27a3e13e8d3f99f854db8fe829fdf07e301a0f79184734df08d62c772275027",
+  "files": {
+   "/home/brand/structured-latent-dynamics-campaign06/agent-acfsmall/smoke/train2.jsonl.gz": "e09031ca0b579f1421b9b8c53664d8f3e8b945b9e7c218df1c22e852cc7e1c74"
+  }
+ },
+ "select": {
+  "range": [
+   303100000,
+   303100120
+  ],
+  "episodes": 120,
+  "instances": 555,
+  "uncertified_episodes_legacy": 0,
+  "episode_list_sha256": "7f2ca7d17b5186ffb04dd8cfd09e2aaabdc05ef655c756aed70decd747986db1",
+  "files": {
+   "/home/brand/structured-latent-dynamics-campaign06/agent-acfsmall/smoke/select.jsonl.gz": "92d3eab8433c47d50f3ea57e512cfcc9c9f5affe90b3ea7eb8f69538e762be33"
+  }
+ },
+ "confirm_touched": false,
+ "min_leaf": 20,
+ "chosen": {
+  "logistic_tuned": "logistic[lam=0.001]",
+  "learned_oneshot": "learned_oneshot[cfg=100x3]",
+  "best_simple": "tree_d2",
+  "best_single": "A0_single"
+ },
+ "select_scores": {
+  "learned_seq[cons:RV+cons:GR]": 0.9559811971253875,
+  "learned_seq[cons:GR]": 0.9545977220182857,
+  "learned_sequential": 0.9538833374737433,
+  "learned_oneshot[cfg=100x3]": 0.9533949330768838,
+  "learned_oneshot": 0.9533949330768838,
+  "learned_oneshot[cfg=200x3]": 0.9524108435482286,
+  "tree_d2": 0.9500040938643777,
+  "threshold_any": 0.9485516480450654,
+  "learned_seq[cons:PD1000]": 0.9413204807501182,
+  "learned_oneshot_direct": 0.941284136348338,
+  "hand": 0.9326148159208253,
+  "tree_d3": 0.9301499628371888,
+  "logistic[lam=0.001]": 0.9291840150829004,
+  "logistic_tuned": 0.9291840150829004,
+  "strong_baseline": 0.9287624855998728,
+  "learned_seq[opt:GR]": 0.9252158446199485,
+  "logistic[lam=0.1]": 0.9247760696961989,
+  "logistic[lam=0.01]": 0.9240668539183788,
+  "cascade_tuned": 0.9138131444846085,
+  "A0_single": 0.9071071380574612
+ },
+ "artifact_sha256": {
+  "A0_single": "c7890f98d33e2ca977154efd781113496e7b4415ae50efd285fd13e65133d9d7",
+  "cascade_tuned": "35ffb06b8c49b75e433510c9187e1456edb50de195a5459ed3ff53a98be1425c",
+  "strong_baseline": "a9b2b9672908fba4ef537778da9580bbc081d2e1b5794ad9bc3bc2fc699dcfa7",
+  "hand": "b13a7087c513c4e69de1c1d97d0ef1ca34a14239c2c79989c15ff9d3f2505d79",
+  "threshold_any": "c411c12750fddbbecf74920c354fe0cac461d59dd1bf3bd1fcdb440e352e9b39",
+  "tree_d2": "527e96313516aef7a360641f2390117c42c2c036cd9060653fd7588729020a72",
+  "tree_d3": "21df6413fbfcd64d7dd8ecced44741191d6df9136067d888ef7c883d7055a8a0",
+  "logistic[lam=0.001]": "c683d4f9022136535ad3ef88b621f4fac5dd63090ed0ea43e380a3e274880a27",
+  "logistic[lam=0.01]": "56f51346feb8021317ad598e971127c5429df257a2119125fff944d64d40fbc9",
+  "logistic[lam=0.1]": "18a9dac625d5d35c800d0939233910d9a1f7db90446d35d3d57413daf2d2656c",
+  "learned_oneshot[cfg=100x3]": "5a3e02615b09f4e0c2c54ef75544d1c68180ccb9f7ce223f6d29828e33c63bbd",
+  "learned_oneshot[cfg=200x3]": "1bc888d1d2ab1377e642ff0fe425fc76731b711ec6519862354c850d6a5fde37",
+  "learned_oneshot_direct": "bdf1ef4923179f54ac801dd92d193c574b1bf030418dd6694a6f5063dfe127ba",
+  "learned_seq[cons:GR]": "893154bfd2c94d642aea369d4018b4b31e436c5c5d6465c809a2adec8452951d",
+  "learned_seq[cons:PD1000]": "88d34a4d5ebf63e6049949b0102588c8c84263866dba8b7c7632d7c1669ca95a",
+  "learned_seq[cons:RV+cons:GR]": "87b93c639b43587eae09b52e9f81b2f3adff24f7c8a94ae57cb963d896bf4b56",
+  "learned_seq[opt:GR]": "a96930ff2e16f6467170e19d2f7b885a596455651c6a4d139f94bdd6c74621a9",
+  "learned_sequential": "9d6fe6a2faed9563ae08e2a08a1065bbbb1236d3618c29465d266e651ba29062"
+ },
+ "fit_pkl_sha256": "bf42f7a889b5fe7cc406d5671217ca47aaf1479357e3add3de6d6ba292fcc00e",
+ "tool_sha256": "48c9eba8e96496aef433184a7e264ef9c0b6d9bd92ffa24938b1bb8a9a6814de",
+ "cpu_s": 55.1
+}
