@@ -159,58 +159,110 @@ def cmd_labels(a):
 
 
 def cmd_labels_b6(a, out):
-    """extended-06 split table v3: training pools (2N base/broad for B0-B3 via --train-n, N dose pools), dev/test,
-    held-out challenge families and historical challenge sets (with per-configuration s0 facts and exact per-factor
-    relevance), and the balanced counterfactual sets."""
+    """extended-06 split table v3 (design v2): training pools of every arm (B0/B1 base, B2/B3 replacement-matched
+    variety, dose1-3; campaign06_probeworld.build_arm_pools), dev/test pools, sharded held-out challenge families and
+    historical challenge sets (per-configuration s0 facts; optional exact per-factor relevance), and the balanced
+    counterfactual octets.  --parts selects label jobs that can run in parallel (train / eval / cf); each part writes
+    labels_meta.<part>.json."""
+    parts = a.parts or ["train", "eval", "cf"]
     meta = {}
     n = a.n_train
-    todo = [("b6_train_base", 2 * n), ("b6_train_broad", 2 * n), ("b6_train_dose1", n), ("b6_train_dose2", n),
-            ("b6_dev", a.n_eval), ("b6_test_base", a.n_eval), ("b6_test_broad", a.n_eval)]
-    todo += [(s, a.n_hold) for s in pw6.B6_HOLD_SPLITS]
-    todo += [(s, a.n_hist) for s, v in pw6.SPLITS6.items() if v[2] == "hist"]
-    for split, cnt in todo:
-        if cnt <= 0:
-            continue
+    if "train" in parts:
         t0 = time.process_time()
-        pool = build_pool(split, cnt)
-        dt = time.process_time() - t0
-        with open(out / f"{split}.pkl", "wb") as f:
-            pickle.dump(pool, f, protocol=pickle.HIGHEST_PROTOCOL)
-        nst = [len(V) for _, _, V, _ in pool]
-        meta[split] = {"n_configs": cnt, "cpu_s": round(dt, 2), "states_total": sum(nst), "states_max": max(nst),
-                       "k_counts": {k: sum(1 for _, c, _, _ in pool if c.k == k) for k in pw6.V3_K},
-                       "combo_counts": _combo_counts(pool), "config_seed_base": pw6.SPLITS6[split][1]}
-        if pw6.SPLITS6[split][2] in ("hold", "hist"):
-            t1 = time.process_time()
-            recs = [b6_s0_record(idx, cfg, V, Q) for idx, cfg, V, Q in pool]
-            (out / f"{split}_s0.json").write_text(json.dumps(recs))
-            meta[split]["s0_cpu_s"] = round(time.process_time() - t1, 2)
-            meta[split]["support"] = b6_support(recs)
-        print(split, json.dumps(meta[split]), flush=True)
-        del pool
-    for fam in pw6.HOLD_FAMILIES + (pw6.HIST_FAMILIES if a.cf_hist else ()):
-        if a.n_cf <= 0:
-            continue
-        t0 = time.process_time()
-        sets = [pw6.counterfactual_set(fam, i) for i in range(a.n_cf)]
-        (out / f"cf_{fam}.json").write_text(json.dumps(sets))
-        meta[f"cf_{fam}"] = {"n_sets": len(sets), "cpu_s": round(time.process_time() - t0, 2),
-                             "config_seed_base": pw6.CF_BASE[fam], "support": cf_support(sets)}
-        print(f"cf_{fam}", json.dumps(meta[f"cf_{fam}"]), flush=True)
+        classify = pw6.make_classifier()  # DP per candidate, first-action class kept, table discarded
+        arms = a.arms or list(pw6.ARM_SIZE)
+        pools, report = pw6.build_arm_pools(n, arms=_with_refs(arms), classify=classify)
+        meta["classified_configs"] = len(classify.memo)
+        for arm in arms:  # arm by arm (bounded memory; shared configurations are re-solved)
+            pool = []
+            for i, (key, j) in enumerate(pools[arm]):
+                cfg = pw6.type_config(key, j)
+                s = pw6.ExactSolver(cfg)
+                s.value(pw.initial_state(cfg))
+                pool.append((i, cfg, s._V, s._Q))
+            with open(out / f"b6_{arm}.pkl", "wb") as f:
+                pickle.dump(pool, f, protocol=pickle.HIGHEST_PROTOCOL)
+            nst = [len(V) for _, _, V, _ in pool]
+            meta[f"b6_{arm}"] = {"n_configs": len(pool), "states_total": sum(nst), "states_max": max(nst),
+                                 "k_counts": {k: sum(1 for _, c, _, _ in pool if c.k == k) for k in pw6.V3_K},
+                                 "combo_counts": _combo_counts(pool), "stream": [list(x) for x in pools[arm]],
+                                 "report": report[arm], "hist_in_training": pw6.HIST_IN_TRAINING[arm]}
+            print(f"b6_{arm}", json.dumps({k: v for k, v in meta[f"b6_{arm}"].items() if k != "stream"}), flush=True)
+            del pool
+        meta["train_cpu_s"] = round(time.process_time() - t0, 2)
+    if "eval" in parts:
+        todo = [("b6_dev", a.n_eval), ("b6_test_base", a.n_eval), ("b6_test_pairs", a.n_eval)]
+        todo += [(s, a.n_hold) for s in pw6.B6_HOLD_SPLITS]
+        todo += [(s, a.n_hist) for s, v in pw6.SPLITS6.items() if v[2] == "hist"]
+        for split, cnt in todo:
+            if cnt <= 0:
+                continue
+            meta[split] = build_b6_shards(out, split, cnt, a.b6_shard,
+                                          relevance=a.hold_relevance and pw6.SPLITS6[split][2] in ("hold", "hist"))
+            print(split, json.dumps(meta[split]), flush=True)
+    if "cf" in parts:
+        for fam in pw6.HOLD_FAMILIES + (pw6.HIST_FAMILIES if a.cf_hist else ()):
+            if a.n_cf <= 0:
+                continue
+            t0 = time.process_time()
+            sets = [pw6.counterfactual_set(fam, i) for i in range(a.n_cf)]
+            (out / f"cf_{fam}.json").write_text(json.dumps(sets))
+            meta[f"cf_{fam}"] = {"n_sets": len(sets), "cpu_s": round(time.process_time() - t0, 2),
+                                 "config_seed_base": pw6.CF_BASE[fam], "support": cf_support(sets)}
+            print(f"cf_{fam}", json.dumps(meta[f"cf_{fam}"]), flush=True)
     meta["version"] = pw.VERSION
     meta["split_set"] = {"name": "b6", "env": pw6.VERSION, "generator": pw6.GENERATOR_VERSION,
                          "split_table": pw6.SPLIT_TABLE_VERSION, "hold_families": list(pw6.HOLD_FAMILIES),
-                         "hist_families": list(pw6.HIST_FAMILIES), "base_combos": list(pw6.BASE_COMBOS),
-                         "extra_pairs": list(pw6.EXTRA_PAIRS), "dose_order": list(pw6.DOSE_ORDER), "n": n,
-                         "k_support": list(pw6.V3_K), "audit": pw6.audit_split_table()}
+                         "hist_families": list(pw6.HIST_FAMILIES), "base_pair": pw6.BASE_PAIR,
+                         "variety_pairs": list(pw6.VARIETY_PAIRS), "dose_order": list(pw6.DOSE_ORDER), "n": n,
+                         "k_support": list(pw6.V3_K), "corr_range": list(pw6.CORR_RANGE),
+                         "p_event_range": list(pw6.P_EVENT_RANGE), "audit": pw6.audit_split_table(n), "parts": parts}
     meta["eps"] = pw.EPS
     meta["continuation"] = pw.CONTINUATION
-    (out / "labels_meta.json").write_text(json.dumps(meta, indent=1))
+    name = "labels_meta.json" if parts == ["train", "eval", "cf"] else f"labels_meta.{'-'.join(parts)}.json"
+    (out / name).write_text(json.dumps(meta, indent=1))
 
 
-def b6_s0_record(idx, cfg, V, Q):
-    """Per-configuration facts of a held-out / historical pool: s0 eps-optimal set and per-factor exact relevance
-    (first decision changes / ignoring the factor costs > eps), computed with one-factor ablations."""
+def _with_refs(arms):
+    need = list(arms)
+    for arm in arms:
+        ref = pw6.ARM_REPLACES.get(arm)
+        if ref and ref not in need:
+            need.insert(0, ref)
+    order = list(pw6.ARM_SIZE)
+    return sorted(need, key=order.index)
+
+
+def build_b6_shards(out, split, cnt, shard, relevance=False):
+    """A b6 evaluation pool stored as shards <split>.shardNNN.pkl + <split>.shards.json (bounded memory; k = 8
+    configurations reach ~1.4e5 DP states), with per-configuration s0 facts in <split>_s0.json."""
+    t0 = time.process_time()
+    shards, cur, recs, nst = [], [], [], []
+    for idx in range(cnt):
+        cfg = pw6.split6_config(split, idx)
+        s = pw6.ExactSolver(cfg)
+        s.value(pw.initial_state(cfg))
+        recs.append(b6_s0_record(idx, cfg, s._V, s._Q, relevance))
+        cur.append((idx, cfg, s._V, s._Q))
+        nst.append(len(s._V))
+        if len(cur) == shard or idx == cnt - 1:
+            name = f"{split}.shard{len(shards):03d}"
+            with open(out / f"{name}.pkl", "wb") as f:
+                pickle.dump(cur, f, protocol=pickle.HIGHEST_PROTOCOL)
+            shards.append(name)
+            cur = []
+    info = {"n_configs": cnt, "shards": shards, "config_seed_base": pw6.SPLITS6[split][1],
+            "combos": list(pw6.SPLITS6[split][0])}
+    (out / f"{split}.shards.json").write_text(json.dumps(info, indent=1))
+    (out / f"{split}_s0.json").write_text(json.dumps(recs))
+    info.update(cpu_s=round(time.process_time() - t0, 2), states_total=sum(nst), states_max=max(nst),
+                k_counts={k: sum(r["k"] == k for r in recs) for k in pw6.V3_K}, support=b6_support(recs))
+    return info
+
+
+def b6_s0_record(idx, cfg, V, Q, relevance=True):
+    """Per-configuration facts of an evaluation pool: s0 eps-optimal set, eligibility (V* > eps) and (relevance=True)
+    per-factor exact relevance (first decision changes / ignoring the factor costs > eps) via one-factor ablations."""
     s = pw6.ExactSolver(cfg)
     s._V, s._Q = V, Q
     s0 = pw.initial_state(cfg)
@@ -219,23 +271,29 @@ def b6_s0_record(idx, cfg, V, Q):
     v = s.value(s0)
     rel = {}
     for f, on in zip(pw6.FACTORS, pw6.flags_of(cfg)):
-        if not on:
+        if not on or not relevance:
             continue
         sa = pw6.ExactSolver(pw6.ablate(cfg, f))
         pa = sa.pi_star(pw.initial_state(sa.cfg))
-        rel[f] = {"first": pa not in opt, "regret": round(v - pw6.foreign_policy_value(s, sa), 6)}
-    return {"idx": idx, "k": cfg.k, "family": pw6.fam_key(pw6.flags_of(cfg)), "V": v, "opt": sorted(opt),
-            "unique": len(opt) == 1, "pi": s.pi_star(s0), "rel": rel,
-            "joint_flip": len(rel) >= 2 and all(r["first"] for r in rel.values()),
-            "all_regret_relevant": len(rel) >= 2 and all(r["regret"] > pw.EPS for r in rel.values())}
+        ex, _ = pw6.any_decision_change(s, sa)
+        rel[f] = {"first": pa not in opt, "any": ex, "regret": round(v - pw6.foreign_policy_value(s, sa), 6)}
+    rec = {"idx": idx, "k": cfg.k, "family": pw6.fam_key(pw6.flags_of(cfg)), "V": v, "eligible": v > pw.EPS,
+           "opt": sorted(opt), "unique": len(opt) == 1, "pi": s.pi_star(s0)}
+    if relevance:
+        rec.update(rel=rel, joint_flip=len(rel) >= 2 and all(r["first"] for r in rel.values()),
+                   all_any_relevant=len(rel) >= 2 and all(r["any"] for r in rel.values()),
+                   all_regret_relevant=len(rel) >= 2 and all(r["regret"] > pw.EPS for r in rel.values()))
+    return rec
 
 
 def b6_support(recs):
-    return {"n": len(recs), "unique_first": sum(r["unique"] for r in recs),
-            "joint_flip": sum(r["joint_flip"] for r in recs),
-            "all_regret_relevant": sum(r["all_regret_relevant"] for r in recs),
-            "first_action": {pw.ACTIONS[a]: sum(r["pi"] == a for r in recs) for a in range(pw.N_ACTIONS)
-                             if any(r["pi"] == a for r in recs)}}
+    out = {"n": len(recs), "eligible": sum(r["eligible"] for r in recs), "unique_first": sum(r["unique"] for r in recs),
+           "first_action": {pw.ACTIONS[a]: sum(r["pi"] == a for r in recs) for a in range(pw.N_ACTIONS)
+                            if any(r["pi"] == a for r in recs)}}
+    if recs and "rel" in recs[0]:
+        out.update(joint_flip=sum(r["joint_flip"] for r in recs), all_any_relevant=sum(r["all_any_relevant"] for r in recs),
+                   all_regret_relevant=sum(r["all_regret_relevant"] for r in recs))
+    return out
 
 
 def cf_support(sets):
@@ -1175,9 +1233,11 @@ def annotate_rows(ext, rows, ref_rows, ref_eps, pool, split, worlds, s0map):
                  probe_eps_opt=r["probe_eps_opt"], probe_unique_opt=r["probe_unique_opt"])
         if idx in s0map and "flag_sensitive" in s0map[idx]:
             e["flag_sensitive"] = s0map[idx]["flag_sensitive"]
-        if idx in s0map and "rel" in s0map[idx]:  # extended-06 held-out / historical pools
-            e.update(rel=s0map[idx]["rel"], joint_flip=s0map[idx]["joint_flip"],
-                     all_regret_relevant=s0map[idx]["all_regret_relevant"], family=s0map[idx]["family"])
+        if idx in s0map and "family" in s0map[idx]:  # extended-06 b6 evaluation pools
+            e.update(family=s0map[idx]["family"], eligible=s0map[idx]["eligible"])
+            for key in ("rel", "joint_flip", "all_any_relevant", "all_regret_relevant"):
+                if key in s0map[idx]:
+                    e[key] = s0map[idx][key]
 
 
 def eval_sharded(model, a, split, parts, worlds, ep_rows):
@@ -1325,9 +1385,15 @@ def main(argv=None):
     s.add_argument("--split-set", choices=("b1", "b5", "b5c", "b6"), default="b1",
                    help="extended-05: b5 = B-SPLIT pools; b5c = B-XC fresh U+C hold only (b5c_hold_uc); "
                         "extended-06: b6 = probeworld-v3 split table v3")
-    s.add_argument("--n-hold", type=int, default=512, help="b6: configurations per held-out challenge family")
-    s.add_argument("--n-hist", type=int, default=256, help="b6: configurations per historical challenge set")
-    s.add_argument("--n-cf", type=int, default=400, help="b6: balanced counterfactual sets per held-out family")
+    s.add_argument("--n-hold", type=int, default=400, help="b6: configurations per held-out challenge family")
+    s.add_argument("--n-hist", type=int, default=200, help="b6: configurations per historical challenge set")
+    s.add_argument("--n-cf", type=int, default=160, help="b6: balanced counterfactual octets per held-out family")
+    s.add_argument("--parts", nargs="+", choices=("train", "eval", "cf"), default=None,
+                   help="b6: label parts to build (default all; parts can run as parallel jobs into one directory)")
+    s.add_argument("--arms", nargs="+", default=None, help="b6: training arms to write (default all)")
+    s.add_argument("--hold-relevance", action="store_true",
+                   help="b6: exact per-factor relevance records for held-out / historical configurations")
+    s.add_argument("--b6-shard", type=int, default=24, help="b6: evaluation pool shard size")
     s.add_argument("--cf-hist", action="store_true", help="b6: also build counterfactual sets for the historical pairs")
     s.add_argument("--n-train-x", type=int, default=768, help="b5: exposure (BX1) training pool size")
     s.add_argument("--hold-target", type=int, default=pw5.HOLD_TARGET_ELIGIBLE,

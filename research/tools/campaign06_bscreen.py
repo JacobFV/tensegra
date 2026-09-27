@@ -76,8 +76,10 @@ SELECTION = {
 # the regret gap of the nearest training-support-optimal policy closed by one shared per-action bias) <= .5; the next
 # passing triple is the secondary holdout.
 SELECTION_V2 = {"relevance": "any", "gs_closable_max": 0.5, "families": "untouched triples",
-                "untouched": ("USC", "USE", "UCE", "SCE"), "extension_triples_considered": "only if they clear the "
-                "rule more clearly (larger minimum relevance) than every untouched triple"}
+                "untouched": ("USC", "USE", "UCE", "SCE"), "extension_margin": 0.05,
+                "extension_triples_considered": "the D/T extension (whole-generator alternative) is adopted only if "
+                "its best passing triple's minimum relevance exceeds the best untouched triple's by more than "
+                "extension_margin; then both slots come from it, otherwise both from the untouched triples"}
 
 
 def _sub(full):
@@ -325,13 +327,17 @@ def select_v2(res):
     cand.sort(key=lambda c: -c["min_relevance_any"])
     base = [c for c in cand if c["untouched"] and c["passes"]]
     ext = [c for c in cand if not c["untouched"] and c["passes"]]
-    primary = base[0] if base else None
-    if primary and ext and ext[0]["min_relevance_any"] > primary["min_relevance_any"]:
-        primary = dict(ext[0], via_extension=True)
-    rest = [c for c in (base + ext) if primary is None or c["family"] != primary["family"]]
-    rest.sort(key=lambda c: -c["min_relevance_any"])
-    return {"rule": SELECTION_V2, "candidates": cand, "primary": primary["family"] if primary else None,
-            "secondary": rest[0]["family"] if rest else None}
+    margin = SELECTION_V2["extension_margin"]
+    # the D/T extension is a whole-generator alternative (design v2 revision 1: "used only if it clears the rule more
+    # clearly"): adopted only if its best passing triple beats the best untouched triple by more than the margin;
+    # otherwise both slots come from the untouched triples.  The per-slot alternative is reported, never used.
+    use_ext = bool(ext) and (not base or ext[0]["min_relevance_any"] > base[0]["min_relevance_any"] + margin)
+    pool = ext if use_ext else base
+    per_slot = sorted(base + ext, key=lambda c: (-c["min_relevance_any"], not c["untouched"]))
+    return {"rule": SELECTION_V2, "candidates": cand, "extension_adopted": use_ext,
+            "primary": pool[0]["family"] if pool else None,
+            "secondary": pool[1]["family"] if len(pool) > 1 else None,
+            "not_used_per_slot_reading": [c["family"] for c in per_slot[:2]]}
 
 
 def _open(p):

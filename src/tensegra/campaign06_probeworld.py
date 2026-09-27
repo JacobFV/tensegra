@@ -334,8 +334,11 @@ def env(cfg):
 
 def make_config(cell: tuple, k: int, flags: tuple, seed: int) -> Config6:
     """v3 configuration: v1 prices/prior/U,S parameters from pw.make_config (rng seed*7+1, unchanged); the v3 ranges
-    of corr and p_event (design v2 revision 1) and the D / T parameters from a separate stream (seed*11+3), every one
-    drawn whether or not its factor is on (switching a factor never shifts any other draw)."""
+    of corr and p_event (design v2 revision 1) and the D / T parameters from a separate stream (seed*11+3), each drawn
+    whether or not its factor is on.  Inherited v1 behaviour: pw.make_config draws q / D_side (and its own corr /
+    p_event, overwritten here) only for active flags, so toggling a factor at GENERATION shifts eta and p_conflict
+    (same marginal distribution).  On-manifold interventions therefore use ``ablate`` (one parameter set to its off
+    value; a valid configuration of the same support), never re-generation."""
     flags = tuple(flags) + (False,) * (6 - len(flags))
     base = pw.make_config(cell, k, flags[:4], random.Random(seed * 7 + 1))
     r2 = random.Random(seed * 11 + 3)
@@ -550,37 +553,43 @@ def mobius_additive(qs: dict, full: tuple, order: int) -> dict:
 
 
 # ---------------------------------------------------------------------------------------------------------
-# supplied factorized public state (SUPPLIED-FACTORIZED inputs; LEARNED-FACTORIZED auxiliary targets)
+# supplied factorized public state (SUPPLIED-FACTORIZED inputs; LEARNED-FACTORIZED auxiliary targets).
+# Design v2 revision 5: the raw factor parameters (q, D_side, corr, p_event, ...) are already model inputs, so the
+# factors supplied / learned are DERIVED decision quantities of the public information state: the posterior over the
+# hidden type after the history, the probability that a probe (or b1) resolves the query, expected remaining cost
+# per strategy (one-query closed forms, not Q*), and the amortized value of building over the remaining horizon.
 
 FACTOR_FEATURES = (
-    # posterior over the hidden type (exact; a function of the visible history)
+    # posterior over the hidden type after the visible history (exact; includes revealed-type evidence under C)
     "belief_H", "belief_M", "belief_F", "belief_X",
-    # detection reliability (U)
-    "miss_rate", "p_false_solved", "p_H_given_solved",
-    # side-effect severity (S)
-    "side_cost_rel", "expected_side_cost_rel",
-    # correlation evidence (C)
-    "corr", "revealed_H_frac", "revealed_notH_frac",
-    # event hazard (E)
-    "event_hazard_active", "event_fired_this_query",
-    # deadline / remaining steps (D)
-    "deadline_active", "steps_left_rel", "last_step",
-    # type-dependent exact cost (T)
-    "hard_surcharge_rel", "reduced",
-    # amortization / remaining horizon
-    "remaining_queries_rel", "is_last_query", "built", "amortized_build_rel",
-    # candidate validity
-    "candidate_valid", "candidate_exact", "candidate_probe_trust",
-    # remaining expected cost by strategy (myopic, one query, public closed forms; NOT Q*)
-    "cost_exact_b2_rel", "cost_probe_then_b2_rel", "cost_b1_route_rel", "cost_use_rel",
+    # probability that a computation resolves the current query
+    "p_probe_resolves", "p_probe_false_solved", "p_H_given_solved", "p_b1_resolves",
+    # expected factor costs under the current belief / history
+    "exp_side_cost_rel", "exp_hard_cost_rel", "event_hazard_active",
+    # expected remaining cost of the current query per strategy (price / R; incl. expected error loss)
+    "cost_exact_b2_rel", "cost_probe_first_rel", "cost_b1_first_rel", "cost_use_rel", "best_strategy_cost_rel",
+    # amortized build value over the remaining horizon (0 once built)
+    "build_value_rel", "remaining_queries_rel", "built",
+    # validity of computed results
+    "candidate_valid", "candidate_exact", "candidate_trust",
+    # remaining step budget (deadline factor; 1 when off)
+    "steps_left_rel",
 )
 N_FACTOR_FEATURES = len(FACTOR_FEATURES)
 
 
+def _clip(x, lo=-5.0, hi=5.0):
+    return max(lo, min(hi, x))
+
+
 def factor_features(cfg, state: tuple) -> list:
-    """Deterministic public factor values at a public information state (config + state only; no hidden type).
-    Price-scale features are divided by R.  The strategy costs are one-query myopic closed forms (documented in
-    trackb-screen.md section 6), not DP values."""
+    """Derived public decision quantities at a public information state (config + state only; no hidden type).
+    Strategy costs are one-query myopic closed forms (documented in trackb-screen.md section 6):
+      b2 route        c_b2 + T surcharge, re-run once if an event invalidates the candidate (hazard)
+      probe first     c_probe + side cost + P(no 'solved') * b2 route + P(false 'solved') * L + hazard * c_probe
+      b1 first        c_b1 + T surcharge + P(b1 times out) * b2 route
+      use             amortized build (C_build / remaining queries, 0 once built) + c_use
+    build value = remaining queries * (best no-structure cost - c_use) - C_build (0 once built)."""
     (i, built, nH, nN), (b, usage, reduced, cand, cand_valid, ev) = state
     R = cfg.R
     bH, bM, bF, bX = b
@@ -588,35 +597,29 @@ def factor_features(cfg, state: tuple) -> list:
     p_false = (1.0 - bH) * miss
     p_solved = bH + p_false
     p_h_solved = bH / p_solved if p_solved > 0 else 0.0
-    d = getattr(cfg, "deadline", 0)
-    t_h = getattr(cfg, "t_hard", 0.0)
-    used = usage >> STEP_SHIFT
-    steps_left = (d - used) if d > 0 else 3
-    rem = max(cfg.k - i, 1)
-    amort = 0.0 if built else cfg.C_build / rem
+    p_b1 = bH + bM + (bF if reduced else 0.0)
     hazard = 0.0 if ev else cfg.p_event
-    # P(b1 times out) under the current belief and reduction state; expected T surcharge of an exact call
-    p_to = bF * (0.0 if reduced else 1.0) + bX
+    t_h = getattr(cfg, "t_hard", 0.0)
     hard = t_h * cfg.c_b2 * (bF + bX)
-    c_b2_route = cfg.c_b2 + hard + hazard * cfg.c_b2  # b2 then commit; an event after b2 forces a rerun (expected)
     side = cfg.D_side * (1.0 - bH)
-    wrong_probe = p_false * cfg.L  # committing a false 'solved' probe
-    c_probe_route = (cfg.c_probe + side + (1.0 - p_solved) * (cfg.c_b2 + hard) + wrong_probe
-                     + hazard * cfg.c_probe)
-    c_b1_route = cfg.c_b1 + hard + p_to * (cfg.c_b2 + t_h * cfg.c_b2)
-    c_use_route = amort + cfg.c_use
+    c_b2_route = (cfg.c_b2 + hard) * (1.0 + hazard)
+    c_probe = cfg.c_probe + side + (1.0 - p_solved) * c_b2_route + p_false * cfg.L + hazard * cfg.c_probe
+    c_b1 = cfg.c_b1 + hard + (1.0 - p_b1) * c_b2_route
+    rem = max(cfg.k - i, 1)
+    c_use = (0.0 if built else cfg.C_build / rem) + cfg.c_use
+    best_ns = min(c_b2_route, c_probe, c_b1)
+    build_value = 0.0 if built else rem * (best_ns - cfg.c_use) - cfg.C_build
+    d = getattr(cfg, "deadline", 0)
+    steps_left = (d - (usage >> STEP_SHIFT)) / 2.0 if d > 0 else 1.0
     cand_ok = cand != pw.C_NONE and cand_valid
     trust = 1.0 if (cand_ok and cand == pw.C_EXACT) else (p_h_solved if (cand_ok and cand == pw.C_PROBE) else 0.0)
     feats = [bH, bM, bF, bX,
-             miss, p_false, p_h_solved,
-             cfg.D_side / R, side / R,
-             cfg.corr, nH / cfg.k, nN / cfg.k,
-             hazard, float(ev),
-             float(d > 0), steps_left / 3.0, float(d > 0 and steps_left == 1),
-             hard / R, float(reduced),
-             rem / 8.0, float(i == cfg.k - 1), float(built), min(amort / R, 10.0) / 10.0,
+             bH, p_false, p_h_solved, p_b1,
+             side / R, hard / R, hazard,
+             _clip(c_b2_route / R), _clip(c_probe / R), _clip(c_b1 / R), _clip(c_use / R), _clip(min(best_ns, c_use) / R),
+             _clip(build_value / R), rem / 8.0, float(built),
              float(cand_ok), float(cand_ok and cand == pw.C_EXACT), trust,
-             c_b2_route / R, c_probe_route / R, c_b1_route / R, min(c_use_route / R, 10.0)]
+             steps_left]
     assert len(feats) == N_FACTOR_FEATURES
     return feats
 
@@ -631,6 +634,10 @@ DECISION_TYPES = {
     "after_probe_solved": ((pw.A_PROBE, pw.O_SOLVED, False, None),),
     "after_probe_failed": ((pw.A_PROBE, pw.O_FAILED, False, None),),
     "after_b1_timeout": ((pw.A_B1, pw.O_TIMEOUT, False, None),),
+    # later queries (k >= 2): first decision of query 2 after query 1 was solved exactly and the verifier revealed
+    # its type (H, or not-H = M) -- where the correlated factor's relevance arrives (design v2 revision 1)
+    "q2_after_H": ((pw.A_B2, pw.O_SOLVED, False, None), (pw.A_COMMIT, pw.O_CORRECT, False, pw.TH)),
+    "q2_after_notH": ((pw.A_B2, pw.O_SOLVED, False, None), (pw.A_COMMIT, pw.O_CORRECT, False, pw.TM)),
 }
 
 
@@ -641,7 +648,8 @@ def history_possible(s, history) -> tuple:
     for a, o, e, rev in history:
         if st[0][0] >= cfg.k or a not in available(cfg, st):
             return False, None
-        ok = any(abs(p) > 0 and oo == o and ee == e for p, oo, ee, _, _, _ in s.transitions(st, a))
+        ok = any(p > 0 and oo == o and ee == e and (rev is None or rr == rev)
+                 for p, oo, ee, rr, _, _ in s.transitions(st, a))
         if not ok:
             return False, None
         st = advance(cfg, st, a, o, e, rev)
@@ -662,47 +670,193 @@ def decision_at(s, history, eps: float = pw.EPS):
 
 
 # ---------------------------------------------------------------------------------------------------------
-# split table v3 (b6).  Held-out challenge families are REGISTERED from the structural screen (trackb-screen.md
-# section 3) before any model exists; historical U+E, S+C, U+C are challenge sets only (never trained on).
+# split table v3 (b6), design v2 revisions 1, 4, 6.  Held-out challenge families are REGISTERED from the official
+# structural screen (trackb-screen.md section 3; registry B-SCREEN) before any model exists; they, and every superset,
+# are never in training, dev or selection.  Historical U+E / S+C / U+C are evaluated as challenge sets; under design
+# v2 some training arms contain them (B2 / dose), which the evaluation flags per arm (HIST_IN_TRAINING).
 
 SPLIT_TABLE_VERSION = "probeworld-split-v3"
-HOLD_FAMILIES = ("ST", "DT")  # PLACEHOLDER until the screen registers them (trackb-screen.md section 3)
-HIST_FAMILIES = ("UE", "SC", "UC")  # historical challenge pairs: evaluation only
-BASE_COMBOS = ("0",) + FACTORS  # none + the 6 singles
+HOLD_FAMILIES = ("SCE", "UCE")  # (primary, secondary): registered from the official screen (trackb-screen.md 3)
+HIST_FAMILIES = ("UE", "SC", "UC")  # historical challenge pairs
+PAIRS4 = tuple(all_families(V1_FACTORS, (2,)))  # US UC UE SC SE CE
+TRAIN_STREAM_BASE = 6_200_000_000  # training type streams (shared by every arm: common random numbers)
 
 
 def is_superset(key: str, fam: str) -> bool:
-    return set(fam) <= set(key) and key != "0"
+    return key != "0" and set(fam) <= set(key)
 
 
 def excluded_from_training(key: str) -> bool:
-    """A combination is never trained on if it contains a held-out or historical family (its interaction)."""
-    return any(is_superset(key, f) for f in HOLD_FAMILIES + HIST_FAMILIES)
+    """Never trained on: a held-out family or any combination containing one (its interaction)."""
+    return any(is_superset(key, f) for f in HOLD_FAMILIES)
 
 
-EXTRA_PAIRS = tuple(p for p in all_families(FACTORS, (2,)) if not excluded_from_training(p))
+def constituents(fam: str) -> tuple:
+    return tuple("".join(c) for c in itertools.combinations(fam, 2))
 
 
-def _shares(p: str, fam: str) -> int:
-    return len(set(p) & set(fam))
+PRIMARY = HOLD_FAMILIES[0]
+# base pair: the pair that is a constituent of no held family (U+S for the two C+E triples)
+BASE_PAIR = next(p for p in PAIRS4 if not any(p in constituents(f) for f in HOLD_FAMILIES))
+VARIETY_PAIRS = tuple(p for p in PAIRS4 if p not in constituents(PRIMARY))  # dose-0 variety (incl. BASE_PAIR)
+# dose order (registered): constituent pairs of the primary, non-historical first, then screening order
+DOSE_ORDER = tuple(sorted(constituents(PRIMARY), key=lambda p: (p in HIST_FAMILIES, SCREEN_FAMILY_ORDER.index(p))))
 
 
-# dose order (registered): extra pair types sharing more factors with the primary hold first, then screening order
-DOSE_ORDER = tuple(sorted(EXTRA_PAIRS, key=lambda p: (-_shares(p, HOLD_FAMILIES[0]), SCREEN_FAMILY_ORDER.index(p))))
-BROAD_COMBOS = BASE_COMBOS + EXTRA_PAIRS
-TRAIN_STREAM_BASE = 6_200_000_000  # every training pool: the same seeds (cell, k and prices shared across arms)
+def arm_pairs(arm: str) -> tuple:
+    """Pair types sharing the pair slots of a training arm (the none / single / pair shares are fixed)."""
+    if arm in ("B0", "B1"):
+        return (BASE_PAIR,)
+    if arm in ("B2", "B3"):
+        return VARIETY_PAIRS
+    if arm.startswith("dose"):
+        return (BASE_PAIR,) + DOSE_ORDER[:int(arm[4:])]
+    raise ValueError(arm)
+
+
+ARM_SIZE = {"B0": 1, "B1": 2, "B2": 1, "B3": 2, "dose1": 1, "dose2": 1, "dose3": 1}  # x N configurations
+ARM_REPLACES = {"B2": "B0", "B3": "B1", "dose1": "B0", "dose2": "B0", "dose3": "B0"}
+
+
+def arm_composition(arm: str, n: int) -> dict:
+    """Target counts per combination type (family key) for an arm of n * ARM_SIZE configurations.
+    B0: none 1/6, each single 1/6, the base pair 1/6 (so U and S are on in 1/3 of the configurations, C and E in 1/6).
+    Every other arm keeps the none share, the pair share and every per-factor frequency of B0 at its size: its pair
+    slots are split equally over arm_pairs(arm) and the singles absorb the difference (replacement)."""
+    size = n * ARM_SIZE[arm]
+    assert size % 6 == 0, "N must be a multiple of 6"
+    sixth = size // 6
+    target_f = {f: sixth + (sixth if f in BASE_PAIR else 0) for f in V1_FACTORS}
+    pairs = arm_pairs(arm)
+    xs = {p: sixth // len(pairs) + (1 if j < sixth % len(pairs) else 0) for j, p in enumerate(pairs)}
+    comp = {"0": sixth}
+    for f in V1_FACTORS:
+        comp[f] = target_f[f] - sum(x for p, x in xs.items() if f in p)
+        assert comp[f] >= 0
+    comp.update(xs)
+    assert sum(comp.values()) == size
+    return comp
+
+
+def factor_frequency(comp: dict) -> dict:
+    tot = sum(comp.values())
+    return {f: sum(c for k, c in comp.items() if f in k) / tot for f in V1_FACTORS}
+
+
+TYPE_STREAM_STRIDE = 1_000_000
+TRAIN_TYPES = ("0",) + V1_FACTORS + PAIRS4  # every combination type a training arm may use (index = its stream)
+
+
+def type_seed(key: str, j: int) -> int:
+    """Training stream of one combination type: TRAIN_STREAM_BASE + 1e6 * type index + j (shared by every arm)."""
+    assert 0 <= j < TYPE_STREAM_STRIDE and not excluded_from_training(key)
+    return TRAIN_STREAM_BASE + TYPE_STREAM_STRIDE * TRAIN_TYPES.index(key) + j
+
+
+def type_config(key: str, j: int) -> Config6:
+    seed = type_seed(key, j)
+    cell, k, _ = draw_params(seed, pw.TRAIN_CELLS, V3_K, (key,))
+    return make_config(cell, k, flags_from_key(key), seed)
+
+
+FIRST_CLASSES = {"probe": {pw.A_PROBE}, "exact": {pw.A_B1, pw.A_B2}, "gather": {pw.A_INSPECT, pw.A_PROP},
+                 "structure": {pw.A_BUILD, pw.A_USE}, "terminal": {pw.A_COMMIT, pw.A_COMMIT_INF, pw.A_ABSTAIN}}
+
+
+def first_class(s) -> str:
+    a = s.pi_star(pw.initial_state(s.cfg))
+    return next(c for c, acts in FIRST_CLASSES.items() if a in acts)
+
+
+def make_classifier():
+    """first_class of a configuration, memoized by configuration; the DP table is discarded (bounded memory)."""
+    memo = {}
+
+    def classify(cfg):
+        c = memo.get(cfg)
+        if c is None:
+            s = ExactSolver(cfg)
+            s.value(pw.initial_state(cfg))
+            c = memo[cfg] = first_class(s)
+        return c
+    classify.memo = memo
+    return classify
+
+
+def build_arm_pools(n: int, arms=("B0", "B1", "B2", "B3", "dose1", "dose2", "dose3"), classify=None, max_tries=40):
+    """Deterministic training pools of every arm, as lists of (type, stream index).  B0/B1 take the first counts of
+    each type stream (B0 is the first half of B1 type by type).  A replacement arm starts from its reference (B0 or
+    B1) and, type by type, drops the LAST surplus configurations and adds configurations of the types it has more of;
+    the added configurations are matched to the dropped ones' optimal-first-action classes (for each dropped class,
+    the next unused configuration of the added type with that class; after max_tries candidates, the next unused one:
+    reported as unmatched).  classify(cfg) -> optimal-first-action class (make_classifier()).  Returns (pools, report)."""
+    classify = classify or make_classifier()
+    pools, report = {}, {}
+    for arm in arms:
+        comp = arm_composition(arm, n)
+        if arm not in ARM_REPLACES:
+            pools[arm] = [(key, j) for key in TRAIN_TYPES if key in comp for j in range(comp[key])]
+            report[arm] = {"composition": comp, "factor_frequency": factor_frequency(comp)}
+            continue
+        ref = ARM_REPLACES[arm]
+        if ref not in pools:
+            raise ValueError(f"{arm} needs {ref}")
+        rcomp = arm_composition(ref, n)
+        keep, dropped = [], []
+        for key in TRAIN_TYPES:
+            have = [x for x in pools[ref] if x[0] == key]
+            want = comp.get(key, 0)
+            keep += have[:want]
+            dropped += have[want:]
+        need = []
+        for key in TRAIN_TYPES:
+            extra = comp.get(key, 0) - rcomp.get(key, 0)
+            need += [key] * max(extra, 0)
+        dclasses = [classify(type_config(*x)) for x in dropped]
+        assert len(need) == len(dropped)
+        added, unmatched = [], 0
+        taken_by = {}
+        for key, cls in zip(need, dclasses):
+            taken = taken_by.setdefault(key, set())
+            start = rcomp.get(key, 0)
+            j, scanned, pick = start, 0, None
+            while scanned < max_tries:
+                if j not in taken:
+                    scanned += 1
+                    if classify(type_config(key, j)) == cls:
+                        pick = j
+                        break
+                j += 1
+            if pick is None:
+                pick = start
+                while pick in taken:
+                    pick += 1
+                unmatched += 1
+            taken.add(pick)
+            added.append((key, pick))
+        pools[arm] = keep + added
+        cnt = {}
+        for key, _ in pools[arm]:
+            cnt[key] = cnt.get(key, 0) + 1
+        assert cnt == {k: v for k, v in comp.items() if v}, (cnt, comp)
+        mix_ref = _class_mix([classify(type_config(*x)) for x in pools[ref]])
+        mix = _class_mix([classify(type_config(*x)) for x in pools[arm]])
+        report[arm] = {"composition": comp, "factor_frequency": factor_frequency(comp), "replaces": ref,
+                       "dropped": len(dropped), "added": len(added), "unmatched_first_class": unmatched,
+                       "first_class_mix": mix, "first_class_mix_ref": mix_ref}
+    return pools, report
+
+
+def _class_mix(classes):
+    return {c: classes.count(c) for c in FIRST_CLASSES}
 
 
 def _splits6():
     sp = {
         # name: (combos (family keys), config seed base, role)
-        "b6_train_base": (BASE_COMBOS, TRAIN_STREAM_BASE, "train"),
-        "b6_train_broad": (BROAD_COMBOS, TRAIN_STREAM_BASE, "train"),
-        "b6_train_dose1": (BASE_COMBOS + DOSE_ORDER[:1], TRAIN_STREAM_BASE, "train"),
-        "b6_train_dose2": (BASE_COMBOS + DOSE_ORDER[:2], TRAIN_STREAM_BASE, "train"),
-        "b6_dev": (BROAD_COMBOS, 6_300_000_000, "dev"),  # monitoring only; final checkpoints are used
-        "b6_test_base": (BASE_COMBOS, 6_310_000_000, "test"),
-        "b6_test_broad": (EXTRA_PAIRS, 6_320_000_000, "test"),
+        "b6_dev": (TRAIN_TYPES, 6_300_000_000, "dev"),  # monitoring only; final checkpoints are used
+        "b6_test_base": (("0",) + V1_FACTORS + (BASE_PAIR,), 6_310_000_000, "test"),
+        "b6_test_pairs": (PAIRS4, 6_320_000_000, "test"),
     }
     for j, f in enumerate(HOLD_FAMILIES):
         sp[f"b6_hold_{f}"] = ((f,), 6_400_000_000 + 10_000_000 * j, "hold")
@@ -713,9 +867,9 @@ def _splits6():
 
 SPLITS6 = _splits6()
 CF_BASE = {f: 6_600_000_000 + 10_000_000 * j for j, f in enumerate(HOLD_FAMILIES + HIST_FAMILIES)}
-B6_TRAIN_SPLITS = tuple(s for s, v in SPLITS6.items() if v[2] == "train")
 B6_EVAL_SPLITS = tuple(s for s, v in SPLITS6.items() if v[2] in ("test", "hold", "hist"))
 B6_HOLD_SPLITS = tuple(s for s, v in SPLITS6.items() if v[2] == "hold")
+HIST_IN_TRAINING = {arm: sorted(set(arm_pairs(arm)) & set(HIST_FAMILIES)) for arm in ARM_SIZE}
 
 
 def split6_config(split: str, index: int) -> Config6:
@@ -727,30 +881,38 @@ def split6_config(split: str, index: int) -> Config6:
 
 
 def world_seed6(split: str, index: int, rep: int) -> int:
-    assert SPLITS6[split][2] != "train"
     return SPLITS6[split][1] + WORLD_SEED_OFFSET + index * 1000 + rep
 
 
 def split_table_digest_input():
-    return (SPLIT_TABLE_VERSION, GENERATOR_VERSION, HOLD_FAMILIES, HIST_FAMILIES, BASE_COMBOS, EXTRA_PAIRS, DOSE_ORDER,
-            tuple(sorted(SPLITS6.items())), tuple(sorted(CF_BASE.items())), V3_K)
+    return (SPLIT_TABLE_VERSION, GENERATOR_VERSION, HOLD_FAMILIES, HIST_FAMILIES, BASE_PAIR, VARIETY_PAIRS,
+            DOSE_ORDER, tuple(sorted(SPLITS6.items())), tuple(sorted(CF_BASE.items())), V3_K, CORR_RANGE,
+            P_EVENT_RANGE, TRAIN_TYPES)
 
 
-def audit_split_table() -> dict:
-    """Generator-parameter audit: no held-out or historical interaction in any training / dev / test pool; every
-    factor of every hold is trained singly; seeds inside their registered sub-ranges and pairwise disjoint."""
+def audit_split_table(n: int = 384) -> dict:
+    """Generator-parameter audit: no held-out family (or superset) in any training / dev / test pool; every factor
+    of every hold is trained singly; per-factor frequency and none/single/pair shares equal across the arms of a
+    volume level; seeds inside their registered sub-ranges and pairwise disjoint."""
     out = {}
-    trainable = [s for s, v in SPLITS6.items() if v[2] in ("train", "dev", "test")]
-    out["holds_absent_from_training"] = all(not excluded_from_training(c) for s in trainable for c in SPLITS6[s][0])
-    out["singles_in_base"] = all(x in BASE_COMBOS for f in HOLD_FAMILIES for x in f)
-    out["hist_absent"] = all(c not in HIST_FAMILIES for s in trainable for c in SPLITS6[s][0])
+    trainable = [s for s, v in SPLITS6.items() if v[2] in ("dev", "test")]
+    out["holds_absent_from_dev_test"] = all(not excluded_from_training(c) for s in trainable for c in SPLITS6[s][0])
+    out["holds_absent_from_arms"] = all(not excluded_from_training(p) for arm in ARM_SIZE for p in arm_pairs(arm))
+    out["singles_in_every_arm"] = all(arm_composition(arm, n)[f] > 0 for arm in ARM_SIZE for f in V1_FACTORS)
+    ff = {arm: factor_frequency(arm_composition(arm, n)) for arm in ARM_SIZE}
+    out["factor_frequency_matched"] = all(abs(ff[arm][f] - ff["B0"][f]) < 1e-12 for arm in ARM_SIZE for f in V1_FACTORS)
+    shares = {arm: (arm_composition(arm, n)["0"] / (n * ARM_SIZE[arm]),
+                    sum(v for k, v in arm_composition(arm, n).items() if len(k) == 2) / (n * ARM_SIZE[arm]))
+              for arm in ARM_SIZE}
+    out["none_pair_shares_matched"] = all(shares[a] == shares["B0"] for a in ARM_SIZE)
+    out["dose0_variety_has_no_primary_constituent"] = not (set(VARIETY_PAIRS) & set(constituents(PRIMARY)))
     ranges = []
     for s, (_, base, role) in SPLITS6.items():
-        if role == "train":
-            continue
         ranges.append((base, base + MAX_POOL, s))
         ranges.append((base + WORLD_SEED_OFFSET, base + WORLD_SEED_OFFSET + MAX_POOL * 1000, s + ":worlds"))
-    ranges.append((TRAIN_STREAM_BASE, TRAIN_STREAM_BASE + MAX_POOL, "train"))
+    for key in TRAIN_TYPES:
+        b = type_seed(key, 0)
+        ranges.append((b, b + TYPE_STREAM_STRIDE, "train:" + key))
     for f, b in CF_BASE.items():
         ranges.append((b, b + MAX_POOL, "cf_" + f))
     ranges.sort()
@@ -760,9 +922,10 @@ def audit_split_table() -> dict:
     sub = {"dev": "dev_test", "test": "dev_test", "hold": "hold", "hist": "hist"}
     out["inside_subranges"] = all(
         SUBRANGES[sub[r]][0] <= b and b + WORLD_SEED_OFFSET + MAX_POOL * 1000 <= SUBRANGES[sub[r]][1]
-        for s, (_, b, r) in SPLITS6.items() if r != "train") and all(
+        for s, (_, b, r) in SPLITS6.items()) and all(
         SUBRANGES["cf"][0] <= b and b + MAX_POOL <= SUBRANGES["cf"][1] for b in CF_BASE.values()) and (
-        SUBRANGES["train"][0] <= TRAIN_STREAM_BASE and TRAIN_STREAM_BASE + MAX_POOL <= SUBRANGES["train"][1])
+        SUBRANGES["train"][0] <= type_seed(TRAIN_TYPES[0], 0)
+        and type_seed(TRAIN_TYPES[-1], 0) + TYPE_STREAM_STRIDE <= SUBRANGES["train"][1])
     out["check_subranges"] = check_subranges()
     out["pass"] = all(out.values())
     return out
@@ -790,13 +953,14 @@ def _strip(d):
     return None if d is None else {k: v for k, v in d.items() if k != "state"}
 
 
-def inherited(nm_s, fam, h) -> bool:
-    """At decision type h, the full-family decision of nm equals (is eps-optimal for) some one-factor ablation's."""
+def inherited(nm_s, fam, h, level: int = 1) -> bool:
+    """At decision type h, the full-family decision of nm is predicted by (is eps-optimal for) the optimal action of
+    one of its sub-combinations with `level` factors (1: the single-factor members; |fam| - 1: one-factor ablations)."""
     d = decision_at(nm_s, DECISION_TYPES[h])
     if d is None:
         return False
-    for f in fam:
-        sa = ExactSolver(ablate(nm_s.cfg, f))
+    for T in itertools.combinations(fam, level):
+        sa = ExactSolver(restrict(nm_s.cfg, T))
         da = decision_at(sa, DECISION_TYPES[h])
         if da is not None and da["pi"] in d["opt"]:
             return True
@@ -826,12 +990,18 @@ def counterfactual_set(fam: str, index: int, base=None, near_miss: bool = True) 
     out = {"family": fam, "index": index, "seed": seed, "k": k, "members": members, "types": {}}
     for h in DECISION_TYPES:
         dfull = members[fam]["labels"][h]
+        singles = [members[f]["labels"][h] for f in full]
         abl = [members["".join(x for x in full if x != f) or "0"]["labels"][h] for f in full]
-        if dfull is None or any(d is None for d in abl):
+        if dfull is None or any(d is None for d in singles + abl):
             continue
-        flip = all(d["pi"] not in dfull["opt"] for d in abl)
-        ent = {"flip": flip, "unique": dfull["unique"], "near_miss": None}
-        if flip and near_miss and dfull["unique"]:
+        # flip (primary, every family size): no single-factor member's optimal action is eps-optimal for the full
+        # family (for a pair these are its one-factor ablations); flip_ablations (triples): no one-factor ablation's
+        d0 = members["0"]["labels"][h]
+        ent = {"flip": all(d["pi"] not in dfull["opt"] for d in singles),
+               "flip_ablations": all(d["pi"] not in dfull["opt"] for d in abl),
+               "changed_vs_none": d0 is not None and d0["pi"] not in dfull["opt"],
+               "unique": dfull["unique"], "near_miss": None}
+        if ent["flip"] and near_miss and dfull["unique"]:
             ent["near_miss"] = find_near_miss(solvers[fam], fam, h, dfull)
         out["types"][h] = ent
     return out
@@ -854,7 +1024,7 @@ def find_near_miss(s_full, fam, h, dfull):
         d = decision_at(s, DECISION_TYPES[h])
         if d is None or not d["unique"] or d["pi"] in dfull["opt"]:
             continue
-        if inherited(s, fam, h):
+        if inherited(s, fam, h, 1):
             return {"move": name, "config": config_dict6(cfg), "label": _strip(d)}
     return None
 

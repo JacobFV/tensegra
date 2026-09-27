@@ -149,11 +149,11 @@ def groups_of(rows):
     for r in rows:
         key = (r["split"], r["cfg_idx"], r["rep"])
         g.setdefault(r["split"], {})[key] = r
-        if "rel" in r:
-            if r.get("all_regret_relevant"):
-                g.setdefault(r["split"] + ":all_regret_relevant", {})[key] = r
-            if r.get("joint_flip"):
-                g.setdefault(r["split"] + ":joint_flip", {})[key] = r
+        if r.get("eligible"):
+            g.setdefault(r["split"] + ":eligible", {})[key] = r
+        for sub in ("all_any_relevant", "all_regret_relevant", "joint_flip"):
+            if r.get(sub):
+                g.setdefault(r["split"] + ":" + sub, {})[key] = r
     return g
 
 
