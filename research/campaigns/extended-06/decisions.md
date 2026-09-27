@@ -46,3 +46,10 @@
   - Track C is not triggered (GA-1 failed).
   - Artifacts are staged in research/results/campaign-06/a-cfsmall; sha256 verified against the remote.
   - An independent audit of Track A is queued for close-out.
+- 2026-09-27T08:17Z: **Independent Track A audit merged and adopted** (review/a-independent-audit.md). All numbers reproduce, and there is no leakage. Corrections:
+  - **(i)** The 07:10Z entry's "~80% of even the hidden-state headroom" is **wrong**. Correct: the simple portfolio captures ~54% of the hidden-state oracle's gain over the best single method, and ~86–91% of the learned public-information selector's gain.
+  - **(ii)** The 08:03Z "real but practically negligible" **overstates "real"**. The A-CF-SMALL pass depends on the charge convention (1/3 at 2× charge; 0/3 under per-output GBT charging) and on the untuned tree (2/3 vs a select-tuned tree; zero vs an in-sample depth-3 tree).
+    - Adopted reading: **no practically or robustly detectable learned-selector advantage** over a tuned depth-3 tree portfolio.
+  - **(iii)** A-HS explicitly declined the optional generator revision.
+  - **(iv)** The strong baseline's inspect-rule deviation is disclosed in portworld.md.
+  - The registry has been updated. Track A stays closed.

@@ -314,3 +314,5 @@ Records are the same per-instance method traces as for headroom (`evaluate`). Ev
 4. Run `cf-score` with `--expect-sha`.
 
 **Caps:** evaluate chunks 1,200 core-s / 3,600 s; fits 3,600 core-s / 3,600 s; score 1,200 core-s / 3,600 s.
+
+**Disclosure (audit):** the strong baseline's inspect rule compares θ·hidden_frac·L with the total observation cost o·n_hidden (θ tuned), not with o.
