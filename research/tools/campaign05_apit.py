@@ -66,7 +66,7 @@ CONDITIONS = ("iid_f0", "iid_f2", "events_train_kinds_p1", "foreign4")
 IID = ("iid_f0", "iid_f2")
 WORLD_BASES = {"apit": 240_000_000, "acf": 260_000_000, "dev": 2_250_500_000}  # acf: A-CF-T sealed confirmation (r3-r5 only)
 STRIDE = 100_000
-NAMESPACES = {"apit": "e05apit", "dev": "e05apit-dev"}
+NAMESPACES = {"apit": "e05apit", "acf": "e05acf", "dev": "e05apit-dev"}
 CHUNK = 32
 PER_CONDITION = 512
 SCREEN_BASES = ("x1-r0", "x1-r1", "x1-r2")
@@ -654,7 +654,7 @@ def main(argv=None, *, binding=None, load_actor_fn=None, solver=None):
         return cmd_train(a)
     if a.command == "score":
         return cmd_score(a)
-    if a.worlds == "apit" and a.margin_override is not None:
+    if a.worlds in ("apit", "acf") and a.margin_override is not None:
         raise SystemExit("--margin-override is for dev worlds only")
     if binding is None and a.base not in hr().bases():
         raise SystemExit(f"unknown base {a.base!r}")
