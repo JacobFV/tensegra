@@ -110,7 +110,7 @@
    "design": "fresh initialization seeds 35-39 (5 pairs) for LRN, RAWF, SUP, B0 (same b6_B0 training pool, L1 recipe, final checkpoint, snapshot f5ff2d64 trainer); evaluated on a FRESH S+C+E held-out pool (400 configs, new base in the hold sub-range, never used) and FRESH S+C+E octets (320, new base in the cf sub-range); labels built before any confirm evaluation; no model selection",
    "primary": "LRN - RAWF, mean over 5 seed pairs, TWO-LEVEL bootstrap (resample seed pairs, then configurations/octets): Q1 gap regret < 0 with 95% upper bound < 0 and >=4/5 pairs negative; Q2 later-decision accuracy > 0 with 95% lower bound > 0 and >=4/5 pairs positive; Q3 near-miss accuracy not worse by > .02 and false-change rate not higher by > .02 (paired means). SUPPORTED iff Q1 and Q2 and Q3.",
    "secondary": "SUP - RAWF (ceiling), LRN - B0, RAWF - B0 with the same statistics; per-seed values always reported",
-   "notes": "The two-level bootstrap addresses the seed variance the B-ARMS configuration-only CI omitted. Old b6_hold_SCE results are not reused for this test."
+   "notes": "The two-level bootstrap addresses the seed variance the B-ARMS configuration-only CI omitted. Old b6_hold_SCE results are not reused for this test. Fresh pool b6c_hold_SCE at config base 6.42e9 (worlds 6.47e9) and octets at CF base 6.65e9; 6.45e9 was rejected by the builder because it coincides with b6_hold_SCE eval worlds. Evaluated with the b6c-aware tools merged from campaign/e06-bfactc (9795f9a2); trainings use snapshot f5ff2d64."
   }
  ]
 }
