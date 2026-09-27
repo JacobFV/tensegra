@@ -62,3 +62,16 @@
   - **Phase-2 infrastructure commissioned** (campaign/e07-p2infra): genuine S×R 2×2 per the gradient-flow spec, common history bank, controlled-consumer trainer.
 
     It is built regardless of the diagnosis because the brief requires the 2×2. Which Phase-2 experiments run awaits the P1 analyst.
+- 2026-09-27T17:31Z: **P1 diagnosis merged** (campaign/e07-p1analysis b9199fcd; analysis code frozen at 97cc728e before any b6c per-decision read; one pooling bug fixed in ae189416 and re-run once; 971 metered + ~150 local core-s).
+  - **Localization:** **consumption is the primary flip failure.**
+    - The frozen LRN barely reads its factor channel: zeroing the factors changes .045 of its actions vs .24 for SUP; factor columns carry 2–3% of fusion variance vs 18–21%.
+    - Exact replacement fixes 7/640 flips (+.011 [.000, .029]).
+    - SUP's consumer fed LRN's *predicted* factors reaches flip .511 vs LRN .405 (SUP exact .562; 5/5 seeds, post hoc).
+  - **Acquisition is a secondary limit:**
+    - errors grow with the number of combined factors (full − single +.22);
+    - interaction terms are absent from the predictions (slope ≤ .2);
+    - the not-H belief update is never learned.
+  - The factor prediction is a function of the same trunk state the fusion sees, so the channel is redundant by construction.
+  - LRN's gains over RAWF (invariance, pool) point to auxiliary shaping (D), not reading.
+  - **Benchmark scope:** only 9/128 SCE flip units differ from every pair's optimum; pairwise Q sums recover the full optimum in 94–96%. It supports full-vs-single composition, **not irreducible third-order** interaction.
+  - **Next:** Phase 2 = branch B (the consumer must rely on factors), with the S×R 2×2 to test D. The independent P1 audit is commissioned.
