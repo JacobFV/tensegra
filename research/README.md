@@ -19,6 +19,7 @@ Experiment designs, scientific reports, audits, and reproducibility artifacts fo
 |---|---|---|
 | extended-01 | Semantic acquisition, returns, composition and attention interventions | [Report](campaigns/extended-01/campaign-report.md) |
 | extended-02 | Evolving agents that learn when and how to use computation | [Synthesis](campaigns/extended-02/campaign-synthesis.md) · [Final report](campaigns/extended-02/final-report.md) · [Closeout](campaigns/extended-02/closeout.md) |
+| extended-07 (complete) | From learned factors to compositional decisions (mechanism diagnosis) | [Report](campaigns/extended-07/report.md) · [Design](campaigns/extended-07/design.md) · [Handoff](campaigns/extended-07/handoff.md) |
 | extended-06 (complete) | Computational strategy selection, structural composition, decision-relevant value learning | [Report](campaigns/extended-06/report.md) · [Design](campaigns/extended-06/design.md) · [Handoff](campaigns/extended-06/handoff.md) |
 | extended-05 (complete) | Decision-relevant metacognition, compositional computational control | [Report](campaigns/extended-05/report.md) · [Design](campaigns/extended-05/design.md) · [Handoff](campaigns/extended-05/handoff.md) |
 | extended-04 (complete) | Metacognitive control, rational backtracking, value of structure | [Report](campaigns/extended-04/report.md) · [Design](campaigns/extended-04/design.md) · [Handoff](campaigns/extended-04/handoff.md) |

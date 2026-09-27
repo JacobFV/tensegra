@@ -1,6 +1,6 @@
 # Extended-07: from learned factors to compositional decisions
 
-**Status: ACTIVE.** Adopted from the user's brief on 2026-09-27T16:02:54Z (window start; deadline 2026-09-28T04:02:54Z, 12 h).
+**Status: COMPLETE** (closed 2026-09-27; see [report.md](report.md), [handoff.md](handoff.md)). Adopted from the user's brief on 2026-09-27T16:02:54Z (window start; deadline 2026-09-28T04:02:54Z, 12 h).
 - **Ceilings:** 24 CPU core-h (86,400 core-s), 6 GPU-device-h, ~20% reserve.
 - **Diagnostic tranche:** at most 3 CPU core-h, on frozen checkpoints, before any substantial new training.
 - **Base:** main at 40154586 (extended-06 merged).
