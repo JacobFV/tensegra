@@ -48,6 +48,15 @@ present, else the PROVISIONAL groups below; every file header says which)
 Exact values are never fed into RAWF's untrained (zero-fed) channel, nor into SUP/B0: a non-'none' intervention on a
 non-LRN model raises.
 
+Extended-07 Phase 2 checkpoints (additive; historical runs load through the identical constructor call):
+  S x R arms (train --shape/--read): kinds S0R0 / S1R0 / S0R1 / S1R1; 'pred' is always logged (in R0 it is the
+      disconnected probe's output); interventions only on the arms that READ the prediction (S0R1, S1R1), never on
+      R0 (constant channel, like RAWF)
+  consumers (train --phi-contract): the model spec must say which factors the consumer reads at evaluation:
+      NAME=RUNDIR::exact              the exact factors (kind CONS-exact; 'pred' = the exact inputs, as SUP)
+      NAME=RUNDIR::pred=PREDRUNDIR    the predictions of a factor predictor run alongside on the same public history
+                                      (kind CONS-pred; state = [consumer h | predictor h]; interventions allowed)
+
 Per-decision record (kind "decision"): protocol, model, history source, cfg id, world seed, public-history id (hash
 of the visible record prefix), episode history id, decision index, query index, step in query, decision context,
 available actions, exact factor targets (23), predicted factors (LRN: auxiliary head; SUP: the supplied inputs; RAWF /
@@ -262,27 +271,93 @@ def write_json_new(path, obj):
 
 # ------------------------------------------------------------------------------------------------ models
 
+def run_path(spec):
+    """Run dir of a model spec (extended-07 consumers: 'RUNDIR::exact' or 'RUNDIR::pred=PREDICTOR_RUNDIR')."""
+    return spec.split("::", 1)[0]
+
+
 def load_model(run):
-    run = Path(run)
+    spec = str(run)
+    run = Path(run_path(spec))
+    phi_spec = spec.split("::", 1)[1] if "::" in spec else None
     meta = json.loads((run / "train_meta.json").read_text())
     arch = meta.get("arch", "flat")
     assert arch in ("flat", "fuse"), f"unsupported arch {arch}"
-    model = T.ProbeNet(meta["hidden"], own_value="own_value" in meta, inputs=meta.get("inputs", "public"), arch=arch,
-                       public_extra=meta.get("public_extra", 0), factor_mode=meta.get("fuse", {}).get("factor_mode"))
+    model = T.build_model_from_meta(meta)  # historical runs: the identical constructor call
     model.load_state_dict(torch.load(run / "model.pt"))
     model.eval()
+    consumer = "consumer" in meta.get("p2", {})
+    if phi_spec is not None and not consumer:
+        raise SystemExit(f"{spec}: '::' input specs are for extended-07 consumers only")
+    if consumer:
+        if phi_spec is None:
+            raise SystemExit(f"{spec}: a consumer needs '::exact' or '::pred=PREDICTOR_RUNDIR'")
+        contract = meta["p2"]["consumer"]["contract"]
+        if phi_spec == "exact":
+            model._diag_kind = "CONS-exact"
+        elif phi_spec.startswith("pred="):
+            pred, pmeta = load_model(phi_spec[5:])
+            assert getattr(pred, "factor_mode", None) in ("sr", "learned"), "the predictor needs an aux head"
+            model = PredictedConsumer(model, pred)
+            meta = dict(meta, predictor={"run": phi_spec[5:], "seed": pmeta["seed"],
+                                         "model_sha256": _sha_file(Path(phi_spec[5:]) / "model.pt")})
+        else:
+            raise SystemExit(f"{spec}: unknown consumer input spec {phi_spec!r}")
+        meta = dict(meta, consumer_contract=contract)
     return model, meta
 
 
+class PredictedConsumer(torch.nn.Module):
+    """extended-07 consumer evaluated on PREDICTED factors: a SUP-architecture consumer whose fusion input is the
+    prediction of a separately trained factor predictor (aux head on its own recurrent encoder) run alongside on the
+    same public history.  The recurrent state is [consumer h | predictor h]; the exact factor tail of the input
+    (T.supplied(..., 'factors6')) is ignored except by interventions (targets)."""
+
+    def __init__(self, consumer, predictor):
+        super().__init__()
+        self.cons, self.pred = consumer, predictor
+        self.inputs, self.arch, self.factor_mode = "factors6", "fuse", "consumer_pred"
+        self.base_dim = consumer.base_dim
+        self.state_size = consumer.gru.hidden_size + predictor.gru.hidden_size
+        self.fuse, self.pi, self.v, self.q = consumer.fuse, consumer.pi, consumer.v, consumer.q
+        self._diag_kind = "CONS-pred"
+
+    def diag_forward(self, x, h):
+        Hc = self.cons.gru.hidden_size
+        xb = x[:, :self.base_dim]
+        p = self.pred
+        hp = p.gru(torch.tanh(p.inp(xb[:, :p.base_dim])), h[:, Hc:])
+        pred = p.aux(p.trunk(hp))
+        c = self.cons
+        hc = c.gru(torch.tanh(c.inp(xb)), h[:, :Hc])
+        z = c.trunk(hc)
+        return torch.cat([hc, hp], 1), z, pred, pred, fuse_out(self, z, pred)
+
+
+def hidden_size(model):
+    return getattr(model, "state_size", None) or model.gru.hidden_size
+
+
 def model_kind(model):
+    if hasattr(model, "_diag_kind"):
+        return model._diag_kind
     if getattr(model, "arch", "flat") != "fuse":
         return "B0"
+    if model.factor_mode == "sr":
+        return f"S{int(model.sr_shape)}R{int(model.sr_read)}"
     return {"learned": "LRN", "none": "RAWF", "supplied": "SUP"}[model.factor_mode]
+
+
+# kinds whose policy READS a learned prediction: the only kinds that accept factor interventions (R0 arms read a
+# constant through an untrained channel, like RAWF; SUP / CONS-exact read exact inputs)
+READS_PREDICTION = ("LRN", "S0R1", "S1R1", "CONS-pred")
 
 
 def forward(model, x, h):
     """Exactly model.step (same ops, same order), exposing the pre-fusion trunk output z and phi.
     Returns (h_new, z_pre, pred, phi, z_fused); pred = auxiliary prediction (LRN) / supplied inputs (SUP) / None."""
+    if hasattr(model, "diag_forward"):  # extended-07 consumer on predicted factors
+        return model.diag_forward(x, h)
     fuse = getattr(model, "arch", "flat") == "fuse"
     pre = model.inp(x[:, :model.base_dim] if fuse else x)
     hn = model.gru(torch.tanh(pre), h)
@@ -295,6 +370,9 @@ def forward(model, x, h):
     elif model.factor_mode == "learned":
         pred = model.aux(z)
         phi = pred.detach()
+    elif model.factor_mode == "sr":  # extended-07 S x R arms: pred is always logged (R0: a disconnected probe)
+        pred = model.aux(z)
+        phi = pred.detach() if model.sr_read else model.phi_const.expand(z.shape[0], -1)
     else:
         pred, phi = None, torch.zeros(z.shape[0], pw6.N_FACTOR_FEATURES)
     return hn, z, pred, phi, fuse_out(model, z, phi)
@@ -311,7 +389,7 @@ class Intervener:
 
     def __init__(self, names, kind, support=None, seed=0):
         self.names = list(names)
-        if kind != "LRN" and any(n != "none" for n in self.names):
+        if kind not in READS_PREDICTION and any(n != "none" for n in self.names):
             what = ("RAWF's fusion channel was never trained (it is fed zeros)" if kind == "RAWF" else
                     f"{kind} is not the learned-factor consumer")
             raise ValueError(f"refusing factor injection into {kind}: {what}; interventions are LRN-only")
@@ -489,7 +567,7 @@ def drive(model, tracks, meta_rec, ivn=None, rollout=None, support=None, latent=
     kind = getattr(model, "inputs", "public")
     B = len(tracks)
     vecs = [t.cfg.public_vector() for t in tracks]
-    h = torch.zeros(B, model.gru.hidden_size)
+    h = torch.zeros(B, hidden_size(model))
     prev = [None] * B
     ivs = [n for n in (ivn.names if ivn else []) if n != "none"]
     while True:
@@ -717,7 +795,7 @@ def cf_decision(model, cfg, hist, q, cid, meta_rec, ivn, support, latent):
     t = Track(cfg, _LabelQ(q), cid, None, history=hist, src="cf")
     kind = getattr(model, "inputs", "public")
     vec = cfg.public_vector()
-    h = torch.zeros(1, model.gru.hidden_size)
+    h = torch.zeros(1, hidden_size(model))
     prev = None
     st = pw.initial_state(cfg)
     for step in range(len(hist) + 1):
@@ -803,7 +881,7 @@ def run_cf(a, models, writers, ivns, supports, report):
 def historical_check(run, name, summary, pool):
     """Compare the free-running summary with the historical eval file of the run (eval_b6c.json for b6c pools)."""
     fn = "eval_b6c.json" if pool.startswith("b6c_") else "eval.json"
-    p = Path(run) / fn
+    p = Path(run_path(run)) / fn
     if not p.exists():
         return {"file": str(p), "status": "missing"}
     hist = json.loads(p.read_text())["splits"].get(pool, {}).get("free_running_greedy", {}).get("summary")
@@ -835,7 +913,8 @@ def cmd_run(a):
     torch.set_num_threads(1)
     t_start = time.process_time()
     runs = parse_named(a.model)
-    forbidden = list(runs.values()) + ([a.labels] if a.labels else []) + [str(Path(p).parent) for p in a.cf or []]
+    forbidden = [run_path(r) for r in runs.values()] + [r.split("::pred=", 1)[1] for r in runs.values() if "::pred=" in r] \
+        + ([a.labels] if a.labels else []) + [str(Path(p).parent) for p in a.cf or []]
     out = check_out_dir(a.out, forbidden)
     out.mkdir(parents=True, exist_ok=True)
     models = {name: load_model(r) for name, r in runs.items()}
@@ -844,13 +923,13 @@ def cmd_run(a):
     supports = {n: Support(json.loads(Path(p).read_text())) for n, p in sup_paths.items()}
     ivns = {}
     for name, k in kinds.items():  # interventions are applied to LRN models only (never RAWF / SUP / B0)
-        if k == "LRN" and a.ivs:
+        if k in READS_PREDICTION and a.ivs:
             ivns[name] = Intervener(a.ivs, k, supports.get(name), a.noise_seed)
     a.rollout = a.rollout or []
-    a.rollout_models = [n for n, k in kinds.items() if k == "LRN"] if a.rollout else []
+    a.rollout_models = [n for n, k in kinds.items() if k in READS_PREDICTION] if a.rollout else []
     for n in a.rollout_models:
         if n not in ivns:
-            ivns[n] = Intervener(["none"] + a.rollout, "LRN", supports.get(n), a.noise_seed)
+            ivns[n] = Intervener(["none"] + a.rollout, kinds[n], supports.get(n), a.noise_seed)
         for iv in a.rollout:
             ivns[n].coords(iv)
             if iv.startswith("gauss") and supports.get(n) is None:
@@ -878,7 +957,10 @@ def cmd_run(a):
               "groups": groups, "group_source": gsrc, "latent": "z_pre = trunk output before fusion, float16 base64"
               if a.latent else None, "noise_seed": a.noise_seed,
               "models": {n: {"run": runs[n], "kind": kinds[n], "seed": models[n][1]["seed"],
-                             "model_sha256": _sha_file(Path(runs[n]) / "model.pt"),
+                             "model_sha256": _sha_file(Path(run_path(runs[n])) / "model.pt"),
+                             **({"predictor": models[n][1]["predictor"]} if "predictor" in models[n][1] else {}),
+                             **({"consumer_contract": models[n][1]["consumer_contract"]}
+                                if "consumer_contract" in models[n][1] else {}),
                              "support_ref": sup_paths.get(n)} for n in models},
               "hist_support_thresholds": {"low": HIST_P_LOW, "unsupported": HIST_P_UNSUPPORTED}}
     writers = {k: Writer(p, {**header, "protocol": k[0], "model": k[1]}) for k, p in paths.items()}
@@ -911,13 +993,13 @@ def cmd_support(a):
     runs = parse_named(a.model)
     assert len(runs) == 1
     name, run = next(iter(runs.items()))
-    out = check_out_dir(a.out, [run, a.labels])
+    out = check_out_dir(a.out, [run_path(run), a.labels])
     out.mkdir(parents=True, exist_ok=True)
     path = out / f"{VERSION}-support-{name}.json"
     if path.exists():
         raise SystemExit(f"refusing to overwrite {path}")
     model, meta = load_model(run)
-    assert model_kind(model) == "LRN", "support references are for the LRN (learned-factor) consumer"
+    assert model_kind(model) in READS_PREDICTION, "support references are for learned-factor consumers"
     pool = T.load_pool(a.labels, a.pool)
     rng = random.Random(a.sample_seed)
     idxs = sorted(rng.sample(range(len(pool)), min(a.n_configs, len(pool))))
@@ -957,7 +1039,7 @@ def cmd_support(a):
         nn.append(dd.min())
     nn = np.array(nn)
     q = lambda x: {f"q{p}": float(np.quantile(x, p / 100)) for p in (50, 90, 95, 99)}  # noqa: E731
-    ref = {"version": VERSION, "model": name, "run": run, "model_sha256": _sha_file(Path(run) / "model.pt"),
+    ref = {"version": VERSION, "model": name, "run": run, "model_sha256": _sha_file(Path(run_path(run)) / "model.pt"),
            "labels": a.labels, "pool": a.pool, "configs": ids, "n_states": int(len(P)), "n_distinct": int(len(U)),
            "sources": {s: srcs.count(s) for s in sorted(set(srcs))},
            "world_seed_base": T.TRAIN_WORLD_BASE + meta["seed"] * 100_000_000 + SUPPORT_WORLD_OFFSET,

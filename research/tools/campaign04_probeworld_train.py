@@ -45,6 +45,18 @@ Extended-06 Track B additions (all default off; b1/b5/b5c paths call the identic
                                  b6c_hold_SCE and writes eval_b6c.json / eval_b6c_episodes.jsonl.gz / cf_eval_b6c.json
                                  (never the run's b6 files; campaign06_bprimary --group b6c_hold_SCE reads them)
 
+Extended-07 Phase 2 additions (all default off; every historical invocation runs the unchanged code path, tested
+against goldens of the unmodified trainer in tests/test_campaign07_p2.py; research/campaigns/extended-07/p2-infra.md):
+  train  --arch fuse --shape {0,1} --read {0,1}   genuine S x R 2x2 (factor mode 'sr'): identical modules / init in all
+                                 four arms; S0 = aux reads sg(z); R0 = policy reads phi_const (--phi-const zeros |
+                                 train_mean); --clip-mode split (default: separate Adam + clip for aux.*) | global
+                                 (historical coupling); --action-rng counter (default for P2) | stream; --init-from /
+                                 --init-sha (common initialization); --aux-group-weights G=W
+  train  --bank FILE --bank-updates N [--finetune --updates U]   common valid-history bank stage (teacher-forced replay
+                                 of stored public histories; imitation + aux), then optional on-policy fine-tuning
+  train  --predictor-only [--bank-folds K --bank-exclude-fold k]   factor predictors (aux MSE only) for K-fold OOF
+  train  --inputs factors6 --arch fuse --phi-contract exact|oof|mix [--oof F]   controlled consumers
+
 Privileged labels (Q*, A*, stage, dependency, switch, case) enter ONLY training losses; model inputs are the
 public config vector plus the visible step record and the public available-action mask.
 """
@@ -463,7 +475,7 @@ class ProbeNet(nn.Module):
     """GRU over visible-history tokens + public prices.  All heads exist in every rung (matched capacity)."""
 
     def __init__(self, hidden=HIDDEN, own_value=False, inputs="public", arch="flat", public_extra=0,
-                 factor_mode=None):
+                 factor_mode=None, shape=None, read=None):
         super().__init__()
         self.inputs = inputs  # extended-05: supplied public state appended to the inputs ('public' = none)
         self.arch = arch  # extended-05: 'flat' (B1) | 'modular' (BX3); extended-06: 'fuse'
@@ -488,9 +500,14 @@ class ProbeNet(nn.Module):
         if arch == "fuse":  # extended-06 factorized arms (created last: every other parameter keeps its init order)
             self.factor_mode = factor_mode or ("supplied" if inputs == "factors6" else "none")
             nf = pw6.N_FACTOR_FEATURES
-            if self.factor_mode == "learned":
+            if self.factor_mode in ("learned", "sr"):  # extended-07 'sr': the identical module set, same order
                 self.aux = nn.Sequential(nn.Linear(hidden, hidden), nn.Tanh(), nn.Linear(hidden, nf))
             self.fuse = nn.Linear(hidden + nf, hidden)
+            if self.factor_mode == "sr":  # extended-07 genuine S x R 2x2 (gradient-flow.md 6)
+                self.sr_shape, self.sr_read = bool(shape), bool(read)
+                # R0 constant fusion input: NOT part of the state_dict (non-persistent), so the initial parameters
+                # of all four arms hash identically; its value is recorded in train_meta['fuse']['phi_const']
+                self.register_buffer("phi_const", torch.zeros(nf), persistent=False)
 
     def step(self, x, h):
         pre = self.inp(x[:, :self.base_dim] if getattr(self, "arch", "flat") == "fuse" else x)
@@ -517,6 +534,9 @@ class ProbeNet(nn.Module):
         elif self.factor_mode == "learned":
             self.last_aux = self.aux(z)
             phi = self.last_aux.detach()
+        elif self.factor_mode == "sr":  # S: aux reads z (S1) or z.detach() (S0); R: policy reads sg(pred) or a constant
+            self.last_aux = self.aux(z if self.sr_shape else z.detach())
+            phi = self.last_aux.detach() if self.sr_read else self.phi_const.expand(z.shape[0], -1)
         else:
             phi = torch.zeros(z.shape[0], pw6.N_FACTOR_FEATURES)
         return torch.tanh(self.fuse(torch.cat([z, phi], 1)))
@@ -585,7 +605,7 @@ def run_batch(model, items, mode, rng=None, need_labels=True):
         idx = torch.tensor(act)
         hn, z = model.step(x, h[idx])
         aux_rec = None
-        if getattr(model, "factor_mode", None) == "learned":  # extended-06 LEARNED-FACTORIZED auxiliary targets
+        if getattr(model, "factor_mode", None) in ("learned", "sr"):  # extended-06/07 auxiliary factor targets
             aux_rec = {"aux": model.last_aux,
                        "aux_t": torch.tensor([pw6.factor_features(eps[i].cfg, eps[i].state) for i in act])}
         h = h.index_copy(0, idx, hn)
@@ -597,7 +617,10 @@ def run_batch(model, items, mode, rng=None, need_labels=True):
         if mode == "sample":
             with torch.no_grad():
                 probs = logp_all.exp()
-                u = torch.tensor([rng.random() for _ in act]).unsqueeze(1)
+                if isinstance(rng, CounterRNG):  # extended-07: u keyed by (seed, episode world seed, step)
+                    u = torch.tensor([rng.u(items[i][2], len(ep_steps[i])) for i in act]).unsqueeze(1)
+                else:
+                    u = torch.tensor([rng.random() for _ in act]).unsqueeze(1)
                 choice = (probs.cumsum(-1) < u).sum(-1).clamp(max=pw.N_ACTIONS - 1)
             chosen = []
             for j, c in enumerate(choice.tolist()):
@@ -717,9 +740,30 @@ def losses(model, items, eps, steps, ep_steps, w):
            "q": cat(ql), "value_mse": cat(vl).detach(), "entropy": cat(ent).detach()}
     total = sum(w[k] * out[k] for k in ("rl", "imit", "dep", "switch", "q"))
     if "aux" in steps[0]:  # extended-06 LEARNED-FACTORIZED: factor regression (MSE, mean over factors and steps)
-        out["aux"] = torch.cat([((rec["aux"] - rec["aux_t"]) ** 2).mean(-1) for rec in steps]).mean()
+        out["aux"] = aux_mse(steps, w)
         total = total + w.get("aux", 0.0) * out["aux"]
     return total, out
+
+
+def aux_mse(steps, w):
+    """Factor regression: mean over the 23 coordinates and all steps (extended-06).  extended-07 optional per-group
+    coordinate weights w['aux_cw'] (a 23-vector; mean over coordinates of w_c * err_c^2); absent = historical."""
+    cw = w.get("aux_cw")
+    if cw is None:
+        return torch.cat([((rec["aux"] - rec["aux_t"]) ** 2).mean(-1) for rec in steps]).mean()
+    return torch.cat([(((rec["aux"] - rec["aux_t"]) ** 2) * cw).mean(-1) for rec in steps]).mean()
+
+
+class CounterRNG:
+    """extended-07 counter-based action sampling: the uniform for decision t of the episode with world seed ws is
+    random.Random('e07-act:<seed>:<ws>:<t>').random().  Episodes are identified by their (unique) training world seed,
+    so every arm of a seed sees the same uniform at the same (episode, step) whatever happened in other episodes."""
+
+    def __init__(self, seed):
+        self.seed = seed
+
+    def u(self, ws, t):
+        return random.Random(f"e07-act:{self.seed}:{ws}:{t}").random()
 
 
 def cmd_train(a):
@@ -733,28 +777,51 @@ def cmd_train(a):
             raise SystemExit(f"--train-n {a.train_n} > pool size {len(pool)}")
         pool = pool[:a.train_n]
     t_load = time.process_time() - t_start
+    p2 = p2_setup(a)  # extended-07 Phase 2 options (None under every historical invocation)
     w = RUNG_WEIGHTS[a.rung]
-    if getattr(a, "factor_mode", None) == "learned":
+    if getattr(a, "factor_mode", None) in ("learned", "sr"):
         w = dict(w, aux=a.aux_weight)
+    if p2 is not None and p2["aux_cw"] is not None:
+        w = dict(w, aux_cw=torch.tensor(p2["aux_cw"]))
     public_extra = pw6.PUBLIC_EXTRA6 if isinstance(pool[0][1], pw6.Config6) else 0
     arch = getattr(a, "arch", "flat")
     if arch == "modular" and getattr(a, "match_params", True):  # BX3: hidden width matched to B0's parameters
         a.hidden = matched_hidden(arch, getattr(a, "inputs", "public"))
     torch.manual_seed(1000 + a.seed)  # same init across rungs for a given seed
     model = ProbeNet(a.hidden, own_value=a.own_value, inputs=getattr(a, "inputs", "public"), arch=arch,
-                     public_extra=public_extra, factor_mode=getattr(a, "factor_mode", None))
+                     public_extra=public_extra, factor_mode=getattr(a, "factor_mode", None),
+                     **({} if p2 is None else p2["sr_kwargs"]))
+    if p2 is not None:
+        p2_init(a, p2, model)  # --init-from copy, init sha256, frozen trunk, R0 constant
     # B1 parameters (everything except v_own): optimizer and gradient clipping see exactly these, so v_own can
     # change neither the Adam state nor the clip coefficient of the policy/trunk.
     main_params = [p for n, p in model.named_parameters() if not n.startswith("v_own.")]
-    opt = torch.optim.Adam(main_params, lr=a.lr)
+    if p2 is None or p2["clip_mode"] == "global":
+        if p2 is not None:
+            main_params = [p for p in main_params if p.requires_grad]
+        opt = torch.optim.Adam(main_params, lr=a.lr)
+        opt_groups = [(opt, main_params, "all")]
+    else:  # extended-07 split: actor group A and aux predictor group X, separate Adam + separate clip
+        grp_a = [p for n, p in model.named_parameters()
+                 if not n.startswith("v_own.") and not n.startswith("aux.") and p.requires_grad]
+        grp_x = [p for n, p in model.named_parameters() if n.startswith("aux.")]
+        opt_groups = [(torch.optim.Adam(grp_a, lr=a.lr), grp_a, "A")]
+        if grp_x:
+            opt_groups.append((torch.optim.Adam(grp_x, lr=a.lr), grp_x, "X"))
+        opt = None
     own = None
     if a.own_value:
         own = {"opt": torch.optim.Adam(model.v_own.parameters(), lr=a.lr), "rng": random.Random(11_000 + a.seed),
                "worlds": 0, "steps": 0, "cpu_s": 0.0, "log": []}
     data_rng = random.Random(7_000 + a.seed)  # same config/world stream across rungs for a given seed
     act_rng = random.Random(9_000 + a.seed)
+    if p2 is not None and p2["action_rng"] == "counter":
+        act_rng = CounterRNG(a.seed)
     log = []
     world_counter = 0
+    if p2 is not None and p2["bank"] is not None:  # extended-07 stage 1: common valid-history bank
+        bank_stage(a, p2, model, w, opt_groups, log, t_start)
+    t_onpolicy = time.process_time()
     for upd in range(a.updates):
         items = []
         for _ in range(a.batch):
@@ -765,10 +832,13 @@ def cmd_train(a):
         eps, steps, ep_steps = run_batch(model, items, "sample", act_rng)
         attach_case_labels(items, ep_steps, steps)
         total, parts = losses(model, items, eps, steps, ep_steps, w)
-        opt.zero_grad()
-        total.backward()
-        nn.utils.clip_grad_norm_(main_params, 1.0)
-        opt.step()
+        if p2 is None:
+            opt.zero_grad()
+            total.backward()
+            nn.utils.clip_grad_norm_(main_params, 1.0)
+            opt.step()
+        else:
+            gn = p2_step(opt_groups, total)
         if own is not None and (upd + 1) % a.own_every == 0:
             own_value_update(model, pool, a, own, upd)
         if upd % a.log_every == 0 or upd == a.updates - 1:
@@ -776,6 +846,8 @@ def cmd_train(a):
             Vs = sum(s.value(pw.initial_state(c)) for c, s, _ in items) / len(items)
             row = {"update": upd, "U": U, "V_star": Vs, "regret": Vs - U,
                    **{k: float(v.detach()) for k, v in parts.items()}, "cpu_s": time.process_time() - t_start}
+            if p2 is not None:
+                row.update(stage="onpolicy", **gn)
             log.append(row)
             print(json.dumps(row), flush=True)
     torch.save(model.state_dict(), out / "model.pt")
@@ -807,6 +879,8 @@ def cmd_train(a):
         meta["fuse"] = {"factor_mode": model.factor_mode, "features": list(pw6.FACTOR_FEATURES),
                         "aux_weight": w.get("aux", 0.0), "stop_gradient": model.factor_mode == "learned",
                         "form": "heads read tanh(W [z; phi]); phi = supplied factors | sg(aux(z)) | 0"}
+    if p2 is not None:  # extended-07 keys: absent under every historical invocation
+        p2_meta(a, p2, model, meta, t_onpolicy)
     if own is not None:  # key absent when off (B1 train_meta unchanged)
         meta["own_value"] = {"continuation": OWN_VALUE_CONTINUATION, "every": a.own_every,
                              "episodes_per_collection": a.own_episodes, "collections": own["steps"],
@@ -817,6 +891,322 @@ def cmd_train(a):
         (out / "own_value_log.json").write_text(json.dumps(own["log"]))
     (out / "train_meta.json").write_text(json.dumps(meta, indent=1))
     (out / "train_log.json").write_text(json.dumps(log))
+
+
+# ------------------------------------------------------------------------------------------------ extended-07 Phase 2
+# Genuine S x R 2x2 (gradient-flow.md 6), common valid-history bank (design Phase 2 / brief 12) and controlled
+# consumers (brief 10).  Every option defaults off; p2_setup returns None for every historical invocation, and the
+# historical code path is then executed unchanged (tests/test_campaign07_p2.py goldens).
+
+P2_OPTS = ("shape", "read", "clip_mode", "action_rng", "init_from", "init_sha", "bank", "aux_group_weights",
+           "phi_contract", "frozen_trunk", "predictor_only", "bank_updates", "finetune")
+CONTRACT_JSON = Path(__file__).resolve().parents[2] / "research" / "campaigns" / "extended-07" / "factor-contract.json"
+BANK_RNG_OFFSET = 7_500  # bank-episode sampling stream random.Random(7_500 + seed): common to every arm of a seed
+
+
+def state_sha(sd):
+    """sha256 over the sorted (name, raw bytes) of a state_dict: identical tensors <=> identical hash."""
+    import hashlib
+    h = hashlib.sha256()
+    for k in sorted(sd):
+        h.update(k.encode())
+        h.update(str(tuple(sd[k].shape)).encode())
+        h.update(sd[k].detach().contiguous().cpu().numpy().tobytes())
+    return h.hexdigest()
+
+
+def contract_groups(path=CONTRACT_JSON):
+    """Short group name (G1..G4) -> coordinate indices, from factor-contract.json (P0a)."""
+    d = json.loads(Path(path).read_text())
+    return {g.split("_")[0]: list(idx) for g, idx in d["groups"].items()}
+
+
+def aux_coord_weights(spec):
+    """['G1=1', 'G4=0.25', ...] -> 23 coordinate weights (unnamed groups keep weight 1)."""
+    groups = contract_groups()
+    cw = [1.0] * pw6.N_FACTOR_FEATURES
+    for item in spec:
+        g, v = item.split("=")
+        if g not in groups:
+            raise SystemExit(f"--aux-group-weights: unknown group {g!r} (have {sorted(groups)})")
+        for j in groups[g]:
+            cw[j] = float(v)
+    return cw
+
+
+def load_bank(path):
+    with open(path, "rb") as f:
+        bank = pickle.load(f)
+    assert bank["meta"]["format"] == BANK_FORMAT, bank["meta"].get("format")
+    return bank
+
+
+BANK_FORMAT = "e07-history-bank-v1"
+
+
+def bank_folds(bank, K):
+    """Deterministic K-fold assignment of the bank's TRAINING CONFIGURATIONS (never episodes): within each condition
+    combination, configurations in index order go to fold j % K (stratified by combination; seed-free, so every seed
+    and arm uses the same folds).  Returns {cfg_idx: fold}."""
+    by = {}
+    for e in bank["episodes"]:
+        by.setdefault(e["combo"], set()).add(e["cfg_idx"])
+    out = {}
+    for combo in sorted(by):
+        for j, idx in enumerate(sorted(by[combo])):
+            out[idx] = j % K
+    return out
+
+
+def p2_setup(a):
+    def unset(k):
+        v = getattr(a, k, None)
+        return v is None if k in ("shape", "read") else v in (None, False, 0, [])  # --shape 0 is a setting
+    if all(unset(k) for k in P2_OPTS):
+        return None
+    sr = getattr(a, "shape", None) is not None or getattr(a, "read", None) is not None
+    if sr:
+        if a.shape is None or a.read is None:
+            raise SystemExit("--shape and --read go together (the S x R 2x2)")
+        if getattr(a, "arch", "flat") != "fuse" or getattr(a, "factor_mode", None) not in (None, "sr"):
+            raise SystemExit("--shape/--read need --arch fuse (factor mode 'sr' is implied)")
+        a.factor_mode = "sr"
+    p2 = {"sr": sr, "sr_kwargs": {"shape": a.shape, "read": a.read} if sr else {},
+          "clip_mode": a.clip_mode or ("split" if sr else "global"), "action_rng": a.action_rng or "counter",
+          "aux_cw": aux_coord_weights(a.aux_group_weights) if a.aux_group_weights else None,
+          "bank": None, "phi_contract": a.phi_contract, "oof": None, "cpu_s_bank": 0.0,
+          "noise_seed": a.noise_seed, "mix_p": a.mix_p}
+    if a.bank:
+        p2["bank"] = load_bank(a.bank)
+        p2["bank_sha256"] = _sha_path(a.bank)
+        eps = p2["bank"]["episodes"]
+        if a.bank_exclude_fold is not None or a.bank_only_fold is not None:
+            folds = bank_folds(p2["bank"], a.bank_folds)
+            eps = [e for e in eps if (a.bank_exclude_fold is None or folds[e["cfg_idx"]] != a.bank_exclude_fold)
+                   and (a.bank_only_fold is None or folds[e["cfg_idx"]] == a.bank_only_fold)]
+        if a.bank_combos:
+            eps = [e for e in eps if e["combo"] in set(a.bank_combos)]
+        if not eps:
+            raise SystemExit("no bank episodes left after the fold / combination filters")
+        p2["bank_eps"] = eps
+        if a.updates > 0 and not a.finetune:
+            raise SystemExit("--bank with --updates > 0 needs --finetune (on-policy fine-tuning is separately flagged)")
+    elif a.bank_updates or a.predictor_only or a.phi_contract:
+        raise SystemExit("--bank-updates / --predictor-only / --phi-contract need --bank")
+    if a.predictor_only and (a.updates > 0 or getattr(a, "factor_mode", None) not in ("sr", "learned")):
+        raise SystemExit("--predictor-only: bank stage only (--updates 0), on a model with an aux head")
+    if a.phi_contract:
+        if getattr(a, "inputs", "public") != "factors6" or getattr(a, "arch", "flat") != "fuse":
+            raise SystemExit("--phi-contract: consumers use the SUP architecture (--inputs factors6 --arch fuse)")
+        if a.phi_contract in ("oof", "mix"):
+            if not a.oof:
+                raise SystemExit(f"--phi-contract {a.phi_contract} needs --oof FILE (campaign07_p2.py oof)")
+            p2["oof"] = torch.load(a.oof)
+            p2["oof_sha256"] = _sha_path(a.oof)
+            assert p2["oof"]["bank_sha256"] == p2["bank_sha256"], "oof file was made from a different bank"
+            if a.updates > 0:
+                raise SystemExit("on-policy fine-tuning of oof / mix consumers is not defined (it would read exact)")
+    return p2
+
+
+def _sha_path(p):
+    import hashlib
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def p2_init(a, p2, model):
+    """Common initialization: the model was constructed under torch.manual_seed(1000 + seed) with the identical module
+    list in all four S x R arms; --init-from copies a saved reference initial state_dict (strict: same keys and
+    shapes), --init-sha asserts its hash.  Then the optional frozen trunk and the R0 constant."""
+    p2["init_sha256_constructed"] = state_sha(model.state_dict())
+    if a.init_from:
+        ref = torch.load(a.init_from)
+        own = model.state_dict()
+        if set(ref) != set(own) or any(tuple(ref[k].shape) != tuple(own[k].shape) for k in own):
+            raise SystemExit(f"--init-from {a.init_from}: keys/shapes differ from this arm's model")
+        model.load_state_dict(ref)
+    p2["init_sha256"] = state_sha(model.state_dict())
+    if a.init_sha and a.init_sha != p2["init_sha256"]:
+        raise SystemExit(f"--init-sha mismatch: {p2['init_sha256']} != {a.init_sha}")
+    if a.frozen_trunk:  # consumer variant: inp/gru/trunk loaded from a trained run and frozen
+        src = torch.load(Path(a.frozen_trunk) / "model.pt")
+        own = model.state_dict()
+        keys = [k for k in own if k.split(".")[0] in ("inp", "gru", "trunk")]
+        for k in keys:
+            if tuple(src[k].shape) != tuple(own[k].shape):
+                raise SystemExit(f"--frozen-trunk: shape mismatch at {k}")
+        model.load_state_dict({**own, **{k: src[k] for k in keys}})
+        for n, p in model.named_parameters():
+            if n.split(".")[0] in ("inp", "gru", "trunk"):
+                p.requires_grad_(False)
+        p2["frozen_trunk_sha256"] = _sha_path(Path(a.frozen_trunk) / "model.pt")
+    if p2["sr"]:
+        if a.phi_const == "train_mean":  # sensitivity option: mean exact factor vector over all bank decisions
+            if p2["bank"] is None:
+                raise SystemExit("--phi-const train_mean needs --bank (mean of the bank's exact factor labels)")
+            rows = [r for e in p2["bank"]["episodes"] for r in e["phi"]]
+            model.phi_const.copy_(torch.tensor(rows, dtype=torch.float64).mean(0).float())
+        p2["phi_const"] = model.phi_const.tolist()
+
+
+def p2_step(opt_groups, total):
+    """One optimizer step.  'all' (global): one Adam + one clip over every parameter (historical coupling).  Split:
+    group A (actor: everything except aux.*) and group X (aux.*) each have their own Adam and their own
+    clip_grad_norm_(., 1.0), so a disconnected auxiliary loss changes neither A's clip coefficient nor A's moments."""
+    for o, _, _ in opt_groups:
+        o.zero_grad()
+    total.backward()
+    gn = {}
+    for _, ps, name in opt_groups:
+        gn[f"gnorm_{name}"] = float(nn.utils.clip_grad_norm_(ps, 1.0))
+    for o, _, _ in opt_groups:
+        o.step()
+    return gn
+
+
+def replay_bank_batch(model, sel, phis=None):
+    """Teacher-forced replay of stored public histories (the bank's own actions, never the model's): inputs are
+    rebuilt exactly as run_batch builds them (public vector, previous visible record, public mask, queries_done / k),
+    plus, for the SUP-architecture consumers, the contract's factor vector at the input tail.  Returns per-step records
+    like run_batch (idx, mask, logp_all, z, opt, G, aux, aux_t)."""
+    B = len(sel)
+    h = torch.zeros(B, model.gru.hidden_size)
+    prev = [None] * B
+    tail = getattr(model, "inputs", "public") == "factors6"
+    if tail and phis is None:
+        raise ValueError("a factors6 consumer needs the contract's factor vectors")
+    assert getattr(model, "inputs", "public") in ("public", "factors6")
+    has_aux = getattr(model, "factor_mode", None) in ("learned", "sr")
+    steps = []
+    for t in range(max(len(e["hist"]) for e in sel)):
+        act = [i for i in range(B) if t < len(sel[i]["hist"])]
+        x = torch.tensor([encode(sel[i]["vec"], prev[i], sel[i]["avail"][t], sel[i]["q"][t] / sel[i]["k"])
+                          + (list(phis[i][t]) if tail else []) for i in act])
+        idx = torch.tensor(act)
+        hn, z = model.step(x, h[idx])
+        h = h.index_copy(0, idx, hn)
+        mask = torch.zeros(len(act), pw.N_ACTIONS, dtype=torch.bool)
+        opt = torch.zeros(len(act), pw.N_ACTIONS, dtype=torch.bool)
+        for j, i in enumerate(act):
+            mask[j, list(sel[i]["avail"][t])] = True
+            opt[j, list(sel[i]["opt"][t])] = True
+        logits = model.pi(z).masked_fill(~mask, -1e9)
+        rec = {"idx": idx, "mask": mask, "logp_all": Fn.log_softmax(logits, -1), "z": z, "opt": opt,
+               "G": torch.tensor([sel[i]["G"][t] for i in act])}
+        if has_aux:
+            rec["aux"] = model.last_aux
+            rec["aux_t"] = torch.tensor([sel[i]["phi"][t] for i in act])
+        steps.append(rec)
+        for i in act:
+            prev[i] = tuple(sel[i]["hist"][t])
+    return steps
+
+
+def bank_losses(model, steps, w, value_weight=0.0, predictor_only=False):
+    """Bank stage objective: set-valued imitation of the exact eps-optimal set at every stored decision (RL is off:
+    the stored actions are not the model's) + the auxiliary factor MSE (models with an aux head) + optionally the
+    value MSE toward the behaviour source's return-to-go.  predictor_only: the aux MSE alone (K-fold predictors)."""
+    cat = lambda xs: torch.cat(xs).mean()  # noqa: E731
+    il = [-torch.logsumexp(rec["logp_all"].masked_fill(~rec["opt"], -1e9), -1) for rec in steps]
+    out = {"imit": cat(il)}
+    total = 0.0 if predictor_only else w["imit"] * out["imit"]
+    if value_weight and not predictor_only:
+        out["value_mse"] = cat([(model.v(rec["z"]).squeeze(-1) - rec["G"]) ** 2 for rec in steps])
+        total = total + value_weight * out["value_mse"]
+    if "aux" in steps[0]:
+        out["aux"] = aux_mse(steps, w)
+        total = total + w.get("aux", 0.0) * out["aux"]
+    return total, out
+
+
+def contract_phis(p2, sel, seed, upd):
+    """Consumer input contract for a sampled batch: exact labels | out-of-fold predictions | declared mixture (each
+    sampled episode is noisy with probability mix_p: exact + sigma_c * N(0, 1) per decision and coordinate, sigma_c =
+    the out-of-fold predictor RMS error of coordinate c; deterministic in (noise seed, seed, update, slot))."""
+    c = p2["phi_contract"]
+    if c is None:
+        return None
+    if c == "exact":
+        return [e["phi"] for e in sel]
+    if c == "oof":
+        return [p2["oof"]["preds"][e["id"]] for e in sel]
+    sig = p2["oof"]["err_rms"]
+    out = []
+    for slot, e in enumerate(sel):
+        r = random.Random(f"e07-mix:{p2['noise_seed']}:{seed}:{upd}:{slot}")
+        if r.random() < p2["mix_p"]:
+            out.append([[x + s * r.gauss(0.0, 1.0) for x, s in zip(row, sig)] for row in e["phi"]])
+        else:
+            out.append(e["phi"])
+    return out
+
+
+def bank_stage(a, p2, model, w, opt_groups, log, t_start):
+    t0 = time.process_time()
+    eps = p2["bank_eps"]
+    rng = random.Random(BANK_RNG_OFFSET + a.seed)  # identical episode stream for every arm of a seed
+    n_dec = 0
+    for bu in range(a.bank_updates):
+        sel = [eps[rng.randrange(len(eps))] for _ in range(a.batch)]
+        steps = replay_bank_batch(model, sel, contract_phis(p2, sel, a.seed, bu))
+        n_dec += sum(len(e["hist"]) for e in sel)
+        total, parts = bank_losses(model, steps, w, a.bank_value_weight, a.predictor_only)
+        gn = p2_step(opt_groups, total)
+        if bu % a.log_every == 0 or bu == a.bank_updates - 1:
+            row = {"stage": "bank", "update": bu, **{k: float(v.detach()) for k, v in parts.items()}, **gn,
+                   "cpu_s": time.process_time() - t_start}
+            log.append(row)
+            print(json.dumps(row), flush=True)
+    p2["cpu_s_bank"] = time.process_time() - t0
+    p2["bank_decisions_seen"] = n_dec
+
+
+def p2_meta(a, p2, model, meta, t_onpolicy):
+    info = {"clip_mode": p2["clip_mode"], "action_rng": p2["action_rng"], "init_from": a.init_from,
+            "init_sha256": p2["init_sha256"], "init_sha256_constructed": p2["init_sha256_constructed"],
+            "aux_coord_weights": p2["aux_cw"], "cpu_s_bank": p2["cpu_s_bank"],
+            "cpu_s_onpolicy": time.process_time() - t_onpolicy, "onpolicy_updates": a.updates}
+    if p2["bank"] is not None:
+        info["bank"] = {"path": a.bank, "sha256": p2["bank_sha256"], "updates": a.bank_updates, "batch": a.batch,
+                        "episodes_available": len(p2["bank_eps"]), "episodes_total": len(p2["bank"]["episodes"]),
+                        "folds": a.bank_folds, "exclude_fold": a.bank_exclude_fold, "only_fold": a.bank_only_fold,
+                        "combos": a.bank_combos, "value_weight": a.bank_value_weight,
+                        "predictor_only": bool(a.predictor_only), "finetune": bool(a.finetune),
+                        "decisions_seen": p2.get("bank_decisions_seen"), "sampling_rng": BANK_RNG_OFFSET + a.seed,
+                        "loss": ("aux MSE only" if a.predictor_only else "set-valued imitation"
+                                 + (" + aux MSE" if hasattr(model, "aux") else "")
+                                 + (f" + {a.bank_value_weight} value MSE" if a.bank_value_weight else "")),
+                        "bank_meta": {k: v for k, v in p2["bank"]["meta"].items() if k != "episode_index"}}
+    if p2["phi_contract"]:
+        info["consumer"] = {"contract": p2["phi_contract"], "oof": a.oof, "oof_sha256": p2.get("oof_sha256"),
+                            "mix_p": a.mix_p if p2["phi_contract"] == "mix" else None,
+                            "noise_seed": a.noise_seed if p2["phi_contract"] == "mix" else None,
+                            "frozen_trunk": a.frozen_trunk, "frozen_trunk_sha256": p2.get("frozen_trunk_sha256"),
+                            "arch": "SUP architecture (factors enter the fusion layer only)"}
+    elif a.frozen_trunk:
+        info["frozen_trunk"] = a.frozen_trunk
+    meta["p2"] = info
+    if p2["sr"]:
+        meta["fuse"].update(shape=int(model.sr_shape), read=int(model.sr_read), phi_const_mode=a.phi_const,
+                            phi_const=p2["phi_const"], stop_gradient=True, arm=f"S{int(model.sr_shape)}R{int(model.sr_read)}",
+                            form="pred = aux(z if S1 else sg(z)); heads read tanh(W [z; sg(pred) if R1 else phi_const])")
+
+
+def build_model_from_meta(meta):
+    """ProbeNet for a saved run (historical runs: the identical constructor call as before; extended-07 'sr' runs:
+    shape/read and the R0 constant restored from train_meta)."""
+    fz = meta.get("fuse", {})
+    kw = {"shape": fz["shape"], "read": fz["read"]} if fz.get("factor_mode") == "sr" else {}
+    model = ProbeNet(meta["hidden"], own_value="own_value" in meta, inputs=meta.get("inputs", "public"),
+                     arch=meta.get("arch", "flat"), public_extra=meta.get("public_extra", 0),
+                     factor_mode=fz.get("factor_mode"), **kw)
+    if kw:
+        model.phi_const.copy_(torch.tensor(fz["phi_const"]))
+    return model
 
 
 def own_returns(ep_steps, R=100.0):
@@ -1210,9 +1600,7 @@ def cmd_eval(a):
     torch.set_num_threads(1)
     run = Path(a.run)
     meta = json.loads((run / "train_meta.json").read_text())
-    model = ProbeNet(meta["hidden"], own_value="own_value" in meta, inputs=meta.get("inputs", "public"),
-                     arch=meta.get("arch", "flat"), public_extra=meta.get("public_extra", 0),
-                     factor_mode=meta.get("fuse", {}).get("factor_mode"))
+    model = build_model_from_meta(meta)  # extended-07: identical constructor call for every historical run
     model.load_state_dict(torch.load(run / "model.pt"))
     model.eval()
     t0 = time.process_time()
@@ -1505,6 +1893,41 @@ def main(argv=None):
     s.add_argument("--factor-mode", choices=("supplied", "learned", "none"), default=None,
                    help="extended-06 --arch fuse: supplied (needs --inputs factors6) | learned | none (raw control)")
     s.add_argument("--aux-weight", type=float, default=1.0, help="extended-06 learned factor loss weight")
+    # extended-07 Phase 2 (all default off; gradient-flow.md 6, research/campaigns/extended-07/p2-infra.md)
+    s.add_argument("--shape", type=int, choices=(0, 1), default=None,
+                   help="extended-07 S x R: S1 = the aux loss updates the trunk/encoder, S0 = aux reads sg(z)")
+    s.add_argument("--read", type=int, choices=(0, 1), default=None,
+                   help="extended-07 S x R: R1 = the policy reads sg(pred), R0 = the constant phi_const")
+    s.add_argument("--phi-const", choices=("zeros", "train_mean"), default="zeros",
+                   help="extended-07 R0 constant (default zeros = the RAWF control; train_mean needs --bank)")
+    s.add_argument("--clip-mode", choices=("split", "global"), default=None,
+                   help="extended-07: split = separate Adam + clip for the aux head (default for S x R); global = "
+                        "historical coupling (one Adam, one clip over everything)")
+    s.add_argument("--action-rng", choices=("stream", "counter"), default=None,
+                   help="extended-07: counter = u(seed, episode world seed, step) (default for every P2 run)")
+    s.add_argument("--init-from", default=None, help="extended-07: reference initial state_dict (strict copy)")
+    s.add_argument("--init-sha", default=None, help="extended-07: assert the initial state_dict sha256")
+    s.add_argument("--aux-group-weights", nargs="*", default=None, metavar="G=W",
+                   help="extended-07: per-group aux loss weights (factor-contract groups G1..G4; default all 1)")
+    s.add_argument("--bank", default=None, help="extended-07: common valid-history bank (campaign07_p2.py bank)")
+    s.add_argument("--bank-updates", type=int, default=0, help="extended-07: bank-stage updates (batch = --batch)")
+    s.add_argument("--bank-value-weight", type=float, default=0.0,
+                   help="extended-07: value MSE toward the behaviour return-to-go in the bank stage (default off)")
+    s.add_argument("--bank-folds", type=int, default=5, help="extended-07: K of the configuration folds")
+    s.add_argument("--bank-exclude-fold", type=int, default=None, help="extended-07: train on the other folds")
+    s.add_argument("--bank-only-fold", type=int, default=None, help="extended-07: train on this fold only")
+    s.add_argument("--bank-combos", nargs="*", default=None, help="extended-07: restrict to these combinations")
+    s.add_argument("--finetune", action="store_true",
+                   help="extended-07: allow --updates > 0 on-policy fine-tuning after the bank stage")
+    s.add_argument("--predictor-only", action="store_true",
+                   help="extended-07: bank stage trains the aux MSE only (K-fold / full factor predictors)")
+    s.add_argument("--phi-contract", choices=("exact", "oof", "mix"), default=None,
+                   help="extended-07 consumer input contract (SUP architecture; bank stage)")
+    s.add_argument("--oof", default=None, help="extended-07: out-of-fold prediction file (campaign07_p2.py oof)")
+    s.add_argument("--mix-p", type=float, default=0.5, help="extended-07: noisy-episode probability (mix)")
+    s.add_argument("--noise-seed", type=int, default=0, help="extended-07: mix-contract noise seed")
+    s.add_argument("--frozen-trunk", default=None,
+                   help="extended-07 consumer variant: load inp/gru/trunk from RUN and freeze them")
     s = sub.add_parser("eval")
     s.add_argument("--labels", required=True)
     s.add_argument("--run", required=True)
