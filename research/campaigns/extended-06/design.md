@@ -98,3 +98,58 @@ Only where A or B shows headroom that simple rules miss, plus a specific value b
 - **Development vs confirmation.** Before confirmation, source, protocol, hyperparameters, selection rule, metrics and test family are frozen. ≥ 3 lineages. Adaptive replications are labelled.
 - **Job plan.** [jobplan.json](jobplan.json) holds every job's dimensions × measured unit costs, generated before any large matrix. A one-job smoke comes before every batch.
 - **Budget.** ~48 CPU core-h ceiling; aim ≤ 60% for Phases 1–4 and keep ≥ 20% for confirmation and audit.
+
+---
+
+## v2 revisions (after internal review [review/design-review.md](review/design-review.md); these supersede v1)
+
+**Track B**
+1. **Probeworld-v3 generator range revision** (versioned; old tables unchanged): the correlated factor occurs only at k ≥ 2 with corr ∈ [.25, .45], and p_event ∈ [.3, .6], in every v3 split. Exact screening (reviewer, local) of per-factor decision relevance among eligible configurations:
+
+   | Triple | Per factor | All three |
+   |---|---|---|
+   | S+C+E | S .86 / C .73 / E .67 | .49 |
+   | U+C+E | .97 / .62 / .85 | .61 |
+   | U+S+E | .55 / .58 / .60 | .24 |
+
+   **Registered selection rule:** the primary challenge family is the untouched triple with the largest minimum per-factor relevance, subject to global-shift closable fraction ≤ .5. This is expected to be S+C+E; the builder's official screen confirms or overrides it by the rule. A second passing triple is a secondary holdout. A new factor extension (D/T) is used only if it clears the rule more clearly. Endpoints include later decisions, because C's relevance mostly arrives after the first decision.
+2. **Global-shift solvability**, defined: a single shared per-action bias applied to the nearest training-support-optimal policy. The fraction of the family's regret gap it closes must be ≤ .5.
+3. **Counterfactual sets for a triple** are 2³ **octets** built with `ablate` (plus near-miss variants), with ≥ 150 octets.
+4. **Matched arms.** The trainer always draws 4,000 × 64 on-policy episodes, so updates and examples are automatically equal; "volume" means the number of distinct configurations. **B2 is built by replacement, matching B0's per-factor frequency, per-combination share and optimal-first-action mix.** The dose axis is the number of the held triple's constituent pairs present in training (0–3), with the held triple itself never present.
+5. **Factorized arms (non-vacuous):** the raw factor parameters are already inputs, so the factors to supply or learn are **derived decision quantities**:
+   - the posterior over hidden type after the history;
+   - expected remaining cost per strategy;
+   - probability that a probe resolves;
+   - amortized build value over the remaining horizon.
+
+   SUPPLIED = exact derived quantities as inputs (a localization ceiling). LEARNED = auxiliary heads trained to predict them from raw public inputs, with the downstream policy consuming the predictions.
+6. **Power.** ≥ 200 eligible held-out configurations per primary cell; **5 seed pairs** for the primary B2-vs-B0 contrast; configuration-clustered CIs. Memory is measured in smoke first (k = 8 C+E configurations reach ~150k DP states).
+
+**Track A**
+
+7. **Gate GA replaced.** Let Û = the cross-fitted public-information portfolio estimate.
+   - **GA-1:** Û − best simple rule ≥ .02 absolute utility, with the 95% lower bound > .005.
+   - **GA-2:** the same margin over the best single method.
+   - Evaluated separately for the one-shot selector and for the sequential (telemetry-using) estimate.
+   - The Phase 2 promotion margin is ≤ half the measured headroom.
+   - The best simple rule is **selected on inner folds** (no winner's curse). Cross-fitting is **episode-clustered**.
+8. **Strong simple baselines (mandatory):**
+   - propagation and decomposition as **always-on preprocessing**;
+   - B&B warm-started from greedy with a budget scaled to the compute price and a **certified-gap stopping rule**;
+   - a **node-count switch rule**;
+   - always verify/repair the cached solution before warm start;
+   - inspect iff hidden fraction × failure loss > observation price.
+9. **Admissible headroom sources** (principled heterogeneity):
+   - heavy-tailed solver effort on hard knapsack classes;
+   - stale-but-feasible reuse;
+   - hidden constraints with explicit posteriors;
+   - prices centred on method cost crossovers.
+10. **Exact oracle.** A hand-written B&B with a surrogate bound, cross-checked by brute force on small instances. The maximum size is set by a pilot (slowest 1% certify in ≤ ~5 core-s). **Uncertified instances are never dropped by outcome.** Each anytime method runs **once to full budget** with its trace logged, and budgets and rules are read off the trace.
+11. **Charging.** The selector is charged for features, telemetry and inference in deterministic work units.
+
+**Schedule and triggers**
+12. **Checkpoints:**
+    - Track B family registered by ~T+2h (07:51Z);
+    - GA decided by ~T+5h (10:51Z), or Track A closes;
+    - confirmations launched by ~T+8h (13:51Z).
+13. **Track C trigger (concrete).** Track C runs only if (i) A2/A3 shows headroom over A1 per GA and (ii) error localization attributes ≥ 50% of the learned selector's regret to value misestimates of candidate methods.
