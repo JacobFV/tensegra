@@ -259,6 +259,94 @@
    "hi": 340000000,
    "status": "registered",
    "parent": "ext06 Track A portfolio-world instances (dev/train/select/confirm sub-ranges assigned in design)"
+  },
+  {
+   "name": "ext06 Track B probeworld-v3 configurations",
+   "campaign": "extended-06",
+   "lo": 6100000000,
+   "hi": 6900000000,
+   "status": "registered",
+   "note": "split into the sub-ranges below (parent); every Track B configuration / eval-world seed lies in exactly one"
+  },
+  {
+   "name": "ext06 Track B v3: screen",
+   "campaign": "extended-06",
+   "lo": 6100000000,
+   "hi": 6200000000,
+   "status": "registered",
+   "parent": "ext06 Track B probeworld-v3 configurations (splits assigned in design)",
+   "use": "structural screening streams (exact DP only)"
+  },
+  {
+   "name": "ext06 Track B v3: train",
+   "campaign": "extended-06",
+   "lo": 6200000000,
+   "hi": 6300000000,
+   "status": "registered",
+   "parent": "ext06 Track B probeworld-v3 configurations (splits assigned in design)",
+   "use": "b6 training pools (all arms share base 6.2e9: common random numbers)"
+  },
+  {
+   "name": "ext06 Track B v3: dev_test",
+   "campaign": "extended-06",
+   "lo": 6300000000,
+   "hi": 6400000000,
+   "status": "registered",
+   "parent": "ext06 Track B probeworld-v3 configurations (splits assigned in design)",
+   "use": "b6 dev / test_base / test_broad pools + their eval worlds"
+  },
+  {
+   "name": "ext06 Track B v3: hold",
+   "campaign": "extended-06",
+   "lo": 6400000000,
+   "hi": 6500000000,
+   "status": "registered",
+   "parent": "ext06 Track B probeworld-v3 configurations (splits assigned in design)",
+   "use": "b6 held-out challenge families + eval worlds"
+  },
+  {
+   "name": "ext06 Track B v3: hist",
+   "campaign": "extended-06",
+   "lo": 6500000000,
+   "hi": 6600000000,
+   "status": "registered",
+   "parent": "ext06 Track B probeworld-v3 configurations (splits assigned in design)",
+   "use": "historical U+E / S+C / U+C challenge sets (v3 generator, fresh) + worlds"
+  },
+  {
+   "name": "ext06 Track B v3: cf",
+   "campaign": "extended-06",
+   "lo": 6600000000,
+   "hi": 6700000000,
+   "status": "registered",
+   "parent": "ext06 Track B probeworld-v3 configurations (splits assigned in design)",
+   "use": "balanced counterfactual quadruples (per family stream)"
+  },
+  {
+   "name": "ext06 Track B v3: intervene",
+   "campaign": "extended-06",
+   "lo": 6700000000,
+   "hi": 6800000000,
+   "status": "registered",
+   "parent": "ext06 Track B probeworld-v3 configurations (splits assigned in design)",
+   "use": "on-manifold one-factor intervention sets"
+  },
+  {
+   "name": "ext06 Track B v3: dev_smoke",
+   "campaign": "extended-06",
+   "lo": 6800000000,
+   "hi": 6900000000,
+   "status": "registered",
+   "parent": "ext06 Track B probeworld-v3 configurations (splits assigned in design)",
+   "use": "tooling tests / smokes (never protocol)"
+  },
+  {
+   "name": "ext06 Track B training worlds, seeds 30-34 (TRAIN_WORLD_BASE 8e9 + 1e8*seed)",
+   "campaign": "extended-06",
+   "lo": 11000000000,
+   "hi": 11500000000,
+   "status": "registered",
+   "use": "b6 training episodes of every arm; seed s uses [8e9 + 1e8 s, 8e9 + 1e8 (s + 1))"
   }
  ]
 }
