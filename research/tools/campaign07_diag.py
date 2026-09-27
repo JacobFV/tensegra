@@ -7,7 +7,9 @@ overwritten, and --out may not lie under a historical root, a model run dir or a
 Subcommands
   run      per-decision logs of frozen models on an evaluation pool and/or counterfactual octets
       --labels DIR --pool SPLIT      evaluation pool (sharded DP labels; e.g. b6c_hold_SCE in e06-tbc-labels, or the
-                                     b6_hold_SCE development pool in e06-tb-labels)
+                                     b6_hold_SCE development pool in e06-tb-labels).  P2-CONFIRM: b6d_hold_SCE in a
+                                     b6d labels dir (checked: current b6d bases) with that dir's cf_SCE.json only;
+                                     b6d inputs are never mixed with b6 / b6c inputs; headers carry population b6d
       --model NAME=RUNDIR            (repeatable) frozen models; kind (LRN / RAWF / SUP / B0) is read from train_meta
       --protocols B A-pistar A-own   B: free-running greedy (each policy acts itself; reproduces eval_b6c exactly).
                                      A-pistar: the SAME fixed pi* histories (exact optimum, lowest-index tie-break, on
@@ -883,8 +885,9 @@ def run_cf(a, models, writers, ivns, supports, report):
 # ------------------------------------------------------------------------------------------------ historical check
 
 def historical_check(run, name, summary, pool):
-    """Compare the free-running summary with the historical eval file of the run (eval_b6c.json for b6c pools)."""
-    fn = "eval_b6c.json" if pool.startswith("b6c_") else "eval.json"
+    """Compare the free-running summary with the historical eval file of the run (eval_b6c.json for b6c pools,
+    eval_b6d.json for b6d pools)."""
+    fn = "eval_b6c.json" if pool.startswith("b6c_") else ("eval_b6d.json" if pool.startswith("b6d_") else "eval.json")
     p = Path(run_path(run)) / fn
     if not p.exists():
         return {"file": str(p), "status": "missing"}
@@ -913,9 +916,33 @@ def _safe(s):
     return s.replace(":", "_")
 
 
+def b6d_population(pool, labels, cf_paths):
+    """P2-CONFIRM (b6d) inputs are never mixed with other populations.  A b6d pool needs a b6d labels dir built from
+    the current b6d bases and b6d octets only; a b6d octet file (its dir holds b6d labels metas) is checked seed by
+    seed and cannot be combined with a non-b6d pool.  Returns 'b6d' when b6d inputs are used, else None (no check,
+    no header key: every b6 / b6c invocation is unchanged)."""
+    cf_b6d = [T.is_b6d_labels_dir(Path(p).parent) for p in cf_paths or []]
+    pool_b6d = bool(pool) and pool.startswith("b6d_")
+    if not pool_b6d and not any(cf_b6d):
+        return None
+    if pool_b6d:
+        T.check_b6d_labels(labels, [pool], cf=False)
+        if not all(cf_b6d):
+            raise SystemExit(f"b6d pool {pool}: every --cf must be a b6d octet file (got {cf_paths})")
+    elif pool:
+        raise SystemExit(f"b6d octets cannot be combined with the non-b6d pool {pool}")
+    if not all(cf_b6d):
+        raise SystemExit(f"b6d octets cannot be combined with non-b6d octets ({cf_paths})")
+    for p in cf_paths or []:
+        T.check_b6d_labels(Path(p).parent, [], cf=False)
+        T.check_b6d_octets(p)
+    return "b6d"
+
+
 def cmd_run(a):
     torch.set_num_threads(1)
     t_start = time.process_time()
+    population = b6d_population(a.pool, a.labels, a.cf)
     runs = parse_named(a.model)
     forbidden = [run_path(r) for r in runs.values()] + [r.split("::pred=", 1)[1] for r in runs.values() if "::pred=" in r] \
         + ([a.labels] if a.labels else []) + [str(Path(p).parent) for p in a.cf or []]
@@ -967,6 +994,8 @@ def cmd_run(a):
                                 if "consumer_contract" in models[n][1] else {}),
                              "support_ref": sup_paths.get(n)} for n in models},
               "hist_support_thresholds": {"low": HIST_P_LOW, "unsupported": HIST_P_UNSUPPORTED}}
+    if population is not None:  # key absent for every b6 / b6c run (headers unchanged)
+        header["population"] = population
     writers = {k: Writer(p, {**header, "protocol": k[0], "model": k[1]}) for k, p in paths.items()}
     report = {"version": VERSION, "tag": a.tag, "shards": [], "cf": [], "hist_written": set(), "files": {}}
     try:
