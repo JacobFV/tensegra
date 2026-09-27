@@ -44,6 +44,11 @@ Extended-06 Track B additions (all default off; b1/b5/b5c paths call the identic
   eval   --split-set b6c [--cf]  models trained on the b6 labels dir, --labels = the b6c labels dir; evaluates only
                                  b6c_hold_SCE and writes eval_b6c.json / eval_b6c_episodes.jsonl.gz / cf_eval_b6c.json
                                  (never the run's b6 files; campaign06_bprimary --group b6c_hold_SCE reads them)
+  labels --split-set b6d [--parts eval cf]   extended-07 P2-CONFIRM fresh confirmation: ONLY b6d_hold_SCE (--n-hold;
+                                 config base 6.43e9, eval worlds 6.48e9) and fresh S+C+E octets cf_SCE.json (--n-cf;
+                                 config base 6.66e9); b6 generator / eligibility / octet / near-miss code, new bases
+  eval   --split-set b6d [--cf]  as b6c; writes ONLY eval_b6d.json / eval_b6d_episodes.jsonl.gz / cf_eval_b6d.json and
+                                 refuses unless --labels is a b6d dir built from the current b6d bases
 
 Extended-07 Phase 2 additions (all default off; every historical invocation runs the unchanged code path, tested
 against goldens of the unmodified trainer in tests/test_campaign07_p2.py; research/campaigns/extended-07/p2-infra.md):
@@ -144,6 +149,8 @@ def cmd_labels(a):
         return cmd_labels_b6(a, out)
     if sset == "b6c":
         return cmd_labels_b6c(a, out)
+    if sset == "b6d":
+        return cmd_labels_b6d(a, out)
     if sset in pw5.SPLIT_SETS:  # b5 (B-SPLIT pools) or b5c (B-XC: ONLY the fresh sized U+C hold)
         todo = [(s, None if opt == "sized" else getattr(a, opt)) for s, opt in pw5.SPLIT_SETS[sset]["label_splits"]]
     else:
@@ -244,7 +251,7 @@ def cmd_labels_b6(a, out):
 
 
 def _split6_entry(split):
-    return pw6.SPLITS6[split] if split in pw6.SPLITS6 else pw6.SPLITS6C[split]
+    return pw6.split6_entry(split)
 
 
 def cmd_labels_b6c(a, out):
@@ -303,6 +310,87 @@ def check_b6c_labels(labels_dir, splits, cf):
             fam = p.stem[3:]
             base = pw6.CF_BASE_C[fam]
             assert all(cs["seed"] == base + cs["index"] for cs in json.loads(p.read_text())), p
+
+
+def cmd_labels_b6d(a, out):
+    """P2-CONFIRM fresh confirmation labels (split set b6d; extended-07 registry P2-CONFIRM): ONLY the fresh S+C+E
+    held-out pool b6d_hold_SCE (part eval, --n-hold configurations, sharded as b6; config base pw6.SPLITS6D) and fresh
+    S+C+E octets cf_SCE.json (part cf, --n-cf octets, config seeds pw6.CF_BASE_D).  Same generator, eligibility, octet
+    and near-miss code as b6 / b6c; only the seed bases differ.  No training part.  Each part writes
+    labels_meta.b6d.<part>.json; parts may run as parallel jobs into one directory."""
+    parts = a.parts or ["eval", "cf"]
+    if "train" in parts:
+        raise SystemExit("b6d has no training part (train on the b6 labels dir)")
+    audit = pw6.audit_b6d()
+    assert audit["pass"], audit
+    meta = {}
+    if "eval" in parts:
+        for split in pw6.B6D_EVAL_SPLITS:
+            if a.n_hold <= 0:
+                continue
+            assert a.n_hold <= pw6.MAX_POOL, a.n_hold
+            meta[split] = build_b6_shards(out, split, a.n_hold, a.b6_shard, relevance=a.hold_relevance)
+            print(split, json.dumps(meta[split]), flush=True)
+    if "cf" in parts:
+        for fam, base in pw6.CF_BASE_D.items():
+            if a.n_cf <= 0:
+                continue
+            assert a.n_cf <= pw6.MAX_POOL, a.n_cf
+            t0 = time.process_time()
+            sets = [pw6.counterfactual_set(fam, i, base=base) for i in range(a.n_cf)]
+            (out / f"cf_{fam}.json").write_text(json.dumps(sets))
+            meta[f"cf_{fam}"] = {"n_sets": len(sets), "cpu_s": round(time.process_time() - t0, 2),
+                                 "config_seed_base": base, "support": cf_support(sets)}
+            print(f"cf_{fam}", json.dumps(meta[f"cf_{fam}"]), flush=True)
+    meta["version"] = pw.VERSION
+    meta["split_set"] = {"name": "b6d", "registry": "P2-CONFIRM", "b6d_version": pw6.B6D_VERSION, "env": pw6.VERSION,
+                         "generator": pw6.GENERATOR_VERSION, "split_table": pw6.SPLIT_TABLE_VERSION,
+                         "splits": {s: [list(c), b, r] for s, (c, b, r) in pw6.SPLITS6D.items()},
+                         "cf_base": dict(pw6.CF_BASE_D), "k_support": list(pw6.V3_K),
+                         "corr_range": list(pw6.CORR_RANGE), "p_event_range": list(pw6.P_EVENT_RANGE),
+                         "audit": audit, "parts": parts}
+    meta["eps"] = pw.EPS
+    meta["continuation"] = pw.CONTINUATION
+    (out / f"labels_meta.b6d.{'-'.join(parts)}.json").write_text(json.dumps(meta, indent=1))
+
+
+def check_b6d_labels(labels_dir, splits, cf):
+    """eval --split-set b6d (and campaign07_diag on a b6d pool / b6d octets): the labels dir must be a b6d dir (every
+    labels_meta is b6d; never a b6 / b6c dir) built from the CURRENT b6d bases: the metas record the current SPLITS6D /
+    CF_BASE_D, every pool's shards.json records the current config base, and every octet's seed is
+    CF_BASE_D[family] + index."""
+    d = Path(labels_dir)
+    metas = [json.loads(p.read_text()) for p in sorted(d.glob("labels_meta*.json"))]
+    names = {m.get("split_set", {}).get("name") for m in metas}
+    assert names == {"b6d"}, f"{labels_dir} is not a b6d labels dir ({names})"
+    cur = {s: [list(c), b, r] for s, (c, b, r) in pw6.SPLITS6D.items()}
+    for m in metas:
+        assert m["split_set"]["splits"] == cur and m["split_set"]["cf_base"] == dict(pw6.CF_BASE_D), \
+            f"{labels_dir}: b6d labels built from other bases ({m['split_set']['splits']}, {m['split_set']['cf_base']})"
+    for split in splits:
+        assert split in pw6.SPLITS6D, split
+        info = json.loads((d / f"{split}.shards.json").read_text())
+        assert info["config_seed_base"] == pw6.SPLITS6D[split][1], (split, info["config_seed_base"])
+    if cf:
+        files = sorted(d.glob("cf_*.json"))
+        assert files, "no counterfactual sets in the b6d labels dir"
+        for p in files:
+            check_b6d_octets(p)
+
+
+def check_b6d_octets(path):
+    """Every octet of a b6d counterfactual file was built at the current CF_BASE_D (seed = base + index)."""
+    p = Path(path)
+    fam = p.stem[3:]
+    assert fam in pw6.CF_BASE_D, f"{p}: family {fam} has no b6d octets"
+    base = pw6.CF_BASE_D[fam]
+    assert all(cs["seed"] == base + cs["index"] for cs in json.loads(p.read_text())), p
+
+
+def is_b6d_labels_dir(labels_dir):
+    """True iff the directory holds b6d labels metas (used by campaign07_diag to route its checks)."""
+    return any(json.loads(p.read_text()).get("split_set", {}).get("name") == "b6d"
+               for p in sorted(Path(labels_dir).glob("labels_meta*.json")))
 
 
 def _with_refs(arms):
@@ -1616,6 +1704,15 @@ def cmd_eval(a):
         a.out_name = getattr(a, "out_name", None) or "eval_b6c.json"
         a.cf_out = getattr(a, "cf_out", None) or "cf_eval_b6c.json"
         result["split_set"] = "b6c"
+    if getattr(a, "split_set", "b1") == "b6d":  # P2-CONFIRM: fixed own output names (never any other file of the run)
+        assert all(s in pw6.SPLITS6D for s in splits), splits
+        if getattr(a, "out_name", None) not in (None, "eval_b6d.json") or \
+                getattr(a, "cf_out", None) not in (None, "cf_eval_b6d.json"):
+            raise SystemExit("b6d eval writes only eval_b6d.json / eval_b6d_episodes.jsonl.gz / cf_eval_b6d.json")
+        check_b6d_labels(a.labels, splits, getattr(a, "cf", False))
+        a.out_name = "eval_b6d.json"
+        a.cf_out = "cf_eval_b6d.json"
+        result["split_set"] = "b6d"
     split_worlds = dict(x.split("=") for x in (getattr(a, "split_worlds", None) or []))
     for split in splits:
         worlds = int(split_worlds.get(split, a.worlds))
@@ -1658,14 +1755,14 @@ def cmd_eval(a):
                           "arch": meta.get("arch", "flat"), "params": meta.get("params"),
                           "train_split": meta.get("train_split", "train"), "q_head_trained": weights.get("q", 0) > 0,
                           "world_offset": getattr(a, "world_offset", None), "eps": pw.EPS, "actions": pw.ACTIONS}}
-        if result.get("split_set") == "b6c":  # key absent for every other split set (headers unchanged)
-            head["_meta"]["split_set"] = "b6c"
+        if result.get("split_set") in ("b6c", "b6d"):  # key absent for every other split set (headers unchanged)
+            head["_meta"]["split_set"] = result["split_set"]
         with gzip.open(run / out_name.replace(".json", "_episodes.jsonl.gz"), "wt") as f:
             f.write(json.dumps(head) + "\n")
             for r in ep_rows:
                 f.write(json.dumps(r) + "\n")
     (run / out_name).write_text(json.dumps(result, indent=1))
-    if failure_records:  # protocol-B2 only
+    if failure_records and result.get("split_set") != "b6d":  # protocol-B2 only (b6d: sharded pool, never written)
         (run / "failure_records.json").write_text(json.dumps(failure_records))
 
 
@@ -1677,6 +1774,8 @@ def default_eval_splits(a):
         return list(pw6.B6_EVAL_SPLITS)
     if sset == "b6c":
         return list(pw6.B6C_EVAL_SPLITS)
+    if sset == "b6d":
+        return list(pw6.B6D_EVAL_SPLITS)
     return list(pw5.SPLIT_SETS[sset]["eval_splits"]) if sset in pw5.SPLIT_SETS else list(EVAL_SPLITS)
 
 
@@ -1850,9 +1949,10 @@ def main(argv=None):
     s.add_argument("--out", required=True)
     s.add_argument("--n-train", type=int, default=384)
     s.add_argument("--n-eval", type=int, default=128)
-    s.add_argument("--split-set", choices=("b1", "b5", "b5c", "b6", "b6c"), default="b1",
+    s.add_argument("--split-set", choices=("b1", "b5", "b5c", "b6", "b6c", "b6d"), default="b1",
                    help="extended-05: b5 = B-SPLIT pools; b5c = B-XC fresh U+C hold only (b5c_hold_uc); "
-                        "extended-06: b6 = probeworld-v3 split table v3; b6c = B-FACT-C fresh S+C+E hold + octets only")
+                        "extended-06: b6 = probeworld-v3 split table v3; b6c = B-FACT-C fresh S+C+E hold + octets only; "
+                        "extended-07: b6d = P2-CONFIRM fresh S+C+E hold + octets only")
     s.add_argument("--n-hold", type=int, default=400, help="b6: configurations per held-out challenge family")
     s.add_argument("--n-hist", type=int, default=200, help="b6: configurations per historical challenge set")
     s.add_argument("--n-cf", type=int, default=160, help="b6: balanced counterfactual octets per held-out family")
@@ -1934,7 +2034,7 @@ def main(argv=None):
     s.add_argument("--worlds", type=int, default=4)
     s.add_argument("--splits", nargs="+", default=None, help="default: B1 eval splits (or b5 eval splits)")
     s.add_argument("--world-offset", type=int, default=None, help="eval world-seed offset (default 500 = B1)")
-    s.add_argument("--split-set", choices=("b1", "b5", "b5c", "b6", "b6c"), default="b1")
+    s.add_argument("--split-set", choices=("b1", "b5", "b5c", "b6", "b6c", "b6d"), default="b1")
     s.add_argument("--episode-rows", action="store_true", help="extended-05: write <out>_episodes.jsonl.gz")
     s.add_argument("--cf", action="store_true", help="extended-06: balanced counterfactual records (cf_eval.json)")
     s.add_argument("--cf-out", default=None, help="extended-06: counterfactual record file name (cf_eval.json)")
@@ -1947,7 +2047,7 @@ def main(argv=None):
     s.add_argument("--worlds", type=int, default=4)
     s.add_argument("--splits", nargs="+", default=None)
     s.add_argument("--world-offset", type=int, default=None, help="eval world-seed offset (default 500 = B1)")
-    s.add_argument("--split-set", choices=("b1", "b5", "b5c", "b6", "b6c"), default="b1")
+    s.add_argument("--split-set", choices=("b1", "b5", "b5c", "b6", "b6c", "b6d"), default="b1")
     s.add_argument("--split-worlds", nargs="*", default=None, metavar="SPLIT=N")
     s = sub.add_parser("summarize")
     s.add_argument("--runs", nargs="+", required=True)

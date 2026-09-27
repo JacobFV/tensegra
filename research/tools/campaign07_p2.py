@@ -25,6 +25,8 @@ Subcommands
                                      nMAE, and (optional) the in-sample error of the full-data predictor
   seeds                              check the proposed P2 seed / world ranges against seed-ranges.json (disjointness)
   jobs   SHA [--smoke]               print the validated launch commands (campaign07_remote.py launch-cmd)
+  jobs   SHA --confirm [--run-tag T] P2-CONFIRM: the b6d label jobs (e07-p2c-labels-eval / -cf) and the b6d diag
+                                     evaluation of the confirmation lineages (seeds 50-54; e07-p2c-eval-s<seed>)
 """
 from __future__ import annotations
 
@@ -437,7 +439,75 @@ def job_matrix(sha, smoke=False, seeds=P2_SEEDS, bank_updates=4000, finetune=0, 
     return jobs
 
 
+# ------------------------------------------------------------------------------------------------ P2-CONFIRM (b6d)
+
+CONFIRM_SEEDS = (50, 51, 52, 53, 54)  # registry P2-CONFIRM (training worlds 1.30e10-1.35e10, registered)
+B6D = f"{R7}/e07-p2c-labels/labels"   # the b6d labels dir (both parts write into it; built before any evaluation)
+B6D_N_HOLD, B6D_N_CF = 400, 320       # registry P2-CONFIRM: 400 configurations, 320 octets
+
+
+def _launch_argv(sha, name, caps, needs, mkdir, cmd, max_concurrent=None):
+    import campaign07_remote as rem
+    argv = [name, sha] + (["--max-concurrent", str(max_concurrent)] if max_concurrent else []) + [
+        "--cpu-cap", str(caps[1]), "--wall-cap", str(caps[0])]
+    for n in needs:
+        argv += ["--needs", n]
+    for m in mkdir:
+        argv += ["--mkdir", m]
+    argv += ["--"] + ENV + cmd
+    pa = rem.parse_launch(argv)
+    assert pa.job.startswith("e07-") and (max_concurrent or 0) <= rem.MAX_CONCURRENT_CEILING
+    rem.check_paths_in_cmd(pa.cmd)
+    assert all(d.startswith(f"{rem.ROOT}/results/") for d in pa.mkdir)
+    return argv
+
+
+def b6d_jobs(sha, seeds=CONFIRM_SEEDS, run_tag="e07-p2", eval_tag="e07-p2c", onpolicy=False, labels=B6D,
+             max_concurrent=6):
+    """P2-CONFIRM launch commands: the two b6d label parts (eval: b6d_hold_SCE, 400 configurations; cf: 320 SCE
+    octets; both into one labels dir, built before any confirmation evaluation) and, per confirmation seed, the diag
+    evaluation of the frozen lineage (the four S x R arms + the consumers as '::exact' and '::pred=PREDRUN' specs; the
+    same model set / protocols / interventions as the screen's eval stage) on the b6d pool and the b6d SCE octets
+    ONLY (no UCE; campaign07_diag refuses mixed populations).  run_tag: the tag the lineages were trained under
+    (job_matrix(sha, seeds=CONFIRM_SEEDS) names them e07-p2-<arm>-bank-s<seed>)."""
+    lab_dir = str(Path(labels).parent)
+    base = ["research/tools/campaign04_probeworld_train.py", "labels", "--split-set", "b6d"]
+    jobs = [("b6d-labels", "e07-p2c-labels-eval",
+             _launch_argv(sha, "e07-p2c-labels-eval", (14400, 8000), [PYR], [labels],
+                          base + ["--parts", "eval", "--n-hold", str(B6D_N_HOLD), "--out", labels], max_concurrent)),
+            ("b6d-labels", "e07-p2c-labels-cf",
+             _launch_argv(sha, "e07-p2c-labels-cf", (14400, 8000), [PYR], [labels],
+                          base + ["--parts", "cf", "--n-cf", str(B6D_N_CF), "--out", labels], max_concurrent))]
+    assert lab_dir.startswith(f"{R7}/")
+    for s in seeds:
+        o = f"{R7}/{eval_tag}-eval-s{s}"
+        m, needs = [], []
+        for arm in ARMS:
+            for kind in ("bank",) + (("onp",) if onpolicy else ()):
+                m += ["--model", f"{arm.upper()}-{kind}-s{s}={R7}/{run_tag}-{arm}-{kind}-s{s}/run"]
+                needs.append(f"{R7}/{run_tag}-{arm}-{kind}-s{s}/run/model.pt")
+        pred = f"{R7}/{run_tag}-pred-ffull-s{s}/run"
+        for c in CONTRACTS:
+            run = f"{R7}/{run_tag}-cons-{c}-s{s}/run"
+            m += ["--model", f"CONS-{c}-exact-s{s}={run}::exact", "--model", f"CONS-{c}-pred-s{s}={run}::pred={pred}"]
+            needs.append(f"{run}/model.pt")
+        needs.append(f"{pred}/model.pt")
+        jobs.append(("b6d-eval", f"{eval_tag}-eval-s{s}", _launch_argv(
+            sha, f"{eval_tag}-eval-s{s}", (7200, 7200),
+            needs + [f"{labels}/b6d_hold_SCE.shards.json", f"{labels}/cf_SCE.json",
+                     f"{labels}/labels_meta.b6d.eval.json", f"{labels}/labels_meta.b6d.cf.json"], [o],
+            [DIAG, "run", "--labels", labels, "--pool", "b6d_hold_SCE", "--cf", f"{labels}/cf_SCE.json", *m,
+             "--protocols", "B", "A-pistar", "--ivs", "none", "exact", "--no-latent", "--tag", f"{eval_tag}-s{s}",
+             "--out", o], max_concurrent)))
+    return jobs
+
+
 def cmd_jobs(a):
+    if a.confirm:
+        for stage, name, argv in b6d_jobs(a.sha, run_tag=a.run_tag, onpolicy=bool(a.onpolicy)):
+            print(f"# [{stage}] {name}")
+            print("python research/tools/campaign07_remote.py launch-cmd " + shlex.join(argv))
+        return
     jobs = job_matrix(a.sha, smoke=a.smoke, finetune=a.finetune, bank_updates=a.bank_updates, onpolicy=a.onpolicy)
     for stage, name, argv in jobs:
         print(f"# [{stage}] {name}")
@@ -470,6 +540,9 @@ def main(argv=None):
     s.add_argument("--finetune", type=int, default=0)
     s.add_argument("--bank-updates", type=int, default=4000)
     s.add_argument("--onpolicy", type=int, default=0, help="also the historical-style on-policy 2x2 (U updates)")
+    s.add_argument("--confirm", action="store_true",
+                   help="P2-CONFIRM: only the b6d label jobs and the b6d diag evaluation of seeds 50-54")
+    s.add_argument("--run-tag", default="e07-p2", help="--confirm: tag the confirmation lineages were trained under")
     a = p.parse_args(argv)
     {"init": cmd_init, "bank": cmd_bank, "oof": cmd_oof, "seeds": cmd_seeds, "jobs": cmd_jobs}[a.cmd](a)
 

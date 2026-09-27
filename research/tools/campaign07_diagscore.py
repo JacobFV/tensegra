@@ -92,6 +92,12 @@ def cluster_of(r):
     return f"{c['family']}:{c['octet']}" if c else r["cfg_id"]
 
 
+def population(path):
+    """The population a diag file was produced on: 'b6d' (P2-CONFIRM header key) or None (b6 / b6c)."""
+    with gzip.open(path, "rt") as f:
+        return json.loads(f.readline())["_meta"].get("population")
+
+
 def read(path):
     with gzip.open(path, "rt") as f:
         head = json.loads(f.readline())["_meta"]
@@ -222,6 +228,9 @@ class Cell:
 def score(files, tol=None, supports=None, n_boot=N_BOOT, boot_seed=7, contrasts=(), tol_coord=None):
     """tol None: semantic per-coordinate tolerances (semantic_tol); a number: uniform; tol_coord overrides per coord."""
     supports = supports or {}
+    pops = {population(p) for p in files}
+    if len(pops) > 1:  # P2-CONFIRM (b6d) files are never pooled with b6 / b6c files (denominators never mixed)
+        raise SystemExit(f"refusing to mix diag populations {sorted(map(str, pops))}")
     heads = {}
     feats = groups = None
     full = {}  # (proto, arm) -> dict of accumulators
@@ -323,6 +332,8 @@ def score(files, tol=None, supports=None, n_boot=N_BOOT, boot_seed=7, contrasts=
            "n_boot": n_boot, "boot_seed": boot_seed,
            "files": [str(f) for f in files], "groups": groups,
            "group_source": next(iter(heads.values()))["group_source"] if heads else None, "cells": {}, "contrasts": {}}
+    if pops == {"b6d"}:  # key absent for every b6 / b6c score (outputs unchanged)
+        out["population"] = "b6d"
     for (proto, arm), A in sorted(full.items()):
         tref = A["tstd"]
         ent = {"seeds": sorted(seeds_of[(proto, arm)]), "overall": A["all"].result(groups, tref)}

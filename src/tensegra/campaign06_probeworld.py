@@ -872,8 +872,15 @@ B6_HOLD_SPLITS = tuple(s for s, v in SPLITS6.items() if v[2] == "hold")
 HIST_IN_TRAINING = {arm: sorted(set(arm_pairs(arm)) & set(HIST_FAMILIES)) for arm in ARM_SIZE}
 
 
+def split6_entry(split: str) -> tuple:
+    """(combos, config seed base, role) of a b6 / b6c / b6d split."""
+    if split in SPLITS6:
+        return SPLITS6[split]
+    return SPLITS6C[split] if split in SPLITS6C else SPLITS6D[split]
+
+
 def split6_config(split: str, index: int) -> Config6:
-    combos, base, _ = SPLITS6[split] if split in SPLITS6 else SPLITS6C[split]
+    combos, base, _ = split6_entry(split)
     assert 0 <= index < MAX_POOL
     seed = base + index
     cell, k, key = draw_params(seed, pw.TRAIN_CELLS, V3_K, tuple(combos))
@@ -881,7 +888,7 @@ def split6_config(split: str, index: int) -> Config6:
 
 
 def world_seed6(split: str, index: int, rep: int) -> int:
-    return (SPLITS6[split] if split in SPLITS6 else SPLITS6C[split])[1] + WORLD_SEED_OFFSET + index * 1000 + rep
+    return split6_entry(split)[1] + WORLD_SEED_OFFSET + index * 1000 + rep
 
 
 def split_table_digest_input():
@@ -942,9 +949,19 @@ SPLITS6C = {"b6c_hold_SCE": (("SCE",), 6_420_000_000, "hold")}
 CF_BASE_C = {"SCE": 6_650_000_000}
 B6C_EVAL_SPLITS = tuple(SPLITS6C)
 
+# P2-CONFIRM fresh confirmation split (split set 'b6d'; extended-07 registry P2-CONFIRM).  ADDITIVE like b6c: SPLITS6,
+# CF_BASE, SPLITS6C, CF_BASE_C and every b6 / b6c output are unchanged (pinned by tests/test_campaign07_b6d.py).  Same
+# generator, eligibility, octet construction and near-miss logic; only the seed bases differ.  Hold base 6.43e9 (the
+# slot after b6c's 6.42e9; eval worlds 6.48e9, after b6c's 6.47e9 block), octets at 6.66e9 (after b6c's 6.65e9).
+# Registered in research/campaigns/extended-07/seed-ranges.json ("ext07 P2 CONFIRM ... (b6d ...)").
+B6D_VERSION = "probeworld-split-v3-b6d"
+SPLITS6D = {"b6d_hold_SCE": (("SCE",), 6_430_000_000, "hold")}
+CF_BASE_D = {"SCE": 6_660_000_000}
+B6D_EVAL_SPLITS = tuple(SPLITS6D)
+
 
 def is_split6(split: str) -> bool:
-    return split in SPLITS6 or split in SPLITS6C
+    return split in SPLITS6 or split in SPLITS6C or split in SPLITS6D
 
 
 def _pool_blocks(splits: dict, cf: dict, cf_prefix: str) -> list:
@@ -983,6 +1000,38 @@ def audit_b6c() -> dict:
     out["b6_audit"] = audit_split_table()["pass"]
     out["pass"] = all(out[k] for k in ("disjoint", "inside_trackb_range", "inside_subranges", "families_are_holds",
                                        "b6_audit"))
+    return out
+
+
+def audit_b6d() -> dict:
+    """b6d seed blocks: pairwise disjoint and disjoint from every b6 block (pools, eval worlds, training streams,
+    counterfactual streams) AND every b6c block (pool, eval worlds, octets); inside the Track B range; the hold pool
+    (configurations + eval worlds) inside the 'hold' sub-range and the octets inside 'cf' (protocol_bases), or all
+    inside 'dev_smoke' (tests / smokes); the b6d families are b6 holds; the b6 and b6c audits still pass."""
+    out = {}
+    new = _pool_blocks(SPLITS6D, CF_BASE_D, "b6d_cf_")
+    old = _pool_blocks(SPLITS6, CF_BASE, "cf_") + _pool_blocks(SPLITS6C, CF_BASE_C, "b6c_cf_") + [
+        (type_seed(key, 0), type_seed(key, 0) + TYPE_STREAM_STRIDE, "train:" + key) for key in TRAIN_TYPES]
+    allb = sorted(new + old)
+    out["disjoint"] = all(a[1] <= b[0] for a, b in zip(allb, allb[1:]))
+    out["n_blocks_checked"] = len(old)
+    lo, hi = TRACKB_RANGE
+    out["inside_trackb_range"] = all(lo <= a[0] and a[1] <= hi for a in new)
+
+    def inside(name, a, b):
+        return SUBRANGES[name][0] <= a and b <= SUBRANGES[name][1]
+
+    holds = [(b, b + WORLD_SEED_OFFSET + MAX_POOL * 1000) for _, b, _ in SPLITS6D.values()]
+    cfs = [(b, b + MAX_POOL) for b in CF_BASE_D.values()]
+    out["protocol_bases"] = all(inside("hold", *x) for x in holds) and all(inside("cf", *x) for x in cfs)
+    out["dev_smoke_bases"] = all(inside("dev_smoke", *x) for x in holds + cfs)
+    out["inside_subranges"] = out["protocol_bases"] or out["dev_smoke_bases"]
+    out["families_are_holds"] = all(set(c) <= set(HOLD_FAMILIES) and r == "hold" for c, _, r in SPLITS6D.values()) \
+        and set(CF_BASE_D) <= set(HOLD_FAMILIES)
+    out["b6_audit"] = audit_split_table()["pass"]
+    out["b6c_audit"] = audit_b6c()["pass"]
+    out["pass"] = all(out[k] for k in ("disjoint", "inside_trackb_range", "inside_subranges", "families_are_holds",
+                                       "b6_audit", "b6c_audit"))
     return out
 
 
