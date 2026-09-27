@@ -1,6 +1,6 @@
 # Extended-06: computational strategy selection, structural composition, and decision-relevant value learning
 
-**Status: ACTIVE.** Adopted from the user's brief on 2026-09-27T05:51Z. Window: 05:51:06Z to 17:51:06Z (12 h). Ceilings: 48 CPU core-h, 12 GPU-h, ~20% reserve.
+**Status: COMPLETE** (closed 2026-09-27; see [report.md](report.md) and [handoff.md](handoff.md)). Adopted from the user's brief on 2026-09-27T05:51Z. Window: 05:51:06Z to 17:51:06Z (12 h). Ceilings: 48 CPU core-h, 12 GPU-h, ~20% reserve.
 - Design: [design.md](design.md). Registry: [registry.json](registry.json). Job plan: [jobplan.json](jobplan.json). Decisions: [decisions.md](decisions.md). Seed ranges: [seed-ranges.json](seed-ranges.json).
 
 ## Tracks

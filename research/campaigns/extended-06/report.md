@@ -1,6 +1,6 @@
 # Extended-06 report: computational strategy selection, structural composition, decision-relevant value learning
 
-**Status: DRAFT** (pending the B-FACT-C independent audit). The campaign ran on the pro6000 (WSL2, CPU only) from 2026-09-27T05:51:06Z, with the window closing at 17:51:06Z.
+**Status: FINAL** (all three independent audits merged and their corrections applied). The campaign ran on the pro6000 (WSL2, CPU only) from 2026-09-27T05:51:06Z, with the window closing at 17:51:06Z.
 
 **Audits** (corrections applied throughout):
 - Track A: [review/a-independent-audit.md](review/a-independent-audit.md).
@@ -22,12 +22,12 @@
 | 1 | Did we discover a task with genuine computational-strategy headroom? | **Yes over single methods, no over simple portfolios.** In portworld, the per-instance best method beats the best single method by .064 utility (hidden-state oracle .9835 vs .920). A tuned depth-2/3 decision tree over public features already captures ~54% of that. The rest (.029 above the best simple portfolio) is mostly hidden-state information that no public selector reaches. The registered practical-headroom gate (GA-1: learned public-information selector ≥ best simple + .02) **failed**: +.0057 [.0030, .0087]. |
 | 2 | Did a learned selector beat the strongest individual and simple portfolio baselines? | **It beat the best single method (+.035 to +.040), but not a tuned simple portfolio in any practical or robust sense.** The fresh-instance confirmation A-CF-SMALL passed its registered test 3/3 at +.0033 [.0016, .0055]. The audit showed this margin: fails at 2× selector compute charge (1/3); reverses under per-output inference charging (0/3); falls to 2/3 against a select-tuned tree; and is zero against a depth-3 tree fit in-sample. Reading: **no practically or robustly detectable learned-selector advantage.** |
 | 3 | Did structural-combination diversity transfer beyond mere extra-data effects? | **No.** At matched data volume (B2 vs B0, 5 seed pairs), broader combination variety did not improve decisions on the untouched S+C+E triple. Gap regret −1.65 [−6.1, +3.1]; later-decision accuracy +.010 [−.002, +.022]; near-miss −.085. The registered primary is **not supported**. B2's first-decision gain (+.075) is an input-specific action-preference change (more builds on S∧C inputs), not composition. |
-| 4 | Did any factorized/value representation causally improve held-out decisions? | **Partly, and adaptively confirmed.** Auxiliary heads trained to predict derived decision quantities (LRN), compared with the identical architecture without them (RAWF), on fresh configurations and seeds: gap regret −2.65 [−5.87, −0.03] (5/5 pairs), later-decision accuracy +.018 [+.002, +.034] (4/5), and fewer spurious one-factor changes. **But** accuracy on the counterfactual flip sets (decisions whose optimum changes only under the full interaction) is **lower** (−.048, 5/5 pairs). The heads improve value-sensitive later decisions and conservatism, not interaction composition. Supplying the exact quantities (SUP) raises flip accuracy (+.109) at a near-miss cost, so the information is there but the learned heads do not exploit it. |
+| 4 | Did any factorized/value representation causally improve held-out decisions? | **A small later-decision improvement, adaptively confirmed; the regret gain is not established; there was no interaction composition.** Auxiliary heads trained to predict derived decision quantities (LRN) were compared with the identical architecture without them (RAWF), on fresh configurations and seeds. Later-decision accuracy is +.018 [+.002, +.034] (4/5 pairs, robust). It comes almost entirely from the first decision of later queries: fewer redundant inspects. Gap regret is −2.65 with all 5 pairs lower. The registered two-level CI excluded 0 as executed ([−5.87, −0.03]), but **not at a converged bootstrap** (audit: upper bound +.02 to +.06 at 20k draws), so the regret gain is suggestive. LRN is **less** accurate on the counterfactual flips that need the full interaction (−.048; −.22 after the verifier reveals H), and less responsive to one-factor changes in both directions. Supplying the exact quantities (SUP) raises flip accuracy (+.109) and interaction discrimination at a near-miss cost. The information is interaction-relevant, but the learned route did not deliver it. |
 | 5 | Did learned regulation add value where a simple rule could not already capture the opportunity? | **No.** Track A is the regulation test, and a depth-3 tree captures the public-information opportunity. Track C (value/metacontrol arms) was **not triggered**: its precondition, GA-1 headroom, failed. |
 | 6 | What was supplied, what was learned, what generalized? | See [below](#supplied-learned-generalized). |
 | 7 | What remains unresolved? | See [below](#unresolved). |
 
-**Stopping condition.** The brief lists "a strong portfolio eliminates all supposed metacontrol headroom" as a legitimate stopping point, and Track A reached it. Track B reached its registered answers (B-ARMS negative; B-FACT-C positive with a caveat), with the window and budget to spare.
+**Stopping condition.** The brief lists "a strong portfolio eliminates all supposed metacontrol headroom" as a legitimate stopping point, and Track A reached it. Track B reached its registered answers (B-ARMS negative; B-FACT-C: a small robust later-decision gain, a borderline regret gain, no composition), with the window and budget to spare.
 
 ## Track A: portworld algorithm selection
 
@@ -152,7 +152,7 @@
 
 | contrast | gap regret | later-decision accuracy | near-miss | false change | flip-set accuracy | verdict |
 |---|---|---|---|---|---|---|
-| **LRN − RAWF** (primary; RAWF gap 17.09, later .815) | **−2.65 [−5.87, −0.03]**, 5/5 | **+.018 [+.002, +.034]**, 4/5 | +.105 [+.017, +.212] | −.032 [−.056, −.009] | **−.048 [−.091, −.003]**, 5/5 lower | **SUPPORTED** |
+| **LRN − RAWF** (primary; RAWF gap 17.09, later .815) | **−2.65 [−5.87, −0.03]**, 5/5 | **+.018 [+.002, +.034]**, 4/5 | +.105 [+.017, +.212] | −.032 [−.056, −.009] | **−.048 [−.091, −.003]**, 5/5 lower | **SUPPORTED as executed; Q1 borderline (audit)** |
 | SUP − RAWF | −4.71 [−12.06, +2.38] | +.025 [−.001, +.050] | −.108 | −.039 | +.109 [+.050, +.178] | not supported |
 | LRN − B0 (B0 gap 21.18) | −6.73 [−12.18, −2.40], 5/5 | +.020 [+.008, +.035], 5/5 | +.102 | −.029 | −.070 | supported |
 | RAWF − B0 | −4.09 [−10.04, +1.80] | +.002 | −.003 | +.003 | −.022 | not supported |
@@ -162,11 +162,26 @@
   - RAWF: fuse architecture, raw public inputs.
   - LRN: the same model plus auxiliary heads predicting the four derived quantities (posterior over hidden type, expected remaining cost per strategy, P(probe resolves), amortized build value), with the policy consuming the predictions.
   - SUP: the exact derived quantities as inputs, a localization ceiling.
+- **Independent audit** ([review/bfc-independent-audit.md](review/bfc-independent-audit.md)):
+  - **Numbers:** every number reproduces exactly from raw rows. Protocol fidelity is confirmed: the registration commit predates the first training by 16 s; the pool, worlds and octets are disjoint from everything else; all 44 receipts exited 0.
+  - **Q1 is borderline:** at n_boot 1,000 the gap upper bound depends on the bootstrap seed (−0.14 to +0.35; passes 8/20 seeds). At 20,000 draws it is +.02 to +.06 (0/2); P(bootstrap ≥ 0) = 2.7%. The across-pair t(4) CI is [−5.5, +0.2]; the sign test gives p = .031 (5/5). 5% of configurations carry more than the whole gap gain.
+  - **Q2 and Q3 are robust:** Q2's lower bound is +.001 to +.003 in every variant.
+  - **Where the effects sit:**
+    - The Q2 gain is the first decision of later queries (+.079): redundant 'inspect' errors fall from 1.28 to 0.79 per episode. Build and probe rates are unchanged.
+    - The flip-set loss sits in the query-2 decisions (−.22 after H, 5/5; −.05 after not-H). First-decision flips are +.03.
+    - LRN changes its action less under one-factor interventions both when the optimum changes (−.046) and when it does not (−.032). Discrimination .364 vs RAWF .378, i.e. no better.
+  - **Bundling:** the auxiliary loss also trains the shared trunk. The contrast bundles representation shaping with the policy reading the predictions.
+  - **Head accuracy on S+C+E was not logged,** so "heads mispredict" cannot be told apart from "the policy ignores good predictions".
+  - **Adaptive-selection disclosures:**
+    - LRN − RAWF and the later-decision endpoint were chosen from ~9 descriptive contrasts × several endpoints on the development split (seeds 30–32).
+    - The development effects were about twice the confirmed ones.
+    - n_boot was not registered; the tool default of 1,000 was fixed before any b6c data.
+    - The b6c bases and the seed-range entry for seeds 35–39 were committed after training started but before any b6c labels or evals.
 - **Reading:**
-  - The learned derived-quantity heads give a **small, seed-robust improvement** in held-out regret and later-decision value sensitivity, plus fewer spurious changes.
-  - They do **not** produce composition of the interacting factors: flip-set accuracy drops.
-  - The supplied quantities do carry flip-relevant information (SUP +.109 on flips), but SUP over-changes near-misses.
-  - Effect sizes are modest. Q1's upper bound (−0.03) is close to 0.
+  - The learned derived-quantity heads give a **small, robust later-decision improvement** (fewer redundant information-gathering actions at the start of later queries).
+  - The regret gain is suggestive (5/5 pairs) but not established.
+  - They do **not** compose the interacting factors: they are less responsive to single-factor changes overall and worse on full-interaction flips.
+  - The supplied quantities do carry interaction-relevant information (SUP flip +.109, discrimination .469), but SUP over-changes near-misses.
 
 ## Track C and optional branches
 
@@ -187,13 +202,14 @@
   - LRN: auxiliary predictors of the derived quantities from raw public inputs.
 - **Generalized:**
   - The learned public selector generalizes to fresh instances (+.035 over best single on 330M). So do the simple trees; the two are practically equal.
-  - LRN's regret and later-decision gain over RAWF held on a fresh S+C+E pool with fresh initializations.
+  - LRN's later-decision gain over RAWF held on a fresh S+C+E pool with fresh initializations. Its regret gain replicated in sign (5/5) but not with a robust CI.
   - No arm generalized **composition** of S, C and E: flip-set accuracy did not improve for any learned arm.
 
 ## Unresolved
 
 1. **Is there public-information headroom beyond trees in any natural strategy-selection family?** Portworld's remaining oracle gap is mostly hidden-state information. A task whose best strategy depends on *inferable but non-obvious* structure (e.g. long-range constraint interactions only revealed by computation) is still needed.
-2. **Why do learned derived-quantity heads not help flips while supplied quantities do?** Candidates: head prediction error concentrated on interaction configurations; or the policy under-weighting predicted quantities. A head-accuracy × flip analysis was not run.
+2. **Why do learned derived-quantity heads not help flips while supplied quantities do?** Candidates: head prediction error concentrated on S+C+E, or the policy under-weighting its predictions. Held-out head accuracy was not logged, so a head-accuracy × flip analysis is the first next step. A variant that separates auxiliary representation shaping from reading the predictions (e.g. stop-gradient heads) would also help.
+6. **Regret effects near the resolution limit.** Future registrations must fix n_boot (≥ 10,000) and prefer across-seed tests when there are few seed pairs.
 3. **Composition via exposure** (the extended-05 B-XC effect) did not reappear at matched volume on S+C+E. Whether it was a data-volume effect (the ext-05 confound) is now more likely but untested at the pair level.
 4. **U+C+E octets** were built but not evaluated.
 5. **Seed variance in probeworld training is large** (gap regret SD 9–19 across seeds). Future Track B tests need ≥ 5 seeds and two-level CIs by default.
@@ -202,7 +218,7 @@
 
 **Compute** (ledger from job receipts; [budget.json](budget.json)):
 - **CPU:** 79.1k / 172.8k core-s metered (dev 8.8k).
-  - Plus ~10.3k core-s local or unmetered, disclosed: the design reviewer's local exact-DP screen (~7.0k); a portworld-builder analysis run killed without a receipt (~3.0k); audits ~0.7k local.
+  - Plus ~11.0k core-s local or unmetered, disclosed: the design reviewer's local exact-DP screen (~7.0k); a portworld-builder analysis run killed without a receipt (~3.0k); builders ~0.3k and audits ~0.7k local.
   - About 84k core-s was left unspent, above the 20% reserve.
 - **GPU:** the ledger's "GPU occupancy" (17.4k s) is a conservative wall-clock union of all main jobs. **Actual GPU use was zero**: every training and evaluation ran with `CUDA_VISIBLE_DEVICES` empty, and the scoring jobs are pure Python.
 - **Unit costs:**
@@ -227,7 +243,7 @@
 
 **Prospective vs adaptive:**
 - Prospective: A-HS, B-SCREEN, B-ARMS.
-- Adaptive (labelled): A-CF-SMALL (after the gate), B-FACT-C (after B-FACT development results).
+- Adaptive (labelled): A-CF-SMALL (after the gate), B-FACT-C (after B-FACT development results; chosen from ~9 descriptive contrasts).
 - Descriptive: B-FACT (3 seeds), the other B-ARMS arms, U+C+E.
 
 **Machine state:** see the final section of [handoff.md](handoff.md).
