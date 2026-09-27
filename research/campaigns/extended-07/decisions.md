@@ -129,3 +129,16 @@
   - **P3-SCREEN registered (arms/training):** CONS-mlp, bil and gate × {exact, mix} × seeds 40–44, reusing P2's lin consumers and predictors. Primary contrast: bil vs mlp.
   - The **metric is fixed from the frontier analysis before any P3 eval output**. Training starts now, because it does not depend on the metric.
   - **Budget:** screen ~12k + confirm ~18k on top of 26.5k used gives ~57k, under the 80% ceiling (69k).
+- 2026-09-27T20:15Z: **Frontier analysis merged** (campaign/e07-frontier 1b3e0aed; 678 metered core-s). It corrects my preliminary reading.
+  - **Near-miss axis = bias:** flip vs near-miss r = −.82; BA_nm .51–.60; nothing beats S0R0 on BA_nm.
+  - **Composition discrimination J_sub is real and model-dependent:** .25–.43, vs pairwise-additive reference .92.
+    - Shaping raises it (S1R1 − S0R0 +.074 [+.010, +.143]).
+    - Every deployable P2 candidate is below S1R1 (−.037 to −.083).
+  - **SUP-h:** J +.043 (CI includes 0), concentrated in q2_after_notH, i.e. a privileged belief-input effect.
+  - **Factor inputs** act mainly as a "don't change" signal (they cut false changes) and never move near-miss discrimination.
+  - **The registered P2 flip-gain rule was passable by bias alone.** P3's metric is therefore fixed now, before any P3 eval:
+    - **Primary:** J_sub (bil − mlp, mix contract, predicted inputs) ≥ .03 with ≥ 4/5 seeds.
+    - **Co-primary:** BA_nm ≥ −.02.
+    - **Guards:** false changes ≤ +.02, near-miss ≥ −.05, pool ≥ −.02.
+    - **Also required:** the gain must hold without the q2_after_notH stratum.
+  - Frontier tool extended with --refs, an all_x_q2notH stratum, and seeds 50–54 parsing.

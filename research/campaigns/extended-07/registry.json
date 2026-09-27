@@ -60,12 +60,21 @@
   },
   {
    "id": "P3-SCREEN",
-   "status": "registered (arms + training; primary metric to be fixed from the frontier analysis BEFORE any P3 evaluation output)",
+   "status": "registered (arms, training, metric and rule fixed before any P3 evaluation output)",
    "branch": "B (brief \u00a715): does explicit interaction structure in the consumer beat a strong ordinary consumer with equal information?",
    "arms": "consumers identical except fusion: lin (existing P2 CONS, reused), CONS-mlp (lin + 2-layer MLP branch on [z;phi], width 51, matched to bil's parameters: 160,082 vs 160,194 active), CONS-bil (lin + factor-group gating + rank-8 bilinear products among factor groups G1-G4), CONS-gate (lin + factor-specific gates, 148,746 active); all copy the seed's common init and start as exactly the lin function; contracts exact and mix; bank mode 4000 updates; seeds 40-44",
    "evaluation": "b6c pool + 320 SCE octets (validation, inspected) + UCE octets descriptive; inputs exact and predicted (separate full-data predictor); phi own/exact/zero/mean; 20000 draws seed 7",
    "primary_contrast": "CONS-bil vs CONS-mlp (equal information, matched parameters) under the DEPLOYABLE input (predicted factors, contract mix and exact both reported; contract chosen before eval: mix = primary, since it is trained for noisy inputs)",
-   "metric": "TO BE FIXED from p2-frontier analysis before any P3 eval output (a discrimination index with near-miss non-inferiority; bias reported separately)",
+   "metric": {
+    "tool": "campaign07_frontier.py (v2 + --refs + all_x_q2notH stratum), SCE octets, two-level bootstrap 20000 draws seed 7 (screen) / 20260928 (confirm)",
+    "primary": "J_sub (Youden: P(change|optimum changes) - P(change|optimum unchanged) over full-vs-pair/single member pairs with unique optima at both ends) contrast CONS3-bil-mix-pred@own - CONS3-mlp-mix-pred@own",
+    "co_primary": "BA_nm = (flip + near-miss)/2 contrast non-inferior at -.02",
+    "guards": "FA_sub (false-change rate) increase <= +.02; near-miss accuracy decrease <= .05; pool (B protocol) accuracy >= mlp - .02",
+    "belief_stratum": "primary J_sub gain must also hold (point >= .02) in stratum all_x_q2notH, so a q2_after_notH belief-acquisition effect cannot pass as interaction",
+    "screen_rule": "advance to confirmation iff J_sub gain >= .03 (point), >= 4/5 seeds positive, co-primary and guards met (point estimates), and stratum condition; else report negative (bil does not beat a matched ordinary consumer)",
+    "confirm_rule": "b6d, fresh seeds 50-54 incl. fresh predictors: J_sub gain two-level 95% CI lower > 0 and >= 4/5 seeds positive; BA_nm lower bound > -.02? no: BA_nm mean >= -.02; guards as screen; stratum all_x_q2notH gain mean > 0",
+    "secondary": "exact-input evaluations, exact contract, gate and lin arms, UCE descriptive, phi own/exact/zero/mean"
+   },
    "confirmation": "if the screen meets the (to-be-fixed) rule, confirm on b6d (labels built) with fresh seeds 50-54 incl. fresh predictors (86 jobs, ~18k core-s)"
   }
  ]

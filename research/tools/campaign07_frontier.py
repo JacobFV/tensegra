@@ -71,10 +71,10 @@ def base_name(model):
 
 
 def seed_index(d):
-    m = re.search(r"-s4(\d)$", str(Path(d).name))
+    m = re.search(r"-s([45])(\d)$", str(Path(d).name))  # screen seeds 40-44, confirmation seeds 50-54
     if not m:
         raise SystemExit(f"cannot parse seed index from {d}")
-    return int(m.group(1))
+    return int(m.group(2))
 
 
 def members_of(fam):
@@ -199,6 +199,8 @@ def counts(dec, flags, fam, psets):
     def add(t, o, k, v=1.0):
         out["all"][o][k] += v
         out[t][o][k] += v
+        if t != "q2_after_notH":  # P3 registration: primary must also hold without the belief-acquisition stratum
+            out["all_x_q2notH"][o][k] += v
 
     units = defaultdict(dict)
     for (o, t, m), v in dec.items():
@@ -313,6 +315,8 @@ def main(argv=None):
     ap.add_argument("--families", default="SCE,UCE")
     ap.add_argument("--only", default=None, help="regex on model@phi (smoke)")
     ap.add_argument("--no-per-type-contrasts", action="store_true")
+    ap.add_argument("--refs", nargs="+", default=["S1R1-bank@own", "S0R0-bank@own"],
+                    help="reference arms for paired contrasts (default: the P2 screen references)")
     a = ap.parse_args(argv)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=False)
@@ -361,7 +365,7 @@ def main(argv=None):
             cnt = counts(dec, flags0, fam, psets)
             C[f"REF-{rname}"] = [cnt] * 5
         octets = sorted(octets)
-        strata = ["all"] + list(TYPES)
+        strata = ["all", "all_x_q2notH"] + list(TYPES)
         keys = sorted({k for pr in ENDPOINT_PARTS.values() for p in pr for k in p})
         fr = {"octets": len(octets), "pair_sets": {k: [list(p) for p in v] for k, v in psets.items()}, "arms": {},
               "contrasts": {}}
@@ -369,16 +373,16 @@ def main(argv=None):
         for arm in C:
             fr["arms"][arm] = {s: {e: endpoint(Ms[arm][s], e, a.n_boot, a.boot_seed) for e in ENDPOINT_PARTS}
                                for s in strata}
-        for refarm in ("S1R1-bank@own", "S0R0-bank@own"):
+        for refarm in a.refs:
             if refarm not in C:
                 continue
             for arm in C:
                 if arm == refarm:
                     continue
-                ss = ["all"] if a.no_per_type_contrasts or fam != "SCE" else strata
+                ss = ["all", "all_x_q2notH"] if a.no_per_type_contrasts or fam != "SCE" else strata
                 fr["contrasts"][f"{arm} - {refarm}"] = {
                     s: {e: contrast(Ms[arm][s], Ms[refarm][s], e, a.n_boot, a.boot_seed)
-                        for e in (CONTRAST_ENDPOINTS if s == "all" else ("J_sub", "bias_sub"))}
+                        for e in (CONTRAST_ENDPOINTS if s in ("all", "all_x_q2notH") else ("J_sub", "bias_sub"))}
                     for s in ss}
         # phi contrasts within a model: own - zero, own - mean, exact - own (pooled)
         fr["phi_contrasts"] = {}
