@@ -69,6 +69,33 @@ taken from the main line (a registered fraction of points also branches it and
 checks equality). These are **hidden-state (true-world) labels**: an optimistic,
 non-deployable privilege of offline analysis, never an input at deployment.
 
+Multi-step option class (A-HR2; registry A-HR2; ``option_mode="multi"``)
+-----------------------------------------------------------------------
+Same worlds, sampler, points, main line and labels as A-HR; the option set at a point
+is {D, ``delegate``} instead of O(I):
+
+- ``delegate`` (option T): at the point a fresh public teacher instance
+  (``make_reference("dep_reuse")`` = ``DepReference("reuse")``, stateless: it reads only
+  the public ``DepObservation`` and the public catalog) chooses the step-t action and
+  every following action until the first step whose feedback is a *successful commit*
+  (the environment's own completion rule: status success with a new selection_id or
+  assignment_id, i.e. ``commit_pending`` / ``commit_assignment`` / a committing
+  ``use_return``) or the episode ends (verify success, abstain, step limit), or 12
+  teacher steps (incl. step t) have been taken; then D continues to termination.
+  The progress tracker is updated on every step (teacher steps included), so D's
+  R-mask after the delegation sees the whole history. Every decision (teacher or D) is
+  charged one controller forward (``neural_work_per_forward``; the extended-04
+  reference tariff 1.0), so T with a teacher that happens to pick D's actions IS the
+  main line. A teacher action outside the catalog is never repaired: the delegation
+  ends and D takes that decision (counted; at step t the option is then unavailable).
+- Budget override (option B: for the next solver call use b in {16, 1024, remaining}
+  at points where D calls or at call_now points, then D) is **identical to existing
+  A-HR options**: at a D-call point it is ``call(p, b)`` then D = the ``budget`` option;
+  at an ``other`` point it is a ``call_now`` option (every allowed budget, incl. the
+  remaining-work budget, of every open problem). ``budget_override_options`` lists
+  those indices; they are always a subset of O(I), so B is not re-branched (its
+  hindsight value is read from the A-HR labels by the analysis).
+
 Torch is imported lazily (actor forwards only).
 """
 from __future__ import annotations
@@ -91,6 +118,10 @@ ANCHORS = ("call", "reuse_recompute", "commit_revise", "other")
 OPTION_TYPES = ("budget", "call_other", "not_call", "reuse", "reuse_retrieve", "recompute", "revise_assign",
                 "revise_select", "call_now", "abstain")
 CONTINUATION = "D = greedy + R-mask (campaign04_deploy r_mask semantics, progress-diagnostic-v1), cap 96, CPU"
+MULTI_VERSION = "e05-hr2-v1"
+TEACHER = "dep_reuse"
+DELEGATE_MAX_STEPS = 12
+B_BUDGETS = (16, 1024, "remaining")
 RECOMPUTE_OF = {"start_subset": "constrained_subset", "start_assign": "csp", "build_route": "shortest_path"}
 START_OF = {v: k for k, v in RECOMPUTE_OF.items()}
 
@@ -435,30 +466,122 @@ def snapshot(ep: Ep, d: Dec, key, options, info=None) -> Point:
                  options, dict(info or {}))
 
 
-def run_branches(actor, jobs, *, neural_work_per_forward=1.0, device="cpu", batch=128, timing=None):
-    """jobs: [(Point, action index)] -> [{utility, success, cost, steps, dU, dsteps, truncated}]
-    (take the action at the point, then D to termination), in job order."""
+def make_teacher():
+    """A fresh public dep_reuse teacher (``campaign02_references.make_reference``)."""
+    from .campaign02_references import make_reference
+    return make_reference(TEACHER)
+
+
+def committed(o) -> bool:
+    """The step that produced observation ``o`` was a successful selection/assignment commit
+    (the environment's completion rule; direct or via use_return). Public feedback only."""
+    fb = o.feedback or {}
+    return fb.get("status") == "success" and ("selection_id" in fb or "assignment_id" in fb)
+
+
+def teacher_index(teacher, o, actions):
+    """Catalog index of the teacher's action (public observation + public catalog), or None
+    when the proposal is outside the catalog (never repaired)."""
+    action = teacher.choose(o, actions)
+    try:
+        return actions.index(action)
+    except ValueError:
+        return None
+
+
+def delegate_choice(decisions, eps):
+    """D, except for episodes with an active delegation (``ep.info["delegate"]``): the teacher
+    chooses until the previous teacher step committed, or ``max_steps`` teacher steps were taken
+    (or its proposal is outside the catalog); from then on D."""
+    out = []
+    for d in decisions:
+        g = eps[d.index].info.get("delegate")
+        choice = d.default
+        if g is not None and g["active"]:
+            if g["steps"] and committed(d.observation):
+                g["active"], g["end"] = False, "commit"
+            elif g["steps"] >= g["max_steps"]:
+                g["active"], g["end"] = False, "max_steps"
+            else:
+                i = teacher_index(g["teacher"], d.observation, d.actions)
+                if i is None:
+                    g["active"], g["end"] = False, "out_of_catalog"
+                    g["out_of_catalog"] += 1
+                else:
+                    choice = i
+                    g["steps"] += 1
+                    g["agree"] += int(i == d.default)
+        out.append(choice)
+    return out
+
+
+def _delegate_end(g, ep):
+    if g["end"] is not None:
+        return g["end"]
+    o = ep.env.observe()       # the delegation was active to the end: the last step was the teacher's
+    if committed(o):
+        return "commit"
+    return "episode_end" if o.done else "cap"
+
+
+def run_branches(actor, jobs, *, neural_work_per_forward=1.0, device="cpu", batch=128, timing=None,
+                 teacher_factory=make_teacher, delegate_max_steps=DELEGATE_MAX_STEPS):
+    """jobs: [(Point, action index | "delegate")] -> [{utility, success, cost, steps, dU, dsteps, truncated}]
+    (take the action at the point, then D to termination; "delegate": the teacher from the point until
+    its next successful commit / max steps, then D), in job order."""
     out = []
     for start in range(0, len(jobs), batch):
         chunk = jobs[start:start + batch]
         eps = []
         for p, a in chunk:
             env, hidden, tracker = clone_branch(p.env, p.hidden, p.tracker)
+            info = {}
+            if a == "delegate":
+                teacher = teacher_factory()     # fresh instance, constructed at the point
+                a = teacher_index(teacher, env.observe(), p.actions)
+                if a is None:
+                    raise ValueError("delegate option without an in-catalog first teacher action")
+                info["delegate"] = {"teacher": teacher, "active": True, "steps": 1, "agree": int(a == p.d_index),
+                                    "max_steps": delegate_max_steps, "end": None, "out_of_catalog": 0,
+                                    "first": a}
             env.charge_compute(neural_work_per_forward)   # the step-t actor forward, charged once as on the main line
             action = p.actions[a]
             after = env.step(action)
             tracker.update(after, action)
-            ep = Ep(env, tracker, hidden=hidden, cap=p.cap - 1)
+            ep = Ep(env, tracker, hidden=hidden, cap=p.cap - 1, info=info)
             eps.append(ep)
-        run_policy(actor, eps, d_choice, device=device, neural_work_per_forward=neural_work_per_forward,
-                   timing=timing)
+        delegated = any("delegate" in ep.info for ep in eps)
+        run_policy(actor, eps, delegate_choice if delegated else d_choice, device=device,
+                   neural_work_per_forward=neural_work_per_forward, timing=timing)
         for (p, a), ep in zip(chunk, eps):
             o = outcome(ep.env)
-            out.append({**o, "dU": o["utility"] - p.utility, "dsteps": ep.taken + 1,
-                        "truncated": not ep.env.observe().done})
+            r = {**o, "dU": o["utility"] - p.utility, "dsteps": ep.taken + 1, "truncated": not ep.env.observe().done}
+            g = ep.info.get("delegate")
+            if g is not None:
+                r.update({"teacher_steps": g["steps"], "teacher_agree": g["agree"], "delegate_end": _delegate_end(g, ep),
+                          "teacher_first": g["first"], "teacher_out_of_catalog": g["out_of_catalog"]})
+            out.append(r)
     return out
 
 
+def budget_override_options(o, actions, d_index) -> list[int]:
+    """Option B's actions at a point (public): D-call point -> call(p_D, b), b in B_BUDGETS minus D's budget;
+    ``other`` point -> call(p, b) for every open problem p, b in B_BUDGETS ("remaining" = the remaining-work
+    budget, when allowed). Empty elsewhere. Always a subset of the anchored O(I) (tested)."""
+    anchor, _ = anchor_of(o, actions[d_index])
+    budgets = {b if b != "remaining" else o.remaining_work for b in B_BUDGETS}
+    open_ = stage_open(o)
+    out = []
+    for i, a in enumerate(actions):
+        if a.kind != "call" or i == d_index or a.arguments.get("budget") not in budgets:
+            continue
+        if anchor == "call" and a.arguments.get("problem") == actions[d_index].arguments.get("problem"):
+            out.append(i)
+        elif anchor == "other":
+            p = o.problems.get(a.arguments.get("problem"))
+            if p is not None and open_.get(p["primitive"], False):
+                out.append(i)
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -529,9 +652,45 @@ def d_rollouts(actor, envs, seeds, cfg: HRConfig = HRConfig(), *, neural_work_pe
     return eps
 
 
+def multi_option_set(o, actions, d_index, teacher_factory=make_teacher) -> list[dict[str, Any]]:
+    """A-HR2 options at a point: D and ``delegate`` (index = the fresh teacher's step-t action; omitted
+    when that proposal is outside the catalog). Public only."""
+    anchor, _ = anchor_of(o, actions[d_index])
+    out = [{"index": d_index, "type": "D", "types": ["D", action_type(actions[d_index])], "is_d": True,
+            "anchor": anchor}]
+    i = teacher_index(teacher_factory(), o, actions)
+    if i is not None:
+        out.append({"index": i, "type": "delegate", "types": ["delegate", action_type(actions[i])], "is_d": False,
+                    "anchor": anchor, "teacher_first_is_d": i == d_index})
+    return out
+
+
+DELEGATE_FIRST_KINDS = ("call", "reuse", "retrieve", "recompute", "commit", "revise", "abstain", "verify", "other")
+
+
+def delegate_features(o, actions, opt) -> dict[str, float]:
+    """Extra public features of the delegate option (teacher's first action, D's anchor)."""
+    a = actions[opt["index"]]
+    t = action_type(a)
+    kind = ("commit" if a.kind in ("commit_pending", "commit_assignment") else "revise" if a.kind == "uncommit"
+            else "verify" if a.kind == "verify" else t if t in DELEGATE_FIRST_KINDS else "other")
+    f = {"teacher_first_is_d": float(opt["teacher_first_is_d"])}
+    f.update({f"teacher_first_{k}": float(kind == k) for k in DELEGATE_FIRST_KINDS})
+    f.update({f"anchor_{k}": float(opt["anchor"] == k) for k in ANCHORS})
+    return f
+
+
+DELEGATE_FIELDS = ("teacher_steps", "teacher_agree", "delegate_end", "teacher_first", "teacher_out_of_catalog")
+
+
+def _job_key(opt):
+    return "delegate" if opt["type"] == "delegate" else opt["index"]
+
+
 def hr_labels(actor, envs, seeds, cfg: HRConfig = HRConfig(), *, neural_work_per_forward=1.0, device="cpu",
-              branch_batch=128, features=True, branch=True):
+              branch_batch=128, features=True, branch=True, teacher_factory=make_teacher):
     """A-HR states and (``branch=True``) branch labels for one batch of worlds.
+    ``cfg.option_mode``: "anchored" (O(I)), "full" (catalog) or "multi" (A-HR2: D + delegate).
     Returns (episodes, points, stats)."""
     t_all = time.process_time()
     timing_main, timing_b = {}, {}
@@ -549,17 +708,28 @@ def hr_labels(actor, envs, seeds, cfg: HRConfig = HRConfig(), *, neural_work_per
             return
         n = len(d.actions)
         scores = d.logits[:n].tolist()
-        options = option_set(d.observation, d.actions, d.default, cfg.option_mode, scores, d.masked)
+        if cfg.option_mode == "multi":
+            options = multi_option_set(d.observation, d.actions, d.default, teacher_factory)
+        else:
+            options = option_set(d.observation, d.actions, d.default, cfg.option_mode, scores, d.masked)
         if cfg.option_mode == "full":
             in_oi = {o["index"] for o in option_set(d.observation, d.actions, d.default, "anchored", scores, d.masked)}
             for o in options:
                 o["in_oi"] = o["index"] in in_oi
         pinfo = {"seed": s, "sampled": sampled, "p_sample": p, "p_include": 1.0 if samplers[s].all_states else p,
                  "anchor": anchor, "candidates": n, "d_is_greedy": d.default == d.greedy, "flagged": d.flagged}
+        if cfg.option_mode == "multi":
+            b = budget_override_options(d.observation, d.actions, d.default)
+            oi = {o["index"] for o in option_set(d.observation, d.actions, d.default, "anchored", scores, d.masked)}
+            pinfo["b_options"] = b
+            pinfo["b_subset_of_oi"] = set(b) <= oi
         if features:
             pinfo["telemetry"] = list(d.telemetry.values)
             pinfo["option_features"] = option_features(d.observation, d.actions, options, scores,
                                                        d.probabilities[:n], d.default)
+            for o, f in zip(options, pinfo["option_features"]):
+                if o["type"] == "delegate":
+                    f.update(delegate_features(d.observation, d.actions, o))
         points.append(snapshot(ep, d, (s, ep.taken), options, pinfo))
 
     c0 = time.process_time()
@@ -581,10 +751,10 @@ def hr_labels(actor, envs, seeds, cfg: HRConfig = HRConfig(), *, neural_work_per
         for opt in p.options:
             if opt["is_d"] and not do_check:
                 continue
-            jobs.append((p, opt["index"]))
+            jobs.append((p, _job_key(opt)))
     c0 = time.process_time()
     results = run_branches(actor, jobs, neural_work_per_forward=neural_work_per_forward, device=device,
-                           batch=branch_batch, timing=timing_b)
+                           batch=branch_batch, timing=timing_b, teacher_factory=teacher_factory)
     branch_cpu = time.process_time() - c0
     by = {(id(p), a): r for (p, a), r in zip(jobs, results)}
     out_points, checks = [], [0, 0]
@@ -594,7 +764,9 @@ def hr_labels(actor, envs, seeds, cfg: HRConfig = HRConfig(), *, neural_work_per
                 "dU": e["utility"] - p.utility, "dsteps": e["T"] - p.step, "truncated": e["truncated"]}
         opts = []
         for opt, f in zip(p.options, p.info.get("option_features") or [None] * len(p.options)):
-            r = by.get((id(p), opt["index"]))
+            r = by.get((id(p), _job_key(opt)))
+            if opt["type"] == "delegate" and r["teacher_first"] != opt["index"]:
+                raise AssertionError("delegate: the branch's fresh teacher disagrees with the point's proposal")
             if opt["is_d"]:
                 if r is not None:
                     checks[0] += 1
@@ -603,7 +775,8 @@ def hr_labels(actor, envs, seeds, cfg: HRConfig = HRConfig(), *, neural_work_per
             action = p.actions[opt["index"]]
             opts.append({**opt, "action": {"kind": action.kind, "arguments": dict(action.arguments)},
                          "dU": r["dU"], "success": r["success"], "cost_rem": r["cost"] - (-p.utility),
-                         "dsteps": r["dsteps"], "truncated": r["truncated"], **({"features": f} if f else {})})
+                         "dsteps": r["dsteps"], "truncated": r["truncated"], **({"features": f} if f else {}),
+                         **{k: r[k] for k in DELEGATE_FIELDS if k in r}})
         q_d = main["dU"]
         best = max(opts, key=lambda x: (x["dU"], x["is_d"], -x["index"]))
         non_abstain = [x for x in opts if x["type"] != "abstain"]
@@ -616,7 +789,8 @@ def hr_labels(actor, envs, seeds, cfg: HRConfig = HRConfig(), *, neural_work_per
                            "d_is_greedy": p.info["d_is_greedy"], "flagged": p.info["flagged"],
                            "q_d": q_d, "headroom": best["dU"] - q_d, "headroom_excl_abstain": best_na["dU"] - q_d,
                            "best_index": best["index"], "best_type": best["type"], "options": opts,
-                           **({"telemetry": p.info["telemetry"]} if "telemetry" in p.info else {})})
+                           **({"telemetry": p.info["telemetry"]} if "telemetry" in p.info else {}),
+                           **{k: p.info[k] for k in ("b_options", "b_subset_of_oi") if k in p.info}})
     branch_steps = [r["dsteps"] for r in results]
     stats = {"episodes": len(episodes), "points": len(points), "sampled_points": sum(p.info["sampled"] for p in points),
              "branches": len(jobs), "default_checks": checks[0], "default_check_matches": checks[1],

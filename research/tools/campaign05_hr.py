@@ -11,6 +11,14 @@
     python research/tools/campaign05_hr.py analyze --branch results/e05-hr/branch --full results/e05-hr/full \
         --states results/e05-hr/states --output results/e05-hr/analysis.json   # numpy only
 
+A-HR2 (registry A-HR2; multi-step option class, same worlds/points/main line as A-HR):
+    CUDA_VISIBLE_DEVICES= python research/tools/campaign05_hr.py branch --option-class multi --base x1-r0 \
+        --condition iid_f0 --chunk 0 1 2 3 --output results/e05-hr2/branch   # D + delegate (option T) labels
+    python research/tools/campaign05_hr.py analyze --multi results/e05-hr2/branch --branch results/e05-hr/branch \
+        --output results/e05-hr2/analysis.json   # G1a-multi / G1b-multi (T alone and T combined with O(I))
+Option B (next-call budget override) is identical to existing A-HR options (budget / call_now) and is
+not re-branched; ``analyze`` reports its hindsight value from the A-HR labels.
+
 Worlds (research/campaigns/extended-05/seed-ranges.json; disjointness asserted at start):
 - ``--worlds hr`` (default): 220,000,000 + 100,000*i + n (i = condition index: iid_f0 0, iid_f2 1);
   chunk c covers n = c*chunk_size ... c*chunk_size + chunk_size - 1; the same worlds for every base.
@@ -194,6 +202,8 @@ def _stem(a, prefix):
     extra = ""
     if getattr(a, "option_set", "anchored") == "full":
         extra = "-full"
+    if getattr(a, "option_class", "single") == "multi":
+        extra += "-multi"
     return a.output / f"{prefix}-{a.base}-{a.condition}-{a.worlds}{extra}-c{a.chunk:03d}"
 
 
@@ -240,13 +250,15 @@ def _run_hr(a, branch):
     from tensegra.campaign05_options import HRConfig, hr_labels
     if a.base in RESERVED_FOR_CONFIRMATION and a.binding is None:
         raise SystemExit(f"{a.base} is reserved for confirmation (design v2 revision 4); A-HR uses x1-r0..r2")
+    if getattr(a, "option_class", "single") == "multi" and getattr(a, "option_set", "anchored") != "anchored":
+        raise SystemExit("--option-class multi uses its own option set (D + delegate); do not combine with --option-set")
     binding, actor, train_cfg, info = _setup(a, "hr")
     stem = _stem(a, "branch" if branch else "states")
     if stem.with_suffix(".json.gz").exists():
         raise SystemExit(f"refusing to overwrite {stem}.json.gz")
     wall0, cpu0, ch0 = time.perf_counter(), time.process_time(), _children_cpu()
-    cfg = HRConfig(max_steps=train_cfg.max_steps, option_mode=getattr(a, "option_set", "anchored"),
-                   all_states=not a.no_all_states)
+    mode = "multi" if getattr(a, "option_class", "single") == "multi" else getattr(a, "option_set", "anchored")
+    cfg = HRConfig(max_steps=train_cfg.max_steps, option_mode=mode, all_states=not a.no_all_states)
     seeds = world_seeds(a.worlds, a.condition, a.chunk, a.chunk_size, a.episodes)
     with (a.solver or BoundedSolver)() as solver:
         cache = SolverCache(partial(depworld_executor, execute_call=solver.execute))
@@ -302,13 +314,45 @@ def cmd_branch(a):
     summary = {**_episode_summary(episodes), **summarize_states(points), "branched_points": stats["points"],
                "sampled_points": stats["sampled_points"], "branches": stats["branches"],
                "default_checks": [stats["default_check_matches"], stats["default_checks"]]}
+    extra = {}
+    if a.option_class == "multi":
+        extra = _multi_meta()
+        summary.update(_multi_summary(points))
+        unit["core_s_per_delegate_branch"] = branch_cpu / max(1, stats["branches"])
     if stats["default_check_matches"] != stats["default_checks"]:
         summary["WARNING"] = "determinism check failed: a cloned D branch differs from the main line"
     _write(stem, {"episodes": episodes, "points": points},
-           _meta(a, binding, info, train_cfg, seeds, cfg, option_set=a.option_set, summary=summary, stats=stats,
+           _meta(a, binding, info, train_cfg, seeds, cfg, option_set=a.option_set, **extra, summary=summary, stats=stats,
                  solver_cache=cache_stats, cpu=cpu, unit_costs=unit,
                  cpu_scope="process_s = this process; children_s = solver worker(s) (reaped)"))
     print(json.dumps({"stem": str(stem), **summary, "unit_costs": unit, "cpu": cpu}))
+
+
+def _multi_meta():
+    from tensegra.campaign05_options import B_BUDGETS, DELEGATE_MAX_STEPS, MULTI_VERSION, TEACHER
+    return {"option_class": "multi", "multi_version": MULTI_VERSION,
+            "options": {"delegate": f"option T: a fresh public {TEACHER} teacher (DepReference('reuse'), stateless, public "
+                                    f"observation + catalog only; a supplied sub-policy, disclosed) from the point until "
+                                    f"its next successful commit (selection/assignment, direct or via use_return), the "
+                                    f"episode end, or {DELEGATE_MAX_STEPS} teacher steps; then D; tracker carried "
+                                    f"through; one controller forward charged per decision (teacher steps included)",
+                        "budget_override": f"option B (b in {list(B_BUDGETS)}): identical to existing A-HR options "
+                                           f"(budget / call_now); not re-branched (b_options, b_subset_of_oi recorded)"}}
+
+
+def _multi_summary(points):
+    dl = [o for p in points for o in p["options"] if o["type"] == "delegate"]
+    ends = {}
+    for o in dl:
+        ends[o["delegate_end"]] = ends.get(o["delegate_end"], 0) + 1
+    n = max(1, len(dl))
+    return {"delegate_options": len(dl), "delegate_unavailable_points": len(points) - len(dl),
+            "delegate_mean_adv": sum(o["dU"] - p["q_d"] for p in points for o in p["options"]
+                                     if o["type"] == "delegate") / n,
+            "delegate_mean_teacher_steps": sum(o["teacher_steps"] for o in dl) / n,
+            "delegate_teacher_agree_rate": sum(o["teacher_agree"] for o in dl) / max(1, sum(o["teacher_steps"] for o in dl)),
+            "delegate_end": ends, "b_subset_of_oi_all": all(p.get("b_subset_of_oi", True) for p in points),
+            "b_points": sum(bool(p.get("b_options")) for p in points)}
 
 
 def cmd_verify_d(a):
@@ -362,6 +406,11 @@ FEATURE_KEYS = ("prob", "logit_gap", "rank_frac", "budget_log", "budget_frac", "
                 "rel_usable", "rec_timeout", "rec_age", "rec_foreign")
 
 
+DELEGATE_KEYS = ("teacher_first_is_d",) + tuple(f"teacher_first_{k}" for k in (
+    "call", "reuse", "retrieve", "recompute", "commit", "revise", "abstain", "verify", "other")) + tuple(
+    f"anchor_{k}" for k in ("call", "reuse_recompute", "commit_revise", "other"))
+
+
 def _read(dirs, prefix):
     out = []
     for d in dirs or []:
@@ -402,7 +451,7 @@ def _collect(branch):
     """[(meta, episode, [points of that episode sorted by step])] for anchored (non-full) branch files."""
     out = []
     for meta, rows in branch:
-        if meta.get("option_set") == "full":
+        if meta.get("option_set") == "full" or meta.get("option_class") == "multi":
             continue
         by = {}
         for p in rows["points"]:
@@ -483,7 +532,8 @@ def _x(p, o):
     if x is None:
         import numpy as np
         f = o.get("features") or {}
-        x = o["_x"] = np.array(list(p["telemetry"]) + [float(f.get(k, 0.0)) for k in FEATURE_KEYS] + [1.0])
+        keys = FEATURE_KEYS + DELEGATE_KEYS if o["type"] == "delegate" else FEATURE_KEYS
+        x = o["_x"] = np.array(list(p["telemetry"]) + [float(f.get(k, 0.0)) for k in keys] + [1.0])
     return x
 
 
@@ -509,6 +559,11 @@ def _fit(points, ridge, allow_abstain):
 def _deviate(ps, predict, margin, allow_abstain):
     """Single-deviation policy on one episode: at the sampled points in step order, deviate once to the
     option with the largest predicted advantage if it exceeds the margin; else D. Returns (gain, type)."""
+    return _deviate_point(ps, predict, margin, allow_abstain)[:2]
+
+
+def _deviate_point(ps, predict, margin, allow_abstain):
+    """``_deviate`` plus the firing point (None if D is kept throughout)."""
     for p in ps:
         if not p["sampled"]:
             continue
@@ -520,8 +575,8 @@ def _deviate(ps, predict, margin, allow_abstain):
             if v is not None and v > bp:
                 best, bp = o, v
         if best is not None:
-            return _adv(p, best), best["type"]
-    return 0.0, None
+            return _adv(p, best), best["type"], p
+    return 0.0, None, None
 
 
 def _predictor(models):
@@ -537,7 +592,7 @@ def _folds(keys, k, seed):
     return {w: i % k for i, w in enumerate(keys)}
 
 
-def single_deviation_estimate(eps, folds=5, inner=3, ridge=1.0, allow_abstain=False, seed=0):
+def single_deviation_estimate(eps, folds=5, inner=3, ridge=1.0, allow_abstain=False, seed=0, breakdown=False):
     """SAME-INFORMATION estimate of the single-deviation-from-D policy (G1b): per option type, a ridge
     regression Q-hat^D advantage on public features [telemetry d_t, option features, 1], cross-fitted by
     WORLD (outer folds; the margin m chosen from M_GRID by inner world-folds on the training worlds only).
@@ -546,6 +601,7 @@ def single_deviation_estimate(eps, folds=5, inner=3, ridge=1.0, allow_abstain=Fa
     wkey = [_world(m["condition"], e["seed"]) for m, e, _ in eps]
     fold = _folds(wkey, folds, seed)
     gains, types, worlds, chosen_m, const_gains, fixed = [], [], [], [], [], {m: [] for m in (0.0, 0.01)}
+    outcomes, fire_anchor = [], []
     for f in range(folds):
         train = [x for x, w in zip(eps, wkey) if fold[w] != f]
         test = [(x, w) for x, w in zip(eps, wkey) if fold[w] == f]
@@ -567,7 +623,9 @@ def single_deviation_estimate(eps, folds=5, inner=3, ridge=1.0, allow_abstain=Fa
         pred = _predictor(models)
         cpred = (lambda p, o: const.get(o["type"]))  # noqa: E731
         for (m, e, ps), w in test:
-            g, t = _deviate(ps, pred, m_star, allow_abstain)
+            g, t, fp = _deviate_point(ps, pred, m_star, allow_abstain)
+            outcomes.append("D_success" if e["success"] else "D_failure")
+            fire_anchor.append(fp["anchor"] if fp is not None else "none")
             gains.append(g)
             types.append(t or "D")
             worlds.append(w)
@@ -576,6 +634,17 @@ def single_deviation_estimate(eps, folds=5, inner=3, ridge=1.0, allow_abstain=Fa
             for mm in fixed:
                 fixed[mm].append(_deviate(ps, pred, mm, allow_abstain)[0])
     est = _mean_ci(gains, worlds)
+    extra = {}
+    if breakdown:
+        def split(keys):
+            out = {}
+            for k in sorted(set(keys)):
+                idx = [i for i, x in enumerate(keys) if x == k]
+                out[k] = {**_mean_ci([gains[i] for i in idx], [worlds[i] for i in idx]),
+                          "share_of_total_gain": sum(gains[i] for i in idx) / max(1, len(gains)),
+                          "deviations": sum(types[i] != "D" for i in idx)}
+            return out
+        extra = {"by_D_episode_outcome": split(outcomes), "by_firing_anchor": split(fire_anchor)}
     return {"label": "SAME-INFORMATION single-deviation-from-D estimate (public features; per-type ridge Q-hat^D; "
                      f"cross-fitted by world, {folds} outer / {inner} inner folds; margin from inner folds); "
                      "episode gain = true branched advantage of the chosen option",
@@ -587,7 +656,7 @@ def single_deviation_estimate(eps, folds=5, inner=3, ridge=1.0, allow_abstain=Fa
             "harmful_rate": sum(g < -1e-12 for g in gains) / max(1, len(gains)),
             "chosen_margins": {str(m): chosen_m.count(m) for m in sorted(set(chosen_m))},
             "fixed_margin_gain": {str(m): _mean_ci(v, worlds)["mean"] for m, v in fixed.items()},
-            "constant_per_type_baseline_gain": _mean_ci(const_gains, worlds)["mean"], "ridge": ridge}
+            "constant_per_type_baseline_gain": _mean_ci(const_gains, worlds)["mean"], "ridge": ridge, **extra}
 
 
 def full_catalog_stats(full, branch, thr):
@@ -628,6 +697,116 @@ def full_catalog_stats(full, branch, thr):
             "best_non_abstain_option_when_positive": best}
 
 
+def _merge_multi(multi_eps, hr_eps):
+    """Pair A-HR2 episodes with the A-HR episodes on the same (base, condition, worlds, seed): the main line
+    must be identical (actions, utility) and every multi point must match an A-HR point (U_t, q_d, D index).
+    Returns (combined episodes: A-HR points + the delegate option, B indices per point, report)."""
+    hr = {(m["base"], m["condition"], m["worlds"], e["seed"]): (m, e, ps) for m, e, ps in hr_eps}
+    combined, b_of, rep = [], {}, {"multi_episodes": len(multi_eps), "paired_episodes": 0, "main_line_mismatch": 0,
+                                   "point_mismatch": 0, "unpaired_points": 0}
+    for m, e, ps in multi_eps:
+        k = (m["base"], m["condition"], m["worlds"], e["seed"])
+        if k not in hr:
+            continue
+        hm, he, hps = hr[k]
+        if he["actions"] != e["actions"] or he["utility"] != e["utility"]:
+            rep["main_line_mismatch"] += 1
+            continue
+        rep["paired_episodes"] += 1
+        by_step = {p["step"]: p for p in hps}
+        new_ps = []
+        for p in ps:
+            h = by_step.get(p["step"])
+            if h is None:
+                rep["unpaired_points"] += 1
+                continue
+            if (h["U_t"], h["q_d"], h["d_index"], h["sampled"]) != (p["U_t"], p["q_d"], p["d_index"], p["sampled"]):
+                rep["point_mismatch"] += 1
+                continue
+            b_of[(k, p["step"])] = set(p.get("b_options") or [])
+            new_ps.append({**h, "options": list(h["options"]) + [o for o in p["options"] if o["type"] == "delegate"]})
+        combined.append((hm, he, new_ps))
+    return combined, b_of, rep
+
+
+def _ep_single_dev(eps, pick):
+    """Per-episode hindsight single-deviation gain: max(0, best advantage over the picked options at the
+    sampled points). ``pick(key, p, o)`` selects candidate (non-D) options."""
+    gains, worlds, outcome = [], [], []
+    for m, e, ps in eps:
+        k = (m["base"], m["condition"], m["worlds"], e["seed"])
+        g = 0.0
+        for p in ps:
+            if p["sampled"]:
+                for o in p["options"]:
+                    if not o["is_d"] and pick(k, p, o):
+                        g = max(g, _adv(p, o))
+        gains.append(g)
+        worlds.append(_world(m["condition"], e["seed"]))
+        outcome.append("D_success" if e["success"] else "D_failure")
+    return gains, worlds, outcome
+
+
+def _by(values, worlds, keys):
+    out = {}
+    for k in sorted(set(keys)):
+        idx = [i for i, x in enumerate(keys) if x == k]
+        out[k] = _mean_ci([values[i] for i in idx], [worlds[i] for i in idx])
+    return out
+
+
+def multi_stats(multi_eps, combined, b_of, thr, a):
+    """A-HR2 statistics: G1a-multi (hindsight single deviation; T alone, T with O(I), B from the A-HR labels)
+    and G1b-multi (cross-fitted same-information single deviation; T alone and T with O(I))."""
+    import numpy as np
+    out = {"label": "A-HR2 multi-step options. G1a-multi = HINDSIGHT single-deviation bound (true-world branches; "
+                    "optimistic, non-deployable; necessary condition only). G1b-multi = SAME-INFORMATION cross-fitted "
+                    "estimate (public features; per-option-type ridge; margin from inner folds). Abstain excluded.",
+           "thr": thr}
+    is_t = (lambda k, p, o: o["type"] == "delegate")  # noqa: E731
+    g, w, oc = _ep_single_dev(multi_eps, is_t)
+    out["G1a_multi_T"] = {**_mean_ci(g, w), "by_D_episode_outcome": _by(g, w, oc),
+                          "by_base": _by(g, w, [m["base"] for m, _, _ in multi_eps]),
+                          "gate_ge_.02": (_mean_ci(g, w)["mean"] or 0.0) >= 0.02}
+    # per-state delegate advantage (sampled and all-states points)
+    st = [(m, e, p, o) for m, e, ps in multi_eps for p in ps for o in p["options"] if o["type"] == "delegate"]
+    adv = [_adv(p, o) for _, _, p, o in st]
+    sw = [_world(m["condition"], p["seed"]) for m, _, p, _ in st]
+    anchors = [p["anchor"] for _, _, p, _ in st]
+    ends = [o["delegate_end"] for *_, o in st]
+    out["state_delegate_advantage"] = {
+        **_mean_ci(adv, sw), "positive_part_mean": float(np.mean(np.maximum(adv, 0))) if adv else None,
+        "frac_ge_thr": float(np.mean(np.array(adv) >= thr)) if adv else None,
+        "frac_le_minus_thr": float(np.mean(np.array(adv) <= -thr)) if adv else None,
+        "by_anchor": {k: {**v, "frac_ge_thr": float(np.mean([adv[i] >= thr for i, x in enumerate(anchors) if x == k]))}
+                      for k, v in _by(adv, sw, anchors).items()},
+        "by_D_episode_outcome": _by(adv, sw, ["D_success" if e["success"] else "D_failure" for _, e, _, _ in st]),
+        "by_delegate_end": _by(adv, sw, ends),
+        "teacher_steps_mean": float(np.mean([o["teacher_steps"] for *_, o in st])) if st else None,
+        "teacher_agree_rate": (sum(o["teacher_agree"] for *_, o in st) / max(1, sum(o["teacher_steps"] for *_, o in st))),
+        "teacher_first_is_d_rate": float(np.mean([o["teacher_first_is_d"] for *_, o in st])) if st else None,
+        "delegate_end_counts": {k: ends.count(k) for k in sorted(set(ends))},
+        "points_without_delegate": sum(1 for _, _, ps in multi_eps for p in ps
+                                       if not any(o["type"] == "delegate" for o in p["options"]))}
+    if combined:
+        oi_na = (lambda k, p, o: o["type"] not in ("abstain", "delegate"))  # noqa: E731
+        comb = (lambda k, p, o: o["type"] != "abstain")  # noqa: E731
+        b_only = (lambda k, p, o: o["type"] != "delegate" and o["index"] in b_of.get((k, p["step"]), ()))  # noqa: E731
+        res = {}
+        for name, pick in (("O(I)_excl_abstain", oi_na), ("T_plus_O(I)_excl_abstain", comb),
+                           ("B_from_A-HR_labels", b_only), ("T_on_paired_episodes", is_t)):
+            g, w, oc = _ep_single_dev(combined, pick)
+            res[name] = {**_mean_ci(g, w), "by_D_episode_outcome": _by(g, w, oc),
+                         "gate_ge_.02": (_mean_ci(g, w)["mean"] or 0.0) >= 0.02}
+        out["G1a_multi_paired"] = res
+    if multi_eps and all("telemetry" in p for _, _, ps in multi_eps for p in ps):
+        out["G1b_multi_T"] = single_deviation_estimate(multi_eps, a.folds, a.inner, a.ridge, False, breakdown=True)
+    if combined and all("telemetry" in p for _, _, ps in combined for p in ps):
+        out["G1b_multi_T_plus_O(I)_excl_abstain"] = single_deviation_estimate(combined, a.folds, a.inner, a.ridge,
+                                                                               False, breakdown=True)
+    return out
+
+
 def cmd_analyze(a):
     branch = _read(a.branch, "branch")
     full = _read(a.full, "branch")
@@ -655,6 +834,17 @@ def cmd_analyze(a):
                 eps, a.folds, a.inner, a.ridge, True)
     if full:
         rep["full_catalog"] = full_catalog_stats(full, branch, a.thr)
+    if getattr(a, "multi", None):
+        multi = []
+        for meta, rows in _read(a.multi, "branch"):
+            if meta.get("option_class") != "multi":
+                raise SystemExit("--multi expects --option-class multi branch files")
+            by = {}
+            for p in rows["points"]:
+                by.setdefault(p["seed"], []).append(p)
+            multi += [(meta, e, sorted(by.get(e["seed"], []), key=lambda p: p["step"])) for e in rows["episodes"]]
+        combined, b_of, pairing = _merge_multi(multi, eps)
+        rep["multi"] = {"pairing": pairing, **multi_stats(multi, combined, b_of, a.thr, a)}
     if states:
         rep["states"] = {}
         for meta, rows in states:
@@ -663,7 +853,8 @@ def cmd_analyze(a):
         rep["states"] = {k: _episode_summary(v) for k, v in rep["states"].items()}
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(rep, indent=2, default=str))
-    print(json.dumps({k: rep[k] for k in rep if k in ("pooled", "full_catalog")}, indent=1, default=str)[:8000])
+    print(json.dumps({k: rep[k] for k in rep if k in ("pooled", "full_catalog", "multi")}, indent=1,
+                     default=str)[:8000])
 
 
 # --- CLI -----------------------------------------------------------------------------------
@@ -686,6 +877,8 @@ def main(argv=None, *, binding=None, load_actor_fn=None, solver=None):
         s.add_argument("--no-all-states", action="store_true", help="sampled points only (full-catalog subsample)")
         if name == "branch":
             s.add_argument("--option-set", choices=("anchored", "full"), default="anchored")
+            s.add_argument("--option-class", choices=("single", "multi"), default="single",
+                           help="multi: A-HR2 options (D + delegate); write to a separate --output directory")
     s = sub.add_parser("analyze")
     s.add_argument("--branch", type=Path, nargs="*")
     s.add_argument("--full", type=Path, nargs="*")
@@ -695,6 +888,7 @@ def main(argv=None, *, binding=None, load_actor_fn=None, solver=None):
     s.add_argument("--inner", type=int, default=3)
     s.add_argument("--ridge", type=float, default=1.0)
     s.add_argument("--per-group-estimate", action="store_true")
+    s.add_argument("--multi", type=Path, nargs="*", help="A-HR2 branch dirs (--option-class multi)")
     s.add_argument("--output", type=Path, required=True)
     a = p.parse_args(argv)
     a.binding, a.load_actor, a.solver = binding, load_actor_fn, solver
