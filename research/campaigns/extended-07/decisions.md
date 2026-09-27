@@ -8,3 +8,13 @@
   - **Plan:** Phase 1 (≤ 3 core-h) is two parallel builders:
     - (a) factor-contract and gradient-flow audit (static, plus mechanical tests);
     - (b) a frozen-checkpoint diagnostic runner, read-only with versioned outputs.
+- 2026-09-27T16:07Z: **Launch guards smoke-tested:**
+  - refusal works for a bad name, an output under campaign06, and a missing --needs input;
+  - a real job ran after a quoting fix (shlex.join; the extended-06 helper had the same latent bug for commands containing shell metacharacters);
+  - e07-smoke-launch3 exited 0.
+- 2026-09-27T16:07Z: **Phase 0/1 builders started in parallel:**
+  - campaign/e07-contracts: factor contract + gradient-flow audit, mechanical tests;
+  - campaign/e07-diag: frozen-checkpoint diagnostic runner (common-history and free-running protocols, octet cf-only path, interventions, two-level scoring).
+
+  Builder dev caps: 1.5k and 2.0k core-s. The Phase-1 tranche must total ≤ 10.8k core-s.
+- Heartbeat cron be7769c4 (hourly at :43).
