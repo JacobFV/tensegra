@@ -43,6 +43,7 @@ def cmd_evaluate(a):
     if knobs:
         knobs = {k: (tuple(v) if isinstance(v, list) else v) for k, v in knobs.items()}
     out = Path(a.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
     done = set()
     if out.exists():
         with gzip.open(out, "rt") as f:
@@ -887,15 +888,23 @@ def report_md(s):
 # plan
 
 def cmd_plan(a):
+    """Root launch commands for a chunked registered run: K evaluate chunks (1 core each),
+    then (after all chunks finish) one headroom analysis job (4 processes)."""
     per = math.ceil(a.episodes / a.chunks)
+    R = "/home/brand/structured-latent-dynamics-campaign06/results"
+    env = ("env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 CUDA_VISIBLE_DEVICES= PYTHONPATH=src "
+           "/home/brand/structured-latent-dynamics-campaign03/env/bin/python research/tools/campaign06_portfolio.py")
+    ins = []
     for k in range(a.chunks):
         lo = a.lo + k * per
         n = min(per, a.lo + a.episodes - lo)
-        job = f"e06-pw-headroom-c{k}"
+        job = f"{a.prefix}-c{k}"
+        ins.append(f"{R}/{job}/records.jsonl.gz")
         print(f"python research/tools/campaign06_remote.py launch-cmd {job} {a.sha} --wall-cap {a.wall_cap} --cpu-cap {a.cpu_cap} -- "
-              f"env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 CUDA_VISIBLE_DEVICES= PYTHONPATH=src "
-              f"/home/brand/structured-latent-dynamics-campaign03/env/bin/python research/tools/campaign06_portfolio.py evaluate "
-              f"--lo {lo} --episodes {n} --out /home/brand/structured-latent-dynamics-campaign06/results/{job}/records.jsonl.gz")
+              f"{env} evaluate --lo {lo} --episodes {n} --version {a.version} --out {R}/{job}/records.jsonl.gz")
+    print(f"# after all chunks exit 0:")
+    print(f"python research/tools/campaign06_remote.py launch-cmd {a.prefix}-analysis {a.sha} --wall-cap {a.wall_cap} "
+          f"--cpu-cap {4 * a.cpu_cap} -- {env} headroom --inputs {' '.join(ins)} --out {R}/{a.prefix}-analysis --procs 4")
 
 
 def main():
@@ -916,6 +925,7 @@ def main():
     pl = s.add_parser("plan"); pl.add_argument("--episodes", type=int, required=True); pl.add_argument("--chunks", type=int, required=True)
     pl.add_argument("--lo", type=int, required=True); pl.add_argument("--sha", required=True)
     pl.add_argument("--wall-cap", type=int, default=7200); pl.add_argument("--cpu-cap", type=int, default=7200)
+    pl.add_argument("--prefix", default="e06-pw-ga"); pl.add_argument("--version", default=pw.GENERATOR_VERSION)
     pl.set_defaults(f=cmd_plan)
     a = p.parse_args()
     if a.cmd in ("evaluate", "pilot"):
