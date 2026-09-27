@@ -62,3 +62,31 @@
   - **Phase-2 infrastructure commissioned** (campaign/e07-p2infra): genuine S×R 2×2 per the gradient-flow spec, common history bank, controlled-consumer trainer.
 
     It is built regardless of the diagnosis because the brief requires the 2×2. Which Phase-2 experiments run awaits the P1 analyst.
+- 2026-09-27T17:31Z: **P1 diagnosis merged** (campaign/e07-p1analysis b9199fcd; analysis code frozen at 97cc728e before any b6c per-decision read; one pooling bug fixed in ae189416 and re-run once; 971 metered + ~150 local core-s).
+  - **Localization:** **consumption is the primary flip failure.**
+    - The frozen LRN barely reads its factor channel: zeroing the factors changes .045 of its actions vs .24 for SUP; factor columns carry 2–3% of fusion variance vs 18–21%.
+    - Exact replacement fixes 7/640 flips (+.011 [.000, .029]).
+    - SUP's consumer fed LRN's *predicted* factors reaches flip .511 vs LRN .405 (SUP exact .562; 5/5 seeds, post hoc).
+  - **Acquisition is a secondary limit:**
+    - errors grow with the number of combined factors (full − single +.22);
+    - interaction terms are absent from the predictions (slope ≤ .2);
+    - the not-H belief update is never learned.
+  - The factor prediction is a function of the same trunk state the fusion sees, so the channel is redundant by construction.
+  - LRN's gains over RAWF (invariance, pool) point to auxiliary shaping (D), not reading.
+  - **Benchmark scope:** only 9/128 SCE flip units differ from every pair's optimum; pairwise Q sums recover the full optimum in 94–96%. It supports full-vs-single composition, **not irreducible third-order** interaction.
+  - **Next:** Phase 2 = branch B (the consumer must rely on factors), with the S×R 2×2 to test D. The independent P1 audit is commissioned.
+- 2026-09-27T17:33Z: **P2 infrastructure merged** (campaign/e07-p2infra aca42d90; 106 tests pass; 443 metered core-s). **P2-SCREEN and P2-CONFIRM registered before any P2 data.**
+  - **Screen:** seeds 40–44 in bank mode.
+    - Arms: the 2×2; separate-encoder predictors; consumers under exact/oof/mix contracts, each evaluated with exact and predicted factors.
+    - Evaluated on b6c, used as validation only.
+    - Selection rule, reference and floors are fixed.
+  - **Confirm:** fresh b6d pool (6.43e9 / worlds 6.48e9) + 320 octets (6.66e9); fresh seeds 50–54.
+    - Primary: flip accuracy, with CI lower > 0 and ≥ 4/5 pairs.
+    - Near-miss ≥ −.05; invariance ≥ −.03; competence floor; 20k draws with seed 20260928.
+  - All new seed ranges are registered; each overlap is only with its parent sub-range.
+  - **Concurrency raised to 6** (profiled ≤ 2.3 GB/job).
+  - A b6d split implementation is commissioned so the confirmation labels can be built while the screen trains.
+- 2026-09-27T17:34Z: **P2-SCREEN launched** (snapshot c7d22aff; 81 jobs; stage runner with a one-job smoke per batch type; ≤ 6 concurrent).
+  - **Bank:** e07-p2-bank exited 0 in 6.8 core-s. 5,376 episodes / 57,315 decisions; sources: π* ×2, eps .1/.3 ×2, RAWF-s30 ×4, B0-s30 ×4. 896 episodes per training combination; sha256 3914ecaa…
+  - The builder's estimate (~210 core-s) was high, and the bank is complete.
+  - The b6d confirmation-split builder is commissioned (campaign/e07-b6d).
