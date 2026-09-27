@@ -102,3 +102,19 @@
   - **Confirmed claim:** a learned public-information controller that decides when to delegate to a supplied better sub-policy improves the imitation deployment on fresh lineages and sealed worlds. It adds no utility over simple trigger rules while delegation is free.
   - **A-PI-C registered** (a discriminating follow-up): a per-step delegation cost c ∈ {.001, .003} makes *when* to invoke matter. The controller is retrained on cost-adjusted existing labels; screen on 270M worlds, confirmation on 280M. Primary: beat max(D, teacher, R1, R2, random) + .005 in 3/3.
 - 2026-09-27T04:18Z: **A-PI-C tooling and frozen controllers merged** (43f57727). c = .001: ridge λ = 1, m = .075 (dev G1b .0245). c = .003: MLP h16, m = .1 (dev G1b .0234). File sha256 7b7928c6…/e251ff5f…. At c = 0 A-PI-T is reproduced exactly. The screen evaluates both costs on the same worlds (270M, r0–r2).
+- 2026-09-27T04:22Z: **Independent Track A audit merged** (3fa978e9). Every exactly defined number reproduces (A-HR G1a/G1b, A-HR2 G1a/G1b-multi, A-PI-T and A-CF-T PI-T-1/PI-T-2), and the gate and pass/fail outcomes stand.
+  - **Integrity is clean:**
+    - D branches reproduce the main line, with costs charged once (0 violations in 11,013 points).
+    - Controller dea16e83 was committed (03:15:49Z) before the first protocol launch (03:39:01Z) and is used in all 384 evaluation metas.
+    - D ≡ extended-04 r_mask (80/80); teacher ≡ dep_reuse (32/32).
+    - The worlds are fresh and disjoint.
+  - **Corrections adopted:**
+    1. **"Improves over imitation" = "recovers the supplied teacher".** π_T's per-world success equals always-teacher's on 100% of worlds in 5 of 6 lineages (r5: 99.9%). It rescues the same D-failure worlds, and its gain over D matches the teacher's gap within .0009.
+    2. **R2 dominates:** it matches or beats π_T in 6/6 lineages while delegating fewer steps (3.0–4.0% vs 5.5–7.7%). "Little delegation" is not a learned advantage, and the "delegates less than the teacher" clause of PI-T-2 is trivially met when delegation is free.
+    3. PI-T-2 is worded "not better than the best rule" (several CIs include 0). The pooled π_T − R1 is −.0013 (CI90 −.0033 to −.0002); the earlier "pooled" CI was r2's.
+    4. A-HR2 passes G1a on its point estimate only (CI lower bound .016), and all its value comes from 70/1,536 D-failure episodes.
+    5. "Fresh lineages" means new imitation actors only; the teacher and controller are shared.
+  - **Ledger refreshed** (the stale committed ledger lacked the A-CF-T receipts).
+- 2026-09-27T04:22Z: **A-PI-C screen launched** (12 jobs, both costs on the same 270M worlds, source-da722185).
+  - The first smoke job failed because snapshots exclude research/results, so the controllers were not staged. The receipt is kept (apic-r0-iid_f0-nocontroller). The controllers were staged via tar with hashes verified (7b7928c6…, e251ff5f…).
+  - Smoke-then-launch discipline was used: one job was verified running before the other 11.
