@@ -1,0 +1,727 @@
+{
+ "tool": "campaign05_bsplit_audit",
+ "version": "probeworld-e05-trackb-v1",
+ "all_pass": true,
+ "checks": [
+  {
+   "check": "A1 all 6 pairs generable (flags sampled independently by make_config)",
+   "pass": true
+  },
+  {
+   "check": "A2 new-hold pairs require both conditions: acting optimally for either single-flag ablation loses > eps on a non-zero fraction of pair configurations",
+   "pass": true,
+   "detail": {
+    "unreliable+correlated": 0.15625,
+    "side_effect+events": 0.125
+   }
+  },
+  {
+   "check": "B1 b5 split families (excluding the BX1 exposure pool) disjoint by generator parameters",
+   "pass": true,
+   "detail": [
+    "b5_heldout_k",
+    "b5_heldout_price",
+    "b5_hold_se",
+    "b5_hold_uc",
+    "b5_iid"
+   ]
+  },
+  {
+   "check": "B2 new holds absent from every training/selection combo set",
+   "pass": true
+  },
+  {
+   "check": "B3 historical pairs absent from b5_train/b5_dev/b5_test_iid; present only in b5x_train",
+   "pass": true
+  },
+  {
+   "check": "B4 every flag of every held-out pair is seen singly in b5_train",
+   "pass": true
+  },
+  {
+   "check": "B5 b5x_train (BX1 exposure) disjoint from the new holds by generator parameters",
+   "pass": true
+  },
+  {
+   "check": "B6 training support = none + 4 singles + U+S + C+E (7 combos); exposure adds U+E, S+C",
+   "pass": true,
+   "detail": [
+    "none",
+    "unreliable",
+    "side_effect",
+    "correlated",
+    "events",
+    "unreliable+side_effect",
+    "correlated+events",
+    "unreliable+events",
+    "side_effect+correlated"
+   ]
+  },
+  {
+   "check": "C1 generated configs land in their generator parameters (cell ranges / k / flags checked on the public prices; +-0.1% rounding tolerance)",
+   "pass": true,
+   "detail": {
+    "problems": [],
+    "rounding_boundary_configs": [
+     [
+      "b5_train",
+      307
+     ],
+     [
+      "b5_dev",
+      85
+     ],
+     [
+      "b5_hold_uc",
+      1188
+     ],
+     [
+      "b5_hold_uc",
+      3800
+     ],
+     [
+      "b5_hold_se",
+      2872
+     ],
+     [
+      "b5_hold_se",
+      3673
+     ]
+    ]
+   }
+  },
+  {
+   "check": "C2 held-out pairs never co-occur in any training/selection configuration",
+   "pass": true,
+   "detail": {
+    "b5_train": [],
+    "b5_dev": [],
+    "b5x_train": [],
+    "b5_test_iid": []
+   }
+  },
+  {
+   "check": "C2b split_of_params (table v2): no training/dev/test/price/k configuration lies in a new-hold family",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "check": "C3 historical pairs occur in b5x_train only",
+   "pass": true
+  },
+  {
+   "check": "C4 no duplicate configuration across b5 splits (and vs extended-04 train/dev/heldout_comp)",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "check": "C5 configuration seeds unique and disjoint from extended-04 seed ranges",
+   "pass": true
+  },
+  {
+   "check": "C6 eval world seeds unique, disjoint from extended-04 eval worlds and the training band",
+   "pass": true
+  },
+  {
+   "check": "D1 labels are functions of the visible history (0 conflicts)",
+   "pass": true,
+   "detail": {
+    "distinct_histories": 2071,
+    "conflicts": 0
+   }
+  },
+  {
+   "check": "D2 supplied BX2/BO features are functions of the visible history (0 conflicts)",
+   "pass": true,
+   "detail": {
+    "conflicts": 0
+   }
+  },
+  {
+   "check": "D3 simulator state == public state rebuilt from the visible history",
+   "pass": true,
+   "detail": {
+    "mismatches": 0
+   }
+  }
+ ],
+ "pairs": {
+  "unreliable+side_effect": {
+   "role": "training_pair",
+   "generable": true,
+   "configs": 32,
+   "interaction_rate": 0.1875,
+   "first_decision_probe_unique_rate": 0.0,
+   "first_decision_differs_from_ablation": {
+    "without_unreliable": 0.28125,
+    "without_side_effect": 0.3125
+   },
+   "naive_policy_regret_mean": {
+    "without_unreliable": 8.02330345934465,
+    "without_side_effect": 1.0346176605806412
+   },
+   "naive_policy_regret_gt_eps_frac": {
+    "without_unreliable": 0.3125,
+    "without_side_effect": 0.15625
+   },
+   "naive_policy_regret_gt_eps_both_frac": 0.15625,
+   "V_star_mean": 158.89907373910492
+  },
+  "unreliable+correlated": {
+   "role": "new_hold",
+   "generable": true,
+   "configs": 32,
+   "interaction_rate": 0.0,
+   "first_decision_probe_unique_rate": 0.09375,
+   "first_decision_differs_from_ablation": {
+    "without_unreliable": 0.71875,
+    "without_correlated": 0.0
+   },
+   "naive_policy_regret_mean": {
+    "without_unreliable": 60.68032935881689,
+    "without_correlated": 0.4165316926978364
+   },
+   "naive_policy_regret_gt_eps_frac": {
+    "without_unreliable": 0.90625,
+    "without_correlated": 0.15625
+   },
+   "naive_policy_regret_gt_eps_both_frac": 0.15625,
+   "V_star_mean": 158.83697176045752
+  },
+  "unreliable+events": {
+   "role": "historical_challenge",
+   "generable": true,
+   "configs": 32,
+   "interaction_rate": 0.25,
+   "first_decision_probe_unique_rate": 0.25,
+   "first_decision_differs_from_ablation": {
+    "without_unreliable": 0.5625,
+    "without_events": 0.625
+   },
+   "naive_policy_regret_mean": {
+    "without_unreliable": 54.619830023115234,
+    "without_events": 1.8401564777717554
+   },
+   "naive_policy_regret_gt_eps_frac": {
+    "without_unreliable": 0.9375,
+    "without_events": 0.375
+   },
+   "naive_policy_regret_gt_eps_both_frac": 0.34375,
+   "V_star_mean": 136.96120958533646
+  },
+  "side_effect+correlated": {
+   "role": "historical_challenge",
+   "generable": true,
+   "configs": 32,
+   "interaction_rate": 0.0,
+   "first_decision_probe_unique_rate": 0.25,
+   "first_decision_differs_from_ablation": {
+    "without_side_effect": 0.5,
+    "without_correlated": 0.0
+   },
+   "naive_policy_regret_mean": {
+    "without_side_effect": 6.7175747106054295,
+    "without_correlated": 0.11449401765007483
+   },
+   "naive_policy_regret_gt_eps_frac": {
+    "without_side_effect": 0.53125,
+    "without_correlated": 0.09375
+   },
+   "naive_policy_regret_gt_eps_both_frac": 0.09375,
+   "V_star_mean": 160.28140320616646
+  },
+  "side_effect+events": {
+   "role": "new_hold",
+   "generable": true,
+   "configs": 32,
+   "interaction_rate": 0.15625,
+   "first_decision_probe_unique_rate": 0.1875,
+   "first_decision_differs_from_ablation": {
+    "without_side_effect": 0.65625,
+    "without_events": 0.1875
+   },
+   "naive_policy_regret_mean": {
+    "without_side_effect": 8.418245909009592,
+    "without_events": 0.28538197639631546
+   },
+   "naive_policy_regret_gt_eps_frac": {
+    "without_side_effect": 0.59375,
+    "without_events": 0.125
+   },
+   "naive_policy_regret_gt_eps_both_frac": 0.125,
+   "V_star_mean": 156.95962412064537
+  },
+  "correlated+events": {
+   "role": "training_pair",
+   "generable": true,
+   "configs": 32,
+   "interaction_rate": 0.0,
+   "first_decision_probe_unique_rate": 0.40625,
+   "first_decision_differs_from_ablation": {
+    "without_correlated": 0.0,
+    "without_events": 0.21875
+   },
+   "naive_policy_regret_mean": {
+    "without_correlated": 0.0436378408688447,
+    "without_events": 0.3002662593333958
+   },
+   "naive_policy_regret_gt_eps_frac": {
+    "without_correlated": 0.03125,
+    "without_events": 0.21875
+   },
+   "naive_policy_regret_gt_eps_both_frac": 0.0,
+   "V_star_mean": 160.23417871042093
+  }
+ },
+ "split_definition": {
+  "b5_train": {
+   "cells": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "k": [
+    1,
+    2,
+    8
+   ],
+   "combos": [
+    "none",
+    "unreliable",
+    "side_effect",
+    "correlated",
+    "events",
+    "unreliable+side_effect",
+    "correlated+events"
+   ],
+   "config_seed_base": 5100000000,
+   "pool_size": 384
+  },
+  "b5_dev": {
+   "cells": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "k": [
+    1,
+    2,
+    8
+   ],
+   "combos": [
+    "none",
+    "unreliable",
+    "side_effect",
+    "correlated",
+    "events",
+    "unreliable+side_effect",
+    "correlated+events"
+   ],
+   "config_seed_base": 5200000000,
+   "pool_size": 128
+  },
+  "b5_test_iid": {
+   "cells": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "k": [
+    1,
+    2,
+    8
+   ],
+   "combos": [
+    "none",
+    "unreliable",
+    "side_effect",
+    "correlated",
+    "events",
+    "unreliable+side_effect",
+    "correlated+events"
+   ],
+   "config_seed_base": 5300000000,
+   "pool_size": 128
+  },
+  "b5_heldout_price": {
+   "cells": [
+    [
+     1,
+     1
+    ]
+   ],
+   "k": [
+    1,
+    2,
+    8
+   ],
+   "combos": [
+    "none",
+    "unreliable",
+    "side_effect",
+    "correlated",
+    "events",
+    "unreliable+side_effect",
+    "correlated+events"
+   ],
+   "config_seed_base": 5400000000,
+   "pool_size": 128
+  },
+  "b5_heldout_k": {
+   "cells": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "k": [
+    4
+   ],
+   "combos": [
+    "none",
+    "unreliable",
+    "side_effect",
+    "correlated",
+    "events",
+    "unreliable+side_effect",
+    "correlated+events"
+   ],
+   "config_seed_base": 5500000000,
+   "pool_size": 128
+  },
+  "b5_hold_uc": {
+   "cells": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "k": [
+    1,
+    2,
+    8
+   ],
+   "combos": [
+    "unreliable+correlated"
+   ],
+   "config_seed_base": 5600000000,
+   "pool_size": 4000
+  },
+  "b5_hold_se": {
+   "cells": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "k": [
+    1,
+    2,
+    8
+   ],
+   "combos": [
+    "side_effect+events"
+   ],
+   "config_seed_base": 5700000000,
+   "pool_size": 4000
+  },
+  "b5x_train": {
+   "cells": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ]
+   ],
+   "k": [
+    1,
+    2,
+    8
+   ],
+   "combos": [
+    "none",
+    "unreliable",
+    "side_effect",
+    "correlated",
+    "events",
+    "unreliable+side_effect",
+    "correlated+events",
+    "unreliable+events",
+    "side_effect+correlated"
+   ],
+   "config_seed_base": 5800000000,
+   "pool_size": 768
+  }
+ },
+ "challenge_split": {
+  "name": "heldout_comp",
+  "combos": [
+   "unreliable+events",
+   "side_effect+correlated"
+  ],
+  "note": "extended-04 configurations (B1/F2 evaluated on them): inspected data"
+ },
+ "combo_counts": {
+  "b5_train": {
+   "correlated": 53,
+   "correlated+events": 60,
+   "events": 50,
+   "none": 63,
+   "side_effect": 57,
+   "unreliable": 49,
+   "unreliable+side_effect": 52
+  },
+  "b5x_train": {
+   "correlated": 93,
+   "correlated+events": 90,
+   "events": 85,
+   "none": 99,
+   "side_effect": 90,
+   "side_effect+correlated": 76,
+   "unreliable": 72,
+   "unreliable+events": 84,
+   "unreliable+side_effect": 79
+  },
+  "b5_dev": {
+   "correlated": 17,
+   "correlated+events": 15,
+   "events": 28,
+   "none": 16,
+   "side_effect": 14,
+   "unreliable": 18,
+   "unreliable+side_effect": 20
+  },
+  "b5_test_iid": {
+   "correlated": 17,
+   "correlated+events": 22,
+   "events": 14,
+   "none": 13,
+   "side_effect": 18,
+   "unreliable": 30,
+   "unreliable+side_effect": 14
+  },
+  "b5_heldout_price": {
+   "correlated": 13,
+   "correlated+events": 25,
+   "events": 14,
+   "none": 16,
+   "side_effect": 20,
+   "unreliable": 16,
+   "unreliable+side_effect": 24
+  },
+  "b5_heldout_k": {
+   "correlated": 28,
+   "correlated+events": 15,
+   "events": 16,
+   "none": 21,
+   "side_effect": 17,
+   "unreliable": 10,
+   "unreliable+side_effect": 21
+  },
+  "b5_hold_uc": {
+   "unreliable+correlated": 4000
+  },
+  "b5_hold_se": {
+   "side_effect+events": 4000
+  }
+ },
+ "cpu_s": 45.349602256
+}
