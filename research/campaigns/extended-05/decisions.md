@@ -75,3 +75,4 @@
   - Consistent with the BX1-L1 result, combination exposure partially helps across two model families. The effect is sub-threshold per the registered B-X rule; there is no transfer claim.
 - 2026-09-27T03:08Z: **B-XC registered (adaptive, labelled):** BX1 vs B0 L1 on fresh seeds 20–22, evaluated on **fresh U+C configuration draws** (new split b5c_hold_uc, seed base 5.9e9, same sizing rule). Primary: mean paired first-probe gain ≥ +.10 with all pairs > 0, and gap regret lower in 3/3.
 - 2026-09-27T03:09Z: B-XC trainings launched (B0 and BX1 L1, seeds 20–22, existing bx-labels). The b5c evaluation split is being added by a builder; b5c labels will be built only after merge.
+- 2026-09-27T03:22Z: B-XC tooling merged (f22ece8d). The b5c split (seed base 5.9e9) passes its audit 11/11; all b1/b5 paths are bit-identical; the scorer's --bxc implements the registered primary. B-XC labels and references launched.
