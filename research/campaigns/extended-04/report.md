@@ -1,6 +1,6 @@
 # Extended-04 report: metacognitive control, rational backtracking, and the value of structure
 
-**Status: FINAL** (2026-09-26T22:50Z). Every promoted or confirmed reading was reproduced from raw rows by independent auditors ([B1](review/b1-independent-audit.md), [A2/C/A1](review/ac-independent-audit.md), [F/B2](review/f-independent-audit.md)), and their corrections are applied here. The campaign ran on the pro6000, starting 2026-09-26T18:43Z.
+**Status: FINAL** (2026-09-26T22:50Z; §2 composition figures and §6 horizon wording corrected after external review). Every promoted or confirmed reading was reproduced from raw rows by independent auditors ([B1](review/b1-independent-audit.md), [A2/C/A1](review/ac-independent-audit.md), [F/B2](review/f-independent-audit.md)), and their corrections are applied here. The campaign ran on the pro6000, starting 2026-09-26T18:43Z.
 
 **Sources:**
 - Design: [design.md](design.md), v1 plus the review-driven v2 ([review/design-review.md](review/design-review.md)).
@@ -17,7 +17,7 @@
 | 3 | A controller that recognizes stagnation and changes strategy | **Supplied rule confirmed; learned controller no better.** R-mask over the public progress diagnostic v1 cut stagnant steps by 73–86% at no utility or success cost on 3 fresh lineages and sealed worlds (F1b, adaptively registered after F1's mis-specified episode-level clause failed; a replication, not a blind test). The step reduction is near-mechanical, because the rule acts on the diagnostic that scores it. The finding is that utility and success do not fall, while per-episode cost rises slightly (+.0003 to +.0015). The rule also rescues collapsed RL policies (A1: success .00–.08 → .87–.92). A *learned* metacontroller did not beat this rule and harmed two of three loop-prone bases (C-H1). |
 | 4 | Calibrated predictions of a small useful set of metacognitive variables | **In-distribution only.** The depworld appraisal P(success) has ECE .009–.026 on fresh worlds, and it predicts that "stop" is harmful. The *within-intervention* predicted-vs-actual effect correlation is weak (ρ .18–.27), and the value of a sampled step is not predictable. The probeworld value head is calibrated in-distribution for L4 only. It fails on held-out reuse horizons and condition combinations, and passes on held-out prices in 2/3 seeds. An own-greedy-return linear readout (B2) is no better. |
 | 5 | Causal evidence that deliberate regulation beats automatic control and simple heuristics | **Not established.** Learned control lost to the best fixed rule on P1-RL r0/r1 (−.017, −.023) and gained +.018 on r2, mostly by stopping early and below the registered .02. The r2 gain depends on trained appraisal (the shuffled-target controller collapses), but that is one lineage below threshold. On competent bases the controller was essentially the default, so C-H2/C-H3 passed degenerately. |
-| 6 | A measured response to computation prices and structure reuse | **Yes, in probeworld (confirmed).** The optimal build decision switches with ρ_k and reuse horizon k (exact labels). Trained policies track it within .016–.045 of the optimal build rate on held-out prices and horizons (B1 plus F2 on fresh seeds and outcome draws). |
+| 6 | A measured response to computation prices and structure reuse | **Yes, in probeworld (confirmed),** as a choice of *when to purchase a supplied build/use operation*. This is not discovery or construction of a new representation. The optimal build decision switches with ρ_k and reuse horizon k (exact labels). Trained policies track it within .016–.045 of the optimal build rate on held-out prices and horizons (B1 plus F2 on fresh seeds and outcome draws). |
 | 7 | An audited account of supplied, learned and generalized | [ledger-supplied-learned.md](ledger-supplied-learned.md), plus four independent audits and an internal design review. Summary in §6. |
 
 **It is acceptable to finish with an informative negative result, and deliverables 1 and 5 are negative.** No claim of learned metacognitive control rests on a descriptive probe.
@@ -38,7 +38,7 @@
   - probing when not optimal: ≤ .01;
   - probing when uniquely optimal: .83–.86;
   - unjustified switches: ≤ .05.
-- **Composition limit (replicated exactly).** On held-out *combinations of conditions*, the uniquely-optimal probe rate is .545 in all 6 seeds. This is a **probing** limit: once a probe fails, switching is .90–.98 of π*.
+- **Composition limit (replicated, with different magnitudes).** On held-out *combinations of conditions*, the uniquely-optimal probe rate stays below the .80 threshold in all 6 seeds: .636/.636/.773 in B1 seeds 0–2 (B1 audit) and .545 (48/88) in F2 seeds 3–5. This is a **probing** limit: once a probe fails, switching is .90–.98 of π* (F2). *(Corrected 2026-09-26 after external review: an earlier version said ".545 in all 6 seeds".)* B1 and F2 are distinct experiments. F2 used new training seeds and new outcome draws on **the same 128 held-out configurations** as B1, so it is not new configuration-level transfer.
 - **Supplied vs learned.** The environment, prior and exact labels are supplied; the labels are training targets only. Belief tracking, when to probe, switch or build, and cost sensitivity are learned from public inputs; leakage was checked on 2,525 steps.
 
 ## 3. Track A: deployment and the absence of improvement (depworld)
@@ -106,7 +106,7 @@
   - probeworld belief-dependent probing, switching and building;
   - depworld appraisal of success and of stop/mask-top effects.
 - **Generalized:**
-  - probeworld to new price regions and reuse horizons, but not to new condition combinations;
+  - probeworld to a held-out price region and an **unseen intermediate** reuse horizon (k = 4, with training on k ∈ {1, 2, 8}; interpolation, not out-of-range extrapolation), but not to held-out condition combinations;
   - the depworld recovery rule's no-harm property to fresh lineages and sealed worlds;
   - appraisal calibration to fresh worlds of the training distribution, but not under generator shift.
 
