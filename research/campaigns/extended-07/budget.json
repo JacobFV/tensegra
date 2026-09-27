@@ -13,7 +13,9 @@
   "concurrency": {
     "default_memory_heavy": 4,
     "max": 8,
-    "min_free_gb": 16
+    "min_free_gb": 16,
+    "raised_to": 6,
+    "raise_basis": "P2 smokes: <=2.3 GB RSS per job; 61 GiB free; 6 x 2.3 = 14 GB leaves >40 GiB headroom"
   },
   "gpu_accounting": "charged = union of wall intervals of jobs tagged '-gpu-' (actual GPU use); legacy extended-06 occupancy reported separately and not charged",
   "cpu_accounting": "all remote work via job.py receipts under ~/structured-latent-dynamics-campaign07/results (main) and results/dev (metered.sh); local analysis/audits declared in local_cpu",
@@ -34,17 +36,21 @@
     {
       "what": "P1 analyst local",
       "core_seconds": 150
+    },
+    {
+      "what": "P2 infra builder local",
+      "core_seconds": 5
     }
   ],
   "status": "active",
-  "charged_cpu_core_seconds": 3818.9,
+  "charged_cpu_core_seconds": 5378.3,
   "charged_gpu_seconds": 0.0,
   "legacy_occupancy_seconds_not_charged": 1811.4,
   "charged_breakdown": {
     "remote_main_cpu": 3470.4,
-    "remote_dev_cpu": 268.5,
-    "local_cpu": 80,
-    "receipts": 45,
+    "remote_dev_cpu": 1678.0,
+    "local_cpu": 230,
+    "receipts": 81,
     "running_unreceipted": []
   }
 }

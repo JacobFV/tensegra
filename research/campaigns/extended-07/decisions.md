@@ -75,3 +75,14 @@
   - LRN's gains over RAWF (invariance, pool) point to auxiliary shaping (D), not reading.
   - **Benchmark scope:** only 9/128 SCE flip units differ from every pair's optimum; pairwise Q sums recover the full optimum in 94–96%. It supports full-vs-single composition, **not irreducible third-order** interaction.
   - **Next:** Phase 2 = branch B (the consumer must rely on factors), with the S×R 2×2 to test D. The independent P1 audit is commissioned.
+- 2026-09-27T17:33Z: **P2 infrastructure merged** (campaign/e07-p2infra aca42d90; 106 tests pass; 443 metered core-s). **P2-SCREEN and P2-CONFIRM registered before any P2 data.**
+  - **Screen:** seeds 40–44 in bank mode.
+    - Arms: the 2×2; separate-encoder predictors; consumers under exact/oof/mix contracts, each evaluated with exact and predicted factors.
+    - Evaluated on b6c, used as validation only.
+    - Selection rule, reference and floors are fixed.
+  - **Confirm:** fresh b6d pool (6.43e9 / worlds 6.48e9) + 320 octets (6.66e9); fresh seeds 50–54.
+    - Primary: flip accuracy, with CI lower > 0 and ≥ 4/5 pairs.
+    - Near-miss ≥ −.05; invariance ≥ −.03; competence floor; 20k draws with seed 20260928.
+  - All new seed ranges are registered; each overlap is only with its parent sub-range.
+  - **Concurrency raised to 6** (profiled ≤ 2.3 GB/job).
+  - A b6d split implementation is commissioned so the confirmation labels can be built while the screen trains.

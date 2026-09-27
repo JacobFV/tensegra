@@ -18,6 +18,41 @@
    ],
    "statistics": "two-level bootstrap (seed, then configuration / whole octet), n_boot 20000, boot seed 7, half-split MC check",
    "order": "support refs -> dev-s30 smoke -> dev s31/32 -> score-dev -> b6c-s35 smoke (historical check 'identical' for all 4 models) -> b6c s36-39 -> score b6c"
+  },
+  {
+   "id": "P2-SCREEN",
+   "status": "registered (development/selection; not confirmatory)",
+   "branch": "B (consumer) + D test via S x R 2x2, chosen from P1-DIAG localization (consumption primary, acquisition secondary)",
+   "arms": {
+    "2x2 (bank mode, 4000 bank updates, common init per seed, separate actor/aux optimizers+clips, keyed action RNG)": [
+     "S0R0",
+     "S1R0",
+     "S0R1",
+     "S1R1"
+    ],
+    "predictors": "separately trained factor predictors with their OWN encoder (5 out-of-fold over training configurations + 1 full-data) per seed",
+    "consumers": "from-scratch recurrent consumers (SUP architecture) under input contracts exact / oof / mix (half the episodes with noise matched per coordinate to OOF error); each evaluated with EXACT factors (privileged ceiling, diagnostic) and with PREDICTED factors from the full-data separate predictor (deployable)"
+   },
+   "seeds": "40-44 (training worlds 1.20e10-1.25e10); history bank from dev lineage s30 behaviour on b6_B0 only (worlds 1.29e10), shared by all arms/seeds",
+   "evaluation": "b6c_hold_SCE (400) + 320 SCE octets (inspected pool: used here as VALIDATION for selection only) + UCE octets (descriptive); campaign07_diag protocols B and cf; scoring campaign07_diagscore two-level 20000 draws seed 7",
+   "readouts": [
+    "2x2: flip / near-miss / invariance / pool accuracy, gap regret; shaping effect S1R0-S0R0, reading effect S0R1-S0R0, interaction; factor reliance (zero-factor action change) for R1 arms",
+    "consumers: same metrics with exact vs predicted inputs; exact->predicted degradation; reliance"
+   ],
+   "selection_rule": "Reference = the better (screen pool eps-optimal accuracy) of S1R1 and S1R0 (strong ordinary equal-information baselines). Candidates = DEPLOYABLE arms/consumers (predicted-factor inputs only; exact-factor evaluations never selected). Choose the candidate with the largest mean screen flip-accuracy gain over the reference subject to: near-miss mean diff >= -.05, invariance mean diff >= -.03, pool accuracy >= reference - .02 and >= .70 absolute. If none qualifies (or best flip gain < .03) -> no confirmation of a repair; report branch E / negative and use remaining budget only for a localized follow-up.",
+   "budget": "~12k core-s (bank mode); on-policy variants not run in screen"
+  },
+  {
+   "id": "P2-CONFIRM",
+   "status": "registered rule (contrast filled in by P2-SCREEN selection rule; no confirmation data exists)",
+   "population": "FRESH S+C+E pool b6d: 400 configurations at base 6.43e9 (eval worlds 6.48e9) + 320 fresh octets at CF base 6.66e9; labels built before any confirmation evaluation; never used for selection",
+   "lineages": "fresh seeds 50-54 (training worlds 1.30e10-1.35e10), 5 paired lineages; same history bank; same recipe as screen; final checkpoint; no selection",
+   "primary": "flip accuracy (full-member accuracy on unique-optimum flip units of SCE octets, all decision types pooled, whole octets) candidate - reference: mean > 0, two-level (seed pair, then whole octet / configuration) 95% CI lower bound > 0, >= 4/5 pairs positive",
+   "non_inferiority": "near-miss accuracy mean diff >= -.05; invariance accuracy mean diff >= -.03",
+   "competence_floor": "b6d pool eps-optimal decision accuracy >= reference - .02 and >= .70 absolute; success >= .8 x pi* success",
+   "regret": "gap regret difference reported with two-level CI (secondary)",
+   "statistics": "n_boot 20000, bootstrap seed 20260928 (fixed now), Monte Carlo half-split check reported for every endpoint whose CI bound is within .005 of its threshold; seed-level values and support always reported",
+   "decision": "SUPPORTED iff primary AND non-inferiority AND competence floor"
   }
  ]
 }
