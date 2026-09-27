@@ -161,10 +161,11 @@ def test_public_sampler_registered_rule():
 
 # --- branch labels -------------------------------------------------------------------------
 
-def _labels(m, seeds, **cfg_kw):
+def _labels(m, seeds, teacher_factory=None, **cfg_kw):
     cache = SolverCache(EXEC)
     cfg = HRConfig(**{"check_fraction": 1.0, "max_steps": 40, "p_other": 0.3, **cfg_kw})
-    return hr_labels(m, [make(s, cache) for s in seeds], seeds, cfg), cfg
+    kw = {} if teacher_factory is None else {"teacher_factory": teacher_factory}
+    return hr_labels(m, [make(s, cache) for s in seeds], seeds, cfg, **kw), cfg
 
 
 def test_branch_with_option_d_reproduces_main_line():
@@ -346,3 +347,235 @@ def test_single_deviation_gain_equals_branched_advantage():
     assert T._deviate(ps, oracle, 0.0, False) == (0.25, "call_now")    # unsampled step 0 is never used
     assert T._deviate(ps, oracle, 0.0, True) == (pytest.approx(0.4), "abstain")
     assert T._deviate(ps, oracle, 0.5, False) == (0.0, None)
+
+
+# --- A-HR2: multi-step options (delegate T; budget override B) ------------------------------------
+
+from tensegra.campaign02_training import digest  # noqa: E402
+from tensegra.campaign03_depworld import DepReference  # noqa: E402
+from tensegra.campaign05_options import (DELEGATE_MAX_STEPS, budget_override_options, committed,  # noqa: E402
+                                         make_teacher, multi_option_set)
+
+
+def _labels_digest(m, seeds, **cfg_kw):
+    """Digest of hr_labels' episodes/points (CPU timings excluded): pins the default A-HR outputs."""
+    (eps, points, stats), _ = _labels(m, seeds, **cfg_kw)
+    keep = {k: v for k, v in stats.items() if k not in ("cpu", "timing_branch")}
+    return digest({"episodes": eps, "points": points, "stats": keep})
+
+
+# Produced by the A-HR code at e29f06ba (before A-HR2) on the registered CPU environment.
+GOLDEN_AHR = {"anchored": "6afe5ca141dee2e88b4d727828a8c28809338e05952c21ec0428b5be8430da78",
+              "full": "2eb69cd2a933fa65964571569185892082d645e01e3e8bb77ce9c89e81076967"}
+
+
+def test_default_a_hr_outputs_bit_identical_to_pre_hr2():
+    m = actor(5)
+    seeds = [DEV + 60 + i for i in range(4)]
+    assert _labels_digest(m, seeds) == GOLDEN_AHR["anchored"]
+    assert _labels_digest(m, seeds[:2], option_mode="full", all_states=False, max_points=2, max_steps=16,
+                          p_other=0.5) == GOLDEN_AHR["full"]
+
+
+def test_teacher_is_fresh_stateless_and_public_only():
+    t = make_teacher()
+    assert isinstance(t, DepReference) and t.mode == "reuse" and t.reference_name == "dep_reuse"
+    assert set(vars(t)) == {"mode", "initial_budget", "reference_name"}     # no episode state, no environment
+    # the teacher's choice (and the multi option set) is a function of the public observation: two worlds
+    # with different hidden values and the same visible history give the same proposal; choose never
+    # mutates the observation it is given
+    seed = DEV + 54
+    spec = generate_depworld(seed, foreign_records=2, p_event=0.5)
+    other = replace(spec, funds=spec.funds + 7, capacity=spec.capacity + 3)
+    envs = [DepWorkshop(s, executor=EXEC, address_seed=seed) for s in (spec, other)]
+    for a in (Action("think"), Action("inspect", {"target": spec.items[0].handle}), Action("inspect", {"target": "map"}),
+              None):
+        obs = [e.observe() for e in envs]
+        assert obs[0].to_dict() == obs[1].to_dict()     # same visible history, different hidden requirements
+        before = obs[0].to_dict()
+        acts = [make_teacher().choose(o, action_catalog(o)) for o in obs]
+        assert acts[0] == acts[1] and obs[0].to_dict() == before
+        cat = action_catalog(obs[0])
+        for d_index in range(len(cat)):
+            assert multi_option_set(obs[0], cat, d_index) == multi_option_set(obs[1], action_catalog(obs[1]), d_index)
+        if a is not None:
+            for e in envs:
+                e.step(a)
+    # along a whole teacher trajectory the proposal never reads the observation's identity/mutable state:
+    # a deep copy gives the same action and the observation is left untouched
+    from copy import deepcopy
+    env, t = make(DEV + 91), make_teacher()
+    o = env.observe()
+    while not o.done and o.step < 40:
+        before = o.to_dict()
+        a = t.choose(o, action_catalog(o))
+        assert a == make_teacher().choose(deepcopy(o), action_catalog(o)) and o.to_dict() == before
+        o = env.step(a)
+
+
+class _ReplayTeacher:
+    """A 'teacher' that proposes D's main-line action for every main-line observation."""
+
+    def __init__(self, table):
+        self.table = table
+
+    def choose(self, o, actions):
+        return self.table[digest(o.to_dict())]
+
+
+def test_delegate_that_picks_d_actions_reproduces_the_main_line():
+    m = actor(5)
+    seeds = [DEV + 60 + i for i in range(6)]
+    table = {}
+
+    def hook(ep, d, choice):
+        table[digest(d.observation.to_dict())] = d.actions[d.default]
+    d_rollouts(m, [make(s) for s in seeds], seeds, HRConfig(max_steps=40), hook=hook)
+    (eps, points, stats), _ = _labels(m, seeds, option_mode="multi", teacher_factory=lambda: _ReplayTeacher(table))
+    assert points and stats["default_check_matches"] == stats["default_checks"]
+    for p in points:
+        assert [o["type"] for o in p["options"]] == ["D", "delegate"]
+        d, t = p["options"]
+        assert t["index"] == d["index"] and t["teacher_first_is_d"]
+        # T then D == the main line, bit for bit: realized utility, success, cost, length
+        assert (t["dU"], t["success"], t["cost_rem"], t["dsteps"]) == (d["dU"], d["success"], d["cost_rem"],
+                                                                        d["dsteps"])
+        assert t["teacher_agree"] == t["teacher_steps"] <= DELEGATE_MAX_STEPS
+        assert t["delegate_end"] in ("commit", "max_steps", "episode_end", "cap")
+
+
+def test_delegate_label_matches_independent_resimulation():
+    m = actor(6)
+    seeds = [DEV + 70 + i for i in range(6)]
+    (eps, points, stats), cfg = _labels(m, seeds, option_mode="multi", check_fraction=0.0, p_other=0.5)
+    info = {e["seed"]: e for e in eps}
+    ends, checked = set(), 0
+    for p in points[:40]:
+        opt = next((o for o in p["options"] if o["type"] == "delegate"), None)
+        if opt is None:
+            continue
+        e = info[p["seed"]]
+        prefix = e["actions"][:p["step"]]
+        env = make(p["seed"])
+        st = {"teacher": None, "n": 0, "on": False, "agree": 0}
+
+        def chooser(decisions, episodes, prefix=prefix, st=st):
+            d, ep = decisions[0], episodes[0]
+            if ep.taken < len(prefix):
+                return [prefix[ep.taken]]
+            if ep.taken == len(prefix):
+                st["u_t"] = ep.env.current_utility()
+                st["teacher"], st["on"] = DepReference("reuse"), True     # fresh teacher at the point
+            elif st["on"]:
+                fb = d.observation.feedback
+                if (fb.get("status") == "success" and ("selection_id" in fb or "assignment_id" in fb)) \
+                        or st["n"] >= DELEGATE_MAX_STEPS:
+                    st["on"] = False
+            if st["on"]:
+                a = d.actions.index(st["teacher"].choose(d.observation, d.actions))
+                st["n"] += 1
+                st["agree"] += a == d.default
+                return [a]
+            return [d.default]
+        run_policy(m, [new_ep(env, cfg.max_steps)], chooser)
+        assert st["u_t"] == p["U_t"]
+        assert env.evaluate()["utility"] - p["U_t"] == opt["dU"]
+        assert (st["n"], st["agree"]) == (opt["teacher_steps"], opt["teacher_agree"])
+        ends.add(opt["delegate_end"])
+        checked += 1
+    assert checked >= 8
+    assert "commit" in ends
+
+
+def test_committed_uses_the_environment_completion_rule():
+    env = make(DEV + 90)
+    t = make_teacher()
+    o = env.observe()
+    n_commits = 0
+    while not o.done and o.step < 60:
+        before = env._completions
+        o = env.step(t.choose(o, action_catalog(o)))
+        assert committed(o) == (env._completions == before + 1)
+        n_commits += committed(o)
+    assert n_commits >= 1
+
+
+def test_budget_override_is_a_subset_of_existing_options():
+    """Option B (next-call budget override, b in {16, 1024, remaining}) is identical to existing A-HR
+    options (budget at D-call points, call_now at other points), so it is not re-branched."""
+    m = actor(4)
+    kinds = set()
+    for seed in (DEV + 50, DEV + 51, DEV + 52, DEV + 53):
+        for oi, full, d in _walk_options(make(seed), m):
+            b = budget_override_options(d.observation, d.actions, d.default)
+            by = {o["index"]: o["type"] for o in oi}
+            assert set(b) <= set(by)
+            for i in b:
+                a = d.actions[i]
+                assert a.kind == "call" and a.arguments["budget"] in (16, 1024, d.observation.remaining_work)
+                assert by[i] in ("budget", "call_now")
+                kinds.add(by[i])
+            da = d.actions[d.default]
+            if da.kind == "call":
+                assert {d.actions[i].arguments["budget"] for i in b} == {
+                    x for x in (16, 1024, d.observation.remaining_work)
+                    if x != da.arguments["budget"] and any(
+                        a.kind == "call" and a.arguments == {**da.arguments, "budget": x} for a in d.actions)}
+    assert "budget" in kinds
+    o0 = make(DEV + 55).observe()        # 'other' anchor (D = think) with open foreign drafts: B = call_now options
+    acts0 = action_catalog(o0)
+    think = next(i for i, a in enumerate(acts0) if a.kind == "think")
+    b0 = budget_override_options(o0, acts0, think)
+    by0 = {o["index"]: o["type"] for o in option_set(o0, acts0, think)}
+    assert b0 and all(by0.get(i) == "call_now" for i in b0)
+
+
+def test_tool_multi_end_to_end(tmp_path):
+    from types import SimpleNamespace
+    T = _tool()
+    tiny = actor(9)
+    binding = {"name": "tiny", "sha256": "0" * 64, "source": "test"}
+    load = lambda b, verify=True: (tiny, SimpleNamespace(max_steps=30, neural_work_per_forward=1.0),  # noqa: E731
+                                   {"parameters": 1, "sha256": b["sha256"]})
+    kw = dict(binding=binding, load_actor_fn=load, solver=_InProcessSolver)
+
+    def args(out, cond, *extra):
+        return ["branch", "--base", "tiny", "--condition", cond, "--worlds", "dev", "--chunk", "0", "1",
+                "--chunk-size", "8", "--output", str(tmp_path / out), *extra]
+    with pytest.raises(SystemExit):
+        T.main(["branch", "--base", "x1-r4", "--condition", "iid_f0", "--chunk", "0", "--option-class", "multi",
+                "--output", str(tmp_path / "x")])
+    with pytest.raises(SystemExit):
+        T.main(args("m", "iid_f0", "--option-class", "multi", "--option-set", "full"), **kw)
+    for cond in ("iid_f0", "iid_f2"):
+        T.main(args("branch", cond), **kw)
+        T.main(args("multi", cond, "--option-class", "multi"), **kw)
+    stems = sorted(p.name for p in (tmp_path / "multi").glob("*.json.gz"))
+    assert stems[0] == "branch-tiny-iid_f0-dev-multi-c000.json.gz" and len(stems) == 4
+    meta = json.loads((tmp_path / "multi" / "branch-tiny-iid_f0-dev-multi-c000.meta.json").read_text())
+    assert meta["option_class"] == "multi" and "dep_reuse" in meta["options"]["delegate"]
+    assert meta["summary"]["b_subset_of_oi_all"]
+    assert meta["summary"]["default_checks"][0] == meta["summary"]["default_checks"][1]
+    out = tmp_path / "a.json"
+    T.main(["analyze", "--branch", str(tmp_path / "branch"), "--multi", str(tmp_path / "multi"), "--folds", "2",
+            "--inner", "2", "--output", str(out)])
+    rep = json.loads(out.read_text())
+    mu = rep["multi"]
+    assert mu["pairing"] == {"multi_episodes": 32, "paired_episodes": 32, "main_line_mismatch": 0,
+                             "point_mismatch": 0, "unpaired_points": 0}
+    pa = mu["G1a_multi_paired"]
+    assert pa["O(I)_excl_abstain"]["mean"] == pytest.approx(
+        rep["pooled"]["hindsight"]["episode_single_deviation_H_excl_abstain"]["mean"])
+    assert pa["T_on_paired_episodes"]["mean"] == pytest.approx(mu["G1a_multi_T"]["mean"])
+    assert pa["T_plus_O(I)_excl_abstain"]["mean"] >= max(pa["O(I)_excl_abstain"]["mean"], mu["G1a_multi_T"]["mean"])
+    assert pa["O(I)_excl_abstain"]["mean"] >= pa["B_from_A-HR_labels"]["mean"] >= 0
+    for k in ("G1b_multi_T", "G1b_multi_T_plus_O(I)_excl_abstain"):
+        g = mu[k]
+        assert g["episodes"] == 32 and "by_D_episode_outcome" in g and "by_firing_anchor" in g
+        assert "abstain" not in g["deviation_types"]
+    assert set(mu["G1b_multi_T"]["deviation_types"]) <= {"D", "delegate"}
+    # the default analysis (no --multi) is unchanged
+    out2 = tmp_path / "b.json"
+    T.main(["analyze", "--branch", str(tmp_path / "branch"), "--folds", "2", "--inner", "2", "--output", str(out2)])
+    rep2 = json.loads(out2.read_text())
+    assert "multi" not in rep2 and rep2["pooled"] == rep["pooled"]
