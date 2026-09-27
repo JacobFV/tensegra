@@ -21,11 +21,13 @@ share it -- and never mixing protocols (denominators are never mixed):
       resolution check (the bounds of the two independent halves of the draws).  --contrast A B: seed-paired A - B.
 
   python research/tools/campaign07_diagscore.py --files DIR/diag-v1-*.jsonl.gz --out score.json [--md score.md] \
-      [--contrast LRN RAWF] [--support-ref LRN-s35=FILE ...] [--tol 0.05] [--n-boot 20000] [--boot-seed 7]
+      [--contrast LRN RAWF] [--support-ref LRN-s35=FILE ...] [--tol T | --tol-coord C=T ...] [--n-boot 20000] [--boot-seed 7]
+  (or --dirs DIR ... --include 'diag-v1-cf-*' instead of --files; tolerances default to semantic per-coordinate values)
 """
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import gzip
 import json
 import math
@@ -42,6 +44,30 @@ PROB_COORDS = ("belief_H", "belief_M", "belief_F", "belief_X", "p_probe_resolves
 BELIEFS = ("belief_H", "belief_M", "belief_F", "belief_X")
 SIGNED = ("build_value_rel",)
 STRAT = ("cost_exact_b2_rel", "cost_probe_first_rel", "cost_b1_first_rel", "cost_use_rel")
+COST_UNIT = ("exp_side_cost_rel", "exp_hard_cost_rel", "cost_exact_b2_rel", "cost_probe_first_rel", "cost_b1_first_rel",
+             "cost_use_rel", "best_strategy_cost_rel", "build_value_rel")
+EPS_REL = 0.005  # decision tolerance eps = 0.5 price units in the cost coordinates' units (price / R; factor contract)
+
+
+def semantic_tol(feats):
+    """Registered-before-use per-coordinate tolerances from the coordinates' semantics (factor contract): cost-unit
+    coordinates eps_rel = .005 (the decision tolerance); probabilities .05; remaining_queries_rel half a query (1/16);
+    binary bookkeeping flags .5 (right side); steps_left_rel half a step (.25)."""
+    out = {}
+    for f in feats:
+        if f in COST_UNIT:
+            out[f] = EPS_REL
+        elif f in PROB_COORDS:
+            out[f] = 0.05
+        elif f == "remaining_queries_rel":
+            out[f] = 1.0 / 16
+        elif f == "steps_left_rel":
+            out[f] = 0.25
+        else:
+            out[f] = 0.5
+    return out
+
+
 MARGIN_BINS = ((0.0, 0.5, "<.5"), (0.5, 2.0, ".5-2"), (2.0, 10.0, "2-10"), (10.0, math.inf, ">=10"))
 
 
@@ -193,7 +219,8 @@ class Cell:
         return out
 
 
-def score(files, tol=0.05, supports=None, n_boot=N_BOOT, boot_seed=7, contrasts=(), tol_coord=None):
+def score(files, tol=None, supports=None, n_boot=N_BOOT, boot_seed=7, contrasts=(), tol_coord=None):
+    """tol None: semantic per-coordinate tolerances (semantic_tol); a number: uniform; tol_coord overrides per coord."""
     supports = supports or {}
     heads = {}
     feats = groups = None
@@ -214,7 +241,8 @@ def score(files, tol=0.05, supports=None, n_boot=N_BOOT, boot_seed=7, contrasts=
             if proto.startswith("A-own_"):
                 proto = "A-own_" + head["models"][proto[len("A-own_"):]]["kind"]
             fi = {f: j for j, f in enumerate(feats)}
-            tolv = np.array([(tol_coord or {}).get(f, tol) for f in feats])
+            base_tol = semantic_tol(feats) if tol is None else {f: tol for f in feats}
+            tolv = np.array([(tol_coord or {}).get(f, base_tol[f]) for f in feats])
             key = (proto, arm)
             A = full.get(key)
             if A is None:
@@ -256,7 +284,7 @@ def score(files, tol=0.05, supports=None, n_boot=N_BOOT, boot_seed=7, contrasts=
                     if abs(target[j]) > tolv[j]:
                         A["sign"][0] += 1
                         A["sign"][1] += (pred[j] > 0) != (target[j] > 0)
-                am, npair, disc = order_errors(pred, target, fi, tol)
+                am, npair, disc = order_errors(pred, target, fi, float(tolv[fi[STRAT[0]]]))
                 if am is not None:
                     A["order"][0] += 1
                     A["order"][1] += not am
@@ -290,7 +318,9 @@ def score(files, tol=0.05, supports=None, n_boot=N_BOOT, boot_seed=7, contrasts=
                     _acc(B, f"iv_rescue:{name}", seed, cl, iv["ok"], 1)
                 else:
                     _acc(B, f"iv_harm:{name}", seed, cl, not iv["ok"], 1)
-    out = {"version": VERSION, "tol": tol, "tol_coord": tol_coord or {}, "n_boot": n_boot, "boot_seed": boot_seed,
+    out = {"version": VERSION, "tol": tol if tol is not None else "semantic", "tol_used": (
+               {f: float(v) for f, v in zip(feats, tolv)} if feats else None), "tol_coord": tol_coord or {},
+           "n_boot": n_boot, "boot_seed": boot_seed,
            "files": [str(f) for f in files], "groups": groups,
            "group_source": next(iter(heads.values()))["group_source"] if heads else None, "cells": {}, "contrasts": {}}
     for (proto, arm), A in sorted(full.items()):
@@ -494,10 +524,12 @@ def _np(o):
 
 def main(argv=None):
     p = argparse.ArgumentParser()
-    p.add_argument("--files", nargs="+", required=True)
+    p.add_argument("--files", nargs="*", default=[])
+    p.add_argument("--dirs", nargs="*", default=[], help="diag output dirs (files matched by --include; no shell globs)")
+    p.add_argument("--include", nargs="*", default=["diag-v1-*.jsonl.gz"], metavar="PATTERN")
     p.add_argument("--out", required=True)
     p.add_argument("--md", default=None)
-    p.add_argument("--tol", type=float, default=0.05)
+    p.add_argument("--tol", type=float, default=None, help="uniform tolerance (default: semantic per coordinate)")
     p.add_argument("--tol-coord", nargs="*", default=None, metavar="COORD=TOL")
     p.add_argument("--support-ref", nargs="*", default=None, metavar="MODEL=FILE")
     p.add_argument("--contrast", nargs=2, action="append", default=[], metavar=("A", "B"))
@@ -512,7 +544,13 @@ def main(argv=None):
         k, v = x.split("=", 1)
         sup[k] = json.loads(Path(v).read_text())
     tc = {k: float(v) for k, v in (x.split("=", 1) for x in a.tol_coord or [])}
-    res = score(a.files, a.tol, sup, a.n_boot, a.boot_seed, [tuple(c) for c in a.contrast], tc)
+    files = list(a.files)
+    for d in a.dirs:
+        files += sorted(str(f) for f in Path(d).iterdir() if any(fnmatch.fnmatch(f.name, pt) for pt in a.include)
+                        and not f.name.startswith("diag-v1-hist-") and f.name.endswith(".jsonl.gz"))
+    if not files:
+        raise SystemExit("no diag files")
+    res = score(files, a.tol, sup, a.n_boot, a.boot_seed, [tuple(c) for c in a.contrast], tc)
     txt = json.dumps(res, indent=1, default=_np)  # serialize before creating the file (no partial outputs)
     with open(a.out, "x") as f:
         f.write(txt)

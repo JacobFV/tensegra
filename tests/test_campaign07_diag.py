@@ -293,6 +293,11 @@ def test_run_end_to_end_and_no_overwrite(tmp_path, pool, dev_worlds):
     assert "B|LRN-RAWF" in res["contrasts"] and "A-own_LRN|LRN-RAWF" in res["contrasts"]
     with pytest.raises(SystemExit):
         S.main(["--files", str(out / files[0]), "--out", str(sc)])
+    sc2 = tmp_path / "score_cf_dirs.json"
+    S.main(["--dirs", str(out), "--include", "diag-v1-A-*", "--out", str(sc2), "--n-boot", "100"])
+    r2 = json.loads(sc2.read_text())
+    assert r2["tol"] == "semantic" and r2["tol_used"]["cost_probe_first_rel"] == 0.005
+    assert all(k.startswith("A-") for k in r2["cells"])
 
 
 def test_cf_path(tmp_path, pool):
