@@ -123,12 +123,13 @@
     "held-out regret",
     "success >= .8 x pi*"
    ],
-   "promotion": "on new holds: probe_unique >= B0 + .15 in 3/3 seed pairs, not-optimal <= .10, regret <= B0",
+   "promotion": "on new holds: probe_unique >= B0 + .15 in 3/3 seed pairs, not-optimal <= .10, regret <= B0 + 1.0 per episode (non-inferiority tolerance registered 2026-09-27 before any B-X run; ~1 SE of per-split regret in extended-04)",
    "statistics": "CIs clustered by configuration; per-seed, per-family",
    "next_branch": {
     "pass": "B-CF fresh seeds",
     "fail": "report unresolved; inspect belief/value localization"
-   }
+   },
+   "v2": "split table probeworld-split-v2 (seeds 5.1e9-5.8e9); holds sized by exact solver (>=60 uniquely-optimal-first-probe configs; U+C >=20 flag-sensitive); B-HR gate on B0 first; arms B0/BX1/BX2/BX3 seeds 10-12; BO seeds 0-2 on ext-04 split (diagnostic)"
   },
   {
    "id": "B-CF",
