@@ -86,12 +86,12 @@ SPEC = [
     ("cost_b1_first_rel", G3, "strategy_costs", "approx_myopic", [0, 2.5], "price / R, clip [-5, 5]", ["c_b1", "f9", "f7", "f11"], True,
      "c_b1 + hard + (1 - p_b1) b2_route, / R (no event re-run term, unlike b2/probe)"),
     ("cost_use_rel", G3, "strategy_costs", "approx_myopic", [0, 5.0], "price / R, clip [-5, 5] (BINDS)",
-     ["C_build", "k", "i", "built", "c_use"], True,
+     ["C_build", "f17", "f18", "c_use"], True,
      "(C_build / max(k - i, 1) if not built else 0) + c_use, / R: build now, amortized over the remaining queries"),
     ("best_strategy_cost_rel", G3, "strategy_costs", "approx_myopic", [0, 2.0], "price / R, clip [-5, 5]",
      ["f11", "f12", "f13", "f14"], True, "min(b2, probe, b1, use) / R == min(f11..f14) (clip is monotone)"),
     ("build_value_rel", G4, "build", "approx_myopic", [-5, 5], "price / R, clip [-5, 5] (BINDS), 0 once built",
-     ["f11", "f12", "f13", "c_use", "C_build", "k", "i", "built"], True,
+     ["f11", "f12", "f13", "c_use", "C_build", "f17", "f18"], True,
      "(rem (min(b2, probe, b1) - c_use) - C_build) / R if not built else 0; rem = max(k - i, 1)"),
     ("remaining_queries_rel", G4, "build", "bookkeeping", [0.125, 1], "rem / 8", ["k", "i"], False,
      "max(k - i, 1) / 8 (also a function of the public vector k/8 and the qfrac input)"),
@@ -141,6 +141,15 @@ def contract() -> dict:
             "dependency_notation": "fN = coordinate N; other names are public config fields or public-state fields "
                                    "(history, reduced, ev, built, cand, cand_valid, usage, i)",
             "replacement_closure": replacement_closure(rows),
+            "core_state": {"variables": ["belief(4; 3 dof)", "reduced", "ev (event this query)", "i (query index)",
+                                         "built", "cand_ok", "cand_exact", "deadline steps used"],
+                           "note": "given the public config, all 23 coordinates are a deterministic function of these "
+                                   "public-state variables; a dependency-consistent replacement edits these and "
+                                   "recomputes factor_features"},
+            "decision_scale": {"eps_price_units": pw.EPS, "eps_in_rel_units": pw.EPS / 100.0,
+                               "note": "cost coordinates are price / R (R = 100): the decision tolerance eps = 0.5 "
+                                       "is 0.005 in these units"},
+            "b6_constants": {"exp_hard_cost_rel": 0.0, "steps_left_rel": 1.0},
             "coordinates": rows}
 
 
