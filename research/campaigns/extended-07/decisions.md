@@ -113,3 +113,7 @@
   - Screen eval / evalX / score are regenerated from 21ab15a6: {own, exact, zero, mean} for every factor-reading model, plus historical LRN/SUP references in evalX.
   - A runner waits for all 15 consumers before launching them.
   - s0r0-bank-s43 exited 0 (146 core-s); the predictor stage is running.
+- 2026-09-27T19:06Z: **Screen training complete.** Predictors (30), OOF (5) and consumers (15) all exited 0 (consumers 125–162 core-s). Confirmation labels are done: b6d eval 835 and cf 2,937 core-s, both exit 0.
+  - **Runner incident:** the eval-stage waiter (p2e_run.sh) never passed its "15 consumers done" check and sat idle for ~40 min. The cause is not established (the check logic matches the status format).
+  - It was stopped. A mistaken relaunch that piped into head -0 was stopped before launching anything, then relaunched correctly.
+  - The eval smoke e07-p2-eval-s40 is running. The lost time is wall time only; no compute was charged.
