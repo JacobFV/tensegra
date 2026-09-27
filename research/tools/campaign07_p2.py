@@ -135,8 +135,9 @@ def cmd_bank(a):
         raise SystemExit(f"refusing to overwrite {out}")
     out.parent.mkdir(parents=True, exist_ok=True)
     pool = T.load_pool(a.labels, a.pool)
-    if a.n_configs:
-        pool = pool[:a.n_configs]
+    if a.n_configs:  # evenly spaced over the pool (b6 pools are stored in combination blocks: keeps every combination)
+        n = len(pool)
+        pool = [pool[(i * n) // a.n_configs] for i in range(min(a.n_configs, n))]
     sources = [parse_source(x) for x in a.source]
     assert len({x["name"] for x in sources}) == len(sources), "duplicate source names"
     assert len(pool) <= 1000 and all(x["reps"] <= 1000 for x in sources) and len(sources) <= 10
@@ -337,7 +338,7 @@ ARMS = {"s0r0": (0, 0), "s1r0": (1, 0), "s0r1": (0, 1), "s1r1": (1, 1)}
 CONTRACTS = ("exact", "oof", "mix")
 
 
-def job_matrix(sha, smoke=False, seeds=P2_SEEDS, bank_updates=4000, finetune=0, k=5):
+def job_matrix(sha, smoke=False, seeds=P2_SEEDS, bank_updates=4000, finetune=0, k=5, onpolicy=0):
     """[(stage, job name, caps, needs, mkdir, argv)] in dependency order.  Smoke: one seed, tiny budgets."""
     import campaign07_remote as rem
     tag = "e07-p2s" if smoke else "e07-p2"
@@ -384,11 +385,13 @@ def job_matrix(sha, smoke=False, seeds=P2_SEEDS, bank_updates=4000, finetune=0, 
                 [TRAIN, "train", *common, "--seed", str(s), "--arch", "fuse", "--shape", str(sh), "--read", str(rd),
                  "--init-from", init, "--bank", bank, "--bank-updates", str(bu), *ft, "--log-every",
                  "5" if smoke else "100", "--out", f"{o}/run"])
-            if smoke:  # also the historical-style on-policy 2x2 (no bank), tiny
+            if smoke or onpolicy:  # the historical-style on-policy 2x2 (no bank; RL + imitation + aux)
                 o = f"{R7}/{tag}-{arm}-onp-s{s}"
-                add("2x2-onpolicy", f"{tag}-{arm}-onp-s{s}", (1800, 1800), [init, f"{TB}/b6_B0.pkl"], [o],
+                add("2x2-onpolicy", f"{tag}-{arm}-onp-s{s}", (1800, 1800) if smoke else (7200, 7200),
+                    [init, f"{TB}/b6_B0.pkl"], [o],
                     [TRAIN, "train", *common, "--seed", str(s), "--arch", "fuse", "--shape", str(sh), "--read",
-                     str(rd), "--init-from", init, "--updates", "10", "--log-every", "5", "--out", f"{o}/run"])
+                     str(rd), "--init-from", init, "--updates", "10" if smoke else str(onpolicy), "--log-every",
+                     "5" if smoke else "100", "--out", f"{o}/run"])
     kk = 2 if smoke else k
     pbu = 20 if smoke else bank_updates
     for s in seeds:
@@ -417,8 +420,9 @@ def job_matrix(sha, smoke=False, seeds=P2_SEEDS, bank_updates=4000, finetune=0, 
         o = f"{R7}/{tag}-eval-s{s}"
         m, needs = [], []
         for arm in ARMS:
-            m += ["--model", f"{arm.upper()}-bank-s{s}={R7}/{tag}-{arm}-bank-s{s}/run"]
-            needs.append(f"{R7}/{tag}-{arm}-bank-s{s}/run/model.pt")
+            for kind in ("bank",) + (("onp",) if onpolicy else ()):
+                m += ["--model", f"{arm.upper()}-{kind}-s{s}={R7}/{tag}-{arm}-{kind}-s{s}/run"]
+                needs.append(f"{R7}/{tag}-{arm}-{kind}-s{s}/run/model.pt")
         pred = f"{R7}/{tag}-pred-ffull-s{s}/run"
         for c in CONTRACTS:
             run = f"{R7}/{tag}-cons-{c}-s{s}/run"
@@ -434,7 +438,7 @@ def job_matrix(sha, smoke=False, seeds=P2_SEEDS, bank_updates=4000, finetune=0, 
 
 
 def cmd_jobs(a):
-    jobs = job_matrix(a.sha, smoke=a.smoke, finetune=a.finetune, bank_updates=a.bank_updates)
+    jobs = job_matrix(a.sha, smoke=a.smoke, finetune=a.finetune, bank_updates=a.bank_updates, onpolicy=a.onpolicy)
     for stage, name, argv in jobs:
         print(f"# [{stage}] {name}")
         print("python research/tools/campaign07_remote.py launch-cmd " + shlex.join(argv))
@@ -465,6 +469,7 @@ def main(argv=None):
     s.add_argument("--smoke", action="store_true")
     s.add_argument("--finetune", type=int, default=0)
     s.add_argument("--bank-updates", type=int, default=4000)
+    s.add_argument("--onpolicy", type=int, default=0, help="also the historical-style on-policy 2x2 (U updates)")
     a = p.parse_args(argv)
     {"init": cmd_init, "bank": cmd_bank, "oof": cmd_oof, "seeds": cmd_seeds, "jobs": cmd_jobs}[a.cmd](a)
 
