@@ -163,3 +163,4 @@
   - **Incident:** the runner wait-loop stalled again (suspected ssh status call without a timeout). Its evals were done at 21:47Z; the frontier was launched by hand, and the watcher now uses timeout 60 on status calls.
   - Staged in research/results/campaign-07/p3-replicate (sha256 verified).
   - **Experimental phase closed;** writing the final report. The b6d labels were used only for this descriptive check; P2-CONFIRM's lineages 50–54 were never trained.
+- 2026-09-27T22:28Z: **Report number check completed** (independent). The P3-REPLICATE numbers are verified from raw logs. **15 precision/wording fixes applied to report.md** (review/report-check.md); no result changed. **Campaign closed.** No e07 jobs are running; next: merge to main.
