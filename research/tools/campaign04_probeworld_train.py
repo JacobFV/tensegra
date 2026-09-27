@@ -15,6 +15,14 @@ Subcommands (all deterministic given their arguments; see research/campaigns/ext
   summarize --runs DIR... --out FILE
       Aggregate eval JSONs across seeds/rungs (+ reference policies).
 
+Extended-05 Track B additions (all default off; defaults reproduce B1/B2/F2 bit for bit, tested):
+  labels --split-set b5          B-SPLIT pools (campaign05_probeworld.SPLITS5 + the extended-04 heldout_comp challenge set)
+  train  --train-split SPLIT     training pool (default 'train'; b5_train for B0/BX2/BO, b5x_train for BX1)
+  train  --inputs public|belief|bx2   supplied public state appended to the inputs (BO: belief; BX2: belief + per-flag
+                                 features); a deterministic public computation, labelled supplied
+  eval   --split-set b5 --episode-rows   b5 eval splits; per-episode decision records (episodes.jsonl.gz) for the
+                                 B-X scorer (campaign05_bx_score.py)
+
 Privileged labels (Q*, A*, stage, dependency, switch, case) enter ONLY training losses; model inputs are the
 public config vector plus the visible step record and the public available-action mask.
 """
@@ -37,6 +45,7 @@ import torch.nn.functional as Fn
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from tensegra import campaign04_probeworld as pw  # noqa: E402
+from tensegra import campaign05_probeworld as pw5  # noqa: E402  (extended-05 Track B; additive)
 
 RUNGS = ("L0", "L1", "L2", "L3", "L4")
 # loss weights per rung (cumulative ladder); every rung keeps the actor-critic RL loss.
@@ -65,7 +74,7 @@ OWN_VALUE_CONTINUATION = "own_greedy_policy_current_params_mc_v1"
 def build_pool(split: str, n: int):
     pool = []
     for idx in range(n):
-        cfg = pw.split_config(split, idx)
+        cfg = pw5.split_config(split, idx)  # == pw.split_config for extended-04 split names
         s = pw.ExactSolver(cfg)
         s.value(pw.initial_state(cfg))
         pool.append((idx, cfg, s._V, s._Q))
@@ -76,7 +85,16 @@ def cmd_labels(a):
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     meta = {}
-    for split, n in [("train", a.n_train)] + [(s, a.n_eval) for s in EVAL_SPLITS]:
+    if getattr(a, "split_set", "b1") == "b5":
+        todo = [(s, None if opt == "sized" else getattr(a, opt)) for s, opt in pw5.B5_LABEL_SPLITS]
+    else:
+        todo = [("train", a.n_train)] + [(s, a.n_eval) for s in EVAL_SPLITS]
+    for split, n in todo:
+        if n is None:  # extended-05 new holds: pool sized by the exact solver, stored in shards
+            meta[split] = build_hold_shards(out, split, a.hold_target, a.hold_max, a.hold_shard,
+                                            getattr(a, "hold_target_sensitive", None))
+            print(split, meta[split], flush=True)
+            continue
         t0 = time.process_time()
         pool = build_pool(split, n)
         dt = time.process_time() - t0
@@ -88,6 +106,9 @@ def cmd_labels(a):
                        "combo_counts": _combo_counts(pool)}
         print(split, meta[split], flush=True)
     meta["version"] = pw.VERSION
+    if getattr(a, "split_set", "b1") == "b5":  # key absent for the B1 split set (labels_meta unchanged)
+        meta["split_set"] = {"name": "b5", "version": pw5.VERSION, "split_table": pw5.SPLIT_TABLE_VERSION,
+                             "hold_target_eligible": a.hold_target}
     meta["eps"] = pw.EPS
     meta["continuation"] = pw.CONTINUATION
     (out / "labels_meta.json").write_text(json.dumps(meta, indent=1))
@@ -101,7 +122,61 @@ def _combo_counts(pool):
     return d
 
 
+def build_hold_shards(out, split, target, max_n, shard, sens_target=None):
+    """extended-05 (design v2 revision 11): label a new-hold pool whose size is fixed by the exact solver -- the
+    smallest prefix of the split's configuration stream with `target` configurations whose first action is uniquely
+    probe (pw5.hold_pool_size).  Stored as shards <split>.shardNNN.pkl (bounded memory) + <split>.shards.json, and
+    the per-configuration s0 facts (incl. registered flag sensitivity) in <split>_s0.json."""
+    t0 = time.process_time()
+    records, cur, shards, idx, nst = [], [], [], 0, []
+    sens_flags = pw5.SENSITIVITY_FLAGS.get(split)
+    t_sens = pw5.HOLD_TARGET_SENSITIVE.get(split, 0) if sens_target is None else (sens_target if sens_flags else 0)
+    n_final = None
+    while idx < max_n and n_final is None:
+        cfg = pw5.split_config(split, idx)
+        s = pw.ExactSolver(cfg)
+        s.value(pw.initial_state(cfg))
+        rec = {"idx": idx, **pw5.s0_record(s)}
+        if sens_flags:
+            rec.update(pw5.flag_sensitivity(cfg, rec["V"], sens_flags))
+        records.append(rec)
+        cur.append((idx, cfg, s._V, s._Q))
+        nst.append(len(s._V))
+        idx += 1
+        n_final = pw5.hold_pool_size(records, target, t_sens)
+        if len(cur) == shard or n_final is not None or idx == max_n:
+            name = f"{split}.shard{len(shards):03d}"
+            with open(out / f"{name}.pkl", "wb") as f:
+                pickle.dump(cur, f, protocol=pickle.HIGHEST_PROTOCOL)
+            shards.append(name)
+            cur = []
+    info = {"n_configs": idx, "sizing_rule": f"smallest prefix with >= {target} s0-uniquely-probe-optimal configs"
+            + (f", >= {t_sens} of them flag-sensitive" if t_sens else ""),
+            "target_eligible": target, "target_eligible_flag_sensitive": t_sens, "eligible": sum(r["probe_unique"] for r in records),
+            "reached_target": n_final is not None, "shards": shards}
+    (out / f"{split}.shards.json").write_text(json.dumps(info, indent=1))
+    (out / f"{split}_s0.json").write_text(json.dumps(records))
+    ks = {k: sum(1 for r in records if r["k"] == k) for k in pw.K_VALUES}
+    info.update(cpu_s=round(time.process_time() - t0, 2), states_total=sum(nst), states_max=max(nst), k_counts=ks,
+                eligible_by_k={k: sum(1 for r in records if r["k"] == k and r["probe_unique"]) for k in pw.K_VALUES})
+    if sens_flags:
+        info["flag_sensitive"] = sum(r["flag_sensitive"] for r in records)
+        info["flag_sensitive_eligible"] = sum(r["flag_sensitive"] and r["probe_unique"] for r in records)
+    return info
+
+
+def pool_parts(labels_dir, split):
+    """Label files of a split: [split] for an ordinary pool, the shard names for a sized (sharded) hold pool."""
+    p = Path(labels_dir) / f"{split}.shards.json"
+    if not (Path(labels_dir) / f"{split}.pkl").exists() and p.exists():
+        return json.loads(p.read_text())["shards"]
+    return [split]
+
+
 def load_pool(labels_dir, split):
+    parts = pool_parts(labels_dir, split)
+    if parts != [split]:  # sharded hold pool: concatenate (use pool_parts + load_pool per shard to bound memory)
+        return [x for part in parts for x in load_pool(labels_dir, part)]
     with open(Path(labels_dir) / f"{split}.pkl", "rb") as f:
         pool = pickle.load(f)
     out = []
@@ -114,12 +189,22 @@ def load_pool(labels_dir, split):
 
 # ------------------------------------------------------------------------------------------------ model
 
+# extended-05 BX3: per-flag modular encoders (design v2 revision 14).  Column indices into the public vector
+# (campaign04_probeworld.Config.public_vector): D_side 10, q 11, corr 12, p_event 13, flags 19..22.
+FLAG_PARAM_COLS = (11, 10, 12, 13)  # unreliable -> q (module sees 1 - q), side_effect, correlated, events
+FLAG_BIT_COL0 = 19
+MODULAR_WIDTH = 16
+B1_PARAMS = 129_189  # B0/L1 ProbeNet at hidden 128 (the parameter count BX3 is matched to)
+
+
 class ProbeNet(nn.Module):
     """GRU over visible-history tokens + public prices.  All heads exist in every rung (matched capacity)."""
 
-    def __init__(self, hidden=HIDDEN, own_value=False):
+    def __init__(self, hidden=HIDDEN, own_value=False, inputs="public", arch="flat"):
         super().__init__()
-        self.inp = nn.Linear(IN_DIM, hidden)
+        self.inputs = inputs  # extended-05: supplied public state appended to the inputs ('public' = none)
+        self.arch = arch  # extended-05: 'flat' (B1) | 'modular' (BX3)
+        self.inp = nn.Linear(IN_DIM + pw5.supplied_dim(inputs), hidden)
         self.gru = nn.GRUCell(hidden, hidden)
         self.trunk = nn.Sequential(nn.Linear(hidden, hidden), nn.Tanh())
         self.pi = nn.Linear(hidden, pw.N_ACTIONS)
@@ -131,11 +216,35 @@ class ProbeNet(nn.Module):
         self.case = nn.Linear(hidden, 4)
         if own_value:  # protocol-B2; created LAST so every B1 parameter gets the identical initialization
             self.v_own = nn.Linear(hidden, 1)
+        if arch == "modular":  # BX3: one gated encoder per flag over (its own parameter, the full public input)
+            self.flag_mods = nn.ModuleList(
+                nn.Sequential(nn.Linear(IN_DIM + 1, MODULAR_WIDTH), nn.Tanh(), nn.Linear(MODULAR_WIDTH, hidden))
+                for _ in range(4))
 
     def step(self, x, h):
-        h = self.gru(torch.tanh(self.inp(x)), h)
+        pre = self.inp(x)
+        if getattr(self, "arch", "flat") == "modular":
+            base = x[:, :IN_DIM]
+            for j, mod in enumerate(self.flag_mods):
+                par = base[:, FLAG_PARAM_COLS[j]:FLAG_PARAM_COLS[j] + 1]
+                if j == 0:
+                    par = 1.0 - par  # detection miss rate (0 when reliable)
+                gate = base[:, FLAG_BIT_COL0 + j:FLAG_BIT_COL0 + j + 1]
+                pre = pre + gate * mod(torch.cat([par, base], 1))
+        h = self.gru(torch.tanh(pre), h)
         z = self.trunk(h)
         return h, z
+
+
+def matched_hidden(arch="modular", inputs="public", target=B1_PARAMS):
+    """Hidden width whose ProbeNet parameter count is closest to `target` (BX3 matched capacity, disclosed)."""
+    best = None
+    with torch.random.fork_rng(devices=[]):  # never perturbs the caller's torch RNG (initialization matching)
+        for hdim in range(64, 160):
+            d = abs(n_params(ProbeNet(hdim, inputs=inputs, arch=arch)) - target)
+            if best is None or d < best[0]:
+                best = (d, hdim)
+    return best[1]
 
 
 def n_params(model):
@@ -184,7 +293,9 @@ def run_batch(model, items, mode, rng=None, need_labels=True):
         if not act:
             break
         avails = [eps[i].available() for i in act]
-        x = torch.tensor([encode(vecs[i], prev[i], av, eps[i].query / eps[i].cfg.k) for i, av in zip(act, avails)])
+        kind = getattr(model, "inputs", "public")
+        x = torch.tensor([encode(vecs[i], prev[i], av, eps[i].query / eps[i].cfg.k)
+                          + pw5.supplied_features(eps[i].cfg, eps[i].state, kind) for i, av in zip(act, avails)])
         idx = torch.tensor(act)
         hn, z = model.step(x, h[idx])
         h = h.index_copy(0, idx, hn)
@@ -321,11 +432,14 @@ def cmd_train(a):
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     t_start = time.process_time()
-    pool = load_pool(a.labels, "train")
+    pool = load_pool(a.labels, getattr(a, "train_split", "train"))
     t_load = time.process_time() - t_start
     w = RUNG_WEIGHTS[a.rung]
+    arch = getattr(a, "arch", "flat")
+    if arch == "modular" and getattr(a, "match_params", True):  # BX3: hidden width matched to B0's parameters
+        a.hidden = matched_hidden(arch, getattr(a, "inputs", "public"))
     torch.manual_seed(1000 + a.seed)  # same init across rungs for a given seed
-    model = ProbeNet(a.hidden, own_value=a.own_value)
+    model = ProbeNet(a.hidden, own_value=a.own_value, inputs=getattr(a, "inputs", "public"), arch=arch)
     # B1 parameters (everything except v_own): optimizer and gradient clipping see exactly these, so v_own can
     # change neither the Adam state nor the clip coefficient of the policy/trunk.
     main_params = [p for n, p in model.named_parameters() if not n.startswith("v_own.")]
@@ -366,6 +480,18 @@ def cmd_train(a):
             "episodes": a.updates * a.batch, "lr": a.lr, "hidden": a.hidden, "params": n_params(model),
             "in_dim": IN_DIM, "cpu_s_total": time.process_time() - t_start, "cpu_s_label_load": t_load,
             "version": pw.VERSION, "continuation": pw.CONTINUATION, "eps": pw.EPS}
+    if getattr(a, "train_split", "train") != "train":  # extended-05 keys: absent under defaults
+        meta["train_split"] = a.train_split
+    if getattr(a, "inputs", "public") != "public":
+        meta["inputs"] = a.inputs
+        meta["in_dim"] = IN_DIM + pw5.supplied_dim(a.inputs)
+        meta["supplied_state"] = {"kind": a.inputs, "features": list(pw5.BX2_FEATURES[:pw5.supplied_dim(a.inputs)]),
+                                  "label": "supplied (deterministic public computation), not learned"}
+    if arch != "flat":
+        meta["arch"] = arch
+        meta["modular"] = {"width": MODULAR_WIDTH, "flag_param_cols": FLAG_PARAM_COLS, "flag_bit_col0": FLAG_BIT_COL0,
+                           "params_target": B1_PARAMS, "hidden_matched": a.hidden,
+                           "form": "tanh(W x + sum_f flag_f * MLP_f([param_f, x])) -> GRU; same public inputs"}
     if own is not None:  # key absent when off (B1 train_meta unchanged)
         meta["own_value"] = {"continuation": OWN_VALUE_CONTINUATION, "every": a.own_every,
                              "episodes_per_collection": a.own_episodes, "collections": own["steps"],
@@ -551,7 +677,7 @@ EVAL_WORLD_OFFSET = 500  # B1 default; Phase F uses a fresh offset (--world-offs
 
 def eval_items(pool, split, worlds, offset=None):
     base = EVAL_WORLD_OFFSET if offset is None else offset
-    return [(cfg, s, pw.world_seed(split, idx, base + r)) for idx, cfg, s in pool for r in range(worlds)]
+    return [(cfg, s, pw5.world_seed(split, idx, base + r)) for idx, cfg, s in pool for r in range(worlds)]
 
 
 def reference_policy_eval(items, name):
@@ -592,8 +718,76 @@ REFERENCE_POLICIES = {"pi_star": lambda s, st, av: s.pi_star(st), "fixed_exact_b
                       "fixed_probe_first": _ref_probe_first}
 
 
+TIE_TOL = 1e-6  # B-LOC deployment class: an eps-optimal action's logit within TIE_TOL of the chosen one's
+
+
+def decision_rows(items, eps, ep_steps, steps, model, R=100.0):
+    """extended-05: per-episode decision records of a rollout (exact labels from the solver in float64; model
+    Q-head and policy logits over the available actions).  Used by --episode-rows and by B-LOC."""
+    out = []
+    heads = []
+    for rec in steps:
+        logits = model.pi(rec["z"]).masked_fill(~rec["mask"], -1e9)
+        heads.append((logits, model.q(rec["z"]) * R))
+    for i, info_list in enumerate(ep_steps):
+        cfg, s, ws = items[i]
+        decs = []
+        siq = 0
+        for info in info_list:
+            t, j, a = info["step_row"], info["row"], info["a"]
+            d = pw5.decision_record(s, info["state"], a)
+            d["step_in_query"] = siq
+            siq = 0 if a in pw.TERMINAL else siq + 1
+            lg, qh = heads[t]
+            lgl = [float(lg[j, b]) for b in d["avail"]]
+            d["qhat"] = [round(float(qh[j, b]), 4) for b in d["avail"]]
+            d["logits"] = [round(x, 4) for x in lgl]
+            la = float(lg[j, a])
+            d["tie_opt"] = any(b != a and float(lg[j, b]) >= la - TIE_TOL for b in d["opt"])
+            d["belief"] = list(info["state"][1][0])
+            d["Q"] = [round(x, 6) for x in d["Q"]]
+            d["rec"] = list(info["rec"])
+            decs.append(d)
+        ep = eps[i]
+        out.append({"world_seed": ws, "k": cfg.k, "combo": pw5.combo_name(cfg.flags), "U": ep.utility,
+                    "V_star": s.value(pw.initial_state(cfg)), "success": ep.successes / cfg.k, "wrong": ep.wrong,
+                    "cost": ep.total_cost, "decisions": decs})
+    return out
+
+
 @torch.no_grad()
-def model_eval(model, items, mode, chunk=256):
+def replay_history(model, cfg, history, upto=None):
+    """extended-05 (B-LOC / BO diagnostic): drive `model` along a GIVEN visible history (the history's own
+    actions, not the model's) and return, for each step t < upto (default len(history) + 1 while the episode is
+    not over), (available actions, masked policy logits, Q-head * R).  Inputs are rebuilt exactly as in run_batch
+    from the public config, the previous visible record, the public mask and the model's supplied-state kind."""
+    kind = getattr(model, "inputs", "public")
+    vec = cfg.public_vector()
+    h = torch.zeros(1, model.gru.hidden_size)
+    st = pw.initial_state(cfg)
+    prev = None
+    out = []
+    n = len(history) + 1 if upto is None else upto
+    for t in range(n):
+        if st[0][0] >= cfg.k:
+            break
+        av = pw.available(cfg, st)
+        x = torch.tensor([encode(vec, prev, av, st[0][0] / cfg.k) + pw5.supplied_features(cfg, st, kind)])
+        h, z = model.step(x, h)
+        mask = torch.zeros(1, pw.N_ACTIONS, dtype=torch.bool)
+        mask[0, list(av)] = True
+        logits = model.pi(z).masked_fill(~mask, -1e9)[0]
+        out.append((av, logits, model.q(z)[0] * 100.0))
+        if t >= len(history):
+            break
+        a, o, e, rev = history[t]
+        st = pw.advance(cfg, st, a, o, e, rev)
+        prev = history[t]
+    return out
+
+
+@torch.no_grad()
+def model_eval(model, items, mode, chunk=256, ext=None):
     eps_all, steps_rows, ep_steps_all, calib_v, calib_vstar, calib_q = [], [], [], [], [], []
     has_own = hasattr(model, "v_own")
     b2 = {"v_own_own": [], "v_own_vstar": [], "vstar_own": [], "commit": [], "episode": []}
@@ -607,6 +801,8 @@ def model_eval(model, items, mode, chunk=256):
             logits = model.pi(rec["z"]).masked_fill(~rec["mask"], -1e9)
             heads.append((model.v(rec["z"]).squeeze(-1), model.q(rec["z"]), logits.argmax(-1)))
         vown = [model.v_own(rec["z"]).squeeze(-1) for rec in steps] if has_own else None
+        if ext is not None:  # extended-05 --episode-rows (read-only: no RNG, no state touched)
+            ext += decision_rows(part, eps, ep_steps, steps, model)
         for i, info_list in enumerate(ep_steps):
             if has_own:
                 b2_episode_records(b2, info_list, steps, heads, vown)
@@ -699,18 +895,35 @@ def cmd_eval(a):
     torch.set_num_threads(1)
     run = Path(a.run)
     meta = json.loads((run / "train_meta.json").read_text())
-    model = ProbeNet(meta["hidden"], own_value="own_value" in meta)
+    model = ProbeNet(meta["hidden"], own_value="own_value" in meta, inputs=meta.get("inputs", "public"),
+                     arch=meta.get("arch", "flat"))
     model.load_state_dict(torch.load(run / "model.pt"))
     model.eval()
     t0 = time.process_time()
     result = {"rung": meta["rung"], "seed": meta["seed"], "splits": {}}
     failure_records = {}
-    for split in a.splits:
+    ep_rows = [] if getattr(a, "episode_rows", False) else None
+    splits = a.splits
+    if splits is None:
+        splits = list(pw5.B5_EVAL_SPLITS) if getattr(a, "split_set", "b1") == "b5" else list(EVAL_SPLITS)
+    split_worlds = dict(x.split("=") for x in (getattr(a, "split_worlds", None) or []))
+    for split in splits:
+        worlds = int(split_worlds.get(split, a.worlds))
+        parts = pool_parts(a.labels, split)
+        if parts != [split]:  # extended-05 sized hold pool (sharded labels)
+            result["splits"][split] = eval_sharded(model, a, split, parts, worlds, ep_rows)
+            print(split, json.dumps({k: round(v, 3) if isinstance(v, float) else v for k, v in
+                                     result["splits"][split]["free_running_greedy"]["summary"].items()}), flush=True)
+            continue
         pool = load_pool(a.labels, split)
-        items = eval_items(pool, split, a.worlds, getattr(a, 'world_offset', None))
+        items = eval_items(pool, split, worlds, getattr(a, 'world_offset', None))
         ref_eps, ref_steps = reference_policy_eval(items, "pi_star")
         ref_rows = episode_metrics(items, ref_eps, ref_steps)
-        free, rows = model_eval(model, items, "greedy")
+        ext = [] if ep_rows is not None else None
+        free, rows = model_eval(model, items, "greedy", ext=ext)
+        if ext is not None:
+            annotate_rows(ext, rows, ref_rows, ref_eps, pool, split, worlds, load_s0(a.labels, split))
+            ep_rows += ext
         free["rho_curve"] = rho_curve(rows, ref_rows)
         teach, _ = model_eval(model, items, "teacher")
         by_combo = {}
@@ -725,21 +938,95 @@ def cmd_eval(a):
         print(split, json.dumps({k: round(v, 3) if isinstance(v, float) else v
                                  for k, v in free["summary"].items()}), flush=True)
     result["cpu_s"] = time.process_time() - t0
-    (run / "eval.json").write_text(json.dumps(result, indent=1))
+    out_name = getattr(a, "out_name", None) or "eval.json"
+    if ep_rows is not None:  # extended-05; file absent under defaults
+        import gzip
+        weights = meta.get("weights", {})
+        head = {"_meta": {"rung": meta["rung"], "seed": meta["seed"], "inputs": meta.get("inputs", "public"),
+                          "arch": meta.get("arch", "flat"), "params": meta.get("params"),
+                          "train_split": meta.get("train_split", "train"), "q_head_trained": weights.get("q", 0) > 0,
+                          "world_offset": getattr(a, "world_offset", None), "eps": pw.EPS, "actions": pw.ACTIONS}}
+        with gzip.open(run / out_name.replace(".json", "_episodes.jsonl.gz"), "wt") as f:
+            f.write(json.dumps(head) + "\n")
+            for r in ep_rows:
+                f.write(json.dumps(r) + "\n")
+    (run / out_name).write_text(json.dumps(result, indent=1))
     if failure_records:  # protocol-B2 only
         (run / "failure_records.json").write_text(json.dumps(failure_records))
+
+
+def eps_u(ep):
+    return ep.utility
+
+
+def load_s0(labels_dir, split):
+    """extended-05: per-configuration s0 facts of a sized hold pool ({} for ordinary pools)."""
+    p = Path(labels_dir) / f"{split}_s0.json"
+    return {r["idx"]: r for r in json.loads(p.read_text())} if p.exists() else {}
+
+
+def annotate_rows(ext, rows, ref_rows, ref_eps, pool, split, worlds, s0map):
+    """extended-05 --episode-rows: add split/config/world ids, pi* reference outcomes on the same world, first-decision
+    probe facts and (sized holds) the registered flag-sensitivity of the configuration."""
+    for j, (r, rr, e) in enumerate(zip(rows, ref_rows, ext)):
+        idx = pool[j // worlds][0]
+        e.update(split=split, cfg_idx=idx, rep=j % worlds, rho=r["rho"], rho_eff=r["rho_eff"],
+                 gap_regret=r["gap_regret"], built=r["built"], pi_star_success=rr["success"],
+                 pi_star_U=eps_u(ref_eps[j]), pi_star_built=rr["built"], first_probe=r["first_probe"],
+                 probe_eps_opt=r["probe_eps_opt"], probe_unique_opt=r["probe_unique_opt"])
+        if idx in s0map and "flag_sensitive" in s0map[idx]:
+            e["flag_sensitive"] = s0map[idx]["flag_sensitive"]
+
+
+def eval_sharded(model, a, split, parts, worlds, ep_rows):
+    """extended-05: greedy evaluation of a sharded (sized) hold pool, one shard in memory at a time.  Reports the
+    free-running summary / rho curve / by-condition over all shards; teacher-forced and value-calibration keys are
+    not computed for sharded pools (the B-X endpoints come from the episode rows)."""
+    rows_all, ref_all = [], []
+    s0map = load_s0(a.labels, split)
+    for part in parts:
+        pool = load_pool(a.labels, part)
+        items = eval_items(pool, split, worlds, getattr(a, "world_offset", None))
+        ref_eps, ref_steps = reference_policy_eval(items, "pi_star")
+        ref_rows = episode_metrics(items, ref_eps, ref_steps)
+        ext = [] if ep_rows is not None else None
+        _, rows = model_eval(model, items, "greedy", ext=ext)
+        if ext is not None:
+            annotate_rows(ext, rows, ref_rows, ref_eps, pool, split, worlds, s0map)
+            ep_rows += ext
+        rows_all += rows
+        ref_all += ref_rows
+        del pool, items
+    by_combo = {}
+    for r in rows_all:
+        by_combo.setdefault("+".join(n for n, f in zip(pw.FLAG_NAMES, r["flags"]) if f) or "none", []).append(r)
+    free = {"summary": summarize_rows(rows_all), "rho_curve": rho_curve(rows_all, ref_all),
+            "by_condition": {k: summarize_rows(v) for k, v in by_combo.items()},
+            "sharded": {"shards": len(parts), "worlds": worlds,
+                        "omitted": ["teacher_forced", "value_calibration_own_return", "value_vs_vstar",
+                                    "q_head_vs_qstar_taken"]}}
+    return {"free_running_greedy": free}
 
 
 def cmd_references(a):
     """Reference policies (pi*, fixed rules) on the same eval worlds."""
     res = {}
-    for split in a.splits:
-        pool = load_pool(a.labels, split)
-        items = eval_items(pool, split, a.worlds, getattr(a, 'world_offset', None))
+    splits = a.splits
+    if splits is None:
+        splits = list(pw5.B5_EVAL_SPLITS) if getattr(a, "split_set", "b1") == "b5" else list(EVAL_SPLITS)
+    split_worlds = dict(x.split("=") for x in (getattr(a, "split_worlds", None) or []))
+    for split in splits:
+        acc = {name: [] for name in REFERENCE_POLICIES}
+        for part in pool_parts(a.labels, split):  # [split] unless a sized (sharded) extended-05 hold pool
+            pool = load_pool(a.labels, part)
+            items = eval_items(pool, split, int(split_worlds.get(split, a.worlds)), getattr(a, 'world_offset', None))
+            for name in REFERENCE_POLICIES:
+                eps, steps = reference_policy_eval(items, name)
+                acc[name] += episode_metrics(items, eps, steps)
+            del pool, items
         res[split] = {}
         for name in REFERENCE_POLICIES:
-            eps, steps = reference_policy_eval(items, name)
-            rows = episode_metrics(items, eps, steps)
+            rows = acc[name]
             res[split][name] = summarize_rows(rows)
             if name == "pi_star":
                 res[split][name]["rho_curve"] = rho_curve(rows, rows)
@@ -790,6 +1077,14 @@ def main(argv=None):
     s.add_argument("--out", required=True)
     s.add_argument("--n-train", type=int, default=384)
     s.add_argument("--n-eval", type=int, default=128)
+    s.add_argument("--split-set", choices=("b1", "b5"), default="b1", help="extended-05: b5 = B-SPLIT pools")
+    s.add_argument("--n-train-x", type=int, default=768, help="b5: exposure (BX1) training pool size")
+    s.add_argument("--hold-target", type=int, default=pw5.HOLD_TARGET_ELIGIBLE,
+                   help="b5: new-hold pool = smallest prefix with this many s0-uniquely-probe-optimal configs")
+    s.add_argument("--hold-max", type=int, default=pw5.HOLD_MAX_CONFIGS)
+    s.add_argument("--hold-target-sensitive", type=int, default=None,
+                   help="b5: U+C flag-sensitive eligible target (default registered pw5.HOLD_TARGET_SENSITIVE)")
+    s.add_argument("--hold-shard", type=int, default=pw5.HOLD_SHARD)
     s = sub.add_parser("train")
     s.add_argument("--labels", required=True)
     s.add_argument("--out", required=True)
@@ -803,18 +1098,30 @@ def main(argv=None):
     s.add_argument("--own-value", action="store_true", help="protocol-B2 v_own head (default off: B1 identical)")
     s.add_argument("--own-every", type=int, default=1, help="collect own greedy rollouts every N updates")
     s.add_argument("--own-episodes", type=int, default=64, help="greedy episodes per collection")
+    s.add_argument("--train-split", default="train", help="extended-05: training pool (b5_train / b5x_train)")
+    s.add_argument("--inputs", choices=pw5.SUPPLIED_KINDS, default="public",
+                   help="extended-05: supplied public state (belief = BO; bx2 = belief + per-flag features)")
+    s.add_argument("--arch", choices=("flat", "modular"), default="flat",
+                   help="extended-05: modular = BX3 per-flag gated encoders (hidden width matched to B0's parameters)")
     s = sub.add_parser("eval")
     s.add_argument("--labels", required=True)
     s.add_argument("--run", required=True)
     s.add_argument("--worlds", type=int, default=4)
-    s.add_argument("--splits", nargs="+", default=list(EVAL_SPLITS))
+    s.add_argument("--splits", nargs="+", default=None, help="default: B1 eval splits (or b5 eval splits)")
     s.add_argument("--world-offset", type=int, default=None, help="eval world-seed offset (default 500 = B1)")
+    s.add_argument("--split-set", choices=("b1", "b5"), default="b1")
+    s.add_argument("--episode-rows", action="store_true", help="extended-05: write <out>_episodes.jsonl.gz")
+    s.add_argument("--out-name", default=None, help="extended-05: eval file name inside the run dir (eval.json)")
+    s.add_argument("--split-worlds", nargs="*", default=None, metavar="SPLIT=N",
+                   help="extended-05: per-split world count override (sized holds: 1 world per configuration)")
     s = sub.add_parser("references")
     s.add_argument("--labels", required=True)
     s.add_argument("--out", required=True)
     s.add_argument("--worlds", type=int, default=4)
-    s.add_argument("--splits", nargs="+", default=list(EVAL_SPLITS))
+    s.add_argument("--splits", nargs="+", default=None)
     s.add_argument("--world-offset", type=int, default=None, help="eval world-seed offset (default 500 = B1)")
+    s.add_argument("--split-set", choices=("b1", "b5"), default="b1")
+    s.add_argument("--split-worlds", nargs="*", default=None, metavar="SPLIT=N")
     s = sub.add_parser("summarize")
     s.add_argument("--runs", nargs="+", required=True)
     s.add_argument("--out", required=True)
