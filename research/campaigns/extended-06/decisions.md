@@ -64,3 +64,10 @@
   - The kernel log shows this one kill only; no non-campaign process was affected.
   - It is rerun alone. **Rule going forward:** at most 8 concurrent Track B jobs, with memory checked first.
 - 2026-09-27T10:25Z: e06-tb-score failed at its final write because the output directory was missing (exit 1, 1,068 core-s, charged). The directory was created and the job relaunched as e06-tb-score2, with identical inputs.
+- 2026-09-27T10:47Z: **B-ARMS primary NOT SUPPORTED** (research/tools/campaign06_bprimary.py pools the pairs, as registered; campaign06_bscore reports per pair only).
+  - B2 − B0 over 5 pairs: gap regret −1.65 [−6.1, +3.1]; later-decision accuracy +.010 [−.002, +.022]; near-miss accuracy −.085.
+  - Broader variety at matched volume **did not** yield composition on the untouched S+C+E triple. B2's first-decision gain (+.075) came with worse near-miss accuracy, i.e. a shift.
+  - **Descriptive:** LRN (learned derived-quantity heads) is the only arm with a consistent sign on gap, later accuracy and near-miss across its 3 pairs.
+  - **Caveat:** the configuration-only CIs omit seed variance. B0 seed 32 is an outlier (gap 40.9), and it drives the B0 comparisons.
+  - **Adaptive B-FACT-C registered before any new data:** LRN vs RAWF (same architecture) on fresh seeds 35–39 and a fresh S+C+E pool and octets, with a two-level bootstrap and ≥ 4/5 pair sign consistency.
+  - Budget: 65k / 172.8k core-s used. Estimate ~21k core-s (20 trainings ~10k, labels ~7k, evals ~4k), leaving > 34.5k reserve.

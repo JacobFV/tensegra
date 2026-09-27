@@ -45,7 +45,7 @@
   },
   {
    "id": "B-ARMS",
-   "status": "registered",
+   "status": "complete: PRIMARY NOT SUPPORTED",
    "track": "B",
    "arms": {
     "B0": "N configs base combinations",
@@ -63,18 +63,20 @@
     "P3": "not a global shift: octet near-miss accuracy and one-factor false-change rate not worse for B2 by more than .02 (paired mean)",
     "decision": "B-ARMS primary SUPPORTED iff P1 and P2 and P3; octet flip accuracy and first-decision accuracies are secondary; U+C+E secondary holdout reported with the pair-exposure confound (B2 trains on U+C, U+E)"
    },
-   "settings": "octets: 320 for both families (U+C+E descriptive); --hold-relevance not used (cost); B2 first-action replacement residual imbalance accepted and disclosed (17/84 unmatched; <=13/384 per class)"
+   "settings": "octets: 320 for both families (U+C+E descriptive); --hold-relevance not used (cost); B2 first-action replacement residual imbalance accepted and disclosed (17/84 unmatched; <=13/384 per class)",
+   "result": "Pooled over 5 seed pairs (campaign06_bprimary.py; joint configuration/octet bootstrap), b6_hold_SCE 400 configs, 320 SCE octets. B2-B0: gap regret -1.65 [-6.10,+3.08] (P1 fail; per pair -0.1/+32.4/-25.3/-9.5/-5.7); later-decision acc +.010 [-.002,+.022] (P2 fail); near-miss acc -.085 [-.155,-.005] (P3 fail); false-change +.006. First-decision acc +.075 [.041,.106] (secondary). Broader combination variety at matched volume does NOT improve composition on the untouched S+C+E triple by the registered rule; its first-decision gain comes with worse near-miss accuracy (a shift, not systematic use of the interacting factors). Descriptive arms (3 pairs vs B0 seeds 30-32): B3, dose2, dose3 pass P1/P2 but fail near-miss (P3); dose1, SUP, LRN pass all three descriptively; RAWF passes P1 only. CAVEAT: the CI resamples configurations only; per-pair gap-regret differences swing by +-30 (B0 seed 32 gap 40.9 drives most 'wins' vs B0), so seed variance is not in the CI and the descriptive passes are fragile."
   },
   {
    "id": "B-FACT",
-   "status": "registered",
+   "status": "descriptive complete (3 seeds); adaptive confirmation B-FACT-C registered",
    "track": "B",
    "arms": [
     "PUBLIC-RAW",
     "SUPPLIED derived quantities (posterior, expected remaining cost per strategy, P(probe resolves), amortized build value) \u2014 localization ceiling",
     "LEARNED: auxiliary heads predicting those quantities, downstream policy consumes predictions"
    ],
-   "causal": "on-manifold interventions changing one factor via valid configurations; policy changes only where expected utility changes"
+   "causal": "on-manifold interventions changing one factor via valid configurations; policy changes only where expected utility changes",
+   "result": "vs B0 (seeds 30-32): LRN gap -14.9, later +.030, near-miss +.098, false-change -.017 (all 3 pairs same sign for gap/later/near-miss); SUP gap -17.3, later +.051, near-miss -.013 (per pair +.24/-.03/-.25); RAWF (same fuse arch, raw inputs) gap -9.4, later +.001, near-miss +.120. LRN-vs-RAWF isolates the auxiliary derived-quantity heads: later-decision accuracy +~.03."
   },
   {
    "id": "C-TRIGGER",
@@ -99,6 +101,16 @@
    "metric_checks": "selector feature/inference work charged; oracle certified fraction reported; uncertified instances scored vs UB",
    "result": "Confirm population 330M (640 episodes, 2,852 instances, oracle certified .999). Best simple chosen on select = tree_d3 in all 3 lineages. One-shot \u2212 best simple: +.0032 [.0006,.0067], +.0025 [.0005,.0046], +.0043 [.0014,.0080]: 3/3 PASS; paired mean +.0033 [.0016,.0055]. Sequential +.0039 [.0021,.0062], 3/3. GA-2 analogue +.035. Learned ~.959 vs tree_d3 ~.956 vs hidden-state oracle .9826. Artifacts: research/results/campaign-06/a-cfsmall (hash-checked). AUDIT (review/a-independent-audit.md): The margin is conditional on the registered selector-charge convention (GBT inference = rounds x depth x models units): it passes 3/3 at zero charge, only 1/3 at 2x selector charge, and reverses (-.010 to -.012, 0/3) if the GBT's 45-output leaf accumulation is charged per output as the logistic's multiply-adds are; the mean margin vanishes at ~2,400-4,000 extra inference units per instance. The registered depth-3 tree used a fixed min_leaf (87) and 16 bins; with min_leaf/bins chosen on the select population (audit, post hoc) one-shot - tree is +.0014 [-.0005,+.0036] / +.0030 [+.0007,+.0053] / +.0023 [+.00002,+.0052] (2/3). The learned one-shot equals a depth-3 tree fit in-sample on confirm (-.0002 [-.0012,+.0008]). ~5% of episodes carry the whole net margin.",
    "interpretation": "The registered A-CF-SMALL test passes 3/3 (+.0033 [.0016,.0055]), but the margin is not robust: it fails at 2x selector charge (1/3), reverses under per-output GBT inference charging (0/3), falls to 2/3 against a select-tuned depth-3 tree, and is zero against a depth-3 tree fit in-sample. We read this as no practically or robustly detectable learned-selector advantage over a tuned depth-3 tree portfolio in portworld. A strong simple portfolio captures ~54% of the hidden-state oracle's gain over the best single method and ~86-91% of the gain a cross-fitted learned public-information selector achieves."
+  },
+  {
+   "id": "B-FACT-C",
+   "status": "registered (ADAPTIVE: after inspecting B-FACT descriptive results on b6_hold_SCE)",
+   "track": "B",
+   "hypothesis": "Auxiliary heads trained to predict derived decision quantities (LRN) improve later decisions on the untouched S+C+E triple relative to the identical fuse architecture without them (RAWF)",
+   "design": "fresh initialization seeds 35-39 (5 pairs) for LRN, RAWF, SUP, B0 (same b6_B0 training pool, L1 recipe, final checkpoint, snapshot f5ff2d64 trainer); evaluated on a FRESH S+C+E held-out pool (400 configs, new base in the hold sub-range, never used) and FRESH S+C+E octets (320, new base in the cf sub-range); labels built before any confirm evaluation; no model selection",
+   "primary": "LRN - RAWF, mean over 5 seed pairs, TWO-LEVEL bootstrap (resample seed pairs, then configurations/octets): Q1 gap regret < 0 with 95% upper bound < 0 and >=4/5 pairs negative; Q2 later-decision accuracy > 0 with 95% lower bound > 0 and >=4/5 pairs positive; Q3 near-miss accuracy not worse by > .02 and false-change rate not higher by > .02 (paired means). SUPPORTED iff Q1 and Q2 and Q3.",
+   "secondary": "SUP - RAWF (ceiling), LRN - B0, RAWF - B0 with the same statistics; per-seed values always reported",
+   "notes": "The two-level bootstrap addresses the seed variance the B-ARMS configuration-only CI omitted. Old b6_hold_SCE results are not reused for this test."
   }
  ]
 }
