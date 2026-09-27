@@ -130,3 +130,12 @@
        - most of the gap-regret gain comes from later decisions;
        - the adaptive rule would also have passed on the inspected B-X data, so the evidence rests on the fresh replication;
        - B-XC also passes the stricter original B-X rule.
+- 2026-09-27T04:35Z: **A-PI-C screen scored** (12 jobs, both costs on the same 270M worlds, r0–r2; research/results/campaign-05/a-pi-c/score.json).
+  - **PI-C-1 passes 3/3 at both costs:** vs D +.030/+.044/+.039 at c = .001 and +.028/+.041/+.037 at c = .003.
+  - **PI-C-2 FAILS 0/3 at both costs.** The cost removes always-teacher's advantage (teacher .872 at c = .001, .815 at c = .003, vs D .855–.869). But the simple rule **R2 ('delegate at every commit_revise anchor') remains best** (.899–.901), exceeding π_T by .0018–.0024 in every lineage. π_T delegates 4.4–6.3% of steps.
+  - **No confirmation run** (PI-C-2 failed).
+  - **Track A evidential boundary:**
+    - (i) one-step deviations from D have no deployable headroom (A-HR);
+    - (ii) delegating to a better supplied sub-policy improves the imitation deployment, confirmed on fresh actors and sealed worlds (A-CF-T; equivalent to recovering the teacher);
+    - (iii) a learned public-information regulator of **when** to delegate adds no value beyond a simple trigger rule, under free and under costly delegation.
+- 2026-09-27T04:35Z: **Both primary questions have reached an evidential boundary.** The campaign closes: final report, handoff, merge. The remaining budget (~125k core-s) is intentionally unspent.
