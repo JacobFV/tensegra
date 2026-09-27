@@ -17,3 +17,11 @@
   - checkpoints and a concrete Track C trigger.
   - **Disclosures:** the reviewer ran ~7.0k core-s of **unmetered local** pure-Python screening and ~2 core-s of unmetered remote import checks, and consumed dev seeds 2.3000e9+i and 2.3005e9+i (recorded as used). Both builders were notified of v2.
 - 2026-09-27T06:22Z: Prospective registry (A-HS, A-SEL, B-SCREEN, B-ARMS, B-FACT, C-TRIGGER) and a preliminary job plan (~19.5 core-h estimated of the 38.4 usable) written.
+- 2026-09-27T06:58Z: **Track A portworld merged** (751c3e62; 21 tests).
+  - Generator pw-v3: Pisinger correlation classes, hidden capacities and conflicts with explicit posteriors, stale or valid caches, crossover-centred prices. Methods have explicit contracts and deterministic work units; trace-based budgets; exact oracle B&B, with uncertified instances kept.
+  - **Dev headroom** (1,801 instances): best single .918, best simple (inner-fold) .931, strong v2 baseline .939, tree depth 2 .942, one-shot learned .949, sequential learned .952, hidden oracle .979.
+    - GA-1: sequential +.0204 [.011, .031], a marginal pass; one-shot +.0175, fail.
+    - GA-2 passes for both.
+    - The margin over the strongest individual simple family is only +.010–.012.
+  - Generator revisions v1 (headroom .0016) → v2 (.0084) → v3 are documented in portworld.md.
+  - **Disclosure:** ~3,000 core-s were spent **unmetered** on the pro6000 by a builder analysis run whose wrapper was killed (no receipt; marker file left). Added to the local/unmetered estimate. The registry addendum reports the margin vs the strongest individual family alongside GA (gates unchanged).
