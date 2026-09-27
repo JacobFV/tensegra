@@ -17,10 +17,15 @@ Versioned extension (probeworld-v3; see trackb-screen.md section 2 for why):
   D deadline pressure       deadline in {1, 2}: at most `deadline` non-terminal actions per query (a per-query
                             wall-clock budget: build counts; an event does NOT refund steps).  When the budget is
                             spent only terminal actions (commit / commit_infeasible / abstain) remain.  Public.
-  G exact-route hardness    g_hard in [.5, 1]: exact b1 times out on an UNREDUCED exact-easy (M) instance w.p.
-                            g_hard (propagation still reduces it; b2 and use are unchanged).  It flips which exact
-                            computation is optimal (b1 vs prop->b1 vs b2).  Public.
-With deadline = 0 and g_hard = 0 every function below is the probeworld-v1 function itself (``env(cfg)`` returns
+  T type-dependent exact cost  t_hard in [.5, 2.5]: exact computation cost scales with hidden hardness -- every exact
+                            call (b1 or b2) on a hard instance (theta in {F, X}) charges an extra t_hard * c_b2
+                            (ledger line "exact_hardness"; like the side effect, the charge is not an observation;
+                            reduction does not remove it).  Probe, prop, inspect and use are unchanged.  It raises the value of cheap-first
+                            probing, of prop -> b1, of the structure and of abstaining on likely-hard instances, i.e.
+                            it pushes AGAINST U and S (which penalize probing) and flips which computation is optimal.
+  (Local pilots only, before any metered screening: gen1 had G "b1 times out on unreduced M"; a T surcharge removed
+  by propagation was absorbed by prop.  See trackb-screen.md section 2.)
+With deadline = 0 and t_hard = 0 every function below is the probeworld-v1 function itself (``env(cfg)`` returns
 ``pw`` for a v1 ``pw.Config``; a ``Config6`` with D and G off delegates to ``pw``), so v1 labels are reproduced
 exactly (tested).
 
@@ -39,46 +44,46 @@ from tensegra import campaign04_probeworld as pw
 from tensegra import campaign05_probeworld as pw5
 
 VERSION = "probeworld-v3"
-GENERATOR_VERSION = "probeworld-v3-gen1"
+GENERATOR_VERSION = "probeworld-v3-gen2"  # gen1 (local pilot only) had factor G instead of T
 U_STEP = 64  # deadline step counter: usage >> 6 (bits 0-5 are the v1 usage bits)
 STEP_SHIFT = 6
 assert U_STEP == 1 << STEP_SHIFT and pw.U_INSPECT < U_STEP
 
-FACTORS = ("U", "S", "C", "E", "D", "G")
-FACTOR_NAMES = ("unreliable", "side_effect", "correlated", "events", "deadline", "exact_hard")
+FACTORS = ("U", "S", "C", "E", "D", "T")
+FACTOR_NAMES = ("unreliable", "side_effect", "correlated", "events", "deadline", "hard_exact_cost")
 FACTOR_FIELD = {"U": ("q", 1.0), "S": ("D_side", 0.0), "C": ("corr", 0.0), "E": ("p_event", 0.0),
-                "D": ("deadline", 0), "G": ("g_hard", 0.0)}
+                "D": ("deadline", 0), "T": ("t_hard", 0.0)}
 V1_FACTORS = ("U", "S", "C", "E")
-EXT_FACTORS = ("D", "G")
+EXT_FACTORS = ("D", "T")
 DEADLINE_VALUES = (1, 2)
 V3_K = (1, 2, 4)  # probeworld-v3 horizon support (composition, not horizon, is the Track B question; k = 8 dropped for cost)
-G_RANGE = (0.5, 1.0)
+T_RANGE = (0.5, 2.5)
 
 
 @dataclass(frozen=True)
 class Config6(pw.Config):
-    """probeworld-v3 public configuration: v1 fields + deadline (D) and exact-route hardness (G)."""
+    """probeworld-v3 public configuration: v1 fields + deadline (D) and type-dependent exact cost (T)."""
     deadline: int = 0
-    g_hard: float = 0.0
+    t_hard: float = 0.0
 
     @property
     def flags(self) -> tuple:  # (U, S, C, E, D, G)
         return (self.q < 1.0, self.D_side > 0.0, self.corr > 0.0, self.p_event > 0.0, self.deadline > 0,
-                self.g_hard > 0.0)
+                self.t_hard > 0.0)
 
     @property
     def extended(self) -> bool:
-        return self.deadline > 0 or self.g_hard > 0.0
+        return self.deadline > 0 or self.t_hard > 0.0
 
     def public_vector(self) -> list:
-        """v1 public vector (the 4 v1 flags at their v1 positions) + [deadline/2, g_hard, D flag, G flag]."""
+        """v1 public vector (the 4 v1 flags at their v1 positions) + [deadline/2, t_hard, D flag, T flag]."""
         R = self.R
         return ([self.c_probe / R, self.c_b1 / R, self.c_b2 / R, self.c_inspect / R, self.c_prop / R,
                  self.L / R, min(self.C_build / R, 10.0) / 10.0, self.C_execute / R, self.C_return / R,
                  self.C_verify / R, self.D_side / R, self.q, self.corr, self.p_event, self.eta,
                  self.p_conflict, self.k / 8.0, math.log2(self.k) / 3.0, math.log(max(self.rho(), 1e-3)) / 3.0]
                 + [float(f) for f in self.flags[:4]] + list(self.prior)
-                + [self.deadline / 2.0, self.g_hard, float(self.deadline > 0), float(self.g_hard > 0.0)])
+                + [self.deadline / 2.0, self.t_hard, float(self.deadline > 0), float(self.t_hard > 0.0)])
 
 
 PUBLIC_DIM6 = len(Config6().public_vector())
@@ -126,10 +131,16 @@ def restrict(cfg: Config6, keep) -> Config6:
 # dynamics (delegate to probeworld-v1 unless D or G is active)
 
 def outcome_dist(cfg, a: int, theta: int, reduced: bool) -> list:
-    g = getattr(cfg, "g_hard", 0.0)
-    if a == pw.A_B1 and g > 0.0 and theta == pw.TM and not reduced:
-        return [(g, pw.O_TIMEOUT)] if g >= 1.0 else [(1.0 - g, pw.O_SOLVED), (g, pw.O_TIMEOUT)]
-    return pw.outcome_dist(cfg, a, theta, reduced)
+    return pw.outcome_dist(cfg, a, theta, reduced)  # D and T change availability / charges, not the outcome model
+
+
+def hard_surcharge(cfg, a: int, theta: int, reduced: bool) -> float:
+    """T: every exact call (b1 or b2) on a hard instance (theta in {F, X}) incurs a hardness surcharge t_hard * c_b2
+    (whether or not the instance was reduced: hardness is intrinsic).  Probe, prop, inspect and use are unchanged."""
+    t = getattr(cfg, "t_hard", 0.0)
+    if t > 0.0 and a in (pw.A_B1, pw.A_B2) and theta in (pw.TF, pw.TX):
+        return t * cfg.c_b2
+    return 0.0
 
 
 def update_belief(cfg, b: tuple, a: int, o: int, reduced: bool) -> tuple:
@@ -215,6 +226,7 @@ class ExactSolver(pw.ExactSolver):
                     agg[o] = agg.get(o, 0.0) + b[t] * p
         pe = cfg.p_event if (cfg.p_event > 0 and not ev) else 0.0
         side = cfg.D_side * (1.0 - b[pw.TH]) if (a == pw.A_PROBE and cfg.D_side > 0) else 0.0
+        side += sum(b[t] * hard_surcharge(cfg, a, t, reduced) for t in (pw.TF, pw.TX))
         for o, po in agg.items():
             for event, pev in ((False, 1.0 - pe), (True, pe)):
                 if pev <= 0:
@@ -251,6 +263,9 @@ class Episode(pw.Episode):
         event = False
         for item, amt in pw.cost_lines(cfg, a, theta):
             self.ledger.append((t, item, amt))
+        hs = hard_surcharge(cfg, a, theta, local[2])
+        if hs:
+            self.ledger.append((t, "exact_hardness", hs))
         if a in pw.TERMINAL:
             reveal = theta
             if a == pw.A_ABSTAIN:
@@ -323,8 +338,8 @@ def make_config(cell: tuple, k: int, flags: tuple, seed: int) -> Config6:
     base = pw.make_config(cell, k, flags[:4], random.Random(seed * 7 + 1))
     r2 = random.Random(seed * 11 + 3)
     d = r2.choice(DEADLINE_VALUES)
-    g = round(r2.uniform(*G_RANGE), 3)
-    return from_v1(base, deadline=d if flags[4] else 0, g_hard=g if flags[5] else 0.0)
+    t = round(r2.uniform(*T_RANGE), 3)
+    return from_v1(base, deadline=d if flags[4] else 0, t_hard=t if flags[5] else 0.0)
 
 
 def draw_params(seed: int, cells, ks, combos) -> tuple:
@@ -539,8 +554,8 @@ FACTOR_FEATURES = (
     "event_hazard_active", "event_fired_this_query",
     # deadline / remaining steps (D)
     "deadline_active", "steps_left_rel", "last_step",
-    # exact-route hardness (G)
-    "p_b1_timeout", "reduced",
+    # type-dependent exact cost (T)
+    "hard_surcharge_rel", "reduced",
     # amortization / remaining horizon
     "remaining_queries_rel", "is_last_query", "built", "amortized_build_rel",
     # candidate validity
@@ -563,19 +578,21 @@ def factor_features(cfg, state: tuple) -> list:
     p_solved = bH + p_false
     p_h_solved = bH / p_solved if p_solved > 0 else 0.0
     d = getattr(cfg, "deadline", 0)
-    g = getattr(cfg, "g_hard", 0.0)
+    t_h = getattr(cfg, "t_hard", 0.0)
     used = usage >> STEP_SHIFT
     steps_left = (d - used) if d > 0 else 3
     rem = max(cfg.k - i, 1)
     amort = 0.0 if built else cfg.C_build / rem
     hazard = 0.0 if ev else cfg.p_event
-    # P(b1 times out) under the current belief and reduction state
-    p_to = bF * (0.0 if reduced else 1.0) + bX + (bM * g if not reduced else 0.0)
-    c_b2_route = cfg.c_b2 + hazard * cfg.c_b2  # b2 then commit; an event after b2 forces a rerun (expected)
+    # P(b1 times out) under the current belief and reduction state; expected T surcharge of an exact call
+    p_to = bF * (0.0 if reduced else 1.0) + bX
+    hard = t_h * cfg.c_b2 * (bF + bX)
+    c_b2_route = cfg.c_b2 + hard + hazard * cfg.c_b2  # b2 then commit; an event after b2 forces a rerun (expected)
     side = cfg.D_side * (1.0 - bH)
     wrong_probe = p_false * cfg.L  # committing a false 'solved' probe
-    c_probe_route = cfg.c_probe + side + (1.0 - p_solved) * cfg.c_b2 + wrong_probe + hazard * cfg.c_probe
-    c_b1_route = cfg.c_b1 + p_to * cfg.c_b2
+    c_probe_route = (cfg.c_probe + side + (1.0 - p_solved) * (cfg.c_b2 + hard) + wrong_probe
+                     + hazard * cfg.c_probe)
+    c_b1_route = cfg.c_b1 + hard + p_to * (cfg.c_b2 + t_h * cfg.c_b2)
     c_use_route = amort + cfg.c_use
     cand_ok = cand != pw.C_NONE and cand_valid
     trust = 1.0 if (cand_ok and cand == pw.C_EXACT) else (p_h_solved if (cand_ok and cand == pw.C_PROBE) else 0.0)
@@ -585,7 +602,7 @@ def factor_features(cfg, state: tuple) -> list:
              cfg.corr, nH / cfg.k, nN / cfg.k,
              hazard, float(ev),
              float(d > 0), steps_left / 3.0, float(d > 0 and steps_left == 1),
-             p_to, float(reduced),
+             hard / R, float(reduced),
              rem / 8.0, float(i == cfg.k - 1), float(built), min(amort / R, 10.0) / 10.0,
              float(cand_ok), float(cand_ok and cand == pw.C_EXACT), trust,
              c_b2_route / R, c_probe_route / R, c_b1_route / R, min(c_use_route / R, 10.0)]

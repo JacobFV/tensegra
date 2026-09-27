@@ -203,7 +203,8 @@ def gs_first(rows, full):
                 break
         if cur > vbest[0]:
             vbest = (cur, f, dict(vec))
-    rec = lambda x, x0: (x - x0) / (1.0 - x0) if x0 < 1.0 else 0.0
+    # nothing to recover (an unbiased support policy is already eps-optimal everywhere) = fully solvable: GS = 1
+    rec = lambda x, x0: (x - x0) / (1.0 - x0) if x0 < 1.0 - 1e-12 else 1.0
     return {"acc_0": base0, "acc_0_by_ref": acc0, "acc_best": best[0], "best": {"ref_without": best[1],
             "action": pw.ACTIONS[best[2]] if best[2] is not None else None, "bias": best[3]},
             "GS_first": rec(best[0], base0), "acc_vec": vbest[0], "GS_vec": rec(vbest[0], base0),
@@ -225,7 +226,7 @@ def gs_regret(rows, full):
     R0 = reg0[f0]
     return {"regret_0": R0, "regret_0_by_ref": reg0, "regret_best": best[0],
             "best": {"ref_without": best[1], "action": pw.ACTIONS[best[2]] if best[2] is not None else None,
-                     "bias": best[3]}, "GS_regret": (1.0 - best[0] / R0) if R0 > 1e-9 else 0.0}
+                     "bias": best[3]}, "GS_regret": (1.0 - best[0] / R0) if R0 > 1e-9 else 1.0}
 
 
 def _mean(xs):
