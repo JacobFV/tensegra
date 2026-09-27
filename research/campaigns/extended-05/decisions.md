@@ -140,3 +140,9 @@
     - (iii) a learned public-information regulator of **when** to delegate adds no value beyond a simple trigger rule, under free and under costly delegation.
 - 2026-09-27T04:35Z: **Both primary questions have reached an evidential boundary.** The campaign closes: final report, handoff, merge. The remaining budget (~125k core-s) is intentionally unspent.
 - 2026-09-27T04:35Z: **Final report and handoff written; campaign complete.**
+- 2026-09-27T05:35Z: **Report wording corrected after external review** (no numbers changed):
+  - the 'no fixed rule can express' phrasing is replaced by 'beat strong, simple, equally informed heuristics and tuned portfolios';
+  - B-XC is stated as conditional first-decision accuracy on the 60 eligible configurations, with per-seed rates;
+  - exposure is confounded with data volume (384 configurations/7 combinations vs 768/9);
+  - a possible generic probe-boundary shift is noted;
+  - the B-LOC value-estimate finding is labelled an auxiliary-head observation, not a demonstrated cause.

@@ -1,6 +1,6 @@
 # Extended-05 report: decision-relevant metacognition and compositional computational control
 
-**Status: FINAL.** The campaign ran on the pro6000 from 2026-09-27T01:27Z, closing at an evidential boundary after about 3.2 h of wall time. Independent audits ([A](review/a-independent-audit.md), [B](review/b-independent-audit.md)) reproduced every reported number from raw rows, and their corrections are applied below. A design review ([review/design-review.md](review/design-review.md)) preceded implementation.
+**Status: FINAL** (§Headline, Track B and recommendation wording corrected after external review; no numbers changed). The campaign ran on the pro6000 from 2026-09-27T01:27Z, closing at an evidential boundary after about 3.2 h of wall time. Independent audits ([A](review/a-independent-audit.md), [B](review/b-independent-audit.md)) reproduced every reported number from raw rows, and their corrections are applied below. A design review ([review/design-review.md](review/design-review.md)) preceded implementation.
 
 **Sources:**
 - Design: [design.md](design.md) (v1 plus v2).
@@ -47,7 +47,7 @@
 ## Track B (probeworld): what was tested
 
 - **B-LOC localization** on the extended-04 models and the historical challenge pairs:
-  - **52–66% of the first consequential errors are value-estimate errors**: the model's own Q-head argmax is also wrong.
+  - **52–66% of the first consequential errors are value-estimate errors**: the model's own Q-head argmax is also wrong. This is evidence about the representation's accessible value predictions (an auxiliary head), **not a demonstrated cause** of the policy's choices. The exposure benefit in B-Q came without better Q ranking.
   - 23–38% are ranking errors.
   - 0 come from deployment (ties).
   - A "belief-dependent" class was **withdrawn by the audit**. Other seeds without belief inputs fixed errors as often, so no belief effect is detectable.
@@ -66,11 +66,13 @@
   - Exposure's benefit appears in the decisions (first probe, gap regret), **not** in all-pairs Q-ranking accuracy.
   - The registered mechanism, that exposure improves value estimates, is not supported.
 - **B-XC, confirmed.** Adaptive registration; fresh U+C configurations (seed base 5.9e9, 1,289 configurations); fresh seeds 20–22.
-  - Mean paired first-probe gain +.206 (+.167/+.233/+.217).
+  - Mean paired first-probe gain +.206 (+.167/+.233/+.217). Per seed (B0 → BX1): 56.7% → 73.3%, 55.0% → 78.3%, 51.7% → 73.3%. This is **conditional first-decision accuracy on the 60 eligible configurations** (of 1,289) shared by all pairs. It is not overall task success.
   - Gap regret lower 3/3 (−.81/−1.09/−1.62).
   - It also passes the stricter original B-X rule.
   - **Caveats:**
     - the pair family had been inspected;
+    - **exposure is confounded with data volume:** B0 trains on 384 configurations over 7 combinations, BX1 on 768 over 9, at equal updates and architecture. The benefit is of that broader training distribution; the experiment does not separate more configurations from more combination types or different decision frequencies;
+    - **the gain may partly be a shift toward probing** rather than more systematic use of the interacting conditions (BX1 probes more everywhere). The evidence does not choose between these;
     - BX1 about doubles the overall probe rate, and its not-optimal probing rises (still ≤ .10);
     - most of the gap-regret gain comes from later decisions;
     - one weak composition only; it is not new-pair transfer.
@@ -114,7 +116,7 @@
 
 ## Next-decision recommendation
 
-1. **Stop learning when-to-invoke regulators over fixed option menus in depworld.** With a competent D, the recoverable value sits at public anchors that simple rules capture. Metacontrol research needs environments where the right trigger **depends on latent, instance-specific evidence** that no fixed anchor rule can express. Build and measure that headroom first, as A-HR did.
+1. **Stop learning when-to-invoke regulators over fixed option menus in depworld.** With a competent D, the recoverable value sits at public anchors that simple rules capture. Metacontrol research needs environments where the best intervention **varies across instances at the same apparent decision point** and is inferable from available evidence. The target is to beat strong, relatively simple, equally informed heuristics and tuned portfolios. *(Corrected after external review: an earlier draft said 'no fixed rule can express', but any computable policy is a rule.)* Build and measure that headroom first, as A-HR did.
 2. **Improvement over the teacher, not recovery of it.** The deployed gains equal the supplied teacher's. The next Track A question is whether any learned procedure can exceed dep_reuse (.90), for example by learning to invoke *different* sub-policies than the ones supplied.
 3. **Composition.** The exposure effect is real but narrow. Test it on a genuinely untouched pair or triple family registered in advance, with exposure dose varied. Test whether the gain works through later-decision value estimates, where BX2 also helped, or through first-probe recognition.
 4. **Value estimates under shift** remain the common failure (extended-04 B-H6, extended-05 B-LOC). A targeted study of value-head generalization, such as horizon-normalized or decomposed targets, is the most direct lever for both tracks.
