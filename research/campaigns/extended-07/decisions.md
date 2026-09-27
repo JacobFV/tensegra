@@ -46,3 +46,12 @@
   - **Labelling:** b6c is diagnostic, not confirmation, because extended-06 already scored it.
   - **Seed ranges registered:** the support-reference worlds, and dev block 6.880–6.890e9.
   - **Estimated tranche:** ~2.3–3.8k core-s (cap 10.8k), ≤ 1.8 GB/job, 4 concurrent.
+- 2026-09-27T16:56Z: **P1 dev tranche done** (8 support refs ~5.5 core-s each; dev s30–32 ~372 each; score-dev 116; all exit 0).
+  - The historical check is "identical" for all 4 models, in dev and in the b6c-s35 smoke (393 core-s).
+  - **Dev readouts (development only, 3 lineages):**
+    - LRN − RAWF: octet flip −.067, invariance +.062, near-miss ≈ 0.
+    - SUP − RAWF: flip +.134, near-miss −.133.
+    - Exact-factor substitution into the frozen LRN changes accuracy by only ~+.002–.004 (rescue ≈ 2× harm, small counts). The exact vectors are in LRN's training support only ~60–70% of the time.
+    - Per-group nMAE: G1 .45, G2 1.03, G3 .33, G4 .11.
+  - b6c s36–39 and the b6c scoring are running (≤ 4 concurrent).
+  - **Analyst commissioned** (campaign/e07-p1analysis) for flip-level cross-tabs. It must freeze its code on dev before reading any b6c per-decision output.
