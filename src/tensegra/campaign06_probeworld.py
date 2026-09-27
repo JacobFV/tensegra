@@ -44,7 +44,7 @@ from tensegra import campaign04_probeworld as pw
 from tensegra import campaign05_probeworld as pw5
 
 VERSION = "probeworld-v3"
-GENERATOR_VERSION = "probeworld-v3-gen2"  # gen1 (local pilot only) had factor G instead of T
+GENERATOR_VERSION = "probeworld-v3-gen3"  # design v2 revision 1 ranges; gen2 = v1 ranges + D/T (screened, superseded)
 U_STEP = 64  # deadline step counter: usage >> 6 (bits 0-5 are the v1 usage bits)
 STEP_SHIFT = 6
 assert U_STEP == 1 << STEP_SHIFT and pw.U_INSPECT < U_STEP
@@ -56,7 +56,9 @@ FACTOR_FIELD = {"U": ("q", 1.0), "S": ("D_side", 0.0), "C": ("corr", 0.0), "E": 
 V1_FACTORS = ("U", "S", "C", "E")
 EXT_FACTORS = ("D", "T")
 DEADLINE_VALUES = (1, 2)
-V3_K = (1, 2, 4)  # probeworld-v3 horizon support (composition, not horizon, is the Track B question; k = 8 dropped for cost)
+V3_K = pw.TRAIN_K  # (1, 2, 8): the v1 training horizons; the correlated factor only at k >= 2 (design v2 revision 1)
+CORR_RANGE = (0.25, 0.45)  # design v2 revision 1 (v1: [.1, .25] at any k)
+P_EVENT_RANGE = (0.3, 0.6)  # design v2 revision 1 (v1: [.1, .3])
 T_RANGE = (0.5, 2.5)
 
 
@@ -92,7 +94,7 @@ assert PUBLIC_EXTRA6 == 4
 
 
 def from_v1(cfg: pw.Config, **kw) -> Config6:
-    return Config6(**{f.name: getattr(cfg, f.name) for f in fields(pw.Config)}, **kw)
+    return Config6(**{**{f.name: getattr(cfg, f.name) for f in fields(pw.Config)}, **kw})
 
 
 def flags_of(cfg) -> tuple:
@@ -331,26 +333,35 @@ def env(cfg):
 # generator
 
 def make_config(cell: tuple, k: int, flags: tuple, seed: int) -> Config6:
-    """v3 configuration: v1 prices/prior/U,S,C,E parameters from pw.make_config (rng seed*7+1, unchanged), then the
-    D and G parameters from a separate stream (seed*11+3), drawn whether or not the factor is on (so switching a
-    factor never shifts any other draw)."""
+    """v3 configuration: v1 prices/prior/U,S parameters from pw.make_config (rng seed*7+1, unchanged); the v3 ranges
+    of corr and p_event (design v2 revision 1) and the D / T parameters from a separate stream (seed*11+3), every one
+    drawn whether or not its factor is on (switching a factor never shifts any other draw)."""
     flags = tuple(flags) + (False,) * (6 - len(flags))
     base = pw.make_config(cell, k, flags[:4], random.Random(seed * 7 + 1))
     r2 = random.Random(seed * 11 + 3)
     d = r2.choice(DEADLINE_VALUES)
     t = round(r2.uniform(*T_RANGE), 3)
-    return from_v1(base, deadline=d if flags[4] else 0, t_hard=t if flags[5] else 0.0)
+    corr = round(r2.uniform(*CORR_RANGE), 3)
+    pe = round(r2.uniform(*P_EVENT_RANGE), 3)
+    if flags[2] and k < 2:
+        raise ValueError("the correlated factor requires k >= 2 in probeworld-v3")
+    return from_v1(base, corr=corr if flags[2] else 0.0, p_event=pe if flags[3] else 0.0,
+                   deadline=d if flags[4] else 0, t_hard=t if flags[5] else 0.0)
 
 
 def draw_params(seed: int, cells, ks, combos) -> tuple:
+    """(cell, k, combo) of a stream configuration; a combination with the correlated factor draws k from k >= 2."""
     rng = random.Random(seed)
-    return rng.choice(cells), rng.choice(ks), rng.choice(combos)
+    cell, k, cmb = rng.choice(cells), rng.choice(ks), rng.choice(combos)
+    if k < 2 and cmb is not None and "C" in cmb:
+        k = rng.choice(tuple(x for x in ks if x >= 2))
+    return cell, k, cmb
 
 
 def stream_config(base: int, index: int, cells, ks, combos):
     seed = base + index
     cell, k, cmb = draw_params(seed, cells, ks, combos)
-    return make_config(cell, k, cmb, seed), (cell, k, cmb, seed)
+    return make_config(cell, k, flags_from_key(cmb), seed), (cell, k, cmb, seed)
 
 
 def family_flags(key: str) -> tuple:
@@ -405,7 +416,7 @@ def screen_seed(family: str, index: int) -> int:
 def screen_config(family: str, index: int, cells=pw.TRAIN_CELLS, ks=None):
     ks = V3_K if ks is None else ks
     seed = screen_seed(family, index)
-    cell, k, _ = draw_params(seed, cells, ks, (None,))
+    cell, k, _ = draw_params(seed, cells, ks, (canon(family),))
     return make_config(cell, k, flags_from_key(family), seed)
 
 
@@ -761,7 +772,7 @@ def audit_split_table() -> dict:
 # balanced counterfactual sets: all sub-combinations of a held-out family at the same prices (none / A / B / A+B for
 # a pair), plus a near-miss full-family configuration that does NOT flip, with exact labels per decision type.
 
-FACTOR_WEAK = {"U": ("q", 0.8), "S": ("D_side", 5.0), "C": ("corr", 0.1), "E": ("p_event", 0.1),
+FACTOR_WEAK = {"U": ("q", 0.8), "S": ("D_side", 5.0), "C": ("corr", CORR_RANGE[0]), "E": ("p_event", P_EVENT_RANGE[0]),
                "D": ("deadline", 2), "T": ("t_hard", 0.5)}  # weakest ON value inside the generator range
 NEAR_MISS_LAMBDAS = (0.5, 1.0)
 
@@ -801,7 +812,7 @@ def counterfactual_set(fam: str, index: int, base=None, near_miss: bool = True) 
     fam = canon(fam)
     base = CF_BASE[fam] if base is None else base
     seed = base + index
-    cell, k, _ = draw_params(seed, pw.TRAIN_CELLS, V3_K, (None,))
+    cell, k, _ = draw_params(seed, pw.TRAIN_CELLS, V3_K, (fam,))
     c = make_config(cell, k, flags_from_key(fam), seed)
     full = tuple(fam)
     members, solvers = {}, {}

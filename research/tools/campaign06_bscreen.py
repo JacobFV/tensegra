@@ -61,7 +61,7 @@ SCREEN_VERSION = "bscreen-v1"
 EPS = pw.EPS
 GS_FIRST_GRID = [x / 4.0 for x in range(-400, 401)]  # price units
 GS_EP_ACTIONS = (pw.A_PROBE, pw.A_B1, pw.A_B2, pw.A_INSPECT, pw.A_PROP)
-GS_EP_GRID = (-30.0, -15.0, -8.0, -4.0, -2.0, -1.0, 0.0, 1.0, 2.0, 4.0, 8.0, 15.0, 30.0)
+GS_EP_GRID = (-30.0, -15.0, -8.0, -4.0, -2.0, 0.0, 2.0, 4.0, 8.0, 15.0, 30.0)
 SELECTION = {
     "rel_regret_min": 0.30,   # every factor: fraction of eligible configs where ignoring it costs > eps
     "rel_first_min": 0.15,    # every factor: fraction where its removal changes the optimal first decision
@@ -70,6 +70,14 @@ SELECTION = {
     "additive_wrong_min": 0.10,       # interaction: order-1 additive Q prediction's first action not eps-optimal
     "rank": "min_f rel_regret(f) * (1 - max(GS_first, GS_regret))",
 }
+# design v2 revisions 1-2 (registry B-SCREEN; supersedes SELECTION, which is still reported): among UNTOUCHED
+# triples, primary = the largest minimum per-factor decision relevance ('any': the optimal first or a later decision
+# changes when the factor is removed, following pi*) subject to global-shift closable fraction (GS_regret: the share of
+# the regret gap of the nearest training-support-optimal policy closed by one shared per-action bias) <= .5; the next
+# passing triple is the secondary holdout.
+SELECTION_V2 = {"relevance": "any", "gs_closable_max": 0.5, "families": "untouched triples",
+                "untouched": ("USC", "USE", "UCE", "SCE"), "extension_triples_considered": "only if they clear the "
+                "rule more clearly (larger minimum relevance) than every untouched triple"}
 
 
 def _sub(full):
@@ -262,6 +270,8 @@ def summarize_family(fam, rows_all):
     out["relevance"] = rel
     out["joint_flip"] = {"n": sum(r["joint_flip"] for r in rows), "frac_eligible": _mean(r["joint_flip"] for r in rows),
                          "per_1000_draws": 1000.0 * sum(r["joint_flip"] for r in rows) / n}
+    out["all_factors_any"] = {"n": sum(all(r["factors"][f]["any"] for f in full) for r in rows),
+                              "frac_eligible": _mean(all(r["factors"][f]["any"] for f in full) for r in rows)}
     out["all_factors_regret_relevant"] = {
         "n": sum(all(r["factors"][f]["regret"] > EPS for f in full) for r in rows),
         "frac_eligible": _mean(all(r["factors"][f]["regret"] > EPS for f in full) for r in rows)}
@@ -300,10 +310,40 @@ def select(s):
     return {"checks": checks, "pass": all(checks.values()), "rank_score": score}
 
 
+def select_v2(res):
+    """Design-v2 registered rule over the summarized families (triples only)."""
+    cand = []
+    for fam, s in res["families"].items():
+        if len(fam) != 3 or "relevance" not in s:
+            continue
+        mn = min(v["any"] for v in s["relevance"].values())
+        gs = s["gs_regret"]["GS_regret"]
+        cand.append({"family": fam, "min_relevance_any": mn, "gs_closable": gs, "passes": gs <= SELECTION_V2["gs_closable_max"],
+                     "untouched": fam in SELECTION_V2["untouched"], "n_eligible": s["n_eligible"],
+                     "per_factor_any": {f: v["any"] for f, v in s["relevance"].items()},
+                     "all_factors_any": s.get("all_factors_any", {}).get("frac_eligible")})
+    cand.sort(key=lambda c: -c["min_relevance_any"])
+    base = [c for c in cand if c["untouched"] and c["passes"]]
+    ext = [c for c in cand if not c["untouched"] and c["passes"]]
+    primary = base[0] if base else None
+    if primary and ext and ext[0]["min_relevance_any"] > primary["min_relevance_any"]:
+        primary = dict(ext[0], via_extension=True)
+    rest = [c for c in (base + ext) if primary is None or c["family"] != primary["family"]]
+    rest.sort(key=lambda c: -c["min_relevance_any"])
+    return {"rule": SELECTION_V2, "candidates": cand, "primary": primary["family"] if primary else None,
+            "secondary": rest[0]["family"] if rest else None}
+
+
+def _open(p):
+    import gzip
+    return gzip.open(p, "rt") if str(p).endswith(".gz") else open(p)
+
+
 def cmd_summarize(a):
     rows = []
     for p in a.inputs:
-        rows += [json.loads(line) for line in open(p) if line.strip()]
+        with _open(p) as fh:
+            rows += [json.loads(line) for line in fh if line.strip()]
     fams = {}
     for r in rows:
         fams.setdefault(r["family"], []).append(r)
@@ -320,6 +360,8 @@ def cmd_summarize(a):
     passing = sorted((f for f, s in res["families"].items() if s.get("selection", {}).get("pass")),
                      key=lambda f: -res["families"][f]["selection"]["rank_score"])
     res["passing_ranked"] = passing
+    res["selection_v2"] = select_v2(res)
+    print("selection_v2", json.dumps({k: res["selection_v2"][k] for k in ("primary", "secondary")}))
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(res, indent=1))
     if a.md:
