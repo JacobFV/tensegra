@@ -212,6 +212,23 @@
    ],
    "scope": "U+C was inspected in B-X/B-Q; this tests fresh configurations of the same pair family with fresh initializations \u2014 configuration-level replication, not a new-pair transfer claim",
    "cost": "~1.5k labels + 6 x ~0.45k training + evals ~0.3k"
+  },
+  {
+   "id": "A-CF-T",
+   "status": "registered (amends A-CF before any run: frozen controller, no retraining)",
+   "hypothesis": "The frozen A-PI-T controller (trained on r0-r2 labels only, sha dea16e83) improves deployed utility over D when applied unchanged to fresh lineages r3-r5.",
+   "intervention": "frozen controller + delegation to dep_reuse (option T) over D of each fresh lineage; no new labels, no retraining, same m=.075",
+   "comparators": [
+    "D (per lineage)",
+    "always-teacher",
+    "R1",
+    "R2",
+    "random-matched"
+   ],
+   "worlds": "sealed fresh 260,000,000 + 100,000*i (i: iid_f0, iid_f2, events_train_kinds_p1, foreign4), 512 per condition; never used before",
+   "primary": "PI-T-1 on each of r3,r4,r5 (IID group): utility >= D + .015 and success >= D - .01, in 3/3 lineages; per-condition absolute floor success >= .8 x dep_reuse",
+   "secondary": "PI-T-2 reading (vs best simple rule and teacher); delegated-step fraction; per-condition",
+   "scope": "learned WHEN to delegate to a supplied sub-policy; screen showed it does not beat the simple rule R1 (PI-T-2 fail) \u2014 confirmation targets PI-T-1 only"
   }
  ]
 }
