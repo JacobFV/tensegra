@@ -1,0 +1,97 @@
+{
+ "version": 1,
+ "campaign": "extended-07",
+ "entries": [
+  {
+   "id": "P1-DIAG",
+   "status": "registered (diagnostic; not confirmatory)",
+   "registered_before": "any e07 diagnostic output on b6c or b6 hold pools",
+   "populations": "dev: b6_hold_SCE (400) + 160 b6 SCE octets, lineages s30-32 (inspected in ext-06); diagnostic: b6c_hold_SCE (400) + 320 SCE octets + 160 UCE octets, lineages s35-39 (b6c pool/octets were inspected by ext-06 end-to-end scoring, so these are DIAGNOSTIC, not confirmation)",
+   "models": "historical LRN, RAWF, SUP, B0 checkpoints (read-only; campaign06)",
+   "protocols": "B free-running (bit-identical to historical eval required); A common-history (pi* histories and each arm's own histories replayed through every model, own recurrent state rebuilt; low (<.05) / unsupported (<1e-3) history probabilities flagged). Denominators never mixed.",
+   "tolerances_frozen": "campaign07_diagscore.semantic_tol at merge 1aa9c388: cost-unit coords .005 (= decision eps .5 price units / R); probabilities .05; remaining_queries_rel 1/16; steps_left_rel .25; binary flags .5. Fixed now, before any dev/b6c output; any later tolerance is reported as a sensitivity, not a substitute.",
+   "interventions": "LRN only, same frozen model + reconstructed state, at the aux output before fusion: pred (identity), exact (all), group replacements G1-G4 (iso/dep/up/keep, dependency closure from factor-contract.json), gauss / gauss_pred / scale_err / mirror perturbations at training-error scale; immediate vs rollout named separately; support membership (range / Mahalanobis / kNN vs 99th pct of LRN's own training predictions) logged for every replaced vector",
+   "primary_descriptive_readouts": [
+    "per-group prediction error and tolerance-hit rate on flip vs near-miss vs invariance octet decisions and by context (query2_after_H / notH, initial, later_query_start)",
+    "immediate rescue/harm of exact and group replacement on the same frozen LRN, split by in-support vs out-of-support replacement",
+    "common-history decision accuracy LRN vs RAWF vs SUP on pi* histories by context"
+   ],
+   "statistics": "two-level bootstrap (seed, then configuration / whole octet), n_boot 20000, boot seed 7, half-split MC check",
+   "order": "support refs -> dev-s30 smoke -> dev s31/32 -> score-dev -> b6c-s35 smoke (historical check 'identical' for all 4 models) -> b6c s36-39 -> score b6c",
+   "audit": "review/p1-independent-audit.md: numbers reproduce; Q3/Q4/Q5 analyses exploratory; SUP flip advantage mostly survives phi=0/mean (training-induced), corrections applied"
+  },
+  {
+   "id": "P2-SCREEN",
+   "status": "complete: NO CANDIDATE QUALIFIES (selection rule)",
+   "branch": "B (consumer) + D test via S x R 2x2, chosen from P1-DIAG localization (consumption primary, acquisition secondary)",
+   "arms": {
+    "2x2 (bank mode, 4000 bank updates, common init per seed, separate actor/aux optimizers+clips, keyed action RNG)": [
+     "S0R0",
+     "S1R0",
+     "S0R1",
+     "S1R1"
+    ],
+    "predictors": "separately trained factor predictors with their OWN encoder (5 out-of-fold over training configurations + 1 full-data) per seed",
+    "consumers": "from-scratch recurrent consumers (SUP architecture) under input contracts exact / oof / mix (half the episodes with noise matched per coordinate to OOF error); each evaluated with EXACT factors (privileged ceiling, diagnostic) and with PREDICTED factors from the full-data separate predictor (deployable)"
+   },
+   "seeds": "40-44 (training worlds 1.20e10-1.25e10); history bank from dev lineage s30 behaviour on b6_B0 only (worlds 1.29e10), shared by all arms/seeds",
+   "evaluation": "b6c_hold_SCE (400) + 320 SCE octets (inspected pool: used here as VALIDATION for selection only) + UCE octets (descriptive); campaign07_diag protocols B and cf; scoring campaign07_diagscore two-level 20000 draws seed 7",
+   "readouts": [
+    "2x2: flip / near-miss / invariance / pool accuracy, gap regret; shaping effect S1R0-S0R0, reading effect S0R1-S0R0, interaction; factor reliance (zero-factor action change) for R1 arms",
+    "consumers: same metrics with exact vs predicted inputs; exact->predicted degradation; reliance"
+   ],
+   "selection_rule": "Reference = the better (screen pool eps-optimal accuracy) of S1R1 and S1R0 (strong ordinary equal-information baselines). Candidates = DEPLOYABLE arms/consumers (predicted-factor inputs only; exact-factor evaluations never selected). Choose the candidate with the largest mean screen flip-accuracy gain over the reference subject to: near-miss mean diff >= -.05, invariance mean diff >= -.03, pool accuracy >= reference - .02 and >= .70 absolute. If none qualifies (or best flip gain < .03) -> no confirmation of a repair; report branch E / negative and use remaining budget only for a localized follow-up.",
+   "budget": "~12k core-s (bank mode); on-policy variants not run in screen",
+   "addendum_1": "Added before any P2 evaluation output exists (the screen is at the training stages): (a) SEP arm (--factor-mode sep): separately encoded predictor trained only by factor loss, policy reads its detached output (non-redundant READ), bank mode, seeds 40-44; (b) evalX: consumers evaluated with the HISTORICAL LRN-s(35+i) predictions replayed on the same history (P2 seed 40+i paired with LRN lineage 35+i), plus SEP-bank. SEP is a deployable candidate under the selection rule.",
+   "addendum_2": "Added after the independent P1 audit, before any P2 evaluation output: every factor-reading model (R1 arms, SEP, consumers, historical LRN/SUP references) is evaluated with factor channel phi in {own (its deployable input), exact, zero, population-mean (training-bank mean of exact targets)} on pool, flips, near-misses, invariances. Selection uses 'own' only; zero/mean separate decision-time reading from training-induced trunk/head effects. A candidate whose flip gain over the reference is not larger under 'own' than under 'zero'/'mean' is reported as a training-induced effect, not factor-mediated reading.",
+   "result": "b6c validation, seeds 40-44, two-level CIs in research/results/campaign-07/p2-screen/e07-p2-score. Reference = S1R1-bank (pool .819 > S1R0 .811): flip .469, near-miss .695, invariance .760. Deployable candidates @own flip: S0R1 .447, SEP .416, CONS-exact-pred .453, CONS-mix-pred .445, CONS-oof-pred .414, CONS-{exact,mix,oof}-predLRN .439/.444/.412 -> every flip gain vs reference < 0 (< .03 threshold) -> no confirmation of a repair (P2-CONFIRM not run as registered). Descriptive: 2x2 flip S0R0 .372 / S1R0 .453 / S0R1 .447 / S1R1 .469; near-miss .847 / .708 / .817 / .695; phi conditions barely move flips (S0R1 own .447 zero .441; S1R1 own .469 zero .475; CONS-exact exact .456 zero .445) but reading moves pool/invariance (CONS-exact exact vs zero: pool .826/.807, invariance .750/.685). All models lie near a flip/near-miss trade-off ((flip+near)/2 .55-.63); historical SUP flip .562 but near-miss .536. Preliminary reading superseded by p2-frontier.md: on the near-miss axis the differences are bias (flip vs near-miss r = \u2212.82, BA_nm .51\u2013.60); composition discrimination J_sub does vary (S1R1 \u2212 S0R0 +.074 [+.010,+.143]) and no deployable candidate reaches S1R1 on it (\u2212.037 to \u2212.083). (audit-corrected)"
+  },
+  {
+   "id": "P2-CONFIRM",
+   "status": "registered rule (contrast filled in by P2-SCREEN selection rule; no confirmation data exists)",
+   "population": "FRESH S+C+E pool b6d: 400 configurations at base 6.43e9 (eval worlds 6.48e9) + 320 fresh octets at CF base 6.66e9; labels built before any confirmation evaluation; never used for selection",
+   "lineages": "fresh seeds 50-54 (training worlds 1.30e10-1.35e10), 5 paired lineages; same history bank; same recipe as screen; final checkpoint; no selection",
+   "primary": "flip accuracy (full-member accuracy on unique-optimum flip units of SCE octets, all decision types pooled, whole octets) candidate - reference: mean > 0, two-level (seed pair, then whole octet / configuration) 95% CI lower bound > 0, >= 4/5 pairs positive",
+   "non_inferiority": "near-miss accuracy mean diff >= -.05; invariance accuracy mean diff >= -.03",
+   "competence_floor": "b6d pool eps-optimal decision accuracy >= reference - .02 and >= .70 absolute; success >= .8 x pi* success",
+   "regret": "gap regret difference reported with two-level CI (secondary)",
+   "statistics": "n_boot 20000, bootstrap seed 20260928 (fixed now), Monte Carlo half-split check reported for every endpoint whose CI bound is within .005 of its threshold; seed-level values and support always reported",
+   "decision": "SUPPORTED iff primary AND non-inferiority AND competence floor"
+  },
+  {
+   "id": "P3-SCREEN",
+   "status": "complete: SCREEN RULE NOT MET (stratum condition fails) -> no confirmation of a repair",
+   "branch": "B (brief \u00a715): does explicit interaction structure in the consumer beat a strong ordinary consumer with equal information?",
+   "arms": "consumers identical except fusion: lin (existing P2 CONS, reused), CONS-mlp (lin + 2-layer MLP branch on [z;phi], width 51, matched to bil's parameters: 160,082 vs 160,194 active), CONS-bil (lin + factor-group gating + rank-8 bilinear products among factor groups G1-G4), CONS-gate (lin + factor-specific gates, 148,746 active); all copy the seed's common init and start as exactly the lin function; contracts exact and mix; bank mode 4000 updates; seeds 40-44",
+   "evaluation": "b6c pool + 320 SCE octets (validation, inspected) + UCE octets descriptive; inputs exact and predicted (separate full-data predictor); phi own/exact/zero/mean; 20000 draws seed 7",
+   "primary_contrast": "CONS-bil vs CONS-mlp (equal information, matched parameters) under the DEPLOYABLE input (predicted factors, contract mix and exact both reported; contract chosen before eval: mix = primary, since it is trained for noisy inputs)",
+   "metric": {
+    "tool": "campaign07_frontier.py (v2 + --refs + all_x_q2notH stratum), SCE octets, two-level bootstrap 20000 draws seed 7 (screen) / 20260928 (confirm)",
+    "primary": "J_sub (Youden: P(change|optimum changes) - P(change|optimum unchanged) over full-vs-pair/single member pairs with unique optima at both ends) contrast CONS3-bil-mix-pred@own - CONS3-mlp-mix-pred@own",
+    "co_primary": "BA_nm = (flip + near-miss)/2 contrast non-inferior at -.02",
+    "guards": "FA_sub (false-change rate) increase <= +.02; near-miss accuracy decrease <= .05; pool (B protocol) accuracy >= mlp - .02",
+    "belief_stratum": "primary J_sub gain must also hold (point >= .02) in stratum all_x_q2notH, so a q2_after_notH belief-acquisition effect cannot pass as interaction",
+    "screen_rule": "advance to confirmation iff J_sub gain >= .03 (point), >= 4/5 seeds positive, co-primary and guards met (point estimates), and stratum condition; else report negative (bil does not beat a matched ordinary consumer)",
+    "confirm_rule": "b6d, fresh seeds 50-54 incl. fresh predictors: J_sub gain (bil - mlp, mix, predicted inputs) two-level 95% CI lower bound > 0 and >= 4/5 seeds positive; BA_nm mean >= -.02; guards as in screen; stratum all_x_q2notH J_sub gain mean > 0",
+    "secondary": "exact-input evaluations, exact contract, gate and lin arms, UCE descriptive, phi own/exact/zero/mean"
+   },
+   "confirmation": "if the screen meets the (to-be-fixed) rule, confirm on b6d (labels built) with fresh seeds 50-54 incl. fresh predictors (86 jobs, ~18k core-s)",
+   "result": "b6c validation, seeds 40-44, frontier v2 (e07-p3-frontier2/v1; 20000 draws seed 7, MC halves agree). Primary J_sub CONS3-bil-mix-pred - CONS3-mlp-mix-pred: +.046 [+.011,+.082], 5/5 seeds; BA_nm +.032 [-.022,+.085]; FA_sub -.042; near-miss +.031; pool .830 vs .812 (+.018): all pass. Stratum condition FAILS: all_x_q2notH J_sub +.011 [-.026,+.048] < .02. Per decision type: q2_after_notH +.119 [+.007,+.220] (4/5 seeds), q2_after_H +.079, first +.050, after_probe_failed -.117 [-.214,-.037] (0/5 positive), after_b1_timeout -.082. Reading (mix contract, the registered primary): the bil \u2212 mlp J_sub gain is false-alarm suppression (\u0394FA \u2212.042, \u0394H +.003), carried by the bilinear products (bil \u2212 gate +.068 [+.033,+.106] 5/5; gate \u2212 mlp \u2212.023), and is resolved only in q2_after_notH (+.119 [+.007,+.220], 4/5 seeds; positive) and after_probe_failed (\u2212.117, 0/5; negative); q2_after_H (+.079) and after_b1_timeout (\u2212.082) CIs include 0 (per-type contrasts exploratory). Outside q2_after_notH bil is more conservative (\u0394H \u2212.032, \u0394FA \u2212.043), not more discriminating. The pattern is contract-specific: under the exact training contract bil \u2212 mlp is \u2212.014 [\u2212.070,+.046] (1/5; q2_after_notH \u2212.010), and mlp-exact-pred (J_sub .392, q2_after_notH .140) matches bil-mix-pred (.394/.166) \u2014 so the primary contrast's q2_after_notH advantage largely reflects the mix-trained mlp's weakness there (.047). No context-general composition gain over a matched ordinary MLP consumer under either contract. Pool +.018 [\u2212.013,+.041] (4/5) is unresolved, absent on common pi* histories (+.003), shared by gate (.827), and present also under the exact contract where J_sub is not: not a composition effect. (audit-corrected, review/p23-independent-audit.md) Also: exact vs predicted inputs for mlp +.039 J_sub (acquisition cost), all within q2_after_notH (all_x_q2notH -.010)."
+  },
+  {
+   "id": "P3-REPLICATE",
+   "status": "complete (descriptive)",
+   "population": "b6d (400 configs at 6.43e9 + 320 SCE octets at 6.66e9; labels built 19:xxZ, never evaluated)",
+   "models": "the P3 screen models (seeds 40-44) as trained; no retraining; same eval settings as P3-eval minus UCE",
+   "expectations_stated_before_data": {
+    "pooled": "J_sub bil-mix-pred minus mlp-mix-pred > 0",
+    "q2_after_notH": "> 0",
+    "after_probe_failed": "< 0",
+    "all_x_q2notH": "approximately 0 (|.| < .03)"
+   },
+   "statistics": "frontier v2 two-level, 20000 draws, seed 20260928; report means, CIs, seed signs; no pass/fail consequences for any repair claim",
+   "addendum": "Per the p23 audit (before any b6d output was read): the report also states the exact-contract contrast CONS3-bil-exact-pred - CONS3-mlp-exact-pred (reference CONS3-mlp-exact-pred@own is already in the frontier job's --refs).",
+   "result": "b6d fresh configurations, screen models s40-44, frontier v2 20000 draws seed 20260928 (research/results/campaign-07/p3-replicate). bil - mlp (mix, predicted): pooled J_sub +.018 [-.018,+.056] 3/5 (expectation >0: point positive, NOT resolved); all_x_q2notH -.011 [-.061,+.034] (expected ~0: yes); q2_after_notH +.061 [-.036,+.166] 4/5 (expected >0: point positive, not resolved); after_probe_failed -.146 [-.255,-.049] 0/5 (expected <0: REPLICATED); after_b1_timeout -.091. FA -.043, H -.025, BA_nm -.004. Exact contract bil - mlp: pooled -.010 [-.061,+.038] 2/5; FA -.055, H -.065, near-miss +.065. Reading: the screen's pooled bil gain does not replicate on fresh configurations; what replicates is that bil is more conservative (fewer false AND fewer correct changes under both contracts) and loses discrimination after failed probes. No evidence that explicit bilinear factor interactions improve composition over a matched MLP consumer."
+  }
+ ]
+}

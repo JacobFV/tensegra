@@ -1,0 +1,166 @@
+# Extended-07 decisions (timestamps from date/git)
+
+- 2026-09-27T16:04Z: **Campaign adopted** from the user's brief; the window opened at 16:02:54Z.
+  - **pro6000 state:** idle, 61 GiB free, 24 cores, no e0x units running, keepalive running. The GPU shows 10% / 5 GB used by an unrelated process, which is not touched.
+  - **New root:** ~/structured-latent-dynamics-campaign07, with job.py copied (sha256 identical to campaign06) and metered.sh retargeted.
+  - Historical campaign06 artifacts (checkpoints, labels) are **read-only** inputs.
+  - **Tools:** campaign07_remote.py (new guards: --needs, --mkdir, concurrency/memory checks, output-path restriction) and campaign07_ledger.py (GPU charged only for '-gpu-' jobs; legacy occupancy reported separately).
+  - **Plan:** Phase 1 (≤ 3 core-h) is two parallel builders:
+    - (a) factor-contract and gradient-flow audit (static, plus mechanical tests);
+    - (b) a frozen-checkpoint diagnostic runner, read-only with versioned outputs.
+- 2026-09-27T16:07Z: **Launch guards smoke-tested:**
+  - refusal works for a bad name, an output under campaign06, and a missing --needs input;
+  - a real job ran after a quoting fix (shlex.join; the extended-06 helper had the same latent bug for commands containing shell metacharacters);
+  - e07-smoke-launch3 exited 0.
+- 2026-09-27T16:07Z: **Phase 0/1 builders started in parallel:**
+  - campaign/e07-contracts: factor contract + gradient-flow audit, mechanical tests;
+  - campaign/e07-diag: frozen-checkpoint diagnostic runner (common-history and free-running protocols, octet cf-only path, interventions, two-level scoring).
+
+  Builder dev caps: 1.5k and 2.0k core-s. The Phase-1 tranche must total ≤ 10.8k core-s.
+- Heartbeat cron be7769c4 (hourly at :43).
+- 2026-09-27T16:25Z: **P0 contracts merged** (campaign/e07-contracts cc620c64; 17 tests pass; 72.6 metered + ~25 local core-s).
+  - **Factor contract:** 23 coordinates in 4 groups. LRN was a single 23-d regression, not "four quantities". **No hidden-state leak** (3 mechanical checks).
+  - **Strategy-cost coordinates are far from Q\*:** errors of 3–27 units against a 0.5 tolerance; the formula-cheapest strategy is optimal at only 36–38% of decisions.
+  - **Defects:**
+    - candidate_trust double-counts under U (irrelevant to S+C+E);
+    - cost_probe_first omits the false-solved loss;
+    - b1/use costs omit the event re-run;
+    - p_probe_resolves ≡ belief_H;
+    - exp_hard_cost and steps_left are constant on b6/b6c;
+    - clip saturation of cost_use (0.45%) and build_value (1.1%);
+    - build_value carries 32% of the target variance;
+    - only 11/23 coordinates are functionally independent given the config.
+  - **Gradient flow verified:**
+    - the policy reads tanh(W[z; stopgrad(aux(z))]) through a fusion layer shared with the value head;
+    - the aux loss updates the encoder, GRU, trunk and aux head;
+    - LRN's fusion init differs from RAWF/SUP (RNG order);
+    - RAWF's 2,944 factor-column weights are dead;
+    - global clip and Adam are shared (aux ~1.1% of the squared gradient norm; clip effect < 1%);
+    - action-sampling RNG drift.
+
+    **LRN − RAWF therefore bundled** shaping, reading, init and dead-vs-live columns.
+  - A 2×2 spec with copied init, separate optimizers/clips and per-decision sampling RNG is ready for Phase 2.
+  - Seed block 6.870–6.880e9 registered (dev_smoke).
+- 2026-09-27T16:32Z: **P1 diagnostic runner merged** (campaign/e07-diag 1aa9c388; 22 tests; bit-identical reproduction of historical eval; 196 metered + ~50 local core-s).
+  - **P1-DIAG registered:** protocols, the frozen semantic tolerances, the interventions and the readouts are registered before any diagnostic output.
+  - **Labelling:** b6c is diagnostic, not confirmation, because extended-06 already scored it.
+  - **Seed ranges registered:** the support-reference worlds, and dev block 6.880–6.890e9.
+  - **Estimated tranche:** ~2.3–3.8k core-s (cap 10.8k), ≤ 1.8 GB/job, 4 concurrent.
+- 2026-09-27T16:56Z: **P1 dev tranche done** (8 support refs ~5.5 core-s each; dev s30–32 ~372 each; score-dev 116; all exit 0).
+  - The historical check is "identical" for all 4 models, in dev and in the b6c-s35 smoke (393 core-s).
+  - **Dev readouts (development only, 3 lineages):**
+    - LRN − RAWF: octet flip −.067, invariance +.062, near-miss ≈ 0.
+    - SUP − RAWF: flip +.134, near-miss −.133.
+    - Exact-factor substitution into the frozen LRN changes accuracy by only ~+.002–.004 (rescue ≈ 2× harm, small counts). The exact vectors are in LRN's training support only ~60–70% of the time.
+    - Per-group nMAE: G1 .45, G2 1.03, G3 .33, G4 .11.
+  - b6c s36–39 and the b6c scoring are running (≤ 4 concurrent).
+  - **Analyst commissioned** (campaign/e07-p1analysis) for flip-level cross-tabs. It must freeze its code on dev before reading any b6c per-decision output.
+- 2026-09-27T17:06Z: **P1 diagnostic tranche complete:** 19 jobs, all exit 0; ~3.8k core-s including dev, within the 10.8k tranche.
+  - **b6c (diagnostic) reproduces extended-06:** LRN − RAWF flip −.048 [−.095, −.005], near-miss +.105, invariance +.037; SUP − RAWF flip +.109, near-miss −.108.
+  - **UCE octets** (descriptive; first evaluation): LRN − RAWF flip +.020 [−.055, +.098]; SUP − RAWF flip +.010. No flip effect.
+  - Scores staged in research/results/campaign-07/p1-score (sha256 verified).
+  - **Phase-2 infrastructure commissioned** (campaign/e07-p2infra): genuine S×R 2×2 per the gradient-flow spec, common history bank, controlled-consumer trainer.
+
+    It is built regardless of the diagnosis because the brief requires the 2×2. Which Phase-2 experiments run awaits the P1 analyst.
+- 2026-09-27T17:31Z: **P1 diagnosis merged** (campaign/e07-p1analysis b9199fcd; analysis code frozen at 97cc728e before any b6c per-decision read; one pooling bug fixed in ae189416 and re-run once; 971 metered + ~150 local core-s).
+  - **Localization (audit-corrected):** the frozen LRN does not read its factor channel, but most of the SUP − LRN flip gap is carried by SUP's learned network even with its factor inputs zeroed or mean-filled. *(audit-corrected)*
+    - The frozen LRN barely reads its factor channel: zeroing the factors changes .045 of its actions vs .24 for SUP; factor columns carry 2–3% of fusion variance vs 18–22% *(audit-corrected)*.
+    - Exact replacement fixes 7/640 flips (+.011 [.000, .029]).
+    - SUP's consumer fed LRN's *predicted* factors reaches flip .511 vs LRN .405 (SUP exact .562), but reaches .514 with φ = 0 and .539 with φ = mean. LRN's predictions add nothing for SUP's consumer (post hoc, 5/5 seeds). *(audit-corrected)*
+  - **Acquisition limits the factor-value-dependent part (≈ .02–.05) entirely:** *(audit-corrected)*
+    - errors grow with the number of combined factors (full − single +.22);
+    - interaction terms are absent from the predictions (slope ≤ .2);
+    - the not-H belief update is never learned.
+  - The factor prediction is a function of the same trunk state the fusion sees, so the channel is redundant by construction.
+  - LRN's gains and its flip deficit vs RAWF are both outside the factor channel. This is consistent with shaping (D), but is not separated from the bundled init/RNG/optimizer differences. *(audit-corrected)*
+  - **Benchmark scope:** only 9/128 SCE flip units differ from every pair's optimum; pairwise Q sums recover the full optimum in 91% (SCE) / 83% (UCE) of flip units (first-order baseline 70% / 44%). *(audit-corrected)* It supports full-vs-single composition, **not irreducible third-order** interaction.
+  - **Next:** Phase 2 = branch B (the consumer must rely on factors), with the S×R 2×2 to test D. The independent P1 audit is commissioned.
+- 2026-09-27T17:33Z: **P2 infrastructure merged** (campaign/e07-p2infra aca42d90; 106 tests pass; 443 metered core-s). **P2-SCREEN and P2-CONFIRM registered before any P2 data.**
+  - **Screen:** seeds 40–44 in bank mode.
+    - Arms: the 2×2; separate-encoder predictors; consumers under exact/oof/mix contracts, each evaluated with exact and predicted factors.
+    - Evaluated on b6c, used as validation only.
+    - Selection rule, reference and floors are fixed.
+  - **Confirm:** fresh b6d pool (6.43e9 / worlds 6.48e9) + 320 octets (6.66e9); fresh seeds 50–54.
+    - Primary: flip accuracy, with CI lower > 0 and ≥ 4/5 pairs.
+    - Near-miss ≥ −.05; invariance ≥ −.03; competence floor; 20k draws with seed 20260928.
+  - All new seed ranges are registered; each overlap is only with its parent sub-range.
+  - **Concurrency raised to 6** (profiled ≤ 2.3 GB/job).
+  - A b6d split implementation is commissioned so the confirmation labels can be built while the screen trains.
+- 2026-09-27T17:34Z: **P2-SCREEN launched** (snapshot c7d22aff; 81 jobs; stage runner with a one-job smoke per batch type; ≤ 6 concurrent).
+  - **Bank:** e07-p2-bank exited 0 in 6.8 core-s. 5,376 episodes / 57,315 decisions; sources: π* ×2, eps .1/.3 ×2, RAWF-s30 ×4, B0-s30 ×4. 896 episodes per training combination; sha256 3914ecaa…
+  - The builder's estimate (~210 core-s) was high, and the bank is complete.
+  - The b6d confirmation-split builder is commissioned (campaign/e07-b6d).
+- 2026-09-27T17:40Z: **P2 infrastructure update merged** (4325f557; 31 P2 tests + 89 regression tests pass).
+  - **Adds:** the SEP arm (separate-encoder predictor, a non-redundant READ) and evalX (consumers on replayed historical LRN predictions).
+  - **Registered as P2-SCREEN addendum_1** before any P2 evaluation output.
+  - **Seed ranges:** smoke bank range widened to [12.95e9, 12.96e9) (the smokes used up to 12,952,024,000); test seed 97 registered.
+- 2026-09-27T17:42Z: **Independent P1 audit merged** (a1ec73f8). All numbers reproduce, with no leakage, and the freeze was verified. **Key correction:**
+  - SUP keeps most of its flip advantage with its factor inputs blanked: .514 with φ = 0, .539 with φ = mean, vs .562 exact and LRN .405.
+  - So the gap is mostly **training-induced** (SUP's trunk and heads, trained with exact factors), not decision-time reading.
+  - LRN's predictions give SUP's consumer nothing beyond zero/mean.
+  - decisions.md corrections applied; p1-diagnosis.md corrections delegated.
+  - **P2-SCREEN addendum_2:** every factor-reading model is evaluated with φ ∈ {own, exact, zero, mean}. This is registered before any P2 eval output; evaluation-condition support is being added before the screen's eval stage.
+- 2026-09-27T17:52Z: **Runner incident: e07-p2-s0r0-bank-s43 was never launched.**
+  - Cause: its launch was refused by the concurrency guard (rc 4) while two local runners competed, and the old runner did not retry. The refusal is an unlaunched attempt, so no receipt and no charge.
+  - The job was launched by hand, and both old runners were stopped (local processes only).
+  - The replacement runner.sh retries refused launches and skips jobs already known.
+  - **2×2 (20) and SEP (5) trainings all exited 0.** The 2×2 used snapshot c7d22aff; SEP used 07b7132a (P2 infra update). The code paths are identical for the 2×2 arms.
+  - **b6d confirmation split merged** (d61ebb59). The merge conflicts in seed-ranges.json and campaign07_p2.py were resolved by union and keeping both flags; no markers, verified.
+  - The seed-range test passes after the registrations (it failed only against the pre-registration table).
+  - **Confirmation labels launched** (snapshot 27b1ea24): e07-p2c-labels-eval (400 configs) and -cf (320 octets). No model is evaluated on them until P2-SCREEN selection is recorded.
+- 2026-09-27T17:55Z: **φ-condition evaluation merged** (campaign/e07-phicond b9e4942b; 8 new tests; own = bit-identical to default). Also merged: the audit's p1-diagnosis corrections, plus the leftover 94–96% figure in the localization table corrected by root.
+  - The diag.py conflict with b6d was resolved by keeping both the population and phi_conditions headers. **70 passed, 1 skipped** on merged snapshot 21ab15a6.
+  - Screen eval / evalX / score are regenerated from 21ab15a6: {own, exact, zero, mean} for every factor-reading model, plus historical LRN/SUP references in evalX.
+  - A runner waits for all 15 consumers before launching them.
+  - s0r0-bank-s43 exited 0 (146 core-s); the predictor stage is running.
+- 2026-09-27T19:06Z: **Screen training complete.** Predictors (30), OOF (5) and consumers (15) all exited 0 (consumers 125–162 core-s). Confirmation labels are done: b6d eval 835 and cf 2,937 core-s, both exit 0.
+  - **Runner incident:** the eval-stage waiter (p2e_run.sh) never passed its "15 consumers done" check and sat idle for ~40 min. The cause is not established (the check logic matches the status format).
+  - It was stopped. A mistaken relaunch that piped into head -0 was stopped before launching anything, then relaunched correctly.
+  - The eval smoke e07-p2-eval-s40 is running. The lost time is wall time only; no compute was charged.
+- 2026-09-27T19:52Z: **P2-SCREEN complete: no candidate qualifies under the registered selection rule.**
+  - All eval (5), evalX (5) and score jobs exited 0; the score cost 1,036 core-s. Staged in research/results/campaign-07/p2-screen (sha256 verified).
+  - **Why nothing qualifies:** reference S1R1 flip .469; the deployable candidates reach .41–.45 on flips.
+  - **Consequence:** P2-CONFIRM is not run as a repair confirmation. The b6d labels are retained, unused.
+  - **Preliminary pattern:** all models lie on a flip/near-miss trade-off. φ conditions barely move flips; factor reading helps invariance and pool accuracy, not flips.
+  - **Next (brief §15/E + B):** (1) a frontier/discrimination analysis of the screen (analyst); (2) prepare the smallest justified consumer-side test of whether explicit interaction structure improves discrimination rather than bias.
+    - Arms: an ordinary deeper MLP consumer vs a bilinear/interaction consumer, same information.
+    - It is registered only after the analysis.
+- 2026-09-27T20:08Z: **P3 consumer variants merged** (campaign/e07-p3cons 6f9a43a3; 10 new tests; 96 passed, 1 skipped; 143 metered core-s).
+  - **P3-SCREEN registered (arms/training):** CONS-mlp, bil and gate × {exact, mix} × seeds 40–44, reusing P2's lin consumers and predictors. Primary contrast: bil vs mlp.
+  - The **metric is fixed from the frontier analysis before any P3 eval output**. Training starts now, because it does not depend on the metric.
+  - **Budget:** screen ~12k + confirm ~18k on top of 26.5k used gives ~57k, under the 80% ceiling (69k).
+- 2026-09-27T20:15Z: **Frontier analysis merged** (campaign/e07-frontier 1b3e0aed; 678 metered core-s). It corrects my preliminary reading.
+  - **Near-miss axis = bias:** flip vs near-miss r = −.82; BA_nm .51–.60; nothing beats S0R0 on BA_nm.
+  - **Composition discrimination J_sub is real and model-dependent:** .25–.43, vs pairwise-additive reference .92.
+    - Shaping raises it (S1R1 − S0R0 +.074 [+.010, +.143]).
+    - Every deployable P2 candidate is below S1R1 (−.037 to −.083).
+  - **SUP-h:** J +.043 (CI includes 0), concentrated in q2_after_notH, i.e. a privileged belief-input effect.
+  - **Factor inputs** act mainly as a "don't change" signal (they cut false changes) and never move near-miss discrimination.
+  - The registered P2 flip-gain rule was not bias-proof: along the observed trade-off a pure criterion shift reaching the +.03 flip minimum costs ≈ .053 near-miss, at the −.05 guard, and the rule had no discrimination requirement. *(audit-corrected)* P3's metric is therefore fixed now, before any P3 eval:
+    - **Primary:** J_sub (bil − mlp, mix contract, predicted inputs) ≥ .03 with ≥ 4/5 seeds.
+    - **Co-primary:** BA_nm ≥ −.02.
+    - **Guards:** false changes ≤ +.02, near-miss ≥ −.05, pool ≥ −.02.
+    - **Also required:** the gain must hold without the q2_after_notH stratum.
+  - Frontier tool extended with --refs, an all_x_q2notH stratum, and seeds 50–54 parsing.
+- 2026-09-27T21:28Z: **P3-SCREEN verdict: the rule is not met, so no confirmation.**
+  - Primary J_sub bil − mlp +.046 [+.011, +.082] (5/5 seeds); the co-primary and all guards pass; pool .830 vs .812.
+  - **The registered stratum condition fails:** without q2_after_notH the gain is +.011 [−.026, +.048].
+  - Per type: +.119 in q2_after_notH, +.079 in q2_after_H; −.117 after_probe_failed (0/5 seeds positive), −.082 after_b1_timeout.
+  - Under the mix contract only, the interaction consumer shifts discrimination toward q2_after_notH (+.119, 4/5 seeds) and away from after_probe_failed (−.117, 0/5); other per-type differences are unresolved. Under the exact contract bil does not beat mlp (−.014, 1/5), and the exact-contract mlp matches bil-mix, so the q2_after_notH advantage mostly reflects the mix-trained mlp's weakness there. No general composition gain (independent audit p23). *(audit-corrected)*
+  - **Incident:** e07-p3-frontier failed at startup (0.1 core-s) because the launch's --mkdir pre-created the output dir the tool creates itself. It was rerun as e07-p3-frontier2 with a subdir, exit 0, 566 core-s.
+  - **P3-REPLICATE registered:** a descriptive fresh-configuration check of this per-context pattern. The screen models are evaluated on b6d; expectations are stated before data. ~3.5k core-s.
+- 2026-09-27T21:38Z: **Independent P2/P3 audit merged** (98e7e221). All numbers reproduce; registration timing is verified; the 2×2 and the P3 matching are confirmed. **Corrections R1–R5 applied** (registry P3-SCREEN / P2-SCREEN, decisions 20:15Z / 21:28Z).
+  - **Main correction:** the bil − mlp J_sub gain is **contract-specific** (mix only).
+    - Under the exact contract it is −.014 (1/5 seeds), and the exact-trained mlp matches bil-mix. The q2_after_notH advantage mostly reflects the mix-trained mlp's weakness there.
+    - The pooled gain is false-change suppression.
+  - The pool +.018 is unresolved and is not a composition effect.
+  - P3-REPLICATE is to report the exact-contract contrast as well (added before any b6d output was read).
+- 2026-09-27T22:14Z: **P3-REPLICATE (descriptive, b6d):** the pooled bil − mlp gain **does not replicate**.
+  - Mix contract: +.018 [−.018, +.056], 3/5 seeds. Exact contract: −.010.
+  - **Replicated:** bil is more conservative (FA −.043 to −.055, with H also lower), and after_probe_failed J −.146 (0/5).
+  - q2_after_notH +.061 is not resolved.
+  - **Conclusion:** no evidence that explicit bilinear factor interactions improve composition over a matched ordinary consumer.
+  - **Incident:** the runner wait-loop stalled again (suspected ssh status call without a timeout). Its evals were done at 21:47Z; the frontier was launched by hand, and the watcher now uses timeout 60 on status calls.
+  - Staged in research/results/campaign-07/p3-replicate (sha256 verified).
+  - **Experimental phase closed;** writing the final report. The b6d labels were used only for this descriptive check; P2-CONFIRM's lineages 50–54 were never trained.
+- 2026-09-27T22:28Z: **Report number check completed** (independent). The P3-REPLICATE numbers are verified from raw logs. **15 precision/wording fixes applied to report.md** (review/report-check.md); no result changed. **Campaign closed.** No e07 jobs are running; next: merge to main.
