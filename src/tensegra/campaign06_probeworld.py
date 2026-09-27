@@ -647,3 +647,225 @@ def decision_at(s, history, eps: float = pw.EPS):
     opt = eps_set(q, eps)
     return {"state": st, "opt": sorted(opt), "unique": len(opt) == 1, "pi": s.pi_star(st),
             "Q": {int(a): q[a] for a in sorted(q)}}
+
+
+
+# ---------------------------------------------------------------------------------------------------------
+# split table v3 (b6).  Held-out challenge families are REGISTERED from the structural screen (trackb-screen.md
+# section 3) before any model exists; historical U+E, S+C, U+C are challenge sets only (never trained on).
+
+SPLIT_TABLE_VERSION = "probeworld-split-v3"
+HOLD_FAMILIES = ("ST", "DT")  # PLACEHOLDER until the screen registers them (trackb-screen.md section 3)
+HIST_FAMILIES = ("UE", "SC", "UC")  # historical challenge pairs: evaluation only
+BASE_COMBOS = ("0",) + FACTORS  # none + the 6 singles
+
+
+def is_superset(key: str, fam: str) -> bool:
+    return set(fam) <= set(key) and key != "0"
+
+
+def excluded_from_training(key: str) -> bool:
+    """A combination is never trained on if it contains a held-out or historical family (its interaction)."""
+    return any(is_superset(key, f) for f in HOLD_FAMILIES + HIST_FAMILIES)
+
+
+EXTRA_PAIRS = tuple(p for p in all_families(FACTORS, (2,)) if not excluded_from_training(p))
+
+
+def _shares(p: str, fam: str) -> int:
+    return len(set(p) & set(fam))
+
+
+# dose order (registered): extra pair types sharing more factors with the primary hold first, then screening order
+DOSE_ORDER = tuple(sorted(EXTRA_PAIRS, key=lambda p: (-_shares(p, HOLD_FAMILIES[0]), SCREEN_FAMILY_ORDER.index(p))))
+BROAD_COMBOS = BASE_COMBOS + EXTRA_PAIRS
+TRAIN_STREAM_BASE = 6_200_000_000  # every training pool: the same seeds (cell, k and prices shared across arms)
+
+
+def _splits6():
+    sp = {
+        # name: (combos (family keys), config seed base, role)
+        "b6_train_base": (BASE_COMBOS, TRAIN_STREAM_BASE, "train"),
+        "b6_train_broad": (BROAD_COMBOS, TRAIN_STREAM_BASE, "train"),
+        "b6_train_dose1": (BASE_COMBOS + DOSE_ORDER[:1], TRAIN_STREAM_BASE, "train"),
+        "b6_train_dose2": (BASE_COMBOS + DOSE_ORDER[:2], TRAIN_STREAM_BASE, "train"),
+        "b6_dev": (BROAD_COMBOS, 6_300_000_000, "dev"),  # monitoring only; final checkpoints are used
+        "b6_test_base": (BASE_COMBOS, 6_310_000_000, "test"),
+        "b6_test_broad": (EXTRA_PAIRS, 6_320_000_000, "test"),
+    }
+    for j, f in enumerate(HOLD_FAMILIES):
+        sp[f"b6_hold_{f}"] = ((f,), 6_400_000_000 + 10_000_000 * j, "hold")
+    for j, f in enumerate(HIST_FAMILIES):
+        sp[f"b6_hist_{f}"] = ((f,), 6_500_000_000 + 10_000_000 * j, "hist")
+    return sp
+
+
+SPLITS6 = _splits6()
+CF_BASE = {f: 6_600_000_000 + 10_000_000 * j for j, f in enumerate(HOLD_FAMILIES + HIST_FAMILIES)}
+B6_TRAIN_SPLITS = tuple(s for s, v in SPLITS6.items() if v[2] == "train")
+B6_EVAL_SPLITS = tuple(s for s, v in SPLITS6.items() if v[2] in ("test", "hold", "hist"))
+B6_HOLD_SPLITS = tuple(s for s, v in SPLITS6.items() if v[2] == "hold")
+
+
+def split6_config(split: str, index: int) -> Config6:
+    combos, base, _ = SPLITS6[split]
+    assert 0 <= index < MAX_POOL
+    seed = base + index
+    cell, k, key = draw_params(seed, pw.TRAIN_CELLS, V3_K, tuple(combos))
+    return make_config(cell, k, flags_from_key(key), seed)
+
+
+def world_seed6(split: str, index: int, rep: int) -> int:
+    assert SPLITS6[split][2] != "train"
+    return SPLITS6[split][1] + WORLD_SEED_OFFSET + index * 1000 + rep
+
+
+def split_table_digest_input():
+    return (SPLIT_TABLE_VERSION, GENERATOR_VERSION, HOLD_FAMILIES, HIST_FAMILIES, BASE_COMBOS, EXTRA_PAIRS, DOSE_ORDER,
+            tuple(sorted(SPLITS6.items())), tuple(sorted(CF_BASE.items())), V3_K)
+
+
+def audit_split_table() -> dict:
+    """Generator-parameter audit: no held-out or historical interaction in any training / dev / test pool; every
+    factor of every hold is trained singly; seeds inside their registered sub-ranges and pairwise disjoint."""
+    out = {}
+    trainable = [s for s, v in SPLITS6.items() if v[2] in ("train", "dev", "test")]
+    out["holds_absent_from_training"] = all(not excluded_from_training(c) for s in trainable for c in SPLITS6[s][0])
+    out["singles_in_base"] = all(x in BASE_COMBOS for f in HOLD_FAMILIES for x in f)
+    out["hist_absent"] = all(c not in HIST_FAMILIES for s in trainable for c in SPLITS6[s][0])
+    ranges = []
+    for s, (_, base, role) in SPLITS6.items():
+        if role == "train":
+            continue
+        ranges.append((base, base + MAX_POOL, s))
+        ranges.append((base + WORLD_SEED_OFFSET, base + WORLD_SEED_OFFSET + MAX_POOL * 1000, s + ":worlds"))
+    ranges.append((TRAIN_STREAM_BASE, TRAIN_STREAM_BASE + MAX_POOL, "train"))
+    for f, b in CF_BASE.items():
+        ranges.append((b, b + MAX_POOL, "cf_" + f))
+    ranges.sort()
+    out["seed_blocks_disjoint"] = all(a[1] <= b[0] for a, b in zip(ranges, ranges[1:]))
+    lo, hi = TRACKB_RANGE
+    out["inside_trackb_range"] = all(lo <= a[0] and a[1] <= hi for a in ranges)
+    sub = {"dev": "dev_test", "test": "dev_test", "hold": "hold", "hist": "hist"}
+    out["inside_subranges"] = all(
+        SUBRANGES[sub[r]][0] <= b and b + WORLD_SEED_OFFSET + MAX_POOL * 1000 <= SUBRANGES[sub[r]][1]
+        for s, (_, b, r) in SPLITS6.items() if r != "train") and all(
+        SUBRANGES["cf"][0] <= b and b + MAX_POOL <= SUBRANGES["cf"][1] for b in CF_BASE.values()) and (
+        SUBRANGES["train"][0] <= TRAIN_STREAM_BASE and TRAIN_STREAM_BASE + MAX_POOL <= SUBRANGES["train"][1])
+    out["check_subranges"] = check_subranges()
+    out["pass"] = all(out.values())
+    return out
+
+
+# ---------------------------------------------------------------------------------------------------------
+# balanced counterfactual sets: all sub-combinations of a held-out family at the same prices (none / A / B / A+B for
+# a pair), plus a near-miss full-family configuration that does NOT flip, with exact labels per decision type.
+
+FACTOR_WEAK = {"U": ("q", 0.8), "S": ("D_side", 5.0), "C": ("corr", 0.1), "E": ("p_event", 0.1),
+               "D": ("deadline", 2), "T": ("t_hard", 0.5)}  # weakest ON value inside the generator range
+NEAR_MISS_LAMBDAS = (0.5, 1.0)
+
+
+def weaken(cfg: Config6, factor: str, lam: float):
+    field, weak = FACTOR_WEAK[factor]
+    cur = getattr(cfg, field)
+    if field == "deadline":
+        return replace(cfg, deadline=2) if (cur == 1 and lam >= 1.0) else None
+    new = round(cur + lam * (weak - cur), 4)
+    return None if abs(new - cur) < 1e-9 else replace(cfg, **{field: new})
+
+
+def _strip(d):
+    return None if d is None else {k: v for k, v in d.items() if k != "state"}
+
+
+def inherited(nm_s, fam, h) -> bool:
+    """At decision type h, the full-family decision of nm equals (is eps-optimal for) some one-factor ablation's."""
+    d = decision_at(nm_s, DECISION_TYPES[h])
+    if d is None:
+        return False
+    for f in fam:
+        sa = ExactSolver(ablate(nm_s.cfg, f))
+        da = decision_at(sa, DECISION_TYPES[h])
+        if da is not None and da["pi"] in d["opt"]:
+            return True
+    return False
+
+
+def counterfactual_set(fam: str, index: int, base=None, near_miss: bool = True) -> dict:
+    """One matched set for held-out family `fam`: members = every sub-combination (same prices, prior, k), each with
+    exact labels at every decision type whose visible history is possible in that member; per decision type the
+    joint-flip flag (no one-factor ablation's optimal action is eps-optimal for the full family) and, for flips, a
+    near-miss full-family configuration (factor parameters moved toward their weakest ON value) whose decision is
+    inherited from an ablation and differs from the full member's."""
+    fam = canon(fam)
+    base = CF_BASE[fam] if base is None else base
+    seed = base + index
+    cell, k, _ = draw_params(seed, pw.TRAIN_CELLS, V3_K, (None,))
+    c = make_config(cell, k, flags_from_key(fam), seed)
+    full = tuple(fam)
+    members, solvers = {}, {}
+    for m in range(len(full) + 1):
+        for T in itertools.combinations(full, m):
+            key = "".join(T) or "0"
+            s = ExactSolver(restrict(c, T))
+            solvers[key] = s
+            members[key] = {"config": config_dict6(s.cfg),
+                            "labels": {h: _strip(decision_at(s, hist)) for h, hist in DECISION_TYPES.items()}}
+    out = {"family": fam, "index": index, "seed": seed, "k": k, "members": members, "types": {}}
+    for h in DECISION_TYPES:
+        dfull = members[fam]["labels"][h]
+        abl = [members["".join(x for x in full if x != f) or "0"]["labels"][h] for f in full]
+        if dfull is None or any(d is None for d in abl):
+            continue
+        flip = all(d["pi"] not in dfull["opt"] for d in abl)
+        ent = {"flip": flip, "unique": dfull["unique"], "near_miss": None}
+        if flip and near_miss and dfull["unique"]:
+            ent["near_miss"] = find_near_miss(solvers[fam], fam, h, dfull)
+        out["types"][h] = ent
+    return out
+
+
+def find_near_miss(s_full, fam, h, dfull):
+    cands = []
+    for f in fam:
+        for lam in NEAR_MISS_LAMBDAS:
+            c2 = weaken(s_full.cfg, f, lam)
+            if c2 is not None:
+                cands.append((f"{f}@{lam}", c2))
+    c2 = s_full.cfg
+    for f in fam:
+        c2 = weaken(c2, f, 1.0) or c2
+    if c2 != s_full.cfg:
+        cands.append(("all@1.0", c2))
+    for name, cfg in cands:
+        s = ExactSolver(cfg)
+        d = decision_at(s, DECISION_TYPES[h])
+        if d is None or not d["unique"] or d["pi"] in dfull["opt"]:
+            continue
+        if inherited(s, fam, h):
+            return {"move": name, "config": config_dict6(cfg), "label": _strip(d)}
+    return None
+
+
+def config_dict6(cfg) -> dict:
+    d = asdict(cfg)
+    for key in ("enable", "prior", "features"):
+        d[key] = list(d[key])
+    return d
+
+
+def config_from_dict6(d: dict) -> Config6:
+    d = {k: v for k, v in d.items() if k in {f.name for f in fields(Config6)}}
+    return Config6(**{**d, "enable": tuple(d["enable"]), "prior": tuple(d["prior"]), "features": tuple(d["features"])})
+
+
+def one_factor_pairs(cfset: dict):
+    """On-manifold interventions inside a matched set: (member without f, member with f, f) for every factor f."""
+    fam = cfset["family"]
+    out = []
+    for key in cfset["members"]:
+        for f in fam:
+            if f not in key:
+                out.append((key, canon((key if key != "0" else "") + f), f))
+    return out

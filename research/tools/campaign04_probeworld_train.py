@@ -25,6 +25,20 @@ Extended-05 Track B additions (all default off; defaults reproduce B1/B2/F2 bit 
   labels/eval/references --split-set b5c   B-XC: ONLY the fresh sized U+C hold b5c_hold_uc (seed base 5.9e9); models
                                  trained on a b5 labels dir are evaluated with --labels pointing at the b5c labels dir
 
+Extended-06 Track B additions (all default off; b1/b5/b5c paths call the identical functions, tested):
+  labels --split-set b6          probeworld-v3 split table v3 (campaign06_probeworld.SPLITS6): shared-seed training
+                                 pools (base / broad / dose, 2N or N configurations), dev/test, the registered
+                                 held-out challenge families, the historical challenge sets, and the balanced
+                                 counterfactual sets cf_<family>.json (exact labels per decision type)
+  train  --train-n N             use the first N configurations of --train-split (B0 = N base, B1 = 2N base, ...)
+  train  --inputs factors6       SUPPLIED-FACTORIZED public factor values (campaign06_probeworld.FACTOR_FEATURES)
+  train  --arch fuse [--factor-mode supplied|learned|none] [--aux-weight W]
+                                 factors enter a fusion layer read by every head: supplied (inputs factors6),
+                                 learned (auxiliary head predicts the factors from the trunk; the policy reads the
+                                 STOP-GRADIENT prediction), none (capacity-matched raw control)
+  eval   --split-set b6 [--cf]   b6 eval pools; --cf adds balanced-counterfactual / one-factor intervention records
+                                 (cf_eval.json) by replaying the model along each decision type's visible history
+
 Privileged labels (Q*, A*, stage, dependency, switch, case) enter ONLY training losses; model inputs are the
 public config vector plus the visible step record and the public available-action mask.
 """
@@ -48,6 +62,26 @@ import torch.nn.functional as Fn
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from tensegra import campaign04_probeworld as pw  # noqa: E402
 from tensegra import campaign05_probeworld as pw5  # noqa: E402  (extended-05 Track B; additive)
+from tensegra import campaign06_probeworld as pw6  # noqa: E402  (extended-06 Track B; additive)
+
+_env = pw6.env  # pw itself for probeworld-v1 configurations (b1/b5/b5c paths call the identical functions)
+
+
+def split_cfg(split, idx):
+    """Configuration `idx` of a split: split table v3 (b6) or pw5.split_config (b5/b5c and extended-04 names)."""
+    return pw6.split6_config(split, idx) if split in pw6.SPLITS6 else pw5.split_config(split, idx)
+
+
+def supplied(cfg, state, kind):
+    return pw6.factor_features(cfg, state) if kind == "factors6" else pw5.supplied_features(cfg, state, kind)
+
+
+def supplied_dim(kind):
+    return pw6.N_FACTOR_FEATURES if kind == "factors6" else pw5.supplied_dim(kind)
+
+
+def split_world_seed(split, idx, rep):
+    return pw6.world_seed6(split, idx, rep) if split in pw6.SPLITS6 else pw5.world_seed(split, idx, rep)
 
 RUNGS = ("L0", "L1", "L2", "L3", "L4")
 # loss weights per rung (cumulative ladder); every rung keeps the actor-critic RL loss.
@@ -76,8 +110,8 @@ OWN_VALUE_CONTINUATION = "own_greedy_policy_current_params_mc_v1"
 def build_pool(split: str, n: int):
     pool = []
     for idx in range(n):
-        cfg = pw5.split_config(split, idx)  # == pw.split_config for extended-04 split names
-        s = pw.ExactSolver(cfg)
+        cfg = split_cfg(split, idx)  # == pw.split_config for extended-04 split names
+        s = _env(cfg).ExactSolver(cfg)
         s.value(pw.initial_state(cfg))
         pool.append((idx, cfg, s._V, s._Q))
     return pool
@@ -88,6 +122,8 @@ def cmd_labels(a):
     out.mkdir(parents=True, exist_ok=True)
     meta = {}
     sset = getattr(a, "split_set", "b1")
+    if sset == "b6":
+        return cmd_labels_b6(a, out)
     if sset in pw5.SPLIT_SETS:  # b5 (B-SPLIT pools) or b5c (B-XC: ONLY the fresh sized U+C hold)
         todo = [(s, None if opt == "sized" else getattr(a, opt)) for s, opt in pw5.SPLIT_SETS[sset]["label_splits"]]
     else:
@@ -122,10 +158,100 @@ def cmd_labels(a):
     (out / "labels_meta.json").write_text(json.dumps(meta, indent=1))
 
 
+def cmd_labels_b6(a, out):
+    """extended-06 split table v3: training pools (2N base/broad for B0-B3 via --train-n, N dose pools), dev/test,
+    held-out challenge families and historical challenge sets (with per-configuration s0 facts and exact per-factor
+    relevance), and the balanced counterfactual sets."""
+    meta = {}
+    n = a.n_train
+    todo = [("b6_train_base", 2 * n), ("b6_train_broad", 2 * n), ("b6_train_dose1", n), ("b6_train_dose2", n),
+            ("b6_dev", a.n_eval), ("b6_test_base", a.n_eval), ("b6_test_broad", a.n_eval)]
+    todo += [(s, a.n_hold) for s in pw6.B6_HOLD_SPLITS]
+    todo += [(s, a.n_hist) for s, v in pw6.SPLITS6.items() if v[2] == "hist"]
+    for split, cnt in todo:
+        if cnt <= 0:
+            continue
+        t0 = time.process_time()
+        pool = build_pool(split, cnt)
+        dt = time.process_time() - t0
+        with open(out / f"{split}.pkl", "wb") as f:
+            pickle.dump(pool, f, protocol=pickle.HIGHEST_PROTOCOL)
+        nst = [len(V) for _, _, V, _ in pool]
+        meta[split] = {"n_configs": cnt, "cpu_s": round(dt, 2), "states_total": sum(nst), "states_max": max(nst),
+                       "k_counts": {k: sum(1 for _, c, _, _ in pool if c.k == k) for k in pw6.V3_K},
+                       "combo_counts": _combo_counts(pool), "config_seed_base": pw6.SPLITS6[split][1]}
+        if pw6.SPLITS6[split][2] in ("hold", "hist"):
+            t1 = time.process_time()
+            recs = [b6_s0_record(idx, cfg, V, Q) for idx, cfg, V, Q in pool]
+            (out / f"{split}_s0.json").write_text(json.dumps(recs))
+            meta[split]["s0_cpu_s"] = round(time.process_time() - t1, 2)
+            meta[split]["support"] = b6_support(recs)
+        print(split, json.dumps(meta[split]), flush=True)
+        del pool
+    for fam in pw6.HOLD_FAMILIES + (pw6.HIST_FAMILIES if a.cf_hist else ()):
+        if a.n_cf <= 0:
+            continue
+        t0 = time.process_time()
+        sets = [pw6.counterfactual_set(fam, i) for i in range(a.n_cf)]
+        (out / f"cf_{fam}.json").write_text(json.dumps(sets))
+        meta[f"cf_{fam}"] = {"n_sets": len(sets), "cpu_s": round(time.process_time() - t0, 2),
+                             "config_seed_base": pw6.CF_BASE[fam], "support": cf_support(sets)}
+        print(f"cf_{fam}", json.dumps(meta[f"cf_{fam}"]), flush=True)
+    meta["version"] = pw.VERSION
+    meta["split_set"] = {"name": "b6", "env": pw6.VERSION, "generator": pw6.GENERATOR_VERSION,
+                         "split_table": pw6.SPLIT_TABLE_VERSION, "hold_families": list(pw6.HOLD_FAMILIES),
+                         "hist_families": list(pw6.HIST_FAMILIES), "base_combos": list(pw6.BASE_COMBOS),
+                         "extra_pairs": list(pw6.EXTRA_PAIRS), "dose_order": list(pw6.DOSE_ORDER), "n": n,
+                         "k_support": list(pw6.V3_K), "audit": pw6.audit_split_table()}
+    meta["eps"] = pw.EPS
+    meta["continuation"] = pw.CONTINUATION
+    (out / "labels_meta.json").write_text(json.dumps(meta, indent=1))
+
+
+def b6_s0_record(idx, cfg, V, Q):
+    """Per-configuration facts of a held-out / historical pool: s0 eps-optimal set and per-factor exact relevance
+    (first decision changes / ignoring the factor costs > eps), computed with one-factor ablations."""
+    s = pw6.ExactSolver(cfg)
+    s._V, s._Q = V, Q
+    s0 = pw.initial_state(cfg)
+    q = s.q_values(s0)
+    opt = pw6.eps_set(q)
+    v = s.value(s0)
+    rel = {}
+    for f, on in zip(pw6.FACTORS, pw6.flags_of(cfg)):
+        if not on:
+            continue
+        sa = pw6.ExactSolver(pw6.ablate(cfg, f))
+        pa = sa.pi_star(pw.initial_state(sa.cfg))
+        rel[f] = {"first": pa not in opt, "regret": round(v - pw6.foreign_policy_value(s, sa), 6)}
+    return {"idx": idx, "k": cfg.k, "family": pw6.fam_key(pw6.flags_of(cfg)), "V": v, "opt": sorted(opt),
+            "unique": len(opt) == 1, "pi": s.pi_star(s0), "rel": rel,
+            "joint_flip": len(rel) >= 2 and all(r["first"] for r in rel.values()),
+            "all_regret_relevant": len(rel) >= 2 and all(r["regret"] > pw.EPS for r in rel.values())}
+
+
+def b6_support(recs):
+    return {"n": len(recs), "unique_first": sum(r["unique"] for r in recs),
+            "joint_flip": sum(r["joint_flip"] for r in recs),
+            "all_regret_relevant": sum(r["all_regret_relevant"] for r in recs),
+            "first_action": {pw.ACTIONS[a]: sum(r["pi"] == a for r in recs) for a in range(pw.N_ACTIONS)
+                             if any(r["pi"] == a for r in recs)}}
+
+
+def cf_support(sets):
+    out = {}
+    for h in pw6.DECISION_TYPES:
+        ents = [s["types"][h] for s in sets if h in s["types"]]
+        out[h] = {"sets": len(ents), "unique_full": sum(e["unique"] for e in ents),
+                  "flip": sum(e["flip"] for e in ents), "flip_unique": sum(e["flip"] and e["unique"] for e in ents),
+                  "near_miss": sum(e["near_miss"] is not None for e in ents)}
+    return out
+
+
 def _combo_counts(pool):
     d = {}
     for _, c, _, _ in pool:
-        key = "+".join(n for n, f in zip(pw.FLAG_NAMES, c.flags) if f) or "none"
+        key = pw6.combo_name(c.flags)
         d[key] = d.get(key, 0) + 1
     return d
 
@@ -189,7 +315,7 @@ def load_pool(labels_dir, split):
         pool = pickle.load(f)
     out = []
     for idx, cfg, V, Q in pool:
-        s = pw.ExactSolver(cfg)
+        s = _env(cfg).ExactSolver(cfg)
         s._V, s._Q = V, Q
         out.append((idx, cfg, s))
     return out
@@ -208,11 +334,14 @@ B1_PARAMS = 129_189  # B0/L1 ProbeNet at hidden 128 (the parameter count BX3 is 
 class ProbeNet(nn.Module):
     """GRU over visible-history tokens + public prices.  All heads exist in every rung (matched capacity)."""
 
-    def __init__(self, hidden=HIDDEN, own_value=False, inputs="public", arch="flat"):
+    def __init__(self, hidden=HIDDEN, own_value=False, inputs="public", arch="flat", public_extra=0,
+                 factor_mode=None):
         super().__init__()
         self.inputs = inputs  # extended-05: supplied public state appended to the inputs ('public' = none)
-        self.arch = arch  # extended-05: 'flat' (B1) | 'modular' (BX3)
-        self.inp = nn.Linear(IN_DIM + pw5.supplied_dim(inputs), hidden)
+        self.arch = arch  # extended-05: 'flat' (B1) | 'modular' (BX3); extended-06: 'fuse'
+        self.base_dim = IN_DIM + public_extra  # extended-06: probeworld-v3 public vector has public_extra more entries
+        fuse_in = arch == "fuse"  # extended-06: supplied factors go to the fusion layer, not the GRU input
+        self.inp = nn.Linear(self.base_dim + (0 if fuse_in else supplied_dim(inputs)), hidden)
         self.gru = nn.GRUCell(hidden, hidden)
         self.trunk = nn.Sequential(nn.Linear(hidden, hidden), nn.Tanh())
         self.pi = nn.Linear(hidden, pw.N_ACTIONS)
@@ -228,9 +357,15 @@ class ProbeNet(nn.Module):
             self.flag_mods = nn.ModuleList(
                 nn.Sequential(nn.Linear(IN_DIM + 1, MODULAR_WIDTH), nn.Tanh(), nn.Linear(MODULAR_WIDTH, hidden))
                 for _ in range(4))
+        if arch == "fuse":  # extended-06 factorized arms (created last: every other parameter keeps its init order)
+            self.factor_mode = factor_mode or ("supplied" if inputs == "factors6" else "none")
+            nf = pw6.N_FACTOR_FEATURES
+            if self.factor_mode == "learned":
+                self.aux = nn.Sequential(nn.Linear(hidden, hidden), nn.Tanh(), nn.Linear(hidden, nf))
+            self.fuse = nn.Linear(hidden + nf, hidden)
 
     def step(self, x, h):
-        pre = self.inp(x)
+        pre = self.inp(x[:, :self.base_dim] if getattr(self, "arch", "flat") == "fuse" else x)
         if getattr(self, "arch", "flat") == "modular":
             base = x[:, :IN_DIM]
             for j, mod in enumerate(self.flag_mods):
@@ -241,7 +376,22 @@ class ProbeNet(nn.Module):
                 pre = pre + gate * mod(torch.cat([par, base], 1))
         h = self.gru(torch.tanh(pre), h)
         z = self.trunk(h)
+        if getattr(self, "arch", "flat") == "fuse":
+            z = self.fuse_step(x, z)
         return h, z
+
+    def fuse_step(self, x, z):
+        """extended-06: heads read tanh(W [z; phi]).  phi = supplied public factors (from the input tail), the
+        STOP-GRADIENT auxiliary prediction (learned; the aux head is trained only by its factor loss), or zeros
+        (capacity-matched raw control).  The auxiliary prediction of the last step is kept in self.last_aux."""
+        if self.factor_mode == "supplied":
+            phi = x[:, self.base_dim:]
+        elif self.factor_mode == "learned":
+            self.last_aux = self.aux(z)
+            phi = self.last_aux.detach()
+        else:
+            phi = torch.zeros(z.shape[0], pw6.N_FACTOR_FEATURES)
+        return torch.tanh(self.fuse(torch.cat([z, phi], 1)))
 
 
 def matched_hidden(arch="modular", inputs="public", target=B1_PARAMS):
@@ -288,7 +438,7 @@ def run_batch(model, items, mode, rng=None, need_labels=True):
     """Roll out a batch.  items: list of (cfg, solver, world_seed).  mode: 'sample' | 'greedy' | 'teacher'.
     Returns per-step tensors and per-episode records."""
     B = len(items)
-    eps = [pw.Episode(cfg, ws) for cfg, _, ws in items]
+    eps = [_env(cfg).Episode(cfg, ws) for cfg, _, ws in items]
     vecs = [cfg.public_vector() for cfg, _, _ in items]
     h = torch.zeros(B, model.gru.hidden_size)
     prev = [None] * B
@@ -303,9 +453,13 @@ def run_batch(model, items, mode, rng=None, need_labels=True):
         avails = [eps[i].available() for i in act]
         kind = getattr(model, "inputs", "public")
         x = torch.tensor([encode(vecs[i], prev[i], av, eps[i].query / eps[i].cfg.k)
-                          + pw5.supplied_features(eps[i].cfg, eps[i].state, kind) for i, av in zip(act, avails)])
+                          + supplied(eps[i].cfg, eps[i].state, kind) for i, av in zip(act, avails)])
         idx = torch.tensor(act)
         hn, z = model.step(x, h[idx])
+        aux_rec = None
+        if getattr(model, "factor_mode", None) == "learned":  # extended-06 LEARNED-FACTORIZED auxiliary targets
+            aux_rec = {"aux": model.last_aux,
+                       "aux_t": torch.tensor([pw6.factor_features(eps[i].cfg, eps[i].state) for i in act])}
         h = h.index_copy(0, idx, hn)
         mask = torch.zeros(len(act), pw.N_ACTIONS, dtype=torch.bool)
         for j, av in enumerate(avails):
@@ -327,6 +481,8 @@ def run_batch(model, items, mode, rng=None, need_labels=True):
         else:  # teacher: deterministic representative of pi*
             chosen = [items[i][1].pi_star(eps[i].state) for i in act]
         rec = {"idx": idx, "mask": mask, "logp_all": logp_all, "z": z, "chosen": torch.tensor(chosen)}
+        if aux_rec is not None:
+            rec.update(aux_rec)
         if need_labels:
             Qt = torch.zeros(len(act), pw.N_ACTIONS)
             opt = torch.zeros(len(act), pw.N_ACTIONS, dtype=torch.bool)
@@ -432,6 +588,9 @@ def losses(model, items, eps, steps, ep_steps, w):
     out = {"rl": cat(pl) + 0.5 * cat(vl) - 0.01 * cat(ent), "imit": cat(il), "dep": cat(dl), "switch": cat(sl),
            "q": cat(ql), "value_mse": cat(vl).detach(), "entropy": cat(ent).detach()}
     total = sum(w[k] * out[k] for k in ("rl", "imit", "dep", "switch", "q"))
+    if "aux" in steps[0]:  # extended-06 LEARNED-FACTORIZED: factor regression (MSE, mean over factors and steps)
+        out["aux"] = torch.cat([((rec["aux"] - rec["aux_t"]) ** 2).mean(-1) for rec in steps]).mean()
+        total = total + w.get("aux", 0.0) * out["aux"]
     return total, out
 
 
@@ -441,13 +600,21 @@ def cmd_train(a):
     out.mkdir(parents=True, exist_ok=True)
     t_start = time.process_time()
     pool = load_pool(a.labels, getattr(a, "train_split", "train"))
+    if getattr(a, "train_n", None):  # extended-06: the first N configurations (B0 = N of the 2N base pool)
+        if a.train_n > len(pool):
+            raise SystemExit(f"--train-n {a.train_n} > pool size {len(pool)}")
+        pool = pool[:a.train_n]
     t_load = time.process_time() - t_start
     w = RUNG_WEIGHTS[a.rung]
+    if getattr(a, "factor_mode", None) == "learned":
+        w = dict(w, aux=a.aux_weight)
+    public_extra = pw6.PUBLIC_EXTRA6 if isinstance(pool[0][1], pw6.Config6) else 0
     arch = getattr(a, "arch", "flat")
     if arch == "modular" and getattr(a, "match_params", True):  # BX3: hidden width matched to B0's parameters
         a.hidden = matched_hidden(arch, getattr(a, "inputs", "public"))
     torch.manual_seed(1000 + a.seed)  # same init across rungs for a given seed
-    model = ProbeNet(a.hidden, own_value=a.own_value, inputs=getattr(a, "inputs", "public"), arch=arch)
+    model = ProbeNet(a.hidden, own_value=a.own_value, inputs=getattr(a, "inputs", "public"), arch=arch,
+                     public_extra=public_extra, factor_mode=getattr(a, "factor_mode", None))
     # B1 parameters (everything except v_own): optimizer and gradient clipping see exactly these, so v_own can
     # change neither the Adam state nor the clip coefficient of the policy/trunk.
     main_params = [p for n, p in model.named_parameters() if not n.startswith("v_own.")]
@@ -492,14 +659,26 @@ def cmd_train(a):
         meta["train_split"] = a.train_split
     if getattr(a, "inputs", "public") != "public":
         meta["inputs"] = a.inputs
-        meta["in_dim"] = IN_DIM + pw5.supplied_dim(a.inputs)
-        meta["supplied_state"] = {"kind": a.inputs, "features": list(pw5.BX2_FEATURES[:pw5.supplied_dim(a.inputs)]),
+        meta["in_dim"] = IN_DIM + supplied_dim(a.inputs)
+        meta["supplied_state"] = {"kind": a.inputs, "features": (list(pw6.FACTOR_FEATURES) if a.inputs == "factors6"
+                                  else list(pw5.BX2_FEATURES[:pw5.supplied_dim(a.inputs)])),
                                   "label": "supplied (deterministic public computation), not learned"}
+
     if arch != "flat":
         meta["arch"] = arch
         meta["modular"] = {"width": MODULAR_WIDTH, "flag_param_cols": FLAG_PARAM_COLS, "flag_bit_col0": FLAG_BIT_COL0,
                            "params_target": B1_PARAMS, "hidden_matched": a.hidden,
                            "form": "tanh(W x + sum_f flag_f * MLP_f([param_f, x])) -> GRU; same public inputs"}
+    if public_extra:  # extended-06 keys: absent for probeworld-v1 pools
+        meta["public_extra"] = public_extra
+        meta["env"] = pw6.VERSION
+        meta["in_dim"] = IN_DIM + public_extra + supplied_dim(getattr(a, "inputs", "public"))
+        meta["train_n"] = len(pool)
+        meta["train_combo_counts"] = {k: v for k, v in sorted(_combo_counts([(i, c, None, None) for i, c, _ in pool]).items())}
+    if arch == "fuse":
+        meta["fuse"] = {"factor_mode": model.factor_mode, "features": list(pw6.FACTOR_FEATURES),
+                        "aux_weight": w.get("aux", 0.0), "stop_gradient": model.factor_mode == "learned",
+                        "form": "heads read tanh(W [z; phi]); phi = supplied factors | sg(aux(z)) | 0"}
     if own is not None:  # key absent when off (B1 train_meta unchanged)
         meta["own_value"] = {"continuation": OWN_VALUE_CONTINUATION, "every": a.own_every,
                              "episodes_per_collection": a.own_episodes, "collections": own["steps"],
@@ -605,7 +784,7 @@ _RHO_EFF: dict = {}
 def _rho_eff(cfg):
     r = _RHO_EFF.get(cfg)
     if r is None:
-        r = _RHO_EFF[cfg] = pw.effective_rho(cfg)
+        r = _RHO_EFF[cfg] = _env(cfg).effective_rho(cfg)
     return r
 
 
@@ -685,13 +864,13 @@ EVAL_WORLD_OFFSET = 500  # B1 default; Phase F uses a fresh offset (--world-offs
 
 def eval_items(pool, split, worlds, offset=None):
     base = EVAL_WORLD_OFFSET if offset is None else offset
-    return [(cfg, s, pw5.world_seed(split, idx, base + r)) for idx, cfg, s in pool for r in range(worlds)]
+    return [(cfg, s, split_world_seed(split, idx, base + r)) for idx, cfg, s in pool for r in range(worlds)]
 
 
 def reference_policy_eval(items, name):
     eps, ep_steps = [], []
     for cfg, s, ws in items:
-        ep = pw.Episode(cfg, ws)
+        ep = _env(cfg).Episode(cfg, ws)
         infos = []
         while not ep.done:
             st = ep.state
@@ -757,7 +936,7 @@ def decision_rows(items, eps, ep_steps, steps, model, R=100.0):
             d["rec"] = list(info["rec"])
             decs.append(d)
         ep = eps[i]
-        out.append({"world_seed": ws, "k": cfg.k, "combo": pw5.combo_name(cfg.flags), "U": ep.utility,
+        out.append({"world_seed": ws, "k": cfg.k, "combo": pw6.combo_name(cfg.flags), "U": ep.utility,
                     "V_star": s.value(pw.initial_state(cfg)), "success": ep.successes / cfg.k, "wrong": ep.wrong,
                     "cost": ep.total_cost, "decisions": decs})
     return out
@@ -779,8 +958,8 @@ def replay_history(model, cfg, history, upto=None):
     for t in range(n):
         if st[0][0] >= cfg.k:
             break
-        av = pw.available(cfg, st)
-        x = torch.tensor([encode(vec, prev, av, st[0][0] / cfg.k) + pw5.supplied_features(cfg, st, kind)])
+        av = _env(cfg).available(cfg, st)
+        x = torch.tensor([encode(vec, prev, av, st[0][0] / cfg.k) + supplied(cfg, st, kind)])
         h, z = model.step(x, h)
         mask = torch.zeros(1, pw.N_ACTIONS, dtype=torch.bool)
         mask[0, list(av)] = True
@@ -789,7 +968,7 @@ def replay_history(model, cfg, history, upto=None):
         if t >= len(history):
             break
         a, o, e, rev = history[t]
-        st = pw.advance(cfg, st, a, o, e, rev)
+        st = _env(cfg).advance(cfg, st, a, o, e, rev)
         prev = history[t]
     return out
 
@@ -904,7 +1083,8 @@ def cmd_eval(a):
     run = Path(a.run)
     meta = json.loads((run / "train_meta.json").read_text())
     model = ProbeNet(meta["hidden"], own_value="own_value" in meta, inputs=meta.get("inputs", "public"),
-                     arch=meta.get("arch", "flat"))
+                     arch=meta.get("arch", "flat"), public_extra=meta.get("public_extra", 0),
+                     factor_mode=meta.get("fuse", {}).get("factor_mode"))
     model.load_state_dict(torch.load(run / "model.pt"))
     model.eval()
     t0 = time.process_time()
@@ -936,7 +1116,7 @@ def cmd_eval(a):
         teach, _ = model_eval(model, items, "teacher")
         by_combo = {}
         for r in rows:
-            key = "+".join(n for n, f in zip(pw.FLAG_NAMES, r["flags"]) if f) or "none"
+            key = pw6.combo_name(r["flags"])
             by_combo.setdefault(key, []).append(r)
         free["by_condition"] = {k: summarize_rows(v) for k, v in by_combo.items()}
         for mode, res in (("free_running_greedy", free), ("teacher_forced", teach)):
@@ -945,6 +1125,8 @@ def cmd_eval(a):
         result["splits"][split] = {"free_running_greedy": free, "teacher_forced": teach}
         print(split, json.dumps({k: round(v, 3) if isinstance(v, float) else v
                                  for k, v in free["summary"].items()}), flush=True)
+    if getattr(a, "cf", False):  # extended-06 balanced counterfactual / intervention records
+        cf_eval(model, a, run)
     result["cpu_s"] = time.process_time() - t0
     out_name = getattr(a, "out_name", None) or "eval.json"
     if ep_rows is not None:  # extended-05; file absent under defaults
@@ -967,6 +1149,8 @@ def default_eval_splits(a):
     """Eval/references splits when --splits is not given: extended-04 EVAL_SPLITS (b1), the b5 eval splits, or the
     B-XC fresh U+C hold only (b5c)."""
     sset = getattr(a, "split_set", "b1")
+    if sset == "b6":
+        return list(pw6.B6_EVAL_SPLITS)
     return list(pw5.SPLIT_SETS[sset]["eval_splits"]) if sset in pw5.SPLIT_SETS else list(EVAL_SPLITS)
 
 
@@ -991,6 +1175,9 @@ def annotate_rows(ext, rows, ref_rows, ref_eps, pool, split, worlds, s0map):
                  probe_eps_opt=r["probe_eps_opt"], probe_unique_opt=r["probe_unique_opt"])
         if idx in s0map and "flag_sensitive" in s0map[idx]:
             e["flag_sensitive"] = s0map[idx]["flag_sensitive"]
+        if idx in s0map and "rel" in s0map[idx]:  # extended-06 held-out / historical pools
+            e.update(rel=s0map[idx]["rel"], joint_flip=s0map[idx]["joint_flip"],
+                     all_regret_relevant=s0map[idx]["all_regret_relevant"], family=s0map[idx]["family"])
 
 
 def eval_sharded(model, a, split, parts, worlds, ep_rows):
@@ -1014,13 +1201,56 @@ def eval_sharded(model, a, split, parts, worlds, ep_rows):
         del pool, items
     by_combo = {}
     for r in rows_all:
-        by_combo.setdefault("+".join(n for n, f in zip(pw.FLAG_NAMES, r["flags"]) if f) or "none", []).append(r)
+        by_combo.setdefault(pw6.combo_name(r["flags"]), []).append(r)
     free = {"summary": summarize_rows(rows_all), "rho_curve": rho_curve(rows_all, ref_all),
             "by_condition": {k: summarize_rows(v) for k, v in by_combo.items()},
             "sharded": {"shards": len(parts), "worlds": worlds,
                         "omitted": ["teacher_forced", "value_calibration_own_return", "value_vs_vstar",
                                     "q_head_vs_qstar_taken"]}}
     return {"free_running_greedy": free}
+
+
+@torch.no_grad()
+def model_choice(model, cfg, history):
+    """The model's greedy choice after replaying a visible history (None if the history ends the episode)."""
+    steps = replay_history(model, cfg, list(history), upto=len(history) + 1)
+    if len(steps) <= len(history):
+        return None
+    av, logits, _ = steps[len(history)]
+    return int(logits.argmax())
+
+
+def cf_eval(model, a, run):
+    """extended-06: for every balanced counterfactual set in the labels dir (cf_<family>.json), the model's greedy
+    choice at every member x decision type (and the near-miss) after replaying the type's visible history; correct =
+    eps-optimal under the member's exact labels.  Writes <run>/cf_eval.json (scored by campaign06_bscore.py)."""
+    out = {"_meta": {"eps": pw.EPS, "decision_types": list(pw6.DECISION_TYPES)}, "families": {}}
+    for p in sorted(Path(a.labels).glob("cf_*.json")):
+        fam = p.stem[3:]
+        rows = []
+        for cs in json.loads(p.read_text()):
+            ent = {"index": cs["index"], "k": cs["k"], "types": {}}
+            cfgs = {key: pw6.config_from_dict6(m["config"]) for key, m in cs["members"].items()}
+            for h, hist in pw6.DECISION_TYPES.items():
+                if h not in cs["types"]:
+                    continue
+                t = cs["types"][h]
+                mem = {}
+                for key, m in cs["members"].items():
+                    lab = m["labels"][h]
+                    if lab is None:
+                        continue
+                    ch = model_choice(model, cfgs[key], hist)
+                    mem[key] = {"a": ch, "ok": ch in lab["opt"], "opt": lab["opt"], "unique": lab["unique"]}
+                nm = None
+                if t["near_miss"] is not None:
+                    ch = model_choice(model, pw6.config_from_dict6(t["near_miss"]["config"]), hist)
+                    nm = {"a": ch, "ok": ch in t["near_miss"]["label"]["opt"], "opt": t["near_miss"]["label"]["opt"]}
+                ent["types"][h] = {"flip": t["flip"], "unique": t["unique"], "members": mem, "near_miss": nm}
+            rows.append(ent)
+        out["families"][fam] = rows
+        print("cf", fam, len(rows), flush=True)
+    (run / (getattr(a, "cf_out", None) or "cf_eval.json")).write_text(json.dumps(out))
 
 
 def cmd_references(a):
@@ -1092,8 +1322,13 @@ def main(argv=None):
     s.add_argument("--out", required=True)
     s.add_argument("--n-train", type=int, default=384)
     s.add_argument("--n-eval", type=int, default=128)
-    s.add_argument("--split-set", choices=("b1", "b5", "b5c"), default="b1",
-                   help="extended-05: b5 = B-SPLIT pools; b5c = B-XC fresh U+C hold only (b5c_hold_uc)")
+    s.add_argument("--split-set", choices=("b1", "b5", "b5c", "b6"), default="b1",
+                   help="extended-05: b5 = B-SPLIT pools; b5c = B-XC fresh U+C hold only (b5c_hold_uc); "
+                        "extended-06: b6 = probeworld-v3 split table v3")
+    s.add_argument("--n-hold", type=int, default=512, help="b6: configurations per held-out challenge family")
+    s.add_argument("--n-hist", type=int, default=256, help="b6: configurations per historical challenge set")
+    s.add_argument("--n-cf", type=int, default=400, help="b6: balanced counterfactual sets per held-out family")
+    s.add_argument("--cf-hist", action="store_true", help="b6: also build counterfactual sets for the historical pairs")
     s.add_argument("--n-train-x", type=int, default=768, help="b5: exposure (BX1) training pool size")
     s.add_argument("--hold-target", type=int, default=pw5.HOLD_TARGET_ELIGIBLE,
                    help="b5: new-hold pool = smallest prefix with this many s0-uniquely-probe-optimal configs")
@@ -1115,18 +1350,25 @@ def main(argv=None):
     s.add_argument("--own-every", type=int, default=1, help="collect own greedy rollouts every N updates")
     s.add_argument("--own-episodes", type=int, default=64, help="greedy episodes per collection")
     s.add_argument("--train-split", default="train", help="extended-05: training pool (b5_train / b5x_train)")
-    s.add_argument("--inputs", choices=pw5.SUPPLIED_KINDS, default="public",
+    s.add_argument("--inputs", choices=pw5.SUPPLIED_KINDS + ("factors6",), default="public",
                    help="extended-05: supplied public state (belief = BO; bx2 = belief + per-flag features)")
-    s.add_argument("--arch", choices=("flat", "modular"), default="flat",
-                   help="extended-05: modular = BX3 per-flag gated encoders (hidden width matched to B0's parameters)")
+    s.add_argument("--arch", choices=("flat", "modular", "fuse"), default="flat",
+                   help="extended-05: modular = BX3 per-flag gated encoders (hidden width matched to B0's parameters); "
+                        "extended-06: fuse = factorized arms (heads read a fusion of the trunk and the factors)")
+    s.add_argument("--train-n", type=int, default=None, help="extended-06: use the first N configurations of the pool")
+    s.add_argument("--factor-mode", choices=("supplied", "learned", "none"), default=None,
+                   help="extended-06 --arch fuse: supplied (needs --inputs factors6) | learned | none (raw control)")
+    s.add_argument("--aux-weight", type=float, default=1.0, help="extended-06 learned factor loss weight")
     s = sub.add_parser("eval")
     s.add_argument("--labels", required=True)
     s.add_argument("--run", required=True)
     s.add_argument("--worlds", type=int, default=4)
     s.add_argument("--splits", nargs="+", default=None, help="default: B1 eval splits (or b5 eval splits)")
     s.add_argument("--world-offset", type=int, default=None, help="eval world-seed offset (default 500 = B1)")
-    s.add_argument("--split-set", choices=("b1", "b5", "b5c"), default="b1")
+    s.add_argument("--split-set", choices=("b1", "b5", "b5c", "b6"), default="b1")
     s.add_argument("--episode-rows", action="store_true", help="extended-05: write <out>_episodes.jsonl.gz")
+    s.add_argument("--cf", action="store_true", help="extended-06: balanced counterfactual records (cf_eval.json)")
+    s.add_argument("--cf-out", default=None, help="extended-06: counterfactual record file name (cf_eval.json)")
     s.add_argument("--out-name", default=None, help="extended-05: eval file name inside the run dir (eval.json)")
     s.add_argument("--split-worlds", nargs="*", default=None, metavar="SPLIT=N",
                    help="extended-05: per-split world count override (sized holds: 1 world per configuration)")
@@ -1136,7 +1378,7 @@ def main(argv=None):
     s.add_argument("--worlds", type=int, default=4)
     s.add_argument("--splits", nargs="+", default=None)
     s.add_argument("--world-offset", type=int, default=None, help="eval world-seed offset (default 500 = B1)")
-    s.add_argument("--split-set", choices=("b1", "b5", "b5c"), default="b1")
+    s.add_argument("--split-set", choices=("b1", "b5", "b5c", "b6"), default="b1")
     s.add_argument("--split-worlds", nargs="*", default=None, metavar="SPLIT=N")
     s = sub.add_parser("summarize")
     s.add_argument("--runs", nargs="+", required=True)
