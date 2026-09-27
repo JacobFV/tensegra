@@ -31,3 +31,9 @@
   - **Official screen:** **S+C+E primary** (min relevance .66, GS .26), **U+C+E secondary** (.55, GS .27). Registered at 06:58Z by the builder, before any model.
   - **B-ARMS primary thresholds registered now, before any Track B training:** P1 gap regret, P2 later-decision accuracy, P3 not-a-global-shift, with all three required (registry).
   - Octets are 320 for both families. The 17/84 unmatched first-action replacements in B2 are accepted and disclosed. Label parts launched.
+- 2026-09-27T07:10Z: **A-HS registered gate FAILS GA-1** (dev_gate 305M, 640 episodes / 2,891 instances; oracle certified 100%; research/results/campaign-06/a-hs/).
+  - Learned one-shot .9601, sequential .9602 vs best simple (inner-selected trees) .9544: **+.0057/+.0058** (CI .003–.009), below .02.
+  - GA-2 passes (+.040 vs best single .920).
+  - The hidden-state oracle is .9835, so **the oracle–best-simple gap is only .029**. Sequential telemetry adds nothing over one-shot.
+  - **Decision: no generator revision** (it would be manufacturing headroom), and Track A Phase 2 (large learned controllers) is not run. **Brief-sanctioned negative:** a strong simple portfolio (depth-2/3 trees over public features) captures ~80% of even the hidden-state headroom.
+  - **A-CF-SMALL registered** (labelled, after the gate): confirm the small learned-selector margin on 3 disjoint training populations, selection on 320M and fresh confirm instances 330M, primary U(learned) − U(best simple) > 0 in 3/3. Tool extension commissioned.
