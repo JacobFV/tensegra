@@ -26,3 +26,8 @@
   - Generator revisions v1 (headroom .0016) → v2 (.0084) → v3 are documented in portworld.md.
   - **Disclosure:** ~3,000 core-s were spent **unmetered** on the pro6000 by a builder analysis run whose wrapper was killed (no receipt; marker file left). Added to the local/unmetered estimate. The registry addendum reports the margin vs the strongest individual family alongside GA (gates unchanged).
 - 2026-09-27T06:59Z: GA one-job smoke passed (40 episodes on non-gate seeds 304.99M; pipeline OK; numbers not used). **Registered A-HS gate run launched:** 4 chunks × 160 episodes on dev_gate seeds from 305M (source-8e8ac6fa); analysis follows.
+- 2026-09-27T07:05Z: **Track B merged** (83df7d12; 33 tests pass after the merge, metered).
+  - The seed-ranges merge conflict was resolved **by hand, without chained commits**: the union of both sides, with the Track B parent entry deduplicated. There are 48 ranges; leaves are disjoint and contained in their parents; the conflict-marker check is clean.
+  - **Official screen:** **S+C+E primary** (min relevance .66, GS .26), **U+C+E secondary** (.55, GS .27). Registered at 06:58Z by the builder, before any model.
+  - **B-ARMS primary thresholds registered now, before any Track B training:** P1 gap regret, P2 later-decision accuracy, P3 not-a-global-shift, with all three required (registry).
+  - Octets are 320 for both families. The 17/84 unmatched first-action replacements in B2 are accepted and disclosed. Label parts launched.

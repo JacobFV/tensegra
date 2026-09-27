@@ -38,7 +38,8 @@
    "status": "registered",
    "track": "B",
    "rule": "primary challenge family = untouched triple (probeworld-v3 ranges) with largest minimum per-factor decision relevance subject to global-shift closable fraction <= .5; second passing triple = secondary holdout; historical U+E/S+C/U+C challenge only",
-   "expected": "S+C+E primary (reviewer local screen), U+C+E secondary \u2014 to be confirmed by the official screen before any model run"
+   "expected": "S+C+E primary (reviewer local screen), U+C+E secondary \u2014 to be confirmed by the official screen before any model run",
+   "result": "OFFICIAL screen (builder, 80 configs/family, probeworld-v3 ranges): S+C+E min relevance .66 [.55,.76], GS .26 -> PRIMARY; U+C+E .55 [.44,.65], GS .27 -> SECONDARY; U+S+E fails GS (.60); U+S+C min .18. Registered 06:58Z before any model."
   },
   {
    "id": "B-ARMS",
@@ -52,7 +53,15 @@
     "dose": "0-3 constituent pairs of the held triple in training"
    },
    "primary": "B2 vs B0 at matched volume on the primary held-out triple: octet-conditional accuracy and gap regret (5 seed pairs; >=200 eligible configs; configuration-clustered CIs); must not be explained by global-shift (closable fraction test)",
-   "threshold": "to be fixed in the protocol addendum after power from dev numbers, before any held-out evaluation"
+   "threshold": "to be fixed in the protocol addendum after power from dev numbers, before any held-out evaluation",
+   "primary_registered": {
+    "contrast": "B2 vs B0 (N=384; seeds 30-34 paired) evaluated on the S+C+E held-out pool (400 configs) and 320 S+C+E octets",
+    "P1": "gap regret: seed-paired mean(B2-B0) < 0 with configuration-clustered 95% CI upper bound < 0",
+    "P2": "later-decision accuracy (decisions after the first, context classes as defined in trackb-screen.md): paired mean(B2-B0) > 0 with 95% CI lower bound > 0",
+    "P3": "not a global shift: octet near-miss accuracy and one-factor false-change rate not worse for B2 by more than .02 (paired mean)",
+    "decision": "B-ARMS primary SUPPORTED iff P1 and P2 and P3; octet flip accuracy and first-decision accuracies are secondary; U+C+E secondary holdout reported with the pair-exposure confound (B2 trains on U+C, U+E)"
+   },
+   "settings": "octets: 320 for both families (U+C+E descriptive); --hold-relevance not used (cost); B2 first-action replacement residual imbalance accepted and disclosed (17/84 unmatched; <=13/384 per class)"
   },
   {
    "id": "B-FACT",
