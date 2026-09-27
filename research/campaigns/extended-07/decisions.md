@@ -117,3 +117,11 @@
   - **Runner incident:** the eval-stage waiter (p2e_run.sh) never passed its "15 consumers done" check and sat idle for ~40 min. The cause is not established (the check logic matches the status format).
   - It was stopped. A mistaken relaunch that piped into head -0 was stopped before launching anything, then relaunched correctly.
   - The eval smoke e07-p2-eval-s40 is running. The lost time is wall time only; no compute was charged.
+- 2026-09-27T19:52Z: **P2-SCREEN complete: no candidate qualifies under the registered selection rule.**
+  - All eval (5), evalX (5) and score jobs exited 0; the score cost 1,036 core-s. Staged in research/results/campaign-07/p2-screen (sha256 verified).
+  - **Why nothing qualifies:** reference S1R1 flip .469; the deployable candidates reach .41–.45 on flips.
+  - **Consequence:** P2-CONFIRM is not run as a repair confirmation. The b6d labels are retained, unused.
+  - **Preliminary pattern:** all models lie on a flip/near-miss trade-off. φ conditions barely move flips; factor reading helps invariance and pool accuracy, not flips.
+  - **Next (brief §15/E + B):** (1) a frontier/discrimination analysis of the screen (analyst); (2) prepare the smallest justified consumer-side test of whether explicit interaction structure improves discrimination rather than bias.
+    - Arms: an ordinary deeper MLP consumer vs a bilinear/interaction consumer, same information.
+    - It is registered only after the analysis.
