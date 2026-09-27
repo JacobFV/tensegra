@@ -125,3 +125,7 @@
   - **Next (brief §15/E + B):** (1) a frontier/discrimination analysis of the screen (analyst); (2) prepare the smallest justified consumer-side test of whether explicit interaction structure improves discrimination rather than bias.
     - Arms: an ordinary deeper MLP consumer vs a bilinear/interaction consumer, same information.
     - It is registered only after the analysis.
+- 2026-09-27T20:08Z: **P3 consumer variants merged** (campaign/e07-p3cons 6f9a43a3; 10 new tests; 96 passed, 1 skipped; 143 metered core-s).
+  - **P3-SCREEN registered (arms/training):** CONS-mlp, bil and gate × {exact, mix} × seeds 40–44, reusing P2's lin consumers and predictors. Primary contrast: bil vs mlp.
+  - The **metric is fixed from the frontier analysis before any P3 eval output**. Training starts now, because it does not depend on the metric.
+  - **Budget:** screen ~12k + confirm ~18k on top of 26.5k used gives ~57k, under the 80% ceiling (69k).
