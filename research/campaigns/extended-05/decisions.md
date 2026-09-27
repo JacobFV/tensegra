@@ -65,3 +65,4 @@
     - PI-T-1 = improvement over D;
     - PI-T-2 = value beyond simple rules (it must beat always-teacher and the rules while delegating less than always-teacher).
   - Scope: supplied sub-policy; the learned component is only when to invoke it.
+- 2026-09-27T02:57Z: **B-Q registered** (diagnostic on inspected U+C): L4 Q-head models B0-L4 vs BX1-L4, seeds 10–12, to test whether exposure improves value estimates of computations (Q ranking). Launched.

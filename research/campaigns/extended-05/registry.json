@@ -182,6 +182,20 @@
    "scope": "supplied sub-policy (teacher) and supplied option; the learned component is only the decision of when to invoke it",
    "confirmation": "if PI-T-1 (and ideally PI-T-2) pass on screen: A-CF on r3-r5 with new labels, sealed worlds >= 250M, 512/condition",
    "metric_checks": "always-teacher is the key comparator: a controller that approximates always-delegate passes PI-T-1 trivially but fails PI-T-2; delegated-step fraction reported"
+  },
+  {
+   "id": "B-Q",
+   "status": "registered (diagnostic, after B-X)",
+   "hypothesis": "The partial BX1 improvement on U+C works through better value estimates of computations (Q ranking), consistent with B-LOC's value-estimate localization.",
+   "intervention": "L4 (Q-head) models: B0-L4 (split v2 b5_train) vs BX1-L4 (b5x_train), seeds 10-12, same updates",
+   "comparator": "B0-L4",
+   "endpoints": [
+    "Q-ranking accuracy on U+C decisions (q_rank_acc)",
+    "value-estimate vs ranking error shares on U+C",
+    "probe_unique, regret, gap regret"
+   ],
+   "status_note": "U+C was inspected in B-X: this is localization on inspected data, not a transfer claim",
+   "decision": "descriptive; no promotion"
   }
  ]
 }
