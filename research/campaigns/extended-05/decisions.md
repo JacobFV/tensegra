@@ -73,3 +73,4 @@
   - **All-pairs Q-ranking accuracy does not improve** (.915–.932 vs .927–.938; ~345k pairs each).
   - **Reading:** exposure's benefit shows up in the decisions that matter (first-probe choice, gap regret), not in aggregate pairwise Q-ranking accuracy. That aggregate is dominated by easy action pairs and is not decision-relevant.
   - Consistent with the BX1-L1 result, combination exposure partially helps across two model families. The effect is sub-threshold per the registered B-X rule; there is no transfer claim.
+- 2026-09-27T03:08Z: **B-XC registered (adaptive, labelled):** BX1 vs B0 L1 on fresh seeds 20–22, evaluated on **fresh U+C configuration draws** (new split b5c_hold_uc, seed base 5.9e9, same sizing rule). Primary: mean paired first-probe gain ≥ +.10 with all pairs > 0, and gap regret lower in 3/3.

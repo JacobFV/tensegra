@@ -196,6 +196,22 @@
    ],
    "status_note": "U+C was inspected in B-X: this is localization on inspected data, not a transfer claim",
    "decision": "descriptive; no promotion"
+  },
+  {
+   "id": "B-XC",
+   "status": "registered (ADAPTIVE: after B-X and B-Q were inspected; labelled as such)",
+   "hypothesis": "Training exposure to additional condition combinations (BX1) improves the value-of-computation decision (first-probe choice) and gap regret on an unseen combination (U+C), relative to the baseline recipe (B0).",
+   "intervention": "BX1 (b5x_train) vs B0 (b5_train), L1 recipe, FRESH training seeds 20, 21, 22 (paired), same updates",
+   "worlds": "FRESH U+C configuration draws: new split b5c_hold_uc with seed base 5,900,000,000 (never generated before), sized by the same exact-solver rule (>=60 uniquely-optimal-first-probe configs, >=20 flag-sensitive), 1 world each, world offset 900",
+   "primary": "mean paired (BX1 - B0) uniquely-optimal first-probe rate >= +.10 with all 3 seed-pair differences > 0, AND gap regret lower for BX1 in 3/3 pairs",
+   "secondary": [
+    "not-optimal probe <= .10 for BX1",
+    "success >= .8 x pi* success",
+    "flag-sensitive subset readings",
+    "configuration-clustered CIs"
+   ],
+   "scope": "U+C was inspected in B-X/B-Q; this tests fresh configurations of the same pair family with fresh initializations \u2014 configuration-level replication, not a new-pair transfer claim",
+   "cost": "~1.5k labels + 6 x ~0.45k training + evals ~0.3k"
   }
  ]
 }
