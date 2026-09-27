@@ -83,9 +83,14 @@
   - B2 − B0 also changes the single-type mix (S 106 vs 64; C and E 43 vs 64).
   - Note for B-FACT-C: on the development split, LRN − RAWF near-miss is −.022, just outside Q3's −.02 margin. Q3 is registered and unchanged.
   - Commit e8537d2d is misnamed: it holds only ledger budget/receipt updates. The corrections are in the next commit.
-- 2026-09-27T11:59Z: **B-FACT-C (adaptive) SUPPORTED by its registered rule.** Setup: fresh configurations and octets, seeds 35–39, two-level CI.
+- 2026-09-27T11:59Z: **B-FACT-C (adaptive) SUPPORTED by its registered rule as executed; Q1 borderline (not robust to bootstrap Monte Carlo error, independent audit).** *(heading corrected per audit)* Setup: fresh configurations and octets, seeds 35–39, two-level CI.
   - **LRN − RAWF:** gap −2.65 [−5.87, −0.03] (5/5 pairs); later-decision accuracy +.018 [+.002, +.034] (4/5); near-miss +.105; false-change −.032.
-  - **Caveat, reported prominently:** flip-set accuracy is lower (−.048, 5/5). The learned derived-quantity heads improve value-sensitive later decisions and reduce spurious changes, but do not help the interaction-dependent flips.
+  - **Caveat, reported prominently:** flip-set accuracy is lower (−.048, 5/5). The learned derived-quantity heads improve the first decision of later queries (fewer redundant inspects) and change actions less often under one-factor interventions (both false and correct changes; no better discrimination), but do not help the interaction-dependent flips.
   - **SUP (exact quantities)** raises flip accuracy (+.109), but near-miss falls (−.108), so it is not supported.
   - The 20 evals and 2 scoring jobs all exited 0. Artifacts are staged in research/results/campaign-06/b-factc; sha256 verified.
   - Independent audit commissioned. Next: final report.
+- 2026-09-27T12:11Z: **Independent B-FACT-C audit merged and adopted** (review/bfc-independent-audit.md). All numbers reproduce, and the protocol is followed.
+  - **Q1 is borderline:** at a converged bootstrap the gap upper bound is > 0 (n_boot 20k: +.02 to +.06). Q2 and Q3 are robust.
+  - Flip loss is located in the query-2 decisions. LRN is less responsive to one-factor changes in both directions, not better at discriminating.
+  - Registry C1–C4 and decisions C5 applied; the report is revised accordingly.
+  - The B-FACT-C claim now reads: a small, robust later-decision improvement (+.018); regret gain suggestive (5/5 pairs, CI not excluding 0); no interaction composition.
