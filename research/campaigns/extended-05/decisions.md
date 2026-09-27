@@ -66,3 +66,10 @@
     - PI-T-2 = value beyond simple rules (it must beat always-teacher and the rules while delegating less than always-teacher).
   - Scope: supplied sub-policy; the learned component is only when to invoke it.
 - 2026-09-27T02:57Z: **B-Q registered** (diagnostic on inspected U+C): L4 Q-head models B0-L4 vs BX1-L4, seeds 10–12, to test whether exposure improves value estimates of computations (Q ranking). Launched.
+- 2026-09-27T03:07Z: **B-Q (diagnostic; U+C already inspected)** (6 L4 trainings and 6 evaluations, exit 0).
+  - BX1-L4 vs B0-L4 on U+C, per seed:
+    - uniquely-optimal probe .717/.750/.733 vs .600/.467/.617 (+.12/+.28/+.12);
+    - gap regret 2.36/2.76/2.42 vs 3.42/3.84/3.35.
+  - **All-pairs Q-ranking accuracy does not improve** (.915–.932 vs .927–.938; ~345k pairs each).
+  - **Reading:** exposure's benefit shows up in the decisions that matter (first-probe choice, gap regret), not in aggregate pairwise Q-ranking accuracy. That aggregate is dominated by easy action pairs and is not decision-relevant.
+  - Consistent with the BX1-L1 result, combination exposure partially helps across two model families. The effect is sub-threshold per the registered B-X rule; there is no transfer claim.
