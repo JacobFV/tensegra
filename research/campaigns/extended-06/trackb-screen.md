@@ -236,3 +236,42 @@ $PY research/tools/campaign06_bscore.py --ref B0 --arm B0 <5 runs> --arm B2 <5 r
 ```
 
 (Section 9 fills in the CPU estimates from the metered smoke.)
+
+## 9. Compute estimate (from the metered smoke `e06-tb-smoke`, 502.5 core-s)
+
+**Smoke measurements** (pro6000, 1 thread):
+- `labels --parts train --arms B0 B2 --n-train 384`: 294 core-s, peak RSS 2.6 GB. This covers 559 classified configurations and 768 solved (0.22 core-s per DP). B0 has 1.69M DP states and B2 1.79M.
+- **B2 first-class matching.** 17 of the 84 replacements are unmatched after 40 candidates. U+C/U+E configurations rarely have probe-first optima. The resulting mix is B2 probe 164 / exact 7 / gather 140 / structure 73 vs B0 177 / 9 / 131 / 67, a difference of <= 13 of 384 per class. This is a disclosed residual imbalance (it could be reduced with a larger `max_tries`; the per-factor frequency and share matching are exact).
+- **Hold labels:** S+C+E 2.5 core-s per configuration, U+C+E 6.8 (k = 8 U+C+E reaches 188k states); RSS 2.7 GB with 24-config shards.
+- **Training** (L1): ~0.085 core-s per update for B0 (150 updates 16.4 s incl. label load), ~0.1 for LEARNED and SUPPLIED; RSS 2.3 GB (B0).
+- **Parameters:** PUBLIC-RAW 129,701; SUPPLIED and RAW-FUSE 149,157 (+15%); LEARNED 168,636 (+30%, of which 19,479 in the auxiliary head).
+
+| item | basis | core-s |
+|---|---|---:|
+| labels, train part (7 arms; ~3,460 solves + ~1,200 classifications) | 0.22 per DP | ~1.0k |
+| labels, eval part (dev / test_base / test_pairs 128 each; holds 400 + 400; hist 3 x 200) | S+C+E 2.5, U+C+E 6.8, pairs ~1 per config | ~4.6k |
+| labels, cf part (S+C+E 320, U+C+E 160 octets) | local 7.4 / 9.9 core-s per octet, x1.2 | ~4.8k |
+| training: B0 x5, B2 x5, B1 x3, B3 x3, dose1-3 x3, SUP x3, LRN x3, RAW-FUSE x3 (34 runs) | ~350-450 each (B1/B3 +label load; LRN +15%) | ~14k |
+| evaluation (34 runs; ~1,650 episodes + ~25k octet replays each) + references | ~200 each | ~7k |
+| scoring (bootstrap, pure Python) | | ~0.1k |
+| **total** | | **~31k core-s (~8.7 core-h; ~39k with 25% contingency)** |
+
+- **Per arm** (3 seeds, train + eval): ~1.8k core-s. B0 and B2 at 5 seeds: ~3.0k each.
+- **Primary-only path** (labels + B0 x5 + B2 x5 + their evals): ~16k.
+- **Memory:** training 2.3 GB (N) and ~4.5 GB (2N); eval <= 2.7 GB per shard. Run <= 4 concurrently.
+- **Wall:** ~6-7 min per training.
+
+## 10. Spent by this task
+
+**Remote, metered: 5,577 core-s** (receipts under `~/structured-latent-dynamics-campaign06/results/dev/`):
+- `e06-tb-bscreen` 1,911.1 (gen2, superseded);
+- `e06-tb-bscreen-v3` 2,931.2 (official);
+- `e06-tb-tests` 232.2 (34 passed: 12 new + the extended-05 Track B / B-XC suites incl. the b1/b2/f2 and b5 bit-identity goldens);
+- `e06-tb-smoke` 502.5.
+
+**Local (Dell GB10, pure Python, process time), about 2.1k core-s:**
+- gen1/gen2 pilots, ~0.9k;
+- octet support samples, ~0.8k;
+- DP cost probes and local test runs, ~0.4k.
+
+All local work used pilot or dev seed indices (screening streams >= 900,000; 6.8e9 dev range), never protocol seeds.
