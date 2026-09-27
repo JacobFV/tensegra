@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "campaign": "extended-07",
+  "started_utc": "2026-09-27T16:02:54Z",
+  "deadline_utc": "2026-09-28T04:02:54Z",
+  "ceilings": {
+    "cpu_core_seconds": 86400,
+    "gpu_device_seconds": 21600,
+    "elapsed_seconds": 43200
+  },
+  "reserve_fraction": 0.2,
+  "diagnostic_tranche_cpu_core_seconds": 10800,
+  "concurrency": {
+    "default_memory_heavy": 4,
+    "max": 8,
+    "min_free_gb": 16
+  },
+  "gpu_accounting": "charged = union of wall intervals of jobs tagged '-gpu-' (actual GPU use); legacy extended-06 occupancy reported separately and not charged",
+  "cpu_accounting": "all remote work via job.py receipts under ~/structured-latent-dynamics-campaign07/results (main) and results/dev (metered.sh); local analysis/audits declared in local_cpu",
+  "host": "pro6000 WSL2; root ~/structured-latent-dynamics-campaign07; env ~/structured-latent-dynamics-campaign03/env; historical artifacts read-only in ~/structured-latent-dynamics-campaign06",
+  "local_cpu": [
+    {
+      "what": "coordinator setup and scaffolding (git, scripts)",
+      "core_seconds": 5
+    }
+  ],
+  "status": "active"
+}
