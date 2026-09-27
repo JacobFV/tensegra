@@ -289,11 +289,17 @@ class PolicyTree:
         if d == 0 or len(U) < 2 * self.min_leaf:
             return leaf, float(U.sum(0).max())
         if self.lookahead and d >= 2:
+            # root lookahead over the top-16 greedy split candidates (exhaustive two-level
+            # search restricted to the most promising first splits)
             H, cnt = node_hist(codes, U, self.B)
+            L = np.cumsum(H, 1)[:, :-1, :]
             nL = np.cumsum(cnt, 1)[:, :-1]
             ok = (nL >= self.min_leaf) & (len(U) - nL >= self.min_leaf)
+            val = np.where(ok, L.max(2) + (U.sum(0)[None, None, :] - L).max(2), -np.inf)
+            flat = np.argsort(-val, axis=None)[:16]
+            cand = [np.unravel_index(t, val.shape) for t in flat if np.isfinite(val.flat[t])]
             best = None
-            for f, b in zip(*np.nonzero(ok)):
+            for f, b in cand:
                 m = codes[:, f] <= b
                 _, vl = self._grow1(codes[m], U[m])
                 _, vr = self._grow1(codes[~m], U[~m])
@@ -350,7 +356,7 @@ class PolicyTree:
 # Softmax-logistic selector (expected-utility objective, L2 tuned on inner folds)
 
 class LogisticSelector:
-    def __init__(self, lam=1e-3, steps=400, lr=0.05, seed=0):
+    def __init__(self, lam=1e-3, steps=250, lr=0.05, seed=0):
         self.lam, self.steps, self.lr, self.seed = lam, steps, lr, seed
 
     def fit(self, X, U):
@@ -378,7 +384,7 @@ class LogisticSelector:
         return np.argmax(Z @ self.W, 1)
 
 
-def tuned_logistic(Xtr, Utr, eps_tr, lams=(1e-4, 1e-3, 1e-2, 1e-1)):
+def tuned_logistic(Xtr, Utr, eps_tr, lams=(1e-3, 1e-2, 1e-1)):
     ue = np.unique(eps_tr)
     inner = np.isin(eps_tr, ue[::3]), np.isin(eps_tr, ue[1::3]), np.isin(eps_tr, ue[2::3])
     best = None
@@ -627,7 +633,7 @@ def fam_logistic(tr, te):
     return M[te][np.arange(len(te)), sel.predict(G["X"][te])] - _feat_charge(te, G["X"].shape[1] * M.shape[1])
 
 
-GBT_GRID = ((100, 3), (250, 3))
+GBT_GRID = ((100, 3), (200, 3))
 
 
 def _gbt_structured_fit(Xs, Q, LW, tr, cfg):
@@ -637,9 +643,10 @@ def _gbt_structured_fit(Xs, Q, LW, tr, cfg):
     return gq, gw, smear
 
 
-def _structured(Xs, Q, LW, OB, US, FAIL, tr, te):
-    """Nested-CV hyperparameters (GBT_GRID) on inner folds, then fit on tr and choose on te.
-    FAIL: per-arm failure indicator (opt-mode arms can fail); its probability is modelled too."""
+def _structured(Xs, Q, LW, OB, US, FAIL, tr, te, cfg=None):
+    """Hyperparameters (GBT_GRID) chosen on 2 inner folds of tr unless cfg is given, then fit
+    on tr and choose on te. FAIL: per-arm failure indicator (opt-mode arms can fail); its
+    probability is modelled too."""
     def choose(trn, tst, cfg):
         gq, gw, smear = _gbt_structured_fit(Xs, Q, LW, trn, cfg)
         gf = MGBT(rounds=cfg[0], depth=cfg[1]).fit(Xs[trn], FAIL[trn]) if FAIL[trn].any() else None
@@ -648,21 +655,22 @@ def _structured(Xs, Q, LW, OB, US, FAIL, tr, te):
         Uh = q - G["c"][tst, None] * (np.expm1(gw.predict(Xs[tst])) * smear) - G["o"][tst, None] * OB[tst] \
             - G["L"][tst, None] * pf
         return np.argmax(Uh, 1)
-    best = None
-    for cfg in GBT_GRID:
-        sc = 0.0
-        for itr, ite in _split_inner(tr, G["eps"], 3):
-            sc += US[ite][np.arange(len(ite)), choose(itr, ite, cfg)].sum()
-        if best is None or sc > best[0]:
-            best = (sc, cfg)
-    cfg = best[1]
+    if cfg is None:
+        best = None
+        for c in GBT_GRID:
+            sc = 0.0
+            for itr, ite in _split_inner(tr, G["eps"], 2):
+                sc += US[ite][np.arange(len(ite)), choose(itr, ite, c)].sum()
+            if best is None or sc > best[0]:
+                best = (sc, c)
+        cfg = best[1]
     ch = choose(tr, te, cfg)
     return US[te][np.arange(len(te)), ch], cfg
 
 
-def fam_learned_oneshot(tr, te):
+def fam_learned_oneshot(tr, te, cfg=None):
     Xs = G["X"][:, G["struct_cols"]]
-    u, cfg = _structured(Xs, G["Q"], np.log1p(G["Wk"]), G["Ob"], G["UA"], G["FAILA"], tr, te)
+    u, cfg = _structured(Xs, G["Q"], np.log1p(G["Wk"]), G["Ob"], G["UA"], G["FAILA"], tr, te, cfg)
     return u - _feat_charge(te, 3 * cfg[0] * cfg[1]), cfg
 
 
@@ -674,9 +682,9 @@ def fam_learned_direct(tr, te):
 
 
 def fam_learned_seq(probe):
-    def f(tr, te):
+    def f(tr, te, cfg=None):
         S = G["SEQ"][probe]
-        u, cfg = _structured(S["XT"], S["Q"], np.log1p(S["W"]), S["OB"], S["U"], S["FAIL"], tr, te)
+        u, cfg = _structured(S["XT"], S["Q"], np.log1p(S["W"]), S["OB"], S["U"], S["FAIL"], tr, te, cfg)
         return u - _feat_charge(te, 3 * cfg[0] * cfg[1]), cfg
     return f
 
@@ -710,16 +718,16 @@ def outer_fold(k):
     info["inner_scores"] = {n: v / len(tr) for n, v in inner_scores.items()}
     u, cfg = fam_learned_oneshot(tr, te); res["learned_oneshot"] = u; info["oneshot_cfg"] = cfg
     res["learned_oneshot_direct"] = fam_learned_direct(tr, te)
-    for probe in G["SEQ"]:
-        u, cfg = fam_learned_seq(probe)(tr, te); res[f"learned_seq[{probe}]"] = u; info[f"seq_cfg[{probe}]"] = cfg
+    for probe in G["SEQ"]:   # hyperparameters: the one-shot model's inner-CV choice
+        u, _ = fam_learned_seq(probe)(tr, te, cfg); res[f"learned_seq[{probe}]"] = u
     # first-call choice: cross-fitted inside the training set (inner OOF utilities of each
     # candidate), then a GBT on public features picks the candidate per test instance
     cands = ["learned_oneshot"] + [f"learned_seq[{p}]" for p in G["SEQ"]]
     inner_u = {c: np.zeros(len(G["fold"])) for c in cands}
-    for itr, ite in _split_inner(tr, G["eps"], 3):
-        inner_u["learned_oneshot"][ite] = fam_learned_oneshot(itr, ite)[0]
+    for itr, ite in _split_inner(tr, G["eps"], 2):
+        inner_u["learned_oneshot"][ite] = fam_learned_oneshot(itr, ite, cfg)[0]
         for p in G["SEQ"]:
-            inner_u[f"learned_seq[{p}]"][ite] = fam_learned_seq(p)(itr, ite)[0]
+            inner_u[f"learned_seq[{p}]"][ite] = fam_learned_seq(p)(itr, ite, cfg)[0]
     S = np.stack([inner_u[c] for c in cands], 1)
     g = MGBT(rounds=100).fit(G["X"][tr], S[tr] - S[tr].mean(1, keepdims=True))
     pick = np.argmax(g.predict(G["X"][te]), 1)
