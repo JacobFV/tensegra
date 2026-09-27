@@ -139,3 +139,4 @@
     - (ii) delegating to a better supplied sub-policy improves the imitation deployment, confirmed on fresh actors and sealed worlds (A-CF-T; equivalent to recovering the teacher);
     - (iii) a learned public-information regulator of **when** to delegate adds no value beyond a simple trigger rule, under free and under costly delegation.
 - 2026-09-27T04:35Z: **Both primary questions have reached an evidential boundary.** The campaign closes: final report, handoff, merge. The remaining budget (~125k core-s) is intentionally unspent.
+- 2026-09-27T04:35Z: **Final report and handoff written; campaign complete.**

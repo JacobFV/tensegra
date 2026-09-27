@@ -1,6 +1,6 @@
 # Extended-05: decision-relevant metacognition and compositional computational control
 
-**Status: ACTIVE**, adopted by the user 2026-09-27T01:26Z. Window: 2026-09-27T01:26:57Z to 2026-09-28T01:26:57Z. Design: [design.md](design.md). Registry: [registry.json](registry.json). Job plan: [jobplan.json](jobplan.json). Decisions: [decisions.md](decisions.md).
+**Status: COMPLETE**, adopted by the user 2026-09-27T01:26Z. **Report: [report.md](report.md).** Window: 2026-09-27T01:26:57Z to 2026-09-28T01:26:57Z. Design: [design.md](design.md). Registry: [registry.json](registry.json). Job plan: [jobplan.json](jobplan.json). Decisions: [decisions.md](decisions.md).
 
 ## Primary questions (from the user's brief)
 1. Can **deployment-aware, cost-sensitive policy improvement** produce verified utility gains over competent imitation and simple recovery rules?
