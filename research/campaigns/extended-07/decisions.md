@@ -90,3 +90,7 @@
   - **Bank:** e07-p2-bank exited 0 in 6.8 core-s. 5,376 episodes / 57,315 decisions; sources: π* ×2, eps .1/.3 ×2, RAWF-s30 ×4, B0-s30 ×4. 896 episodes per training combination; sha256 3914ecaa…
   - The builder's estimate (~210 core-s) was high, and the bank is complete.
   - The b6d confirmation-split builder is commissioned (campaign/e07-b6d).
+- 2026-09-27T17:40Z: **P2 infrastructure update merged** (4325f557; 31 P2 tests + 89 regression tests pass).
+  - **Adds:** the SEP arm (separate-encoder predictor, a non-redundant READ) and evalX (consumers on replayed historical LRN predictions).
+  - **Registered as P2-SCREEN addendum_1** before any P2 evaluation output.
+  - **Seed ranges:** smoke bank range widened to [12.95e9, 12.96e9) (the smokes used up to 12,952,024,000); test seed 97 registered.

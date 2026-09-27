@@ -40,7 +40,8 @@
     "consumers: same metrics with exact vs predicted inputs; exact->predicted degradation; reliance"
    ],
    "selection_rule": "Reference = the better (screen pool eps-optimal accuracy) of S1R1 and S1R0 (strong ordinary equal-information baselines). Candidates = DEPLOYABLE arms/consumers (predicted-factor inputs only; exact-factor evaluations never selected). Choose the candidate with the largest mean screen flip-accuracy gain over the reference subject to: near-miss mean diff >= -.05, invariance mean diff >= -.03, pool accuracy >= reference - .02 and >= .70 absolute. If none qualifies (or best flip gain < .03) -> no confirmation of a repair; report branch E / negative and use remaining budget only for a localized follow-up.",
-   "budget": "~12k core-s (bank mode); on-policy variants not run in screen"
+   "budget": "~12k core-s (bank mode); on-policy variants not run in screen",
+   "addendum_1": "Added before any P2 evaluation output exists (the screen is at the training stages): (a) SEP arm (--factor-mode sep): separately encoded predictor trained only by factor loss, policy reads its detached output (non-redundant READ), bank mode, seeds 40-44; (b) evalX: consumers evaluated with the HISTORICAL LRN-s(35+i) predictions replayed on the same history (P2 seed 40+i paired with LRN lineage 35+i), plus SEP-bank. SEP is a deployable candidate under the selection rule."
   },
   {
    "id": "P2-CONFIRM",
