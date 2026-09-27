@@ -1,0 +1,783 @@
+{
+ "version": "e07-factor-contract-v1",
+ "source": "src/tensegra/campaign06_probeworld.py:factor_features",
+ "n": 23,
+ "groups": {
+  "G1_posterior_outcome_probabilities": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "G2_side_event_costs": [
+   8,
+   9,
+   10
+  ],
+  "G3_one_query_strategy_costs": [
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "G4_amortized_build_bookkeeping": [
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22
+  ]
+ },
+ "clip": [
+  -5.0,
+  5.0
+ ],
+ "dependency_notation": "fN = coordinate N; other names are public config fields or public-state fields (history, reduced, ev, built, cand, cand_valid, usage, i)",
+ "replacement_closure": {
+  "0": [
+   4,
+   5,
+   6,
+   7,
+   8,
+   12,
+   13,
+   15,
+   16,
+   21
+  ],
+  "1": [
+   7,
+   13,
+   15,
+   16
+  ],
+  "2": [
+   7,
+   9,
+   11,
+   12,
+   13,
+   15,
+   16
+  ],
+  "3": [
+   9,
+   11,
+   12,
+   13,
+   15,
+   16
+  ],
+  "4": [],
+  "5": [
+   6,
+   12,
+   15,
+   16,
+   21
+  ],
+  "6": [
+   21
+  ],
+  "7": [
+   13,
+   15,
+   16
+  ],
+  "8": [
+   12,
+   15,
+   16
+  ],
+  "9": [
+   11,
+   12,
+   13,
+   15,
+   16
+  ],
+  "10": [
+   11,
+   12,
+   13,
+   15,
+   16
+  ],
+  "11": [
+   12,
+   13,
+   15,
+   16
+  ],
+  "12": [
+   15,
+   16
+  ],
+  "13": [
+   15,
+   16
+  ],
+  "14": [
+   15
+  ],
+  "15": [],
+  "16": [],
+  "17": [],
+  "18": [],
+  "19": [
+   21
+  ],
+  "20": [
+   21
+  ],
+  "21": [],
+  "22": []
+ },
+ "coordinates": [
+  {
+   "index": 0,
+   "name": "belief_H",
+   "group": "G1_posterior_outcome_probabilities",
+   "code_block": "posterior",
+   "kind": "exact",
+   "range_v1_factors": [
+    0,
+    1
+   ],
+   "normalization": "probability",
+   "clipped_pm5": false,
+   "depends_on": [
+    "history",
+    "prior",
+    "q",
+    "eta",
+    "p_conflict",
+    "corr"
+   ],
+   "formula": "P(theta=H | public history); pw.theta_prior (revealed-type evidence under C) x Bayes updates, rounded 1e-12",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 1,
+   "name": "belief_M",
+   "group": "G1_posterior_outcome_probabilities",
+   "code_block": "posterior",
+   "kind": "exact",
+   "range_v1_factors": [
+    0,
+    1
+   ],
+   "normalization": "probability",
+   "clipped_pm5": false,
+   "depends_on": [
+    "history",
+    "prior",
+    "q",
+    "eta",
+    "p_conflict",
+    "corr"
+   ],
+   "formula": "P(theta=M | public history)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 2,
+   "name": "belief_F",
+   "group": "G1_posterior_outcome_probabilities",
+   "code_block": "posterior",
+   "kind": "exact",
+   "range_v1_factors": [
+    0,
+    1
+   ],
+   "normalization": "probability",
+   "clipped_pm5": false,
+   "depends_on": [
+    "history",
+    "prior",
+    "q",
+    "eta",
+    "p_conflict",
+    "corr"
+   ],
+   "formula": "P(theta=F | public history)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 3,
+   "name": "belief_X",
+   "group": "G1_posterior_outcome_probabilities",
+   "code_block": "posterior",
+   "kind": "exact",
+   "range_v1_factors": [
+    0,
+    1
+   ],
+   "normalization": "probability",
+   "clipped_pm5": false,
+   "depends_on": [
+    "history",
+    "prior",
+    "q",
+    "eta",
+    "p_conflict",
+    "corr"
+   ],
+   "formula": "P(theta=X | public history)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 4,
+   "name": "p_probe_resolves",
+   "group": "G1_posterior_outcome_probabilities",
+   "code_block": "outcome",
+   "kind": "exact",
+   "range_v1_factors": [
+    0,
+    1
+   ],
+   "normalization": "probability",
+   "clipped_pm5": false,
+   "depends_on": [
+    "f0"
+   ],
+   "formula": "bH (IDENTICAL to belief_H): P(a probe now yields a correct candidate)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": "belief_H"
+  },
+  {
+   "index": 5,
+   "name": "p_probe_false_solved",
+   "group": "G1_posterior_outcome_probabilities",
+   "code_block": "outcome",
+   "kind": "exact",
+   "range_v1_factors": [
+    0,
+    0.7
+   ],
+   "normalization": "probability",
+   "clipped_pm5": false,
+   "depends_on": [
+    "f0",
+    "q"
+   ],
+   "formula": "(1 - bH)(1 - q): joint P(theta != H and probe reports 'solved')",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 6,
+   "name": "p_H_given_solved",
+   "group": "G1_posterior_outcome_probabilities",
+   "code_block": "outcome",
+   "kind": "exact",
+   "range_v1_factors": [
+    0,
+    1
+   ],
+   "normalization": "probability (0 if P(solved)=0)",
+   "clipped_pm5": false,
+   "depends_on": [
+    "f0",
+    "f5"
+   ],
+   "formula": "bH / (bH + (1-bH)(1-q)); 0 when bH = 0 and q = 1 (undefined -> 0)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 7,
+   "name": "p_b1_resolves",
+   "group": "G1_posterior_outcome_probabilities",
+   "code_block": "outcome",
+   "kind": "exact",
+   "range_v1_factors": [
+    0,
+    1
+   ],
+   "normalization": "probability",
+   "clipped_pm5": false,
+   "depends_on": [
+    "f0",
+    "f1",
+    "f2",
+    "reduced"
+   ],
+   "formula": "bH + bM + bF * [reduced]: P(b1 now returns 'solved')",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 8,
+   "name": "exp_side_cost_rel",
+   "group": "G2_side_event_costs",
+   "code_block": "factor_costs",
+   "kind": "exact",
+   "range_v1_factors": [
+    0,
+    0.4
+   ],
+   "normalization": "price / R",
+   "clipped_pm5": false,
+   "depends_on": [
+    "f0",
+    "D_side"
+   ],
+   "formula": "D_side (1 - bH) / R: expected side-effect charge of a probe now",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 9,
+   "name": "exp_hard_cost_rel",
+   "group": "G2_side_event_costs",
+   "code_block": "factor_costs",
+   "kind": "exact",
+   "range_v1_factors": [
+    0,
+    3.125
+   ],
+   "normalization": "price / R (UNCLIPPED)",
+   "clipped_pm5": false,
+   "depends_on": [
+    "f2",
+    "f3",
+    "t_hard",
+    "c_b2"
+   ],
+   "formula": "t_hard c_b2 (bF + bX) / R: expected T surcharge of an exact call now (0 whenever T is off: every b6/b6c pool)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": true,
+   "duplicate_of": null
+  },
+  {
+   "index": 10,
+   "name": "event_hazard_active",
+   "group": "G2_side_event_costs",
+   "code_block": "factor_costs",
+   "kind": "exact",
+   "range_v1_factors": [
+    0,
+    0.6
+   ],
+   "normalization": "probability",
+   "clipped_pm5": false,
+   "depends_on": [
+    "p_event",
+    "ev"
+   ],
+   "formula": "p_event if no event yet in this query else 0: P(an event follows the next non-terminal action)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 11,
+   "name": "cost_exact_b2_rel",
+   "group": "G3_one_query_strategy_costs",
+   "code_block": "strategy_costs",
+   "kind": "approx_myopic",
+   "range_v1_factors": [
+    0,
+    2.0
+   ],
+   "normalization": "price / R, clip [-5, 5]",
+   "clipped_pm5": true,
+   "depends_on": [
+    "c_b2",
+    "f9",
+    "f10"
+   ],
+   "formula": "(c_b2 + hard)(1 + hazard) / R: b2 then commit, one re-run if an event invalidates (re-runs even on X)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 12,
+   "name": "cost_probe_first_rel",
+   "group": "G3_one_query_strategy_costs",
+   "code_block": "strategy_costs",
+   "kind": "approx_myopic",
+   "range_v1_factors": [
+    0,
+    3.1
+   ],
+   "normalization": "price / R, clip [-5, 5]",
+   "clipped_pm5": true,
+   "depends_on": [
+    "c_probe",
+    "f8",
+    "f0",
+    "q",
+    "f11",
+    "f5",
+    "L",
+    "f10"
+   ],
+   "formula": "c_probe + side + q(1-bH) b2_route + (1-bH)(1-q) L + hazard c_probe, / R (forgone reward R on a false 'solved' NOT counted)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 13,
+   "name": "cost_b1_first_rel",
+   "group": "G3_one_query_strategy_costs",
+   "code_block": "strategy_costs",
+   "kind": "approx_myopic",
+   "range_v1_factors": [
+    0,
+    2.5
+   ],
+   "normalization": "price / R, clip [-5, 5]",
+   "clipped_pm5": true,
+   "depends_on": [
+    "c_b1",
+    "f9",
+    "f7",
+    "f11"
+   ],
+   "formula": "c_b1 + hard + (1 - p_b1) b2_route, / R (no event re-run term, unlike b2/probe)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 14,
+   "name": "cost_use_rel",
+   "group": "G3_one_query_strategy_costs",
+   "code_block": "strategy_costs",
+   "kind": "approx_myopic",
+   "range_v1_factors": [
+    0,
+    5.0
+   ],
+   "normalization": "price / R, clip [-5, 5] (BINDS)",
+   "clipped_pm5": true,
+   "depends_on": [
+    "C_build",
+    "k",
+    "i",
+    "built",
+    "c_use"
+   ],
+   "formula": "(C_build / max(k - i, 1) if not built else 0) + c_use, / R: build now, amortized over the remaining queries",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 15,
+   "name": "best_strategy_cost_rel",
+   "group": "G3_one_query_strategy_costs",
+   "code_block": "strategy_costs",
+   "kind": "approx_myopic",
+   "range_v1_factors": [
+    0,
+    2.0
+   ],
+   "normalization": "price / R, clip [-5, 5]",
+   "clipped_pm5": true,
+   "depends_on": [
+    "f11",
+    "f12",
+    "f13",
+    "f14"
+   ],
+   "formula": "min(b2, probe, b1, use) / R == min(f11..f14) (clip is monotone)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 16,
+   "name": "build_value_rel",
+   "group": "G4_amortized_build_bookkeeping",
+   "code_block": "build",
+   "kind": "approx_myopic",
+   "range_v1_factors": [
+    -5,
+    5
+   ],
+   "normalization": "price / R, clip [-5, 5] (BINDS), 0 once built",
+   "clipped_pm5": true,
+   "depends_on": [
+    "f11",
+    "f12",
+    "f13",
+    "c_use",
+    "C_build",
+    "k",
+    "i",
+    "built"
+   ],
+   "formula": "(rem (min(b2, probe, b1) - c_use) - C_build) / R if not built else 0; rem = max(k - i, 1)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 17,
+   "name": "remaining_queries_rel",
+   "group": "G4_amortized_build_bookkeeping",
+   "code_block": "build",
+   "kind": "bookkeeping",
+   "range_v1_factors": [
+    0.125,
+    1
+   ],
+   "normalization": "rem / 8",
+   "clipped_pm5": false,
+   "depends_on": [
+    "k",
+    "i"
+   ],
+   "formula": "max(k - i, 1) / 8 (also a function of the public vector k/8 and the qfrac input)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 18,
+   "name": "built",
+   "group": "G4_amortized_build_bookkeeping",
+   "code_block": "build",
+   "kind": "bookkeeping",
+   "range_v1_factors": [
+    0,
+    1
+   ],
+   "normalization": "indicator",
+   "clipped_pm5": false,
+   "depends_on": [
+    "built"
+   ],
+   "formula": "structure built",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 19,
+   "name": "candidate_valid",
+   "group": "G4_amortized_build_bookkeeping",
+   "code_block": "candidate",
+   "kind": "bookkeeping",
+   "range_v1_factors": [
+    0,
+    1
+   ],
+   "normalization": "indicator",
+   "clipped_pm5": false,
+   "depends_on": [
+    "cand",
+    "cand_valid"
+   ],
+   "formula": "a candidate exists and no event invalidated it",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 20,
+   "name": "candidate_exact",
+   "group": "G4_amortized_build_bookkeeping",
+   "code_block": "candidate",
+   "kind": "bookkeeping",
+   "range_v1_factors": [
+    0,
+    1
+   ],
+   "normalization": "indicator",
+   "clipped_pm5": false,
+   "depends_on": [
+    "cand",
+    "cand_valid"
+   ],
+   "formula": "valid candidate from b1 / b2 / use (always correct on commit)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 21,
+   "name": "candidate_trust",
+   "group": "G4_amortized_build_bookkeeping",
+   "code_block": "candidate",
+   "kind": "approx_myopic",
+   "range_v1_factors": [
+    0,
+    1
+   ],
+   "normalization": "probability-like (0 if no valid candidate)",
+   "clipped_pm5": false,
+   "depends_on": [
+    "f19",
+    "f20",
+    "f6"
+   ],
+   "formula": "1 if exact; p_H_given_solved if probe candidate; else 0.  Under U (q < 1) this applies the probe likelihood a SECOND time (belief already conditions on 'solved'): trust > P(commit correct) = bH",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": false,
+   "duplicate_of": null
+  },
+  {
+   "index": 22,
+   "name": "steps_left_rel",
+   "group": "G4_amortized_build_bookkeeping",
+   "code_block": "steps",
+   "kind": "bookkeeping",
+   "range_v1_factors": [
+    0,
+    1
+   ],
+   "normalization": "(deadline - steps) / 2; 1 when D off",
+   "clipped_pm5": false,
+   "depends_on": [
+    "deadline",
+    "usage"
+   ],
+   "formula": "remaining deadline budget of the query (constant 1 in every b6/b6c pool: D never on)",
+   "arms": {
+    "SUP": "supplied input (exact) to the fusion layer only (not the GRU)",
+    "LRN": "target only; policy reads stop-gradient prediction",
+    "RAWF": "unused (phi = 0)"
+   },
+   "public_history_reconstructible": true,
+   "constant_in_b6": true,
+   "duplicate_of": null
+  }
+ ]
+}
