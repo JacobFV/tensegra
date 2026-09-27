@@ -60,7 +60,7 @@
   },
   {
    "id": "P3-SCREEN",
-   "status": "registered (arms, training, metric and rule fixed before any P3 evaluation output)",
+   "status": "complete: SCREEN RULE NOT MET (stratum condition fails) -> no confirmation of a repair",
    "branch": "B (brief \u00a715): does explicit interaction structure in the consumer beat a strong ordinary consumer with equal information?",
    "arms": "consumers identical except fusion: lin (existing P2 CONS, reused), CONS-mlp (lin + 2-layer MLP branch on [z;phi], width 51, matched to bil's parameters: 160,082 vs 160,194 active), CONS-bil (lin + factor-group gating + rank-8 bilinear products among factor groups G1-G4), CONS-gate (lin + factor-specific gates, 148,746 active); all copy the seed's common init and start as exactly the lin function; contracts exact and mix; bank mode 4000 updates; seeds 40-44",
    "evaluation": "b6c pool + 320 SCE octets (validation, inspected) + UCE octets descriptive; inputs exact and predicted (separate full-data predictor); phi own/exact/zero/mean; 20000 draws seed 7",
@@ -75,7 +75,21 @@
     "confirm_rule": "b6d, fresh seeds 50-54 incl. fresh predictors: J_sub gain (bil - mlp, mix, predicted inputs) two-level 95% CI lower bound > 0 and >= 4/5 seeds positive; BA_nm mean >= -.02; guards as in screen; stratum all_x_q2notH J_sub gain mean > 0",
     "secondary": "exact-input evaluations, exact contract, gate and lin arms, UCE descriptive, phi own/exact/zero/mean"
    },
-   "confirmation": "if the screen meets the (to-be-fixed) rule, confirm on b6d (labels built) with fresh seeds 50-54 incl. fresh predictors (86 jobs, ~18k core-s)"
+   "confirmation": "if the screen meets the (to-be-fixed) rule, confirm on b6d (labels built) with fresh seeds 50-54 incl. fresh predictors (86 jobs, ~18k core-s)",
+   "result": "b6c validation, seeds 40-44, frontier v2 (e07-p3-frontier2/v1; 20000 draws seed 7, MC halves agree). Primary J_sub CONS3-bil-mix-pred - CONS3-mlp-mix-pred: +.046 [+.011,+.082], 5/5 seeds; BA_nm +.032 [-.022,+.085]; FA_sub -.042; near-miss +.031; pool .830 vs .812 (+.018): all pass. Stratum condition FAILS: all_x_q2notH J_sub +.011 [-.026,+.048] < .02. Per decision type: q2_after_notH +.119 [+.007,+.220], q2_after_H +.079, first +.050, after_probe_failed -.117 [-.214,-.037] (0/5 positive), after_b1_timeout -.082. Reading: the explicit-interaction consumer improves discrimination where belief-type factors are updated (query-2 contexts) and worsens it after failed probes/timeouts; no context-general composition gain over a matched ordinary MLP consumer. Also: exact vs predicted inputs for mlp +.039 J_sub (acquisition cost), all within q2_after_notH (all_x_q2notH -.010)."
+  },
+  {
+   "id": "P3-REPLICATE",
+   "status": "registered (DESCRIPTIVE fresh-configuration check; NOT a repair confirmation; registered after the P3 screen result, before any b6d evaluation)",
+   "population": "b6d (400 configs at 6.43e9 + 320 SCE octets at 6.66e9; labels built 19:xxZ, never evaluated)",
+   "models": "the P3 screen models (seeds 40-44) as trained; no retraining; same eval settings as P3-eval minus UCE",
+   "expectations_stated_before_data": {
+    "pooled": "J_sub bil-mix-pred minus mlp-mix-pred > 0",
+    "q2_after_notH": "> 0",
+    "after_probe_failed": "< 0",
+    "all_x_q2notH": "approximately 0 (|.| < .03)"
+   },
+   "statistics": "frontier v2 two-level, 20000 draws, seed 20260928; report means, CIs, seed signs; no pass/fail consequences for any repair claim"
   }
  ]
 }

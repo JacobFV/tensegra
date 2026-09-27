@@ -142,3 +142,10 @@
     - **Guards:** false changes ≤ +.02, near-miss ≥ −.05, pool ≥ −.02.
     - **Also required:** the gain must hold without the q2_after_notH stratum.
   - Frontier tool extended with --refs, an all_x_q2notH stratum, and seeds 50–54 parsing.
+- 2026-09-27T21:28Z: **P3-SCREEN verdict: the rule is not met, so no confirmation.**
+  - Primary J_sub bil − mlp +.046 [+.011, +.082] (5/5 seeds); the co-primary and all guards pass; pool .830 vs .812.
+  - **The registered stratum condition fails:** without q2_after_notH the gain is +.011 [−.026, +.048].
+  - Per type: +.119 in q2_after_notH, +.079 in q2_after_H; −.117 after_probe_failed (0/5 seeds positive), −.082 after_b1_timeout.
+  - The interaction consumer shifts discrimination toward the belief-update contexts. It is not a general composition gain.
+  - **Incident:** e07-p3-frontier failed at startup (0.1 core-s) because the launch's --mkdir pre-created the output dir the tool creates itself. It was rerun as e07-p3-frontier2 with a subdir, exit 0, 566 core-s.
+  - **P3-REPLICATE registered:** a descriptive fresh-configuration check of this per-context pattern. The screen models are evaluated on b6d; expectations are stated before data. ~3.5k core-s.
