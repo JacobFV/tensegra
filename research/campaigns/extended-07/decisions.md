@@ -100,3 +100,11 @@
   - LRN's predictions give SUP's consumer nothing beyond zero/mean.
   - decisions.md corrections applied; p1-diagnosis.md corrections delegated.
   - **P2-SCREEN addendum_2:** every factor-reading model is evaluated with φ ∈ {own, exact, zero, mean}. This is registered before any P2 eval output; evaluation-condition support is being added before the screen's eval stage.
+- 2026-09-27T17:52Z: **Runner incident: e07-p2-s0r0-bank-s43 was never launched.**
+  - Cause: its launch was refused by the concurrency guard (rc 4) while two local runners competed, and the old runner did not retry. The refusal is an unlaunched attempt, so no receipt and no charge.
+  - The job was launched by hand, and both old runners were stopped (local processes only).
+  - The replacement runner.sh retries refused launches and skips jobs already known.
+  - **2×2 (20) and SEP (5) trainings all exited 0.** The 2×2 used snapshot c7d22aff; SEP used 07b7132a (P2 infra update). The code paths are identical for the 2×2 arms.
+  - **b6d confirmation split merged** (d61ebb59). The merge conflicts in seed-ranges.json and campaign07_p2.py were resolved by union and keeping both flags; no markers, verified.
+  - The seed-range test passes after the registrations (it failed only against the pre-registration table).
+  - **Confirmation labels launched** (snapshot 27b1ea24): e07-p2c-labels-eval (400 configs) and -cf (320 octets). No model is evaluated on them until P2-SCREEN selection is recorded.
