@@ -69,6 +69,8 @@ Extended-07 Phase 2 checkpoints (additive; historical runs load through the iden
       NAME=RUNDIR::exact              the exact factors (kind CONS-exact; 'pred' = the exact inputs, as SUP)
       NAME=RUNDIR::pred=PREDRUNDIR    the predictions of a factor predictor run alongside on the same public history
                                       (kind CONS-pred; state = [consumer h | predictor h]; interventions allowed)
+      P3 consumer fusion variants (train --cons-arch mlp|gate|bil) take the same specs and kinds; their fusion is
+      the trainer's ConsHead (fuse_out), under every --phis condition and intervention; header 'cons_arch'
 
 Per-decision record (kind "decision"): protocol, model, history source, cfg id, world seed, public-history id (hash
 of the visible record prefix), episode history id, decision index, query index, step in query, decision context,
@@ -333,6 +335,7 @@ class PredictedConsumer(torch.nn.Module):
         self.base_dim = consumer.base_dim
         self.state_size = consumer.gru.hidden_size + predictor.gru.hidden_size
         self.fuse, self.pi, self.v, self.q = consumer.fuse, consumer.pi, consumer.v, consumer.q
+        self.xfuse = getattr(consumer, "xfuse", None)  # extended-07 P3 consumer fusion variant (None: plain CONS)
         self._diag_kind = "CONS-pred"
 
     def diag_forward(self, x, h):
@@ -427,6 +430,9 @@ def forward(model, x, h):
 
 
 def fuse_out(model, z, phi):
+    xf = getattr(model, "xfuse", None)  # extended-07 P3 consumer fusion variants (ConsHead); absent: historical op
+    if xf is not None:
+        return xf(model.fuse, z, phi)
     return torch.tanh(model.fuse(torch.cat([z, phi], 1)))
 
 
@@ -1083,6 +1089,8 @@ def cmd_run(a):
                              **({"predictor": models[n][1]["predictor"]} if "predictor" in models[n][1] else {}),
                              **({"consumer_contract": models[n][1]["consumer_contract"]}
                                 if "consumer_contract" in models[n][1] else {}),
+                             **({"cons_arch": models[n][1]["fuse"]["cons"]["arch"]}
+                                if models[n][1].get("fuse", {}).get("cons") else {}),
                              "support_ref": sup_paths.get(n)} for n in models},
               "hist_support_thresholds": {"low": HIST_P_LOW, "unsupported": HIST_P_UNSUPPORTED}}
     if population is not None:  # key absent for every b6 / b6c run (headers unchanged)

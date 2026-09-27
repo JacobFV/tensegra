@@ -27,6 +27,11 @@ Subcommands
   jobs   SHA [--smoke]               print the validated launch commands (campaign07_remote.py launch-cmd)
   jobs   SHA --confirm [--run-tag T] P2-CONFIRM: the b6d label jobs (e07-p2c-labels-eval / -cf) and the b6d diag
                                      evaluation of the confirmation lineages (seeds 50-54; e07-p2c-eval-s<seed>)
+  jobs   SHA --stages P3-cons P3-eval P3-score [--confirm-seeds]
+                                     P3 consumer comparison (plain CONS vs mlp / bil / gate fusion variants; screen
+                                     seeds 40-44 on b6c + SCE + UCE octets, or confirmation seeds 50-54 with P3-pred /
+                                     P3-oof and evaluation on b6d)
+  cons-cost                          parameter / FLOP / training-work table of the P3 consumers
 """
 from __future__ import annotations
 
@@ -566,7 +571,190 @@ def b6d_jobs(sha, seeds=CONFIRM_SEEDS, run_tag="e07-p2", eval_tag="e07-p2c", onp
     return jobs
 
 
+# ------------------------------------------------------------------------------------------------ P3 consumer comparison
+# brief 15 B / 16: does an explicit interaction consumer (bil: group-pair low-rank bilinear terms + factor gates on the
+# trunk) beat a STRONG ORDINARY consumer (mlp: residual 2-layer MLP, parameter-matched) with equal information?  Every
+# variant is the SUP-architecture consumer (same recurrent public-context encoder, common tensors copied explicitly from
+# the plain CONS of the seed, raw residual path = the historical fusion W_f [z; phi]); only the fusion differs.
+# 'lin' = the plain CONS (screen seeds: the P2-SCREEN consumers e07-p2-cons-<c>-s<seed>, identical code path).
+
+P3_ARCHS = ("mlp", "bil", "gate")
+P3_CONTRACTS = ("exact", "mix")
+P3_INPUTS = ("exact", "pred")
+# seed-paired contrasts (every contract x input x phi): variant - plain, bil - mlp (the brief's question), bil - gate
+P3_PAIRS = (("bil", "mlp"), ("bil", "lin"), ("mlp", "lin"), ("gate", "lin"), ("bil", "gate"))
+P3_TAG = "e07-p3"
+P3_2X2_STAGES = ("P3-2x2-bank", "P3-2x2-onpolicy")  # the P2 matrix's S x R stages (not this comparison)
+P3_CONFIRM_EVAL_TAG = "e07-p3c"
+P3_CONFIRM_BOOT_SEED = 20260928  # as P2-CONFIRM
+
+
+def p3_name(arch, c, inp, s):
+    return f"CONS3-{arch}-{c}-{inp}-s{s}"
+
+
+def p3_jobs(sha, confirm=False, bank_updates=4000, k=5, max_concurrent=6):
+    """P3 launch commands.  Screen (seeds 40-44): P3-cons (mlp / bil / gate x exact / mix; the plain CONS and the
+    out-of-fold file / full predictor are the P2-SCREEN runs), P3-eval (b6c_hold_SCE + SCE + UCE octets; every consumer
+    as ::exact and ::pred=<full predictor>; phi in {own, exact, zero, mean}; one job per seed x contract) and P3-score
+    (20000 draws, seed 7).  Confirm (--confirm-seeds 50-54): P3-pred + P3-oof (the P2 recipe; these lineages do not
+    exist yet), P3-cons (lin + the three variants), P3-eval on the b6d pool + b6d SCE octets (b6d is never mixed with
+    other populations: no UCE) and P3-score (bootstrap seed 20260928).  Returns [(stage, name, argv)]."""
+    seeds = CONFIRM_SEEDS if confirm else P2_SEEDS
+    bank = f"{R7}/e07-p2-bank/bank.pkl"
+    common = ["--labels", TB, "--train-split", "b6_B0", "--train-n", "384", "--rung", "L1", "--batch", "64"]
+    le = ["--log-every", "100"]
+    jobs = []
+
+    def add(stage, name, caps, needs, mkdir, cmd):
+        jobs.append((stage, name, _launch_argv(sha, name, caps, needs, mkdir, cmd, max_concurrent)))
+
+    def pred_run(s):
+        return f"{R7}/{P3_TAG if confirm else 'e07-p2'}-pred-ffull-s{s}/run"
+
+    def oof_file(s):
+        return f"{R7}/{P3_TAG if confirm else 'e07-p2'}-oof-s{s}/oof.pt"
+
+    def cons_run(arch, c, s):
+        if arch == "lin" and not confirm:
+            return f"{R7}/e07-p2-cons-{c}-s{s}/run"
+        return f"{R7}/{P3_TAG}-cons-{arch}-{c}-s{s}/run"
+
+    if confirm:  # the confirmation lineages' predictors and out-of-fold file (P2 recipe, P1-predictor / P1-oof)
+        for s in seeds:
+            for f in list(range(k)) + ["full"]:
+                o = f"{R7}/{P3_TAG}-pred-f{f}-s{s}"
+                fold = [] if f == "full" else ["--bank-folds", str(k), "--bank-exclude-fold", str(f)]
+                add("P3-pred", f"{P3_TAG}-pred-f{f}-s{s}", (7200, 7200), [bank, f"{TB}/b6_B0.pkl"], [o],
+                    [TRAIN, "train", *common, "--seed", str(s), "--arch", "fuse", "--shape", "1", "--read", "0",
+                     "--bank", bank, "--bank-updates", str(bank_updates), "--predictor-only", *fold, "--updates", "0",
+                     *le, "--out", f"{o}/run"])
+            o = f"{R7}/{P3_TAG}-oof-s{s}"
+            add("P3-oof", f"{P3_TAG}-oof-s{s}", (1800, 1800),
+                [bank] + [f"{R7}/{P3_TAG}-pred-f{f}-s{s}/run/model.pt" for f in list(range(k)) + ["full"]], [o],
+                [P2, "oof", "--bank", bank, *sum((["--fold-run", f"{f}={R7}/{P3_TAG}-pred-f{f}-s{s}/run"]
+                                                  for f in range(k)), []),
+                 "--full-run", pred_run(s), "--out", oof_file(s)])
+    archs = (("lin",) if confirm else ()) + P3_ARCHS
+    for s in seeds:
+        for arch in archs:
+            for c in P3_CONTRACTS:
+                run = cons_run(arch, c, s)
+                extra = [] if c == "exact" else ["--oof", oof_file(s)]
+                variant = [] if arch == "lin" else ["--cons-arch", arch]
+                add("P3-cons", f"{P3_TAG}-cons-{arch}-{c}-s{s}", (7200, 7200),
+                    [bank, f"{TB}/b6_B0.pkl"] + ([oof_file(s)] if c != "exact" else []), [str(Path(run).parent)],
+                    [TRAIN, "train", *common, "--seed", str(s), "--inputs", "factors6", "--arch", "fuse", "--bank",
+                     bank, "--bank-updates", str(bank_updates), "--phi-contract", c, *extra, *variant, "--updates",
+                     "0", *le, "--out", run])
+    tail = ["--protocols", "B", "A-pistar", "--ivs", "none", "exact", "--phis", *PHIS, "--phi-mean-bank", bank,
+            "--no-latent"]
+    if confirm:
+        pops = ["--labels", B6D, "--pool", "b6d_hold_SCE", "--cf", f"{B6D}/cf_SCE.json"]
+        popneeds = [f"{B6D}/b6d_hold_SCE.shards.json", f"{B6D}/cf_SCE.json", f"{B6D}/labels_meta.b6d.eval.json",
+                    f"{B6D}/labels_meta.b6d.cf.json", bank]
+        etag = P3_CONFIRM_EVAL_TAG
+    else:
+        pops = ["--labels", TBC, "--pool", "b6c_hold_SCE", "--cf", f"{TBC}/cf_SCE.json", "--cf", UCE]
+        popneeds = [f"{TBC}/b6c_hold_SCE.shards.json", f"{TBC}/cf_SCE.json", UCE, bank]
+        etag = P3_TAG
+    score_dirs, score_needs = [], []
+    for s in seeds:
+        for c in P3_CONTRACTS:  # one job per seed x contract: 4 consumers x (exact, pred) = 8 entries
+            m, needs = [], []
+            for arch in ("lin",) + P3_ARCHS:
+                run = cons_run(arch, c, s)
+                m += ["--model", f"{p3_name(arch, c, 'exact', s)}={run}::exact",
+                      "--model", f"{p3_name(arch, c, 'pred', s)}={run}::pred={pred_run(s)}"]
+                needs.append(f"{run}/model.pt")
+            o = f"{R7}/{etag}-eval-{c}-s{s}"
+            add("P3-eval", f"{etag}-eval-{c}-s{s}", (7200, 7200), needs + [f"{pred_run(s)}/model.pt"] + popneeds, [o],
+                [DIAG, "run", *pops, *m, *tail, "--tag", f"{etag}-{c}-s{s}", "--out", o])
+            score_dirs.append(o)
+            score_needs.append(f"{o}/{DIAG_VERSION}-summary-{etag}-{c}-s{s}.json")
+    con = []
+    for c in P3_CONTRACTS:
+        for inp in P3_INPUTS:
+            for x, y in P3_PAIRS:
+                for ph in PHIS:
+                    con += ["--contrast", f"CONS3-{x}-{c}-{inp}@{ph}", f"CONS3-{y}-{c}-{inp}@{ph}"]
+    o = f"{R7}/{etag}-score"
+    add("P3-score", f"{etag}-score", (7200, 7200), score_needs, [o],
+        [SCORE, "--dirs", *score_dirs, "--by-model-phi", "--n-boot", "20000", "--boot-seed",
+         str(P3_CONFIRM_BOOT_SEED if confirm else 7), *con, "--out", f"{o}/score.json", "--md", f"{o}/score.md"])
+    return jobs
+
+
+def decision_macs(model):
+    """Multiply-accumulates of one decision step on the consumer's policy path (inp, GRU cell, trunk, fusion (+ the
+    variant), pi); elementwise products of the variants (gate: H; bil: pairs x rank) are included, activations not."""
+    H = model.gru.hidden_size
+    lin = lambda m: m.in_features * m.out_features  # noqa: E731
+    macs = lin(model.inp) + 3 * (model.gru.input_size * H + H * H) + lin(model.trunk[0]) + lin(model.fuse) \
+        + lin(model.pi)
+    xf = getattr(model, "xfuse", None)
+    if xf is not None:
+        macs += sum(lin(m) for m in xf.modules() if isinstance(m, torch.nn.Linear))
+        macs += H if xf.arch in ("gate", "bil") else 0
+        macs += len(xf.pairs) * xf.U[0].out_features if xf.arch == "bil" else 0
+    return macs
+
+
+def cons_cost_table(hidden=T.HIDDEN, rank=8, mlp_width=None, bank_updates=4000, batch=64, dec_per_episode=None):
+    """Parameters and work of the plain CONS and the P3 variants (the models exactly as the trainer builds them)."""
+    dec = dec_per_episode or BANK_DECISIONS / BANK_EPISODES
+    rows = {}
+    with torch.random.fork_rng(devices=[]):
+        for arch in ("lin",) + P3_ARCHS:
+            torch.manual_seed(0)
+            cons = None if arch == "lin" else T.cons_spec(arch, hidden, rank, mlp_width)
+            m = T.ProbeNet(hidden, inputs="factors6", arch="fuse", public_extra=pw6.PUBLIC_EXTRA6, cons=cons)
+            pc = T.cons_param_counts(m)
+            macs = decision_macs(m)
+            rows[arch] = {**pc, "mlp_width": cons["mlp_width"] if cons else None, "rank": rank if arch == "bil" else None,
+                          "decision_macs": macs, "decision_flops": 2 * macs,
+                          "train_updates_x_batch": f"{bank_updates} x {batch}", "train_episodes": bank_updates * batch,
+                          "train_decisions": round(bank_updates * batch * dec),
+                          "train_flops": round(3 * 2 * macs * bank_updates * batch * dec)}
+        pred = make_init(0, hidden)  # the separately trained predictor that feeds ::pred (same for every consumer)
+        H = hidden
+        pmacs = pred.inp.in_features * H + 3 * 2 * H * H + H * H + sum(
+            mm.in_features * mm.out_features for mm in pred.aux if isinstance(mm, torch.nn.Linear))
+    for r in rows.values():
+        r["decision_flops_with_predictor"] = 2 * (r["decision_macs"] + pmacs)
+        r["active_vs_lin"] = r["active"] - rows["lin"]["active"]
+    return {"rows": rows, "predictor_decision_flops": 2 * pmacs, "decisions_per_episode": dec,
+            "note": "active = inp, gru, trunk, fuse, xfuse, pi (the decision path; the bank stage trains exactly these "
+                    "with the imitation loss); total adds the unused auxiliary heads v/q/stage/dep/switch/case. "
+                    "train_flops ~ 3 x forward over the bank decisions seen."}
+
+
+BANK_EPISODES, BANK_DECISIONS = 5_376, 57_315  # the P2 protocol bank e07-p2-bank (sha256 3914ecaa...)
+
+
+def cmd_cons_cost(a):
+    res = cons_cost_table(a.hidden, a.rank, a.mlp_width, a.bank_updates)
+    print(json.dumps(res, indent=1))
+    hdr = "| consumer | active params | total params | added | MLP width / rank | FLOPs / decision (+ predictor) | " \
+          "training (updates x batch; decisions; FLOPs) |"
+    lines = [hdr, "|---|---|---|---|---|---|---|"]
+    for arch, r in res["rows"].items():
+        lines.append(f"| {arch} | {r['active']:,} | {r['total']:,} | {r['variant']:,} | "
+                     f"{r['mlp_width'] or r['rank'] or '-'} | {r['decision_flops']:,} ({r['decision_flops_with_predictor']:,}) | "
+                     f"{r['train_updates_x_batch']}; {r['train_decisions']:,}; {r['train_flops']:.3g} |")
+    print("\n".join(lines))
+
+
 def cmd_jobs(a):
+    p3 = [x for x in a.stages or [] if x.startswith("P3-") and x not in P3_2X2_STAGES]
+    if a.confirm_seeds or p3:  # extended-07 P3 consumer comparison (screen 40-44, or --confirm-seeds 50-54)
+        jobs = p3_jobs(a.sha, confirm=a.confirm_seeds, bank_updates=a.bank_updates)
+        if a.stages:
+            jobs = [j for j in jobs if j[0] in set(a.stages)]
+        for stage, name, argv in jobs:
+            print(f"# [{stage}] {name}")
+            print("python research/tools/campaign07_remote.py launch-cmd " + shlex.join(argv))
+        return
     if a.confirm:
         for stage, name, argv in b6d_jobs(a.sha, run_tag=a.run_tag, onpolicy=bool(a.onpolicy)):
             print(f"# [{stage}] {name}")
@@ -611,8 +799,17 @@ def main(argv=None):
     s.add_argument("--confirm", action="store_true",
                    help="P2-CONFIRM: only the b6d label jobs and the b6d diag evaluation of seeds 50-54")
     s.add_argument("--run-tag", default="e07-p2", help="--confirm: tag the confirmation lineages were trained under")
+    s.add_argument("--confirm-seeds", action="store_true",
+                   help="P3 consumer comparison on the confirmation seeds 50-54 (P3-pred, P3-oof, P3-cons incl. the "
+                        "plain CONS, P3-eval on b6d, P3-score); without it the P3-* stages are the screen (40-44)")
+    s = sub.add_parser("cons-cost", help="P3 consumer parameter / work table")
+    s.add_argument("--hidden", type=int, default=T.HIDDEN)
+    s.add_argument("--rank", type=int, default=8)
+    s.add_argument("--mlp-width", type=int, default=None)
+    s.add_argument("--bank-updates", type=int, default=4000)
     a = p.parse_args(argv)
-    {"init": cmd_init, "bank": cmd_bank, "oof": cmd_oof, "seeds": cmd_seeds, "jobs": cmd_jobs}[a.cmd](a)
+    {"init": cmd_init, "bank": cmd_bank, "oof": cmd_oof, "seeds": cmd_seeds, "jobs": cmd_jobs,
+     "cons-cost": cmd_cons_cost}[a.cmd](a)
 
 
 if __name__ == "__main__":

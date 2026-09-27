@@ -257,3 +257,51 @@ The launched P2-SCREEN (c7d22aff) already has bank, init, predictors, oof, consu
 | optional SEP on-policy arm (4,000 updates) | +5 × ~470 = ~2,350, plus its evalX entry |
 
 **Seed-range note.** The smoke bank used worlds 12,950,000,000 + 1e6·j + 1000·idx + r with j < 3. That is **up to 12,952,024,000**, which is beyond the registered smoke-bank entry [12.950e9, 12.951e9). Please widen that entry to [12.95e9, 12.96e9) as originally proposed in §7. The dev test seed 97 (worlds [1.77e10, 1.78e10)) is also still unregistered.
+
+## 11. P3 consumer comparison (branch `campaign/e07-p3cons`: built, not registered, not launched)
+
+**Question (brief §15 B, §16):** does an explicit interaction consumer beat a strong ordinary consumer with equal information on interaction (flip) correctness, without near-miss harm?
+
+**Variants.** Selected with `train ... --phi-contract C --cons-arch {mlp,bil,gate}`. Without the flag the trainer builds the plain CONS, which is bit-identical to the old code (golden-tested).
+- All variants are the SUP-architecture consumer: the same recurrent public-context encoder, bank, contract, optimizer and budget.
+- Every variant keeps the historical 1-layer fusion `W_f [z; φ]` as the raw residual path and adds one term inside the tanh (`ConsHead` in the trainer).
+
+| consumer | fusion | active params | total | added | FLOPs / decision (with predictor) |
+|---|---|---|---|---|---|
+| lin (plain CONS) | `tanh(W_f [z; φ])` | 145,674 | 149,157 | 0 | 289,024 (575,488) |
+| mlp | `+ W_2 tanh(W_1 [z; φ])`, width 51 (matched to bil) | 160,082 | 163,565 | 14,408 | 317,482 (603,946) |
+| bil | gate + `W_o · concat_{g≤g'} (U φ_g) ⊙ (V φ_g')` (10 pairs of groups G1..G4, rank 8) | 160,194 | 163,677 | 14,520 | 317,648 (604,112) |
+| gate | `W_f [z ⊙ (1 + tanh(A φ)); φ]` | 148,746 | 152,229 | 3,072 | 295,168 (581,632) |
+
+- **Parameter counts.** Active = inp, gru, trunk, fuse (+ the variant) and pi: the decision path, which is exactly what the bank imitation loss trains. Total adds the unused heads.
+- **Training work** is identical for all four: 4,000 bank updates × 64 episodes ≈ 2.73M decisions (≈ 2.4–2.6e12 FLOPs).
+- **Common initialization.**
+  - The common tensors are copied explicitly from the plain CONS built for the same seed, so `p2.consumer.cons_common_sha256` equals the plain CONS run's `p2.init_sha256`.
+  - The added output layers (W_2, A, W_o) start at zero, so at initialization every variant computes exactly the plain CONS function (tested bitwise).
+  - As a result, the first bank batch and its loss are identical across variants.
+- `campaign07_p2.py cons-cost` prints the table.
+
+**Diag.** `fuse_out` dispatches to the variant. `::exact`, `::pred=` and `--phis own exact zero mean` work unchanged, and the header records `cons_arch`.
+
+**Jobs.**
+- **Screen** (seeds 40–44): `campaign07_p2.py jobs SHA --stages P3-cons P3-eval P3-score`. lin reuses the P2-SCREEN consumers, predictors and OOF.
+- **Confirmation** (seeds 50–54): `jobs SHA --confirm-seeds`. It runs:
+  - P3-pred and P3-oof;
+  - P3-cons, including lin;
+  - P3-eval on b6d_hold_SCE + the b6d SCE octets;
+  - P3-score with bootstrap seed 20260928.
+- **Eval** is one job per seed × contract, with 8 entries (4 consumers × {exact, pred}):
+  - protocols B / A-pistar, ivs none / exact, φ ∈ {own, exact, zero, mean};
+  - the screen also includes the UCE octets.
+- **Score** contrasts, for each contract × input × φ: bil − mlp, bil − lin, mlp − lin, gate − lin, bil − gate.
+
+**Tests.** `tests/test_campaign07_p3cons.py` has 10 tests. Regression (p2, diag, b6d, gradflow, factor-contract, p3cons): 96 passed, 1 skipped.
+
+**Smokes** (seed 47, P2 smoke bank; all exit 0):
+
+| smoke | CPU (core-s) | peak RSS | note |
+|---|---|---|---|
+| consumers (20 updates) | 5.7–6.3 each | ≤ 2.28 GB | per update vs lin: mlp and gate ≈ 1.0×, bil ≈ 1.45× |
+| b6c eval (8 entries, 24 configurations + 8 SCE + 8 UCE octets, 4 φ) | 17.6 | 1.0 GB | |
+| b6d eval (4 configurations + 2 octets) | 7.0 | — | not scored |
+| score | 5.7 | — | |

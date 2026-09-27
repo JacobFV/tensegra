@@ -563,7 +563,7 @@ class ProbeNet(nn.Module):
     """GRU over visible-history tokens + public prices.  All heads exist in every rung (matched capacity)."""
 
     def __init__(self, hidden=HIDDEN, own_value=False, inputs="public", arch="flat", public_extra=0,
-                 factor_mode=None, shape=None, read=None):
+                 factor_mode=None, shape=None, read=None, cons=None):
         super().__init__()
         self.inputs = inputs  # extended-05: supplied public state appended to the inputs ('public' = none)
         self.arch = arch  # extended-05: 'flat' (B1) | 'modular' (BX3); extended-06: 'fuse'
@@ -603,6 +603,11 @@ class ProbeNet(nn.Module):
                 # R0 constant fusion input: NOT part of the state_dict (non-persistent), so the initial parameters
                 # of all four arms hash identically; its value is recorded in train_meta['fuse']['phi_const']
                 self.register_buffer("phi_const", torch.zeros(nf), persistent=False)
+            if cons is not None:  # extended-07 P3 consumer fusion variant (created LAST: every CONS tensor keeps its
+                # construction order; the common tensors are also copied explicitly from a plain CONS, p2_init)
+                if self.factor_mode != "supplied":
+                    raise ValueError("consumer fusion variants are for the SUP-architecture consumer (factors6)")
+                self.xfuse = ConsHead(hidden=hidden, nf=nf, **cons)
 
     def step(self, x, h):
         if getattr(self, "factor_mode", None) == "sep":
@@ -640,6 +645,8 @@ class ProbeNet(nn.Module):
         (capacity-matched raw control).  The auxiliary prediction of the last step is kept in self.last_aux."""
         if self.factor_mode == "supplied":
             phi = x[:, self.base_dim:]
+            if getattr(self, "xfuse", None) is not None:  # extended-07 P3 consumer variant (absent: historical path)
+                return self.xfuse(self.fuse, z, phi)
         elif self.factor_mode == "learned":
             self.last_aux = self.aux(z)
             phi = self.last_aux.detach()
@@ -649,6 +656,80 @@ class ProbeNet(nn.Module):
         else:
             phi = torch.zeros(z.shape[0], pw6.N_FACTOR_FEATURES)
         return torch.tanh(self.fuse(torch.cat([z, phi], 1)))
+
+
+class ConsHead(nn.Module):
+    """extended-07 P3 consumer fusion variants.  The consumer's 1-layer fusion W_f [z; phi] (the historical CONS
+    fusion) is KEPT in every variant as the raw residual path; each variant adds one term inside the tanh:
+
+      mlp   u = W_f [z; phi] + W_2 tanh(W_1 [z; phi] + b_1)          ordinary stronger consumer (residual 2-layer MLP)
+      gate  u = W_f [z * (1 + tanh(A phi)); phi]                     factor-specific multiplicative gates on z
+      bil   u = W_f [z * (1 + tanh(A phi)); phi] + W_o b(phi)         gate + explicit group interactions:
+            b(phi) = concat over the 10 unordered factor-group pairs (g <= g') of G1..G4 (factor-contract.json) of
+                     (U_gg' phi_g + c) * (V_gg' phi_g' + d)  (rank r each: low-rank bilinear phi_g^T W phi_g')
+      heads read tanh(u).
+
+    The output layers of the added terms (W_2, A, W_o) are zero-initialized, so at initialization every variant computes
+    exactly the historical CONS function of its (copied) common tensors."""
+
+    def __init__(self, arch, hidden, nf, groups, rank=8, mlp_width=None):
+        super().__init__()
+        assert arch in CONS_ARCHS, arch
+        self.arch = arch
+        self.groups = {g: list(v) for g, v in sorted(groups.items())}
+        assert sorted(j for v in self.groups.values() for j in v) == list(range(nf)), "groups must partition phi"
+        zero = []
+        if arch == "mlp":
+            self.l1 = nn.Linear(hidden + nf, mlp_width)
+            self.l2 = nn.Linear(mlp_width, hidden)
+            zero.append(self.l2)
+        if arch in ("gate", "bil"):
+            self.gate = nn.Linear(nf, hidden)
+            zero.append(self.gate)
+        if arch == "bil":
+            names = list(self.groups)
+            self.pairs = [(g, h) for i, g in enumerate(names) for h in names[i:]]
+            self.U = nn.ModuleList(nn.Linear(len(self.groups[g]), rank) for g, _ in self.pairs)
+            self.V = nn.ModuleList(nn.Linear(len(self.groups[h]), rank) for _, h in self.pairs)
+            self.out = nn.Linear(len(self.pairs) * rank, hidden)
+            zero.append(self.out)
+            self._gidx = {g: torch.tensor(v) for g, v in self.groups.items()}
+        with torch.no_grad():
+            for lin in zero:
+                lin.weight.zero_()
+                lin.bias.zero_()
+
+    def forward(self, fuse, z, phi):
+        zin = z * (1.0 + torch.tanh(self.gate(phi))) if self.arch in ("gate", "bil") else z
+        u = fuse(torch.cat([zin, phi], 1))  # the raw residual path: the historical 1-layer fusion
+        if self.arch == "mlp":
+            u = u + self.l2(torch.tanh(self.l1(torch.cat([z, phi], 1))))
+        if self.arch == "bil":
+            sel = {g: phi.index_select(1, i) for g, i in self._gidx.items()}
+            feats = [U(sel[g]) * V(sel[h]) for (g, h), U, V in zip(self.pairs, self.U, self.V)]
+            u = u + self.out(torch.cat(feats, 1))
+        return torch.tanh(u)
+
+
+CONS_ARCHS = ("mlp", "gate", "bil")
+
+
+def cons_spec(arch, hidden=HIDDEN, rank=8, mlp_width=None, groups=None):
+    """ConsHead kwargs of a P3 variant; mlp_width None = matched to the bil variant's added parameter count."""
+    groups = groups or contract_groups()
+    if arch == "mlp" and mlp_width is None:
+        mlp_width = matched_cons_mlp_width(hidden, rank, groups)
+    return {"arch": arch, "groups": groups, "rank": rank, "mlp_width": mlp_width if arch == "mlp" else None}
+
+
+def matched_cons_mlp_width(hidden=HIDDEN, rank=8, groups=None):
+    """MLP width whose added parameters are closest to the bil variant's (ties: the smaller width; disclosed)."""
+    groups = groups or contract_groups()
+    nf = pw6.N_FACTOR_FEATURES
+    with torch.random.fork_rng(devices=[]):
+        target = n_params(ConsHead("bil", hidden, nf, groups, rank))
+        best = min((abs(n_params(ConsHead("mlp", hidden, nf, groups, rank, m)) - target), m) for m in range(4, 257))
+    return best[1]
 
 
 def matched_hidden(arch="modular", inputs="public", target=B1_PARAMS):
@@ -904,7 +985,8 @@ def cmd_train(a):
     torch.manual_seed(1000 + a.seed)  # same init across rungs for a given seed
     model = ProbeNet(a.hidden, own_value=a.own_value, inputs=getattr(a, "inputs", "public"), arch=arch,
                      public_extra=public_extra, factor_mode=getattr(a, "factor_mode", None),
-                     **({} if p2 is None else p2["sr_kwargs"]))
+                     **({} if p2 is None else p2["sr_kwargs"]),
+                     **({} if p2 is None or p2.get("cons") is None else {"cons": p2["cons"]}))
     if p2 is not None:
         p2_init(a, p2, model)  # --init-from copy, init sha256, frozen trunk, R0 constant
     # B1 parameters (everything except v_own): optimizer and gradient clipping see exactly these, so v_own can
@@ -1014,7 +1096,7 @@ def cmd_train(a):
 
 AUX_PREFIXES = ("aux.", "pinp.", "pgru.", "ptrunk.")  # group X: the predictor (sep: with its own encoder)
 P2_OPTS = ("shape", "read", "clip_mode", "action_rng", "init_from", "init_sha", "bank", "aux_group_weights",
-           "phi_contract", "frozen_trunk", "predictor_only", "bank_updates", "finetune")
+           "phi_contract", "frozen_trunk", "predictor_only", "bank_updates", "finetune", "cons_arch")
 CONTRACT_JSON = Path(__file__).resolve().parents[2] / "research" / "campaigns" / "extended-07" / "factor-contract.json"
 BANK_RNG_OFFSET = 7_500  # bank-episode sampling stream random.Random(7_500 + seed): common to every arm of a seed
 
@@ -1126,6 +1208,13 @@ def p2_setup(a):
             assert p2["oof"]["bank_sha256"] == p2["bank_sha256"], "oof file was made from a different bank"
             if a.updates > 0:
                 raise SystemExit("on-policy fine-tuning of oof / mix consumers is not defined (it would read exact)")
+    p2["cons"] = None
+    if getattr(a, "cons_arch", None):  # extended-07 P3 consumer fusion variant
+        if not a.phi_contract:
+            raise SystemExit("--cons-arch: a consumer fusion variant (needs --phi-contract)")
+        if a.frozen_trunk or a.init_from:
+            raise SystemExit("--cons-arch: the common tensors are copied from the plain CONS construction of this seed")
+        p2["cons"] = cons_spec(a.cons_arch, a.hidden, a.cons_rank, a.cons_mlp_width)
     return p2
 
 
@@ -1153,6 +1242,19 @@ def p2_init(a, p2, model):
         if set(ref) != set(own) - extra or any(tuple(ref[k].shape) != tuple(own[k].shape) for k in ref):
             raise SystemExit(f"--init-from {a.init_from}: keys/shapes differ from this arm's model")
         model.load_state_dict({**own, **ref})
+    if getattr(model, "xfuse", None) is not None:  # extended-07 P3 variant: copy the common tensors EXPLICITLY from
+        # the plain CONS of this seed (constructed exactly as the trainer constructs it; the caller's RNG untouched)
+        with torch.random.fork_rng(devices=[]):
+            torch.manual_seed(1000 + a.seed)
+            ref = ProbeNet(a.hidden, own_value=a.own_value, inputs=model.inputs, arch=model.arch,
+                           public_extra=model.base_dim - IN_DIM, factor_mode=getattr(a, "factor_mode", None))
+        ref_sd, own = ref.state_dict(), model.state_dict()
+        extra = {k for k in own if k.startswith("xfuse.")}
+        if set(ref_sd) != set(own) - extra or any(tuple(ref_sd[k].shape) != tuple(own[k].shape) for k in ref_sd):
+            raise SystemExit("--cons-arch: the common tensors differ from the plain consumer's")
+        model.load_state_dict({**own, **ref_sd})
+        p2["cons_common_sha256"] = state_sha(ref_sd)  # == the plain CONS run's p2.init_sha256 (same seed)
+        p2["cons_xfuse_sha256"] = state_sha({k: v for k, v in model.state_dict().items() if k in extra})
     p2["init_sha256"] = state_sha(model.state_dict())
     if a.init_sha and a.init_sha != p2["init_sha256"]:
         raise SystemExit(f"--init-sha mismatch: {p2['init_sha256']} != {a.init_sha}")
@@ -1311,6 +1413,11 @@ def p2_meta(a, p2, model, meta, t_onpolicy):
                             "noise_seed": a.noise_seed if p2["phi_contract"] == "mix" else None,
                             "frozen_trunk": a.frozen_trunk, "frozen_trunk_sha256": p2.get("frozen_trunk_sha256"),
                             "arch": "SUP architecture (factors enter the fusion layer only)"}
+        if p2.get("cons") is not None:  # extended-07 P3 variant (keys absent for the plain CONS)
+            info["consumer"].update(cons_arch=p2["cons"]["arch"], cons_common_sha256=p2["cons_common_sha256"],
+                                    cons_xfuse_sha256=p2["cons_xfuse_sha256"], cons_params=cons_param_counts(model))
+            meta["fuse"]["cons"] = p2["cons"]
+            meta["fuse"]["form"] = ConsHead.__doc__.split("\n\n")[1].strip()
     elif a.frozen_trunk:
         info["frozen_trunk"] = a.frozen_trunk
     meta["p2"] = info
@@ -1328,12 +1435,27 @@ def build_model_from_meta(meta):
     shape/read and the R0 constant restored from train_meta)."""
     fz = meta.get("fuse", {})
     kw = {"shape": fz["shape"], "read": fz["read"]} if fz.get("factor_mode") == "sr" else {}
+    if fz.get("cons") is not None:  # extended-07 P3 consumer fusion variant
+        kw["cons"] = fz["cons"]
     model = ProbeNet(meta["hidden"], own_value="own_value" in meta, inputs=meta.get("inputs", "public"),
                      arch=meta.get("arch", "flat"), public_extra=meta.get("public_extra", 0),
                      factor_mode=fz.get("factor_mode"), **kw)
-    if kw:
+    if "shape" in kw:
         model.phi_const.copy_(torch.tensor(fz["phi_const"]))
     return model
+
+
+ACTIVE_PREFIXES = ("inp.", "gru.", "trunk.", "fuse.", "xfuse.", "pi.")  # a consumer's decision path
+
+
+def cons_param_counts(model):
+    """Consumer parameter counts: total (every tensor, including the unused auxiliary heads v/q/stage/dep/switch/case),
+    active (the decision path inp -> gru -> trunk -> fusion (+ variant) -> pi; the bank stage trains exactly these
+    with the imitation loss) and the variant's added parameters."""
+    ps = dict(model.named_parameters())
+    return {"total": sum(p.numel() for p in ps.values()),
+            "active": sum(p.numel() for n, p in ps.items() if n.startswith(ACTIVE_PREFIXES)),
+            "variant": sum(p.numel() for n, p in ps.items() if n.startswith("xfuse."))}
 
 
 def own_returns(ep_steps, R=100.0):
@@ -2067,6 +2189,11 @@ def main(argv=None):
     s.add_argument("--noise-seed", type=int, default=0, help="extended-07: mix-contract noise seed")
     s.add_argument("--frozen-trunk", default=None,
                    help="extended-07 consumer variant: load inp/gru/trunk from RUN and freeze them")
+    s.add_argument("--cons-arch", choices=CONS_ARCHS, default=None,
+                   help="extended-07 P3 consumer fusion variant (default: the historical 1-layer fusion)")
+    s.add_argument("--cons-rank", type=int, default=8, help="extended-07 P3 bil: rank per factor-group pair")
+    s.add_argument("--cons-mlp-width", type=int, default=None,
+                   help="extended-07 P3 mlp: hidden width (default: matched to the bil variant's added parameters)")
     s = sub.add_parser("eval")
     s.add_argument("--labels", required=True)
     s.add_argument("--run", required=True)
