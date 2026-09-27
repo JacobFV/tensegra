@@ -177,7 +177,51 @@ The drivers are drawn independently. A Latin hypercube was not used, because epi
 
 ## 5. Development results (pw-v3)
 
-(filled below)
+Builder development seeds were 300,004,000–300,004,399: 400 episodes, 1,801 instances. These are development numbers, not the registered gate. Full output: [portworld-dev/hr_v3/headroom.md](portworld-dev/hr_v3/headroom.md) and `.json`. Oracle certification was .999 (1 instance scored against the UB). Oracle work: p50 20k, p99 3.8M, max = cap.
+
+| policy (out of fold, charges included) | U | 95% CI (episode-clustered) |
+|---|---|---|
+| hidden-state oracle (per-instance best arm; non-deployable) | .9791 | .9748–.9830 |
+| **BPE sequential** (`learned_sequential`) | **.9517** | .9445–.9586 |
+| BPE one-shot (`learned_oneshot`, structured GBT) | .9488 | .9383–.9572 |
+| tree_d2 (best individual simple family out of fold) | .9415 | .9303–.9513 |
+| strong_baseline (design v2 rev. 8) | .9393 | .9318–.9465 |
+| logistic_tuned | .9390 | .9298–.9477 |
+| tree_d3 | .9383 | .9269–.9493 |
+| direct multi-output GBT on menu utilities | .9368 | .9236–.9476 |
+| threshold_any | .9325 | .9208–.9431 |
+| **best simple (inner-selected)** | **.9313** | .9185–.9436 |
+| hand | .9309 | .9166–.9434 |
+| cascade_tuned | .9204 | .9103–.9299 |
+| **best single method** | **.9176** | .9072–.9271 |
+
+**Gates on the development population:**
+
+| estimate | GA-1: − best simple (inner-selected) | GA-2: − best single |
+|---|---|---|
+| sequential | **+.0204 [.0114, .0310] (pass, marginal)** | +.0341 [.0263, .0428] (pass) |
+| one-shot | +.0175 [.0058, .0292] (fail) | +.0312 [.0199, .0413] (pass) |
+
+**Caveats:**
+- **Selection noise inflates GA-1.** Inner selection picks a different simple family in different folds: threshold, strong ×2, tree_d3, tree_d2. The fold-0 threshold pick scores poorly out of fold. Against the strongest *individual* simple family out of fold (a comparison that favours the simple side), the sequential margin is only **+.010 (tree_d2) to +.012 (strong_baseline)**. Root may wish to report this conservative comparison next to GA-1.
+- **Spreads.** Best simple − best single = +.0137 [.0022, .0241]. Oracle − best simple = .048 [.038, .060].
+- **Hindsight-best share by method:**
+
+  | RV | GR | G | BM | PD | RU | RUPD |
+  |---|---|---|---|---|---|---|
+  | .47 | .15 | .12 | .12 | .07 | .05 | .01 |
+
+  RUPD is < 5%. It is kept in the menu because it is the mandatory warm-start baseline's search; flagged for root.
+- **Share by mode:** cons .49, opt .37, insp .14.
+- **Drivers.** The learned estimates gain most:
+  - at high hidden fraction (.925 vs best simple .885);
+  - at the loosest local tightness (.937 vs .894);
+  - at the highest observation price (.915–.918 vs .880).
+
+  These are the principled sources: explicit-posterior risk and the value of inspection, plus reuse staleness.
+- The mean public-feature charge is 465 work units per instance.
+
+**CPU.** Evaluation costs .08–.13 core-s per instance (1 core per chunk). The headroom analysis at N = 1,801 cost 850 core-s (4 processes, 307 s wall).
 
 ## 6. Supplied vs learned
 
@@ -189,4 +233,23 @@ The drivers are drawn independently. A Latin hypercube was not used, because epi
 
 ## 7. Registered GA run (root launches)
 
-(filled below)
+- **Seeds:** dev_gate sub-range (305,000,000+; fresh and never touched by the builder).
+- **Size:** 640 episodes ≈ 2,880 instances, in 4 evaluate chunks (1 core each) plus one analysis job (4 processes).
+- **Frozen before the run:** generator `pw-v3`, menu, families, grids and estimators, as in this document and in the code at the launch SHA.
+- **Commands:** `campaign06_portfolio.py plan --episodes 640 --chunks 4 --lo 305000000 --sha <SHA> --wall-cap 1800 --cpu-cap 1200` prints them. They are listed in the builder report.
+- **Smoke first** (1 job; builder range 304,990,000+, not a gate seed): evaluate 40 episodes, then run headroom on them with `--boot 200`, for ≈ 60 core-s.
+
+**Cost estimate** (from the development run):
+
+| step | core-s | wall |
+|---|---|---|
+| evaluation (.105 core-s × 2,880) | ≈ 300 | ≈ 80 s per chunk |
+| analysis (850 × (2880/1801)^1.25) | ≈ 1,500 | ≈ 9–10 min on 4 processes |
+| smoke | ≈ 60 | – |
+| **total** | **≈ 1,900 (≈ .53 core-h)** | – |
+
+- **Caps:** chunks 1,200 core-s / 1,800 s wall; analysis 6,000 core-s / 3,600 s wall.
+- **Decision rule** (registry A-HS):
+  - GA-1 and GA-2 are read from `headroom.json["gates"]` for `learned_oneshot` (A2) and `learned_sequential` (A3) separately.
+  - A pass requires mean ≥ .02 with 95% lower bound > .005.
+  - The Phase-2 margin is ≤ half the measured GA-1 headroom (`phase2_margin_max`).
