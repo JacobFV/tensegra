@@ -83,3 +83,9 @@
   - B2 − B0 also changes the single-type mix (S 106 vs 64; C and E 43 vs 64).
   - Note for B-FACT-C: on the development split, LRN − RAWF near-miss is −.022, just outside Q3's −.02 margin. Q3 is registered and unchanged.
   - Commit e8537d2d is misnamed: it holds only ledger budget/receipt updates. The corrections are in the next commit.
+- 2026-09-27T11:59Z: **B-FACT-C (adaptive) SUPPORTED by its registered rule.** Setup: fresh configurations and octets, seeds 35–39, two-level CI.
+  - **LRN − RAWF:** gap −2.65 [−5.87, −0.03] (5/5 pairs); later-decision accuracy +.018 [+.002, +.034] (4/5); near-miss +.105; false-change −.032.
+  - **Caveat, reported prominently:** flip-set accuracy is lower (−.048, 5/5). The learned derived-quantity heads improve value-sensitive later decisions and reduce spurious changes, but do not help the interaction-dependent flips.
+  - **SUP (exact quantities)** raises flip accuracy (+.109), but near-miss falls (−.108), so it is not supported.
+  - The 20 evals and 2 scoring jobs all exited 0. Artifacts are staged in research/results/campaign-06/b-factc; sha256 verified.
+  - Independent audit commissioned. Next: final report.
