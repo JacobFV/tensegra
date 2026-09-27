@@ -16,3 +16,4 @@
   - an exact oracle via hand B&B with trace-based evaluation;
   - checkpoints and a concrete Track C trigger.
   - **Disclosures:** the reviewer ran ~7.0k core-s of **unmetered local** pure-Python screening and ~2 core-s of unmetered remote import checks, and consumed dev seeds 2.3000e9+i and 2.3005e9+i (recorded as used). Both builders were notified of v2.
+- 2026-09-27T06:22Z: Prospective registry (A-HS, A-SEL, B-SCREEN, B-ARMS, B-FACT, C-TRIGGER) and a preliminary job plan (~19.5 core-h estimated of the 38.4 usable) written.

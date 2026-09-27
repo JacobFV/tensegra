@@ -1,0 +1,80 @@
+{
+ "campaign": "extended-06",
+ "entries": [
+  {
+   "id": "A-HS",
+   "status": "registered",
+   "track": "A",
+   "hypothesis": "portworld has computational-strategy headroom: a cross-fitted public-information portfolio beats the best simple rule and best single method",
+   "gates": {
+    "GA-1": "U_hat - best simple rule >= .02 absolute, 95% LB > .005 (one-shot and sequential separately)",
+    "GA-2": "U_hat - best single method >= .02, 95% LB > .005"
+   },
+   "baselines": "single methods (trace-read budgets), cascades, cheap/expensive-first, thresholds, depth<=3 trees, tuned logistic, strong hand portfolio incl. preprocessing, certified-gap stop, node-count switch, reuse verify/repair, inspect rule; hidden-state oracle ceiling only",
+   "selection": "best simple rule chosen on inner folds; episode-clustered cross-fitting",
+   "worlds": "fresh dev population in the 300M-340M range (sub-range assigned by builder)",
+   "next": {
+    "pass": "A-SEL (learned selectors A2/A3, >=3 lineages, fresh instances; promotion margin <= half measured headroom)",
+    "fail": "one principled generator revision then close Track A"
+   }
+  },
+  {
+   "id": "A-SEL",
+   "status": "registered (gated on A-HS)",
+   "track": "A",
+   "arms": [
+    "A0 best single",
+    "A1 best tuned simple portfolio",
+    "A2 learned contextual selector",
+    "A3 learned sequential option policy",
+    "A4 privileged ceiling"
+   ],
+   "primary": "U(A2 or A3) >= U(A1) + margin (<= half of GA-1 headroom; fixed before evaluation) at comparable or lower total compute incl. selector charges, 3/3 lineages, fresh instances; also >= max single method",
+   "switch_metrics": "unnecessary/justified switches, latency, wasted work, case types (a)-(d) with belief-conditioned values"
+  },
+  {
+   "id": "B-SCREEN",
+   "status": "registered",
+   "track": "B",
+   "rule": "primary challenge family = untouched triple (probeworld-v3 ranges) with largest minimum per-factor decision relevance subject to global-shift closable fraction <= .5; second passing triple = secondary holdout; historical U+E/S+C/U+C challenge only",
+   "expected": "S+C+E primary (reviewer local screen), U+C+E secondary \u2014 to be confirmed by the official screen before any model run"
+  },
+  {
+   "id": "B-ARMS",
+   "status": "registered",
+   "track": "B",
+   "arms": {
+    "B0": "N configs base combinations",
+    "B1": "2N base",
+    "B2": "N broader variety, built by replacement matching B0 per-factor frequency, per-combination share, optimal-first-action mix",
+    "B3": "2N broader",
+    "dose": "0-3 constituent pairs of the held triple in training"
+   },
+   "primary": "B2 vs B0 at matched volume on the primary held-out triple: octet-conditional accuracy and gap regret (5 seed pairs; >=200 eligible configs; configuration-clustered CIs); must not be explained by global-shift (closable fraction test)",
+   "threshold": "to be fixed in the protocol addendum after power from dev numbers, before any held-out evaluation"
+  },
+  {
+   "id": "B-FACT",
+   "status": "registered",
+   "track": "B",
+   "arms": [
+    "PUBLIC-RAW",
+    "SUPPLIED derived quantities (posterior, expected remaining cost per strategy, P(probe resolves), amortized build value) \u2014 localization ceiling",
+    "LEARNED: auxiliary heads predicting those quantities, downstream policy consumes predictions"
+   ],
+   "causal": "on-manifold interventions changing one factor via valid configurations; policy changes only where expected utility changes"
+  },
+  {
+   "id": "C-TRIGGER",
+   "status": "registered (conditional)",
+   "track": "C",
+   "trigger": "A2/A3 shows headroom over A1 per GA AND >=50% of learned-selector regret localized to value misestimates of candidate methods",
+   "arms": [
+    "C0 monolithic",
+    "C1 decomposed",
+    "C2 normalized",
+    "C3 pairwise advantage"
+   ]
+  }
+ ]
+}
