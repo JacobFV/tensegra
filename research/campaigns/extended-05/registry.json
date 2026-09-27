@@ -1,0 +1,140 @@
+{
+ "campaign": "extended-05",
+ "registered_utc": "2026-09-27 (see git commit time)",
+ "entries": [
+  {
+   "id": "A-HR",
+   "status": "registered",
+   "hypothesis": "One-step deviations within the consequential option set O(I), followed by D (greedy+R-mask), have meaningful headroom over D.",
+   "intervention": "none (evaluation + branching)",
+   "comparator": "D itself",
+   "input_contract": "public observation/catalog define O(I); branch outcomes are labels only",
+   "label_privilege": "hidden-state (true-world clone) rollouts: optimistic non-deployable bound H; same-information estimate via regression Q-hat^D on public features",
+   "selection_rule": "none",
+   "endpoints": [
+    "H: E[max_a Q_true^D - Q_true^D(D)] per state and per episode (oracle one-step rollout policy)",
+    "fraction of states with any option > D by >=.01",
+    "full-catalog vs O(I) headroom ratio"
+   ],
+   "gate": "G1: IID-group episode-level H >= .02 utility",
+   "next_branch": {
+    "pass": "A-PI",
+    "fail": "bounded multi-step option class; if also < .02, stop Track A and report"
+   },
+   "metric_checks": "H is an upper bound by construction (max over realized branches), never a claim of deployable gain; per-option-type breakdown reported"
+  },
+  {
+   "id": "A-PI",
+   "status": "registered (gated on G1)",
+   "hypothesis": "A cost-sensitive ranking head trained on Q^D branch targets improves deployed utility over D and over teacher-action supervision at matched label cost.",
+   "intervention": "rollout-based cost-sensitive policy improvement (RSPI-style; one optional iteration)",
+   "comparator": [
+    "D",
+    "D + teacher-action supervision (same states)",
+    "public heuristics (budget escalate, reuse-if-applicable, minimal revision)",
+    "dep_reuse"
+   ],
+   "input_contract": "frozen actor features + public telemetry; no hidden state/branch outcomes at inference",
+   "label_privilege": "simulator branching offline (charged); regression targets only; near-ties as equivalence sets",
+   "selection_rule": "margin m and fallback threshold registered on development states before screening",
+   "endpoints": [
+    "utility",
+    "success",
+    "cost",
+    "per-step no-progress",
+    "intervention rate",
+    "ranking accuracy (|dQ|>=.005)",
+    "chosen-option regret",
+    "false-positive / missed interventions"
+   ],
+   "promotion": "screen (1 lineage, development-selected): utility >= D+.015, success >= D-.01, utility >= teacher-sup comparator + .01",
+   "next_branch": {
+    "pass": "A-CF",
+    "fail": "inspect targets/option scope/features; no hyperparameter sweeps"
+   },
+   "metric_checks": "policy identical to D cannot pass; utility includes failures/abstentions; R-mask-scored metrics excluded from learned-choice claims"
+  },
+  {
+   "id": "A-CF",
+   "status": "registered (gated on A-PI promotion)",
+   "hypothesis": "The promoted improvement generalizes to fresh lineages and sealed worlds.",
+   "intervention": "A-PI recipe applied to bootstraps r3-r5",
+   "comparator": "D per lineage; dep_reuse floor",
+   "input_contract": "as A-PI",
+   "label_privilege": "as A-PI",
+   "selection_rule": "final raw and development-selected policies both reported",
+   "endpoints": [
+    "utility",
+    "success",
+    "cost"
+   ],
+   "promotion": "utility >= D + margin (margin fixed from A-PI development power analysis, default .01) in 3/3 lineages; success >= D-.01; per-condition floor >= .8 x dep_reuse success",
+   "worlds": "sealed fresh range registered at launch (>= 210M), 512 per condition"
+  },
+  {
+   "id": "B-LOC",
+   "status": "registered",
+   "hypothesis": "The historical combination failure is localized to a specific stage (belief / value estimate / ranking / deployment).",
+   "intervention": "none (exact-label localization on existing models; oracle-belief diagnostic re-run)",
+   "comparator": "pi*",
+   "input_contract": "existing L1/L4 models seeds 0-5, historical challenge pairs U+E, S+C (separately)",
+   "label_privilege": "exact DP labels and exact belief (diagnostic only)",
+   "endpoints": [
+    "first consequential error class distribution",
+    "delta_t accumulated vs realized regret",
+    "per-pair breakdown"
+   ],
+   "metric_checks": "challenge sets are inspected data: localization only, no transfer claims"
+  },
+  {
+   "id": "B-SPLIT",
+   "status": "registered",
+   "hypothesis": "n/a (split registration)",
+   "new_holds": [
+    "unreliable+correlated",
+    "side_effect+events"
+   ],
+   "historical_challenge": [
+    "unreliable+events",
+    "side_effect+correlated"
+   ],
+   "training_support": "all singles + remaining pairs except new holds (historical pairs only in exposure arm BX1)",
+   "audit": "split-support audit before any model run: labels function of visible info; held-out pairs never co-occur in training; configs disjoint by generator parameters"
+  },
+  {
+   "id": "B-X",
+   "status": "registered",
+   "hypothesis": "Exposure (BX1) or supplied factorized public state incl. exact belief (BX2) fixes probing on unseen combinations.",
+   "intervention": [
+    "B0 baseline L1 on new split",
+    "BX1 exposure diversity",
+    "BX2 supplied factorized belief/flag features",
+    "BO oracle-belief diagnostic (challenge sets only)"
+   ],
+   "comparator": "B0 (matched updates, capacity)",
+   "input_contract": "public only; BX2 features are a deterministic public computation, labelled supplied",
+   "label_privilege": "exact labels as training targets only",
+   "selection_rule": "final checkpoints; development split of training configurations",
+   "endpoints": [
+    "uniquely-optimal probe rate on new holds (support)",
+    "not-optimal probe rate",
+    "boundary decision accuracy/regret",
+    "Q-ranking accuracy",
+    "held-out regret",
+    "success >= .8 x pi*"
+   ],
+   "promotion": "on new holds: probe_unique >= B0 + .15 in 3/3 seed pairs, not-optimal <= .10, regret <= B0",
+   "statistics": "CIs clustered by configuration; per-seed, per-family",
+   "next_branch": {
+    "pass": "B-CF fresh seeds",
+    "fail": "report unresolved; inspect belief/value localization"
+   }
+  },
+  {
+   "id": "B-CF",
+   "status": "registered (gated on B-X promotion)",
+   "hypothesis": "The promoted arm's gain replicates on fresh seeds and fresh configuration draws of the new holds.",
+   "worlds": "new configuration draws from the new-hold families (registered generator seed), not only new outcome draws"
+  }
+ ]
+}

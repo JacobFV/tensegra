@@ -1,0 +1,302 @@
+{
+ "campaign": "extended-05",
+ "unit_costs_core_s": {
+  "dep_ep": 0.1,
+  "branch": 0.15,
+  "tail": 1.1,
+  "dep_train": 1800,
+  "pw_labels": 350,
+  "pw_train": 530,
+  "pw_eval": 45
+ },
+ "contingency": 0.25,
+ "jobs": [
+  {
+   "name": "A-HR states (D rollouts, dev + 3 fresh lineages)",
+   "stage": "B",
+   "dims": {
+    "lineages": 4,
+    "conditions": 2,
+    "worlds": 128
+   },
+   "units": 1024,
+   "unit": "episode",
+   "unit_cost": 0.1,
+   "core_s": 102,
+   "with_contingency": 128,
+   "gated_by": null,
+   "note": ""
+  },
+  {
+   "name": "A-HR branches over O(I)",
+   "stage": "B",
+   "dims": {
+    "lineages": 4,
+    "conditions": 2,
+    "worlds": 128,
+    "states_per_ep": 4,
+    "options": 12
+   },
+   "units": 49152,
+   "unit": "branch",
+   "unit_cost": 0.165,
+   "core_s": 8110,
+   "with_contingency": 10138,
+   "gated_by": null,
+   "note": ""
+  },
+  {
+   "name": "A-HR full-catalog subsample",
+   "stage": "B",
+   "dims": {
+    "lineages": 2,
+    "states": 100,
+    "options": 60
+   },
+   "units": 12000,
+   "unit": "branch",
+   "unit_cost": 0.165,
+   "core_s": 1980,
+   "with_contingency": 2475,
+   "gated_by": null,
+   "note": ""
+  },
+  {
+   "name": "A-HR oracle one-step-rollout policy episodes (H bound)",
+   "stage": "B",
+   "dims": {
+    "lineages": 2,
+    "conditions": 1,
+    "worlds": 32,
+    "steps": 30,
+    "options": 12
+   },
+   "units": 23040,
+   "unit": "branch",
+   "unit_cost": 0.165,
+   "core_s": 3802,
+   "with_contingency": 4752,
+   "gated_by": null,
+   "note": "online rollout policy on a subsample; per-state headroom comes from A-HR branches"
+  },
+  {
+   "name": "A-PI labels (branch O(I) on training states)",
+   "stage": "C",
+   "dims": {
+    "lineages": 1,
+    "worlds": 768,
+    "states_per_ep": 4,
+    "options": 12
+   },
+   "units": 36864,
+   "unit": "branch",
+   "unit_cost": 0.165,
+   "core_s": 6083,
+   "with_contingency": 7603,
+   "gated_by": "G1",
+   "note": ""
+  },
+  {
+   "name": "A-PI ranking head training (+ teacher-sup comparator)",
+   "stage": "C",
+   "dims": {
+    "arms": 2,
+    "seeds": 1
+   },
+   "units": 2,
+   "unit": "run",
+   "unit_cost": 600,
+   "core_s": 1200,
+   "with_contingency": 1500,
+   "gated_by": "G1",
+   "note": ""
+  },
+  {
+   "name": "A-PI screen eval",
+   "stage": "C",
+   "dims": {
+    "policies": 5,
+    "conditions": 4,
+    "worlds": 256
+   },
+   "units": 5120,
+   "unit": "episode",
+   "unit_cost": 0.13,
+   "core_s": 666,
+   "with_contingency": 832,
+   "gated_by": "G1",
+   "note": "ranking head forward charged"
+  },
+  {
+   "name": "A-CF labels (3 fresh lineages)",
+   "stage": "D",
+   "dims": {
+    "lineages": 3,
+    "worlds": 768,
+    "states_per_ep": 4,
+    "options": 12
+   },
+   "units": 110592,
+   "unit": "branch",
+   "unit_cost": 0.165,
+   "core_s": 18248,
+   "with_contingency": 22810,
+   "gated_by": "A-PI promotion",
+   "note": ""
+  },
+  {
+   "name": "A-CF training",
+   "stage": "D",
+   "dims": {
+    "lineages": 3,
+    "arms": 2
+   },
+   "units": 6,
+   "unit": "run",
+   "unit_cost": 600,
+   "core_s": 3600,
+   "with_contingency": 4500,
+   "gated_by": "A-PI promotion",
+   "note": ""
+  },
+  {
+   "name": "A-CF sealed eval",
+   "stage": "D",
+   "dims": {
+    "lineages": 3,
+    "policies": 3,
+    "conditions": 4,
+    "worlds": 512
+   },
+   "units": 18432,
+   "unit": "episode",
+   "unit_cost": 0.13,
+   "core_s": 2396,
+   "with_contingency": 2995,
+   "gated_by": "A-PI promotion",
+   "note": ""
+  },
+  {
+   "name": "B-LOC exact localization (existing models, challenge sets)",
+   "stage": "B",
+   "dims": {
+    "models": 12,
+    "splits": 2,
+    "episodes": 512
+   },
+   "units": 12288,
+   "unit": "episode",
+   "unit_cost": 0.02,
+   "core_s": 246,
+   "with_contingency": 307,
+   "gated_by": null,
+   "note": "pure Python DP + model forward"
+  },
+  {
+   "name": "B-SPLIT labels (new holds)",
+   "stage": "B",
+   "dims": {
+    "label_sets": 1
+   },
+   "units": 1,
+   "unit": "labels",
+   "unit_cost": 525.0,
+   "core_s": 525,
+   "with_contingency": 656,
+   "gated_by": null,
+   "note": ""
+  },
+  {
+   "name": "B-X training",
+   "stage": "C",
+   "dims": {
+    "arms": 3,
+    "seeds": 3
+   },
+   "units": 9,
+   "unit": "run",
+   "unit_cost": 636.0,
+   "core_s": 5724,
+   "with_contingency": 7155,
+   "gated_by": null,
+   "note": "BX2 adds belief features"
+  },
+  {
+   "name": "B-X eval + oracle diagnostic",
+   "stage": "C",
+   "dims": {
+    "models": 12,
+    "splits": 1
+   },
+   "units": 12,
+   "unit": "model",
+   "unit_cost": 67.5,
+   "core_s": 810,
+   "with_contingency": 1012,
+   "gated_by": null,
+   "note": ""
+  },
+  {
+   "name": "B-CF training (fresh seeds, promoted arm + B0)",
+   "stage": "D",
+   "dims": {
+    "arms": 2,
+    "seeds": 3
+   },
+   "units": 6,
+   "unit": "run",
+   "unit_cost": 636.0,
+   "core_s": 3816,
+   "with_contingency": 4770,
+   "gated_by": "B-X promotion",
+   "note": ""
+  },
+  {
+   "name": "B-CF eval",
+   "stage": "D",
+   "dims": {
+    "models": 6
+   },
+   "units": 6,
+   "unit": "model",
+   "unit_cost": 67.5,
+   "core_s": 405,
+   "with_contingency": 506,
+   "gated_by": "B-X promotion",
+   "note": ""
+  },
+  {
+   "name": "dev/tests/smokes (metered)",
+   "stage": "all",
+   "dims": {
+    "estimate": 1
+   },
+   "units": 1,
+   "unit": "lump",
+   "unit_cost": 8000,
+   "core_s": 8000,
+   "with_contingency": 10000,
+   "gated_by": null,
+   "note": ""
+  },
+  {
+   "name": "independent audits (3)",
+   "stage": "E",
+   "dims": {
+    "audits": 3
+   },
+   "units": 3,
+   "unit": "audit",
+   "unit_cost": 1500,
+   "core_s": 4500,
+   "with_contingency": 5625,
+   "gated_by": null,
+   "note": ""
+  }
+ ],
+ "total_with_contingency_core_s": 87764,
+ "ungated_with_contingency_core_s": 42248,
+ "ceiling_core_s": 172800,
+ "usable_before_reserve_core_s": 138240,
+ "gpu_note": "depworld eval/branch jobs use the GPU actor; occupancy tracked as union of main-job wall intervals"
+}
