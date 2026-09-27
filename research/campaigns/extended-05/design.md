@@ -148,3 +148,42 @@ Only if A-PI or BX2 yields a concrete relational interface (e.g. the dependency 
 5. Independent audits; report.
 
 A failed screen selects the next discriminating diagnostic. Close when both questions reach an evidential boundary or the ceilings are reached.
+
+---
+
+## v2 revisions (after internal review [review/design-review.md](review/design-review.md): 3 BLOCKER, 11 MAJOR; these supersede v1)
+
+**Track A**
+1. **G1 is a necessary condition only (F1).** The hindsight-state bound H is reported per option class, with and without abstain. **Abstain/stop gains are a separate class and do not count toward G1** (they arise only in episodes D later fails, so they are hindsight-favourable by construction). The G1 bound is H excluding abstain ≥ .02 per episode.
+2. **G1b (deployable estimate) is added (F1, F2).** The policy class is **single-deviation-from-D**: at publicly sampled decision points (a fixed public sampling rule), a learned ranker may replace D's action once per episode; otherwise D is followed. The episode-level gain of such a policy **equals the branched advantage exactly**, so it is estimated from the planned branches with **cross-fitting by world** (regression Q̂^D on public features; argmax over O(I) at the sampled point; the true branch value of the chosen option minus D's).
+   - **G1b:** the cross-fitted same-information gain ≥ .01 per episode on the IID group, with a CI excluding 0.
+   - The oracle rollout policy (sum over states) is dropped; summing per-state headroom along trajectories is invalid.
+3. **O(I) is anchored to D's action kind (F3).**
+   - At D-call states: budget alternatives, plus "call a different open problem".
+   - At D reuse/recompute states: use_return(applicable-typed) vs recompute.
+   - At D commit/uncommit states: revision-scope alternatives (uncommit assign vs select).
+   - At other states: "call now" options.
+   - Abstain is always its own class.
+   - The full catalog is only on a subsample.
+   - Measured on dev: 17 options per decision on average; D takes consequential actions at 38% of decisions and never abstains; 89% of its calls use budget 128.
+4. **Lineages (F8).** r0–r2 are for headroom and screening; **r3–r5 are reserved for confirmation only**.
+5. **Loss (F4).** The ranking loss is linear in realized cost differences (cost-sensitive regression of ΔQ with argmax selection), or a paired regression head. Near-ties (|ΔQ| < .005) are equivalence sets.
+6. **Iteration 2 (F5).** Its continuation is named "π₁ (the single-deviation improved policy), then D". Otherwise no iteration.
+7. **Teacher comparator (F6).** "Matched label cost" means the same number of labelled states and the same simulator core-seconds, spent on teacher-action labels. It uses 3 seeds.
+8. **Infrastructure (F7).**
+   - A checkpoint **path-remap layer** (tensegra-campaign0X → structured-latent-dynamics-campaign0X; hashes verified). Hashed configs are never edited.
+   - The **D device is registered as CPU** for branching/labels (as in extended-04 Track C) and as GPU for large evaluation. CPU/GPU numerical identity must be tested on a sample, or a single device kept per comparison.
+9. **Costs (F17).** Learned-head evaluation is priced at **.35 core-s/episode**. The job plan is re-run with all arms, evaluation-time branching and the multi-step option test (revised ≈ 100k).
+
+**Track B**
+
+10. **New split table version (F12).**
+    - The new holds U+C and S+E are removed from training **and** development/selection.
+    - A new split-table version with **new seed bases**; the old table is kept for historical reproduction.
+11. **Pool sizing from the exact solver before any model run (F11).**
+    - Evaluation pools are sized so each primary cell has ≥ 20 configurations with a uniquely-optimal first probe (≈ 1,500 U+C and ≈ 350 S+E configurations, 1 world each).
+    - CIs are configuration-level. Cells under 20 are marked "insufficient".
+12. **Correlated flag (F10).** It is mostly inert at k = 1, so U+C results are also reported on the registered subset where the pair changes the optimal value (flag-sensitive configurations).
+13. **B-HR headroom gate (F13).** B0 (the L1 recipe on the new split) is evaluated on the new holds first. If its probe/regret gap is already small (uniquely-optimal probe ≥ .80 with support ≥ 20), there is no failure to repair, and B-X reports that instead of training arms.
+14. **BX2 and a modular arm (F14).** BX2 is kept as a *labelled supplied-belief control*; it is predicted null at the first decision, where the belief equals the prior. A new **BX3 per-flag modular encoder** is added, with matched parameters. All arms are reported **by decision depth**.
+15. **BO (F15).** The oracle-belief diagnostic arm is trained on the **extended-04 split** to localize the old models' failure (+2.4k core-s).
