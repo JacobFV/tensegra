@@ -1,0 +1,6709 @@
+{
+ "version": "e05-a-independent-audit-v1",
+ "base_commit": "88bd3b0c",
+ "reproduction": {
+  "root": {
+   "A-HR": {
+    "G1a_excl_abstain": 0.0076962890625,
+    "G1b": -0.0021267578125
+   },
+   "A-HR2": {
+    "G1a_multi_T": 0.026045507812500004,
+    "T_plus_OI": 0.028306640625,
+    "B": 0.0061,
+    "G1b_multi_T": 0.021401302083333334
+   },
+   "A-PI-T": {
+    "PI-T-1": [
+     0.035055966504822345,
+     0.043941414239581644,
+     0.03625684717331146
+    ],
+    "PI-T-2_vs_best": [
+     -0.001058877245177614,
+     -0.0011784099791684044,
+     -0.0016895395454386009
+    ]
+   },
+   "A-CF-T": {
+    "PI-T-1": [
+     0.02473643514661472,
+     0.02148507196279814,
+     0.02768350658756613
+    ],
+    "PI-T-2_vs_best": [
+     -0.0020154203221353084,
+     -0.001817662412201826,
+     -0.0011205949749339972
+    ]
+   }
+  },
+  "auditor": {
+   "A-HR": {
+    "G1a_excl_abstain": 0.007696289062499998,
+    "G1b_rootgrid": -0.0022222656249999994,
+    "G1b_widegrid": -0.00029811197916666674
+   },
+   "A-HR2": {
+    "G1a_multi_T": 0.026045507812500004,
+    "T_plus_OI": 0.028306640625,
+    "B": 0.006081315104166666,
+    "G1b_multi_T_single_type": 0.02523216145833333,
+    "G1b_multi_T_per_anchor": 0.025129296875000002,
+    "G1b_multi_T_trigger_only": 0.022452799479166664
+   },
+   "A-PI-T": {
+    "PI-T-1": [
+     0.035055966504822345,
+     0.043941414239581644,
+     0.036256847173311346
+    ],
+    "PI-T-2_vs_best": [
+     -0.001058877245177614,
+     -0.0011784099791684044,
+     -0.0016895395454386009
+    ]
+   },
+   "A-CF-T": {
+    "PI-T-1": [
+     0.02473643514661472,
+     0.02148507196279803,
+     0.02768350658756613
+    ],
+    "PI-T-2_vs_best": [
+     -0.0020154203221353084,
+     -0.001817662412201937,
+     -0.0011205949749339972
+    ]
+   }
+  },
+  "exact_numeric_discrepancies": [],
+  "note": "G1b values are independent re-implementations (own ridge, own fold assignment); they reproduce sign/gate outcome, not digits."
+ },
+ "hr": {
+  "files": {
+   "hr": 48,
+   "hr2": 48,
+   "full": 4
+  },
+  "world_integrity": {
+   "per_base_condition": {
+    "x1-r0/iid_f0": {
+     "n": 256,
+     "lo": 220000000,
+     "hi": 220000255,
+     "same_as_hr2": true
+    },
+    "x1-r0/iid_f2": {
+     "n": 256,
+     "lo": 220100000,
+     "hi": 220100255,
+     "same_as_hr2": true
+    },
+    "x1-r1/iid_f0": {
+     "n": 256,
+     "lo": 220000000,
+     "hi": 220000255,
+     "same_as_hr2": true
+    },
+    "x1-r1/iid_f2": {
+     "n": 256,
+     "lo": 220100000,
+     "hi": 220100255,
+     "same_as_hr2": true
+    },
+    "x1-r2/iid_f0": {
+     "n": 256,
+     "lo": 220000000,
+     "hi": 220000255,
+     "same_as_hr2": true
+    },
+    "x1-r2/iid_f2": {
+     "n": 256,
+     "lo": 220100000,
+     "hi": 220100255,
+     "same_as_hr2": true
+    }
+   },
+   "bases": [
+    "x1-r0",
+    "x1-r1",
+    "x1-r2"
+   ],
+   "conditions": [
+    "iid_f0",
+    "iid_f2"
+   ],
+   "same_worlds_across_bases": true,
+   "seeds_in_220M_registered_block": true,
+   "base_sha": {
+    "x1-r0": "6733870ca6609cbf3ddd3c5aee48836e4197dcd027c83fe513449b1d2d500407",
+    "x1-r1": "786fed13600f9fcbfacc3153ceb21230f8735b57816529f3c0f3b26f84b8a04b",
+    "x1-r2": "74ff10a686c04b4face63ac2e666add7fd5a3c17509ec78c81f8aa954b5f2fc9"
+   },
+   "protocol_worlds": true
+  },
+  "label_validity": {
+   "counts": {
+    "episodes": 3072,
+    "hr:points": 11013,
+    "hr:options": 45749,
+    "hr2:points": 11013,
+    "hr2:options": 22026,
+    "hr2:delegate_options": 11013,
+    "hr2:delegate_end:max_steps": 1222,
+    "hr2:delegate_end:commit": 7447,
+    "hr2:delegate_end:episode_end": 2344,
+    "hr2:non_max_end_at_12": 244,
+    "hr2:commit_end_no_D_continuation_nonterminal_info": 2
+   },
+   "first_mismatches": [],
+   "meta_default_checks": {
+    "hr": [
+     1093,
+     1093
+    ],
+    "hr2": [
+     1093,
+     1093
+    ],
+    "full": [
+     28,
+     28
+    ]
+   }
+  },
+  "hr_vs_hr2_mainline": {
+   "episodes": 1536
+  },
+  "sampling": {
+   "episodes": 1536,
+   "all_states_episodes": 102
+  },
+  "G1a": {
+   "G1a_excl_abstain": {
+    "n": 1536,
+    "clusters": 512,
+    "mean": 0.007696289062499998,
+    "ci90": [
+     0.0041239290364583295,
+     0.012200976562499997
+    ],
+    "ci95": [
+     0.00369026204427083,
+     0.013141484374999996
+    ],
+    "by_D_outcome": {
+     "D_success": {
+      "n": 1466,
+      "mean": 0.001702319236016369
+     },
+     "D_failure": {
+      "n": 70,
+      "mean": 0.13322714285714288
+     }
+    }
+   },
+   "G1a_incl_abstain": {
+    "n": 1536,
+    "clusters": 512,
+    "mean": 0.013387174479166666,
+    "ci90": [
+     0.009086123046874997,
+     0.018353486328124995
+    ],
+    "ci95": [
+     0.008504923502604164,
+     0.019221748046874997
+    ],
+    "by_D_outcome": {
+     "D_success": {
+      "n": 1466,
+      "mean": 0.001702319236016369
+     },
+     "D_failure": {
+      "n": 70,
+      "mean": 0.25810142857142865
+     }
+    }
+   },
+   "G1a_excl_abstain_all_branched_points(not deployable on all-states worlds)": {
+    "n": 1536,
+    "clusters": 512,
+    "mean": 0.007855794270833332,
+    "ci90": [
+     0.004280205078125,
+     0.01240618489583333
+    ],
+    "ci95": [
+     0.0038332666015624983,
+     0.013333640950520831
+    ],
+    "by_D_outcome": {
+     "D_success": {
+      "n": 1466,
+      "mean": 0.001713301500682126
+     },
+     "D_failure": {
+      "n": 70,
+      "mean": 0.13649714285714287
+     }
+    }
+   },
+   "G1a_excl_abstain_per_base_condition": {
+    "x1-r0/iid_f0": 0.0029695312499999947,
+    "x1-r0/iid_f2": 0.011025,
+    "x1-r1/iid_f0": 0.002105859374999994,
+    "x1-r1/iid_f2": 0.017243359375,
+    "x1-r2/iid_f0": 0.0061234375,
+    "x1-r2/iid_f2": 0.006710546874999998
+   },
+   "G1a_pass_(>=.02)": false,
+   "G1a_multi_T": {
+    "n": 1536,
+    "clusters": 512,
+    "mean": 0.026045507812500004,
+    "ci90": [
+     0.015941839192708335,
+     0.037488994140625
+    ],
+    "ci95": [
+     0.014236892903645834,
+     0.04030112955729166
+    ],
+    "by_D_outcome": {
+     "D_success": {
+      "n": 1466,
+      "mean": 0.0005997953615279689
+     },
+     "D_failure": {
+      "n": 70,
+      "mean": 0.5589514285714287
+     }
+    }
+   },
+   "G1a_multi_T_plus_OI_excl_abstain": {
+    "n": 1536,
+    "clusters": 512,
+    "mean": 0.028306640625,
+    "ci90": [
+     0.018158496093749997,
+     0.03972680989583333
+    ],
+    "ci95": [
+     0.016271427408854164,
+     0.042408819986979165
+    ],
+    "by_D_outcome": {
+     "D_success": {
+      "n": 1466,
+      "mean": 0.0020533424283765336
+     },
+     "D_failure": {
+      "n": 70,
+      "mean": 0.5781257142857144
+     }
+    }
+   },
+   "G1a_multi_T_trigger_anchors_only": {
+    "n": 1536,
+    "clusters": 512,
+    "mean": 0.0260349609375,
+    "ci90": [
+     0.015930520833333333,
+     0.037472890625
+    ],
+    "ci95": [
+     0.014232190755208334,
+     0.040291209309895826
+    ],
+    "by_D_outcome": {
+     "D_success": {
+      "n": 1466,
+      "mean": 0.0005887448840382002
+     },
+     "D_failure": {
+      "n": 70,
+      "mean": 0.5589514285714287
+     }
+    }
+   },
+   "G1a_B_budget_from_AHR(budget+call_now)": {
+    "n": 1536,
+    "clusters": 512,
+    "mean": 0.006081315104166666,
+    "ci90": [
+     0.002766702473958333,
+     0.010474658203124999
+    ],
+    "ci95": [
+     0.002388621419270833,
+     0.011244991861979168
+    ],
+    "by_D_outcome": {
+     "D_success": {
+      "n": 1466,
+      "mean": 0.0011844474761255118
+     },
+     "D_failure": {
+      "n": 70,
+      "mean": 0.10863571428571428
+     }
+    }
+   },
+   "G1a_multi_pass_(>=.02)": true
+  },
+  "G1b": {
+   "G1b_OI_excl_abstain": {
+    "n": 1536,
+    "clusters": 512,
+    "mean": -0.00029811197916666674,
+    "ci90": [
+     -0.0005046061197916669,
+     -0.00013241210937500007
+    ],
+    "ci95": [
+     -0.0005574300130208333,
+     -0.0001116455078125
+    ],
+    "deviation_rate": 0.03515625,
+    "deviation_types": {
+     "D": 1482,
+     "call_now": 8,
+     "call_other": 14,
+     "revise_select": 12,
+     "not_call": 2,
+     "budget": 10,
+     "reuse": 8
+    },
+    "chosen_margins": {
+     "0.075": 309,
+     "0.1": 921,
+     "0.05": 306
+    },
+    "fixed_margin": {
+     "0.0": -0.002853385416666668,
+     "0.0025": -0.003692187500000001,
+     "0.005": -0.0035429036458333348,
+     "0.01": -0.0022276692708333326,
+     "0.02": -0.002047460937499999,
+     "0.05": -0.00047526041666666653,
+     "0.075": -0.00034414062500000005,
+     "0.1": -0.0003044921875
+    },
+    "harmful_rate": 0.022786458333333332,
+    "pass_(>=.01_and_ci90_excl_0)": false
+   },
+   "G1b_multi_T_all_anchors": {
+    "n": 1536,
+    "clusters": 512,
+    "mean": 0.025129296875000002,
+    "ci90": [
+     0.015117366536458334,
+     0.036581923828125
+    ],
+    "ci95": [
+     0.013467241210937501,
+     0.03916805338541665
+    ],
+    "deviation_rate": 0.21940104166666663,
+    "deviation_types": {
+     "D": 1199,
+     "call": 169,
+     "reuse_recompute": 110,
+     "other": 23,
+     "commit_revise": 35
+    },
+    "chosen_margins": {
+     "0.075": 615,
+     "0.05": 921
+    },
+    "fixed_margin": {
+     "0.0": 0.013899934895833334,
+     "0.0025": 0.013842838541666666,
+     "0.005": 0.013746223958333331,
+     "0.01": 0.0156984375,
+     "0.02": 0.020761848958333332,
+     "0.05": 0.025112239583333335,
+     "0.075": 0.025108789062499998,
+     "0.1": 0.025170117187499997
+    },
+    "harmful_rate": 0.04296875,
+    "pass_(>=.01_and_ci90_excl_0)": true
+   },
+   "G1b_multi_T_trigger_anchors": {
+    "n": 1536,
+    "clusters": 512,
+    "mean": 0.022452799479166664,
+    "ci90": [
+     0.012949606119791667,
+     0.033185143229166665
+    ],
+    "ci95": [
+     0.011389982096354168,
+     0.035765703125
+    ],
+    "deviation_rate": 0.26627604166666663,
+    "deviation_types": {
+     "D": 1127,
+     "call": 205,
+     "reuse_recompute": 171,
+     "commit_revise": 33
+    },
+    "chosen_margins": {
+     "0.075": 615,
+     "0.05": 615,
+     "0.02": 306
+    },
+    "fixed_margin": {
+     "0.0": 0.012284895833333332,
+     "0.0025": 0.012193098958333334,
+     "0.005": 0.012744466145833333,
+     "0.01": 0.017532421875,
+     "0.02": 0.022508138020833332,
+     "0.05": 0.024450325520833333,
+     "0.075": 0.02445390625,
+     "0.1": 0.02451640625
+    },
+    "harmful_rate": 0.039713541666666664,
+    "pass_(>=.01_and_ci90_excl_0)": true
+   },
+   "G1b_multi_T_single_type_all_anchors": {
+    "n": 1536,
+    "clusters": 512,
+    "mean": 0.02523216145833333,
+    "ci90": [
+     0.015205107421875,
+     0.03672869466145833
+    ],
+    "ci95": [
+     0.013518375651041668,
+     0.039273640950520834
+    ],
+    "deviation_rate": 0.224609375,
+    "deviation_types": {
+     "D": 1191,
+     "delegate": 345
+    },
+    "chosen_margins": {
+     "0.1": 309,
+     "0.05": 921,
+     "0.075": 306
+    },
+    "fixed_margin": {
+     "0.0": 0.0104708984375,
+     "0.0025": 0.012430859375,
+     "0.005": 0.015190885416666666,
+     "0.01": 0.018800716145833334,
+     "0.02": 0.018422200520833334,
+     "0.05": 0.025226041666666667,
+     "0.075": 0.02514459635416667,
+     "0.1": 0.0251419921875
+    },
+    "harmful_rate": 0.048177083333333336,
+    "pass_(>=.01_and_ci90_excl_0)": true
+   },
+   "G1b_multi_T_all_anchors_seed1": {
+    "mean": 0.0244310546875,
+    "ci90": [
+     0.014738069661458332,
+     0.03549268880208333
+    ]
+   },
+   "G1b_multi_T_all_anchors_lam100": {
+    "mean": 0.02525221354166667,
+    "ci90": [
+     0.015232958984374998,
+     0.036735152994791666
+    ]
+   },
+   "G1b_OI_rootgrid_(m<=.05)": {
+    "mean": -0.0022222656249999994,
+    "ci90": [
+     -0.005776627604166667,
+     -0.0002752180989583332
+    ],
+    "deviation_rate": 0.09765625,
+    "harmful_rate": 0.052734375
+   },
+   "G1b_multi_T_single_type_rootgrid_(m<=.05)": {
+    "mean": 0.025226041666666667,
+    "ci90": [
+     0.015194537760416665,
+     0.03671837239583333
+    ],
+    "deviation_rate": 0.26041666666666663,
+    "harmful_rate": 0.050130208333333336
+   },
+   "G1b_OI_seed1": {
+    "mean": -0.00035319010416666653,
+    "ci90": [
+     -0.0005603548177083332,
+     -0.00018298502604166658
+    ]
+   },
+   "feature_note": {
+    "telemetry_dims": 89,
+    "option_keys_hr": [
+     "budget_frac",
+     "budget_log",
+     "budget_vs_d_log",
+     "logit_gap",
+     "prev_calls",
+     "prev_max_budget_log",
+     "prev_timeouts",
+     "prob",
+     "problem_latest",
+     "rank_frac",
+     "rec_age",
+     "rec_foreign",
+     "rec_timeout",
+     "rel_canonical_match",
+     "rel_dependency_match",
+     "rel_request_match",
+     "rel_requirements_match",
+     "rel_selection_match",
+     "rel_type_match",
+     "rel_usable"
+    ],
+    "option_keys_hr2": [
+     "anchor_call",
+     "anchor_commit_revise",
+     "anchor_other",
+     "anchor_reuse_recompute",
+     "budget_frac",
+     "budget_log",
+     "budget_vs_d_log",
+     "logit_gap",
+     "prev_calls",
+     "prev_max_budget_log",
+     "prev_timeouts",
+     "prob",
+     "problem_latest",
+     "rank_frac",
+     "rec_age",
+     "rec_foreign",
+     "rec_timeout",
+     "rel_canonical_match",
+     "rel_dependency_match",
+     "rel_request_match",
+     "rel_requirements_match",
+     "rel_selection_match",
+     "rel_type_match",
+     "rel_usable",
+     "teacher_first_abstain",
+     "teacher_first_call",
+     "teacher_first_commit",
+     "teacher_first_is_d",
+     "teacher_first_other",
+     "teacher_first_recompute",
+     "teacher_first_retrieve",
+     "teacher_first_reuse",
+     "teacher_first_revise",
+     "teacher_first_verify"
+    ]
+   }
+  },
+  "leakage_probe": {}
+ },
+ "eval": {
+  "A-PI-T": {
+   "teacher_evaluated_in_bases": [
+    "x1-r0"
+   ],
+   "policies_by_base": {
+    "x1-r0": [
+     "d",
+     "pit",
+     "r1",
+     "r2",
+     "random",
+     "teacher"
+    ],
+    "x1-r1": [
+     "d",
+     "pit",
+     "r1",
+     "r2",
+     "random"
+    ],
+    "x1-r2": [
+     "d",
+     "pit",
+     "r1",
+     "r2",
+     "random"
+    ]
+   },
+   "pairing": {
+    "iid_f0": {
+     "n": 512,
+     "identical_across_policies_and_bases": true
+    },
+    "iid_f2": {
+     "n": 512,
+     "identical_across_policies_and_bases": true
+    },
+    "events_train_kinds_p1": {
+     "n": 512,
+     "identical_across_policies_and_bases": true
+    },
+    "foreign4": {
+     "n": 512,
+     "identical_across_policies_and_bases": true
+    }
+   },
+   "integrity": {
+    "files": 192,
+    "controller_sha_ok": 192,
+    "margin_.075": 192,
+    "protocol_worlds": 192,
+    "chunks_random_rate_eq_pit_rate": 192
+   },
+   "bases": [
+    "x1-r0",
+    "x1-r1",
+    "x1-r2"
+   ],
+   "controller_sha_in_meta": [
+    "dea16e83488d2d74c4cbbef6dbbc13dbda4625e01ba601552fcb367854cd6db0"
+   ],
+   "controller_path_in_meta": [
+    "/home/brand/structured-latent-dynamics-campaign05/results/e05-apit/controller.json"
+   ],
+   "actor_sha_by_base": {
+    "x1-r0": [
+     "6733870ca6609cbf3ddd3c5aee48836e4197dcd027c83fe513449b1d2d500407"
+    ],
+    "x1-r1": [
+     "786fed13600f9fcbfacc3153ceb21230f8735b57816529f3c0f3b26f84b8a04b"
+    ],
+    "x1-r2": [
+     "74ff10a686c04b4face63ac2e666add7fd5a3c17509ec78c81f8aa954b5f2fc9"
+    ]
+   },
+   "teacher_rows_identical_across_bases": {
+    "identical": 2048
+   },
+   "comparator_checks": {
+    "pit_end_commit": 3426,
+    "pit_end_max_steps": 13,
+    "pit_end_episode_end": 763,
+    "r1_end_commit": 11607,
+    "r1_end_episode_end": 4806,
+    "r1_end_max_steps": 45,
+    "r2_end_commit": 975,
+    "r2_end_episode_end": 135,
+    "random_end_commit": 3377,
+    "random_end_episode_end": 1321,
+    "random_end_max_steps": 21,
+    "r2_end_max_steps": 18
+   },
+   "lineages": {
+    "x1-r0": {
+     "conditions": {
+      "iid_f0": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8617208984375,
+         "success": 0.94921875,
+         "cost": 0.08749785156249999,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.8886306580778351,
+         "success": 0.970703125,
+         "cost": 0.08207246692216484,
+         "delegated_step_fraction_pooled": 0.04196533298579434,
+         "delegated_step_fraction_mean_episode": 0.03436345388951889,
+         "delegation_rate_per_eligible": 0.022116418368914145,
+         "delegations_per_episode": 0.28125
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.888701953125,
+         "success": 0.970703125,
+         "cost": 0.082001171875,
+         "delegated_step_fraction_pooled": 0.38252186398642474,
+         "delegated_step_fraction_mean_episode": 0.3775111505570662,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 3.224609375
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.888733984375,
+         "success": 0.970703125,
+         "cost": 0.081969140625,
+         "delegated_step_fraction_pooled": 0.03223064853556486,
+         "delegated_step_fraction_mean_episode": 0.025261567037431945,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.18359375
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.8739349609375,
+         "success": 0.9609375,
+         "cost": 0.0870025390625,
+         "delegated_step_fraction_pooled": 0.03679113114454529,
+         "delegated_step_fraction_mean_episode": 0.032260606028076316,
+         "delegation_rate_per_eligible": 0.020206075204067978,
+         "delegations_per_episode": 0.294921875
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.8887041015624999,
+         "success": 0.970703125,
+         "cost": 0.08199902343750001,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.02690975964033516,
+          "ci90": [
+           0.014405707804083739,
+           0.04031579204347311
+          ],
+          "ci95": [
+           0.012416316495431555,
+           0.04309253217352827
+          ]
+         },
+         "success_mean": 0.021484375
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -7.129504716484866e-05,
+          "ci90": [
+           -0.00016504538724606562,
+           8.391653644292194e-06
+          ],
+          "ci95": [
+           -0.00018661032037260413,
+           1.2690973364497805e-05
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00010332629716484876,
+          "ci90": [
+           -0.00019146450533927454,
+           -2.9085622979729686e-05
+          ],
+          "ci95": [
+           -0.00021294824036825494,
+           -1.9536487259078454e-05
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.014695697140335154,
+          "ci90": [
+           0.005942230009562232,
+           0.024273745511692514
+          ],
+          "ci95": [
+           0.004410062836138531,
+           0.026799129601394453
+          ]
+         },
+         "success_mean": 0.009765625
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -7.344348466484864e-05,
+          "ci90": [
+           -0.00017031747215031246,
+           8.391653644292194e-06
+          ],
+          "ci95": [
+           -0.00019082811737228237,
+           1.2690973364497805e-05
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 26,
+       "pit_rescues": 13,
+       "teacher_rescues": 13,
+       "pit_breaks_D_success": 2,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "iid_f2": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8545291015625001,
+         "success": 0.93359375,
+         "cost": 0.0790646484375,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.8977312749318096,
+         "success": 0.970703125,
+         "cost": 0.07297185006819044,
+         "delegated_step_fraction_pooled": 0.0967136802612381,
+         "delegated_step_fraction_mean_episode": 0.08310380054118996,
+         "delegation_rate_per_eligible": 0.04953728905824714,
+         "delegations_per_episode": 0.533203125
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.899777734375,
+         "success": 0.97265625,
+         "cost": 0.072878515625,
+         "delegated_step_fraction_pooled": 0.3424714723072641,
+         "delegated_step_fraction_mean_episode": 0.3310774858396132,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.6015625
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.897886328125,
+         "success": 0.97265625,
+         "cost": 0.074769921875,
+         "delegated_step_fraction_pooled": 0.04460681976339596,
+         "delegated_step_fraction_mean_episode": 0.032859601988019335,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.189453125
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.8867988281250001,
+         "success": 0.96484375,
+         "cost": 0.07804492187499999,
+         "delegated_step_fraction_pooled": 0.08463047743623284,
+         "delegated_step_fraction_mean_episode": 0.0749466735198435,
+         "delegation_rate_per_eligible": 0.051570557899671826,
+         "delegations_per_episode": 0.64453125
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.89792109375,
+         "success": 0.970703125,
+         "cost": 0.07278203124999999,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.043202173369309566,
+          "ci90": [
+           0.028561833129079048,
+           0.05905394332491144
+          ],
+          "ci95": [
+           0.025693778886354917,
+           0.062065787542055204
+          ]
+         },
+         "success_mean": 0.037109375
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.002046459443190441,
+          "ci90": [
+           -0.006100140975607776,
+           0.00010687755160643924
+          ],
+          "ci95": [
+           -0.006242889251639511,
+           0.00019634492434732016
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00015505319319044153,
+          "ci90": [
+           -0.00427007017692295,
+           0.002776587243219068
+          ],
+          "ci95": [
+           -0.005171314312184106,
+           0.003125665787535385
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.010932446806809559,
+          "ci90": [
+           0.003172643842903006,
+           0.019322124692675278
+          ],
+          "ci95": [
+           0.0015161582049650272,
+           0.021109818007971026
+          ]
+         },
+         "success_mean": 0.005859375
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00018981881819044044,
+          "ci90": [
+           -0.0002640625623814691,
+           -0.00012360781885749047
+          ],
+          "ci95": [
+           -0.0002788881031390294,
+           -0.00011364169556354409
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 34,
+       "pit_rescues": 20,
+       "teacher_rescues": 20,
+       "pit_breaks_D_success": 1,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "events_train_kinds_p1": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8543302734375,
+         "success": 0.93359375,
+         "cost": 0.07926347656249999,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.9069728721969197,
+         "success": 0.982421875,
+         "cost": 0.0754490028030804,
+         "delegated_step_fraction_pooled": 0.10465906003803314,
+         "delegated_step_fraction_mean_episode": 0.08940586712754464,
+         "delegation_rate_per_eligible": 0.0552212389380531,
+         "delegations_per_episode": 0.609375
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.9090576171875,
+         "success": 0.984375,
+         "cost": 0.0753173828125,
+         "delegated_step_fraction_pooled": 0.3553876523041318,
+         "delegated_step_fraction_mean_episode": 0.34442700169444074,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.771484375
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.9107806640625,
+         "success": 0.986328125,
+         "cost": 0.07554746093749999,
+         "delegated_step_fraction_pooled": 0.03558450462804251,
+         "delegated_step_fraction_mean_episode": 0.026186305878949045,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.166015625
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.892567578125,
+         "success": 0.970703125,
+         "cost": 0.07813554687499999,
+         "delegated_step_fraction_pooled": 0.08343110415851909,
+         "delegated_step_fraction_mean_episode": 0.07567113551942463,
+         "delegation_rate_per_eligible": 0.05568481464246937,
+         "delegations_per_episode": 0.701171875
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.907216796875,
+         "success": 0.982421875,
+         "cost": 0.07520507812499999,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.052642598759419616,
+          "ci90": [
+           0.03570951229015626,
+           0.0699896385754854
+          ],
+          "ci95": [
+           0.03248606539475604,
+           0.07383132957443413
+          ]
+         },
+         "success_mean": 0.048828125
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0020847449905803815,
+          "ci90": [
+           -0.005838700764326057,
+           -0.00010914861656788581
+          ],
+          "ci95": [
+           -0.006005663815716723,
+           -8.39291450663036e-05
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0038077918655803843,
+          "ci90": [
+           -0.009231205784272235,
+           3.167195563049484e-05
+          ],
+          "ci95": [
+           -0.00969141215393296,
+           0.00022439336636793816
+          ]
+         },
+         "success_mean": -0.00390625
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.014405294071919613,
+          "ci90": [
+           0.005007393284017922,
+           0.024757666514377545
+          ],
+          "ci95": [
+           0.0034801738349540486,
+           0.026334418191619545
+          ]
+         },
+         "success_mean": 0.01171875
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0002439246780803825,
+          "ci90": [
+           -0.0003724701966433351,
+           -0.0001497717832209572
+          ],
+          "ci95": [
+           -0.00040155812090163906,
+           -0.00013923006232551693
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 34,
+       "pit_rescues": 27,
+       "teacher_rescues": 27,
+       "pit_breaks_D_success": 2,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "foreign4": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8775146484375,
+         "success": 0.94921875,
+         "cost": 0.0717041015625,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.9135053448986036,
+         "success": 0.98046875,
+         "cost": 0.06696340510139646,
+         "delegated_step_fraction_pooled": 0.25416423144360023,
+         "delegated_step_fraction_mean_episode": 0.22833473827731043,
+         "delegation_rate_per_eligible": 0.1707438841737394,
+         "delegations_per_episode": 1.3359375
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.913871875,
+         "success": 0.98046875,
+         "cost": 0.066596875,
+         "delegated_step_fraction_pooled": 0.3048960330334759,
+         "delegated_step_fraction_mean_episode": 0.2885341878506023,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.1171875
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.9146451171875001,
+         "success": 0.982421875,
+         "cost": 0.0677767578125,
+         "delegated_step_fraction_pooled": 0.04960449471427515,
+         "delegated_step_fraction_mean_episode": 0.034807559983388386,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.19140625
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.9140189453125,
+         "success": 0.982421875,
+         "cost": 0.06840292968749999,
+         "delegated_step_fraction_pooled": 0.20349807678351114,
+         "delegated_step_fraction_mean_episode": 0.19231506586487518,
+         "delegation_rate_per_eligible": 0.1683211048769961,
+         "delegations_per_episode": 1.5234375
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.913778515625,
+         "success": 0.98046875,
+         "cost": 0.06669023437499999,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.03599069646110353,
+          "ci90": [
+           0.021476879006035413,
+           0.05074103635816118
+          ],
+          "ci95": [
+           0.018690580517218714,
+           0.05330270217554592
+          ]
+         },
+         "success_mean": 0.03125
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.000366530101396464,
+          "ci90": [
+           -0.0006997539417474293,
+           4.441363047551136e-05
+          ],
+          "ci95": [
+           -0.0007542352490835342,
+           0.00013078094208603775
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0011397722888964639,
+          "ci90": [
+           -0.006967496564373541,
+           0.002489561331413779
+          ],
+          "ci95": [
+           -0.00805883862286757,
+           0.0028037983153893983
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0005136004138964648,
+          "ci90": [
+           -0.0044628252550984815,
+           0.002055755988531062
+          ],
+          "ci95": [
+           -0.005125307285903348,
+           0.0023175921810919793
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00027317072639646575,
+          "ci90": [
+           -0.0003415709956975724,
+           -0.00021008392941847682
+          ],
+          "ci95": [
+           -0.0003530604111840898,
+           -0.00020068028410817664
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 26,
+       "pit_rescues": 17,
+       "teacher_rescues": 17,
+       "pit_breaks_D_success": 1,
+       "floor_success_ge_.8x_teacher": true
+      }
+     },
+     "PI-T-1": {
+      "utility_diff": 0.035055966504822345,
+      "success_diff": 0.029296875,
+      "ci": {
+       "n": 1024,
+       "clusters": 1024,
+       "mean": 0.03505596650482236,
+       "ci90": [
+        0.025773314157582616,
+        0.046301150689053744
+       ],
+       "ci95": [
+        0.023800907145339018,
+        0.048125165780545515
+       ]
+      },
+      "pass_": true
+     },
+     "PI-T-2": {
+      "best_comparator": "r1",
+      "diff_vs_best": -0.001058877245177614,
+      "ci": {
+       "n": 1024,
+       "clusters": 1024,
+       "mean": -0.0010588772451776448,
+       "ci90": [
+        -0.003107382865722878,
+        2.5436584957125813e-05
+       ],
+       "ci95": [
+        -0.0031853606245030295,
+        6.285387107344798e-05
+       ]
+      },
+      "dsf_pit": 0.06846228857728909,
+      "dsf_teacher": 1.0,
+      "pass_": false
+     },
+     "iid_group": {
+      "policies": {
+       "d": {
+        "n": 1024,
+        "utility": 0.858125,
+        "success": 0.94140625,
+        "cost": 0.08328125,
+        "delegated_step_fraction_pooled": 0.0,
+        "delegated_step_fraction_mean_episode": 0.0,
+        "delegation_rate_per_eligible": null,
+        "delegations_per_episode": 0.0
+       },
+       "pit": {
+        "n": 1024,
+        "utility": 0.8931809665048224,
+        "success": 0.970703125,
+        "cost": 0.07752215849517764,
+        "delegated_step_fraction_pooled": 0.06846228857728909,
+        "delegated_step_fraction_mean_episode": 0.058733627215354425,
+        "delegation_rate_per_eligible": 0.03468640825153885,
+        "delegations_per_episode": 0.4072265625
+       },
+       "r1": {
+        "n": 1024,
+        "utility": 0.89423984375,
+        "success": 0.9716796875,
+        "cost": 0.07743984375,
+        "delegated_step_fraction_pooled": 0.36313733414157745,
+        "delegated_step_fraction_mean_episode": 0.3542943181983397,
+        "delegation_rate_per_eligible": 1.0,
+        "delegations_per_episode": 2.9130859375
+       },
+       "r2": {
+        "n": 1024,
+        "utility": 0.89331015625,
+        "success": 0.9716796875,
+        "cost": 0.07836953125000001,
+        "delegated_step_fraction_pooled": 0.038225578102878716,
+        "delegated_step_fraction_mean_episode": 0.02906058451272564,
+        "delegation_rate_per_eligible": 1.0,
+        "delegations_per_episode": 0.1865234375
+       },
+       "random": {
+        "n": 1024,
+        "utility": 0.88036689453125,
+        "success": 0.962890625,
+        "cost": 0.08252373046875,
+        "delegated_step_fraction_pooled": 0.05986059860598606,
+        "delegated_step_fraction_mean_episode": 0.05360363977395991,
+        "delegation_rate_per_eligible": 0.03467416378316032,
+        "delegations_per_episode": 0.4697265625
+       },
+       "teacher": {
+        "n": 1024,
+        "utility": 0.8933125976562499,
+        "success": 0.970703125,
+        "cost": 0.07739052734375,
+        "delegated_step_fraction_pooled": 1.0,
+        "delegated_step_fraction_mean_episode": 1.0,
+        "delegation_rate_per_eligible": null,
+        "delegations_per_episode": 1.0
+       }
+      },
+      "pit_minus": {
+       "d": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": 0.03505596650482236,
+         "ci90": [
+          0.025773314157582616,
+          0.046301150689053744
+         ],
+         "ci95": [
+          0.023800907145339018,
+          0.048125165780545515
+         ]
+        },
+        "success_mean": 0.029296875
+       },
+       "r1": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.0010588772451776448,
+         "ci90": [
+          -0.003107382865722878,
+          2.5436584957125813e-05
+         ],
+         "ci95": [
+          -0.0031853606245030295,
+          6.285387107344798e-05
+         ]
+        },
+        "success_mean": -0.0009765625
+       },
+       "r2": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.00012918974517764516,
+         "ci90": [
+          -0.0021971389407402894,
+          0.0013431343893249611
+         ],
+         "ci95": [
+          -0.0026961961382366466,
+          0.0015509533760937112
+         ]
+        },
+        "success_mean": -0.0009765625
+       },
+       "random": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": 0.012814071973572356,
+         "ci90": [
+          0.007027729086516812,
+          0.019447557618443273
+         ],
+         "ci95": [
+          0.006016765699120165,
+          0.020727409251641436
+         ]
+        },
+        "success_mean": 0.0078125
+       },
+       "teacher": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.00013163115142764454,
+         "ci90": [
+          -0.00019785202227451794,
+          -8.104505470780203e-05
+         ],
+         "ci95": [
+          -0.00021113225573128093,
+          -7.449991429779126e-05
+         ]
+        },
+        "success_mean": 0.0
+       }
+      },
+      "pit_teacher_success_agreement": 1.0,
+      "D_failures": 60,
+      "pit_rescues": 33,
+      "teacher_rescues": 33,
+      "pit_breaks_D_success": 3
+     }
+    },
+    "x1-r1": {
+     "conditions": {
+      "iid_f0": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.83865078125,
+         "success": 0.921875,
+         "cost": 0.08322421875,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.8885853455469188,
+         "success": 0.970703125,
+         "cost": 0.08211777945308132,
+         "delegated_step_fraction_pooled": 0.04229115078847908,
+         "delegated_step_fraction_mean_episode": 0.0349511155928223,
+         "delegation_rate_per_eligible": 0.02195945945945946,
+         "delegations_per_episode": 0.279296875
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.888701953125,
+         "success": 0.970703125,
+         "cost": 0.082001171875,
+         "delegated_step_fraction_pooled": 0.38252186398642474,
+         "delegated_step_fraction_mean_episode": 0.3775111505570662,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 3.224609375
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.88869375,
+         "success": 0.970703125,
+         "cost": 0.082009375,
+         "delegated_step_fraction_pooled": 0.03220959101006141,
+         "delegated_step_fraction_mean_episode": 0.025169932062269692,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.18359375
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.8577755859375,
+         "success": 0.94140625,
+         "cost": 0.0836306640625,
+         "delegated_step_fraction_pooled": 0.04133545310015898,
+         "delegated_step_fraction_mean_episode": 0.03567689888226304,
+         "delegation_rate_per_eligible": 0.023262576330328584,
+         "delegations_per_episode": 0.3125
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.8887041015624999,
+         "success": 0.970703125,
+         "cost": 0.08199902343750001,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.049934564296918685,
+          "ci90": [
+           0.03496480003069773,
+           0.0666439191535225
+          ],
+          "ci95": [
+           0.03242619608765247,
+           0.06981220617750238
+          ]
+         },
+         "success_mean": 0.048828125
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00011660757808132339,
+          "ci90": [
+           -0.00022799468174142836,
+           -2.949865291602336e-05
+          ],
+          "ci95": [
+           -0.00026195137370639706,
+           -2.090433482580764e-05
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00010840445308132302,
+          "ci90": [
+           -0.0001984432589745836,
+           -3.0084774369045786e-05
+          ],
+          "ci95": [
+           -0.00021818017142095176,
+           -1.9723378227807077e-05
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.03080975960941868,
+          "ci90": [
+           0.019155687801357495,
+           0.04357181783601227
+          ],
+          "ci95": [
+           0.017584743419794928,
+           0.045975199133651556
+          ]
+         },
+         "success_mean": 0.029296875
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00011875601558132337,
+          "ci90": [
+           -0.0002299683535976166,
+           -3.164763609179844e-05
+          ],
+          "ci95": [
+           -0.00026330904755065713,
+           -2.3046261760927718e-05
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 40,
+       "pit_rescues": 25,
+       "teacher_rescues": 25,
+       "pit_breaks_D_success": 0,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "iid_f2": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.85964296875,
+         "success": 0.9375,
+         "cost": 0.07785703125,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.8975912329322444,
+         "success": 0.970703125,
+         "cost": 0.07311189206775551,
+         "delegated_step_fraction_pooled": 0.08705295259218186,
+         "delegated_step_fraction_mean_episode": 0.07359441450809205,
+         "delegation_rate_per_eligible": 0.04495183731716019,
+         "delegations_per_episode": 0.4921875
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.8998314453125,
+         "success": 0.97265625,
+         "cost": 0.0728248046875,
+         "delegated_step_fraction_pooled": 0.34216212448595523,
+         "delegated_step_fraction_mean_episode": 0.33107058400601835,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.6015625
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.897731640625,
+         "success": 0.97265625,
+         "cost": 0.074924609375,
+         "delegated_step_fraction_pooled": 0.04451388888888889,
+         "delegated_step_fraction_mean_episode": 0.032670252394600016,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.189453125
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.88550234375,
+         "success": 0.9609375,
+         "cost": 0.07543515625,
+         "delegated_step_fraction_pooled": 0.06505449591280654,
+         "delegated_step_fraction_mean_episode": 0.05917025769114562,
+         "delegation_rate_per_eligible": 0.044484275704741734,
+         "delegations_per_episode": 0.533203125
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.89792109375,
+         "success": 0.970703125,
+         "cost": 0.07278203124999999,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.03794826418224449,
+          "ci90": [
+           0.02319841216761433,
+           0.05370582411931531
+          ],
+          "ci95": [
+           0.020762328864174673,
+           0.05691484965990845
+          ]
+         },
+         "success_mean": 0.033203125
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.002240212380255508,
+          "ci90": [
+           -0.006278045515223648,
+           -5.4782913808297516e-05
+          ],
+          "ci95": [
+           -0.006502159008274768,
+           2.2484214505265713e-05
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0001404076927555087,
+          "ci90": [
+           -0.004255267678309336,
+           0.0027969362211018056
+          ],
+          "ci95": [
+           -0.005128530900372901,
+           0.003130293863233414
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.012088889182244492,
+          "ci90": [
+           0.0038701299391079073,
+           0.021006730108820735
+          ],
+          "ci95": [
+           0.0027659216967282933,
+           0.022845766037232935
+          ]
+         },
+         "success_mean": 0.009765625
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0003298608177555084,
+          "ci90": [
+           -0.0004998523490766083,
+           -0.0001682964287589215
+          ],
+          "ci95": [
+           -0.0005359626604709611,
+           -0.00014645593384231536
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 32,
+       "pit_rescues": 18,
+       "teacher_rescues": 18,
+       "pit_breaks_D_success": 1,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "events_train_kinds_p1": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.847596484375,
+         "success": 0.927734375,
+         "cost": 0.080137890625,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.9068568533875228,
+         "success": 0.982421875,
+         "cost": 0.07556502161247725,
+         "delegated_step_fraction_pooled": 0.09246435845213849,
+         "delegated_step_fraction_mean_episode": 0.07785748185587565,
+         "delegation_rate_per_eligible": 0.04832261428819746,
+         "delegations_per_episode": 0.54296875
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.909068359375,
+         "success": 0.984375,
+         "cost": 0.075306640625,
+         "delegated_step_fraction_pooled": 0.3554405556312134,
+         "delegated_step_fraction_mean_episode": 0.3444773127115486,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.771484375
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.91044453125,
+         "success": 0.986328125,
+         "cost": 0.07588359375,
+         "delegated_step_fraction_pooled": 0.03547990155865464,
+         "delegated_step_fraction_mean_episode": 0.026010364367008376,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.166015625
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.8920029296875001,
+         "success": 0.970703125,
+         "cost": 0.0787001953125,
+         "delegated_step_fraction_pooled": 0.07906334276129712,
+         "delegated_step_fraction_mean_episode": 0.07365569018620896,
+         "delegation_rate_per_eligible": 0.04910086004691165,
+         "delegations_per_episode": 0.61328125
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.907216796875,
+         "success": 0.982421875,
+         "cost": 0.07520507812499999,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.059260369012522754,
+          "ci90": [
+           0.04059954161176444,
+           0.07705444902956445
+          ],
+          "ci95": [
+           0.037635451124975045,
+           0.08176933798472326
+          ]
+         },
+         "success_mean": 0.0546875
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.002211505987477245,
+          "ci90": [
+           -0.005970459281721672,
+           -0.0002491804424104936
+          ],
+          "ci95": [
+           -0.006092187774932229,
+           -0.00022497485730185368
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0035876778624772472,
+          "ci90": [
+           -0.0089846291989592,
+           0.00027895273410771836
+          ],
+          "ci95": [
+           -0.009507023967516416,
+           0.0005251304070478584
+          ]
+         },
+         "success_mean": -0.00390625
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.014853923700022751,
+          "ci90": [
+           0.005238815717013741,
+           0.025202584670125677
+          ],
+          "ci95": [
+           0.003440728759714719,
+           0.027290497671464183
+          ]
+         },
+         "success_mean": 0.01171875
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.000359943487477246,
+          "ci90": [
+           -0.00045195777384044676,
+           -0.00026794832581241004
+          ],
+          "ci95": [
+           -0.00047460049071476124,
+           -0.0002573832574728378
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 37,
+       "pit_rescues": 30,
+       "teacher_rescues": 30,
+       "pit_breaks_D_success": 2,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "foreign4": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8626773437499999,
+         "success": 0.935546875,
+         "cost": 0.07286953125000001,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.9129697900780696,
+         "success": 0.98046875,
+         "cost": 0.06749895992193039,
+         "delegated_step_fraction_pooled": 0.21949978188163444,
+         "delegated_step_fraction_mean_episode": 0.1977130870155372,
+         "delegation_rate_per_eligible": 0.14942528735632185,
+         "delegations_per_episode": 1.244140625
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.91393203125,
+         "success": 0.98046875,
+         "cost": 0.06653671875,
+         "delegated_step_fraction_pooled": 0.3047140534949017,
+         "delegated_step_fraction_mean_episode": 0.28860032233558597,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.1171875
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.9126361328125,
+         "success": 0.982421875,
+         "cost": 0.0697857421875,
+         "delegated_step_fraction_pooled": 0.04897899861928639,
+         "delegated_step_fraction_mean_episode": 0.034283914415063205,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.19140625
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.90388203125,
+         "success": 0.974609375,
+         "cost": 0.07072734375,
+         "delegated_step_fraction_pooled": 0.19056118806225902,
+         "delegated_step_fraction_mean_episode": 0.1793308771477503,
+         "delegation_rate_per_eligible": 0.14424668874172186,
+         "delegations_per_episode": 1.361328125
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.913778515625,
+         "success": 0.98046875,
+         "cost": 0.06669023437499999,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.05029244632806962,
+          "ci90": [
+           0.03306610080351053,
+           0.06846530746451247
+          ],
+          "ci95": [
+           0.029562398862588227,
+           0.07115653208089019
+          ]
+         },
+         "success_mean": 0.044921875
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0009622411719303842,
+          "ci90": [
+           -0.0013057091034399974,
+           -0.000548605754717415
+          ],
+          "ci95": [
+           -0.0013695571569666905,
+           -0.0004560615041047299
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.00033365726556961774,
+          "ci90": [
+           -0.005488959872464025,
+           0.00407114739328278
+          ],
+          "ci95": [
+           -0.006478059436986861,
+           0.004331261030470325
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.009087758828069618,
+          "ci90": [
+           0.0020093688406986297,
+           0.017077777648240703
+          ],
+          "ci95": [
+           0.0007567292255196113,
+           0.018837541046153348
+          ]
+         },
+         "success_mean": 0.005859375
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0008087255469303857,
+          "ci90": [
+           -0.000943489559636244,
+           -0.0006780521145362592
+          ],
+          "ci95": [
+           -0.000963021506029833,
+           -0.0006512905905135041
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 33,
+       "pit_rescues": 25,
+       "teacher_rescues": 25,
+       "pit_breaks_D_success": 2,
+       "floor_success_ge_.8x_teacher": true
+      }
+     },
+     "PI-T-1": {
+      "utility_diff": 0.043941414239581644,
+      "success_diff": 0.041015625,
+      "ci": {
+       "n": 1024,
+       "clusters": 1024,
+       "mean": 0.04394141423958159,
+       "ci90": [
+        0.03391986724363252,
+        0.05556253649344902
+       ],
+       "ci95": [
+        0.03223372554778641,
+        0.057843125266926775
+       ]
+      },
+      "pass_": true
+     },
+     "PI-T-2": {
+      "best_comparator": "r1",
+      "diff_vs_best": -0.0011784099791684044,
+      "ci": {
+       "n": 1024,
+       "clusters": 1024,
+       "mean": -0.0011784099791684157,
+       "ci90": [
+        -0.003217337630865118,
+        -8.074362114346241e-05
+       ],
+       "ci95": [
+        -0.003324236137693233,
+        -4.2553168081197395e-05
+       ]
+      },
+      "dsf_pit": 0.06398199771612817,
+      "dsf_teacher": 1.0,
+      "pass_": false
+     },
+     "iid_group": {
+      "policies": {
+       "d": {
+        "n": 1024,
+        "utility": 0.849146875,
+        "success": 0.9296875,
+        "cost": 0.080540625,
+        "delegated_step_fraction_pooled": 0.0,
+        "delegated_step_fraction_mean_episode": 0.0,
+        "delegation_rate_per_eligible": null,
+        "delegations_per_episode": 0.0
+       },
+       "pit": {
+        "n": 1024,
+        "utility": 0.8930882892395816,
+        "success": 0.970703125,
+        "cost": 0.07761483576041842,
+        "delegated_step_fraction_pooled": 0.06398199771612817,
+        "delegated_step_fraction_mean_episode": 0.05427276505045718,
+        "delegation_rate_per_eligible": 0.03259613797656379,
+        "delegations_per_episode": 0.3857421875
+       },
+       "r1": {
+        "n": 1024,
+        "utility": 0.89426669921875,
+        "success": 0.9716796875,
+        "cost": 0.07741298828125,
+        "delegated_step_fraction_pooled": 0.3630051568977721,
+        "delegated_step_fraction_mean_episode": 0.35429086728154224,
+        "delegation_rate_per_eligible": 1.0,
+        "delegations_per_episode": 2.9130859375
+       },
+       "r2": {
+        "n": 1024,
+        "utility": 0.8932126953124999,
+        "success": 0.9716796875,
+        "cost": 0.0784669921875,
+        "delegated_step_fraction_pooled": 0.0381741062411634,
+        "delegated_step_fraction_mean_episode": 0.028920092228434856,
+        "delegation_rate_per_eligible": 1.0,
+        "delegations_per_episode": 0.1865234375
+       },
+       "random": {
+        "n": 1024,
+        "utility": 0.87163896484375,
+        "success": 0.951171875,
+        "cost": 0.07953291015625,
+        "delegated_step_fraction_pooled": 0.05278737049827331,
+        "delegated_step_fraction_mean_episode": 0.04742357828670433,
+        "delegation_rate_per_eligible": 0.03326930464848252,
+        "delegations_per_episode": 0.4228515625
+       },
+       "teacher": {
+        "n": 1024,
+        "utility": 0.8933125976562499,
+        "success": 0.970703125,
+        "cost": 0.07739052734375,
+        "delegated_step_fraction_pooled": 1.0,
+        "delegated_step_fraction_mean_episode": 1.0,
+        "delegation_rate_per_eligible": null,
+        "delegations_per_episode": 1.0
+       }
+      },
+      "pit_minus": {
+       "d": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": 0.04394141423958159,
+         "ci90": [
+          0.03391986724363252,
+          0.05556253649344902
+         ],
+         "ci95": [
+          0.03223372554778641,
+          0.057843125266926775
+         ]
+        },
+        "success_mean": 0.041015625
+       },
+       "r1": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.0011784099791684157,
+         "ci90": [
+          -0.003217337630865118,
+          -8.074362114346241e-05
+         ],
+         "ci95": [
+          -0.003324236137693233,
+          -4.2553168081197395e-05
+         ]
+        },
+        "success_mean": -0.0009765625
+       },
+       "r2": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.00012440607291841585,
+         "ci90": [
+          -0.002181481902018642,
+          0.001371476337269326
+         ],
+         "ci95": [
+          -0.0026769566568768453,
+          0.0015699350656696305
+         ]
+        },
+        "success_mean": -0.0009765625
+       },
+       "random": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": 0.02144932439583159,
+         "ci90": [
+          0.014215731556321758,
+          0.02954722423537043
+         ],
+         "ci95": [
+          0.013060738508769902,
+          0.03117502246102227
+         ]
+        },
+        "success_mean": 0.01953125
+       },
+       "teacher": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.00022430841666841588,
+         "ci90": [
+          -0.00032470499650966676,
+          -0.00013582114713676813
+         ],
+         "ci95": [
+          -0.0003496114756663979,
+          -0.00012243627191079235
+         ]
+        },
+        "success_mean": 0.0
+       }
+      },
+      "pit_teacher_success_agreement": 1.0,
+      "D_failures": 72,
+      "pit_rescues": 43,
+      "teacher_rescues": 43,
+      "pit_breaks_D_success": 1
+     }
+    },
+    "x1-r2": {
+     "conditions": {
+      "iid_f0": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8522724609375001,
+         "success": 0.9375,
+         "cost": 0.0852275390625,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.8885042961461358,
+         "success": 0.970703125,
+         "cost": 0.0821988288538642,
+         "delegated_step_fraction_pooled": 0.05993094912383558,
+         "delegated_step_fraction_mean_episode": 0.050441084657144065,
+         "delegation_rate_per_eligible": 0.036271881406718186,
+         "delegations_per_episode": 0.44921875
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.888701953125,
+         "success": 0.970703125,
+         "cost": 0.082001171875,
+         "delegated_step_fraction_pooled": 0.3829787234042553,
+         "delegated_step_fraction_mean_episode": 0.3778012399302395,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 3.224609375
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.8885357421875,
+         "success": 0.970703125,
+         "cost": 0.0821673828125,
+         "delegated_step_fraction_pooled": 0.032847907007118135,
+         "delegated_step_fraction_mean_episode": 0.025484513237775758,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.185546875
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.8667644531250001,
+         "success": 0.951171875,
+         "cost": 0.084407421875,
+         "delegated_step_fraction_pooled": 0.06291014639071177,
+         "delegated_step_fraction_mean_episode": 0.06005924843329022,
+         "delegation_rate_per_eligible": 0.037266165856532626,
+         "delegations_per_episode": 0.494140625
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.8887041015624999,
+         "success": 0.970703125,
+         "cost": 0.08199902343750001,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.03623183520863581,
+          "ci90": [
+           0.023071170591185085,
+           0.05138862256070514
+          ],
+          "ci95": [
+           0.02050332315095232,
+           0.05345490164271063
+          ]
+         },
+         "success_mean": 0.033203125
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00019765697886420052,
+          "ci90": [
+           -0.0003611554840992061,
+           -7.479489328557762e-05
+          ],
+          "ci95": [
+           -0.0003918031173727781,
+           -6.015109435792819e-05
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -3.144604136420061e-05,
+          "ci90": [
+           -7.792887208630477e-05,
+           1.5038540776178558e-05
+          ],
+          "ci95": [
+           -8.945791043391782e-05,
+           2.4414656087994012e-05
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.021739843021135803,
+          "ci90": [
+           0.011285820022649738,
+           0.033410575311615794
+          ],
+          "ci95": [
+           0.009440576149452241,
+           0.03569024659262137
+          ]
+         },
+         "success_mean": 0.01953125
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0001998054163642005,
+          "ci90": [
+           -0.0003646784678766734,
+           -7.557566253439976e-05
+          ],
+          "ci95": [
+           -0.00039396135605172355,
+           -6.229953185792816e-05
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 32,
+       "pit_rescues": 18,
+       "teacher_rescues": 18,
+       "pit_breaks_D_success": 1,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "iid_f2": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8603574218750001,
+         "success": 0.9375,
+         "cost": 0.077142578125,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.896639281012987,
+         "success": 0.970703125,
+         "cost": 0.07406384398701302,
+         "delegated_step_fraction_pooled": 0.09480968858131487,
+         "delegated_step_fraction_mean_episode": 0.07914630774035303,
+         "delegation_rate_per_eligible": 0.05370935872103467,
+         "delegations_per_episode": 0.583984375
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.899820703125,
+         "success": 0.97265625,
+         "cost": 0.07283554687499999,
+         "delegated_step_fraction_pooled": 0.3439241917502787,
+         "delegated_step_fraction_mean_episode": 0.33216050794119334,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.6015625
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.8969873046875001,
+         "success": 0.97265625,
+         "cost": 0.0756689453125,
+         "delegated_step_fraction_pooled": 0.04675234456408475,
+         "delegated_step_fraction_mean_episode": 0.033811427727553196,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.1953125
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.884225,
+         "success": 0.9609375,
+         "cost": 0.0767125,
+         "delegated_step_fraction_pooled": 0.08527755430410297,
+         "delegated_step_fraction_mean_episode": 0.07769359102431084,
+         "delegation_rate_per_eligible": 0.056310361761335734,
+         "delegations_per_episode": 0.671875
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.89792109375,
+         "success": 0.970703125,
+         "cost": 0.07278203124999999,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.036281859137986996,
+          "ci90": [
+           0.02296480840156588,
+           0.05132387875036946
+          ],
+          "ci95": [
+           0.02010692452286887,
+           0.054296364144442125
+          ]
+         },
+         "success_mean": 0.033203125
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0031814221120130093,
+          "ci90": [
+           -0.007210863149560778,
+           -0.0005690197172508309
+          ],
+          "ci95": [
+           -0.00795902295729734,
+           -0.0004393215341794455
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00034802367451301005,
+          "ci90": [
+           -0.00448696803323977,
+           0.0025880127972329773
+          ],
+          "ci95": [
+           -0.005456875641620735,
+           0.002890154590454345
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.012414281012986993,
+          "ci90": [
+           0.004103327243425039,
+           0.021614798815256436
+          ],
+          "ci95": [
+           0.0025362118563883153,
+           0.023488794832839693
+          ]
+         },
+         "success_mean": 0.009765625
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0012818127370130088,
+          "ci90": [
+           -0.002184259417613544,
+           -0.0005593007376727322
+          ],
+          "ci95": [
+           -0.0024552400073126097,
+           -0.0005063268126995518
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 32,
+       "pit_rescues": 18,
+       "teacher_rescues": 18,
+       "pit_breaks_D_success": 1,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "events_train_kinds_p1": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8563976562500001,
+         "success": 0.935546875,
+         "cost": 0.07914921875,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.906869551915336,
+         "success": 0.982421875,
+         "cost": 0.07555232308466392,
+         "delegated_step_fraction_pooled": 0.10410865874363327,
+         "delegated_step_fraction_mean_episode": 0.08939647722710223,
+         "delegation_rate_per_eligible": 0.06071871127633209,
+         "delegations_per_episode": 0.669921875
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.9090640625,
+         "success": 0.984375,
+         "cost": 0.07531093750000001,
+         "delegated_step_fraction_pooled": 0.3562091503267974,
+         "delegated_step_fraction_mean_episode": 0.344925218761571,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.771484375
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.9105925781249999,
+         "success": 0.986328125,
+         "cost": 0.075735546875,
+         "delegated_step_fraction_pooled": 0.036237840800109604,
+         "delegated_step_fraction_mean_episode": 0.026408014587932818,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.16796875
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.8982558593750001,
+         "success": 0.9765625,
+         "cost": 0.078306640625,
+         "delegated_step_fraction_pooled": 0.09332892998678996,
+         "delegated_step_fraction_mean_episode": 0.08576089988824886,
+         "delegation_rate_per_eligible": 0.06338142324525856,
+         "delegations_per_episode": 0.763671875
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.907216796875,
+         "success": 0.982421875,
+         "cost": 0.07520507812499999,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.050471895665336095,
+          "ci90": [
+           0.03351417092302025,
+           0.06695447265260983
+          ],
+          "ci95": [
+           0.029830127342124053,
+           0.07137488165335659
+          ]
+         },
+         "success_mean": 0.046875
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0021945105846639086,
+          "ci90": [
+           -0.005950172360890623,
+           -0.0002302355611953122
+          ],
+          "ci95": [
+           -0.006073461791718034,
+           -0.00020369154360392103
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0037230262096639125,
+          "ci90": [
+           -0.0091542163900757,
+           0.00010503843125540207
+          ],
+          "ci95": [
+           -0.009572441379301976,
+           0.0003129923048088961
+          ]
+         },
+         "success_mean": -0.00390625
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.00861369254033609,
+          "ci90": [
+           0.001684307539745885,
+           0.01599940306121332
+          ],
+          "ci95": [
+           0.0007518823169363407,
+           0.017727758312400258
+          ]
+         },
+         "success_mean": 0.005859375
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0003472449596639101,
+          "ci90": [
+           -0.0004410040064808792,
+           -0.0002546557705469838
+          ],
+          "ci95": [
+           -0.00046408644390769267,
+           -0.0002411719168411324
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 33,
+       "pit_rescues": 26,
+       "teacher_rescues": 26,
+       "pit_breaks_D_success": 2,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "foreign4": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8690873046875001,
+         "success": 0.94140625,
+         "cost": 0.07231894531250001,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.9119354080291134,
+         "success": 0.98046875,
+         "cost": 0.06853334197088655,
+         "delegated_step_fraction_pooled": 0.19721259387637205,
+         "delegated_step_fraction_mean_episode": 0.17529613763813984,
+         "delegation_rate_per_eligible": 0.13515920730349587,
+         "delegations_per_episode": 1.185546875
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.9139341796875,
+         "success": 0.98046875,
+         "cost": 0.0665345703125,
+         "delegated_step_fraction_pooled": 0.3062144387792803,
+         "delegated_step_fraction_mean_episode": 0.28954867562292264,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.1171875
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.9126623046875,
+         "success": 0.982421875,
+         "cost": 0.06975957031249999,
+         "delegated_step_fraction_pooled": 0.05008383757381352,
+         "delegated_step_fraction_mean_episode": 0.03491818115234304,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.193359375
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.9067988281249999,
+         "success": 0.978515625,
+         "cost": 0.071716796875,
+         "delegated_step_fraction_pooled": 0.17607353152376848,
+         "delegated_step_fraction_mean_episode": 0.16434910940675337,
+         "delegation_rate_per_eligible": 0.13507492912110167,
+         "delegations_per_episode": 1.302734375
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.913778515625,
+         "success": 0.98046875,
+         "cost": 0.06669023437499999,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.042848103341613444,
+          "ci90": [
+           0.02756580898550994,
+           0.05892028026752265
+          ],
+          "ci95": [
+           0.023284109712656098,
+           0.062197110559346125
+          ]
+         },
+         "success_mean": 0.0390625
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00199877165838655,
+          "ci90": [
+           -0.002556262214292887,
+           -0.0014725504435938997
+          ],
+          "ci95": [
+           -0.0026556940110228086,
+           -0.0013523578729405464
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0007268966583865461,
+          "ci90": [
+           -0.0065804695709155,
+           0.002969453754067146
+          ],
+          "ci95": [
+           -0.007673668586787771,
+           0.0033100165685957346
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.005136579904113453,
+          "ci90": [
+           0.0007064157032854993,
+           0.01123220356543011
+          ],
+          "ci95": [
+           0.0004468138462828135,
+           0.012429183721572173
+          ]
+         },
+         "success_mean": 0.001953125
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0018431075958865513,
+          "ci90": [
+           -0.002288783886508739,
+           -0.0014759682175701082
+          ],
+          "ci95": [
+           -0.002392145924518376,
+           -0.0014221347676520277
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 30,
+       "pit_rescues": 21,
+       "teacher_rescues": 21,
+       "pit_breaks_D_success": 1,
+       "floor_success_ge_.8x_teacher": true
+      }
+     },
+     "PI-T-1": {
+      "utility_diff": 0.036256847173311346,
+      "success_diff": 0.033203125,
+      "ci": {
+       "n": 1024,
+       "clusters": 1024,
+       "mean": 0.0362568471733114,
+       "ci90": [
+        0.026771339512302122,
+        0.04700333295964846
+       ],
+       "ci95": [
+        0.024970911389175728,
+        0.04873600482345284
+       ]
+      },
+      "pass_": true
+     },
+     "PI-T-2": {
+      "best_comparator": "r1",
+      "diff_vs_best": -0.0016895395454386009,
+      "ci": {
+       "n": 1024,
+       "clusters": 1024,
+       "mean": -0.001689539545438605,
+       "ci90": [
+        -0.003687962427917579,
+        -0.0004018496985266436
+       ],
+       "ci95": [
+        -0.00405117863256632,
+        -0.0003480285902906166
+       ]
+      },
+      "dsf_pit": 0.07684305895775309,
+      "dsf_teacher": 1.0,
+      "pass_": false
+     },
+     "iid_group": {
+      "policies": {
+       "d": {
+        "n": 1024,
+        "utility": 0.8563149414062501,
+        "success": 0.9375,
+        "cost": 0.08118505859375,
+        "delegated_step_fraction_pooled": 0.0,
+        "delegated_step_fraction_mean_episode": 0.0,
+        "delegation_rate_per_eligible": null,
+        "delegations_per_episode": 0.0
+       },
+       "pit": {
+        "n": 1024,
+        "utility": 0.8925717885795614,
+        "success": 0.970703125,
+        "cost": 0.07813133642043861,
+        "delegated_step_fraction_pooled": 0.07684305895775309,
+        "delegated_step_fraction_mean_episode": 0.06479369619874854,
+        "delegation_rate_per_eligible": 0.04442391669465905,
+        "delegations_per_episode": 0.5166015625
+       },
+       "r1": {
+        "n": 1024,
+        "utility": 0.894261328125,
+        "success": 0.9716796875,
+        "cost": 0.077418359375,
+        "delegated_step_fraction_pooled": 0.3640897755610973,
+        "delegated_step_fraction_mean_episode": 0.3549808739357164,
+        "delegation_rate_per_eligible": 1.0,
+        "delegations_per_episode": 2.9130859375
+       },
+       "r2": {
+        "n": 1024,
+        "utility": 0.8927615234375,
+        "success": 0.9716796875,
+        "cost": 0.07891816406249999,
+        "delegated_step_fraction_pooled": 0.03958529688972667,
+        "delegated_step_fraction_mean_episode": 0.029647970482664477,
+        "delegation_rate_per_eligible": 1.0,
+        "delegations_per_episode": 0.1904296875
+       },
+       "random": {
+        "n": 1024,
+        "utility": 0.8754947265625,
+        "success": 0.9560546875,
+        "cost": 0.08055996093750001,
+        "delegated_step_fraction_pooled": 0.07375503835652061,
+        "delegated_step_fraction_mean_episode": 0.06887641972880053,
+        "delegation_rate_per_eligible": 0.04628624592960149,
+        "delegations_per_episode": 0.5830078125
+       },
+       "teacher": {
+        "n": 1024,
+        "utility": 0.8933125976562499,
+        "success": 0.970703125,
+        "cost": 0.07739052734375,
+        "delegated_step_fraction_pooled": 1.0,
+        "delegated_step_fraction_mean_episode": 1.0,
+        "delegation_rate_per_eligible": null,
+        "delegations_per_episode": 1.0
+       }
+      },
+      "pit_minus": {
+       "d": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": 0.0362568471733114,
+         "ci90": [
+          0.026771339512302122,
+          0.04700333295964846
+         ],
+         "ci95": [
+          0.024970911389175728,
+          0.04873600482345284
+         ]
+        },
+        "success_mean": 0.033203125
+       },
+       "r1": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.001689539545438605,
+         "ci90": [
+          -0.003687962427917579,
+          -0.0004018496985266436
+         ],
+         "ci95": [
+          -0.00405117863256632,
+          -0.0003480285902906166
+         ]
+        },
+        "success_mean": -0.0009765625
+       },
+       "r2": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.00018973485793860533,
+         "ci90": [
+          -0.0022193493870431673,
+          0.001294879944776755
+         ],
+         "ci95": [
+          -0.0027276462771265845,
+          0.0014936081479579551
+         ]
+        },
+        "success_mean": -0.0009765625
+       },
+       "random": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": 0.017077062017061398,
+         "ci90": [
+          0.010101917529890645,
+          0.024478017875804104
+         ],
+         "ci95": [
+          0.00852051955418221,
+          0.025723234436355488
+         ]
+        },
+        "success_mean": 0.0146484375
+       },
+       "teacher": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.0007408090766886046,
+         "ci90": [
+          -0.0012227780342270766,
+          -0.0003792599652797728
+         ],
+         "ci95": [
+          -0.0013259836344191292,
+          -0.0003447853336893738
+         ]
+        },
+        "success_mean": 0.0
+       }
+      },
+      "pit_teacher_success_agreement": 1.0,
+      "D_failures": 64,
+      "pit_rescues": 36,
+      "teacher_rescues": 36,
+      "pit_breaks_D_success": 2
+     }
+    }
+   },
+   "pooled_iid_pit_minus": {
+    "r1": {
+     "n": 3072,
+     "clusters": 1024,
+     "mean": -0.0013089422565948884,
+     "ci90": [
+      -0.003325514381034656,
+      -0.00017741821298377755
+     ],
+     "ci95": [
+      -0.003465496480589896,
+      -0.0001427923886457161
+     ]
+    },
+    "r2": {
+     "n": 3072,
+     "clusters": 1024,
+     "mean": -0.00014777689201155527,
+     "ci90": [
+      -0.002209597802753092,
+      0.0013398048398716737
+     ],
+     "ci95": [
+      -0.002700859360444879,
+      0.001528936268109801
+     ]
+    },
+    "teacher": {
+     "n": 3072,
+     "clusters": 1024,
+     "mean": -0.0003655828815948884,
+     "ci90": [
+      -0.0005619053100544102,
+      -0.0002209866449108222
+     ],
+     "ci95": [
+      -0.0005916726789624197,
+      -0.0002021241125813886
+     ]
+    },
+    "random": {
+     "n": 3072,
+     "clusters": 1024,
+     "mean": 0.01711348612882178,
+     "ci90": [
+      0.011871120051582515,
+      0.022943306048417152
+     ],
+     "ci95": [
+      0.010958259236393956,
+      0.024099695455261104
+     ]
+    },
+    "d": {
+     "n": 3072,
+     "clusters": 1024,
+     "mean": 0.038418075972571776,
+     "ci90": [
+      0.02941459910105524,
+      0.04884523804496419
+     ],
+     "ci95": [
+      0.027579243144664208,
+      0.05111712979596019
+     ]
+    }
+   },
+   "gap_comparison": {
+    "x1-r0": {
+     "pit_minus_d": 0.035055966504822345,
+     "teacher_minus_d": 0.0351875976562499,
+     "r2_minus_pit": 0.00012918974517761583,
+     "dsf_r2": 0.038225578102878716,
+     "dsf_pit": 0.06846228857728909
+    },
+    "x1-r1": {
+     "pit_minus_d": 0.043941414239581644,
+     "teacher_minus_d": 0.04416572265624996,
+     "r2_minus_pit": 0.00012440607291830386,
+     "dsf_r2": 0.0381741062411634,
+     "dsf_pit": 0.06398199771612817
+    },
+    "x1-r2": {
+     "pit_minus_d": 0.036256847173311346,
+     "teacher_minus_d": 0.036997656249999844,
+     "r2_minus_pit": 0.000189734857938606,
+     "dsf_r2": 0.03958529688972667,
+     "dsf_pit": 0.07684305895775309
+    }
+   },
+   "summary": {
+    "PI_T_1_pass": 3,
+    "PI_T_2_pass": 0,
+    "lineages": 3
+   }
+  },
+  "A-CF-T": {
+   "teacher_evaluated_in_bases": [
+    "x1-r3"
+   ],
+   "policies_by_base": {
+    "x1-r3": [
+     "d",
+     "pit",
+     "r1",
+     "r2",
+     "random",
+     "teacher"
+    ],
+    "x1-r4": [
+     "d",
+     "pit",
+     "r1",
+     "r2",
+     "random"
+    ],
+    "x1-r5": [
+     "d",
+     "pit",
+     "r1",
+     "r2",
+     "random"
+    ]
+   },
+   "pairing": {
+    "iid_f0": {
+     "n": 512,
+     "identical_across_policies_and_bases": true
+    },
+    "iid_f2": {
+     "n": 512,
+     "identical_across_policies_and_bases": true
+    },
+    "events_train_kinds_p1": {
+     "n": 512,
+     "identical_across_policies_and_bases": true
+    },
+    "foreign4": {
+     "n": 512,
+     "identical_across_policies_and_bases": true
+    }
+   },
+   "integrity": {
+    "files": 192,
+    "controller_sha_ok": 192,
+    "margin_.075": 192,
+    "protocol_worlds": 192,
+    "chunks_random_rate_eq_pit_rate": 192
+   },
+   "bases": [
+    "x1-r3",
+    "x1-r4",
+    "x1-r5"
+   ],
+   "controller_sha_in_meta": [
+    "dea16e83488d2d74c4cbbef6dbbc13dbda4625e01ba601552fcb367854cd6db0"
+   ],
+   "controller_path_in_meta": [
+    "/home/brand/structured-latent-dynamics-campaign05/results/e05-apit/controller.json"
+   ],
+   "actor_sha_by_base": {
+    "x1-r3": [
+     "5a25a83d1ee6c798cc29d7d4ad444a57d4257cfcd88dace99c0ee860c177ca95"
+    ],
+    "x1-r4": [
+     "c7cd0d5bf49de07c6086741aa46139ed9bfe198a0b18762ce3d6dc219e50e881"
+    ],
+    "x1-r5": [
+     "e60b325b43fd8cb17081921b3128491c87ea7a747f5f8c35725f75e31ee94f8a"
+    ]
+   },
+   "teacher_rows_identical_across_bases": {
+    "identical": 2048
+   },
+   "comparator_checks": {
+    "pit_end_commit": 3393,
+    "pit_end_episode_end": 746,
+    "pit_end_max_steps": 16,
+    "r1_end_commit": 11346,
+    "r1_end_episode_end": 4815,
+    "r1_end_max_steps": 27,
+    "r2_end_commit": 888,
+    "r2_end_episode_end": 123,
+    "r2_end_max_steps": 9,
+    "random_end_commit": 3392,
+    "random_end_episode_end": 1311,
+    "random_end_max_steps": 28
+   },
+   "lineages": {
+    "x1-r3": {
+     "conditions": {
+      "iid_f0": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8803369140624999,
+         "success": 0.962890625,
+         "cost": 0.0825537109375,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.904610934174152,
+         "success": 0.982421875,
+         "cost": 0.07781094082584805,
+         "delegated_step_fraction_pooled": 0.029608975635663545,
+         "delegated_step_fraction_mean_episode": 0.02614749005979575,
+         "delegation_rate_per_eligible": 0.017120622568093387,
+         "delegations_per_episode": 0.21484375
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.904633984375,
+         "success": 0.982421875,
+         "cost": 0.077787890625,
+         "delegated_step_fraction_pooled": 0.37533191715347847,
+         "delegated_step_fraction_mean_episode": 0.3722876813200221,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 3.1484375
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.9046306640625,
+         "success": 0.982421875,
+         "cost": 0.0777912109375,
+         "delegated_step_fraction_pooled": 0.025310569321729887,
+         "delegated_step_fraction_mean_episode": 0.020249459483486526,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.13671875
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.889941015625,
+         "success": 0.97265625,
+         "cost": 0.082715234375,
+         "delegated_step_fraction_pooled": 0.027909590409590408,
+         "delegated_step_fraction_mean_episode": 0.025772853983708016,
+         "delegation_rate_per_eligible": 0.01669174989738678,
+         "delegations_per_episode": 0.23828125
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.9046361328125,
+         "success": 0.982421875,
+         "cost": 0.07778574218749999,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.02427402011165196,
+          "ci90": [
+           0.013576723936113916,
+           0.03612648044164324
+          ],
+          "ci95": [
+           0.011777396203401591,
+           0.03841713280778441
+          ]
+         },
+         "success_mean": 0.01953125
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -2.3050200848049365e-05,
+          "ci90": [
+           -5.683943957195605e-05,
+           4.294088644429383e-06
+          ],
+          "ci95": [
+           -6.309124354823518e-05,
+           6.639043614017372e-06
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -1.972988834804973e-05,
+          "ci90": [
+           -3.164124565654228e-05,
+           -8.794560230375265e-06
+          ],
+          "ci95": [
+           -3.496912220027806e-05,
+           -6.832103537210351e-06
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.014669918549151952,
+          "ci90": [
+           0.007445844145652748,
+           0.023034653680809394
+          ],
+          "ci95": [
+           0.006222393148853917,
+           0.025044595428686426
+          ]
+         },
+         "success_mean": 0.009765625
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -2.51986383480494e-05,
+          "ci90": [
+           -5.8804784965021465e-05,
+           1.9310273667602986e-07
+          ],
+          "ci95": [
+           -6.719034200522207e-05,
+           4.29633472629141e-06
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 19,
+       "pit_rescues": 10,
+       "teacher_rescues": 10,
+       "pit_breaks_D_success": 0,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "iid_f2": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8785798828125,
+         "success": 0.955078125,
+         "cost": 0.0764982421875,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.9037787329940774,
+         "success": 0.9765625,
+         "cost": 0.07278376700592257,
+         "delegated_step_fraction_pooled": 0.08078907012407639,
+         "delegated_step_fraction_mean_episode": 0.06785411197544053,
+         "delegation_rate_per_eligible": 0.043897216274089934,
+         "delegations_per_episode": 0.48046875
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.9063785156249999,
+         "success": 0.978515625,
+         "cost": 0.07213710937500001,
+         "delegated_step_fraction_pooled": 0.33856660095747676,
+         "delegated_step_fraction_mean_episode": 0.32912382455442135,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.578125
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.90778984375,
+         "success": 0.98046875,
+         "cost": 0.07267890625,
+         "delegated_step_fraction_pooled": 0.03527585720333004,
+         "delegated_step_fraction_mean_episode": 0.02582141862854595,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.16015625
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.8968941406250001,
+         "success": 0.97265625,
+         "cost": 0.075762109375,
+         "delegated_step_fraction_pooled": 0.06590296495956874,
+         "delegated_step_fraction_mean_episode": 0.059491977188442235,
+         "delegation_rate_per_eligible": 0.04147317854283427,
+         "delegations_per_episode": 0.505859375
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.90406171875,
+         "success": 0.9765625,
+         "cost": 0.07250078125000001,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.025198850181577435,
+          "ci90": [
+           0.012929136326404975,
+           0.039323751163456745
+          ],
+          "ci95": [
+           0.010274832857365619,
+           0.04237471199776137
+          ]
+         },
+         "success_mean": 0.021484375
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0025997826309225613,
+          "ci90": [
+           -0.0070178381183630695,
+           -0.0002618717063981734
+          ],
+          "ci95": [
+           -0.007169743437800458,
+           -0.0002275040292934163
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.004011110755922561,
+          "ci90": [
+           -0.009649831186982587,
+           9.346990497797962e-05
+          ],
+          "ci95": [
+           -0.01061153125129816,
+           0.0003128190873075444
+          ]
+         },
+         "success_mean": -0.00390625
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.006884592369077439,
+          "ci90": [
+           -0.00042876617890687366,
+           0.014703351604484903
+          ],
+          "ci95": [
+           -0.0021121634639952877,
+           0.01613174811047815
+          ]
+         },
+         "success_mean": 0.00390625
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0002829857559225622,
+          "ci90": [
+           -0.00047206817981178506,
+           -0.00014430130499004098
+          ],
+          "ci95": [
+           -0.0005171890656950353,
+           -0.00012809839837254756
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 23,
+       "pit_rescues": 12,
+       "teacher_rescues": 12,
+       "pit_breaks_D_success": 1,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "events_train_kinds_p1": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8699874999999999,
+         "success": 0.947265625,
+         "cost": 0.077278125,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.8937447463621748,
+         "success": 0.966796875,
+         "cost": 0.0730521286378252,
+         "delegated_step_fraction_pooled": 0.09402352297592997,
+         "delegated_step_fraction_mean_episode": 0.08098498163665462,
+         "delegation_rate_per_eligible": 0.04985027303153074,
+         "delegations_per_episode": 0.552734375
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.8940310546875,
+         "success": 0.966796875,
+         "cost": 0.07276582031249999,
+         "delegated_step_fraction_pooled": 0.35387892530749676,
+         "delegated_step_fraction_mean_episode": 0.34296927796821186,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.69921875
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.90318671875,
+         "success": 0.9765625,
+         "cost": 0.07337578125000001,
+         "delegated_step_fraction_pooled": 0.039495450785773364,
+         "delegated_step_fraction_mean_episode": 0.028918594642095004,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.173828125
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.8912716796875,
+         "success": 0.966796875,
+         "cost": 0.07552519531249999,
+         "delegated_step_fraction_pooled": 0.07979179020886869,
+         "delegated_step_fraction_mean_episode": 0.07167861773675685,
+         "delegation_rate_per_eligible": 0.049524996106525464,
+         "delegations_per_episode": 0.62109375
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.8939611328124999,
+         "success": 0.966796875,
+         "cost": 0.0728357421875,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.023757246362174807,
+          "ci90": [
+           0.008847384302125548,
+           0.03936066385481111
+          ],
+          "ci95": [
+           0.006098443645974877,
+           0.042000646854847445
+          ]
+         },
+         "success_mean": 0.01953125
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00028630832532519396,
+          "ci90": [
+           -0.0004521848772856712,
+           -0.00012752006356188094
+          ],
+          "ci95": [
+           -0.00048611179858065837,
+           -9.801843505986103e-05
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.009441972387825195,
+          "ci90": [
+           -0.017201807670692116,
+           -0.0035095145697974597
+          ],
+          "ci95": [
+           -0.019004096992820695,
+           -0.0018512902850221747
+          ]
+         },
+         "success_mean": -0.009765625
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.0024730666746748064,
+          "ci90": [
+           -0.007424743186604103,
+           0.011875691426546826
+          ],
+          "ci95": [
+           -0.009214119939568204,
+           0.013580854034848057
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00021638645032519358,
+          "ci90": [
+           -0.0003388782274322677,
+           -9.489020737993674e-05
+          ],
+          "ci95": [
+           -0.00036895566685944724,
+           -7.162477677890463e-05
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 27,
+       "pit_rescues": 16,
+       "teacher_rescues": 16,
+       "pit_breaks_D_success": 6,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "foreign4": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8816029296875,
+         "success": 0.953125,
+         "cost": 0.07152207031249999,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.9058160732973559,
+         "success": 0.97265625,
+         "cost": 0.06684017670264406,
+         "delegated_step_fraction_pooled": 0.19151101097463477,
+         "delegated_step_fraction_mean_episode": 0.16783654289167038,
+         "delegation_rate_per_eligible": 0.1201707097933513,
+         "delegations_per_episode": 1.044921875
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.9117568359374999,
+         "success": 0.978515625,
+         "cost": 0.06675878906249999,
+         "delegated_step_fraction_pooled": 0.30634347601856626,
+         "delegated_step_fraction_mean_episode": 0.2878850925459626,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.115234375
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.912684375,
+         "success": 0.98046875,
+         "cost": 0.067784375,
+         "delegated_step_fraction_pooled": 0.04963752034324604,
+         "delegated_step_fraction_mean_episode": 0.03497488288755435,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.1875
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.9039080078124999,
+         "success": 0.97265625,
+         "cost": 0.0687482421875,
+         "delegated_step_fraction_pooled": 0.15649047105357786,
+         "delegated_step_fraction_mean_episode": 0.14546718818906298,
+         "delegation_rate_per_eligible": 0.11840539468464895,
+         "delegations_per_episode": 1.166015625
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.908121484375,
+         "success": 0.974609375,
+         "cost": 0.066487890625,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.024213143609855953,
+          "ci90": [
+           0.009935254193690103,
+           0.03868188439145255
+          ],
+          "ci95": [
+           0.0074856074808847435,
+           0.04133828318716229
+          ]
+         },
+         "success_mean": 0.01953125
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.005940762640144049,
+          "ci90": [
+           -0.011821282693132824,
+           -0.0015567975892536682
+          ],
+          "ci95": [
+           -0.013420621028205418,
+           -0.00036615350010925374
+          ]
+         },
+         "success_mean": -0.005859375
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.006868301702644049,
+          "ci90": [
+           -0.013247958645922715,
+           -0.0012705371341912913
+          ],
+          "ci95": [
+           -0.014709157057401185,
+           -0.0007480219787236154
+          ]
+         },
+         "success_mean": -0.0078125
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.0019080654848559519,
+          "ci90": [
+           -0.006066769139490069,
+           0.009510331718910503
+          ],
+          "ci95": [
+           -0.007337565479260241,
+           0.010737140646909962
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.002305411077644048,
+          "ci90": [
+           -0.00629722929714527,
+           -0.00025832645015983917
+          ],
+          "ci95": [
+           -0.006379858172830347,
+           -0.00024408261024409488
+          ]
+         },
+         "success_mean": -0.001953125
+        }
+       },
+       "pit_teacher_success_agreement": 0.998046875,
+       "D_failures": 24,
+       "pit_rescues": 15,
+       "teacher_rescues": 15,
+       "pit_breaks_D_success": 5,
+       "floor_success_ge_.8x_teacher": true
+      }
+     },
+     "PI-T-1": {
+      "utility_diff": 0.02473643514661472,
+      "success_diff": 0.0205078125,
+      "ci": {
+       "n": 1024,
+       "clusters": 1024,
+       "mean": 0.024736435146614697,
+       "ci90": [
+        0.01670390107590777,
+        0.033570721658528827
+       ],
+       "ci95": [
+        0.014978211989131355,
+        0.03514670181407374
+       ]
+      },
+      "pass_": true
+     },
+     "PI-T-2": {
+      "best_comparator": "r2",
+      "diff_vs_best": -0.0020154203221353084,
+      "ci": {
+       "n": 1024,
+       "clusters": 1024,
+       "mean": -0.0020154203221353054,
+       "ci90": [
+        -0.004838346063591981,
+        3.883880586068132e-05
+       ],
+       "ci95": [
+        -0.0053821553794057946,
+        0.00013090237283059546
+       ]
+      },
+      "dsf_pit": 0.05457513006222585,
+      "dsf_teacher": 1.0,
+      "pass_": false
+     },
+     "iid_group": {
+      "policies": {
+       "d": {
+        "n": 1024,
+        "utility": 0.8794583984375,
+        "success": 0.958984375,
+        "cost": 0.07952597656249999,
+        "delegated_step_fraction_pooled": 0.0,
+        "delegated_step_fraction_mean_episode": 0.0,
+        "delegation_rate_per_eligible": null,
+        "delegations_per_episode": 0.0
+       },
+       "pit": {
+        "n": 1024,
+        "utility": 0.9041948335841147,
+        "success": 0.9794921875,
+        "cost": 0.07529735391588531,
+        "delegated_step_fraction_pooled": 0.05457513006222585,
+        "delegated_step_fraction_mean_episode": 0.04700080101761814,
+        "delegation_rate_per_eligible": 0.029595145066090282,
+        "delegations_per_episode": 0.34765625
+       },
+       "r1": {
+        "n": 1024,
+        "utility": 0.90550625,
+        "success": 0.98046875,
+        "cost": 0.0749625,
+        "delegated_step_fraction_pooled": 0.3574894082274156,
+        "delegated_step_fraction_mean_episode": 0.3507057529372217,
+        "delegation_rate_per_eligible": 1.0,
+        "delegations_per_episode": 2.86328125
+       },
+       "r2": {
+        "n": 1024,
+        "utility": 0.90621025390625,
+        "success": 0.9814453125,
+        "cost": 0.07523505859374999,
+        "delegated_step_fraction_pooled": 0.030143360591234132,
+        "delegated_step_fraction_mean_episode": 0.023035439056016238,
+        "delegation_rate_per_eligible": 1.0,
+        "delegations_per_episode": 0.1484375
+       },
+       "random": {
+        "n": 1024,
+        "utility": 0.893417578125,
+        "success": 0.97265625,
+        "cost": 0.079238671875,
+        "delegated_step_fraction_pooled": 0.046182266009852216,
+        "delegated_step_fraction_mean_episode": 0.042632415586075126,
+        "delegation_rate_per_eligible": 0.028109783089862773,
+        "delegations_per_episode": 0.3720703125
+       },
+       "teacher": {
+        "n": 1024,
+        "utility": 0.90434892578125,
+        "success": 0.9794921875,
+        "cost": 0.07514326171874999,
+        "delegated_step_fraction_pooled": 1.0,
+        "delegated_step_fraction_mean_episode": 1.0,
+        "delegation_rate_per_eligible": null,
+        "delegations_per_episode": 1.0
+       }
+      },
+      "pit_minus": {
+       "d": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": 0.024736435146614697,
+         "ci90": [
+          0.01670390107590777,
+          0.033570721658528827
+         ],
+         "ci95": [
+          0.014978211989131355,
+          0.03514670181407374
+         ]
+        },
+        "success_mean": 0.0205078125
+       },
+       "r1": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.0013114164158853053,
+         "ci90": [
+          -0.003524931127303486,
+          -0.00014403366367243218
+         ],
+         "ci95": [
+          -0.0036112886089150146,
+          -0.00012703398964219125
+         ]
+        },
+        "success_mean": -0.0009765625
+       },
+       "r2": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.0020154203221353054,
+         "ci90": [
+          -0.004838346063591981,
+          3.883880586068132e-05
+         ],
+         "ci95": [
+          -0.0053821553794057946,
+          0.00013090237283059546
+         ]
+        },
+        "success_mean": -0.001953125
+       },
+       "random": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": 0.010777255459114695,
+         "ci90": [
+          0.0056999899415494425,
+          0.0163308308967467
+         ],
+         "ci95": [
+          0.004776569875725427,
+          0.01778513165904872
+         ]
+        },
+        "success_mean": 0.0068359375
+       },
+       "teacher": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.0001540921971353058,
+         "ci90": [
+          -0.00024823368084038244,
+          -8.435087257976177e-05
+         ],
+         "ci95": [
+          -0.00026972831844771037,
+          -7.567442122681804e-05
+         ]
+        },
+        "success_mean": 0.0
+       }
+      },
+      "pit_teacher_success_agreement": 1.0,
+      "D_failures": 42,
+      "pit_rescues": 22,
+      "teacher_rescues": 22,
+      "pit_breaks_D_success": 1
+     }
+    },
+    "x1-r4": {
+     "conditions": {
+      "iid_f0": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8842130859374999,
+         "success": 0.966796875,
+         "cost": 0.0825837890625,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.9045374987146392,
+         "success": 0.982421875,
+         "cost": 0.07788437628536074,
+         "delegated_step_fraction_pooled": 0.039270315091210616,
+         "delegated_step_fraction_mean_episode": 0.034117421232211356,
+         "delegation_rate_per_eligible": 0.022173297688315774,
+         "delegations_per_episode": 0.275390625
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.904633984375,
+         "success": 0.982421875,
+         "cost": 0.077787890625,
+         "delegated_step_fraction_pooled": 0.3757966011683484,
+         "delegated_step_fraction_mean_episode": 0.37260915841629544,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 3.1484375
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.9045820312499999,
+         "success": 0.982421875,
+         "cost": 0.07783984375,
+         "delegated_step_fraction_pooled": 0.025966263780050472,
+         "delegated_step_fraction_mean_episode": 0.020630301246095877,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.140625
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.8947826171875,
+         "success": 0.9765625,
+         "cost": 0.0817798828125,
+         "delegated_step_fraction_pooled": 0.034151884350735434,
+         "delegated_step_fraction_mean_episode": 0.02912890183222172,
+         "delegation_rate_per_eligible": 0.020753375977256575,
+         "delegations_per_episode": 0.28515625
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.9046361328125,
+         "success": 0.982421875,
+         "cost": 0.07778574218749999,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.020324412777139263,
+          "ci90": [
+           0.010775684583841776,
+           0.031121374829927814
+          ],
+          "ci95": [
+           0.009640612130352659,
+           0.03349618016976541
+          ]
+         },
+         "success_mean": 0.015625
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -9.648566036073964e-05,
+          "ci90": [
+           -0.00017071439240106103,
+           -3.417989542160847e-05
+          ],
+          "ci95": [
+           -0.00018967237126427027,
+           -2.537780450736634e-05
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -4.453253536073994e-05,
+          "ci90": [
+           -7.402473677315362e-05,
+           -1.777588841182579e-05
+          ],
+          "ci95": [
+           -8.069083781655152e-05,
+           -1.367373618007554e-05
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.009754881527139263,
+          "ci90": [
+           0.003873143831756448,
+           0.01703597540698846
+          ],
+          "ci95": [
+           0.0027619683639338467,
+           0.01871863068466533
+          ]
+         },
+         "success_mean": 0.005859375
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -9.863409786073967e-05,
+          "ci90": [
+           -0.0001730894813091922,
+           -3.6524433791705354e-05
+          ],
+          "ci95": [
+           -0.00019260919571603574,
+           -2.6367172050080095e-05
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 17,
+       "pit_rescues": 8,
+       "teacher_rescues": 8,
+       "pit_breaks_D_success": 0,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "iid_f2": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8802275390625001,
+         "success": 0.958984375,
+         "cost": 0.07875683593749999,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.902873270210957,
+         "success": 0.9765625,
+         "cost": 0.07368922978904299,
+         "delegated_step_fraction_pooled": 0.11053361053361054,
+         "delegated_step_fraction_mean_episode": 0.09651360152120161,
+         "delegation_rate_per_eligible": 0.07096654962114211,
+         "delegations_per_episode": 0.75
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.9063591796874999,
+         "success": 0.978515625,
+         "cost": 0.07215644531250001,
+         "delegated_step_fraction_pooled": 0.33905579399141633,
+         "delegated_step_fraction_mean_episode": 0.32946855259273333,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.578125
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.9064640625,
+         "success": 0.98046875,
+         "cost": 0.0740046875,
+         "delegated_step_fraction_pooled": 0.0356495046742012,
+         "delegated_step_fraction_mean_episode": 0.02597783100782093,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.162109375
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.8980048828125,
+         "success": 0.974609375,
+         "cost": 0.07660449218749998,
+         "delegated_step_fraction_pooled": 0.09941520467836257,
+         "delegated_step_fraction_mean_episode": 0.09370454167725432,
+         "delegation_rate_per_eligible": 0.06927411335764004,
+         "delegations_per_episode": 0.81640625
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.90406171875,
+         "success": 0.9765625,
+         "cost": 0.07250078125000001,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.022645731148457,
+          "ci90": [
+           0.011497412751232587,
+           0.034842157759814335
+          ],
+          "ci95": [
+           0.009596546932138132,
+           0.037832239191659546
+          ]
+         },
+         "success_mean": 0.017578125
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0034859094765430027,
+          "ci90": [
+           -0.007938194199962365,
+           -0.001145848024564946
+          ],
+          "ci95": [
+           -0.00808758722558006,
+           -0.0010987111195664555
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0035907922890430002,
+          "ci90": [
+           -0.009162422979923215,
+           0.0005057300431930373
+          ],
+          "ci95": [
+           -0.010135878882721903,
+           0.0006761836980124809
+          ]
+         },
+         "success_mean": -0.00390625
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.004868387398456997,
+          "ci90": [
+           -0.0015182396860164758,
+           0.011189629718148193
+          ],
+          "ci95": [
+           -0.0030892735805460435,
+           0.013035613350356624
+          ]
+         },
+         "success_mean": 0.001953125
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0011884485390430024,
+          "ci90": [
+           -0.0013700892104177157,
+           -0.001005230947568071
+          ],
+          "ci95": [
+           -0.0014116177935202456,
+           -0.0009757362860935585
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 21,
+       "pit_rescues": 10,
+       "teacher_rescues": 10,
+       "pit_breaks_D_success": 1,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "events_train_kinds_p1": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8678171875,
+         "success": 0.947265625,
+         "cost": 0.0794484375,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.8923332257689904,
+         "success": 0.966796875,
+         "cost": 0.07446364923100954,
+         "delegated_step_fraction_pooled": 0.11665876295643926,
+         "delegated_step_fraction_mean_episode": 0.10293340836097316,
+         "delegation_rate_per_eligible": 0.07179946284691137,
+         "delegations_per_episode": 0.783203125
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.8940181640625,
+         "success": 0.966796875,
+         "cost": 0.0727787109375,
+         "delegated_step_fraction_pooled": 0.3546946905694072,
+         "delegated_step_fraction_mean_episode": 0.3435228621766484,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.69921875
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.90163671875,
+         "success": 0.9765625,
+         "cost": 0.07492578125,
+         "delegated_step_fraction_pooled": 0.040535007506482874,
+         "delegated_step_fraction_mean_episode": 0.02934042692370532,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.1796875
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.9004355468749999,
+         "success": 0.9765625,
+         "cost": 0.076126953125,
+         "delegated_step_fraction_pooled": 0.10832557520946934,
+         "delegated_step_fraction_mean_episode": 0.0988381867260419,
+         "delegation_rate_per_eligible": 0.07418348924995898,
+         "delegations_per_episode": 0.8828125
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.8939611328124999,
+         "success": 0.966796875,
+         "cost": 0.0728357421875,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.024516038268990452,
+          "ci90": [
+           0.009931935443552474,
+           0.03949753974520556
+          ],
+          "ci95": [
+           0.00761548378401663,
+           0.04274190066331246
+          ]
+         },
+         "success_mean": 0.01953125
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0016849382935095474,
+          "ci90": [
+           -0.0020958990764737145,
+           -0.0013183005993913169
+          ],
+          "ci95": [
+           -0.002189243414589829,
+           -0.0012602979390054297
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.009303492981009548,
+          "ci90": [
+           -0.017035287478532668,
+           -0.0033239503870985294
+          ],
+          "ci95": [
+           -0.01887166819883007,
+           -0.0017270295246363389
+          ]
+         },
+         "success_mean": -0.009765625
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.008102321106009547,
+          "ci90": [
+           -0.01575837535758726,
+           -0.001973697348055636
+          ],
+          "ci95": [
+           -0.017782770332816947,
+           -0.00065351200490109
+          ]
+         },
+         "success_mean": -0.009765625
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0016279070435095471,
+          "ci90": [
+           -0.002023934072707688,
+           -0.0012736375748421392
+          ],
+          "ci95": [
+           -0.0021125073620893503,
+           -0.0012149606763596753
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 27,
+       "pit_rescues": 15,
+       "teacher_rescues": 15,
+       "pit_breaks_D_success": 5,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "foreign4": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8676175781250001,
+         "success": 0.943359375,
+         "cost": 0.075741796875,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.907711788356115,
+         "success": 0.974609375,
+         "cost": 0.06689758664388493,
+         "delegated_step_fraction_pooled": 0.24787566272060427,
+         "delegated_step_fraction_mean_episode": 0.223744119201772,
+         "delegation_rate_per_eligible": 0.17117560255779635,
+         "delegations_per_episode": 1.359375
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.9117568359374999,
+         "success": 0.978515625,
+         "cost": 0.06675878906249999,
+         "delegated_step_fraction_pooled": 0.3064908273778826,
+         "delegated_step_fraction_mean_episode": 0.28814505998979667,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.111328125
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.9110767578125,
+         "success": 0.98046875,
+         "cost": 0.0693919921875,
+         "delegated_step_fraction_pooled": 0.050667055478603194,
+         "delegated_step_fraction_mean_episode": 0.035424465736816235,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.193359375
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.907766015625,
+         "success": 0.9765625,
+         "cost": 0.068796484375,
+         "delegated_step_fraction_pooled": 0.21908254242162783,
+         "delegated_step_fraction_mean_episode": 0.20564111482800318,
+         "delegation_rate_per_eligible": 0.1787429070274989,
+         "delegations_per_episode": 1.599609375
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.908121484375,
+         "success": 0.974609375,
+         "cost": 0.066487890625,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.04009421023111508,
+          "ci90": [
+           0.025025843158802213,
+           0.056496437234174836
+          ],
+          "ci95": [
+           0.02243927458493254,
+           0.05990356935915807
+          ]
+         },
+         "success_mean": 0.03125
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0040450475813849284,
+          "ci90": [
+           -0.00822955222733485,
+           -0.0002705253179147723
+          ],
+          "ci95": [
+           -0.009740039778956051,
+           -8.716577673872322e-05
+          ]
+         },
+         "success_mean": -0.00390625
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0033649694563849253,
+          "ci90": [
+           -0.008943346826086144,
+           0.0014322956291225974
+          ],
+          "ci95": [
+           -0.010076855602430507,
+           0.0021139989168089054
+          ]
+         },
+         "success_mean": -0.005859375
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -5.4227268884926485e-05,
+          "ci90": [
+           -0.005707791235075452,
+           0.005594394397569491
+          ],
+          "ci95": [
+           -0.006354154165048651,
+           0.006006924871589255
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00040969601888492854,
+          "ci90": [
+           -0.0005905874624218588,
+           -0.00027120645380505714
+          ],
+          "ci95": [
+           -0.0006255315035283924,
+           -0.0002532425719322355
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 29,
+       "pit_rescues": 19,
+       "teacher_rescues": 19,
+       "pit_breaks_D_success": 3,
+       "floor_success_ge_.8x_teacher": true
+      }
+     },
+     "PI-T-1": {
+      "utility_diff": 0.02148507196279803,
+      "success_diff": 0.0166015625,
+      "ci": {
+       "n": 1024,
+       "clusters": 1024,
+       "mean": 0.02148507196279813,
+       "ci90": [
+        0.014037056181693206,
+        0.029073337786038392
+       ],
+       "ci95": [
+        0.012699192133913687,
+        0.030524658349149227
+       ]
+      },
+      "pass_": true
+     },
+     "PI-T-2": {
+      "best_comparator": "r2",
+      "diff_vs_best": -0.001817662412201937,
+      "ci": {
+       "n": 1024,
+       "clusters": 1024,
+       "mean": -0.0018176624122018701,
+       "ci90": [
+        -0.004651322791027216,
+        0.00022735424812520198
+       ],
+       "ci95": [
+        -0.005185296744422362,
+        0.00033067551781836355
+       ]
+      },
+      "dsf_pit": 0.07412302999491611,
+      "dsf_teacher": 1.0,
+      "pass_": false
+     },
+     "iid_group": {
+      "policies": {
+       "d": {
+        "n": 1024,
+        "utility": 0.8822203125,
+        "success": 0.962890625,
+        "cost": 0.0806703125,
+        "delegated_step_fraction_pooled": 0.0,
+        "delegated_step_fraction_mean_episode": 0.0,
+        "delegation_rate_per_eligible": null,
+        "delegations_per_episode": 0.0
+       },
+       "pit": {
+        "n": 1024,
+        "utility": 0.903705384462798,
+        "success": 0.9794921875,
+        "cost": 0.07578680303720187,
+        "delegated_step_fraction_pooled": 0.07412302999491611,
+        "delegated_step_fraction_mean_episode": 0.06531551137670649,
+        "delegation_rate_per_eligible": 0.044604927782497875,
+        "delegations_per_episode": 0.5126953125
+       },
+       "r1": {
+        "n": 1024,
+        "utility": 0.9054965820312499,
+        "success": 0.98046875,
+        "cost": 0.07497216796875,
+        "delegated_step_fraction_pooled": 0.35796017351504594,
+        "delegated_step_fraction_mean_episode": 0.3510388555045144,
+        "delegation_rate_per_eligible": 1.0,
+        "delegations_per_episode": 2.86328125
+       },
+       "r2": {
+        "n": 1024,
+        "utility": 0.905523046875,
+        "success": 0.9814453125,
+        "cost": 0.075922265625,
+        "delegated_step_fraction_pooled": 0.030688622754491017,
+        "delegated_step_fraction_mean_episode": 0.023304066126958404,
+        "delegation_rate_per_eligible": 1.0,
+        "delegations_per_episode": 0.1513671875
+       },
+       "random": {
+        "n": 1024,
+        "utility": 0.89639375,
+        "success": 0.9755859375,
+        "cost": 0.07919218749999998,
+        "delegated_step_fraction_pooled": 0.06575948955010091,
+        "delegated_step_fraction_mean_episode": 0.06141672175473802,
+        "delegation_rate_per_eligible": 0.04315555895630882,
+        "delegations_per_episode": 0.55078125
+       },
+       "teacher": {
+        "n": 1024,
+        "utility": 0.90434892578125,
+        "success": 0.9794921875,
+        "cost": 0.07514326171874999,
+        "delegated_step_fraction_pooled": 1.0,
+        "delegated_step_fraction_mean_episode": 1.0,
+        "delegation_rate_per_eligible": null,
+        "delegations_per_episode": 1.0
+       }
+      },
+      "pit_minus": {
+       "d": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": 0.02148507196279813,
+         "ci90": [
+          0.014037056181693206,
+          0.029073337786038392
+         ],
+         "ci95": [
+          0.012699192133913687,
+          0.030524658349149227
+         ]
+        },
+        "success_mean": 0.0166015625
+       },
+       "r1": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.001791197568451871,
+         "ci90": [
+          -0.0039961440607901915,
+          -0.0006048544703913909
+         ],
+         "ci95": [
+          -0.00411092249121936,
+          -0.0005791778426154939
+         ]
+        },
+        "success_mean": -0.0009765625
+       },
+       "r2": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.0018176624122018701,
+         "ci90": [
+          -0.004651322791027216,
+          0.00022735424812520198
+         ],
+         "ci95": [
+          -0.005185296744422362,
+          0.00033067551781836355
+         ]
+        },
+        "success_mean": -0.001953125
+       },
+       "random": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": 0.00731163446279813,
+         "ci90": [
+          0.0029557454871687663,
+          0.011801398228945105
+         ],
+         "ci95": [
+          0.0022199676049098824,
+          0.012813386569720956
+         ]
+        },
+        "success_mean": 0.00390625
+       },
+       "teacher": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.0006435413184518711,
+         "ci90": [
+          -0.000749791223383712,
+          -0.0005423878284735842
+         ],
+         "ci95": [
+          -0.0007706957258649046,
+          -0.0005228060667824124
+         ]
+        },
+        "success_mean": 0.0
+       }
+      },
+      "pit_teacher_success_agreement": 1.0,
+      "D_failures": 38,
+      "pit_rescues": 18,
+      "teacher_rescues": 18,
+      "pit_breaks_D_success": 1
+     }
+    },
+    "x1-r5": {
+     "conditions": {
+      "iid_f0": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8766570312499999,
+         "success": 0.958984375,
+         "cost": 0.08232734375,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.9046275364786474,
+         "success": 0.982421875,
+         "cost": 0.07779433852135266,
+         "delegated_step_fraction_pooled": 0.03193043016463091,
+         "delegated_step_fraction_mean_episode": 0.028046718311662264,
+         "delegation_rate_per_eligible": 0.018278394000937354,
+         "delegations_per_episode": 0.228515625
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.904633984375,
+         "success": 0.982421875,
+         "cost": 0.077787890625,
+         "delegated_step_fraction_pooled": 0.37533191715347847,
+         "delegated_step_fraction_mean_episode": 0.3722876813200221,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 3.1484375
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.904655859375,
+         "success": 0.982421875,
+         "cost": 0.07776601562499999,
+         "delegated_step_fraction_pooled": 0.0253156146179402,
+         "delegated_step_fraction_mean_episode": 0.020275414632988188,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.13671875
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.8912017578125,
+         "success": 0.97265625,
+         "cost": 0.08145449218749999,
+         "delegated_step_fraction_pooled": 0.03174502997791101,
+         "delegated_step_fraction_mean_episode": 0.02800735534493924,
+         "delegation_rate_per_eligible": 0.01905972045743329,
+         "delegations_per_episode": 0.263671875
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.9046361328125,
+         "success": 0.982421875,
+         "cost": 0.07778574218749999,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.027970505228647344,
+          "ci90": [
+           0.016315291756042977,
+           0.04070736106221174
+          ],
+          "ci95": [
+           0.014441606508682956,
+           0.043308259704533364
+          ]
+         },
+         "success_mean": 0.0234375
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -6.4478963526636436e-06,
+          "ci90": [
+           -2.3247402344633656e-05,
+           4.1001241027145285e-06
+          ],
+          "ci95": [
+           -2.5395652027051942e-05,
+           6.246955491869005e-06
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -2.8322896352664053e-05,
+          "ci90": [
+           -4.629212246637178e-05,
+           -1.2306602010990709e-05
+          ],
+          "ci95": [
+           -5.156320103937488e-05,
+           -9.380067218472755e-06
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.013425778666147338,
+          "ci90": [
+           0.006367772821480936,
+           0.021495966007723678
+          ],
+          "ci95": [
+           0.005212551574600804,
+           0.02331839591934485
+          ]
+         },
+         "success_mean": 0.009765625
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -8.596333852663678e-06,
+          "ci90": [
+           -2.5394477973937496e-05,
+           -1.9600890189895962e-07
+          ],
+          "ci95": [
+           -2.5396118092903212e-05,
+           -1.9560853356134532e-07
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 21,
+       "pit_rescues": 12,
+       "teacher_rescues": 12,
+       "pit_breaks_D_success": 0,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "iid_f2": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8784458984374999,
+         "success": 0.955078125,
+         "cost": 0.07663222656249999,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.9058424063839847,
+         "success": 0.978515625,
+         "cost": 0.0726732186160153,
+         "delegated_step_fraction_pooled": 0.08343806730903505,
+         "delegated_step_fraction_mean_episode": 0.07017595383047595,
+         "delegation_rate_per_eligible": 0.04464446444644465,
+         "delegations_per_episode": 0.484375
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.9063763671875,
+         "success": 0.978515625,
+         "cost": 0.0721392578125,
+         "delegated_step_fraction_pooled": 0.3385427666314678,
+         "delegated_step_fraction_mean_episode": 0.3291068234663517,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.578125
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.9080552734375,
+         "success": 0.98046875,
+         "cost": 0.0724134765625,
+         "delegated_step_fraction_pooled": 0.03529328721677137,
+         "delegated_step_fraction_mean_episode": 0.02579033887472665,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.16015625
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.8991445312499999,
+         "success": 0.974609375,
+         "cost": 0.07546484375,
+         "delegated_step_fraction_pooled": 0.07466216216216216,
+         "delegated_step_fraction_mean_episode": 0.06537584759738183,
+         "delegation_rate_per_eligible": 0.04618146214099217,
+         "delegations_per_episode": 0.552734375
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.90406171875,
+         "success": 0.9765625,
+         "cost": 0.07250078125000001,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.027396507946484686,
+          "ci90": [
+           0.01580732061113818,
+           0.04034969105948351
+          ],
+          "ci95": [
+           0.013731712706169996,
+           0.04349612654993591
+          ]
+         },
+         "success_mean": 0.0234375
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0005339608035153158,
+          "ci90": [
+           -0.0011596368761763612,
+           -0.00011560007282791303
+          ],
+          "ci95": [
+           -0.0012835801327308089,
+           -7.748682560930668e-05
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0022128670535153157,
+          "ci90": [
+           -0.005894508058787947,
+           5.5258911078685624e-05
+          ],
+          "ci95": [
+           -0.00651661170309114,
+           0.00016222886103598344
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.006697875133984685,
+          "ci90": [
+           0.0016678247322111349,
+           0.01278178911839732
+          ],
+          "ci95": [
+           0.0011628949202955987,
+           0.01377268740363368
+          ]
+         },
+         "success_mean": 0.00390625
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.0017806876339846844,
+          "ci90": [
+           -0.00022460687285991585,
+           0.005579934281889217
+          ],
+          "ci95": [
+           -0.00026462436053095755,
+           0.005667055448316202
+          ]
+         },
+         "success_mean": 0.001953125
+        }
+       },
+       "pit_teacher_success_agreement": 0.998046875,
+       "D_failures": 23,
+       "pit_rescues": 12,
+       "teacher_rescues": 12,
+       "pit_breaks_D_success": 0,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "events_train_kinds_p1": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8701880859375,
+         "success": 0.947265625,
+         "cost": 0.0770775390625,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.8936679895699184,
+         "success": 0.966796875,
+         "cost": 0.07312888543008153,
+         "delegated_step_fraction_pooled": 0.09727254084352997,
+         "delegated_step_fraction_mean_episode": 0.08311214982091547,
+         "delegation_rate_per_eligible": 0.050318922749822824,
+         "delegations_per_episode": 0.5546875
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.8940539062499999,
+         "success": 0.966796875,
+         "cost": 0.07274296875,
+         "delegated_step_fraction_pooled": 0.3537573842560791,
+         "delegated_step_fraction_mean_episode": 0.3428568012575073,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.69921875
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.9033736328124999,
+         "success": 0.9765625,
+         "cost": 0.0731888671875,
+         "delegated_step_fraction_pooled": 0.039853823346893746,
+         "delegated_step_fraction_mean_episode": 0.02882556179060257,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.173828125
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.892683984375,
+         "success": 0.96875,
+         "cost": 0.07606601562500001,
+         "delegated_step_fraction_pooled": 0.08343110415851909,
+         "delegated_step_fraction_mean_episode": 0.07820163810861111,
+         "delegation_rate_per_eligible": 0.054377880184331796,
+         "delegations_per_episode": 0.69140625
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.8939611328124999,
+         "success": 0.966796875,
+         "cost": 0.0728357421875,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.02347990363241846,
+          "ci90": [
+           0.008822697429729975,
+           0.039098494041893396
+          ],
+          "ci95": [
+           0.0061380348531413905,
+           0.04177962967397586
+          ]
+         },
+         "success_mean": 0.01953125
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.000385916680081538,
+          "ci90": [
+           -0.00057069259474078,
+           -0.00022730072455649872
+          ],
+          "ci95": [
+           -0.0006183701498234957,
+           -0.0002048602326612355
+          ]
+         },
+         "success_mean": 0.0
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.009705643242581538,
+          "ci90": [
+           -0.01749400124179843,
+           -0.0037957907672959024
+          ],
+          "ci95": [
+           -0.01926679573473062,
+           -0.002087998154858271
+          ]
+         },
+         "success_mean": -0.009765625
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.0009840051949184631,
+          "ci90": [
+           -0.009120210730861607,
+           0.011166388517540284
+          ],
+          "ci95": [
+           -0.010984121234968476,
+           0.012886587163937417
+          ]
+         },
+         "success_mean": -0.001953125
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0002931432425815376,
+          "ci90": [
+           -0.00041502947055577585,
+           -0.00019037642186361709
+          ],
+          "ci95": [
+           -0.00045193328513377733,
+           -0.00017711486973430348
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 27,
+       "pit_rescues": 16,
+       "teacher_rescues": 16,
+       "pit_breaks_D_success": 6,
+       "floor_success_ge_.8x_teacher": true
+      },
+      "foreign4": {
+       "policies": {
+        "d": {
+         "n": 512,
+         "utility": 0.8643345703125,
+         "success": 0.935546875,
+         "cost": 0.0712123046875,
+         "delegated_step_fraction_pooled": 0.0,
+         "delegated_step_fraction_mean_episode": 0.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 0.0
+        },
+        "pit": {
+         "n": 512,
+         "utility": 0.9078252669591024,
+         "success": 0.974609375,
+         "cost": 0.06678410804089763,
+         "delegated_step_fraction_pooled": 0.24435542607428987,
+         "delegated_step_fraction_mean_episode": 0.22208079010785187,
+         "delegation_rate_per_eligible": 0.1775,
+         "delegations_per_episode": 1.38671875
+        },
+        "r1": {
+         "n": 512,
+         "utility": 0.9116794921875,
+         "success": 0.978515625,
+         "cost": 0.0668361328125,
+         "delegated_step_fraction_pooled": 0.30538614152399146,
+         "delegated_step_fraction_mean_episode": 0.2871496465798381,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 2.11328125
+        },
+        "r2": {
+         "n": 512,
+         "utility": 0.9130501953125,
+         "success": 0.98046875,
+         "cost": 0.0674185546875,
+         "delegated_step_fraction_pooled": 0.0493087898277519,
+         "delegated_step_fraction_mean_episode": 0.03472957376245292,
+         "delegation_rate_per_eligible": 1.0,
+         "delegations_per_episode": 0.1875
+        },
+        "random": {
+         "n": 512,
+         "utility": 0.9107568359374999,
+         "success": 0.978515625,
+         "cost": 0.06775878906249999,
+         "delegated_step_fraction_pooled": 0.2189340507525631,
+         "delegated_step_fraction_mean_episode": 0.20523039790589315,
+         "delegation_rate_per_eligible": 0.18453309560953868,
+         "delegations_per_episode": 1.6171875
+        },
+        "teacher": {
+         "n": 512,
+         "utility": 0.908121484375,
+         "success": 0.974609375,
+         "cost": 0.066487890625,
+         "delegated_step_fraction_pooled": 1.0,
+         "delegated_step_fraction_mean_episode": 1.0,
+         "delegation_rate_per_eligible": null,
+         "delegations_per_episode": 1.0
+        }
+       },
+       "pit_minus": {
+        "d": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.04349069664660239,
+          "ci90": [
+           0.02742506200928075,
+           0.060993596728062635
+          ],
+          "ci95": [
+           0.02404261935941557,
+           0.0635992918968243
+          ]
+         },
+         "success_mean": 0.0390625
+        },
+        "r1": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0038542252283976165,
+          "ci90": [
+           -0.008085330416603882,
+           -6.279981196201655e-05
+          ],
+          "ci95": [
+           -0.009588158684546032,
+           8.580609151599708e-05
+          ]
+         },
+         "success_mean": -0.00390625
+        },
+        "r2": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.005224928353397618,
+          "ci90": [
+           -0.010809525582204086,
+           -0.0003119883886049653
+          ],
+          "ci95": [
+           -0.0120193113451899,
+           0.00027176531706277424
+          ]
+         },
+         "success_mean": -0.005859375
+        },
+        "random": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.0029315689783976162,
+          "ci90": [
+           -0.007249213242969752,
+           0.0008263277980915273
+          ],
+          "ci95": [
+           -0.008630148924424503,
+           0.001109660202681223
+          ]
+         },
+         "success_mean": -0.00390625
+        },
+        "teacher": {
+         "utility": {
+          "n": 512,
+          "clusters": 512,
+          "mean": -0.00029621741589761646,
+          "ci90": [
+           -0.0003966184310353984,
+           -0.0002098782901594643
+          ],
+          "ci95": [
+           -0.00042182655907060175,
+           -0.0001997159129588676
+          ]
+         },
+         "success_mean": 0.0
+        }
+       },
+       "pit_teacher_success_agreement": 1.0,
+       "D_failures": 33,
+       "pit_rescues": 23,
+       "teacher_rescues": 23,
+       "pit_breaks_D_success": 3,
+       "floor_success_ge_.8x_teacher": true
+      }
+     },
+     "PI-T-1": {
+      "utility_diff": 0.02768350658756613,
+      "success_diff": 0.0234375,
+      "ci": {
+       "n": 1024,
+       "clusters": 1024,
+       "mean": 0.027683506587566013,
+       "ci90": [
+        0.019189704723887858,
+        0.035958960435613425
+       ],
+       "ci95": [
+        0.01780496882820705,
+        0.03816793871261934
+       ]
+      },
+      "pass_": true
+     },
+     "PI-T-2": {
+      "best_comparator": "r2",
+      "diff_vs_best": -0.0011205949749339972,
+      "ci": {
+       "n": 1024,
+       "clusters": 1024,
+       "mean": -0.0011205949749339898,
+       "ci90": [
+        -0.002973235754891182,
+        3.115525097898215e-06
+       ],
+       "ci95": [
+        -0.003399874103888071,
+        6.291933727521444e-05
+       ]
+      },
+      "dsf_pit": 0.05703396175049343,
+      "dsf_teacher": 1.0,
+      "pass_": false
+     },
+     "iid_group": {
+      "policies": {
+       "d": {
+        "n": 1024,
+        "utility": 0.8775514648437499,
+        "success": 0.95703125,
+        "cost": 0.07947978515625,
+        "delegated_step_fraction_pooled": 0.0,
+        "delegated_step_fraction_mean_episode": 0.0,
+        "delegation_rate_per_eligible": null,
+        "delegations_per_episode": 0.0
+       },
+       "pit": {
+        "n": 1024,
+        "utility": 0.905234971431316,
+        "success": 0.98046875,
+        "cost": 0.07523377856868399,
+        "delegated_step_fraction_pooled": 0.05703396175049343,
+        "delegated_step_fraction_mean_episode": 0.04911133607106911,
+        "delegation_rate_per_eligible": 0.03052860488457678,
+        "delegations_per_episode": 0.3564453125
+       },
+       "r1": {
+        "n": 1024,
+        "utility": 0.90550517578125,
+        "success": 0.98046875,
+        "cost": 0.07496357421875,
+        "delegated_step_fraction_pooled": 0.3574771943011377,
+        "delegated_step_fraction_mean_episode": 0.3506972523931869,
+        "delegation_rate_per_eligible": 1.0,
+        "delegations_per_episode": 2.86328125
+       },
+       "r2": {
+        "n": 1024,
+        "utility": 0.90635556640625,
+        "success": 0.9814453125,
+        "cost": 0.07508974609374999,
+        "delegated_step_fraction_pooled": 0.030153677653420953,
+        "delegated_step_fraction_mean_episode": 0.02303287675385742,
+        "delegation_rate_per_eligible": 1.0,
+        "delegations_per_episode": 0.1484375
+       },
+       "random": {
+        "n": 1024,
+        "utility": 0.89517314453125,
+        "success": 0.9736328125,
+        "cost": 0.07845966796875,
+        "delegated_step_fraction_pooled": 0.05247185511502692,
+        "delegated_step_fraction_mean_episode": 0.04669160147116053,
+        "delegation_rate_per_eligible": 0.03164029975020816,
+        "delegations_per_episode": 0.408203125
+       },
+       "teacher": {
+        "n": 1024,
+        "utility": 0.90434892578125,
+        "success": 0.9794921875,
+        "cost": 0.07514326171874999,
+        "delegated_step_fraction_pooled": 1.0,
+        "delegated_step_fraction_mean_episode": 1.0,
+        "delegation_rate_per_eligible": null,
+        "delegations_per_episode": 1.0
+       }
+      },
+      "pit_minus": {
+       "d": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": 0.027683506587566013,
+         "ci90": [
+          0.019189704723887858,
+          0.035958960435613425
+         ],
+         "ci95": [
+          0.01780496882820705,
+          0.03816793871261934
+         ]
+        },
+        "success_mean": 0.0234375
+       },
+       "r1": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.00027020434993398973,
+         "ci90": [
+          -0.0005908878532532984,
+          -5.427362174307469e-05
+         ],
+         "ci95": [
+          -0.0006615765168604709,
+          -3.2872912854165806e-05
+         ]
+        },
+        "success_mean": 0.0
+       },
+       "r2": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": -0.0011205949749339898,
+         "ci90": [
+          -0.002973235754891182,
+          3.115525097898215e-06
+         ],
+         "ci95": [
+          -0.003399874103888071,
+          6.291933727521444e-05
+         ]
+        },
+        "success_mean": -0.0009765625
+       },
+       "random": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": 0.01006182690006601,
+         "ci90": [
+          0.00545995672027265,
+          0.0150786272102146
+         ],
+         "ci95": [
+          0.004784377298361456,
+          0.016390215962425632
+         ]
+        },
+        "success_mean": 0.0068359375
+       },
+       "teacher": {
+        "utility": {
+         "n": 1024,
+         "clusters": 1024,
+         "mean": 0.0008860456500660104,
+         "ci90": [
+          -0.00011546783321849462,
+          0.0027760986684744826
+         ],
+         "ci95": [
+          -0.0001308591615682895,
+          0.002829704150551397
+         ]
+        },
+        "success_mean": 0.0009765625
+       }
+      },
+      "pit_teacher_success_agreement": 0.9990234375,
+      "D_failures": 44,
+      "pit_rescues": 24,
+      "teacher_rescues": 24,
+      "pit_breaks_D_success": 0
+     }
+    }
+   },
+   "pooled_iid_pit_minus": {
+    "r1": {
+     "n": 3072,
+     "clusters": 1024,
+     "mean": -0.001124272778090389,
+     "ci90": [
+      -0.002706253630181401,
+      -0.00027943777089536144
+     ],
+     "ci95": [
+      -0.0027788168138296976,
+      -0.00026053087280876713
+     ]
+    },
+    "r2": {
+     "n": 3072,
+     "clusters": 1024,
+     "mean": -0.0016512259030903888,
+     "ci90": [
+      -0.004016689450807652,
+      8.508830851129099e-05
+     ],
+     "ci95": [
+      -0.004521575261358655,
+      0.00017303817212741769
+     ]
+    },
+    "teacher": {
+     "n": 3072,
+     "clusters": 1024,
+     "mean": 2.9470711492944467e-05,
+     "ci90": [
+      -0.00033893936296109593,
+      0.0006655759312403837
+     ],
+     "ci95": [
+      -0.000357584955992947,
+      0.0007135370724612524
+     ]
+    },
+    "random": {
+     "n": 3072,
+     "clusters": 1024,
+     "mean": 0.009383572273992944,
+     "ci90": [
+      0.0054571583966092135,
+      0.013354739778215156
+     ],
+     "ci95": [
+      0.004987184509161453,
+      0.014302738353687765
+     ]
+    },
+    "d": {
+     "n": 3072,
+     "clusters": 1024,
+     "mean": 0.024635004565659615,
+     "ci90": [
+      0.016986087397919444,
+      0.032544570951696716
+     ],
+     "ci95": [
+      0.015532867441357078,
+      0.033982622927525075
+     ]
+    }
+   },
+   "gap_comparison": {
+    "x1-r3": {
+     "pit_minus_d": 0.02473643514661472,
+     "teacher_minus_d": 0.02489052734375008,
+     "r2_minus_pit": 0.0020154203221353084,
+     "dsf_r2": 0.030143360591234132,
+     "dsf_pit": 0.05457513006222585
+    },
+    "x1-r4": {
+     "pit_minus_d": 0.02148507196279803,
+     "teacher_minus_d": 0.022128613281250042,
+     "r2_minus_pit": 0.001817662412201937,
+     "dsf_r2": 0.030688622754491017,
+     "dsf_pit": 0.07412302999491611
+    },
+    "x1-r5": {
+     "pit_minus_d": 0.02768350658756613,
+     "teacher_minus_d": 0.026797460937500128,
+     "r2_minus_pit": 0.0011205949749339972,
+     "dsf_r2": 0.030153677653420953,
+     "dsf_pit": 0.05703396175049343
+    }
+   },
+   "summary": {
+    "PI_T_1_pass": 3,
+    "PI_T_2_pass": 0,
+    "lineages": 3
+   }
+  }
+ },
+ "eval_disjoint_240M_260M": true,
+ "d_teacher_rerun": {
+  "results": [
+   {
+    "label": "apit",
+    "base": "x1-r0",
+    "condition": "iid_f0",
+    "d_episodes": 16,
+    "d_identical": 16,
+    "teacher_episodes": 8,
+    "teacher_identical": 8
+   },
+   {
+    "label": "apit",
+    "base": "x1-r2",
+    "condition": "iid_f2",
+    "d_episodes": 16,
+    "d_identical": 16,
+    "teacher_episodes": 8,
+    "teacher_identical": 8
+   },
+   {
+    "label": "acf",
+    "base": "x1-r3",
+    "condition": "iid_f0",
+    "d_episodes": 16,
+    "d_identical": 16,
+    "teacher_episodes": 8,
+    "teacher_identical": 8
+   },
+   {
+    "label": "acf",
+    "base": "x1-r5",
+    "condition": "iid_f2",
+    "d_episodes": 16,
+    "d_identical": 16,
+    "teacher_episodes": 8,
+    "teacher_identical": 8
+   },
+   {
+    "label": "hr",
+    "base": "x1-r1",
+    "condition": "iid_f0",
+    "d_episodes": 16,
+    "d_identical": 16,
+    "teacher_episodes": 0,
+    "teacher_identical": 0
+   }
+  ],
+  "remote_cpu_process_s": 7.017915918
+ },
+ "integrity": {
+  "controller_sha_repo": "dea16e83488d2d74c4cbbef6dbbc13dbda4625e01ba601552fcb367854cd6db0",
+  "controller_sha_remote": "dea16e83488d2d74c4cbbef6dbbc13dbda4625e01ba601552fcb367854cd6db0",
+  "training_files": 48,
+  "training_files_hash_match": 48,
+  "training_bases": [
+   "r0",
+   "r1",
+   "r2"
+  ],
+  "triggers": [
+   "call",
+   "reuse_recompute",
+   "commit_revise"
+  ],
+  "margin": 0.075,
+  "family": {
+   "name": "ridge_l1",
+   "kind": "ridge",
+   "lam": 1.0
+  },
+  "n_features": 124,
+  "feature_groups": [
+   "anchor",
+   "bias",
+   "budget",
+   "control",
+   "cost",
+   "diagnostic",
+   "feedback",
+   "info_events",
+   "logit",
+   "policy",
+   "prev",
+   "prob",
+   "problem",
+   "rank",
+   "rec",
+   "rel",
+   "stage",
+   "teacher"
+  ],
+  "suspicious_feature_names": [
+   "telemetry:feedback:status_success"
+  ],
+  "selection_rule": "max over (family, m) of the out-of-fold (5 world folds) G1b single-deviation value: per episode the true delegate advantage at the first sampled trigger point with prediction > m (0 if none); ties: earlier family, larger m",
+  "rule_history": "first draft (IPW per-episode sum of true delegate advantages at every firing point; now 'secondary_objective_table') replaced BEFORE any evaluation: it ignores overlapping delegations, credits ~.3/episode at m=0 and always selects m=0",
+  "registered_before_evaluation": true,
+  "committed_vs_remote_outputs_identical": {
+   "a-hr/analysis.json": true,
+   "a-hr2/analysis.json": true,
+   "a-pi-t/score.json": true,
+   "a-cf-t/score.json": true,
+   "a-pi-t/controller.json": true
+  }
+ },
+ "receipts": {
+  "groups": {
+   "acf-nons": {
+    "n": 12,
+    "exit_codes": {
+     "1": 12
+    },
+    "cpu": 13.144970653999998,
+    "first_start": "2026-09-27T03:51:52Z",
+    "last_end": "2026-09-27T03:52:07Z",
+    "sources": [
+     "source-acf61800"
+    ],
+    "controllers": [
+     "/home/brand/structured-latent-dynamics-campaign05/results/e05-apit/controller.json"
+    ]
+   },
+   "acf": {
+    "n": 12,
+    "exit_codes": {
+     "0": 12
+    },
+    "cpu": 5123.037845305,
+    "first_start": "2026-09-27T03:53:00Z",
+    "last_end": "2026-09-27T04:03:15Z",
+    "sources": [
+     "source-63d52c02"
+    ],
+    "controllers": [
+     "/home/brand/structured-latent-dynamics-campaign05/results/e05-apit/controller.json"
+    ]
+   },
+   "apit-nocontroller": {
+    "n": 12,
+    "exit_codes": {
+     "1": 12
+    },
+    "cpu": 13.181988015000002,
+    "first_start": "2026-09-27T03:39:01Z",
+    "last_end": "2026-09-27T03:39:16Z",
+    "sources": [
+     "source-55a66cec"
+    ],
+    "controllers": [
+     "/home/brand/structured-latent-dynamics-campaign05/results/e05-apit/controller.json"
+    ]
+   },
+   "apit": {
+    "n": 12,
+    "exit_codes": {
+     "0": 12
+    },
+    "cpu": 5242.8730832599995,
+    "first_start": "2026-09-27T03:39:42Z",
+    "last_end": "2026-09-27T03:48:46Z",
+    "sources": [
+     "source-55a66cec"
+    ],
+    "controllers": [
+     "/home/brand/structured-latent-dynamics-campaign05/results/e05-apit/controller.json"
+    ]
+   },
+   "root-dev": {
+    "n": 6,
+    "exit_codes": {
+     "0": 6
+    },
+    "cpu": 300.3004773670001,
+    "first_start": "2026-09-27T02:24:05Z",
+    "last_end": "2026-09-27T04:03:45Z",
+    "sources": [
+     "source-4debc95f",
+     "source-55a66cec",
+     "source-63d52c02",
+     "source-acf61800",
+     "source-b3a64bbc"
+    ],
+    "controllers": []
+   },
+   "hr-full": {
+    "n": 4,
+    "exit_codes": {
+     "0": 4
+    },
+    "cpu": 1292.498546135,
+    "first_start": "2026-09-27T02:09:55Z",
+    "last_end": "2026-09-27T02:17:13Z",
+    "sources": [
+     "source-4debc95f"
+    ],
+    "controllers": []
+   },
+   "hr": {
+    "n": 12,
+    "exit_codes": {
+     "0": 12
+    },
+    "cpu": 3913.7960838730005,
+    "first_start": "2026-09-27T02:09:34Z",
+    "last_end": "2026-09-27T02:23:19Z",
+    "sources": [
+     "source-4debc95f"
+    ],
+    "controllers": []
+   },
+   "hr2": {
+    "n": 12,
+    "exit_codes": {
+     "0": 12
+    },
+    "cpu": 1539.2225770440002,
+    "first_start": "2026-09-27T02:51:07Z",
+    "last_end": "2026-09-27T02:55:26Z",
+    "sources": [
+     "source-b3a64bbc"
+    ],
+    "controllers": []
+   }
+  },
+  "commits": {
+   "03fe1b22": "2026-09-26T20:15:49-07:00 A-PI-T tooling: delegation controller (train/eval/score), pi_T + comparators, 240M eval range; frozen controller (ridge_l1, m=.075)",
+   "81d1ebee": "2026-09-26T20:23:47-07:00 A-PI-T scorer: teacher paired to the lineage's worlds; per-anchor delegation counts and delegation ends",
+   "55a66cec": "2026-09-26T20:34:34-07:00 Resolve seed-ranges merge conflict (union, verified disjoint); record A-PI-T freeze and incident",
+   "acf61800": "2026-09-26T20:51:00-07:00 campaign05_apit: acf world kind (260M sealed A-CF-T; r3-r5 only), teacher auto for x1-r3",
+   "63d52c02": "2026-09-26T20:52:52-07:00 campaign05_apit: acf namespace",
+   "e6fa7e99": "2026-09-26T19:50:05-07:00 A-HR2 tooling: multi-step option class (delegate T) on the A-HR worlds/points",
+   "7028e2c5": "2026-09-26T19:08:29-07:00 A-HR headroom tooling (design v2): D wrapper, anchored O(I), public sampler, branch labels, G1/G1b analysis",
+   "f04720a0": "2026-09-26T19:57:10-07:00 A-HR2 passes gates; register A-PI-T with always-teacher and simple-rule comparators",
+   "e29f06ba": "2026-09-26T19:24:48-07:00 A-HR: G1 fails (negligible one-step headroom); register A-HR2 multi-step options",
+   "d558ad58": "2026-09-26T20:33:45-07:00 status filter apit/bxc"
+  },
+  "controller_first_commit": "03fe1b22 2026-09-26T20:15:49-07:00",
+  "registry_commits": "88bd3b0c 2026-09-26T21:04:22-07:00 A-CF-T: PI-T-1 confirmed 3/3, PI-T-2 fails; register A-PI-C (delegation cost)\ne8ae3271 2026-09-26T20:50:20-07:00 A-PI-T scored (PI-T-1 pass, PI-T-2 fail); register A-CF-T (frozen controller on r3-r5, 260M)\n0923cff2 2026-09-26T20:08:34-07:00 Register B-XC (adaptive confirmation on fresh U+C configurations)\n6a77eae7 2026-09-26T19:57:51-07:00 Register B-Q diagnostic\nf04720a0 2026-09-26T19:57:10-07:00 A-HR2 passes gates; register A-PI-T with always-teacher and simple-rule comparators\ne29f06ba 2026-09-26T19:24:48-07:00 A-HR: G1 fails (negligible one-step headroom); register A-HR2 multi-step options\n9226196a 2026-09-26T19:06:33-07:00 Register B-X NI tolerance; log Track B merge\n135edad7 2026-09-26T18:29:49-07:00 Extended-05 design v1, prospective registry, job plan",
+  "receipts": [
+   {
+    "name": "acf-r3-events_train_kinds_p1-nons-process",
+    "started": "2026-09-27T03:51:55Z",
+    "ended": "2026-09-27T03:51:56Z",
+    "exit": 1,
+    "cpu": 1.1121942509999998,
+    "cwd": "source-acf61800"
+   },
+   {
+    "name": "acf-r3-events_train_kinds_p1-process",
+    "started": "2026-09-27T03:54:11Z",
+    "ended": "2026-09-27T04:01:27Z",
+    "exit": 0,
+    "cpu": 444.86998857,
+    "cwd": "source-63d52c02"
+   },
+   {
+    "name": "acf-r3-foreign4-nons-process",
+    "started": "2026-09-27T03:51:56Z",
+    "ended": "2026-09-27T03:51:57Z",
+    "exit": 1,
+    "cpu": 1.10465816,
+    "cwd": "source-acf61800"
+   },
+   {
+    "name": "acf-r3-foreign4-process",
+    "started": "2026-09-27T03:54:13Z",
+    "ended": "2026-09-27T04:03:05Z",
+    "exit": 0,
+    "cpu": 542.576200213,
+    "cwd": "source-63d52c02"
+   },
+   {
+    "name": "acf-r3-iid_f0-nons-process",
+    "started": "2026-09-27T03:51:52Z",
+    "ended": "2026-09-27T03:51:54Z",
+    "exit": 1,
+    "cpu": 1.1113794459999997,
+    "cwd": "source-acf61800"
+   },
+   {
+    "name": "acf-r3-iid_f0-process",
+    "started": "2026-09-27T03:53:00Z",
+    "ended": "2026-09-27T03:57:29Z",
+    "exit": 0,
+    "cpu": 274.40394780300005,
+    "cwd": "source-63d52c02"
+   },
+   {
+    "name": "acf-r3-iid_f2-nons-process",
+    "started": "2026-09-27T03:51:53Z",
+    "ended": "2026-09-27T03:51:55Z",
+    "exit": 1,
+    "cpu": 1.063849214,
+    "cwd": "source-acf61800"
+   },
+   {
+    "name": "acf-r3-iid_f2-process",
+    "started": "2026-09-27T03:54:10Z",
+    "ended": "2026-09-27T04:01:06Z",
+    "exit": 0,
+    "cpu": 424.83840051500005,
+    "cwd": "source-63d52c02"
+   },
+   {
+    "name": "acf-r4-events_train_kinds_p1-nons-process",
+    "started": "2026-09-27T03:51:59Z",
+    "ended": "2026-09-27T03:52:01Z",
+    "exit": 1,
+    "cpu": 1.0851470309999998,
+    "cwd": "source-acf61800"
+   },
+   {
+    "name": "acf-r4-events_train_kinds_p1-process",
+    "started": "2026-09-27T03:54:16Z",
+    "ended": "2026-09-27T04:01:36Z",
+    "exit": 0,
+    "cpu": 448.55076577700004,
+    "cwd": "source-63d52c02"
+   },
+   {
+    "name": "acf-r4-foreign4-nons-process",
+    "started": "2026-09-27T03:52:01Z",
+    "ended": "2026-09-27T03:52:02Z",
+    "exit": 1,
+    "cpu": 1.09649408,
+    "cwd": "source-acf61800"
+   },
+   {
+    "name": "acf-r4-foreign4-process",
+    "started": "2026-09-27T03:54:18Z",
+    "ended": "2026-09-27T04:03:14Z",
+    "exit": 0,
+    "cpu": 546.810183036,
+    "cwd": "source-63d52c02"
+   },
+   {
+    "name": "acf-r4-iid_f0-nons-process",
+    "started": "2026-09-27T03:51:57Z",
+    "ended": "2026-09-27T03:51:58Z",
+    "exit": 1,
+    "cpu": 1.1072818770000001,
+    "cwd": "source-acf61800"
+   },
+   {
+    "name": "acf-r4-iid_f0-process",
+    "started": "2026-09-27T03:54:14Z",
+    "ended": "2026-09-27T03:59:05Z",
+    "exit": 0,
+    "cpu": 297.244472065,
+    "cwd": "source-63d52c02"
+   },
+   {
+    "name": "acf-r4-iid_f2-nons-process",
+    "started": "2026-09-27T03:51:58Z",
+    "ended": "2026-09-27T03:51:59Z",
+    "exit": 1,
+    "cpu": 1.1144227379999998,
+    "cwd": "source-acf61800"
+   },
+   {
+    "name": "acf-r4-iid_f2-process",
+    "started": "2026-09-27T03:54:15Z",
+    "ended": "2026-09-27T04:01:16Z",
+    "exit": 0,
+    "cpu": 430.09792031700005,
+    "cwd": "source-63d52c02"
+   },
+   {
+    "name": "acf-r5-events_train_kinds_p1-nons-process",
+    "started": "2026-09-27T03:52:04Z",
+    "ended": "2026-09-27T03:52:05Z",
+    "exit": 1,
+    "cpu": 1.091979711,
+    "cwd": "source-acf61800"
+   },
+   {
+    "name": "acf-r5-events_train_kinds_p1-process",
+    "started": "2026-09-27T03:54:22Z",
+    "ended": "2026-09-27T04:01:41Z",
+    "exit": 0,
+    "cpu": 447.702498364,
+    "cwd": "source-63d52c02"
+   },
+   {
+    "name": "acf-r5-foreign4-nons-process",
+    "started": "2026-09-27T03:52:05Z",
+    "ended": "2026-09-27T03:52:07Z",
+    "exit": 1,
+    "cpu": 1.078217094,
+    "cwd": "source-acf61800"
+   },
+   {
+    "name": "acf-r5-foreign4-process",
+    "started": "2026-09-27T03:54:23Z",
+    "ended": "2026-09-27T04:03:15Z",
+    "exit": 0,
+    "cpu": 541.457251751,
+    "cwd": "source-63d52c02"
+   },
+   {
+    "name": "acf-r5-iid_f0-nons-process",
+    "started": "2026-09-27T03:52:02Z",
+    "ended": "2026-09-27T03:52:03Z",
+    "exit": 1,
+    "cpu": 1.093060091,
+    "cwd": "source-acf61800"
+   },
+   {
+    "name": "acf-r5-iid_f0-process",
+    "started": "2026-09-27T03:54:19Z",
+    "ended": "2026-09-27T03:59:14Z",
+    "exit": 0,
+    "cpu": 300.79120860999996,
+    "cwd": "source-63d52c02"
+   },
+   {
+    "name": "acf-r5-iid_f2-nons-process",
+    "started": "2026-09-27T03:52:03Z",
+    "ended": "2026-09-27T03:52:04Z",
+    "exit": 1,
+    "cpu": 1.0862869609999999,
+    "cwd": "source-acf61800"
+   },
+   {
+    "name": "acf-r5-iid_f2-process",
+    "started": "2026-09-27T03:54:21Z",
+    "ended": "2026-09-27T04:01:16Z",
+    "exit": 0,
+    "cpu": 423.695008284,
+    "cwd": "source-63d52c02"
+   },
+   {
+    "name": "apit-r0-events_train_kinds_p1-nocontroller-process",
+    "started": "2026-09-27T03:39:04Z",
+    "ended": "2026-09-27T03:39:05Z",
+    "exit": 1,
+    "cpu": 1.1058917689999999,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r0-events_train_kinds_p1-process",
+    "started": "2026-09-27T03:39:45Z",
+    "ended": "2026-09-27T03:47:17Z",
+    "exit": 0,
+    "cpu": 461.76771106099994,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r0-foreign4-nocontroller-process",
+    "started": "2026-09-27T03:39:05Z",
+    "ended": "2026-09-27T03:39:06Z",
+    "exit": 1,
+    "cpu": 1.102548457,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r0-foreign4-process",
+    "started": "2026-09-27T03:39:47Z",
+    "ended": "2026-09-27T03:48:24Z",
+    "exit": 0,
+    "cpu": 527.0231412,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r0-iid_f0-nocontroller-process",
+    "started": "2026-09-27T03:39:01Z",
+    "ended": "2026-09-27T03:39:03Z",
+    "exit": 1,
+    "cpu": 1.0994152529999999,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r0-iid_f0-process",
+    "started": "2026-09-27T03:39:42Z",
+    "ended": "2026-09-27T03:45:01Z",
+    "exit": 0,
+    "cpu": 325.81109907900003,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r0-iid_f2-nocontroller-process",
+    "started": "2026-09-27T03:39:03Z",
+    "ended": "2026-09-27T03:39:04Z",
+    "exit": 1,
+    "cpu": 1.105757637,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r0-iid_f2-process",
+    "started": "2026-09-27T03:39:43Z",
+    "ended": "2026-09-27T03:46:59Z",
+    "exit": 0,
+    "cpu": 444.63348866300004,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r1-events_train_kinds_p1-nocontroller-process",
+    "started": "2026-09-27T03:39:09Z",
+    "ended": "2026-09-27T03:39:10Z",
+    "exit": 1,
+    "cpu": 1.083243256,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r1-events_train_kinds_p1-process",
+    "started": "2026-09-27T03:39:52Z",
+    "ended": "2026-09-27T03:47:23Z",
+    "exit": 0,
+    "cpu": 460.33906103,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r1-foreign4-nocontroller-process",
+    "started": "2026-09-27T03:39:10Z",
+    "ended": "2026-09-27T03:39:11Z",
+    "exit": 1,
+    "cpu": 1.103741764,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r1-foreign4-process",
+    "started": "2026-09-27T03:39:54Z",
+    "ended": "2026-09-27T03:48:34Z",
+    "exit": 0,
+    "cpu": 530.163338683,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r1-iid_f0-nocontroller-process",
+    "started": "2026-09-27T03:39:06Z",
+    "ended": "2026-09-27T03:39:08Z",
+    "exit": 1,
+    "cpu": 1.106209274,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r1-iid_f0-process",
+    "started": "2026-09-27T03:39:49Z",
+    "ended": "2026-09-27T03:44:56Z",
+    "exit": 0,
+    "cpu": 313.72893595600004,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r1-iid_f2-nocontroller-process",
+    "started": "2026-09-27T03:39:08Z",
+    "ended": "2026-09-27T03:39:09Z",
+    "exit": 1,
+    "cpu": 1.096377571,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r1-iid_f2-process",
+    "started": "2026-09-27T03:39:51Z",
+    "ended": "2026-09-27T03:46:53Z",
+    "exit": 0,
+    "cpu": 430.841322988,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r2-events_train_kinds_p1-nocontroller-process",
+    "started": "2026-09-27T03:39:14Z",
+    "ended": "2026-09-27T03:39:15Z",
+    "exit": 1,
+    "cpu": 1.1004543159999998,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r2-events_train_kinds_p1-process",
+    "started": "2026-09-27T03:39:58Z",
+    "ended": "2026-09-27T03:47:24Z",
+    "exit": 0,
+    "cpu": 455.882302053,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r2-foreign4-nocontroller-process",
+    "started": "2026-09-27T03:39:15Z",
+    "ended": "2026-09-27T03:39:16Z",
+    "exit": 1,
+    "cpu": 1.092787244,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r2-foreign4-process",
+    "started": "2026-09-27T03:39:59Z",
+    "ended": "2026-09-27T03:48:46Z",
+    "exit": 0,
+    "cpu": 536.931774559,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r2-iid_f0-nocontroller-process",
+    "started": "2026-09-27T03:39:11Z",
+    "ended": "2026-09-27T03:39:13Z",
+    "exit": 1,
+    "cpu": 1.095996199,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r2-iid_f0-process",
+    "started": "2026-09-27T03:39:55Z",
+    "ended": "2026-09-27T03:45:06Z",
+    "exit": 0,
+    "cpu": 317.781877688,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r2-iid_f2-nocontroller-process",
+    "started": "2026-09-27T03:39:13Z",
+    "ended": "2026-09-27T03:39:14Z",
+    "exit": 1,
+    "cpu": 1.089565275,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "apit-r2-iid_f2-process",
+    "started": "2026-09-27T03:39:57Z",
+    "ended": "2026-09-27T03:47:05Z",
+    "exit": 0,
+    "cpu": 437.9690303,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "root-acf-pretest-20260927T035106-1057605-process",
+    "started": "2026-09-27T03:51:06Z",
+    "ended": "2026-09-27T03:51:51Z",
+    "exit": 0,
+    "cpu": 44.978885197,
+    "cwd": "source-acf61800"
+   },
+   {
+    "name": "root-acf-score-20260927T040344-1081078-process",
+    "started": "2026-09-27T04:03:44Z",
+    "ended": "2026-09-27T04:03:45Z",
+    "exit": 0,
+    "cpu": 1.3680463430000003,
+    "cwd": "source-63d52c02"
+   },
+   {
+    "name": "root-apit-pretest-20260927T033449-1033008-process",
+    "started": "2026-09-27T03:34:49Z",
+    "ended": "2026-09-27T03:38:48Z",
+    "exit": 0,
+    "cpu": 241.44078486400002,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "root-apit-score-20260927T034944-1057563-process",
+    "started": "2026-09-27T03:49:44Z",
+    "ended": "2026-09-27T03:49:46Z",
+    "exit": 0,
+    "cpu": 1.304096988,
+    "cwd": "source-55a66cec"
+   },
+   {
+    "name": "root-hr-analyze-20260927T022405-1020450-process",
+    "started": "2026-09-27T02:24:05Z",
+    "ended": "2026-09-27T02:24:10Z",
+    "exit": 0,
+    "cpu": 4.585630211,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "root-hr2-analyze-20260927T025601-1029801-process",
+    "started": "2026-09-27T02:56:01Z",
+    "ended": "2026-09-27T02:56:07Z",
+    "exit": 0,
+    "cpu": 6.623033764,
+    "cwd": "source-b3a64bbc"
+   },
+   {
+    "name": "hr-full-r0-iid_f0-process",
+    "started": "2026-09-27T02:09:55Z",
+    "ended": "2026-09-27T02:13:11Z",
+    "exit": 0,
+    "cpu": 204.14808167,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-full-r0-iid_f2-process",
+    "started": "2026-09-27T02:09:56Z",
+    "ended": "2026-09-27T02:17:13Z",
+    "exit": 0,
+    "cpu": 449.053337082,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-full-r1-iid_f0-process",
+    "started": "2026-09-27T02:09:58Z",
+    "ended": "2026-09-27T02:13:12Z",
+    "exit": 0,
+    "cpu": 201.252275771,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-full-r1-iid_f2-process",
+    "started": "2026-09-27T02:10:00Z",
+    "ended": "2026-09-27T02:17:07Z",
+    "exit": 0,
+    "cpu": 438.04485161199995,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-r0-iid_f0-c0-process",
+    "started": "2026-09-27T02:09:34Z",
+    "ended": "2026-09-27T02:13:03Z",
+    "exit": 0,
+    "cpu": 216.817714572,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-r0-iid_f0-c4-process",
+    "started": "2026-09-27T02:09:35Z",
+    "ended": "2026-09-27T02:12:38Z",
+    "exit": 0,
+    "cpu": 188.862059151,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-r0-iid_f2-c0-process",
+    "started": "2026-09-27T02:09:37Z",
+    "ended": "2026-09-27T02:14:51Z",
+    "exit": 0,
+    "cpu": 323.97538074799996,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-r0-iid_f2-c4-process",
+    "started": "2026-09-27T02:09:38Z",
+    "ended": "2026-09-27T02:23:19Z",
+    "exit": 0,
+    "cpu": 837.743741949,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-r1-iid_f0-c0-process",
+    "started": "2026-09-27T02:09:40Z",
+    "ended": "2026-09-27T02:12:35Z",
+    "exit": 0,
+    "cpu": 179.88709081200003,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-r1-iid_f0-c4-process",
+    "started": "2026-09-27T02:09:42Z",
+    "ended": "2026-09-27T02:12:31Z",
+    "exit": 0,
+    "cpu": 175.68351159000002,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-r1-iid_f2-c0-process",
+    "started": "2026-09-27T02:09:43Z",
+    "ended": "2026-09-27T02:14:14Z",
+    "exit": 0,
+    "cpu": 279.824591786,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-r1-iid_f2-c4-process",
+    "started": "2026-09-27T02:09:45Z",
+    "ended": "2026-09-27T02:18:53Z",
+    "exit": 0,
+    "cpu": 561.25091072,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-r2-iid_f0-c0-process",
+    "started": "2026-09-27T02:09:47Z",
+    "ended": "2026-09-27T02:13:15Z",
+    "exit": 0,
+    "cpu": 216.107113888,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-r2-iid_f0-c4-process",
+    "started": "2026-09-27T02:09:49Z",
+    "ended": "2026-09-27T02:12:42Z",
+    "exit": 0,
+    "cpu": 178.72111258099997,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-r2-iid_f2-c0-process",
+    "started": "2026-09-27T02:09:51Z",
+    "ended": "2026-09-27T02:14:35Z",
+    "exit": 0,
+    "cpu": 294.651976642,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr-r2-iid_f2-c4-process",
+    "started": "2026-09-27T02:09:52Z",
+    "ended": "2026-09-27T02:17:20Z",
+    "exit": 0,
+    "cpu": 460.270879434,
+    "cwd": "source-4debc95f"
+   },
+   {
+    "name": "hr2-r0-iid_f0-c0-process",
+    "started": "2026-09-27T02:51:07Z",
+    "ended": "2026-09-27T02:52:52Z",
+    "exit": 0,
+    "cpu": 106.775661185,
+    "cwd": "source-b3a64bbc"
+   },
+   {
+    "name": "hr2-r0-iid_f0-c4-process",
+    "started": "2026-09-27T02:51:09Z",
+    "ended": "2026-09-27T02:52:59Z",
+    "exit": 0,
+    "cpu": 112.464323105,
+    "cwd": "source-b3a64bbc"
+   },
+   {
+    "name": "hr2-r0-iid_f2-c0-process",
+    "started": "2026-09-27T02:51:11Z",
+    "ended": "2026-09-27T02:52:53Z",
+    "exit": 0,
+    "cpu": 104.126755456,
+    "cwd": "source-b3a64bbc"
+   },
+   {
+    "name": "hr2-r0-iid_f2-c4-process",
+    "started": "2026-09-27T02:51:13Z",
+    "ended": "2026-09-27T02:55:26Z",
+    "exit": 0,
+    "cpu": 258.022675003,
+    "cwd": "source-b3a64bbc"
+   },
+   {
+    "name": "hr2-r1-iid_f0-c0-process",
+    "started": "2026-09-27T02:51:15Z",
+    "ended": "2026-09-27T02:52:53Z",
+    "exit": 0,
+    "cpu": 101.137995102,
+    "cwd": "source-b3a64bbc"
+   },
+   {
+    "name": "hr2-r1-iid_f0-c4-process",
+    "started": "2026-09-27T02:51:17Z",
+    "ended": "2026-09-27T02:52:56Z",
+    "exit": 0,
+    "cpu": 101.77860392800001,
+    "cwd": "source-b3a64bbc"
+   },
+   {
+    "name": "hr2-r1-iid_f2-c0-process",
+    "started": "2026-09-27T02:51:19Z",
+    "ended": "2026-09-27T02:52:57Z",
+    "exit": 0,
+    "cpu": 100.64353774,
+    "cwd": "source-b3a64bbc"
+   },
+   {
+    "name": "hr2-r1-iid_f2-c4-process",
+    "started": "2026-09-27T02:51:21Z",
+    "ended": "2026-09-27T02:54:29Z",
+    "exit": 0,
+    "cpu": 191.32656518299999,
+    "cwd": "source-b3a64bbc"
+   },
+   {
+    "name": "hr2-r2-iid_f0-c0-process",
+    "started": "2026-09-27T02:51:24Z",
+    "ended": "2026-09-27T02:53:04Z",
+    "exit": 0,
+    "cpu": 102.825955767,
+    "cwd": "source-b3a64bbc"
+   },
+   {
+    "name": "hr2-r2-iid_f0-c4-process",
+    "started": "2026-09-27T02:51:26Z",
+    "ended": "2026-09-27T02:53:06Z",
+    "exit": 0,
+    "cpu": 101.889522442,
+    "cwd": "source-b3a64bbc"
+   },
+   {
+    "name": "hr2-r2-iid_f2-c0-process",
+    "started": "2026-09-27T02:51:29Z",
+    "ended": "2026-09-27T02:53:06Z",
+    "exit": 0,
+    "cpu": 99.90661510300002,
+    "cwd": "source-b3a64bbc"
+   },
+   {
+    "name": "hr2-r2-iid_f2-c4-process",
+    "started": "2026-09-27T02:51:33Z",
+    "ended": "2026-09-27T02:54:08Z",
+    "exit": 0,
+    "cpu": 158.32436703000002,
+    "cwd": "source-b3a64bbc"
+   }
+  ]
+ },
+ "auditor_compute": {
+  "remote_metered_core_s": 19.29,
+  "remote_receipts": [
+   "aaudit-pack-20260927T040542-1081186 (0.23)",
+   "aaudit-dspot-20260927T041252-1081725 (0.01, exit 127: python not on PATH)",
+   "aaudit-dspot-20260927T041255-1081737 (3.09, exit 1: spawn without __main__ guard)",
+   "aaudit-dspot-20260927T041313-1081783 (3.49, exit 1: result key)",
+   "aaudit-dspot-20260927T041327-1081878 (12.47, exit 0)"
+  ],
+  "unmetered_remote": "directory listings and two ssh cat transfers (< 1 core-s, estimated)",
+  "local_core_s_estimate": 640,
+  "local_note": "first hr_audit run used unrestricted multithreaded BLAS (~587 core-s user time for 37 s wall); later runs pinned to 2 threads (~16-21 core-s each)"
+ }
+}
