@@ -25,6 +25,17 @@ Subcommands
       --rollout IV ...               rollout interventions (LRN only): free-running with phi replaced at EVERY
                                      decision; separate protocol files 'R-<iv>'
       --support-ref NAME=FILE        support reference of an LRN model (subcommand support)
+      --phis own exact zero mean     factor-channel EVALUATION CONDITIONS (P2-SCREEN addendum_2), for every model that
+                                     reads a factor channel (PHI_KINDS: LRN, S0R1, S1R1, SEP, SUP, CONS-exact,
+                                     CONS-pred; R0 arms / RAWF / B0 are skipped, never an error).  'own' = the model's
+                                     own input (its prediction; SUP / CONS-exact: the supplied exact factors; CONS-pred:
+                                     the predictor's output) = the default output files, unchanged.  exact / zero /
+                                     mean replace the fusion input phi at EVERY decision of the whole episode
+                                     (free-running protocol B) and at every counterfactual decision (cf), in separate
+                                     files diag-v1-<protocol>-<model>@phi=<c>.jsonl.gz (records carry "phi": c).  The
+                                     recurrent state never depends on phi, so only the actions (and hence, in B, the
+                                     free-running history) change.  'mean' = population mean of the exact targets over
+                                     every decision of --phi-mean-bank (P2 history bank; sha256 + values in the header)
   support  support reference of an LRN model's own predictions on training-pool states (free-running greedy and pi*
            histories on --n-configs configurations of the training pool b6_B0): per-coordinate min/max/mean/std,
            prediction-error RMS (the observed error scale), covariance for Mahalanobis distance, a kNN sample, and the
@@ -355,6 +366,37 @@ def model_kind(model):
 # kinds whose policy READS a learned prediction: the only kinds that accept factor interventions (R0 arms read a
 # constant through an untrained channel, like RAWF; SUP / CONS-exact read exact inputs)
 READS_PREDICTION = ("LRN", "S0R1", "S1R1", "SEP", "CONS-pred")
+# kinds whose policy reads a factor channel at all: the only kinds evaluated under factor-channel conditions (--phis);
+# consumer-side INPUT conditions, so unlike interventions they include SUP-type consumers
+PHI_KINDS = READS_PREDICTION + ("SUP", "CONS-exact")
+PHI_CONDS = ("own", "exact", "zero", "mean")
+
+
+def bank_phi_mean(path):
+    """Population mean of the exact factor targets over every decision of a P2 history bank (campaign07_p2 bank):
+    per coordinate math.fsum / n (deterministic)."""
+    bank = T.load_bank(path)
+    rows = [row for e in bank["episodes"] for row in e["phi"]]
+    n = len(rows)
+    assert n and all(len(r) == NF for r in rows)
+    return {"bank": str(path), "sha256": _sha_file(path), "n_decisions": n, "n_episodes": len(bank["episodes"]),
+            "values": [math.fsum(r[j] for r in rows) / n for j in range(NF)]}
+
+
+def cond_phi(cond, targets, mean):
+    """Replacement phi rows (list of lists) of a factor-channel condition for one batch of decisions."""
+    if cond == "exact":
+        return [list(t) for t in targets]
+    if cond == "zero":
+        return [[0.0] * NF for _ in targets]
+    if cond == "mean":
+        assert mean is not None and len(mean) == NF
+        return [list(mean) for _ in targets]
+    raise ValueError(f"unknown factor-channel condition {cond!r}")
+
+
+def cond_name(name, cond):
+    return f"{name}@phi={cond}"
 
 
 def forward(model, x, h):
@@ -565,11 +607,15 @@ class Track:
 
 
 @torch.no_grad()
-def drive(model, tracks, meta_rec, ivn=None, rollout=None, support=None, latent=True):
+def drive(model, tracks, meta_rec, ivn=None, rollout=None, support=None, latent=True, phi_cond=None, phi_mean=None):
     """Batched rollout mirroring campaign04 run_batch (same inputs, same batch composition and op order, so a free
     greedy run is bit-identical to the historical eval).  Appends per-decision records to track.recs.
     ivn: Intervener (immediate interventions; logged, never acted on).  rollout: intervention name acted on at
-    every decision (free-running only)."""
+    every decision (free-running only).  phi_cond: factor-channel condition (exact / zero / mean) acted on at every
+    decision (None / 'own': the model's own phi, bit-identical to the default path)."""
+    if phi_cond == "own":
+        phi_cond = None
+    assert not (phi_cond and rollout), "a factor-channel condition and a rollout intervention are exclusive"
     kind = getattr(model, "inputs", "public")
     B = len(tracks)
     vecs = [t.cfg.public_vector() for t in tracks]
@@ -596,6 +642,8 @@ def drive(model, tracks, meta_rec, ivn=None, rollout=None, support=None, latent=
         if rollout is not None:
             rp = [ivn.phi(rollout, pred_l[j], targets[j], keys[j]) for j in range(len(act))]
             zf = fuse_out(model, z, torch.tensor(rp, dtype=z.dtype))
+        if phi_cond is not None:
+            zf = fuse_out(model, z, torch.tensor(cond_phi(phi_cond, targets, phi_mean), dtype=z.dtype))
         logits = model.pi(zf).masked_fill(~mask, -1e9)
         greedy = logits.argmax(-1).tolist()
         probs = torch.softmax(logits, -1).tolist()
@@ -618,6 +666,8 @@ def drive(model, tracks, meta_rec, ivn=None, rollout=None, support=None, latent=
                 rec["support_pred"] = support.dist(pred_l[j])
             if rollout is not None:
                 rec["iv_applied"] = {"name": rollout, "mode": "rollout"}
+            if phi_cond is not None:
+                rec["phi"] = phi_cond
             if alt:
                 rec["iv"] = {n: iv_record(alt[n][0][j], alt[n][1][j], alt[n][2][j], q, support) for n in alt}
             t.recs.append(rec)
@@ -706,6 +756,7 @@ def shards(labels, pool, n_configs=None, only=None):
 def run_pool(a, models, writers, headers, ivns, supports, report):
     protos = a.protocols
     per_model_b = {name: [] for name in models}
+    per_model_b.update({cond_name(n, c): [] for n, c in a.phi_runs} if "B" in protos else {})
     for part, rows, sel in shards(a.labels, a.pool, a.n_configs, set(a.shards) if a.shards else None):
         t0 = time.process_time()
         items = T.eval_items(rows, a.pool, a.worlds, a.world_offset)  # (cfg, solver, ws): the historical eval order
@@ -747,6 +798,21 @@ def run_pool(a, models, writers, headers, ivns, supports, report):
                     tr = [Track(cfg, s, cid, ws, history=hs, src=src)
                           for (cfg, s, ws), cid, hs, k in zip(items, ids, own[src], keep) if k]
                     emit_forced(model, tr, f"A-own_{src}", name, writers, ivns.get(name), supports.get(name), a.latent)
+        for name, cond in (a.phi_runs if "B" in protos else []):  # factor-channel conditions: whole free-run episode
+            model = models[name][0]
+            tr = [Track(cfg, s, cid, ws, src="self") for (cfg, s, ws), cid in zip(items, ids)]
+            drive(model, tr, {"protocol": "B", "model": name}, None, None, None, a.latent, cond, a.phi_mean_values)
+            rows_m = T.episode_metrics(items, [t.ep for t in tr], [t.infos for t in tr])
+            w = writers[("B", cond_name(name, cond))]
+            for t, rm, k in zip(tr, rows_m, keep):
+                if not k:
+                    continue
+                per_model_b[cond_name(name, cond)].append(rm)
+                for r in t.recs:
+                    w.write(r)
+                w.write({"kind": "episode", "protocol": "B", "model": name, "phi": cond, "src": "self",
+                         "cfg_id": t.cfg_id, "ws": t.ws, "ep_hist_id": hist_id(t.prefix), "n": len(t.recs),
+                         **_json_row(rm)})
         for name in a.rollout_models:
             for ivname in a.rollout:
                 model = models[name][0]
@@ -795,7 +861,7 @@ class _LabelQ:
 
 
 @torch.no_grad()
-def cf_decision(model, cfg, hist, q, cid, meta_rec, ivn, support, latent):
+def cf_decision(model, cfg, hist, q, cid, meta_rec, ivn, support, latent, phi_cond=None, phi_mean=None):
     """Replay the decision type's visible history through the model (batch 1, exactly campaign04 replay_history /
     model_choice) and record the decision after it."""
     t = Track(cfg, _LabelQ(q), cid, None, history=hist, src="cf")
@@ -815,15 +881,19 @@ def cf_decision(model, cfg, hist, q, cid, meta_rec, ivn, support, latent):
         t.prefix.append(prev)
     mask = torch.zeros(1, pw.N_ACTIONS, dtype=torch.bool)
     mask[0, list(av)] = True
+    target = pw6.factor_features(cfg, st)
+    if phi_cond not in (None, "own"):  # factor-channel condition at the decision (the state does not depend on phi)
+        zf = fuse_out(model, z, torch.tensor(cond_phi(phi_cond, [target], phi_mean), dtype=z.dtype))
     logits = model.pi(zf).masked_fill(~mask, -1e9)
     greedy = int(logits.argmax())
     probs = torch.softmax(logits, -1)[0].tolist()
-    target = pw6.factor_features(cfg, st)
     pred_l = pred[0].tolist() if pred is not None else None
     t.forced = False  # the decision is the model's own (no history action at the decision)
     key = f"{cid}|{hist_id(t.prefix)}"
     rec = decision_record(t, st, _LabelQ(q).q, av, target, pred_l, probs, greedy, greedy, key, meta_rec)
     assert sorted(int(k) for k in q) == sorted(av), (cid, q, av)
+    if phi_cond not in (None, "own"):
+        rec["phi"] = phi_cond
     if latent:
         rec["z_pre"] = latent_b64(z.to(torch.float16).numpy()[0])
     if support is not None and pred_l is not None:
@@ -842,6 +912,7 @@ def cf_decision(model, cfg, hist, q, cid, meta_rec, ivn, support, latent):
 
 
 def run_cf(a, models, writers, ivns, supports, report):
+    runs = [(name, None) for name in models] + list(a.phi_runs)
     for path in a.cf:
         fam_file = Path(path).stem  # cf_SCE
         sets = json.loads(Path(path).read_text())
@@ -850,10 +921,12 @@ def run_cf(a, models, writers, ivns, supports, report):
             sets = [cs for cs in sets if lo <= cs["index"] < hi]
         if a.n_octets is not None:
             sets = sets[:a.n_octets]
-        for name, (model, meta) in models.items():
+        for name, cond in runs:
+            model = models[name][0]
             t0 = time.process_time()
-            w = writers[(f"cf-{fam_file[3:]}", name)]
+            w = writers[(f"cf-{fam_file[3:]}", name if cond is None else cond_name(name, cond))]
             meta_rec = {"protocol": f"cf-{fam_file[3:]}", "model": name}
+            ivn_c, sup_c = (ivns.get(name), supports.get(name)) if cond is None else (None, None)
             for cs in sets:
                 fam = cs["family"]
                 cfgs = {k: pw6.config_from_dict6(m["config"]) for k, m in cs["members"].items()}
@@ -870,14 +943,15 @@ def run_cf(a, models, writers, ivns, supports, report):
                         todo.append(("near_miss", pw6.config_from_dict6(nm["config"]), nm["label"]))
                     for key, cfg, lab in todo:
                         cid = f"{fam_file}:{cs['index']}:{key}"
-                        rec = cf_decision(model, cfg, hist, lab["Q"], cid, meta_rec, ivns.get(name), supports.get(name),
-                                          a.latent)
+                        rec = cf_decision(model, cfg, hist, lab["Q"], cid, meta_rec, ivn_c, sup_c, a.latent, cond,
+                                          a.phi_mean_values)
                         assert rec["opt"] == sorted(lab["opt"]), (cid, h, rec["opt"], lab["opt"])
                         role = "near_miss" if key == "near_miss" else ("full" if key == fam else "sub")
                         rec["cf"] = {**unit, "member": key, "role": role,
                                      "near_miss_move": tinfo["near_miss"]["move"] if key == "near_miss" else None}
                         w.write(rec)
-            report["cf"].append({"file": str(path), "model": name, "octets": len(sets),
+            report["cf"].append({"file": str(path), "model": name, **({"phi": cond} if cond else {}),
+                                 "octets": len(sets),
                                  "cpu_s": round(time.process_time() - t0, 2)})
             print(json.dumps(report["cf"][-1]), flush=True)
 
@@ -945,7 +1019,8 @@ def cmd_run(a):
     population = b6d_population(a.pool, a.labels, a.cf)
     runs = parse_named(a.model)
     forbidden = [run_path(r) for r in runs.values()] + [r.split("::pred=", 1)[1] for r in runs.values() if "::pred=" in r] \
-        + ([a.labels] if a.labels else []) + [str(Path(p).parent) for p in a.cf or []]
+        + ([a.labels] if a.labels else []) + [str(Path(p).parent) for p in a.cf or []] \
+        + ([str(Path(a.phi_mean_bank).parent)] if a.phi_mean_bank else [])
     out = check_out_dir(a.out, forbidden)
     out.mkdir(parents=True, exist_ok=True)
     models = {name: load_model(r) for name, r in runs.items()}
@@ -965,6 +1040,19 @@ def cmd_run(a):
             ivns[n].coords(iv)
             if iv.startswith("gauss") and supports.get(n) is None:
                 raise SystemExit(f"rollout {iv} needs --support-ref for {n}")
+    # factor-channel conditions (addendum_2): every non-own condition x every factor-reading model; others skipped
+    bad = [c for c in a.phis if c not in PHI_CONDS]
+    if bad:
+        raise SystemExit(f"unknown --phis {bad} (have {PHI_CONDS})")
+    conds = [c for c in PHI_CONDS if c in a.phis and c != "own"]
+    a.phi_runs = [(n, c) for n in models for c in conds if kinds[n] in PHI_KINDS]
+    phi_skipped = sorted(n for n in models if kinds[n] not in PHI_KINDS) if conds else []
+    a.phi_mean_values, phi_mean = None, None
+    if "mean" in conds and a.phi_runs:
+        if not a.phi_mean_bank:
+            raise SystemExit("--phis mean needs --phi-mean-bank (the P2 history bank)")
+        phi_mean = bank_phi_mean(a.phi_mean_bank)
+        a.phi_mean_values = phi_mean["values"]
     # plan every output file first; refuse if any exists (never overwrite)
     plan = []
     if a.pool:
@@ -974,8 +1062,11 @@ def cmd_run(a):
         if "A-pistar" in a.protocols:
             plan.append(("hist", "pistar"))
         plan += [(f"R-{_safe(iv)}", n) for iv in a.rollout for n in a.rollout_models]
+        if "B" in a.protocols:
+            plan += [("B", cond_name(n, c)) for n, c in a.phi_runs]
     for p in a.cf or []:
         plan += [(f"cf-{Path(p).stem[3:]}", n) for n in models]
+        plan += [(f"cf-{Path(p).stem[3:]}", cond_name(n, c)) for n, c in a.phi_runs]
     paths = {k: out / out_name(*k) for k in plan}
     summary_path = out / f"{VERSION}-summary-{a.tag}.json"
     clash = [str(p) for p in list(paths.values()) + [summary_path] if p.exists()]
@@ -996,7 +1087,15 @@ def cmd_run(a):
               "hist_support_thresholds": {"low": HIST_P_LOW, "unsupported": HIST_P_UNSUPPORTED}}
     if population is not None:  # key absent for every b6 / b6c run (headers unchanged)
         header["population"] = population
-    writers = {k: Writer(p, {**header, "protocol": k[0], "model": k[1]}) for k, p in paths.items()}
+    if conds:  # absent without --phis conditions: the default header is unchanged
+        header["phi_conditions"] = {"conds": ["own"] + conds, "runs": [cond_name(n, c) for n, c in a.phi_runs],
+                                    "skipped_models": phi_skipped, "phi_mean": phi_mean,
+                                    "note": "phi replaced at every decision (B: whole free-running episode; cf: each "
+                                            "decision); 'own' = the default files; condition records carry 'phi'"}
+    writers = {}
+    for k, p in paths.items():
+        base, _, cond = k[1].partition("@phi=")
+        writers[k] = Writer(p, {**header, "protocol": k[0], "model": base, **({"phi": cond} if cond else {})})
     report = {"version": VERSION, "tag": a.tag, "shards": [], "cf": [], "hist_written": set(), "files": {}}
     try:
         if a.pool:
@@ -1098,6 +1197,8 @@ def main(argv=None):
     s.add_argument("--cf", action="append", default=None)
     s.add_argument("--ivs", nargs="*", default=[])
     s.add_argument("--rollout", nargs="*", default=[])
+    s.add_argument("--phis", nargs="*", default=["own"], help="factor-channel conditions (own exact zero mean)")
+    s.add_argument("--phi-mean-bank", default=None, help="P2 history bank (bank.pkl) for --phis mean")
     s.add_argument("--support-ref", action="append", default=None, metavar="NAME=FILE")
     s.add_argument("--n-configs", type=int, default=None)
     s.add_argument("--shards", type=int, nargs="*", default=None, help="process only these shard indices")

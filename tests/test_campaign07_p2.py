@@ -781,3 +781,26 @@ if __name__ == "__main__" and "--golden" in sys.argv:
     import tempfile
     with tempfile.TemporaryDirectory() as d:
         print(json.dumps(hist_digests(M, d), indent=1))
+
+
+def test_job_matrix_phi_conditions():
+    full = P.job_matrix("abcdef12")
+    st = {}
+    for s, n, argv in full:
+        st.setdefault(s, []).append((n, argv))
+    assert "evalA" not in st and "evalB" not in st
+    assert [n for n, _ in st["eval"]] == [f"e07-p2-eval-s{s}" for s in P.P2_SEEDS]
+    assert len(st["evalX"]) == len(P.P2_SEEDS) and len(st["score"]) == 1
+    for n, argv in st["eval"] + st["evalX"]:
+        cmd = argv[argv.index("--") + 1:]
+        i = cmd.index("--phis")
+        assert cmd[i + 1:i + 5] == ["own", "exact", "zero", "mean"]
+        assert cmd[cmd.index("--phi-mean-bank") + 1] == f"{P.R7}/e07-p2-bank/bank.pkl"
+    x40 = st["evalX"][0][1]
+    assert f"LRN-h-s35={P.R6}/e06-tb-lrn-s35/run" in x40 and f"SUP-h-s35={P.R6}/e06-tb-sup-s35/run" in x40
+    sc = st["score"][0][1]
+    cmd = sc[sc.index("--") + 1:]
+    assert "--by-model-phi" in cmd and cmd[cmd.index("--n-boot") + 1] == "20000"
+    assert cmd[cmd.index("--boot-seed") + 1] == "7"
+    assert cmd[cmd.index("--out") + 1] == f"{P.R7}/e07-p2-score/score.json"
+    assert sum(1 for x in cmd if x.startswith(f"{P.R7}/e07-p2-eval")) == 2 * len(P.P2_SEEDS)

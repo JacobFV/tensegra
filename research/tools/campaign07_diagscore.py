@@ -23,6 +23,12 @@ share it -- and never mixing protocols (denominators are never mixed):
   python research/tools/campaign07_diagscore.py --files DIR/diag-v1-*.jsonl.gz --out score.json [--md score.md] \
       [--contrast LRN RAWF] [--support-ref LRN-s35=FILE ...] [--tol T | --tol-coord C=T ...] [--n-boot 20000] [--boot-seed 7]
   (or --dirs DIR ... --include 'diag-v1-cf-*' instead of --files; tolerances default to semantic per-coordinate values)
+
+  --by-model-phi (extended-07 P2-SCREEN addendum_2): the arm is '<model>@<phi>' instead of the model kind: <model> =
+      the model name without its trailing '-s<seed>' (and 'predLRN<lineage>' -> 'predLRN'), so seeds pool into one
+      arm per model; <phi> = the record's factor-channel condition (own when absent: the default files).  Adds, per
+      protocol, the seed-paired contrasts <model>@own - <model>@<phi> for every other phi present, and a
+      'phi_readout' table (pool / flip / near-miss / invariance accuracy per model x phi, with CIs).
 """
 from __future__ import annotations
 
@@ -31,6 +37,7 @@ import fnmatch
 import gzip
 import json
 import math
+import re
 import warnings
 from collections import defaultdict
 from pathlib import Path
@@ -84,6 +91,19 @@ def membership(r):
     if c["role"] == "full":
         return "flip" if (c["flip"] and c["unique_full"]) else "invariance"
     return "sub"
+
+
+def model_base(name):
+    """Model name without its trailing seed ('S1R1-bank-s40' -> 'S1R1-bank'; 'CONS-mix-predLRN35-s40' ->
+    'CONS-mix-predLRN'): the seed-pooled arm of --by-model-phi."""
+    return re.sub(r"predLRN\d+", "predLRN", re.sub(r"-s\d+$", "", name))
+
+
+def phi_arm(name, phi):
+    return f"{model_base(name)}@{phi or 'own'}"
+
+
+PHI_ENDPOINTS = ("acc", "acc_flip", "acc_near_miss", "acc_invariance")
 
 
 def cluster_of(r):
@@ -225,7 +245,7 @@ class Cell:
         return out
 
 
-def score(files, tol=None, supports=None, n_boot=N_BOOT, boot_seed=7, contrasts=(), tol_coord=None):
+def score(files, tol=None, supports=None, n_boot=N_BOOT, boot_seed=7, contrasts=(), tol_coord=None, by_model_phi=False):
     """tol None: semantic per-coordinate tolerances (semantic_tol); a number: uniform; tol_coord overrides per coord."""
     supports = supports or {}
     pops = {population(p) for p in files}
@@ -246,9 +266,12 @@ def score(files, tol=None, supports=None, n_boot=N_BOOT, boot_seed=7, contrasts=
             heads[path] = head
             info = head["models"][r["model"]]
             arm, seed = info["kind"], info["seed"]
+            if by_model_phi:
+                arm = phi_arm(r["model"], r.get("phi"))
             proto = r["protocol"]
             if proto.startswith("A-own_"):
-                proto = "A-own_" + head["models"][proto[len("A-own_"):]]["kind"]
+                src = proto[len("A-own_"):]
+                proto = "A-own_" + (model_base(src) if by_model_phi else head["models"][src]["kind"])
             fi = {f: j for j, f in enumerate(feats)}
             base_tol = semantic_tol(feats) if tol is None else {f: tol for f in feats}
             tolv = np.array([(tol_coord or {}).get(f, base_tol[f]) for f in feats])
@@ -360,6 +383,13 @@ def score(files, tol=None, supports=None, n_boot=N_BOOT, boot_seed=7, contrasts=
         ent["bootstrap"] = {e: boot_endpoint(boot[(proto, arm)][e], n_boot, boot_seed, useeds, ucls)
                             for e in sorted(boot[(proto, arm)])}
         out["cells"][f"{proto}|{arm}"] = ent
+    contrasts = list(contrasts)
+    if by_model_phi:  # own - phi, per model (seed-paired; the same seeds and clusters)
+        arms = {a for _, a in full}
+        for a_ in sorted(arms):
+            m, _, ph = a_.rpartition("@")
+            if ph != "own" and f"{m}@own" in arms and (f"{m}@own", a_) not in contrasts:
+                contrasts.append((f"{m}@own", a_))
     for a_arm, b_arm in contrasts:
         for proto in sorted({p for p, _ in full}):
             if (proto, a_arm) in full and (proto, b_arm) in full:
@@ -369,6 +399,26 @@ def score(files, tol=None, supports=None, n_boot=N_BOOT, boot_seed=7, contrasts=
                 out["contrasts"][f"{proto}|{a_arm}-{b_arm}"] = {
                     e: boot_contrast(Ba[e], Bb[e], n_boot, boot_seed, common, ucls) for e in sorted(set(Ba) & set(Bb))
                     if not e.startswith(("nmae_", "mae_", "hit_", "iv_"))}
+    if by_model_phi:
+        out["phi_readout"] = phi_readout(out)
+    return out
+
+
+def phi_readout(res):
+    """{protocol: {model: {phi: {endpoint: {mean, ci, per_seed}}}}} for pool / flip / near-miss / invariance
+    accuracy, plus the own - phi contrasts (mean, ci, per pair)."""
+    out = {}
+    for key, ent in res["cells"].items():
+        proto, arm = key.split("|", 1)
+        m, _, ph = arm.rpartition("@")
+        bs = ent.get("bootstrap", {})
+        row = {e: {k: bs[e].get(k) for k in ("mean", "ci", "per_seed")} for e in PHI_ENDPOINTS if e in bs}
+        row["n"] = ent["overall"]["n"]
+        out.setdefault(proto, {}).setdefault(m, {})[ph] = row
+        c = res["contrasts"].get(f"{proto}|{m}@own-{arm}")
+        if c:
+            row["own_minus_this"] = {e: {k: c[e].get(k) for k in ("mean", "ci", "per_pair")}
+                                     for e in PHI_ENDPOINTS if c.get(e)}
     return out
 
 
@@ -517,6 +567,23 @@ def markdown(res):
                       "|---|---|---|---|---|---|---|"]
             for n, s in ent["interventions"].items():
                 lines.append(f"| {n} | {s['n']} | {s['acc']} | {s['acc_none']} | {s['rescue']} | {s['harm']} | {s['in_support']} |")
+    if res.get("phi_readout"):
+        lines += ["", "## factor-channel conditions (model x phi; mean [95% CI]; own-phi = seed-paired own minus this)",
+                  "", "| protocol | model | phi | n | " + " | ".join(PHI_ENDPOINTS) + " | own-phi |",
+                  "|---|---|---|---|" + "---|" * len(PHI_ENDPOINTS) + "---|"]
+        for proto, ms in res["phi_readout"].items():
+            for m, phis in ms.items():
+                for ph in sorted(phis, key=lambda x: ("own", "exact", "zero", "mean").index(x)
+                                 if x in ("own", "exact", "zero", "mean") else 9):
+                    row = phis[ph]
+                    cells = []
+                    for e in PHI_ENDPOINTS:
+                        v = row.get(e)
+                        cells.append("—" if not v or v["mean"] is None else
+                                     f"{v['mean']:.3f}" + (f" [{v['ci'][0]:.3f}, {v['ci'][1]:.3f}]" if v.get("ci") else ""))
+                    d = row.get("own_minus_this") or {}
+                    dd = "; ".join(f"{e} {v['mean']:+.3f}" for e, v in d.items() if v.get("mean") is not None)
+                    lines.append(f"| {proto} | {m} | {ph} | {row['n']} | " + " | ".join(cells) + f" | {dd or '—'} |")
     if res["contrasts"]:
         lines += ["", "## contrasts (seed-paired, two-level CI)", "", "| contrast | endpoint | mean | CI | per pair |",
                   "|---|---|---|---|---|"]
@@ -546,6 +613,8 @@ def main(argv=None):
     p.add_argument("--contrast", nargs=2, action="append", default=[], metavar=("A", "B"))
     p.add_argument("--n-boot", type=int, default=N_BOOT)
     p.add_argument("--boot-seed", type=int, default=7)
+    p.add_argument("--by-model-phi", action="store_true",
+                   help="arm = <model without seed>@<phi> (factor-channel conditions; adds own - phi contrasts)")
     a = p.parse_args(argv)
     for f in [a.out] + ([a.md] if a.md else []):
         if Path(f).exists():
@@ -561,7 +630,7 @@ def main(argv=None):
                         and not f.name.startswith("diag-v1-hist-") and f.name.endswith(".jsonl.gz"))
     if not files:
         raise SystemExit("no diag files")
-    res = score(files, a.tol, sup, a.n_boot, a.boot_seed, [tuple(c) for c in a.contrast], tc)
+    res = score(files, a.tol, sup, a.n_boot, a.boot_seed, [tuple(c) for c in a.contrast], tc, a.by_model_phi)
     txt = json.dumps(res, indent=1, default=_np)  # serialize before creating the file (no partial outputs)
     with open(a.out, "x") as f:
         f.write(txt)

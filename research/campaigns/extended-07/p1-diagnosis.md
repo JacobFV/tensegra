@@ -36,9 +36,9 @@ Unless marked *dev*, the numbers below are **b6c SCE, lineages s35–39** (640 f
 
 ## Summary
 
-**Localization.** The flip deficit of LRN relative to SUP is mainly **consumption**. LRN's frozen policy barely reads its factor channel: correcting the channel with exact values changes 1.4% of flip actions. The predictions carry usable information when a consumer that does read factors is given them.
+**Localization.** LRN's frozen policy barely reads its factor channel: correcting the channel with exact values changes 1.4% of flip actions, and in-support substitutions confirm the insensitivity. Most of the LRN − SUP flip gap (+.158), however, is not decision-time reading. SUP's own network keeps +.109 (φ = 0) to +.134 (φ = population mean) over LRN when its factor inputs carry no decision-specific information (5/5 seeds). That gap is therefore carried by SUP's learned trunk and heads. LRN's predictions give SUP's consumer no flip benefit over zero (−.003) or mean (−.028) inputs. *(audit-corrected)*
 
-There is a genuine but secondary **acquisition** problem:
+There is a genuine **acquisition** problem. It accounts for the whole factor-value-dependent part of SUP's advantage (≈ .02–.05), but that part is the smaller component *(audit-corrected)*:
 - prediction error grows with the number of combined factors;
 - the 2nd/3rd-order interaction content of the cost coordinates is essentially absent from the predictions;
 - the not-H belief update is never learned.
@@ -141,13 +141,13 @@ On **semantics**, drift of meaning through the trunk is not separately identifie
 - **Action-change rate, exact vs noise at LRN's own error scale:**
   - exact − gauss_pred: flip +.013 [.000,+.032], all +.009 [+.007,+.012];
   - exact − mirror (same error magnitude, opposite sign): flip −.022 [−.043,−.006].
-  - The mirror moves actions more than exact does, so the consumer does not treat the correct values specially.
+  - The mirror is displaced twice as far from the prediction as exact and moves more actions; the response scales with displacement, and this comparison cannot show whether correctness matters. *(audit-corrected)*
 - **Dev agrees:** exact on flips changed 14/402 actions, rescued 7 and harmed 3, Δacc +.010 [−.008,+.034].
 - **Rollout-level replacement** (R-exact etc., named separately) was not re-analysed here. Dev score: R-exact .820 vs B .818.
 
 ## Q3: Consumer reliance, LRN vs SUP
 
-The policy was recomputed from the logged pre-fusion latent z (float16) and φ, reading the checkpoint weights. Recomputed actions matched the logged ones for 100% of decisions in every cell. The noise scale σ is the same per-seed LRN training-error RMS for both arms.
+The policy was recomputed from the logged pre-fusion latent z (float16) and φ, reading the checkpoint weights. Recomputed actions matched the logged ones for > 99.99% of decisions (at most 1 mismatch per 15,419-decision cell). *(audit-corrected)* The noise scale σ is the same per-seed LRN training-error RMS for both arms.
 
 **Action-change rate on b6c SCE** (LRN − SUP contrasts in brackets):
 
@@ -162,7 +162,7 @@ The policy was recomputed from the logged pre-fusion latent z (float16) and φ, 
 
 **Accuracy on flips when the φ channel is swapped:**
 - LRN: .405 → .416 with exact φ, .403 with φ = 0.
-- **SUP's own network reading LRN's predictions instead of exact inputs:** .562 → **.511 [.416,.599]**.
+- **SUP's own network reading LRN's predictions instead of exact inputs:** .562 → **.511 [.416,.599]**. The same network reading φ = 0 scores .514 [.416,.609], and reading the flip-population mean φ scores .539 [.440,.633]; on dev these are .430 and .527 vs .478 with LRN predictions. LRN's predictions are therefore no better than an uninformative input for SUP's consumer on flips. *(audit-corrected)*
 - **Per-seed paired differences** (not bootstrapped; post hoc; all 5 seeds share the sign):
 
   | comparison | per-seed differences | mean |
@@ -185,7 +185,7 @@ RAWF's factor columns are dead (P0b).
 **Interpretation:**
 - LRN's policy is carried by the trunk: permuting z changes 66% of actions.
 - It is 4–5× less sensitive to its factor channel than SUP is to the same-scale perturbations.
-- This is expected mechanically. φ = sg(aux(z)) is a deterministic function of the same z the fusion layer already sees, so the channel adds no information and gives the fusion layer no pressure to route through it.
+- This is expected mechanically. φ = sg(aux(z)) is a deterministic function of the same z the fusion layer already sees, so the channel adds no information beyond z (only nonlinear features of it), and empirically the fusion layer barely uses it. *(audit-corrected)*
 
 ## Q4: 4-way cross-tab on flips (b6c SCE, identical histories; counts summed over seeds)
 
@@ -205,7 +205,7 @@ RAWF's factor columns are dead (P0b).
 - Of the 381 flips LRN gets wrong, SUP gets 115 right at the identical history. Exact replacement fixes 7 of them.
 - **In 108 cases SUP is right and exact factors do not change LRN's action**: the dominant cell.
 - When LRN's interaction-carrying coordinates are already within error scale, LRN is still wrong on 62 of 112 (55%). When they are out, it is wrong on 319 of 528 (60%). Prediction accuracy on the relevant coordinates barely predicts LRN's correctness.
-- On near-misses, LRN is right on 221 of 295 while SUP is right on only 155 of those. SUP's near-miss cost is a consumer over-reaction, not LRN's problem.
+- On near-misses, LRN is right on 221 of 295 while SUP is right on only 155 of those. SUP's near-miss cost persists with its factor inputs zeroed (.505) or mean-filled (.519), so it is a property of SUP's learned network, not a reaction to the supplied values. *(audit-corrected)*
 - Per-seed counts and the flip_vs_pairs / flip_pair_inherited splits are in `q4` / `q4_summary`.
 
 ## Q5: Is the interaction content third-order? (octet labels, b6c)
@@ -217,7 +217,7 @@ RAWF's factor columns are dead (P0b).
 
 Flips by type (SCE): first 28, after_probe_failed 8, after_b1_timeout 18, query2_after_H 20, query2_after_notH 54, after_probe_solved 0. Under the stricter disjoint-ε-set definition, 73 flips remain vs singles and 3 vs singles and all pairs. Dev (b6 SCE): 134 flips, of which 15 are also vs all pairs.
 
-**What the benchmark supports:** the SCE/UCE flips test **full-vs-single composition, whose optimum is overwhelmingly already present in one constituent pair (SCE 119/128 = 93%, UCE 50/59 = 85%)**, and the full optimum is recoverable from pairwise-additive Q in 94–96% of units.
+**What the benchmark supports:** the SCE/UCE flips test **full-vs-single composition, whose optimum is overwhelmingly already present in one constituent pair (SCE 119/128 = 93%, UCE 50/59 = 85%)**, and pairwise-additive Q recovers the full optimum in 117/128 (91%) SCE and 49/59 (83%) UCE flip units, including 8/9 SCE 'third-order' units. The first-order single-sum baseline is 89/128 and 26/59; the all-unit rates of 96%/94% are dominated by trivial non-flip units, where the first-order baseline already reaches 90%/78%. *(audit-corrected)*
 - Third-order-only flips are 9 units per family, i.e. 45 decisions over 5 seeds. That is too few to resolve anything: the LRN − SUP flip_vs_pairs contrast on SCE is −.133 [−.422,+.060].
 - The benchmark does **not** support claims about irreducible third-order interaction.
 - Because **no arm ever saw any constituent pair** (Q6), what it does test is extrapolation from singles to pairwise interactions.
@@ -249,15 +249,16 @@ Flips by type (SCE): first 28, after_probe_failed 8, after_b1_timeout 18, query2
 
 | candidate locus | verdict | evidence |
 |---|---|---|
-| **consumption** | **Established as the main reason the frozen LRN does not turn its factors into flip decisions.** | Q2: exact factors move 1.4% of flip actions and fix 7 of 381 errors. Q3: LRN's φ-sensitivity is ¼–⅕ of SUP's and its factor share of fusion variance is 2–3%. Q4: 108 of 381 flips where SUP is right and exact factors change nothing. Q3: SUP's network reading LRN's predictions recovers about 2/3 of SUP's flip advantage over LRN (+.106 of +.158; 5/5 seeds). |
-| **acquisition** | **Established as a real but secondary limit.** | Monotone error growth with the number of combined held-out factors (full − single +.22 nMAE). Interaction contrasts not reproduced (slope ≤ .2). Not-H belief update never learned. SUP's consumer loses .051 on flips (5/5 seeds) and falls below LRN on pool states when fed LRN predictions. Flip errors ≈ invariance errors, so acquisition does not explain what is specific to flips. |
+| **consumption** | **Established that the frozen LRN does not read its factor channel. Not established as the main source of the flip gap.** *(audit-corrected)* | Q2: exact factors move 1.4% of flip actions and fix 7 of 381 errors. Q3: LRN's φ-sensitivity is ¼–⅕ of SUP's and its factor share of fusion variance is 2–3%. Q4: 108 of 381 flips where SUP is right and exact factors change nothing. SUP's network scores +.106 over LRN with LRN's predictions but +.109 with φ = 0 and +.134 with φ = mean (5/5 seeds): the recovery is a property of SUP's network. *(audit-corrected)* |
+| **training-induced trunk/head representation** | **Largest component of the LRN − SUP flip gap (≈ .11–.13 of .158); also carries LRN − RAWF (LRN with φ = 0: .403)** *(audit-corrected)* | SUP flip .514/.539 with φ zero/mean; LRN flip unchanged by φ = 0. |
+| **acquisition** | **Established as real; it limits the factor-value-dependent part of SUP's advantage entirely (SUP+LRN-pred ≤ SUP+mean).** *(audit-corrected)* | Monotone error growth with the number of combined held-out factors (full − single +.22 nMAE). Interaction contrasts not reproduced (slope ≤ .2). Not-H belief update never learned. SUP's consumer loses .051 on flips (5/5 seeds) and falls below LRN on pool states when fed LRN predictions. Flip errors ≈ invariance errors, so acquisition does not explain what is specific to flips. |
 | **semantics** (meaning drift through the shared trunk) | Not identified. | These data cannot separate it from acquisition. The predictions are measured against their targets, which covers acquisition, but whether the trunk's own code for the factors drifts is untested here. The 2×2 (S0 vs S1 trunks) addresses it. |
 | **learning of the downstream interaction** | Partly implied, not separately established. | RAWF and LRN both reach ~.4–.45 on flips. SUP's consumer, which was trained with exact factors on the same singles-only data, reaches .56. The downstream mapping is learnable from supplied factors without pair exposure, but only partially. |
-| **targets / ontology** | Established as a scope limit, not a failure cause. | Flips are 85–93% pair-inherited (second-order) and pairwise-additive Q recovers 94–96% of full optima. G3 strategy costs are myopic (P0a). Third-order support is 9 units per family. |
+| **targets / ontology** | Established as a scope limit, not a failure cause. | Flips are 85–93% pair-inherited (second-order) and pairwise-additive Q recovers the full optimum in 91% (SCE) / 83% (UCE) of flip units (all-unit 94–96% is dominated by trivial non-flip units) *(audit-corrected)*. G3 strategy costs are myopic (P0a). Third-order support is 9 units per family. |
 
 **What is established:**
-- LRN's flip deficit is a consumer that ignores a redundant channel, with prediction error as a second-order contributor.
-- Together with the LRN − RAWF gains on invariance (+.037) and pool (+.034), which cannot come through a channel the policy ignores, this points to the **auxiliary shaping of the trunk (D) as the source of LRN's gains** and to **non-reading (B) as the source of its flip deficit**.
+- LRN's policy ignores its (redundant) factor channel. The LRN − SUP flip gap is mostly carried by SUP's learned network independently of its factor values, and LRN's predictions supply none of the factor-value-dependent remainder. *(audit-corrected)*
+- Together with the LRN − RAWF gains on invariance (+.037) and pool (+.034), which cannot come through a channel the policy ignores, this is consistent with trunk-level effects (auxiliary shaping D, not separated from the init/RNG/optimizer differences bundled in LRN − RAWF) as the source of both LRN's gains and its flip deficit vs RAWF; non-reading (B) explains why exact factors do not help the frozen LRN. *(audit-corrected)*
 
 **What is not established:**
 - that fixing consumption would reach SUP's level: SUP+LRN-pred .511 < SUP .562;
@@ -274,6 +275,8 @@ The minimal intervention the evidence justifies is **to make the factor channel 
 - or decouple R from S: a policy that reads φ from a separately trained predictor.
 
 In both cases, evaluate with predicted and exact inputs on SCE flips, near-misses and invariances, plus the pool.
+
+**Required readout:** evaluate every arm with φ ∈ {own, exact, zero, population-mean} so that channel reading is separated from training-induced trunk/head effects. *(audit-corrected)*
 
 **Why B and not the alternatives:**
 - **A (acquisition):** A alone would not help, because the current consumer ignores even exact values.
