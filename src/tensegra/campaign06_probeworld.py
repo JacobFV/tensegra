@@ -873,7 +873,7 @@ HIST_IN_TRAINING = {arm: sorted(set(arm_pairs(arm)) & set(HIST_FAMILIES)) for ar
 
 
 def split6_config(split: str, index: int) -> Config6:
-    combos, base, _ = SPLITS6[split]
+    combos, base, _ = SPLITS6[split] if split in SPLITS6 else SPLITS6C[split]
     assert 0 <= index < MAX_POOL
     seed = base + index
     cell, k, key = draw_params(seed, pw.TRAIN_CELLS, V3_K, tuple(combos))
@@ -881,7 +881,7 @@ def split6_config(split: str, index: int) -> Config6:
 
 
 def world_seed6(split: str, index: int, rep: int) -> int:
-    return SPLITS6[split][1] + WORLD_SEED_OFFSET + index * 1000 + rep
+    return (SPLITS6[split] if split in SPLITS6 else SPLITS6C[split])[1] + WORLD_SEED_OFFSET + index * 1000 + rep
 
 
 def split_table_digest_input():
@@ -928,6 +928,61 @@ def audit_split_table(n: int = 384) -> dict:
         and type_seed(TRAIN_TYPES[-1], 0) + TYPE_STREAM_STRIDE <= SUBRANGES["train"][1])
     out["check_subranges"] = check_subranges()
     out["pass"] = all(out.values())
+    return out
+
+
+# ---------------------------------------------------------------------------------------------------------
+# B-FACT-C fresh confirmation split (split set 'b6c'; registry B-FACT-C).  ADDITIVE: SPLITS6, CF_BASE, B6_* and
+# split_table_digest_input are unchanged (pinned by tests/test_campaign06_bfactc.py).  Same generator (probeworld-v3),
+# eligibility, octet construction and near-miss logic; only the seed bases differ.  The hold base is 6.42e9 (the next
+# slot of the b6 hold pattern 6.4e9 + 1e7 j): 6.45e9 is b6_hold_SCE's eval-world block (base + WORLD_SEED_OFFSET).
+
+B6C_VERSION = "probeworld-split-v3-b6c"
+SPLITS6C = {"b6c_hold_SCE": (("SCE",), 6_420_000_000, "hold")}
+CF_BASE_C = {"SCE": 6_650_000_000}
+B6C_EVAL_SPLITS = tuple(SPLITS6C)
+
+
+def is_split6(split: str) -> bool:
+    return split in SPLITS6 or split in SPLITS6C
+
+
+def _pool_blocks(splits: dict, cf: dict, cf_prefix: str) -> list:
+    out = []
+    for s, (_, base, _) in splits.items():
+        out.append((base, base + MAX_POOL, s))
+        out.append((base + WORLD_SEED_OFFSET, base + WORLD_SEED_OFFSET + MAX_POOL * 1000, s + ":worlds"))
+    for f, b in cf.items():
+        out.append((b, b + MAX_POOL, cf_prefix + f))
+    return out
+
+
+def audit_b6c() -> dict:
+    """b6c seed blocks: pairwise disjoint and disjoint from every b6 block (pools, eval worlds, training streams,
+    counterfactual streams); inside the Track B range; holds (configurations + worlds) inside the 'hold' sub-range and
+    octets inside 'cf' (protocol_bases), or all inside 'dev_smoke' (tests / smokes); the b6c families are b6 holds."""
+    out = {}
+    new = _pool_blocks(SPLITS6C, CF_BASE_C, "b6c_cf_")
+    old = _pool_blocks(SPLITS6, CF_BASE, "cf_") + [
+        (type_seed(key, 0), type_seed(key, 0) + TYPE_STREAM_STRIDE, "train:" + key) for key in TRAIN_TYPES]
+    allb = sorted(new + old)
+    out["disjoint"] = all(a[1] <= b[0] for a, b in zip(allb, allb[1:]))
+    lo, hi = TRACKB_RANGE
+    out["inside_trackb_range"] = all(lo <= a[0] and a[1] <= hi for a in new)
+
+    def inside(name, a, b):
+        return SUBRANGES[name][0] <= a and b <= SUBRANGES[name][1]
+
+    holds = [(b, b + WORLD_SEED_OFFSET + MAX_POOL * 1000) for _, b, _ in SPLITS6C.values()]
+    cfs = [(b, b + MAX_POOL) for b in CF_BASE_C.values()]
+    out["protocol_bases"] = all(inside("hold", *x) for x in holds) and all(inside("cf", *x) for x in cfs)
+    out["dev_smoke_bases"] = all(inside("dev_smoke", *x) for x in holds + cfs)
+    out["inside_subranges"] = out["protocol_bases"] or out["dev_smoke_bases"]
+    out["families_are_holds"] = all(set(c) <= set(HOLD_FAMILIES) and r == "hold" for c, _, r in SPLITS6C.values()) \
+        and set(CF_BASE_C) <= set(HOLD_FAMILIES)
+    out["b6_audit"] = audit_split_table()["pass"]
+    out["pass"] = all(out[k] for k in ("disjoint", "inside_trackb_range", "inside_subranges", "families_are_holds",
+                                       "b6_audit"))
     return out
 
 

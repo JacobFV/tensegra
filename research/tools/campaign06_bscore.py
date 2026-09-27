@@ -231,13 +231,14 @@ def _flat(fn):
 
 # ------------------------------------------------------------------------------------------------ scoring
 
-def score(arms: dict, ref: str | None = None, n_boot: int = N_BOOT) -> dict:
+def score(arms: dict, ref: str | None = None, n_boot: int = N_BOOT, eval_name: str = "eval_episodes.jsonl.gz",
+          cf_name: str = "cf_eval.json") -> dict:
     ep_f = endpoint_funcs()
     runs = {}
     for arm, dirs in arms.items():
         for d in dirs:
-            head, rows = read_rows(d)
-            runs[(arm, d)] = {"head": head, "groups": groups_of(rows), "cf": read_cf(d)}
+            head, rows = read_rows(d, eval_name)
+            runs[(arm, d)] = {"head": head, "groups": groups_of(rows), "cf": read_cf(d, cf_name)}
     out = {"version": "bscore-v1", "n_boot": n_boot, "min_support": MIN_SUPPORT, "arms": {}, "paired": {}}
     for arm, dirs in arms.items():
         A = out["arms"][arm] = {"runs": [], "groups": {}}
@@ -352,9 +353,11 @@ def main(argv=None):
     p.add_argument("--out", required=True)
     p.add_argument("--md", default=None)
     p.add_argument("--n-boot", type=int, default=N_BOOT)
+    p.add_argument("--b6c", action="store_true",
+                   help="B-FACT-C: read eval_b6c_episodes.jsonl.gz / cf_eval_b6c.json (eval --split-set b6c)")
     a = p.parse_args(argv)
     arms = {x[0]: x[1:] for x in a.arm}
-    res = score(arms, a.ref, a.n_boot)
+    res = score(arms, a.ref, a.n_boot, *(("eval_b6c_episodes.jsonl.gz", "cf_eval_b6c.json") if a.b6c else ()))
     Path(a.out).write_text(json.dumps(res, indent=1))
     if a.md:
         Path(a.md).write_text(markdown(res))

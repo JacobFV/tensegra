@@ -211,11 +211,24 @@ def test_split_table_v3_audit_and_arms():
 def test_seed_ranges_registry_extended06():
     reg = json.loads((ROOT / "research/campaigns/extended-06/seed-ranges.json").read_text())
     rs = reg["ranges"]
+    by = {r["name"]: r for r in rs}
+
+    def ancestors(r):  # transitive parents (B-FACT-C ranges nest inside a Track B v3 sub-range)
+        out, p = set(), r.get("parent")
+        while p in by and p not in out:
+            out.add(p)
+            p = by[p].get("parent")
+        return out
+
+    for r in rs:
+        for p in ancestors(r):
+            assert by[p]["lo"] <= r["lo"] and r["hi"] <= by[p]["hi"], (r["name"], p)
     for i, a in enumerate(rs):
         assert a["lo"] < a["hi"]
         for b in rs[i + 1:]:
             if a.get("contains") == b["name"] or b.get("contains") == a["name"] or \
-                    a["name"] in b.get("parent", "") or b["name"] in a.get("parent", ""):
+                    a["name"] in b.get("parent", "") or b["name"] in a.get("parent", "") or \
+                    a["name"] in ancestors(b) or b["name"] in ancestors(a):
                 continue
             assert not (a["lo"] < b["hi"] and b["lo"] < a["hi"]), (a["name"], b["name"])
     sub = [r for r in rs if r.get("parent") == "ext06 Track B probeworld-v3 configurations"]
