@@ -33,3 +33,8 @@
   - L1: belief-dependent 14–37%; the rest cannot be classified without a Q head.
   - Realized regret .7–3.0, gap regret 1.8–3.0 per episode.
   - **Reading:** the historical combination failure is mainly **wrong value estimates for computations** under unseen condition combinations, not belief tracking or deployment. This is consistent with the extended-04 B-H6 finding that the value head generalizes poorly under shift.
+- 2026-09-27T02:43Z: **B-HR gate** (B0 = L1 recipe on split v2, seeds 10–12; training ~375 core-s each; all exit 0):
+  - **b5_hold_uc (U+C) is EVALUABLE:** uniquely-optimal first-probe rate .633/.650/.517 (60 supporting configurations each), below .80, so a failure exists to repair.
+  - **b5_hold_se (S+E) shows NO FAILURE:** .983/.950/.967, reported as 'no failure to repair'.
+  - U+C flag-sensitive subset: .727/.727/.576 (33 configurations), ambiguous.
+  - B-X arms BX1/BX2/BX3 × seeds 10–12 launched. The primary endpoint is on U+C.
