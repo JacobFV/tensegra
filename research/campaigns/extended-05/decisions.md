@@ -14,3 +14,10 @@
   - BX2 is non-trivial but null at the first decision (belief = prior).
   - **The B-X non-inferiority regret tolerance is registered at 1.0 per episode** before any B-X run.
   - Launched: bx-labels and BO seeds 0–2.
+- 2026-09-27T02:09Z: **Track A headroom tooling merged** (7028e2c5; 394 tests).
+  - D matches extended-04 r_mask on 32 dev worlds for each of r0–r5.
+  - O(I) is anchored to D's action kind, with 'not_call' added per review F3 (accepted).
+  - The sampling rule is public and online, so the single-deviation policy is deployable. Abstain is its own class.
+  - The G1a hindsight bound and the G1b cross-fitted ridge estimate are implemented. r3–r5 are refused.
+  - Dev smoke (non-protocol): single-deviation H excl. abstain = .0013 per episode (90% CI .0004–.0024); G1b −.0005. Both suggest little headroom.
+  - Registered A-HR launched: r0–r2 × iid_f0/iid_f2 × 256 worlds on seeds from 220M, plus the full-catalog subsample (~3.9k core-s).
