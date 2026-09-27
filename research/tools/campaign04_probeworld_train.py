@@ -500,9 +500,16 @@ class ProbeNet(nn.Module):
         if arch == "fuse":  # extended-06 factorized arms (created last: every other parameter keeps its init order)
             self.factor_mode = factor_mode or ("supplied" if inputs == "factors6" else "none")
             nf = pw6.N_FACTOR_FEATURES
-            if self.factor_mode in ("learned", "sr"):  # extended-07 'sr': the identical module set, same order
+            if self.factor_mode in ("learned", "sr", "sep"):  # extended-07 'sr'/'sep': same module order
                 self.aux = nn.Sequential(nn.Linear(hidden, hidden), nn.Tanh(), nn.Linear(hidden, nf))
             self.fuse = nn.Linear(hidden + nf, hidden)
+            if self.factor_mode == "sep":  # extended-07 separate-predictor READ arm: the aux head sits on its OWN
+                # recurrent encoder (created last, so every shared tensor keeps the S x R initialization); the policy
+                # reads sg(pred); the factor channel is not a function of the policy trunk
+                self.pinp = nn.Linear(self.base_dim, hidden)
+                self.pgru = nn.GRUCell(hidden, hidden)
+                self.ptrunk = nn.Sequential(nn.Linear(hidden, hidden), nn.Tanh())
+                self.state_size = 2 * hidden  # recurrent state = [policy h | predictor h]
             if self.factor_mode == "sr":  # extended-07 genuine S x R 2x2 (gradient-flow.md 6)
                 self.sr_shape, self.sr_read = bool(shape), bool(read)
                 # R0 constant fusion input: NOT part of the state_dict (non-persistent), so the initial parameters
@@ -510,6 +517,9 @@ class ProbeNet(nn.Module):
                 self.register_buffer("phi_const", torch.zeros(nf), persistent=False)
 
     def step(self, x, h):
+        if getattr(self, "factor_mode", None) == "sep":
+            hn, _, _, _, zf = self.sep_forward(x, h)
+            return hn, zf
         pre = self.inp(x[:, :self.base_dim] if getattr(self, "arch", "flat") == "fuse" else x)
         if getattr(self, "arch", "flat") == "modular":
             base = x[:, :IN_DIM]
@@ -524,6 +534,17 @@ class ProbeNet(nn.Module):
         if getattr(self, "arch", "flat") == "fuse":
             z = self.fuse_step(x, z)
         return h, z
+
+    def sep_forward(self, x, h):
+        """Separate-predictor arm: (h_new, z_policy_trunk, pred, phi, fused)."""
+        H = self.gru.hidden_size
+        xb = x[:, :self.base_dim]
+        hc = self.gru(torch.tanh(self.inp(xb)), h[:, :H])
+        z = self.trunk(hc)
+        hp = self.pgru(torch.tanh(self.pinp(xb)), h[:, H:])
+        self.last_aux = self.aux(self.ptrunk(hp))
+        phi = self.last_aux.detach()
+        return torch.cat([hc, hp], 1), z, self.last_aux, phi, torch.tanh(self.fuse(torch.cat([z, phi], 1)))
 
     def fuse_step(self, x, z):
         """extended-06: heads read tanh(W [z; phi]).  phi = supplied public factors (from the input tail), the
@@ -551,6 +572,11 @@ def matched_hidden(arch="modular", inputs="public", target=B1_PARAMS):
             if best is None or d < best[0]:
                 best = (d, hdim)
     return best[1]
+
+
+def state_size(model):
+    """Recurrent state width (the GRU's hidden size; extended-07 'sep': policy + predictor states)."""
+    return getattr(model, "state_size", None) or model.gru.hidden_size
 
 
 def n_params(model):
@@ -588,7 +614,7 @@ def run_batch(model, items, mode, rng=None, need_labels=True):
     B = len(items)
     eps = [_env(cfg).Episode(cfg, ws) for cfg, _, ws in items]
     vecs = [cfg.public_vector() for cfg, _, _ in items]
-    h = torch.zeros(B, model.gru.hidden_size)
+    h = torch.zeros(B, state_size(model))
     prev = [None] * B
     prev_state = [None] * B
     prev_act = [None] * B
@@ -605,7 +631,7 @@ def run_batch(model, items, mode, rng=None, need_labels=True):
         idx = torch.tensor(act)
         hn, z = model.step(x, h[idx])
         aux_rec = None
-        if getattr(model, "factor_mode", None) in ("learned", "sr"):  # extended-06/07 auxiliary factor targets
+        if getattr(model, "factor_mode", None) in ("learned", "sr", "sep"):  # extended-06/07 aux factor targets
             aux_rec = {"aux": model.last_aux,
                        "aux_t": torch.tensor([pw6.factor_features(eps[i].cfg, eps[i].state) for i in act])}
         h = h.index_copy(0, idx, hn)
@@ -779,7 +805,7 @@ def cmd_train(a):
     t_load = time.process_time() - t_start
     p2 = p2_setup(a)  # extended-07 Phase 2 options (None under every historical invocation)
     w = RUNG_WEIGHTS[a.rung]
-    if getattr(a, "factor_mode", None) in ("learned", "sr"):
+    if getattr(a, "factor_mode", None) in ("learned", "sr", "sep"):
         w = dict(w, aux=a.aux_weight)
     if p2 is not None and p2["aux_cw"] is not None:
         w = dict(w, aux_cw=torch.tensor(p2["aux_cw"]))
@@ -803,8 +829,8 @@ def cmd_train(a):
         opt_groups = [(opt, main_params, "all")]
     else:  # extended-07 split: actor group A and aux predictor group X, separate Adam + separate clip
         grp_a = [p for n, p in model.named_parameters()
-                 if not n.startswith("v_own.") and not n.startswith("aux.") and p.requires_grad]
-        grp_x = [p for n, p in model.named_parameters() if n.startswith("aux.")]
+                 if not n.startswith("v_own.") and not n.startswith(AUX_PREFIXES) and p.requires_grad]
+        grp_x = [p for n, p in model.named_parameters() if n.startswith(AUX_PREFIXES)]
         opt_groups = [(torch.optim.Adam(grp_a, lr=a.lr), grp_a, "A")]
         if grp_x:
             opt_groups.append((torch.optim.Adam(grp_x, lr=a.lr), grp_x, "X"))
@@ -898,6 +924,7 @@ def cmd_train(a):
 # consumers (brief 10).  Every option defaults off; p2_setup returns None for every historical invocation, and the
 # historical code path is then executed unchanged (tests/test_campaign07_p2.py goldens).
 
+AUX_PREFIXES = ("aux.", "pinp.", "pgru.", "ptrunk.")  # group X: the predictor (sep: with its own encoder)
 P2_OPTS = ("shape", "read", "clip_mode", "action_rng", "init_from", "init_sha", "bank", "aux_group_weights",
            "phi_contract", "frozen_trunk", "predictor_only", "bank_updates", "finetune")
 CONTRACT_JSON = Path(__file__).resolve().parents[2] / "research" / "campaigns" / "extended-07" / "factor-contract.json"
@@ -959,11 +986,16 @@ def bank_folds(bank, K):
 
 
 def p2_setup(a):
+    if getattr(a, "factor_mode", None) == "sep":
+        a.clip_mode = getattr(a, "clip_mode", None) or "split"
     def unset(k):
         v = getattr(a, k, None)
         return v is None if k in ("shape", "read") else v in (None, False, 0, [])  # --shape 0 is a setting
     if all(unset(k) for k in P2_OPTS):
         return None
+    sep = getattr(a, "factor_mode", None) == "sep"
+    if sep and getattr(a, "arch", "flat") != "fuse":
+        raise SystemExit("--factor-mode sep needs --arch fuse")
     sr = getattr(a, "shape", None) is not None or getattr(a, "read", None) is not None
     if sr:
         if a.shape is None or a.read is None:
@@ -972,7 +1004,7 @@ def p2_setup(a):
             raise SystemExit("--shape/--read need --arch fuse (factor mode 'sr' is implied)")
         a.factor_mode = "sr"
     p2 = {"sr": sr, "sr_kwargs": {"shape": a.shape, "read": a.read} if sr else {},
-          "clip_mode": a.clip_mode or ("split" if sr else "global"), "action_rng": a.action_rng or "counter",
+          "clip_mode": a.clip_mode or ("split" if sr or sep else "global"), "action_rng": a.action_rng or "counter",
           "aux_cw": aux_coord_weights(a.aux_group_weights) if a.aux_group_weights else None,
           "bank": None, "phi_contract": a.phi_contract, "oof": None, "cpu_s_bank": 0.0,
           "noise_seed": a.noise_seed, "mix_p": a.mix_p}
@@ -993,7 +1025,7 @@ def p2_setup(a):
             raise SystemExit("--bank with --updates > 0 needs --finetune (on-policy fine-tuning is separately flagged)")
     elif a.bank_updates or a.predictor_only or a.phi_contract:
         raise SystemExit("--bank-updates / --predictor-only / --phi-contract need --bank")
-    if a.predictor_only and (a.updates > 0 or getattr(a, "factor_mode", None) not in ("sr", "learned")):
+    if a.predictor_only and (a.updates > 0 or getattr(a, "factor_mode", None) not in ("sr", "learned", "sep")):
         raise SystemExit("--predictor-only: bank stage only (--updates 0), on a model with an aux head")
     if a.phi_contract:
         if getattr(a, "inputs", "public") != "factors6" or getattr(a, "arch", "flat") != "fuse":
@@ -1026,9 +1058,13 @@ def p2_init(a, p2, model):
     if a.init_from:
         ref = torch.load(a.init_from)
         own = model.state_dict()
-        if set(ref) != set(own) or any(tuple(ref[k].shape) != tuple(own[k].shape) for k in own):
+        # 'sep' arm: the common S x R init covers every shared tensor; its own predictor encoder (pinp/pgru/ptrunk)
+        # keeps this seed's construction draw
+        extra = {k for k in own if k.split(".")[0] in ("pinp", "pgru", "ptrunk")} \
+            if getattr(model, "factor_mode", None) == "sep" else set()
+        if set(ref) != set(own) - extra or any(tuple(ref[k].shape) != tuple(own[k].shape) for k in ref):
             raise SystemExit(f"--init-from {a.init_from}: keys/shapes differ from this arm's model")
-        model.load_state_dict(ref)
+        model.load_state_dict({**own, **ref})
     p2["init_sha256"] = state_sha(model.state_dict())
     if a.init_sha and a.init_sha != p2["init_sha256"]:
         raise SystemExit(f"--init-sha mismatch: {p2['init_sha256']} != {a.init_sha}")
@@ -1074,13 +1110,13 @@ def replay_bank_batch(model, sel, phis=None):
     plus, for the SUP-architecture consumers, the contract's factor vector at the input tail.  Returns per-step records
     like run_batch (idx, mask, logp_all, z, opt, G, aux, aux_t)."""
     B = len(sel)
-    h = torch.zeros(B, model.gru.hidden_size)
+    h = torch.zeros(B, state_size(model))
     prev = [None] * B
     tail = getattr(model, "inputs", "public") == "factors6"
     if tail and phis is None:
         raise ValueError("a factors6 consumer needs the contract's factor vectors")
     assert getattr(model, "inputs", "public") in ("public", "factors6")
-    has_aux = getattr(model, "factor_mode", None) in ("learned", "sr")
+    has_aux = getattr(model, "factor_mode", None) in ("learned", "sr", "sep")
     steps = []
     for t in range(max(len(e["hist"]) for e in sel)):
         act = [i for i in range(B) if t < len(sel[i]["hist"])]
@@ -1190,6 +1226,9 @@ def p2_meta(a, p2, model, meta, t_onpolicy):
     elif a.frozen_trunk:
         info["frozen_trunk"] = a.frozen_trunk
     meta["p2"] = info
+    if getattr(model, "factor_mode", None) == "sep":
+        meta["fuse"].update(stop_gradient=True, arm="SEP", form="pred = aux(ptrunk(pgru(pinp(x))))  (own encoder, "
+                            "trained by the aux loss only); heads read tanh(W [z; sg(pred)])")
     if p2["sr"]:
         meta["fuse"].update(shape=int(model.sr_shape), read=int(model.sr_read), phi_const_mode=a.phi_const,
                             phi_const=p2["phi_const"], stop_gradient=True, arm=f"S{int(model.sr_shape)}R{int(model.sr_read)}",
@@ -1468,7 +1507,7 @@ def replay_history(model, cfg, history, upto=None):
     from the public config, the previous visible record, the public mask and the model's supplied-state kind."""
     kind = getattr(model, "inputs", "public")
     vec = cfg.public_vector()
-    h = torch.zeros(1, model.gru.hidden_size)
+    h = torch.zeros(1, state_size(model))
     st = pw.initial_state(cfg)
     prev = None
     out = []
@@ -1890,7 +1929,7 @@ def main(argv=None):
                    help="extended-05: modular = BX3 per-flag gated encoders (hidden width matched to B0's parameters); "
                         "extended-06: fuse = factorized arms (heads read a fusion of the trunk and the factors)")
     s.add_argument("--train-n", type=int, default=None, help="extended-06: use the first N configurations of the pool")
-    s.add_argument("--factor-mode", choices=("supplied", "learned", "none"), default=None,
+    s.add_argument("--factor-mode", choices=("supplied", "learned", "none", "sep"), default=None,
                    help="extended-06 --arch fuse: supplied (needs --inputs factors6) | learned | none (raw control)")
     s.add_argument("--aux-weight", type=float, default=1.0, help="extended-06 learned factor loss weight")
     # extended-07 Phase 2 (all default off; gradient-flow.md 6, research/campaigns/extended-07/p2-infra.md)

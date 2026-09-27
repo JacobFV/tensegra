@@ -350,7 +350,7 @@ def job_matrix(sha, smoke=False, seeds=P2_SEEDS, bank_updates=4000, finetune=0, 
              f"model:B0-s30={R6}/e06-tb-b0-s30/run:4"])
     n_cfg = ["--n-configs", "24"] if smoke else []
     bu = 20 if smoke else bank_updates
-    jobs = []
+    jobs = []  # order = coordinator priorities after P1: (1) consumers, (2) separate-predictor READ arm, (3) 2x2
 
     def add(stage, name, caps, needs, mkdir, cmd):
         argv = [name, sha, "--wall-cap", str(caps[0]), "--cpu-cap", str(caps[1])]
@@ -374,36 +374,21 @@ def job_matrix(sha, smoke=False, seeds=P2_SEEDS, bank_updates=4000, finetune=0, 
     for s in seeds:
         init = f"{R7}/{tag}-init-s{s}"
         add("init", f"{tag}-init-s{s}", (600, 300), [], [init], [P2, "init", "--seed", str(s), "--out", init])
-    common = ["--labels", TB, "--train-split", "b6_B0", "--train-n", "384", "--rung", "L1", "--batch",
-              "8" if smoke else "64"]
-    for s in seeds:
-        init = f"{R7}/{tag}-init-s{s}/init.pt"
-        for arm, (sh, rd) in ARMS.items():
-            o = f"{R7}/{tag}-{arm}-bank-s{s}"
-            ft = ["--finetune", "--updates", str(finetune)] if finetune else ["--updates", "0"]
-            add("2x2-bank", f"{tag}-{arm}-bank-s{s}", (7200, 7200), [bank, init, f"{TB}/b6_B0.pkl"], [o],
-                [TRAIN, "train", *common, "--seed", str(s), "--arch", "fuse", "--shape", str(sh), "--read", str(rd),
-                 "--init-from", init, "--bank", bank, "--bank-updates", str(bu), *ft, "--log-every",
-                 "5" if smoke else "100", "--out", f"{o}/run"])
-            if smoke or onpolicy:  # the historical-style on-policy 2x2 (no bank; RL + imitation + aux)
-                o = f"{R7}/{tag}-{arm}-onp-s{s}"
-                add("2x2-onpolicy", f"{tag}-{arm}-onp-s{s}", (1800, 1800) if smoke else (7200, 7200),
-                    [init, f"{TB}/b6_B0.pkl"], [o],
-                    [TRAIN, "train", *common, "--seed", str(s), "--arch", "fuse", "--shape", str(sh), "--read",
-                     str(rd), "--init-from", init, "--updates", "10" if smoke else str(onpolicy), "--log-every",
-                     "5" if smoke else "100", "--out", f"{o}/run"])
+    common = ["--labels", TB, "--train-split", "b6_B0", "--train-n", "384", "--rung", "L1", "--batch", "64"]
+    le = ["--log-every", "5" if smoke else "100"]
     kk = 2 if smoke else k
-    pbu = 20 if smoke else bank_updates
+    ft = ["--finetune", "--updates", str(finetune)] if finetune else ["--updates", "0"]
+    # priority 1: controlled consumers (predictors with their OWN encoder, K-fold OOF, exact / oof / mix contracts)
     for s in seeds:
         for f in list(range(kk)) + ["full"]:
             o = f"{R7}/{tag}-pred-f{f}-s{s}"
             fold = [] if f == "full" else ["--bank-folds", str(kk), "--bank-exclude-fold", str(f)]
-            add("predictor", f"{tag}-pred-f{f}-s{s}", (7200, 7200), [bank, f"{TB}/b6_B0.pkl"], [o],
+            add("P1-predictor", f"{tag}-pred-f{f}-s{s}", (7200, 7200), [bank, f"{TB}/b6_B0.pkl"], [o],
                 [TRAIN, "train", *common, "--seed", str(s), "--arch", "fuse", "--shape", "1", "--read", "0",
-                 "--bank", bank, "--bank-updates", str(pbu), "--predictor-only", *fold, "--updates", "0",
-                 "--log-every", "5" if smoke else "100", "--out", f"{o}/run"])
+                 "--bank", bank, "--bank-updates", str(bu), "--predictor-only", *fold, "--updates", "0", *le,
+                 "--out", f"{o}/run"])
         oof_dir = f"{R7}/{tag}-oof-s{s}"
-        add("oof", f"{tag}-oof-s{s}", (1800, 1800),
+        add("P1-oof", f"{tag}-oof-s{s}", (1800, 1800),
             [bank] + [f"{R7}/{tag}-pred-f{f}-s{s}/run/model.pt" for f in list(range(kk)) + ["full"]], [oof_dir],
             [P2, "oof", "--bank", bank, *sum((["--fold-run", f"{f}={R7}/{tag}-pred-f{f}-s{s}/run"]
                                               for f in range(kk)), []),
@@ -411,29 +396,69 @@ def job_matrix(sha, smoke=False, seeds=P2_SEEDS, bank_updates=4000, finetune=0, 
         for c in CONTRACTS:
             o = f"{R7}/{tag}-cons-{c}-s{s}"
             extra = [] if c == "exact" else ["--oof", f"{oof_dir}/oof.pt"]
-            add("consumer", f"{tag}-cons-{c}-s{s}", (7200, 7200),
+            add("P1-consumer", f"{tag}-cons-{c}-s{s}", (7200, 7200),
                 [bank, f"{TB}/b6_B0.pkl"] + ([f"{oof_dir}/oof.pt"] if c != "exact" else []), [o],
                 [TRAIN, "train", *common, "--seed", str(s), "--inputs", "factors6", "--arch", "fuse", "--bank", bank,
-                 "--bank-updates", str(pbu), "--phi-contract", c, *extra, "--updates", "0",
-                 "--log-every", "5" if smoke else "100", "--out", f"{o}/run"])
-    for s in seeds:  # evaluation: diag runner, b6c_hold_SCE + SCE octets (+ UCE), free-running + pi* histories
-        o = f"{R7}/{tag}-eval-s{s}"
+                 "--bank-updates", str(bu), "--phi-contract", c, *extra, "--updates", "0", *le, "--out", f"{o}/run"])
+    # priority 2: separate-predictor READ arm (own encoder, aux loss only; the policy reads sg(pred)); shared tensors
+    # copied from the seed's common S x R init
+    for s in seeds:
+        init = f"{R7}/{tag}-init-s{s}/init.pt"
+        o = f"{R7}/{tag}-sep-bank-s{s}"
+        add("P2-sep", f"{tag}-sep-bank-s{s}", (7200, 7200), [bank, init, f"{TB}/b6_B0.pkl"], [o],
+            [TRAIN, "train", *common, "--seed", str(s), "--arch", "fuse", "--factor-mode", "sep", "--init-from", init,
+             "--bank", bank, "--bank-updates", str(bu), *ft, *le, "--out", f"{o}/run"])
+        if smoke or onpolicy:
+            o = f"{R7}/{tag}-sep-onp-s{s}"
+            add("P2-sep-onpolicy", f"{tag}-sep-onp-s{s}", (1800, 1800) if smoke else (7200, 7200),
+                [init, f"{TB}/b6_B0.pkl"], [o],
+                [TRAIN, "train", *common, "--seed", str(s), "--arch", "fuse", "--factor-mode", "sep", "--init-from",
+                 init, "--updates", "10" if smoke else str(onpolicy), *le, "--out", f"{o}/run"])
+    # priority 3: the S x R 2x2
+    for s in seeds:
+        init = f"{R7}/{tag}-init-s{s}/init.pt"
+        for arm, (sh, rd) in ARMS.items():
+            o = f"{R7}/{tag}-{arm}-bank-s{s}"
+            add("P3-2x2-bank", f"{tag}-{arm}-bank-s{s}", (7200, 7200), [bank, init, f"{TB}/b6_B0.pkl"], [o],
+                [TRAIN, "train", *common, "--seed", str(s), "--arch", "fuse", "--shape", str(sh), "--read", str(rd),
+                 "--init-from", init, "--bank", bank, "--bank-updates", str(bu), *ft, *le, "--out", f"{o}/run"])
+            if smoke or onpolicy:  # the historical-style on-policy 2x2 (no bank; RL + imitation + aux)
+                o = f"{R7}/{tag}-{arm}-onp-s{s}"
+                add("P3-2x2-onpolicy", f"{tag}-{arm}-onp-s{s}", (1800, 1800) if smoke else (7200, 7200),
+                    [init, f"{TB}/b6_B0.pkl"], [o],
+                    [TRAIN, "train", *common, "--seed", str(s), "--arch", "fuse", "--shape", str(sh), "--read",
+                     str(rd), "--init-from", init, "--updates", "10" if smoke else str(onpolicy), *le,
+                     "--out", f"{o}/run"])
+    # evaluation (diag runner): b6c_hold_SCE + SCE octets (+ UCE); B free-running + A-pistar; ivs none / exact.
+    # Near-miss members of every octet are logged (cf role 'near_miss').  evalA = priorities 1-2, evalB = the 2x2.
+    sub = ["--n-configs", "24", "--n-octets", "8"] if smoke else []
+    pops = ["--labels", TBC, "--pool", "b6c_hold_SCE", "--cf", f"{TBC}/cf_SCE.json", *([] if smoke else ["--cf", UCE])]
+    tail = ["--protocols", "B", "A-pistar", "--ivs", "none", "exact", "--no-latent", *sub]
+    popneeds = [f"{TBC}/b6c_hold_SCE.shards.json", f"{TBC}/cf_SCE.json"]
+    for i, s in enumerate(seeds):
         m, needs = [], []
-        for arm in ARMS:
-            for kind in ("bank",) + (("onp",) if onpolicy else ()):
-                m += ["--model", f"{arm.upper()}-{kind}-s{s}={R7}/{tag}-{arm}-{kind}-s{s}/run"]
-                needs.append(f"{R7}/{tag}-{arm}-{kind}-s{s}/run/model.pt")
         pred = f"{R7}/{tag}-pred-ffull-s{s}/run"
+        lrn = f"{R6}/e06-tb-lrn-s{35 + i}/run"  # historical LRN of the paired lineage: its aux predictions
         for c in CONTRACTS:
             run = f"{R7}/{tag}-cons-{c}-s{s}/run"
-            m += ["--model", f"CONS-{c}-exact-s{s}={run}::exact", "--model", f"CONS-{c}-pred-s{s}={run}::pred={pred}"]
+            m += ["--model", f"CONS-{c}-exact-s{s}={run}::exact", "--model", f"CONS-{c}-pred-s{s}={run}::pred={pred}",
+                  "--model", f"CONS-{c}-predLRN{35 + i}-s{s}={run}::pred={lrn}"]
             needs.append(f"{run}/model.pt")
-        needs.append(f"{pred}/model.pt")
-        sub = ["--n-configs", "24", "--n-octets", "8"] if smoke else []
-        add("eval", f"{tag}-eval-s{s}", (7200, 7200), needs + [f"{TBC}/b6c_hold_SCE.shards.json", f"{TBC}/cf_SCE.json"],
-            [o], [DIAG, "run", "--labels", TBC, "--pool", "b6c_hold_SCE", "--cf", f"{TBC}/cf_SCE.json",
-                  *([] if smoke else ["--cf", UCE]), *m, "--protocols", "B", "A-pistar",
-                  "--ivs", "none", "exact", "--no-latent", *sub, "--tag", f"{tag}-s{s}", "--out", o])
+        for kind in ("bank",) + (("onp",) if smoke or onpolicy else ()):
+            m += ["--model", f"SEP-{kind}-s{s}={R7}/{tag}-sep-{kind}-s{s}/run"]
+            needs.append(f"{R7}/{tag}-sep-{kind}-s{s}/run/model.pt")
+        needs += [f"{pred}/model.pt", f"{lrn}/model.pt"]
+        o = f"{R7}/{tag}-evalA-s{s}"
+        add("evalA", f"{tag}-evalA-s{s}", (7200, 7200), needs + popneeds, [o],
+            [DIAG, "run", *pops, *m, *tail, "--tag", f"{tag}-A-s{s}", "--out", o])
+        m, needs = [], []
+        for arm in ARMS:
+            for kind in ("bank",) + (("onp",) if smoke or onpolicy else ()):
+                m += ["--model", f"{arm.upper()}-{kind}-s{s}={R7}/{tag}-{arm}-{kind}-s{s}/run"]
+                needs.append(f"{R7}/{tag}-{arm}-{kind}-s{s}/run/model.pt")
+        o = f"{R7}/{tag}-evalB-s{s}"
+        add("evalB", f"{tag}-evalB-s{s}", (7200, 7200), needs + popneeds, [o],
+            [DIAG, "run", *pops, *m, *tail, "--tag", f"{tag}-B-s{s}", "--out", o])
     return jobs
 
 

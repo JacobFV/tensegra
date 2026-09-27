@@ -4,7 +4,7 @@
 # Seed 47 (dev), bank worlds 12.95e9 (dev), 24 configurations of b6_B0, batch 64 (per-update costs at protocol scale).
 set -u
 CODE="$1"; OUT="$2"; shift 2
-STEPS="${*:-bank init arms onp pred oof cons eval}"
+STEPS="${*:-bank init pred oof cons sep arms onp eval}"
 R6=$HOME/structured-latent-dynamics-campaign06/results
 TB=$R6/e06-tb-labels/labels
 TBC=$R6/e06-tbc-labels/labels
@@ -37,9 +37,14 @@ oof)  run oof $P2 oof --bank $OUT/bank.pkl --fold-run 0=$OUT/pred-f0/run --fold-
 cons) for c in exact oof mix; do extra=""; [ $c != exact ] && extra="--oof $OUT/oof.pt"
         run cons-$c $TR train $COMMON --inputs factors6 --arch fuse --bank $OUT/bank.pkl --bank-updates $BU \
           --phi-contract $c $extra --updates 0 --out $OUT/cons-$c/run; done ;;
+sep)  run sep-bank $TR train $COMMON --arch fuse --factor-mode sep --init-from $OUT/init-s$S/init.pt \
+        --bank $OUT/bank.pkl --bank-updates $BU --updates 0 --out $OUT/sep-bank/run
+      run sep-onp $TR train $COMMON --arch fuse --factor-mode sep --init-from $OUT/init-s$S/init.pt \
+        --updates 10 --out $OUT/sep-onp/run ;;
 eval) M=""
-      for a in s0r0 s1r0 s0r1 s1r1; do M="$M --model ${a^^}=$OUT/${a}-bank/run"; done
-      for c in exact oof mix; do M="$M --model C${c}-X=$OUT/cons-$c/run::exact --model C${c}-P=$OUT/cons-$c/run::pred=$OUT/pred-full/run"; done
+      for a in s0r0 s1r0 s0r1 s1r1 sep; do M="$M --model ${a^^}=$OUT/${a}-bank/run"; done
+      M="$M --model SEP-ONP=$OUT/sep-onp/run"
+      for c in exact oof mix; do M="$M --model C${c}-X=$OUT/cons-$c/run::exact --model C${c}-P=$OUT/cons-$c/run::pred=$OUT/pred-full/run --model C${c}-L=$OUT/cons-$c/run::pred=$R6/e06-tb-lrn-s35/run"; done
       run eval research/tools/campaign07_diag.py run --labels $TBC --pool b6c_hold_SCE --cf $TBC/cf_SCE.json $M \
         --protocols B A-pistar --ivs none exact --no-latent --n-configs 24 --n-octets 8 --tag smoke --out $OUT/eval ;;
 esac; done

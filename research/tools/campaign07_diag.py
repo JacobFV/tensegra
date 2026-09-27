@@ -345,12 +345,14 @@ def model_kind(model):
         return "B0"
     if model.factor_mode == "sr":
         return f"S{int(model.sr_shape)}R{int(model.sr_read)}"
+    if model.factor_mode == "sep":
+        return "SEP"
     return {"learned": "LRN", "none": "RAWF", "supplied": "SUP"}[model.factor_mode]
 
 
 # kinds whose policy READS a learned prediction: the only kinds that accept factor interventions (R0 arms read a
 # constant through an untrained channel, like RAWF; SUP / CONS-exact read exact inputs)
-READS_PREDICTION = ("LRN", "S0R1", "S1R1", "CONS-pred")
+READS_PREDICTION = ("LRN", "S0R1", "S1R1", "SEP", "CONS-pred")
 
 
 def forward(model, x, h):
@@ -358,6 +360,8 @@ def forward(model, x, h):
     Returns (h_new, z_pre, pred, phi, z_fused); pred = auxiliary prediction (LRN) / supplied inputs (SUP) / None."""
     if hasattr(model, "diag_forward"):  # extended-07 consumer on predicted factors
         return model.diag_forward(x, h)
+    if getattr(model, "factor_mode", None) == "sep":  # extended-07 separate-predictor READ arm
+        return model.sep_forward(x, h)
     fuse = getattr(model, "arch", "flat") == "fuse"
     pre = model.inp(x[:, :model.base_dim] if fuse else x)
     hn = model.gru(torch.tanh(pre), h)

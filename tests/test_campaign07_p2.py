@@ -663,8 +663,118 @@ def test_job_matrix_validates():
     names = [n for _, n, _ in jobs]
     assert len(names) == len(set(names)) and all(n.startswith("e07-p2s-") for n in names)
     full = P.job_matrix("abcdef12")
-    assert sum(1 for s, _, _ in full if s == "2x2-bank") == 4 * len(P.P2_SEEDS)
-    assert sum(1 for s, _, _ in full if s == "consumer") == 3 * len(P.P2_SEEDS)
+    assert sum(1 for s, _, _ in full if s == "P3-2x2-bank") == 4 * len(P.P2_SEEDS)
+    assert sum(1 for s, _, _ in full if s == "P1-consumer") == 3 * len(P.P2_SEEDS)
+    assert sum(1 for s, _, _ in full if s == "P2-sep") == len(P.P2_SEEDS)
+    stages = [s for s, _, _ in full]
+    assert stages.index("P1-consumer") < stages.index("P2-sep") < stages.index("P3-2x2-bank")
+
+
+# ------------------------------------------------------------------ separate-predictor READ arm (factor mode 'sep')
+
+def sep_model(seed=HSEED):
+    torch.manual_seed(1000 + seed)
+    return M.ProbeNet(M.HIDDEN, arch="fuse", public_extra=pw6.PUBLIC_EXTRA6, factor_mode="sep")
+
+
+PRED_GROUPS = ("aux", "pinp", "pgru", "ptrunk")
+
+
+def test_sep_shares_the_sxr_init_and_has_its_own_encoder(tmp_path):
+    P.main(["init", "--seed", str(HSEED), "--out", str(tmp_path / "init")])
+    ref = torch.load(tmp_path / "init" / "init.pt")
+    m = sep_model()
+    sd = m.state_dict()
+    assert all(torch.equal(sd[k], ref[k]) for k in ref)  # constructed under the same seed: shared tensors equal
+    assert {k.split(".")[0] for k in set(sd) - set(ref)} == {"pinp", "pgru", "ptrunk"}
+    d = train(M, tmp_path, "sep-init", ["--arch", "fuse", "--factor-mode", "sep", "--init-from",
+                                        str(tmp_path / "init" / "init.pt")], updates=0, seed=HSEED + 1)
+    got = torch.load(d / "model.pt")
+    assert all(torch.equal(got[k], ref[k]) for k in ref)  # copied from the S x R init (another seed's construction)
+    meta = json.loads((d / "train_meta.json").read_text())
+    assert meta["fuse"]["arm"] == "SEP" and meta["p2"]["clip_mode"] == "split"
+    lm, _ = load_run(d)
+    assert M.state_size(lm) == 2 * M.HIDDEN and D.model_kind(D.load_model(d)[0]) == "SEP"
+
+
+def test_sep_gradient_partition():
+    """Actor loss never reaches the predictor (aux + its own encoder); the aux loss reaches ONLY the predictor (never
+    the policy encoder/trunk); the policy reads the prediction."""
+    m = sep_model()
+    batch = sample_batch(m)
+    names = [n for n, _ in m.named_parameters()]
+    params = list(m.parameters())
+    total, parts = actor_loss(m, batch)
+    ga = torch.autograd.grad(total, params, retain_graph=True, allow_unused=True)
+    items, eps, steps, ep_steps = batch
+    gx = torch.autograd.grad(M.aux_mse(steps, {}), params, allow_unused=True)
+    for n, a, x in zip(names, ga, gx):
+        if n.split(".")[0] in PRED_GROUPS:
+            assert a is None or torch.all(a == 0), n
+            assert x is not None and torch.any(x != 0), n
+        else:
+            assert x is None or torch.all(x == 0), n
+    H = m.gru.hidden_size
+    assert torch.any(dict(zip(names, ga))["fuse.weight"][:, H:] != 0)
+    with torch.no_grad():
+        _, s1, _ = M.run_batch(m, items, "greedy", need_labels=False)
+        for n, p in m.named_parameters():
+            if n.split(".")[0] in PRED_GROUPS:
+                p.add_(torch.randn_like(p))
+        _, s2, _ = M.run_batch(m, items, "greedy", need_labels=False)
+    assert not all(torch.equal(a["logp_all"], b["logp_all"]) for a, b in zip(s1, s2))
+
+
+def test_sep_one_actor_step_independent_of_aux_weight(tmp_path):
+    def policy_part(w):
+        d = train(M, tmp_path, f"sep-w{w}", ["--arch", "fuse", "--factor-mode", "sep", "--aux-weight", str(w)],
+                  updates=1)
+        return {k: v for k, v in torch.load(d / "model.pt").items() if k.split(".")[0] not in PRED_GROUPS}
+    sds = {w: policy_part(w) for w in (0, 1, 1000)}
+    assert all(torch.equal(sds[0][k], sds[w][k]) for w in (1, 1000) for k in sds[0])
+
+
+def test_sep_bank_replay_and_training(tmp_path):
+    m = sep_model()
+    items = [(cfg, s, DEVP2 + 810_000 + j) for j, (_, cfg, s) in enumerate(POOL)]
+    with torch.no_grad():
+        eps, steps, ep_steps = M.run_batch(m, items, "sample", M.CounterRNG(4), need_labels=False)
+        bank = [P.label_episode(cfg, s, ep_steps[j], ws, j, "m", 0, eps[j]) for j, (cfg, s, ws) in enumerate(items)]
+        rsteps = M.replay_bank_batch(m, bank)
+    for a, b in zip(steps, rsteps):
+        assert torch.equal(a["logp_all"], b["logp_all"]) and torch.equal(a["aux"], b["aux"])
+    bk = make_bank(tmp_path)
+    d = train(M, tmp_path, "sep-bank", ["--arch", "fuse", "--factor-mode", "sep", "--bank", str(bk),
+                                        "--bank-updates", "3"], updates=0)
+    rows = json.loads((d / "train_log.json").read_text())
+    assert [r["stage"] for r in rows] == ["bank"] * 3 and "gnorm_X" in rows[0]
+
+
+def test_diag_sep_and_historical_lrn_predictor(tmp_path, monkeypatch):
+    """Consumers evaluated on the predictions of a historical-style LRN (aux on its own trunk), and the SEP arm, in
+    the diag runner (interventions allowed on both)."""
+    monkeypatch.setattr(M, "split_world_seed", lambda split, idx, rep: DEVP2 + 960_000 + 1000 * idx + rep)
+    cons, runs = build_consumers(tmp_path)
+    lrn = train(M, tmp_path, "lrn-pred", HIST_ARMS["LRN"], updates=1)
+    sep = train(M, tmp_path, "sep-d", ["--arch", "fuse", "--factor-mode", "sep"], updates=1)
+    lab = _labels(tmp_path)
+    out = tmp_path / "diag2"
+    D.main(["run", "--labels", str(lab), "--pool", "b6_dev", "--model", f"SEP={sep}",
+            "--model", f"CL={cons['mix']}::pred={lrn}", "--protocols", "B", "--ivs", "none", "exact",
+            "--tag", "t", "--out", str(out)])
+    summ = json.loads((out / "diag-v1-summary-t.json").read_text())
+    assert {n: v["kind"] for n, v in summ["header"]["models"].items()} == {"SEP": "SEP", "CL": "CONS-pred"}
+    assert sorted(summ["header"]["ivs_applied_to"]) == ["CL", "SEP"]
+    m, _ = D.load_model(f"{cons['mix']}::pred={lrn}")
+    lm, _ = load_run(lrn)
+    cfg = POOL[1][1]
+    st = pw.initial_state(cfg)
+    x = torch.tensor([M.encode(cfg.public_vector(), None, pw6.available(cfg, st), 0.0)
+                      + M.supplied(cfg, st, "factors6")])
+    with torch.no_grad():
+        _, _, pred, _, _ = D.forward(m, x, torch.zeros(1, 2 * M.HIDDEN))
+        lm.step(x[:, :lm.base_dim], torch.zeros(1, M.HIDDEN))
+    assert torch.equal(pred, lm.last_aux)  # exactly the historical LRN's aux prediction on the same history
 
 
 if __name__ == "__main__" and "--golden" in sys.argv:
