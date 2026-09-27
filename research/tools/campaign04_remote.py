@@ -11,8 +11,8 @@ See research/campaigns/extended-04/infrastructure.md. Subcommands:
 import argparse, json, subprocess, sys
 from pathlib import Path
 
-ROOT = "/home/brand/tensegra-campaign04"
-PY = "/home/brand/tensegra-campaign03/env/bin/python"
+ROOT = "/home/brand/structured-latent-dynamics-campaign04"
+PY = "/home/brand/structured-latent-dynamics-campaign03/env/bin/python"
 REPO = Path(__file__).resolve().parents[2]
 
 
@@ -42,7 +42,7 @@ def launch(a):
     for cfg in a.configs:
         job = Path(cfg).stem
         lines.append(
-            f"/home/brand/tensegra-campaign03/bin/detach.sh {job} {ROOT}/source-{a.sha} {PY} {ROOT}/bin/job.py "
+            f"/home/brand/structured-latent-dynamics-campaign03/bin/detach.sh {job} {ROOT}/source-{a.sha} {PY} {ROOT}/bin/job.py "
             f"--output {ROOT}/results/{job}-process --wall-cap {a.wall_cap} --cpu-cap {a.cpu_cap} -- "
             f"{PY} -m tensegra.campaign02_population --config {cfg} --output {ROOT}/results/{job}")
     print(wsl("set -e\n" + "\n".join(lines) + "\n"))
@@ -50,7 +50,7 @@ def launch(a):
 
 def launch_eval(a):
     job = Path(a.config).stem
-    print(wsl(f"/home/brand/tensegra-campaign03/bin/detach.sh {job} {ROOT}/source-{a.sha} {PY} {ROOT}/bin/job.py "
+    print(wsl(f"/home/brand/structured-latent-dynamics-campaign03/bin/detach.sh {job} {ROOT}/source-{a.sha} {PY} {ROOT}/bin/job.py "
               f"--output {ROOT}/results/{job}-process --wall-cap {a.wall_cap} --cpu-cap {a.cpu_cap} -- "
               f"{PY} research/tools/campaign02_evaluate.py {a.config} --output {ROOT}/results/{job} --device cuda --threads 1\n"))
 
@@ -62,7 +62,7 @@ def launch_cmd(a):
     if args and args[0] == "--":
         args = args[1:]
     cmd = " ".join(args)
-    print(wsl(f"/home/brand/tensegra-campaign03/bin/detach.sh {a.job} {ROOT}/source-{a.sha} {PY} {ROOT}/bin/job.py "
+    print(wsl(f"/home/brand/structured-latent-dynamics-campaign03/bin/detach.sh {a.job} {ROOT}/source-{a.sha} {PY} {ROOT}/bin/job.py "
               f"--output {ROOT}/results/{a.job}-process --wall-cap {a.wall_cap} --cpu-cap {a.cpu_cap} -- {cmd}\n"))
 
 

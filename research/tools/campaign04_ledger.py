@@ -1,7 +1,7 @@
 """Extended-04 budget ledger, computed from ALL job-wrapper receipts on the pro6000.
 
-Main jobs: ~/tensegra-campaign04/results/<job>-process; dev/test/audit work:
-~/tensegra-campaign04/results/dev/<tag>-<utc>-<pid>-process (bin/metered.sh).
+Main jobs: ~/structured-latent-dynamics-campaign04/results/<job>-process; dev/test/audit work:
+~/structured-latent-dynamics-campaign04/results/dev/<tag>-<utc>-<pid>-process (bin/metered.sh).
 CPU = sum of process-tree core-seconds over every receipt (failed/capped included).
 GPU = device occupancy: union of wall intervals of main jobs, plus dev jobs whose tag
 starts with "gpu" (CPU-only dev work runs with CUDA_VISIBLE_DEVICES empty).
@@ -16,7 +16,7 @@ OUT = REPO / "research/results/campaign-04/receipts.json"
 SCRIPT = r'''
 import json, glob, os
 rows = []
-for occ in glob.glob(os.path.expanduser("~/tensegra-campaign04/results/**/*-process/occupancy.json"), recursive=True):
+for occ in glob.glob(os.path.expanduser("~/structured-latent-dynamics-campaign04/results/**/*-process/occupancy.json"), recursive=True):
     d = os.path.dirname(occ)
     try:
         o = json.load(open(occ)); l = json.load(open(os.path.join(d, "launch.json")))
@@ -25,7 +25,7 @@ for occ in glob.glob(os.path.expanduser("~/tensegra-campaign04/results/**/*-proc
     rows.append({"dir": d.split("/results/", 1)[1], "dev": "/dev/" in d, "started_unix": l["started_unix"],
                  "ended_unix": o["ended_unix"], "wall_seconds": o["wall_seconds"], "cpu_core_seconds": o["cpu_core_seconds"],
                  "exit_code": o["exit_code"], "stop_reason": o.get("stop_reason")})
-running = [os.path.dirname(p) for p in glob.glob(os.path.expanduser("~/tensegra-campaign04/results/**/*-process/launch.json"), recursive=True)
+running = [os.path.dirname(p) for p in glob.glob(os.path.expanduser("~/structured-latent-dynamics-campaign04/results/**/*-process/launch.json"), recursive=True)
            if not os.path.exists(os.path.join(os.path.dirname(p), "occupancy.json"))]
 print(json.dumps({"rows": rows, "running": [r.split("/results/", 1)[1] for r in running]}))
 '''

@@ -23,3 +23,13 @@ See report.md §7:
 - the probeworld composition gap;
 - calibration under shift;
 - budget planning by job count.
+
+## Rename note (2026-09-27)
+The pro6000 directories were renamed by the user:
+- `~/tensegra-campaign03` → `~/structured-latent-dynamics-campaign03`
+- `~/tensegra-campaign04` → `~/structured-latent-dynamics-campaign04`
+
+What changed:
+- `bin/metered.sh`, `bin/detach.sh`, `research/tools/campaign04_remote.py` and `campaign04_ledger.py` now use the new paths.
+- Historical configs and receipts keep their original absolute paths, which record what ran. To resolve an old path, substitute the prefix.
+- The venv at `structured-latent-dynamics-campaign03/env` works through `python -m ...`. Its console-script shebangs still name the old path, so do not call `env/bin/pytest` directly.
