@@ -14,6 +14,14 @@ Subcommands
   plan --episodes E --chunks K --lo SEED --sha SHA
       Print root launch commands for a chunked registered run.
 
+A-CF-SMALL confirmation pipeline (additive; see the section "A-CF-SMALL" below):
+  cf-populations [--smoke]            print the train0..2 / select / confirm episode-seed populations
+  cf-fit --lineage L --train F... --select F... --out DIR [--smoke]
+      fit every family on train L, choose hyperparameters / best simple family on select, freeze + hash
+  cf-score --fits DIR... --confirm F... --out DIR [--expect-sha H...] [--smoke]
+      score the frozen selectors once on the confirm population (paired across lineages)
+  cf-plan --sha SHA [--chunks 2] [--smoke]   print the root launch commands
+
 All selectors are cross-fitted by EPISODE folds (instances of one episode share a fold)
 and evaluated out-of-fold. CIs are episode-clustered bootstrap percentiles.
 Pure numpy; runs with OMP/BLAS threads pinned to 1.
@@ -737,41 +745,41 @@ def outer_fold(k):
     return k, te, res, info
 
 
-def cmd_headroom(a):
-    recs, unc = load(a.inputs)
-    budgets = pw.BUDGETS
-    arms = pw.arm_names(budgets)
-    X, names = feature_matrix(recs)
-    N = len(recs)
-    fold, eps = episode_folds(recs, a.folds)
-    t0 = time.process_time()
-    G.update(X=X, names=names, fold=fold, eps=eps, inner=a.inner, minleaf=max(20, int(0.03 * N * (a.folds - 1) / a.folds)))
-    G["UA"] = util_matrix(recs, arms)
-    grid = cascade_grid(budgets)
-    G["UC"] = cascade_matrix(recs, grid, budgets)
-    G["USB"] = sb_matrix(recs)
-    G["UH"] = np.array([[hand_utility(r, h, budgets) for h in HAND_GRID] for r in recs])
-    G["c"] = np.array([r["prices"]["c"] for r in recs]); G["o"] = np.array([r["prices"]["o"] for r in recs])
-    G["L"] = np.array([r["prices"]["L"] for r in recs])
-    G["fwork"] = np.array([r["feature_work"] for r in recs], float)
-    G["Q"] = np.array([[(r["arms"][m]["v"] / r["opt"]) if (r["opt"] > 0 and r["arms"][m]["ok"]) else 0.0 for m in arms] for r in recs])
-    G["FAILA"] = np.array([[float(not r["arms"][m]["ok"]) for m in arms] for r in recs])
-    G["Wk"] = np.array([[pw.total_work(r, m) for m in arms] for r in recs], float)
-    G["Ob"] = np.array([[r["arms"][m]["obs"] for m in arms] for r in recs], float)
-    G["struct_cols"] = [i for i, f in enumerate(names) if f not in ("log_c", "log_o", "L", "log_obs_cost", "hid_x_L")]
-    probes = {"cons:GR": ["root_bound", "gr_value", "g_value", "gr_moves"],
+SEQ_PROBES = {"cons:GR": ["root_bound", "gr_value", "g_value", "gr_moves"],
               "cons:PD1000": ["root_bound", "gr_value", "pd_nfree", "pd_ncomp", "pd_maxcomp", "pd_nfixed_in", "pd0_value",
                               "pd0_ub", "pd1000_value", "pd1000_ub", "pd1000_finished"],
               "cons:RV+cons:GR": ["root_bound", "gr_value", "cache_feasible", "cache_violations", "cache_value", "reuse_value"],
               "opt:GR": ["root_bound", "gr_value", "gr_post_feas", "cache_post_feas"]}
-    G["SEQ"] = {}
-    for probe, tk in probes.items():
+
+
+def population_matrices(recs, X, names, budgets=pw.BUDGETS):
+    """Per-instance matrices of one record population (every entry is a function of that
+    instance's record only, so populations can be built independently). Shared by headroom
+    (unchanged numbers; tests/fixtures/campaign06_headroom_golden.json) and the A-CF-SMALL
+    confirm pipeline."""
+    arms = pw.arm_names(budgets)
+    P = {}
+    P["UA"] = util_matrix(recs, arms)
+    grid = cascade_grid(budgets)
+    P["UC"] = cascade_matrix(recs, grid, budgets)
+    P["USB"] = sb_matrix(recs)
+    P["UH"] = np.array([[hand_utility(r, h, budgets) for h in HAND_GRID] for r in recs])
+    P["c"] = np.array([r["prices"]["c"] for r in recs]); P["o"] = np.array([r["prices"]["o"] for r in recs])
+    P["L"] = np.array([r["prices"]["L"] for r in recs])
+    P["fwork"] = np.array([r["feature_work"] for r in recs], float)
+    P["Q"] = np.array([[(r["arms"][m]["v"] / r["opt"]) if (r["opt"] > 0 and r["arms"][m]["ok"]) else 0.0 for m in arms] for r in recs])
+    P["FAILA"] = np.array([[float(not r["arms"][m]["ok"]) for m in arms] for r in recs])
+    P["Wk"] = np.array([[pw.total_work(r, m) for m in arms] for r in recs], float)
+    P["Ob"] = np.array([[r["arms"][m]["obs"] for m in arms] for r in recs], float)
+    P["struct_cols"] = [i for i, f in enumerate(names) if f not in ("log_c", "log_o", "L", "log_obs_cost", "hid_x_L")]
+    P["SEQ"] = {}
+    for probe, tk in SEQ_PROBES.items():
         pa = probe.split("+")
         mode = pa[0].split(":")[0]
         T = np.array([[float(r["tel"][mode].get(k, 0.0)) for k in tk] for r in recs])
         rb = np.maximum(T[:, 0:1], 1e-9)
         T = np.hstack([T, T[:, 1:] / rb])
-        XT = np.hstack([X[:, G["struct_cols"]], T])
+        XT = np.hstack([X[:, P["struct_cols"]], T])
         U = np.array([[pw.utility(r, pa + [m]) for m in arms] + [pw.utility(r, pa)] for r in recs])
         # quality / failure of the committed output under the utility's commit rule
         Qs, F = np.zeros_like(U), np.zeros_like(U)
@@ -782,8 +790,22 @@ def cmd_headroom(a):
                 F[i, j] = float(uq < 0)
                 Qs[i, j] = max(uq, 0.0)
         W = np.array([[pw.total_work(r, pa + [m]) for m in arms] + [pw.total_work(r, pa)] for r in recs], float)
-        OB = np.hstack([G["Ob"], G["Ob"][:, [arms.index(pa[0])]]])
-        G["SEQ"][probe] = {"XT": XT, "U": U, "Q": Qs, "FAIL": F, "W": W, "OB": OB}
+        OB = np.hstack([P["Ob"], P["Ob"][:, [arms.index(pa[0])]]])
+        P["SEQ"][probe] = {"XT": XT, "U": U, "Q": Qs, "FAIL": F, "W": W, "OB": OB}
+    return P, grid
+
+
+def cmd_headroom(a):
+    recs, unc = load(a.inputs)
+    budgets = pw.BUDGETS
+    arms = pw.arm_names(budgets)
+    X, names = feature_matrix(recs)
+    N = len(recs)
+    fold, eps = episode_folds(recs, a.folds)
+    t0 = time.process_time()
+    G.update(X=X, names=names, fold=fold, eps=eps, inner=a.inner, minleaf=max(20, int(0.03 * N * (a.folds - 1) / a.folds)))
+    P, grid = population_matrices(recs, X, names, budgets)
+    G.update(P)
     print(f"[headroom] N={N} episodes={len(np.unique(eps))} arms={len(arms)} cascades={len(grid)} SB={len(SB_GRID)} "
           f"hand={len(HAND_GRID)} matrices {time.process_time() - t0:.1f}s", flush=True)
 
@@ -893,6 +915,539 @@ def report_md(s):
 
 
 # ---------------------------------------------------------------------------
+# A-CF-SMALL confirmation pipeline (registry A-CF-SMALL; registered after the A-HS gate
+# failure). Additive: evaluate/headroom/plan are unchanged (bit-identity test:
+# tests/test_campaign06_confirm.py against tests/fixtures/campaign06_headroom_golden.json).
+#
+#   (1) evaluate  (the existing subcommand) on 3 disjoint training populations, one shared
+#       select population and one shared confirm population (cf_populations).
+#   (2) cf-fit    per lineage L: every simple family and the learned one-shot / sequential
+#       selectors are FIT on train L only; hyperparameters (logistic L2, GBT config) and the
+#       best simple family are CHOSEN on the select population only; the frozen artifacts
+#       are pickled and hashed. cf-fit refuses any record outside the role's seed range, so
+#       it cannot read the confirm population.
+#   (3) cf-score  the frozen selectors of all lineages are applied ONCE to the confirm
+#       population (paired: the same confirm instances for every lineage); refuses a second
+#       run into the same directory, a hash mismatch, or any population overlap.
+#
+# Semantics of every family, its menu and its selector charge are those of headroom (same
+# classes, grids, menus and charges); only the fit/choose/evaluate split differs:
+#   A0_single / cascade_tuned / strong_baseline / hand: constants = argmax of the TRAIN mean;
+#   threshold_any / tree_d2 / tree_d3: menu (arms + top-5 of each tuned family on TRAIN),
+#       min_leaf = max(20, int(.03 N_train));
+#   logistic_tuned: one model per L2 in LOGIT_LAMS fit on TRAIN, L2 chosen on SELECT;
+#   learned_oneshot: structured GBT (quality, log-work, failure) for each GBT_GRID config
+#       fit on TRAIN, config chosen on SELECT (charged utility);
+#   learned_seq[probe]: same structure on the probe telemetry, the one-shot's chosen config;
+#   learned_sequential: first-call GBT over {one-shot, seq[probe]...}, trained on 2-fold
+#       inner out-of-fold utilities WITHIN the training population (as headroom);
+#   best_simple: argmax over the 8 simple families of the SELECT mean.
+
+CF_EPISODES = 640
+CF_LINEAGES = 3
+CF_LINEAGE_STRIDE = 1_000_000     # lineage L trains on 310,000,000 + L * 1,000,000 + i
+CF_SMOKE_BASE = 303_000_000       # dev_builder smoke (never protocol)
+CF_SIMPLE = ("A0_single", "cascade_tuned", "strong_baseline", "hand", "threshold_any", "tree_d2", "tree_d3", "logistic_tuned")
+LOGIT_LAMS = (1e-3, 1e-2, 1e-1)
+
+
+def cf_populations(episodes=CF_EPISODES, lineages=CF_LINEAGES, smoke=False):
+    """Episode-seed populations {name: (lo, hi)} (hi exclusive; one seed per episode).
+
+    Registered: train L = [310,000,000 + L*1,000,000, + episodes) for L < lineages;
+    select = [320,000,000, + episodes); confirm = [330,000,000, + episodes).
+    Smoke (dev_builder only): train L = 303,000,000 + L*10,000 + i; select 303,100,000 + i;
+    confirm 303,200,000 + i. Asserts containment in the role's registered sub-range and
+    pairwise disjointness (hence disjointness from dev_builder/dev_gate for registered runs)."""
+    R = pw.SEED_RANGES
+    if smoke:
+        assert episodes <= 10_000 and lineages <= 10
+        b = CF_SMOKE_BASE
+        pops = {f"train{L}": (b + L * 10_000, b + L * 10_000 + episodes) for L in range(lineages)}
+        pops["select"] = (b + 100_000, b + 100_000 + episodes)
+        pops["confirm"] = (b + 200_000, b + 200_000 + episodes)
+        roles = {k: "dev_builder" for k in pops}
+    else:
+        assert 0 < episodes <= CF_LINEAGE_STRIDE and 0 < lineages <= 10
+        t0 = R["train"][0]
+        pops = {f"train{L}": (t0 + L * CF_LINEAGE_STRIDE, t0 + L * CF_LINEAGE_STRIDE + episodes) for L in range(lineages)}
+        pops["select"] = (R["select"][0], R["select"][0] + episodes)
+        pops["confirm"] = (R["confirm"][0], R["confirm"][0] + episodes)
+        roles = {k: ("train" if k.startswith("train") else k) for k in pops}
+    assert pw.check_seed_ranges()
+    for k, (lo, hi) in pops.items():
+        r0, r1 = R[roles[k]]
+        assert r0 <= lo < hi <= r1, (k, lo, hi, roles[k])
+        if not smoke:
+            for other in ("dev_builder", "dev_gate"):
+                assert hi <= R[other][0] or R[other][1] <= lo, (k, other)
+    items = sorted(pops.values())
+    for (a0, a1), (b0, b1) in zip(items, items[1:]):
+        assert a1 <= b0, "A-CF-SMALL populations overlap"
+    return pops
+
+
+def _sha(b: bytes):
+    import hashlib
+    return hashlib.sha256(b).hexdigest()
+
+
+def _file_sha(p):
+    return _sha(Path(p).read_bytes())
+
+
+def _check_population(recs, rng, what, unc=()):
+    """Every record's episode lies in rng = [lo, hi) and the population is complete (every
+    episode of the range present, as instance records or legacy uncertified-episode lines).
+    Returns the sorted episode list of the instance records."""
+    eps = sorted({int(r["episode"]) for r in recs})
+    allep = set(eps) | {int(r["episode"]) for r in unc}
+    bad = sorted(e for e in allep if not (rng[0] <= e < rng[1]))
+    if bad or not eps:
+        raise SystemExit(f"refusing: {what} population has {len(bad)} episodes outside [{rng[0]},{rng[1]}) "
+                         f"(e.g. {bad[:3]}) or is empty")
+    if len(allep) != rng[1] - rng[0]:
+        raise SystemExit(f"refusing: {what} population incomplete: {len(allep)} of {rng[1] - rng[0]} episodes")
+    return eps
+
+
+def _rows(P, idx):
+    """Row subset of a population-matrix dict."""
+    out = {}
+    for k, v in P.items():
+        if k == "SEQ":
+            out[k] = {p: {kk: vv[idx] for kk, vv in S.items()} for p, S in v.items()}
+        elif k in ("struct_cols", "names"):
+            out[k] = v
+        else:
+            out[k] = v[idx]
+    return out
+
+
+def cf_matrices(recs):
+    X, names = feature_matrix(recs)
+    P, _ = population_matrices(recs, X, names)
+    P["X"], P["names"] = X, names
+    P["eps"] = np.array([r["episode"] for r in recs])
+    return P
+
+
+_MODEL_CLASSES = {"PolicyTree": PolicyTree, "LogisticSelector": LogisticSelector, "MGBT": MGBT}
+
+
+def _freeze(obj):
+    """Plain-data snapshot of a fitted model (module-independent pickles)."""
+    if obj is None:
+        return None
+    return {"cls": type(obj).__name__, "state": {k: v for k, v in vars(obj).items() if k != "_rows"}}
+
+
+def _thaw(d):
+    if d is None:
+        return None
+    o = _MODEL_CLASSES[d["cls"]].__new__(_MODEL_CLASSES[d["cls"]])
+    o.__dict__.update(d["state"])
+    return o
+
+
+def cf_menu_spec(P, K=5):
+    """headroom's _menu: arms + top-K (on this population's rows) of each tuned family."""
+    return {key: np.argsort(-P[key].mean(0))[:K] for key in ("UC", "USB", "UH")}
+
+
+def cf_menu(P, spec):
+    return np.hstack([P["UA"]] + [P[key][:, spec[key]] for key in ("UC", "USB", "UH")])
+
+
+def _struct_source(P, src):
+    if src == "A":
+        return P["X"][:, P["struct_cols"]], P["Q"], np.log1p(P["Wk"]), P["Ob"], P["UA"], P["FAILA"]
+    S = P["SEQ"][src]
+    return S["XT"], S["Q"], np.log1p(S["W"]), S["OB"], S["U"], S["FAIL"]
+
+
+def _struct_fit(P, src, cfg):
+    """headroom _structured's choose(): fit on every row of P."""
+    Xs, Q, LW, _, _, FAIL = _struct_source(P, src)
+    gq = MGBT(rounds=cfg[0], depth=cfg[1]).fit(Xs, Q)
+    gw = MGBT(rounds=cfg[0], depth=cfg[1]).fit(Xs, LW)
+    smear = np.exp(LW - gw.predict(Xs)).mean(0)
+    gf = MGBT(rounds=cfg[0], depth=cfg[1]).fit(Xs, FAIL) if FAIL.any() else None
+    return {"kind": "struct", "src": src, "cfg": list(cfg), "gq": _freeze(gq), "gw": _freeze(gw), "smear": smear,
+            "gf": _freeze(gf), "units": 3 * cfg[0] * cfg[1]}
+
+
+def cf_charge(P, art, arts=None):
+    """Selector compute charged to each instance (utility units)."""
+    k = art["kind"]
+    if k == "pick":
+        return np.zeros(len(P["c"]))   # the tuned families' own charges are inside their utility matrices
+    if k == "sequential":
+        cands = np.stack([cf_charge(P, arts[c], arts) for c in art["cands"]], 1)
+        pick = np.argmax(_thaw(art["model"]).predict(P["X"]), 1)
+        return cands[np.arange(len(pick)), pick] + P["c"] * art["units"]
+    return P["c"] * (P["fwork"] + art["units"])
+
+
+def cf_apply(P, art, arts=None):
+    """Per-instance utility (selector charges included) of a frozen artifact on population P."""
+    k = art["kind"]
+    n = len(P["c"])
+    if k == "pick":
+        return P[art["mat"]][:, art["j"]]
+    if k in ("tree", "logit", "direct"):
+        M = cf_menu(P, art["menu"])
+        m = _thaw(art["model"])
+        ch = np.argmax(m.predict(P["X"]), 1) if k == "direct" else m.predict(P["X"])
+        return M[np.arange(n), ch] - cf_charge(P, art)
+    if k == "struct":
+        Xs, _, _, OB, US, _ = _struct_source(P, art["src"])
+        gq, gw, gf = _thaw(art["gq"]), _thaw(art["gw"]), _thaw(art["gf"])
+        pf = np.clip(gf.predict(Xs), 0, 1) if gf is not None else 0.0
+        Uh = gq.predict(Xs) - P["c"][:, None] * (np.expm1(gw.predict(Xs)) * art["smear"]) - P["o"][:, None] * OB \
+            - P["L"][:, None] * pf
+        return US[np.arange(n), np.argmax(Uh, 1)] - cf_charge(P, art)
+    if k == "sequential":
+        S = np.stack([cf_apply(P, arts[c], arts) for c in art["cands"]], 1)
+        pick = np.argmax(_thaw(art["model"]).predict(P["X"]), 1)
+        return S[np.arange(n), pick] - P["c"] * art["units"]
+    raise ValueError(k)
+
+
+def cf_resolve(arts, chosen, name):
+    while name in chosen:   # aliases may chain: best_simple -> logistic_tuned -> logistic[lam=..]
+        name = chosen[name]
+    return arts[name]
+
+
+def cf_fit(PT, PS, log=print):
+    """Fit every candidate on the training population PT; choose on the select population PS.
+    Returns (artifacts, chosen, select_scores). PS is used only through cf_apply(PS, .) means."""
+    NT = len(PT["c"])
+    arts = {}
+    for name, mat in (("A0_single", "UA"), ("cascade_tuned", "UC"), ("strong_baseline", "USB"), ("hand", "UH")):
+        arts[name] = {"kind": "pick", "mat": mat, "j": int(np.argmax(PT[mat].mean(0)))}
+    spec = cf_menu_spec(PT)
+    MT = cf_menu(PT, spec)
+    minleaf = max(20, int(0.03 * NT))
+    for name, d in (("threshold_any", 1), ("tree_d2", 2), ("tree_d3", 3)):
+        t = PolicyTree(d, minleaf, feats=None, lookahead=d >= 2).fit(PT["X"], MT)
+        arts[name] = {"kind": "tree", "menu": spec, "model": _freeze(t), "units": d}
+    for lam in LOGIT_LAMS:
+        arts[f"logistic[lam={lam:g}]"] = {"kind": "logit", "menu": spec, "units": PT["X"].shape[1] * MT.shape[1],
+                                          "model": _freeze(LogisticSelector(lam).fit(PT["X"], MT)), "lam": lam}
+    for cfg in GBT_GRID:
+        arts[f"learned_oneshot[cfg={cfg[0]}x{cfg[1]}]"] = _struct_fit(PT, "A", cfg)
+    Mc = MT - MT.mean(1, keepdims=True)
+    arts["learned_oneshot_direct"] = {"kind": "direct", "menu": spec, "units": 200 * 3,
+                                      "model": _freeze(MGBT(rounds=200).fit(PT["X"], Mc))}
+    log(f"[cf-fit] simple families + one-shot candidates fit on N_train={NT}")
+    sel = {n: float(cf_apply(PS, a, arts).mean()) for n, a in arts.items()}
+    chosen = {}
+    chosen["logistic_tuned"] = max((n for n in arts if n.startswith("logistic[")), key=lambda n: sel[n])
+    chosen["learned_oneshot"] = max((n for n in arts if n.startswith("learned_oneshot[")), key=lambda n: sel[n])
+    cfg = tuple(arts[chosen["learned_oneshot"]]["cfg"])
+    for p in SEQ_PROBES:
+        arts[f"learned_seq[{p}]"] = _struct_fit(PT, p, cfg)
+    # first-call selector: inner 2-fold OOF utilities of each candidate within the training population
+    cands = [chosen["learned_oneshot"]] + [f"learned_seq[{p}]" for p in SEQ_PROBES]
+    S = np.zeros((NT, len(cands)))
+    for itr, ite in _split_inner(np.arange(NT), PT["eps"], 2):
+        Ptr, Pte = _rows(PT, itr), _rows(PT, ite)
+        S[ite, 0] = cf_apply(Pte, _struct_fit(Ptr, "A", cfg))
+        for j, p in enumerate(SEQ_PROBES, 1):
+            S[ite, j] = cf_apply(Pte, _struct_fit(Ptr, p, cfg))
+    g = MGBT(rounds=100).fit(PT["X"], S - S.mean(1, keepdims=True))
+    arts["learned_sequential"] = {"kind": "sequential", "cands": cands, "model": _freeze(g), "units": 100 * 3}
+    for n in list(arts):
+        if n not in sel:
+            sel[n] = float(cf_apply(PS, arts[n], arts).mean())
+    for n in ("logistic_tuned", "learned_oneshot"):
+        sel[n] = sel[chosen[n]]
+    chosen["best_simple"] = max(CF_SIMPLE, key=lambda n: sel[n])
+    chosen["best_single"] = "A0_single"
+    return arts, chosen, sel
+
+
+def _pickle(obj):
+    import pickle
+    return pickle.dumps(obj, protocol=4)
+
+
+def cmd_cf_fit(a):
+    import pickle
+    t0 = time.process_time()
+    pops = cf_populations(a.episodes, a.lineages, a.smoke)
+    tr_recs, tr_unc = load(a.train)
+    se_recs, se_unc = load(a.select)
+    tr_eps = _check_population(tr_recs, pops[f"train{a.lineage}"], f"train{a.lineage}", tr_unc)
+    se_eps = _check_population(se_recs, pops["select"], "select", se_unc)
+    PT, PS = cf_matrices(tr_recs), cf_matrices(se_recs)
+    assert PT["names"] == PS["names"], "feature names differ between populations"
+    print(f"[cf-fit] lineage {a.lineage}: train {len(tr_recs)} inst / {len(tr_eps)} ep; select {len(se_recs)} inst / "
+          f"{len(se_eps)} ep; matrices {time.process_time() - t0:.1f}s", flush=True)
+    arts, chosen, sel = cf_fit(PT, PS)
+    blob = _pickle({"artifacts": arts, "chosen": chosen, "names": PT["names"], "lineage": a.lineage})
+    out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
+    if (out / "fit.pkl").exists():
+        sys.exit(f"refusing: {out}/fit.pkl exists (artifacts are frozen once)")
+    (out / "fit.pkl").write_bytes(blob)
+    meta = {
+        "registry": "A-CF-SMALL", "lineage": a.lineage, "smoke": a.smoke, "populations": pops,
+        "train": {"range": pops[f"train{a.lineage}"], "episodes": len(tr_eps), "instances": len(tr_recs),
+                  "uncertified_episodes_legacy": len(tr_unc), "episode_list_sha256": _sha(json.dumps(tr_eps).encode()),
+                  "files": {str(p): _file_sha(p) for p in a.train}},
+        "select": {"range": pops["select"], "episodes": len(se_eps), "instances": len(se_recs),
+                   "uncertified_episodes_legacy": len(se_unc), "episode_list_sha256": _sha(json.dumps(se_eps).encode()),
+                   "files": {str(p): _file_sha(p) for p in a.select}},
+        "confirm_touched": False,
+        "min_leaf": max(20, int(0.03 * len(tr_recs))),
+        "chosen": chosen, "select_scores": dict(sorted(sel.items(), key=lambda t: -t[1])),
+        "artifact_sha256": {n: _sha(_pickle(x)) for n, x in arts.items()},
+        "fit_pkl_sha256": _sha(blob),
+        "tool_sha256": _file_sha(__file__),
+        "cpu_s": round(time.process_time() - t0, 1),
+    }
+    (out / "train_episodes.json").write_text(json.dumps(tr_eps))
+    (out / "select_episodes.json").write_text(json.dumps(se_eps))
+    (out / "fit.json").write_text(json.dumps(meta, indent=1))
+    print(json.dumps({"lineage": a.lineage, "chosen": chosen, "fit_pkl_sha256": meta["fit_pkl_sha256"],
+                      "select_best_simple": sel[chosen["best_simple"]], "select_learned_oneshot": sel["learned_oneshot"],
+                      "select_learned_sequential": sel["learned_sequential"], "cpu_s": meta["cpu_s"]}, indent=1))
+
+
+def cf_load_fit(d, expect_sha=None):
+    import pickle
+    d = Path(d)
+    meta = json.loads((d / "fit.json").read_text())
+    blob = (d / "fit.pkl").read_bytes()
+    h = _sha(blob)
+    if h != meta["fit_pkl_sha256"] or (expect_sha and not h.startswith(expect_sha)):
+        raise SystemExit(f"refusing: {d}/fit.pkl sha256 {h} does not match fit.json / expected {expect_sha}")
+    fit = pickle.loads(blob)
+    fit["meta"] = meta
+    fit["train_eps"] = set(json.loads((d / "train_episodes.json").read_text()))
+    fit["select_eps"] = set(json.loads((d / "select_episodes.json").read_text()))
+    return fit
+
+
+CF_REPORT = ("best_single", "best_simple") + CF_SIMPLE + ("learned_oneshot", "learned_oneshot_direct") + \
+    tuple(f"learned_seq[{p}]" for p in SEQ_PROBES) + ("learned_sequential",)
+
+
+def cf_score(fits, PC, boot=2000):
+    """Apply every lineage's frozen selectors once to the confirm population PC."""
+    eps = PC["eps"]
+    per = {}
+    for L, f in fits.items():
+        arts, ch = f["artifacts"], f["chosen"]
+        per[L] = {n: cf_apply(PC, cf_resolve(arts, ch, n), arts) for n in CF_REPORT}
+        per[L]["_charge"] = {n: cf_charge(PC, cf_resolve(arts, ch, n), arts) for n in CF_REPORT}
+    oracle = PC["UA"].max(1)
+    lin = sorted(per)
+    out = {"lineages": {}}
+    for L in lin:
+        u = per[L]
+        keys = list(CF_REPORT)
+        cis = dict(zip(keys, cluster_boot([u[k] for k in keys], eps, boot)))
+        diffs = {}
+        for est in ("learned_oneshot", "learned_sequential"):
+            (m1, l1, h1), (m2, l2, h2) = cluster_boot([u[est] - u["best_simple"], u[est] - u["best_single"]], eps, boot, seed=1)
+            diffs[est] = {"primary_vs_best_simple_select": {"mean": m1, "lo": l1, "hi": h1, "pass": bool(m1 > 0 and l1 > 0)},
+                          "GA2_analogue_vs_best_single": {"mean": m2, "lo": l2, "hi": h2, "pass": bool(m2 >= 0.02 and l2 > 0.005)}}
+        # reported, not a gate: margin over the strongest individual simple family in hindsight on confirm
+        hind = max(CF_SIMPLE, key=lambda n: u[n].mean())
+        (mh, lh, hh), = cluster_boot([u["learned_oneshot"] - u[hind]], eps, boot, seed=3)
+        out["lineages"][str(L)] = {
+            "chosen": fits[L]["chosen"], "fit_pkl_sha256": fits[L]["meta"]["fit_pkl_sha256"],
+            "select_scores": {k: fits[L]["meta"]["select_scores"].get(fits[L]["chosen"].get(k, k)) for k in CF_REPORT},
+            "utilities": {k: {"mean": cis[k][0], "lo": cis[k][1], "hi": cis[k][2]} for k in keys},
+            "estimates": diffs,
+            "hindsight_best_simple_on_confirm": {"family": hind, "oneshot_minus": {"mean": mh, "lo": lh, "hi": hh}},
+            "selector_charge_mean": {k: float(per[L]["_charge"][k].mean()) for k in keys},
+            "selector_charge_mean_work_units": {k: float((per[L]["_charge"][k] / PC["c"]).mean()) for k in keys},
+        }
+    # paired across lineages (the same bootstrap episode weights for every lineage)
+    for est in ("learned_oneshot", "learned_sequential"):
+        ds = [per[L][est] - per[L]["best_simple"] for L in lin]
+        r = cluster_boot(ds + [np.mean(ds, 0)], eps, boot, seed=4)
+        out.setdefault("paired", {})[est] = {
+            "per_lineage": {str(L): dict(zip(("mean", "lo", "hi"), r[i])) for i, L in enumerate(lin)},
+            "mean_over_lineages": dict(zip(("mean", "lo", "hi"), r[-1])),
+            "lineages_passing": int(sum(out["lineages"][str(L)]["estimates"][est]["primary_vs_best_simple_select"]["pass"] for L in lin)),
+        }
+    out["primary_pass_3of3_oneshot"] = bool(len(lin) == CF_LINEAGES and out["paired"]["learned_oneshot"]["lineages_passing"] == len(lin))
+    out["sequential_pass_all"] = bool(out["paired"]["learned_sequential"]["lineages_passing"] == len(lin))
+    (mo, lo_, ho), = cluster_boot([oracle], eps, boot)
+    out["oracle_arms_hidden_state"] = {"mean": mo, "lo": lo_, "hi": ho}
+    X, names = PC["X"], PC["names"]
+    drivers = {}
+    for dname in DRIVERS:
+        x = X[:, names.index(dname)]
+        qs = np.unique(np.quantile(x, [1 / 3, 2 / 3]))
+        b = np.searchsorted(qs, x, side="right")
+        rows = []
+        for kb in np.unique(b):
+            m = b == kb
+            row = {"bin": int(kb), "range": [float(x[m].min()), float(x[m].max())], "n": int(m.sum()),
+                   "oracle": float(oracle[m].mean())}
+            for L in lin:
+                row[str(L)] = {k: float(per[L][k][m].mean()) for k in ("best_single", "best_simple", "learned_oneshot", "learned_sequential")}
+            rows.append(row)
+        drivers[dname] = rows
+    out["drivers"] = drivers
+    return out, per, oracle
+
+
+def cmd_cf_score(a):
+    t0 = time.process_time()
+    out = Path(a.out)
+    if (out / "score.json").exists():
+        sys.exit(f"refusing: {out}/score.json exists (the confirm population is scored once)")
+    pops = cf_populations(a.episodes, a.lineages, a.smoke)
+    if not a.smoke and len(a.fits) != CF_LINEAGES:
+        sys.exit(f"refusing: {len(a.fits)} fits given, registered design has {CF_LINEAGES} lineages")
+    expect = a.expect_sha or [None] * len(a.fits)
+    fits = {}
+    for d, e in zip(a.fits, expect):
+        f = cf_load_fit(d, e)
+        fits[f["lineage"]] = f
+    if len(fits) != len(a.fits):
+        sys.exit("refusing: duplicate lineage among --fits")
+    sel_sets = {f["meta"]["select"]["episode_list_sha256"] for f in fits.values()}
+    if len(sel_sets) != 1:
+        sys.exit("refusing: lineages were selected on different select populations")
+    L = sorted(fits)
+    for i in L:
+        for j in L:
+            if i < j and fits[i]["train_eps"] & fits[j]["train_eps"]:
+                sys.exit(f"refusing: training populations of lineages {i} and {j} overlap")
+    recs, unc = load(a.confirm)
+    ceps = set(_check_population(recs, pops["confirm"], "confirm", unc))
+    for f in fits.values():
+        if ceps & (f["train_eps"] | f["select_eps"]):
+            sys.exit("refusing: confirm episodes overlap a training/select population")
+    PC = cf_matrices(recs)
+    for f in fits.values():
+        assert f["names"] == PC["names"], "feature names differ from the fit"
+    res, per, oracle = cf_score(fits, PC, a.boot)
+    certified = float(np.mean([r["certified"] for r in recs]))
+    res.update({
+        "registry": "A-CF-SMALL", "smoke": a.smoke, "populations": pops,
+        "confirm": {"episodes": len(ceps), "instances": len(recs), "uncertified_episodes_legacy": len(unc),
+                    "files": {str(p): _file_sha(p) for p in a.confirm}},
+        "oracle_certified_fraction": certified,
+        "uncertified_instances_scored_vs_UB": int(sum(not r["certified"] for r in recs)),
+        "selector_feature_work_mean": float(PC["fwork"].mean()),
+        "cpu_s": round(time.process_time() - t0, 1),
+    })
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "score.json").write_text(json.dumps(res, indent=1, default=float))
+    flat = {"eps": PC["eps"], "oracle": oracle}
+    for Lk, u in per.items():
+        for k, v in u.items():
+            if k != "_charge":
+                flat[f"L{Lk}__" + "".join(ch if ch.isalnum() else "_" for ch in k)] = v
+    np.savez_compressed(out / "per_instance.npz", **flat)
+    md = cf_report_md(res)
+    (out / "score.md").write_text(md)
+    print(md)
+
+
+def cf_report_md(s):
+    c = s["confirm"]
+    L = [f"# A-CF-SMALL confirmation{' (SMOKE, dev_builder seeds; not protocol)' if s['smoke'] else ''}", "",
+         f"Confirm population: {c['instances']} instances / {c['episodes']} episodes; oracle certified "
+         f"{s['oracle_certified_fraction']:.3f} ({s['uncertified_instances_scored_vs_UB']} scored vs UB). "
+         f"Hidden-state oracle {s['oracle_arms_hidden_state']['mean']:.4f}.", "",
+         "## Primary (per lineage): U(learned) − U(best simple chosen on select), episode-clustered 95% CI", "",
+         "| lineage | best simple (select) | one-shot − best simple | pass | sequential − best simple | pass | one-shot − best single (GA-2 analogue) | seq − best single |",
+         "|---|---|---|---|---|---|---|---|"]
+    for Lk, r in s["lineages"].items():
+        e1, e2 = r["estimates"]["learned_oneshot"], r["estimates"]["learned_sequential"]
+        p1, p2 = e1["primary_vs_best_simple_select"], e2["primary_vs_best_simple_select"]
+        g1, g2 = e1["GA2_analogue_vs_best_single"], e2["GA2_analogue_vs_best_single"]
+        L.append(f"| {Lk} | {r['chosen']['best_simple']} | {p1['mean']:+.4f} [{p1['lo']:+.4f}, {p1['hi']:+.4f}] | {p1['pass']} | "
+                 f"{p2['mean']:+.4f} [{p2['lo']:+.4f}, {p2['hi']:+.4f}] | {p2['pass']} | "
+                 f"{g1['mean']:+.4f} [{g1['lo']:+.4f}, {g1['hi']:+.4f}] | {g2['mean']:+.4f} [{g2['lo']:+.4f}, {g2['hi']:+.4f}] |")
+    for est, p in s["paired"].items():
+        m = p["mean_over_lineages"]
+        L.append(f"\n{est}: lineages passing {p['lineages_passing']}/{len(s['lineages'])}; mean over lineages (paired) "
+                 f"{m['mean']:+.4f} [{m['lo']:+.4f}, {m['hi']:+.4f}]")
+    L += ["", f"**Primary (one-shot, 3/3 lineages): {'PASS' if s['primary_pass_3of3_oneshot'] else 'FAIL'}**; "
+          f"sequential all lineages: {s['sequential_pass_all']}.",
+          "A pass establishes a small margin below the registered .02 practical-headroom threshold (registry practical_note).", "",
+          "## Utilities on confirm (per lineage)", "",
+          "U select = the select-population score used for choosing; charge = selector compute (features + inference) in "
+          "work units, already subtracted from U (the tuned single/cascade/strong/hand families carry their own charges "
+          "inside their utilities and show 0 here).", ""]
+    for Lk, r in s["lineages"].items():
+        L += [f"### lineage {Lk} (chosen: {r['chosen']}; fit.pkl {r['fit_pkl_sha256'][:12]})", "",
+              "| policy | U confirm | 95% CI | U select | charge (work units) |", "|---|---|---|---|---|"]
+        for k, v in sorted(r["utilities"].items(), key=lambda t: -t[1]["mean"]):
+            ss = r["select_scores"].get(k)
+            L.append(f"| {k} | {v['mean']:.4f} | {v['lo']:.4f} – {v['hi']:.4f} | {'' if ss is None else f'{ss:.4f}'} | "
+                     f"{r['selector_charge_mean_work_units'][k]:.0f} |")
+        h = r["hindsight_best_simple_on_confirm"]
+        L += ["", f"Reported, not a gate: one-shot − strongest individual simple family in hindsight on confirm "
+              f"({h['family']}): {h['oneshot_minus']['mean']:+.4f} [{h['oneshot_minus']['lo']:+.4f}, {h['oneshot_minus']['hi']:+.4f}]", ""]
+    lins = list(s["lineages"])
+    L += ["## Drivers (confirm tertiles; one-shot − best simple per lineage)", "",
+          "| driver | range | n | oracle | " + " | ".join(f"L{x} best simple | L{x} 1-shot − simple | L{x} seq − simple" for x in lins) + " |",
+          "|---|---|---|---|" + "---|" * (3 * len(lins))]
+    for d, rows in s["drivers"].items():
+        for r in rows:
+            cells = []
+            for x in lins:
+                q = r[x]
+                cells += [f"{q['best_simple']:.3f}", f"{q['learned_oneshot'] - q['best_simple']:+.4f}",
+                          f"{q['learned_sequential'] - q['best_simple']:+.4f}"]
+            L.append(f"| {d} | {r['range'][0]:.3g}–{r['range'][1]:.3g} | {r['n']} | {r['oracle']:.3f} | " + " | ".join(cells) + " |")
+    return "\n".join(L)
+
+
+def cmd_cf_plan(a):
+    """Root launch commands for A-CF-SMALL: evaluate chunks for train0..2 + select, then one
+    fit job per lineage, then (after the fits are frozen) the confirm evaluate chunks, then
+    one score job. Every job is 1 process."""
+    pops = cf_populations(a.episodes, a.lineages, a.smoke)
+    R = "/home/brand/structured-latent-dynamics-campaign06/results"
+    env = ("env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 CUDA_VISIBLE_DEVICES= PYTHONPATH=src "
+           "/home/brand/structured-latent-dynamics-campaign03/env/bin/python research/tools/campaign06_portfolio.py")
+    rc = "python research/tools/campaign06_remote.py launch-cmd"
+    sm = " --smoke" if a.smoke else ""
+    geo = f" --episodes {a.episodes} --lineages {a.lineages}{sm}"
+    per = math.ceil(a.episodes / a.chunks)
+    files = {}
+
+    def evals(pop):
+        lo0, hi0 = pops[pop]
+        for k in range(a.chunks):
+            lo = lo0 + k * per
+            n = min(per, hi0 - lo)
+            if n <= 0:
+                break
+            job = f"{a.prefix}-{pop}-c{k}"
+            files.setdefault(pop, []).append(f"{R}/{job}/records.jsonl.gz")
+            print(f"{rc} {job} {a.sha} --wall-cap {a.wall_cap} --cpu-cap {a.cpu_cap} -- "
+                  f"{env} evaluate --lo {lo} --episodes {n} --version {a.version} --out {R}/{job}/records.jsonl.gz")
+    print("# step 1: evaluate the training populations and the shared select population (parallel)")
+    for L in range(a.lineages):
+        evals(f"train{L}")
+    evals("select")
+    print("# step 2 (after every step-1 chunk exits 0): fit + freeze one lineage per job (parallel)")
+    for L in range(a.lineages):
+        print(f"{rc} {a.prefix}-fit{L} {a.sha} --wall-cap {a.wall_cap} --cpu-cap {a.fit_cpu_cap} -- {env} cf-fit --lineage {L}{geo} "
+              f"--train {' '.join(files[f'train{L}'])} --select {' '.join(files['select'])} --out {R}/{a.prefix}-fit{L}")
+    print("# step 3 (after the fits exit 0; record each fit.json fit_pkl_sha256): evaluate the confirm population")
+    evals("confirm")
+    print("# step 4 (after the confirm chunks exit 0): score once (pass the recorded hashes as --expect-sha)")
+    print(f"{rc} {a.prefix}-score {a.sha} --wall-cap {a.wall_cap} --cpu-cap {a.cpu_cap} -- {env} cf-score{geo} "
+          f"--fits {' '.join(f'{R}/{a.prefix}-fit{L}' for L in range(a.lineages))} --expect-sha <SHA0> <SHA1> <SHA2> "
+          f"--confirm {' '.join(files['confirm'])} --out {R}/{a.prefix}-score")
+
+
+# ---------------------------------------------------------------------------
 # plan
 
 def cmd_plan(a):
@@ -935,6 +1490,23 @@ def main():
     pl.add_argument("--wall-cap", type=int, default=7200); pl.add_argument("--cpu-cap", type=int, default=7200)
     pl.add_argument("--prefix", default="e06-pw-ga"); pl.add_argument("--version", default=pw.GENERATOR_VERSION)
     pl.set_defaults(f=cmd_plan)
+
+    def geo(sp):
+        sp.add_argument("--episodes", type=int, default=CF_EPISODES); sp.add_argument("--lineages", type=int, default=CF_LINEAGES)
+        sp.add_argument("--smoke", action="store_true", help="dev_builder smoke populations (never protocol)")
+    cp = s.add_parser("cf-populations"); geo(cp)
+    cp.set_defaults(f=lambda a: print(json.dumps(cf_populations(a.episodes, a.lineages, a.smoke), indent=1)))
+    cf = s.add_parser("cf-fit"); cf.add_argument("--lineage", type=int, required=True)
+    cf.add_argument("--train", nargs="+", required=True); cf.add_argument("--select", nargs="+", required=True)
+    cf.add_argument("--out", required=True); geo(cf); cf.set_defaults(f=cmd_cf_fit)
+    cs = s.add_parser("cf-score"); cs.add_argument("--fits", nargs="+", required=True); cs.add_argument("--confirm", nargs="+", required=True)
+    cs.add_argument("--out", required=True); cs.add_argument("--boot", type=int, default=2000)
+    cs.add_argument("--expect-sha", nargs="+", default=None, help="fit.pkl sha256 (prefixes) recorded after step 2, in --fits order")
+    geo(cs); cs.set_defaults(f=cmd_cf_score)
+    cpl = s.add_parser("cf-plan"); cpl.add_argument("--sha", required=True); cpl.add_argument("--chunks", type=int, default=2)
+    cpl.add_argument("--wall-cap", type=int, default=3600); cpl.add_argument("--cpu-cap", type=int, default=1200)
+    cpl.add_argument("--fit-cpu-cap", type=int, default=3600); cpl.add_argument("--prefix", default="e06-pw-acf")
+    cpl.add_argument("--version", default=pw.GENERATOR_VERSION); geo(cpl); cpl.set_defaults(f=cmd_cf_plan)
     a = p.parse_args()
     if a.cmd in ("evaluate", "pilot"):
         lo, hi = a.lo, a.lo + (a.episodes if a.cmd == "evaluate" else a.per * len(a.n) * len(a.classes))

@@ -1,0 +1,106 @@
+{
+ "registry": "A-CF-SMALL",
+ "lineage": 0,
+ "smoke": true,
+ "populations": {
+  "train0": [
+   303000000,
+   303000120
+  ],
+  "train1": [
+   303010000,
+   303010120
+  ],
+  "train2": [
+   303020000,
+   303020120
+  ],
+  "select": [
+   303100000,
+   303100120
+  ],
+  "confirm": [
+   303200000,
+   303200120
+  ]
+ },
+ "train": {
+  "range": [
+   303000000,
+   303000120
+  ],
+  "episodes": 120,
+  "instances": 545,
+  "uncertified_episodes_legacy": 0,
+  "episode_list_sha256": "16a17262f2c2b6861225440879db2561ac3b696c37ba31290dafdd1347ab1f81",
+  "files": {
+   "/home/brand/structured-latent-dynamics-campaign06/agent-acfsmall/smoke/train0.jsonl.gz": "6e7cd11c3a2e3521e36738ef18a0d4611c8eb3ed41eb345710b419872c03686e"
+  }
+ },
+ "select": {
+  "range": [
+   303100000,
+   303100120
+  ],
+  "episodes": 120,
+  "instances": 555,
+  "uncertified_episodes_legacy": 0,
+  "episode_list_sha256": "7f2ca7d17b5186ffb04dd8cfd09e2aaabdc05ef655c756aed70decd747986db1",
+  "files": {
+   "/home/brand/structured-latent-dynamics-campaign06/agent-acfsmall/smoke/select.jsonl.gz": "92d3eab8433c47d50f3ea57e512cfcc9c9f5affe90b3ea7eb8f69538e762be33"
+  }
+ },
+ "confirm_touched": false,
+ "min_leaf": 20,
+ "chosen": {
+  "logistic_tuned": "logistic[lam=0.001]",
+  "learned_oneshot": "learned_oneshot[cfg=100x3]",
+  "best_simple": "tree_d2",
+  "best_single": "A0_single"
+ },
+ "select_scores": {
+  "learned_seq[cons:RV+cons:GR]": 0.9560341170665909,
+  "learned_seq[cons:GR]": 0.9547475514748848,
+  "learned_sequential": 0.9539468427791374,
+  "learned_oneshot[cfg=100x3]": 0.9525333922538458,
+  "learned_oneshot": 0.9525333922538458,
+  "learned_oneshot[cfg=200x3]": 0.9520449360100949,
+  "learned_seq[cons:PD1000]": 0.944607037253663,
+  "tree_d2": 0.9358847184605139,
+  "logistic[lam=0.001]": 0.9352906789502302,
+  "logistic_tuned": 0.9352906789502302,
+  "logistic[lam=0.01]": 0.9341638472876891,
+  "learned_oneshot_direct": 0.9330335000913462,
+  "hand": 0.9323213761777879,
+  "tree_d3": 0.9318689744244425,
+  "threshold_any": 0.9304314232268945,
+  "strong_baseline": 0.9287625113166179,
+  "learned_seq[opt:GR]": 0.9235918798668499,
+  "A0_single": 0.9072987044343604,
+  "cascade_tuned": 0.9035208987026753,
+  "logistic[lam=0.1]": 0.8827272817522975
+ },
+ "artifact_sha256": {
+  "A0_single": "6cb2d84da2eebcc0dee50cab0b4bb4fed1b53246ab08f1d5291bf2f5183a5fa5",
+  "cascade_tuned": "58189b7f10942ecb65aa52fd274b81ddb387311d2f77e977fd123b9b7c2be7bd",
+  "strong_baseline": "09d5f7a64187968116549106163382b2a68e9f2ca575c75cce3b2f29470cd1b7",
+  "hand": "7b74b2427648bb3b4c0b9e8cbe40c860a1d69b294b1a51ccff2c0af07f5b69e7",
+  "threshold_any": "d3c002b17d216f89488902cb78b05905bef74b2b6f8a6c79588b28f4de7beed1",
+  "tree_d2": "8e74fe7f08b3c31ff590986e89ed19d64758922e9b94bb8a2c6a56bccb7be509",
+  "tree_d3": "7b74e02cd3de18cfa83c3c487210f84ff8b7f57ff921e0c057ff155b11a8c22f",
+  "logistic[lam=0.001]": "d7de12cc0e23975ec82f3e1894f0c2d92eb3521d623f63593cf067d19bfbdc48",
+  "logistic[lam=0.01]": "f53c65de749b3e0c65b186761d61ed1eacc034484d3d99fb7b855010b26acd12",
+  "logistic[lam=0.1]": "0dbfcfb84fb752ff9ee5d50408b3466c7ef242c08fe5c627c90634c920a93c55",
+  "learned_oneshot[cfg=100x3]": "3133502c1f9750e97e446d5c854f0b2c5fbd170144028d8401a5becdc91738fd",
+  "learned_oneshot[cfg=200x3]": "481c1e0a3216ccb6f76540e05525012cc5a9dee9de8dd5e3b6a479f9824f4d75",
+  "learned_oneshot_direct": "2e47f39f6e685a921f32c89cd1bd0e0e07af43c7d670efb5162a6a1690634456",
+  "learned_seq[cons:GR]": "b1500d2428b59f45b75e42252f8fabe59db5ebead7b436e669a4235478d6a63f",
+  "learned_seq[cons:PD1000]": "bd9240eb7145a7f65b53f2fe51decb2eeb01b9f39a3ab6b14024654f09ac7c72",
+  "learned_seq[cons:RV+cons:GR]": "9ff0dd4bdbec2f3bee5244c40c160f150205d465a9f3cdbef82f4737ea2e0fc3",
+  "learned_seq[opt:GR]": "66e0f61755294623b3070e5fb0f35bc9d9cca7d423fa2679c926da0606c38315",
+  "learned_sequential": "6318cbdf298135617d2d50c5a374582ff9f3ecea2d20e64f5da457ba2d4cb5f1"
+ },
+ "fit_pkl_sha256": "86eba90fe644581d6282d4a1704184614578205dc6ac8f9edefc66b11e27a2f8",
+ "tool_sha256": "48c9eba8e96496aef433184a7e264ef9c0b6d9bd92ffa24938b1bb8a9a6814de",
+ "cpu_s": 56.3
+}

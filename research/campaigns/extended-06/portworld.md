@@ -253,3 +253,64 @@ Builder development seeds were 300,004,000–300,004,399: 400 episodes, 1,801 in
   - GA-1 and GA-2 are read from `headroom.json["gates"]` for `learned_oneshot` (A2) and `learned_sequential` (A3) separately.
   - A pass requires mean ≥ .02 with 95% lower bound > .005.
   - The Phase-2 margin is ≤ half the measured GA-1 headroom (`phase2_margin_max`).
+
+## 8. A-CF-SMALL confirmation pipeline (`cf-fit` / `cf-score`)
+
+Registry entry A-CF-SMALL (registered after the A-HS gate failure; labelled). The tool extension is additive. `evaluate`, `headroom` and `plan` are unchanged: the headroom matrices moved into `population_matrices` with identical code, and `tests/test_campaign06_confirm.py` reproduces a headroom run written by the base commit (de28b9f7) exactly (`tests/fixtures/campaign06_headroom_golden.json`).
+
+**Populations** (`cf-populations`; one seed per episode, 640 episodes each; asserted inside the role's registered sub-range, pairwise disjoint and disjoint from dev_builder/dev_gate):
+
+| population | episode seeds | role |
+|---|---|---|
+| train0 / train1 / train2 | 310,000,000 + L·1,000,000 + i (i < 640) | lineage L fitting |
+| select | 320,000,000 + i | hyperparameter and best-simple-family choice, shared by all lineages |
+| confirm | 330,000,000 + i | scored once, paired across lineages |
+
+Records are the same per-instance method traces as for headroom (`evaluate`). Every selector is replayed from them, so one record set serves all lineages.
+
+**Fit** (`cf-fit`, per lineage):
+
+- Every family is fit on train L only, with headroom's classes, grids, menus and charges:
+  - single, cascade, strong v2 baseline and hand constants: argmax of the train mean.
+  - Threshold and depth-2/3 trees: menu of arms plus the top-5 of each tuned family, with min_leaf = max(20, .03·N_train).
+  - Logistic: one model per L2 value.
+  - Learned one-shot: structured GBT, one per GBT config.
+  - Learned seq[probe]: the chosen config.
+  - Learned sequential: first-call GBT on 2-fold inner out-of-fold utilities within train L.
+- The select population is used only through the select means of the frozen candidates. It chooses the logistic L2, the GBT config (charged utility) and the best simple family among the 8.
+- `cf-fit` refuses records outside the role's range, incomplete populations and an existing `fit.pkl`. It never reads the confirm population.
+- Artifacts are plain-data pickles (`fit.pkl`). `fit.json` records the pickle and per-artifact sha256, the input-file hashes, the episode lists, the choices and the select scores.
+
+**Score** (`cf-score`):
+
+- Before scoring, it verifies the hashes (and `--expect-sha`), a common select population, disjoint training populations, and confirm episodes that lie in the confirm range and are disjoint from every training and select population.
+- It refuses a second run into the same directory.
+- **Primary, per lineage:** U(learned one-shot) − U(best simple chosen on select), episode-clustered 95% CI (2,000 bootstrap draws). A lineage passes if the lower bound is > 0. `primary_pass_3of3_oneshot` requires 3/3 lineages.
+- **Also reported:**
+  - the same for sequential;
+  - the GA-2 analogue vs the best single method (≥ .02, lower bound > .005);
+  - a paired mean over lineages (shared bootstrap weights);
+  - the hindsight strongest simple family on confirm (not a gate);
+  - the selector charge per policy;
+  - the oracle-certified fraction and instances scored vs the UB;
+  - per-driver tertiles.
+
+**Smoke** (dev_builder only: train L 303,000,000 + L·10,000 + i, select 303,100,000 + i, confirm 303,200,000 + i; 120 episodes each, ≈ 545 instances each). Output is in [portworld-dev/acf_smoke/](portworld-dev/acf_smoke/score/score.md). The pipeline ran end to end. The numbers are development numbers and are not used: one-shot − best simple was +.006/+.009/+.007, with 1/3 lineages having LB > 0.
+
+**Cost** (smoke measured: evaluate .44 core-s per episode; fit 57 core-s per lineage at ≈ 550 train + 540 select instances; score 5 core-s):
+
+| step | core-s | wall |
+|---|---|---|
+| evaluate 5 × 640 episodes (10 chunks × 320) | ≈ 1,400 | ≈ 2.5 min per chunk |
+| fit 3 lineages (57 × 5.3^1.25 each) | ≈ 1,400 (upper ≈ 2,100) | ≈ 8–12 min each, parallel |
+| score | ≈ 60 | ≈ 1 min |
+| **total** | **≈ 2,900 (≈ .8 core-h); upper ≈ 3,600** | |
+
+**Launch:** `campaign06_portfolio.py cf-plan --sha <SHA>` prints the root commands in four steps:
+
+1. Evaluate train0–2 and select.
+2. Run `cf-fit` × 3 and record each `fit_pkl_sha256`.
+3. Evaluate confirm, only after the fits are frozen.
+4. Run `cf-score` with `--expect-sha`.
+
+**Caps:** evaluate chunks 1,200 core-s / 3,600 s; fits 3,600 core-s / 3,600 s; score 1,200 core-s / 3,600 s.

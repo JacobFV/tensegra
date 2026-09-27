@@ -1,0 +1,106 @@
+{
+ "registry": "A-CF-SMALL",
+ "lineage": 1,
+ "smoke": true,
+ "populations": {
+  "train0": [
+   303000000,
+   303000120
+  ],
+  "train1": [
+   303010000,
+   303010120
+  ],
+  "train2": [
+   303020000,
+   303020120
+  ],
+  "select": [
+   303100000,
+   303100120
+  ],
+  "confirm": [
+   303200000,
+   303200120
+  ]
+ },
+ "train": {
+  "range": [
+   303010000,
+   303010120
+  ],
+  "episodes": 120,
+  "instances": 556,
+  "uncertified_episodes_legacy": 0,
+  "episode_list_sha256": "de547e6a3f40a8792ca129b177e0b5556edfe7efb4f6196182da5e8b35f4400e",
+  "files": {
+   "/home/brand/structured-latent-dynamics-campaign06/agent-acfsmall/smoke/train1.jsonl.gz": "784650b9d28532f46a8296731faae7e3af6557d75881bde4cba0dd11bccda5b5"
+  }
+ },
+ "select": {
+  "range": [
+   303100000,
+   303100120
+  ],
+  "episodes": 120,
+  "instances": 555,
+  "uncertified_episodes_legacy": 0,
+  "episode_list_sha256": "7f2ca7d17b5186ffb04dd8cfd09e2aaabdc05ef655c756aed70decd747986db1",
+  "files": {
+   "/home/brand/structured-latent-dynamics-campaign06/agent-acfsmall/smoke/select.jsonl.gz": "92d3eab8433c47d50f3ea57e512cfcc9c9f5affe90b3ea7eb8f69538e762be33"
+  }
+ },
+ "confirm_touched": false,
+ "min_leaf": 20,
+ "chosen": {
+  "logistic_tuned": "logistic[lam=0.01]",
+  "learned_oneshot": "learned_oneshot[cfg=100x3]",
+  "best_simple": "threshold_any",
+  "best_single": "A0_single"
+ },
+ "select_scores": {
+  "learned_seq[cons:GR]": 0.9568134048394568,
+  "learned_seq[cons:RV+cons:GR]": 0.9561033577992836,
+  "learned_sequential": 0.9542285804007218,
+  "learned_oneshot[cfg=100x3]": 0.9525449600591452,
+  "learned_oneshot": 0.9525449600591452,
+  "learned_oneshot[cfg=200x3]": 0.9510791005267112,
+  "learned_seq[cons:PD1000]": 0.9465473066614626,
+  "threshold_any": 0.9432091168724648,
+  "learned_oneshot_direct": 0.9400999382662675,
+  "logistic[lam=0.01]": 0.9400591319638524,
+  "logistic_tuned": 0.9400591319638524,
+  "tree_d2": 0.9370859006943684,
+  "hand": 0.9323213761777879,
+  "strong_baseline": 0.9318275669207186,
+  "logistic[lam=0.001]": 0.9303758862693522,
+  "tree_d3": 0.9287667465460753,
+  "logistic[lam=0.1]": 0.9285527294638677,
+  "learned_seq[opt:GR]": 0.927491472413264,
+  "cascade_tuned": 0.9080539128401369,
+  "A0_single": 0.9072987044343604
+ },
+ "artifact_sha256": {
+  "A0_single": "6cb2d84da2eebcc0dee50cab0b4bb4fed1b53246ab08f1d5291bf2f5183a5fa5",
+  "cascade_tuned": "a1446bf09f895bd431608e60ab3db8aa8c5e8c7efcb013d47b7b76b2aadaa714",
+  "strong_baseline": "04b6bcfb8bd2e2d0ee0a9137babd23cc0283bce016632bb27b8db1c3addd0edb",
+  "hand": "7b74b2427648bb3b4c0b9e8cbe40c860a1d69b294b1a51ccff2c0af07f5b69e7",
+  "threshold_any": "e6971b06cc243259287bc1d5230a705f031a41abf7f9c5c14f4846d4703e6680",
+  "tree_d2": "4d1e40ed8516c2586bac25702b4f81435e864862d7be4bef0078048e071934e4",
+  "tree_d3": "f75263f82b7eed0ace463e58eda7cb70535defc1178cd97f9ccb0bc58a476563",
+  "logistic[lam=0.001]": "20f5179ff40594c3ab8c103cbef83c35e52df5b803d232266d395a1a6610310b",
+  "logistic[lam=0.01]": "37108c67e6f2a5346ff49a25e62bc7044141b58d45bef2c99c175dd94177022e",
+  "logistic[lam=0.1]": "fea386b66f41eb5c0bf26a93430d85556250d2203300f3bece966b39a4220a64",
+  "learned_oneshot[cfg=100x3]": "ec1fa8b80b772d4241fe31cf17e7eb991391d443672cd55910877b83ca405138",
+  "learned_oneshot[cfg=200x3]": "02ddaa7b779dd60ac43e624765d3d4b1b28b27e3a99ef1c403350081c1476f65",
+  "learned_oneshot_direct": "1d86c36aa8d3ec5236143f7427e5bd6b2daa8b034c6b57e27b5406fc06496977",
+  "learned_seq[cons:GR]": "a9354f8a5121bfd6f048cc962e4005adb26e773fd46e4728cb80d72c0ccc2345",
+  "learned_seq[cons:PD1000]": "371b2e98b526ff6e597237803d9661480d9a51753cd902bd69cb1566d318a70b",
+  "learned_seq[cons:RV+cons:GR]": "15320a13dcc4a54f28a2425af9fb1c9f5c81ae88b7ec233e4e2df819a86bd50e",
+  "learned_seq[opt:GR]": "755610b327363f4c9cd3fe54e15168b961b3e2e0b48956cbe70d8a5996e5f9e5",
+  "learned_sequential": "e11ae5da08fe8b429b8c49bd8f7b2e7d2fa68f03b38e352f42c6ec1991b4f9c2"
+ },
+ "fit_pkl_sha256": "c707c4ff0764584e924a8860077ffad18b55bd576b2b346cdd5735bae000b6b3",
+ "tool_sha256": "48c9eba8e96496aef433184a7e264ef9c0b6d9bd92ffa24938b1bb8a9a6814de",
+ "cpu_s": 56.5
+}
