@@ -43,3 +43,15 @@
   - Dev smoke (non-protocol): T's hindsight gain comes entirely from rare episodes D fails; G1b-multi is ≈ 0.
   - The 5 pre-existing failures elsewhere in the full test suite (binding_study, main_freeze, s21_cpu, grounding_study, bf16) also fail on the base and are unrelated.
   - Registered A-HR2 launched: 12 jobs on the A-HR worlds.
+- 2026-09-27T02:56Z: **B-X scored** (9 trainings and 9 evaluations, exit 0, 5.3k core-s; research/results/campaign-05/b-x/bx-score.json). **Primary NOT SUPPORTED for any arm on U+C** (the registered hold; S+E showed no failure). Per seed (10/11/12):
+
+  | Arm | Uniquely-optimal probe | Regret | Gap regret | Not-optimal probe |
+  |---|---|---|---|---|
+  | B0 | .633/.650/.517 | 2.90/2.97/2.23 | 3.18/3.95/3.17 | |
+  | **BX1 (exposure incl. historical pairs)** | .733/.800/.650 (+.10/+.15/+.13; the ≥ .15 bar passes 1/3) | **.32/1.46/.93** | **2.43/3.12/2.65** | .02–.06 |
+  | BX2 (supplied belief) | .45/.60/.45 (lower) | 1.3–1.7 | | .008–.03 |
+  | BX3 (modular per-flag) | .58–.67 | 3.7–5.2 (worse) | | |
+
+  - **Reading:** broader exposure to other condition combinations partly improves probing and lowers regret on the unseen U+C combination, but below the registered threshold. Supplied belief does not fix probing (as predicted: belief = prior at the first decision); it makes the policy more conservative. The modular encoder hurts.
+  - Together with B-LOC (value-estimate errors dominate), the failure looks like **acquisition of computation values under unseen interactions**, partly helped by combination diversity. It is not belief tracking and not a lack of factorized inputs.
+  - Realized regret is noisy (it goes negative on the flag-sensitive subset); gap regret is the steadier measure.
