@@ -229,6 +229,16 @@
    "primary": "PI-T-1 on each of r3,r4,r5 (IID group): utility >= D + .015 and success >= D - .01, in 3/3 lineages; per-condition absolute floor success >= .8 x dep_reuse",
    "secondary": "PI-T-2 reading (vs best simple rule and teacher); delegated-step fraction; per-condition",
    "scope": "learned WHEN to delegate to a supplied sub-policy; screen showed it does not beat the simple rule R1 (PI-T-2 fail) \u2014 confirmation targets PI-T-1 only"
+  },
+  {
+   "id": "A-PI-C",
+   "status": "registered (after A-CF-T; discriminating follow-up for PI-T-2)",
+   "hypothesis": "When invoking the better sub-policy has a real per-step cost, a learned delegation controller adds utility beyond always-teacher and simple trigger rules (the regime where WHEN-to-invoke matters).",
+   "intervention": "delegation cost c charged per teacher-controlled step (external utility, charged once, to every policy that delegates incl. always-teacher, R1, R2, random); controller retrained on the existing A-HR2 option-T labels with labels adjusted exactly by -c * (teacher steps in the branch) (recorded per branch); model family/selection rule frozen as in A-PI-T",
+   "costs": "c in {0.001, 0.003} per teacher step (registered before any run; c=.001 roughly equalizes always-teacher and D, c=.003 makes always-teacher clearly worse than D)",
+   "worlds": "screen: fresh 270,000,000 + 100,000*i, r0-r2, 512 per condition; confirmation if screen passes: r3-r5 frozen controller, sealed 280,000,000 + 100,000*i",
+   "primary": "PI-C-2 per cost: utility >= max(D, always-teacher, R1, R2, random-matched) + .005 in 3/3 lineages (IID group) and success >= D - .01; PI-C-1 (vs D) reported",
+   "scope": "supplied sub-policy and supplied cost; learned: when to invoke it; tests value-of-computation control, not the teacher's skill"
   }
  ]
 }

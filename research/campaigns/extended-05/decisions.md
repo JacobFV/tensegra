@@ -96,3 +96,8 @@
   - **Reading:** delegating to the better supplied sub-policy improves the deployed policy. The learned *timing* recovers the gain with little delegation but adds no utility beyond a simple trigger rule.
   - **A-CF-T registered (amends A-CF before any run):** the frozen controller is applied unchanged to fresh lineages r3–r5 on sealed worlds from 260M; primary PI-T-1 in 3/3. Launched.
 - 2026-09-27T03:54Z: **A-CF-T launched** (12 jobs, source-63d52c02). The first launch (acf61800) failed at startup on a missing 'acf' address namespace; receipts renamed *-nons-process (charged, seconds). Fixed and smoke-verified on one job before launching the rest.
+- 2026-09-27T04:04Z: **A-CF-T scored** (12 jobs, exit 0; research/results/campaign-05/a-cf-t/score.json). Frozen r0–r2 controller on fresh lineages r3–r5, sealed worlds from 260M, 512 per condition.
+  - **PI-T-1 CONFIRMED 3/3:** utility over D +.0247/+.0215/+.0277; success +.021/+.017/+.023.
+  - **PI-T-2 fails 3/3:** below the best simple rule (R2 'delegate at every commit_revise', .906) by −.0020/−.0018/−.0011. Always-teacher .904; delegated steps 5.5–7.4%.
+  - **Confirmed claim:** a learned public-information controller that decides when to delegate to a supplied better sub-policy improves the imitation deployment on fresh lineages and sealed worlds. It adds no utility over simple trigger rules while delegation is free.
+  - **A-PI-C registered** (a discriminating follow-up): a per-step delegation cost c ∈ {.001, .003} makes *when* to invoke matter. The controller is retrained on cost-adjusted existing labels; screen on 270M worlds, confirmation on 280M. Primary: beat max(D, teacher, R1, R2, random) + .005 in 3/3.

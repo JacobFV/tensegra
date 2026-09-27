@@ -1,0 +1,5855 @@
+{
+  "version": "e05-apit-score-v1",
+  "registered": {
+    "PI-T-1": "per lineage, IID group (iid_f0+iid_f2, 512 each): utility(pi_T) >= utility(D) + .015 AND success(pi_T) >= success(D) - .01",
+    "PI-T-2": "per lineage, IID group: utility(pi_T) >= max(always-teacher, R1, R2, random-matched) + .005 AND delegated-step fraction(pi_T) < always-teacher's"
+  },
+  "notes": [
+    "point estimates decide the registered criteria; CIs are world-clustered percentile bootstraps",
+    "always-teacher = dep_reuse reference evaluation (lineage-independent; from the x1-r0 jobs)",
+    "R-mask-scored metrics are not used; utility includes failures"
+  ],
+  "lineages": {
+    "x1-r3": {
+      "coverage": [
+        [
+          "events_train_kinds_p1",
+          0
+        ],
+        [
+          "events_train_kinds_p1",
+          1
+        ],
+        [
+          "events_train_kinds_p1",
+          2
+        ],
+        [
+          "events_train_kinds_p1",
+          3
+        ],
+        [
+          "events_train_kinds_p1",
+          4
+        ],
+        [
+          "events_train_kinds_p1",
+          5
+        ],
+        [
+          "events_train_kinds_p1",
+          6
+        ],
+        [
+          "events_train_kinds_p1",
+          7
+        ],
+        [
+          "events_train_kinds_p1",
+          8
+        ],
+        [
+          "events_train_kinds_p1",
+          9
+        ],
+        [
+          "events_train_kinds_p1",
+          10
+        ],
+        [
+          "events_train_kinds_p1",
+          11
+        ],
+        [
+          "events_train_kinds_p1",
+          12
+        ],
+        [
+          "events_train_kinds_p1",
+          13
+        ],
+        [
+          "events_train_kinds_p1",
+          14
+        ],
+        [
+          "events_train_kinds_p1",
+          15
+        ],
+        [
+          "foreign4",
+          0
+        ],
+        [
+          "foreign4",
+          1
+        ],
+        [
+          "foreign4",
+          2
+        ],
+        [
+          "foreign4",
+          3
+        ],
+        [
+          "foreign4",
+          4
+        ],
+        [
+          "foreign4",
+          5
+        ],
+        [
+          "foreign4",
+          6
+        ],
+        [
+          "foreign4",
+          7
+        ],
+        [
+          "foreign4",
+          8
+        ],
+        [
+          "foreign4",
+          9
+        ],
+        [
+          "foreign4",
+          10
+        ],
+        [
+          "foreign4",
+          11
+        ],
+        [
+          "foreign4",
+          12
+        ],
+        [
+          "foreign4",
+          13
+        ],
+        [
+          "foreign4",
+          14
+        ],
+        [
+          "foreign4",
+          15
+        ],
+        [
+          "iid_f0",
+          0
+        ],
+        [
+          "iid_f0",
+          1
+        ],
+        [
+          "iid_f0",
+          2
+        ],
+        [
+          "iid_f0",
+          3
+        ],
+        [
+          "iid_f0",
+          4
+        ],
+        [
+          "iid_f0",
+          5
+        ],
+        [
+          "iid_f0",
+          6
+        ],
+        [
+          "iid_f0",
+          7
+        ],
+        [
+          "iid_f0",
+          8
+        ],
+        [
+          "iid_f0",
+          9
+        ],
+        [
+          "iid_f0",
+          10
+        ],
+        [
+          "iid_f0",
+          11
+        ],
+        [
+          "iid_f0",
+          12
+        ],
+        [
+          "iid_f0",
+          13
+        ],
+        [
+          "iid_f0",
+          14
+        ],
+        [
+          "iid_f0",
+          15
+        ],
+        [
+          "iid_f2",
+          0
+        ],
+        [
+          "iid_f2",
+          1
+        ],
+        [
+          "iid_f2",
+          2
+        ],
+        [
+          "iid_f2",
+          3
+        ],
+        [
+          "iid_f2",
+          4
+        ],
+        [
+          "iid_f2",
+          5
+        ],
+        [
+          "iid_f2",
+          6
+        ],
+        [
+          "iid_f2",
+          7
+        ],
+        [
+          "iid_f2",
+          8
+        ],
+        [
+          "iid_f2",
+          9
+        ],
+        [
+          "iid_f2",
+          10
+        ],
+        [
+          "iid_f2",
+          11
+        ],
+        [
+          "iid_f2",
+          12
+        ],
+        [
+          "iid_f2",
+          13
+        ],
+        [
+          "iid_f2",
+          14
+        ],
+        [
+          "iid_f2",
+          15
+        ]
+      ],
+      "conditions": {
+        "iid_f0": {
+          "policies": {
+            "d": {
+              "episodes": 512,
+              "utility": 0.8803369140625,
+              "success": 0.962890625,
+              "cost": 0.0825537109375,
+              "delegation_rate_per_eligible": 0.0,
+              "delegations_per_episode": 0.0,
+              "delegated_step_fraction": 0.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {}
+            },
+            "pit": {
+              "episodes": 512,
+              "utility": 0.904610934174152,
+              "success": 0.982421875,
+              "cost": 0.07781094082584805,
+              "delegation_rate_per_eligible": 0.017120622568093387,
+              "delegations_per_episode": 0.21484375,
+              "delegated_step_fraction": 0.029608975635663545,
+              "controller_evals_per_episode": 12.548828125,
+              "consults_per_episode": 12.548828125,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1707,
+                  "delegations": 75
+                },
+                "reuse_recompute": {
+                  "eligible": 4647,
+                  "delegations": 10
+                },
+                "commit_revise": {
+                  "eligible": 71,
+                  "delegations": 25
+                }
+              },
+              "delegation_ends": {
+                "commit": 89,
+                "episode_end": 21
+              }
+            },
+            "r1": {
+              "episodes": 512,
+              "utility": 0.904633984375,
+              "success": 0.982421875,
+              "cost": 0.077787890625,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 3.1484375,
+              "delegated_step_fraction": 0.37533191715347847,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 3.1484375,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1612,
+                  "delegations": 1612
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {
+                "commit": 1141,
+                "episode_end": 471
+              }
+            },
+            "r2": {
+              "episodes": 512,
+              "utility": 0.9046306640625,
+              "success": 0.982421875,
+              "cost": 0.0777912109375,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 0.13671875,
+              "delegated_step_fraction": 0.025310569321729887,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.13671875,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 70,
+                  "delegations": 70
+                }
+              },
+              "delegation_ends": {
+                "commit": 61,
+                "episode_end": 9
+              }
+            },
+            "random": {
+              "episodes": 512,
+              "utility": 0.889941015625,
+              "success": 0.97265625,
+              "cost": 0.082715234375,
+              "delegation_rate_per_eligible": 0.01669174989738678,
+              "delegations_per_episode": 0.23828125,
+              "delegated_step_fraction": 0.027909590409590408,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 14.275390625,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1842,
+                  "delegations": 31
+                },
+                "reuse_recompute": {
+                  "eligible": 5319,
+                  "delegations": 91
+                },
+                "commit_revise": {
+                  "eligible": 148,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {
+                "commit": 87,
+                "episode_end": 34,
+                "max_steps": 1
+              }
+            },
+            "teacher": {
+              "episodes": 512,
+              "utility": 0.9046361328125,
+              "success": 0.982421875,
+              "cost": 0.07778574218749999,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 1.0,
+              "delegated_step_fraction": 1.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0
+            }
+          },
+          "pit_minus": {
+            "d": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.02427402011165196,
+                "ci90": [
+                  0.013576723936113916,
+                  0.03612648044164324
+                ],
+                "ci95": [
+                  0.011777396203401591,
+                  0.03841713280778441
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.01953125,
+                "ci90": [
+                  0.009765625,
+                  0.029296875
+                ],
+                "ci95": [
+                  0.0078125,
+                  0.033203125
+                ]
+              }
+            },
+            "r1": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -2.3050200848049365e-05,
+                "ci90": [
+                  -5.683943957195605e-05,
+                  4.294088644429383e-06
+                ],
+                "ci95": [
+                  -6.309124354823518e-05,
+                  6.639043614017372e-06
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            },
+            "r2": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -1.972988834804973e-05,
+                "ci90": [
+                  -3.164124565654228e-05,
+                  -8.794560230375265e-06
+                ],
+                "ci95": [
+                  -3.496912220027806e-05,
+                  -6.832103537210351e-06
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            },
+            "random": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.014669918549151952,
+                "ci90": [
+                  0.007445844145652748,
+                  0.023034653680809394
+                ],
+                "ci95": [
+                  0.006222393148853917,
+                  0.025044595428686426
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.009765625,
+                "ci90": [
+                  0.00390625,
+                  0.017578125
+                ],
+                "ci95": [
+                  0.001953125,
+                  0.01953125
+                ]
+              }
+            },
+            "teacher": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -2.51986383480494e-05,
+                "ci90": [
+                  -5.8804784965021465e-05,
+                  1.9310273667602986e-07
+                ],
+                "ci95": [
+                  -6.719034200522207e-05,
+                  4.29633472629141e-06
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            }
+          }
+        },
+        "iid_f2": {
+          "policies": {
+            "d": {
+              "episodes": 512,
+              "utility": 0.8785798828125,
+              "success": 0.955078125,
+              "cost": 0.0764982421875,
+              "delegation_rate_per_eligible": 0.0,
+              "delegations_per_episode": 0.0,
+              "delegated_step_fraction": 0.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {}
+            },
+            "pit": {
+              "episodes": 512,
+              "utility": 0.9037787329940774,
+              "success": 0.9765625,
+              "cost": 0.07278376700592257,
+              "delegation_rate_per_eligible": 0.043897216274089934,
+              "delegations_per_episode": 0.48046875,
+              "delegated_step_fraction": 0.08078907012407639,
+              "controller_evals_per_episode": 10.9453125,
+              "consults_per_episode": 10.9453125,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1365,
+                  "delegations": 141
+                },
+                "reuse_recompute": {
+                  "eligible": 4169,
+                  "delegations": 72
+                },
+                "commit_revise": {
+                  "eligible": 70,
+                  "delegations": 33
+                }
+              },
+              "delegation_ends": {
+                "commit": 212,
+                "episode_end": 34
+              }
+            },
+            "r1": {
+              "episodes": 512,
+              "utility": 0.906378515625,
+              "success": 0.978515625,
+              "cost": 0.072137109375,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 2.578125,
+              "delegated_step_fraction": 0.33856660095747676,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 2.578125,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1320,
+                  "delegations": 1320
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {
+                "commit": 932,
+                "episode_end": 386,
+                "max_steps": 2
+              }
+            },
+            "r2": {
+              "episodes": 512,
+              "utility": 0.90778984375,
+              "success": 0.98046875,
+              "cost": 0.07267890625,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 0.16015625,
+              "delegated_step_fraction": 0.03527585720333004,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.16015625,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 82,
+                  "delegations": 82
+                }
+              },
+              "delegation_ends": {
+                "commit": 72,
+                "episode_end": 10
+              }
+            },
+            "random": {
+              "episodes": 512,
+              "utility": 0.896894140625,
+              "success": 0.97265625,
+              "cost": 0.075762109375,
+              "delegation_rate_per_eligible": 0.04147317854283427,
+              "delegations_per_episode": 0.505859375,
+              "delegated_step_fraction": 0.06590296495956874,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 12.197265625,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1493,
+                  "delegations": 58
+                },
+                "reuse_recompute": {
+                  "eligible": 4606,
+                  "delegations": 196
+                },
+                "commit_revise": {
+                  "eligible": 146,
+                  "delegations": 5
+                }
+              },
+              "delegation_ends": {
+                "commit": 198,
+                "episode_end": 61
+              }
+            },
+            "teacher": {
+              "episodes": 512,
+              "utility": 0.90406171875,
+              "success": 0.9765625,
+              "cost": 0.07250078125,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 1.0,
+              "delegated_step_fraction": 1.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0
+            }
+          },
+          "pit_minus": {
+            "d": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.025198850181577435,
+                "ci90": [
+                  0.012929136326404975,
+                  0.039323751163456745
+                ],
+                "ci95": [
+                  0.010274832857365619,
+                  0.04237471199776137
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.021484375,
+                "ci90": [
+                  0.009765625,
+                  0.03515625
+                ],
+                "ci95": [
+                  0.0078125,
+                  0.037109375
+                ]
+              }
+            },
+            "r1": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0025997826309225613,
+                "ci90": [
+                  -0.0070178381183630695,
+                  -0.0002618717063981734
+                ],
+                "ci95": [
+                  -0.007169743437800458,
+                  -0.0002275040292934163
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.001953125,
+                "ci90": [
+                  -0.005859375,
+                  0.0
+                ],
+                "ci95": [
+                  -0.005859375,
+                  0.0
+                ]
+              }
+            },
+            "r2": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.004011110755922561,
+                "ci90": [
+                  -0.009649831186982587,
+                  9.346990497797962e-05
+                ],
+                "ci95": [
+                  -0.01061153125129816,
+                  0.0003128190873075444
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.00390625,
+                "ci90": [
+                  -0.009765625,
+                  0.0
+                ],
+                "ci95": [
+                  -0.009765625,
+                  0.0
+                ]
+              }
+            },
+            "random": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.006884592369077439,
+                "ci90": [
+                  -0.00042876617890687366,
+                  0.014703351604484903
+                ],
+                "ci95": [
+                  -0.0021121634639952877,
+                  0.01613174811047815
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.00390625,
+                "ci90": [
+                  -0.001953125,
+                  0.009765625
+                ],
+                "ci95": [
+                  -0.00390625,
+                  0.01171875
+                ]
+              }
+            },
+            "teacher": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0002829857559225622,
+                "ci90": [
+                  -0.00047206817981178506,
+                  -0.00014430130499004098
+                ],
+                "ci95": [
+                  -0.0005171890656950353,
+                  -0.00012809839837254756
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            }
+          }
+        },
+        "events_train_kinds_p1": {
+          "policies": {
+            "d": {
+              "episodes": 512,
+              "utility": 0.8699875,
+              "success": 0.947265625,
+              "cost": 0.077278125,
+              "delegation_rate_per_eligible": 0.0,
+              "delegations_per_episode": 0.0,
+              "delegated_step_fraction": 0.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {}
+            },
+            "pit": {
+              "episodes": 512,
+              "utility": 0.8937447463621748,
+              "success": 0.966796875,
+              "cost": 0.07305212863782519,
+              "delegation_rate_per_eligible": 0.04985027303153074,
+              "delegations_per_episode": 0.552734375,
+              "delegated_step_fraction": 0.09402352297592997,
+              "controller_evals_per_episode": 11.087890625,
+              "consults_per_episode": 11.087890625,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1401,
+                  "delegations": 147
+                },
+                "reuse_recompute": {
+                  "eligible": 4208,
+                  "delegations": 101
+                },
+                "commit_revise": {
+                  "eligible": 68,
+                  "delegations": 35
+                }
+              },
+              "delegation_ends": {
+                "commit": 239,
+                "episode_end": 41,
+                "max_steps": 3
+              }
+            },
+            "r1": {
+              "episodes": 512,
+              "utility": 0.8940310546875,
+              "success": 0.966796875,
+              "cost": 0.0727658203125,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 2.69921875,
+              "delegated_step_fraction": 0.35387892530749676,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 2.69921875,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1382,
+                  "delegations": 1382
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {
+                "commit": 959,
+                "episode_end": 421,
+                "max_steps": 2
+              }
+            },
+            "r2": {
+              "episodes": 512,
+              "utility": 0.90318671875,
+              "success": 0.9765625,
+              "cost": 0.07337578125,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 0.173828125,
+              "delegated_step_fraction": 0.039495450785773364,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.173828125,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 89,
+                  "delegations": 89
+                }
+              },
+              "delegation_ends": {
+                "commit": 76,
+                "episode_end": 12,
+                "max_steps": 1
+              }
+            },
+            "random": {
+              "episodes": 512,
+              "utility": 0.8912716796875,
+              "success": 0.966796875,
+              "cost": 0.0755251953125,
+              "delegation_rate_per_eligible": 0.049524996106525464,
+              "delegations_per_episode": 0.62109375,
+              "delegated_step_fraction": 0.07979179020886869,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 12.541015625,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1542,
+                  "delegations": 67
+                },
+                "reuse_recompute": {
+                  "eligible": 4735,
+                  "delegations": 247
+                },
+                "commit_revise": {
+                  "eligible": 144,
+                  "delegations": 4
+                }
+              },
+              "delegation_ends": {
+                "commit": 220,
+                "episode_end": 94,
+                "max_steps": 4
+              }
+            },
+            "teacher": {
+              "episodes": 512,
+              "utility": 0.8939611328125,
+              "success": 0.966796875,
+              "cost": 0.0728357421875,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 1.0,
+              "delegated_step_fraction": 1.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0
+            }
+          },
+          "pit_minus": {
+            "d": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.023757246362174807,
+                "ci90": [
+                  0.008847384302125548,
+                  0.03936066385481111
+                ],
+                "ci95": [
+                  0.006098443645974877,
+                  0.042000646854847445
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.01953125,
+                "ci90": [
+                  0.005859375,
+                  0.03515625
+                ],
+                "ci95": [
+                  0.001953125,
+                  0.037109375
+                ]
+              }
+            },
+            "r1": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.00028630832532519396,
+                "ci90": [
+                  -0.0004521848772856712,
+                  -0.00012752006356188094
+                ],
+                "ci95": [
+                  -0.00048611179858065837,
+                  -9.801843505986103e-05
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            },
+            "r2": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.009441972387825195,
+                "ci90": [
+                  -0.017201807670692116,
+                  -0.0035095145697974597
+                ],
+                "ci95": [
+                  -0.019004096992820695,
+                  -0.0018512902850221747
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.009765625,
+                "ci90": [
+                  -0.017578125,
+                  -0.00390625
+                ],
+                "ci95": [
+                  -0.01953125,
+                  -0.001953125
+                ]
+              }
+            },
+            "random": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0024730666746748064,
+                "ci90": [
+                  -0.007424743186604103,
+                  0.011875691426546826
+                ],
+                "ci95": [
+                  -0.009214119939568204,
+                  0.013580854034848057
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  -0.009765625,
+                  0.009765625
+                ],
+                "ci95": [
+                  -0.01171875,
+                  0.009765625
+                ]
+              }
+            },
+            "teacher": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.00021638645032519358,
+                "ci90": [
+                  -0.0003388782274322677,
+                  -9.489020737993674e-05
+                ],
+                "ci95": [
+                  -0.00036895566685944724,
+                  -7.162477677890463e-05
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            }
+          }
+        },
+        "foreign4": {
+          "policies": {
+            "d": {
+              "episodes": 512,
+              "utility": 0.8816029296875,
+              "success": 0.953125,
+              "cost": 0.0715220703125,
+              "delegation_rate_per_eligible": 0.0,
+              "delegations_per_episode": 0.0,
+              "delegated_step_fraction": 0.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {}
+            },
+            "pit": {
+              "episodes": 512,
+              "utility": 0.9058160732973559,
+              "success": 0.97265625,
+              "cost": 0.06684017670264404,
+              "delegation_rate_per_eligible": 0.1201707097933513,
+              "delegations_per_episode": 1.044921875,
+              "delegated_step_fraction": 0.19151101097463477,
+              "controller_evals_per_episode": 8.6953125,
+              "consults_per_episode": 8.6953125,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 892,
+                  "delegations": 123
+                },
+                "reuse_recompute": {
+                  "eligible": 3500,
+                  "delegations": 366
+                },
+                "commit_revise": {
+                  "eligible": 60,
+                  "delegations": 46
+                }
+              },
+              "delegation_ends": {
+                "commit": 388,
+                "episode_end": 145,
+                "max_steps": 2
+              }
+            },
+            "r1": {
+              "episodes": 512,
+              "utility": 0.9117568359375,
+              "success": 0.978515625,
+              "cost": 0.0667587890625,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 2.115234375,
+              "delegated_step_fraction": 0.30634347601856626,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 2.115234375,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1083,
+                  "delegations": 1083
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {
+                "commit": 751,
+                "episode_end": 327,
+                "max_steps": 5
+              }
+            },
+            "r2": {
+              "episodes": 512,
+              "utility": 0.912684375,
+              "success": 0.98046875,
+              "cost": 0.067784375,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 0.1875,
+              "delegated_step_fraction": 0.04963752034324604,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.1875,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 96,
+                  "delegations": 96
+                }
+              },
+              "delegation_ends": {
+                "max_steps": 2,
+                "episode_end": 10,
+                "commit": 84
+              }
+            },
+            "random": {
+              "episodes": 512,
+              "utility": 0.9039080078125,
+              "success": 0.97265625,
+              "cost": 0.0687482421875,
+              "delegation_rate_per_eligible": 0.11840539468464895,
+              "delegations_per_episode": 1.166015625,
+              "delegated_step_fraction": 0.15649047105357786,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 9.84765625,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1118,
+                  "delegations": 138
+                },
+                "reuse_recompute": {
+                  "eligible": 3810,
+                  "delegations": 444
+                },
+                "commit_revise": {
+                  "eligible": 114,
+                  "delegations": 15
+                }
+              },
+              "delegation_ends": {
+                "commit": 429,
+                "episode_end": 164,
+                "max_steps": 4
+              }
+            },
+            "teacher": {
+              "episodes": 512,
+              "utility": 0.908121484375,
+              "success": 0.974609375,
+              "cost": 0.066487890625,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 1.0,
+              "delegated_step_fraction": 1.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0
+            }
+          },
+          "pit_minus": {
+            "d": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.024213143609855953,
+                "ci90": [
+                  0.009935254193690103,
+                  0.03868188439145255
+                ],
+                "ci95": [
+                  0.0074856074808847435,
+                  0.04133828318716229
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.01953125,
+                "ci90": [
+                  0.005859375,
+                  0.033203125
+                ],
+                "ci95": [
+                  0.00390625,
+                  0.03515625
+                ]
+              }
+            },
+            "r1": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.005940762640144049,
+                "ci90": [
+                  -0.011821282693132824,
+                  -0.0015567975892536682
+                ],
+                "ci95": [
+                  -0.013420621028205418,
+                  -0.00036615350010925374
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.005859375,
+                "ci90": [
+                  -0.01171875,
+                  -0.001953125
+                ],
+                "ci95": [
+                  -0.013671875,
+                  0.0
+                ]
+              }
+            },
+            "r2": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.006868301702644049,
+                "ci90": [
+                  -0.013247958645922715,
+                  -0.0012705371341912913
+                ],
+                "ci95": [
+                  -0.014709157057401185,
+                  -0.0007480219787236154
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0078125,
+                "ci90": [
+                  -0.013671875,
+                  -0.001953125
+                ],
+                "ci95": [
+                  -0.015625,
+                  -0.001953125
+                ]
+              }
+            },
+            "random": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0019080654848559519,
+                "ci90": [
+                  -0.006066769139490069,
+                  0.009510331718910503
+                ],
+                "ci95": [
+                  -0.007337565479260241,
+                  0.010737140646909962
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  -0.0078125,
+                  0.0078125
+                ],
+                "ci95": [
+                  -0.009765625,
+                  0.0078125
+                ]
+              }
+            },
+            "teacher": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.002305411077644048,
+                "ci90": [
+                  -0.00629722929714527,
+                  -0.00025832645015983917
+                ],
+                "ci95": [
+                  -0.006379858172830347,
+                  -0.00024408261024409488
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.001953125,
+                "ci90": [
+                  -0.005859375,
+                  0.0
+                ],
+                "ci95": [
+                  -0.005859375,
+                  0.0
+                ]
+              }
+            }
+          }
+        }
+      },
+      "iid_group": {
+        "policies": {
+          "d": {
+            "episodes": 1024,
+            "utility": 0.8794583984375,
+            "success": 0.958984375,
+            "cost": 0.0795259765625,
+            "delegation_rate_per_eligible": 0.0,
+            "delegations_per_episode": 0.0,
+            "delegated_step_fraction": 0.0,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 0.0,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "reuse_recompute": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "commit_revise": {
+                "eligible": 0,
+                "delegations": 0
+              }
+            },
+            "delegation_ends": {}
+          },
+          "pit": {
+            "episodes": 1024,
+            "utility": 0.9041948335841147,
+            "success": 0.9794921875,
+            "cost": 0.07529735391588531,
+            "delegation_rate_per_eligible": 0.029595145066090282,
+            "delegations_per_episode": 0.34765625,
+            "delegated_step_fraction": 0.05457513006222585,
+            "controller_evals_per_episode": 11.7470703125,
+            "consults_per_episode": 11.7470703125,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 3072,
+                "delegations": 216
+              },
+              "reuse_recompute": {
+                "eligible": 8816,
+                "delegations": 82
+              },
+              "commit_revise": {
+                "eligible": 141,
+                "delegations": 58
+              }
+            },
+            "delegation_ends": {
+              "commit": 301,
+              "episode_end": 55
+            }
+          },
+          "r1": {
+            "episodes": 1024,
+            "utility": 0.90550625,
+            "success": 0.98046875,
+            "cost": 0.0749625,
+            "delegation_rate_per_eligible": 1.0,
+            "delegations_per_episode": 2.86328125,
+            "delegated_step_fraction": 0.3574894082274156,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 2.86328125,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 2932,
+                "delegations": 2932
+              },
+              "reuse_recompute": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "commit_revise": {
+                "eligible": 0,
+                "delegations": 0
+              }
+            },
+            "delegation_ends": {
+              "commit": 2073,
+              "episode_end": 857,
+              "max_steps": 2
+            }
+          },
+          "r2": {
+            "episodes": 1024,
+            "utility": 0.90621025390625,
+            "success": 0.9814453125,
+            "cost": 0.07523505859375,
+            "delegation_rate_per_eligible": 1.0,
+            "delegations_per_episode": 0.1484375,
+            "delegated_step_fraction": 0.030143360591234132,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 0.1484375,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "reuse_recompute": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "commit_revise": {
+                "eligible": 152,
+                "delegations": 152
+              }
+            },
+            "delegation_ends": {
+              "commit": 133,
+              "episode_end": 19
+            }
+          },
+          "random": {
+            "episodes": 1024,
+            "utility": 0.893417578125,
+            "success": 0.97265625,
+            "cost": 0.079238671875,
+            "delegation_rate_per_eligible": 0.028109783089862773,
+            "delegations_per_episode": 0.3720703125,
+            "delegated_step_fraction": 0.046182266009852216,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 13.236328125,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 3335,
+                "delegations": 89
+              },
+              "reuse_recompute": {
+                "eligible": 9925,
+                "delegations": 287
+              },
+              "commit_revise": {
+                "eligible": 294,
+                "delegations": 5
+              }
+            },
+            "delegation_ends": {
+              "commit": 285,
+              "episode_end": 95,
+              "max_steps": 1
+            }
+          },
+          "teacher": {
+            "episodes": 1024,
+            "utility": 0.90434892578125,
+            "success": 0.9794921875,
+            "cost": 0.07514326171874999,
+            "delegation_rate_per_eligible": 1.0,
+            "delegations_per_episode": 1.0,
+            "delegated_step_fraction": 1.0,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 0.0,
+            "truncated": 0,
+            "unsupported": 0
+          }
+        },
+        "pit_minus": {
+          "d": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.024736435146614697,
+              "ci90": [
+                0.01670390107590777,
+                0.033570721658528827
+              ],
+              "ci95": [
+                0.014978211989131355,
+                0.03514670181407374
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.0205078125,
+              "ci90": [
+                0.013671875,
+                0.0283203125
+              ],
+              "ci95": [
+                0.01171875,
+                0.0302734375
+              ]
+            }
+          },
+          "r1": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": -0.0013114164158853053,
+              "ci90": [
+                -0.003524931127303486,
+                -0.00014403366367243218
+              ],
+              "ci95": [
+                -0.0036112886089150146,
+                -0.00012703398964219125
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": -0.0009765625,
+              "ci90": [
+                -0.0029296875,
+                0.0
+              ],
+              "ci95": [
+                -0.0029296875,
+                0.0
+              ]
+            }
+          },
+          "r2": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": -0.0020154203221353054,
+              "ci90": [
+                -0.004838346063591981,
+                3.883880586068132e-05
+              ],
+              "ci95": [
+                -0.0053821553794057946,
+                0.00013090237283059546
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": -0.001953125,
+              "ci90": [
+                -0.0048828125,
+                0.0
+              ],
+              "ci95": [
+                -0.0048828125,
+                0.0
+              ]
+            }
+          },
+          "random": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.010777255459114695,
+              "ci90": [
+                0.0056999899415494425,
+                0.0163308308967467
+              ],
+              "ci95": [
+                0.004776569875725427,
+                0.01778513165904872
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.0068359375,
+              "ci90": [
+                0.0029296875,
+                0.01171875
+              ],
+              "ci95": [
+                0.001953125,
+                0.0126953125
+              ]
+            }
+          },
+          "teacher": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": -0.0001540921971353058,
+              "ci90": [
+                -0.00024823368084038244,
+                -8.435087257976177e-05
+              ],
+              "ci95": [
+                -0.00026972831844771037,
+                -7.567442122681804e-05
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.0,
+              "ci90": [
+                0.0,
+                0.0
+              ],
+              "ci95": [
+                0.0,
+                0.0
+              ]
+            }
+          }
+        }
+      },
+      "PI-T-1": {
+        "utility_diff": 0.02473643514661472,
+        "success_diff": 0.0205078125,
+        "utility_diff_ci": {
+          "n": 1024,
+          "clusters": 1024,
+          "mean": 0.024736435146614697,
+          "ci90": [
+            0.01670390107590777,
+            0.033570721658528827
+          ],
+          "ci95": [
+            0.014978211989131355,
+            0.03514670181407374
+          ]
+        },
+        "pass": true
+      },
+      "PI-T-2": {
+        "comparators_utility": {
+          "teacher": 0.90434892578125,
+          "r1": 0.90550625,
+          "r2": 0.90621025390625,
+          "random": 0.893417578125
+        },
+        "best_comparator": "r2",
+        "utility_diff_vs_best": -0.0020154203221353084,
+        "utility_diff_vs_best_ci": {
+          "n": 1024,
+          "clusters": 1024,
+          "mean": -0.0020154203221353054,
+          "ci90": [
+            -0.004838346063591981,
+            3.883880586068132e-05
+          ],
+          "ci95": [
+            -0.0053821553794057946,
+            0.00013090237283059546
+          ]
+        },
+        "delegated_step_fraction": {
+          "pit": 0.05457513006222585,
+          "teacher": 1.0
+        },
+        "pass": false
+      },
+      "delegation_regret": {
+        "label": "branch-evaluated delegation decisions of pi_T (1/16 world subsample; Q = utility-to-go under pi_T continuation; hidden-state rollouts, evaluation only)",
+        "decisions": 1439,
+        "fired": 76,
+        "regret_per_decision": {
+          "n": 1439,
+          "clusters": 139,
+          "mean": 4.394039877599338e-05,
+          "ci90": [
+            1.8050863175661507e-05,
+            7.40265763494536e-05
+          ],
+          "ci95": [
+            1.4756277819605045e-05,
+            8.057065727141517e-05
+          ]
+        },
+        "adv_delegate_where_fired": {
+          "n": 76,
+          "clusters": 51,
+          "mean": 0.0016566101892794068,
+          "ci90": [
+            0.0009579042078543551,
+            0.0024383097783320777
+          ],
+          "ci95": [
+            0.0008252051129467449,
+            0.0026305512827965016
+          ]
+        },
+        "adv_delegate_where_not_fired": {
+          "n": 1363,
+          "clusters": 136,
+          "mean": 3.67060372810451e-05,
+          "ci90": [
+            1.0543495324082733e-05,
+            6.929912604651113e-05
+          ],
+          "ci95": [
+            6.969459384777957e-06,
+            7.752479935178675e-05
+          ]
+        },
+        "false_positive_rate": 0.0,
+        "missed_rate": 0.001467351430667645,
+        "by_anchor": {
+          "call": {
+            "decisions": 329,
+            "fired": 21,
+            "mean_adv_delegate": 0.00025595866202835426,
+            "mean_adv_where_fired": 0.0030285963030834153,
+            "mean_regret": 8.270450597923172e-05
+          },
+          "commit_revise": {
+            "decisions": 16,
+            "fired": 11,
+            "mean_adv_delegate": 0.003550032647796981,
+            "mean_adv_where_fired": 0.005063668022106161,
+            "mean_regret": 6.876088259899493e-05
+          },
+          "reuse_recompute": {
+            "decisions": 1094,
+            "fired": 44,
+            "mean_adv_delegate": 3.192118923877434e-05,
+            "mean_adv_where_fired": 0.00015003417675716853,
+            "mean_regret": 3.1919814670843986e-05
+          }
+        }
+      }
+    },
+    "x1-r4": {
+      "coverage": [
+        [
+          "events_train_kinds_p1",
+          0
+        ],
+        [
+          "events_train_kinds_p1",
+          1
+        ],
+        [
+          "events_train_kinds_p1",
+          2
+        ],
+        [
+          "events_train_kinds_p1",
+          3
+        ],
+        [
+          "events_train_kinds_p1",
+          4
+        ],
+        [
+          "events_train_kinds_p1",
+          5
+        ],
+        [
+          "events_train_kinds_p1",
+          6
+        ],
+        [
+          "events_train_kinds_p1",
+          7
+        ],
+        [
+          "events_train_kinds_p1",
+          8
+        ],
+        [
+          "events_train_kinds_p1",
+          9
+        ],
+        [
+          "events_train_kinds_p1",
+          10
+        ],
+        [
+          "events_train_kinds_p1",
+          11
+        ],
+        [
+          "events_train_kinds_p1",
+          12
+        ],
+        [
+          "events_train_kinds_p1",
+          13
+        ],
+        [
+          "events_train_kinds_p1",
+          14
+        ],
+        [
+          "events_train_kinds_p1",
+          15
+        ],
+        [
+          "foreign4",
+          0
+        ],
+        [
+          "foreign4",
+          1
+        ],
+        [
+          "foreign4",
+          2
+        ],
+        [
+          "foreign4",
+          3
+        ],
+        [
+          "foreign4",
+          4
+        ],
+        [
+          "foreign4",
+          5
+        ],
+        [
+          "foreign4",
+          6
+        ],
+        [
+          "foreign4",
+          7
+        ],
+        [
+          "foreign4",
+          8
+        ],
+        [
+          "foreign4",
+          9
+        ],
+        [
+          "foreign4",
+          10
+        ],
+        [
+          "foreign4",
+          11
+        ],
+        [
+          "foreign4",
+          12
+        ],
+        [
+          "foreign4",
+          13
+        ],
+        [
+          "foreign4",
+          14
+        ],
+        [
+          "foreign4",
+          15
+        ],
+        [
+          "iid_f0",
+          0
+        ],
+        [
+          "iid_f0",
+          1
+        ],
+        [
+          "iid_f0",
+          2
+        ],
+        [
+          "iid_f0",
+          3
+        ],
+        [
+          "iid_f0",
+          4
+        ],
+        [
+          "iid_f0",
+          5
+        ],
+        [
+          "iid_f0",
+          6
+        ],
+        [
+          "iid_f0",
+          7
+        ],
+        [
+          "iid_f0",
+          8
+        ],
+        [
+          "iid_f0",
+          9
+        ],
+        [
+          "iid_f0",
+          10
+        ],
+        [
+          "iid_f0",
+          11
+        ],
+        [
+          "iid_f0",
+          12
+        ],
+        [
+          "iid_f0",
+          13
+        ],
+        [
+          "iid_f0",
+          14
+        ],
+        [
+          "iid_f0",
+          15
+        ],
+        [
+          "iid_f2",
+          0
+        ],
+        [
+          "iid_f2",
+          1
+        ],
+        [
+          "iid_f2",
+          2
+        ],
+        [
+          "iid_f2",
+          3
+        ],
+        [
+          "iid_f2",
+          4
+        ],
+        [
+          "iid_f2",
+          5
+        ],
+        [
+          "iid_f2",
+          6
+        ],
+        [
+          "iid_f2",
+          7
+        ],
+        [
+          "iid_f2",
+          8
+        ],
+        [
+          "iid_f2",
+          9
+        ],
+        [
+          "iid_f2",
+          10
+        ],
+        [
+          "iid_f2",
+          11
+        ],
+        [
+          "iid_f2",
+          12
+        ],
+        [
+          "iid_f2",
+          13
+        ],
+        [
+          "iid_f2",
+          14
+        ],
+        [
+          "iid_f2",
+          15
+        ]
+      ],
+      "conditions": {
+        "iid_f0": {
+          "policies": {
+            "d": {
+              "episodes": 512,
+              "utility": 0.8842130859375,
+              "success": 0.966796875,
+              "cost": 0.0825837890625,
+              "delegation_rate_per_eligible": 0.0,
+              "delegations_per_episode": 0.0,
+              "delegated_step_fraction": 0.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {}
+            },
+            "pit": {
+              "episodes": 512,
+              "utility": 0.9045374987146393,
+              "success": 0.982421875,
+              "cost": 0.07788437628536074,
+              "delegation_rate_per_eligible": 0.022173297688315774,
+              "delegations_per_episode": 0.275390625,
+              "delegated_step_fraction": 0.039270315091210616,
+              "controller_evals_per_episode": 12.419921875,
+              "consults_per_episode": 12.419921875,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1675,
+                  "delegations": 81
+                },
+                "reuse_recompute": {
+                  "eligible": 4621,
+                  "delegations": 42
+                },
+                "commit_revise": {
+                  "eligible": 63,
+                  "delegations": 18
+                }
+              },
+              "delegation_ends": {
+                "commit": 120,
+                "episode_end": 21
+              }
+            },
+            "r1": {
+              "episodes": 512,
+              "utility": 0.904633984375,
+              "success": 0.982421875,
+              "cost": 0.077787890625,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 3.1484375,
+              "delegated_step_fraction": 0.3757966011683484,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 3.1484375,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1612,
+                  "delegations": 1612
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {
+                "commit": 1141,
+                "episode_end": 471
+              }
+            },
+            "r2": {
+              "episodes": 512,
+              "utility": 0.90458203125,
+              "success": 0.982421875,
+              "cost": 0.07783984375,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 0.140625,
+              "delegated_step_fraction": 0.025966263780050472,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.140625,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 72,
+                  "delegations": 72
+                }
+              },
+              "delegation_ends": {
+                "commit": 63,
+                "episode_end": 9
+              }
+            },
+            "random": {
+              "episodes": 512,
+              "utility": 0.8947826171875,
+              "success": 0.9765625,
+              "cost": 0.0817798828125,
+              "delegation_rate_per_eligible": 0.020753375977256575,
+              "delegations_per_episode": 0.28515625,
+              "delegated_step_fraction": 0.034151884350735434,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 13.740234375,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1832,
+                  "delegations": 38
+                },
+                "reuse_recompute": {
+                  "eligible": 5067,
+                  "delegations": 106
+                },
+                "commit_revise": {
+                  "eligible": 136,
+                  "delegations": 2
+                }
+              },
+              "delegation_ends": {
+                "episode_end": 34,
+                "commit": 112
+              }
+            },
+            "teacher": {
+              "episodes": 512,
+              "utility": 0.9046361328125,
+              "success": 0.982421875,
+              "cost": 0.07778574218749999,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 1.0,
+              "delegated_step_fraction": 1.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0
+            }
+          },
+          "pit_minus": {
+            "d": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.020324412777139263,
+                "ci90": [
+                  0.010775684583841776,
+                  0.031121374829927814
+                ],
+                "ci95": [
+                  0.009640612130352659,
+                  0.03349618016976541
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.015625,
+                "ci90": [
+                  0.0078125,
+                  0.025390625
+                ],
+                "ci95": [
+                  0.005859375,
+                  0.02734375
+                ]
+              }
+            },
+            "r1": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -9.648566036073964e-05,
+                "ci90": [
+                  -0.00017071439240106103,
+                  -3.417989542160847e-05
+                ],
+                "ci95": [
+                  -0.00018967237126427027,
+                  -2.537780450736634e-05
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            },
+            "r2": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -4.453253536073994e-05,
+                "ci90": [
+                  -7.402473677315362e-05,
+                  -1.777588841182579e-05
+                ],
+                "ci95": [
+                  -8.069083781655152e-05,
+                  -1.367373618007554e-05
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            },
+            "random": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.009754881527139263,
+                "ci90": [
+                  0.003873143831756448,
+                  0.01703597540698846
+                ],
+                "ci95": [
+                  0.0027619683639338467,
+                  0.01871863068466533
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.005859375,
+                "ci90": [
+                  0.0,
+                  0.01171875
+                ],
+                "ci95": [
+                  0.0,
+                  0.013671875
+                ]
+              }
+            },
+            "teacher": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -9.863409786073967e-05,
+                "ci90": [
+                  -0.0001730894813091922,
+                  -3.6524433791705354e-05
+                ],
+                "ci95": [
+                  -0.00019260919571603574,
+                  -2.6367172050080095e-05
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            }
+          }
+        },
+        "iid_f2": {
+          "policies": {
+            "d": {
+              "episodes": 512,
+              "utility": 0.8802275390625,
+              "success": 0.958984375,
+              "cost": 0.0787568359375,
+              "delegation_rate_per_eligible": 0.0,
+              "delegations_per_episode": 0.0,
+              "delegated_step_fraction": 0.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {}
+            },
+            "pit": {
+              "episodes": 512,
+              "utility": 0.902873270210957,
+              "success": 0.9765625,
+              "cost": 0.073689229789043,
+              "delegation_rate_per_eligible": 0.07096654962114211,
+              "delegations_per_episode": 0.75,
+              "delegated_step_fraction": 0.11053361053361054,
+              "controller_evals_per_episode": 10.568359375,
+              "consults_per_episode": 10.568359375,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1474,
+                  "delegations": 285
+                },
+                "reuse_recompute": {
+                  "eligible": 3875,
+                  "delegations": 72
+                },
+                "commit_revise": {
+                  "eligible": 62,
+                  "delegations": 27
+                }
+              },
+              "delegation_ends": {
+                "commit": 353,
+                "episode_end": 30,
+                "max_steps": 1
+              }
+            },
+            "r1": {
+              "episodes": 512,
+              "utility": 0.9063591796875,
+              "success": 0.978515625,
+              "cost": 0.0721564453125,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 2.578125,
+              "delegated_step_fraction": 0.33905579399141633,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 2.578125,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1320,
+                  "delegations": 1320
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {
+                "commit": 932,
+                "episode_end": 386,
+                "max_steps": 2
+              }
+            },
+            "r2": {
+              "episodes": 512,
+              "utility": 0.9064640625,
+              "success": 0.98046875,
+              "cost": 0.0740046875,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 0.162109375,
+              "delegated_step_fraction": 0.0356495046742012,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.162109375,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 83,
+                  "delegations": 83
+                }
+              },
+              "delegation_ends": {
+                "commit": 73,
+                "episode_end": 10
+              }
+            },
+            "random": {
+              "episodes": 512,
+              "utility": 0.8980048828125,
+              "success": 0.974609375,
+              "cost": 0.0766044921875,
+              "delegation_rate_per_eligible": 0.06927411335764004,
+              "delegations_per_episode": 0.81640625,
+              "delegated_step_fraction": 0.09941520467836257,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 11.78515625,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1571,
+                  "delegations": 111
+                },
+                "reuse_recompute": {
+                  "eligible": 4343,
+                  "delegations": 299
+                },
+                "commit_revise": {
+                  "eligible": 120,
+                  "delegations": 8
+                }
+              },
+              "delegation_ends": {
+                "commit": 299,
+                "episode_end": 117,
+                "max_steps": 2
+              }
+            },
+            "teacher": {
+              "episodes": 512,
+              "utility": 0.90406171875,
+              "success": 0.9765625,
+              "cost": 0.07250078125,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 1.0,
+              "delegated_step_fraction": 1.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0
+            }
+          },
+          "pit_minus": {
+            "d": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.022645731148457,
+                "ci90": [
+                  0.011497412751232587,
+                  0.034842157759814335
+                ],
+                "ci95": [
+                  0.009596546932138132,
+                  0.037832239191659546
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.017578125,
+                "ci90": [
+                  0.0078125,
+                  0.029296875
+                ],
+                "ci95": [
+                  0.005859375,
+                  0.03125
+                ]
+              }
+            },
+            "r1": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0034859094765430027,
+                "ci90": [
+                  -0.007938194199962365,
+                  -0.001145848024564946
+                ],
+                "ci95": [
+                  -0.00808758722558006,
+                  -0.0010987111195664555
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.001953125,
+                "ci90": [
+                  -0.005859375,
+                  0.0
+                ],
+                "ci95": [
+                  -0.005859375,
+                  0.0
+                ]
+              }
+            },
+            "r2": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0035907922890430002,
+                "ci90": [
+                  -0.009162422979923215,
+                  0.0005057300431930373
+                ],
+                "ci95": [
+                  -0.010135878882721903,
+                  0.0006761836980124809
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.00390625,
+                "ci90": [
+                  -0.009765625,
+                  0.0
+                ],
+                "ci95": [
+                  -0.009765625,
+                  0.0
+                ]
+              }
+            },
+            "random": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.004868387398456997,
+                "ci90": [
+                  -0.0015182396860164758,
+                  0.011189629718148193
+                ],
+                "ci95": [
+                  -0.0030892735805460435,
+                  0.013035613350356624
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.001953125,
+                "ci90": [
+                  -0.00390625,
+                  0.0078125
+                ],
+                "ci95": [
+                  -0.003955078124999997,
+                  0.0078125
+                ]
+              }
+            },
+            "teacher": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0011884485390430024,
+                "ci90": [
+                  -0.0013700892104177157,
+                  -0.001005230947568071
+                ],
+                "ci95": [
+                  -0.0014116177935202456,
+                  -0.0009757362860935585
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            }
+          }
+        },
+        "events_train_kinds_p1": {
+          "policies": {
+            "d": {
+              "episodes": 512,
+              "utility": 0.8678171875,
+              "success": 0.947265625,
+              "cost": 0.0794484375,
+              "delegation_rate_per_eligible": 0.0,
+              "delegations_per_episode": 0.0,
+              "delegated_step_fraction": 0.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {}
+            },
+            "pit": {
+              "episodes": 512,
+              "utility": 0.8923332257689904,
+              "success": 0.966796875,
+              "cost": 0.07446364923100955,
+              "delegation_rate_per_eligible": 0.07179946284691137,
+              "delegations_per_episode": 0.783203125,
+              "delegated_step_fraction": 0.11665876295643926,
+              "controller_evals_per_episode": 10.908203125,
+              "consults_per_episode": 10.908203125,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1532,
+                  "delegations": 292
+                },
+                "reuse_recompute": {
+                  "eligible": 3982,
+                  "delegations": 78
+                },
+                "commit_revise": {
+                  "eligible": 71,
+                  "delegations": 31
+                }
+              },
+              "delegation_ends": {
+                "commit": 367,
+                "episode_end": 32,
+                "max_steps": 2
+              }
+            },
+            "r1": {
+              "episodes": 512,
+              "utility": 0.8940181640625,
+              "success": 0.966796875,
+              "cost": 0.0727787109375,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 2.69921875,
+              "delegated_step_fraction": 0.3546946905694072,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 2.69921875,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1382,
+                  "delegations": 1382
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {
+                "commit": 959,
+                "episode_end": 421,
+                "max_steps": 2
+              }
+            },
+            "r2": {
+              "episodes": 512,
+              "utility": 0.90163671875,
+              "success": 0.9765625,
+              "cost": 0.07492578125,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 0.1796875,
+              "delegated_step_fraction": 0.040535007506482874,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.1796875,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 92,
+                  "delegations": 92
+                }
+              },
+              "delegation_ends": {
+                "commit": 79,
+                "episode_end": 12,
+                "max_steps": 1
+              }
+            },
+            "random": {
+              "episodes": 512,
+              "utility": 0.900435546875,
+              "success": 0.9765625,
+              "cost": 0.076126953125,
+              "delegation_rate_per_eligible": 0.07418348924995898,
+              "delegations_per_episode": 0.8828125,
+              "delegated_step_fraction": 0.10832557520946934,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 11.900390625,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1622,
+                  "delegations": 116
+                },
+                "reuse_recompute": {
+                  "eligible": 4370,
+                  "delegations": 331
+                },
+                "commit_revise": {
+                  "eligible": 101,
+                  "delegations": 5
+                }
+              },
+              "delegation_ends": {
+                "episode_end": 133,
+                "commit": 316,
+                "max_steps": 3
+              }
+            },
+            "teacher": {
+              "episodes": 512,
+              "utility": 0.8939611328125,
+              "success": 0.966796875,
+              "cost": 0.0728357421875,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 1.0,
+              "delegated_step_fraction": 1.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0
+            }
+          },
+          "pit_minus": {
+            "d": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.024516038268990452,
+                "ci90": [
+                  0.009931935443552474,
+                  0.03949753974520556
+                ],
+                "ci95": [
+                  0.00761548378401663,
+                  0.04274190066331246
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.01953125,
+                "ci90": [
+                  0.005859375,
+                  0.033203125
+                ],
+                "ci95": [
+                  0.00390625,
+                  0.037109375
+                ]
+              }
+            },
+            "r1": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0016849382935095474,
+                "ci90": [
+                  -0.0020958990764737145,
+                  -0.0013183005993913169
+                ],
+                "ci95": [
+                  -0.002189243414589829,
+                  -0.0012602979390054297
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            },
+            "r2": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.009303492981009548,
+                "ci90": [
+                  -0.017035287478532668,
+                  -0.0033239503870985294
+                ],
+                "ci95": [
+                  -0.01887166819883007,
+                  -0.0017270295246363389
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.009765625,
+                "ci90": [
+                  -0.017578125,
+                  -0.00390625
+                ],
+                "ci95": [
+                  -0.01953125,
+                  -0.001953125
+                ]
+              }
+            },
+            "random": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.008102321106009547,
+                "ci90": [
+                  -0.01575837535758726,
+                  -0.001973697348055636
+                ],
+                "ci95": [
+                  -0.017782770332816947,
+                  -0.00065351200490109
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.009765625,
+                "ci90": [
+                  -0.017578125,
+                  -0.00390625
+                ],
+                "ci95": [
+                  -0.01953125,
+                  -0.001953125
+                ]
+              }
+            },
+            "teacher": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0016279070435095471,
+                "ci90": [
+                  -0.002023934072707688,
+                  -0.0012736375748421392
+                ],
+                "ci95": [
+                  -0.0021125073620893503,
+                  -0.0012149606763596753
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            }
+          }
+        },
+        "foreign4": {
+          "policies": {
+            "d": {
+              "episodes": 512,
+              "utility": 0.867617578125,
+              "success": 0.943359375,
+              "cost": 0.075741796875,
+              "delegation_rate_per_eligible": 0.0,
+              "delegations_per_episode": 0.0,
+              "delegated_step_fraction": 0.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {}
+            },
+            "pit": {
+              "episodes": 512,
+              "utility": 0.9077117883561151,
+              "success": 0.974609375,
+              "cost": 0.06689758664388493,
+              "delegation_rate_per_eligible": 0.17117560255779635,
+              "delegations_per_episode": 1.359375,
+              "delegated_step_fraction": 0.24787566272060427,
+              "controller_evals_per_episode": 7.94140625,
+              "consults_per_episode": 7.94140625,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 833,
+                  "delegations": 233
+                },
+                "reuse_recompute": {
+                  "eligible": 3172,
+                  "delegations": 417
+                },
+                "commit_revise": {
+                  "eligible": 61,
+                  "delegations": 46
+                }
+              },
+              "delegation_ends": {
+                "commit": 557,
+                "episode_end": 137,
+                "max_steps": 2
+              }
+            },
+            "r1": {
+              "episodes": 512,
+              "utility": 0.9117568359375,
+              "success": 0.978515625,
+              "cost": 0.0667587890625,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 2.111328125,
+              "delegated_step_fraction": 0.3064908273778826,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 2.111328125,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1081,
+                  "delegations": 1081
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {
+                "commit": 749,
+                "episode_end": 327,
+                "max_steps": 5
+              }
+            },
+            "r2": {
+              "episodes": 512,
+              "utility": 0.9110767578125,
+              "success": 0.98046875,
+              "cost": 0.0693919921875,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 0.193359375,
+              "delegated_step_fraction": 0.050667055478603194,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.193359375,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 99,
+                  "delegations": 99
+                }
+              },
+              "delegation_ends": {
+                "max_steps": 2,
+                "episode_end": 10,
+                "commit": 87
+              }
+            },
+            "random": {
+              "episodes": 512,
+              "utility": 0.907766015625,
+              "success": 0.9765625,
+              "cost": 0.068796484375,
+              "delegation_rate_per_eligible": 0.1787429070274989,
+              "delegations_per_episode": 1.599609375,
+              "delegated_step_fraction": 0.21908254242162783,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 8.94921875,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1111,
+                  "delegations": 218
+                },
+                "reuse_recompute": {
+                  "eligible": 3396,
+                  "delegations": 588
+                },
+                "commit_revise": {
+                  "eligible": 75,
+                  "delegations": 13
+                }
+              },
+              "delegation_ends": {
+                "commit": 582,
+                "episode_end": 233,
+                "max_steps": 4
+              }
+            },
+            "teacher": {
+              "episodes": 512,
+              "utility": 0.908121484375,
+              "success": 0.974609375,
+              "cost": 0.066487890625,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 1.0,
+              "delegated_step_fraction": 1.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0
+            }
+          },
+          "pit_minus": {
+            "d": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.04009421023111508,
+                "ci90": [
+                  0.025025843158802213,
+                  0.056496437234174836
+                ],
+                "ci95": [
+                  0.02243927458493254,
+                  0.05990356935915807
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.03125,
+                "ci90": [
+                  0.017578125,
+                  0.046875
+                ],
+                "ci95": [
+                  0.015625,
+                  0.048828125
+                ]
+              }
+            },
+            "r1": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0040450475813849284,
+                "ci90": [
+                  -0.00822955222733485,
+                  -0.0002705253179147723
+                ],
+                "ci95": [
+                  -0.009740039778956051,
+                  -8.716577673872322e-05
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.00390625,
+                "ci90": [
+                  -0.0078125,
+                  0.0
+                ],
+                "ci95": [
+                  -0.009765625,
+                  0.0
+                ]
+              }
+            },
+            "r2": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0033649694563849253,
+                "ci90": [
+                  -0.008943346826086144,
+                  0.0014322956291225974
+                ],
+                "ci95": [
+                  -0.010076855602430507,
+                  0.0021139989168089054
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.005859375,
+                "ci90": [
+                  -0.01171875,
+                  0.0
+                ],
+                "ci95": [
+                  -0.013671875,
+                  0.0
+                ]
+              }
+            },
+            "random": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -5.4227268884926485e-05,
+                "ci90": [
+                  -0.005707791235075452,
+                  0.005594394397569491
+                ],
+                "ci95": [
+                  -0.006354154165048651,
+                  0.006006924871589255
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.001953125,
+                "ci90": [
+                  -0.0078125,
+                  0.00390625
+                ],
+                "ci95": [
+                  -0.007861328124999997,
+                  0.00390625
+                ]
+              }
+            },
+            "teacher": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.00040969601888492854,
+                "ci90": [
+                  -0.0005905874624218588,
+                  -0.00027120645380505714
+                ],
+                "ci95": [
+                  -0.0006255315035283924,
+                  -0.0002532425719322355
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            }
+          }
+        }
+      },
+      "iid_group": {
+        "policies": {
+          "d": {
+            "episodes": 1024,
+            "utility": 0.8822203125,
+            "success": 0.962890625,
+            "cost": 0.0806703125,
+            "delegation_rate_per_eligible": 0.0,
+            "delegations_per_episode": 0.0,
+            "delegated_step_fraction": 0.0,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 0.0,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "reuse_recompute": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "commit_revise": {
+                "eligible": 0,
+                "delegations": 0
+              }
+            },
+            "delegation_ends": {}
+          },
+          "pit": {
+            "episodes": 1024,
+            "utility": 0.9037053844627981,
+            "success": 0.9794921875,
+            "cost": 0.07578680303720187,
+            "delegation_rate_per_eligible": 0.044604927782497875,
+            "delegations_per_episode": 0.5126953125,
+            "delegated_step_fraction": 0.07412302999491611,
+            "controller_evals_per_episode": 11.494140625,
+            "consults_per_episode": 11.494140625,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 3149,
+                "delegations": 366
+              },
+              "reuse_recompute": {
+                "eligible": 8496,
+                "delegations": 114
+              },
+              "commit_revise": {
+                "eligible": 125,
+                "delegations": 45
+              }
+            },
+            "delegation_ends": {
+              "commit": 473,
+              "episode_end": 51,
+              "max_steps": 1
+            }
+          },
+          "r1": {
+            "episodes": 1024,
+            "utility": 0.90549658203125,
+            "success": 0.98046875,
+            "cost": 0.07497216796875,
+            "delegation_rate_per_eligible": 1.0,
+            "delegations_per_episode": 2.86328125,
+            "delegated_step_fraction": 0.35796017351504594,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 2.86328125,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 2932,
+                "delegations": 2932
+              },
+              "reuse_recompute": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "commit_revise": {
+                "eligible": 0,
+                "delegations": 0
+              }
+            },
+            "delegation_ends": {
+              "commit": 2073,
+              "episode_end": 857,
+              "max_steps": 2
+            }
+          },
+          "r2": {
+            "episodes": 1024,
+            "utility": 0.905523046875,
+            "success": 0.9814453125,
+            "cost": 0.075922265625,
+            "delegation_rate_per_eligible": 1.0,
+            "delegations_per_episode": 0.1513671875,
+            "delegated_step_fraction": 0.030688622754491017,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 0.1513671875,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "reuse_recompute": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "commit_revise": {
+                "eligible": 155,
+                "delegations": 155
+              }
+            },
+            "delegation_ends": {
+              "commit": 136,
+              "episode_end": 19
+            }
+          },
+          "random": {
+            "episodes": 1024,
+            "utility": 0.89639375,
+            "success": 0.9755859375,
+            "cost": 0.0791921875,
+            "delegation_rate_per_eligible": 0.04315555895630882,
+            "delegations_per_episode": 0.55078125,
+            "delegated_step_fraction": 0.06575948955010091,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 12.7626953125,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 3403,
+                "delegations": 149
+              },
+              "reuse_recompute": {
+                "eligible": 9410,
+                "delegations": 405
+              },
+              "commit_revise": {
+                "eligible": 256,
+                "delegations": 10
+              }
+            },
+            "delegation_ends": {
+              "episode_end": 151,
+              "commit": 411,
+              "max_steps": 2
+            }
+          },
+          "teacher": {
+            "episodes": 1024,
+            "utility": 0.90434892578125,
+            "success": 0.9794921875,
+            "cost": 0.07514326171874999,
+            "delegation_rate_per_eligible": 1.0,
+            "delegations_per_episode": 1.0,
+            "delegated_step_fraction": 1.0,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 0.0,
+            "truncated": 0,
+            "unsupported": 0
+          }
+        },
+        "pit_minus": {
+          "d": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.02148507196279813,
+              "ci90": [
+                0.014037056181693206,
+                0.029073337786038392
+              ],
+              "ci95": [
+                0.012699192133913687,
+                0.030524658349149227
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.0166015625,
+              "ci90": [
+                0.009765625,
+                0.0234375
+              ],
+              "ci95": [
+                0.0087890625,
+                0.0244140625
+              ]
+            }
+          },
+          "r1": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": -0.001791197568451871,
+              "ci90": [
+                -0.0039961440607901915,
+                -0.0006048544703913909
+              ],
+              "ci95": [
+                -0.00411092249121936,
+                -0.0005791778426154939
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": -0.0009765625,
+              "ci90": [
+                -0.0029296875,
+                0.0
+              ],
+              "ci95": [
+                -0.0029296875,
+                0.0
+              ]
+            }
+          },
+          "r2": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": -0.0018176624122018701,
+              "ci90": [
+                -0.004651322791027216,
+                0.00022735424812520198
+              ],
+              "ci95": [
+                -0.005185296744422362,
+                0.00033067551781836355
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": -0.001953125,
+              "ci90": [
+                -0.0048828125,
+                0.0
+              ],
+              "ci95": [
+                -0.0048828125,
+                0.0
+              ]
+            }
+          },
+          "random": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.00731163446279813,
+              "ci90": [
+                0.0029557454871687663,
+                0.011801398228945105
+              ],
+              "ci95": [
+                0.0022199676049098824,
+                0.012813386569720956
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.00390625,
+              "ci90": [
+                0.0,
+                0.0078125
+              ],
+              "ci95": [
+                0.0,
+                0.0087890625
+              ]
+            }
+          },
+          "teacher": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": -0.0006435413184518711,
+              "ci90": [
+                -0.000749791223383712,
+                -0.0005423878284735842
+              ],
+              "ci95": [
+                -0.0007706957258649046,
+                -0.0005228060667824124
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.0,
+              "ci90": [
+                0.0,
+                0.0
+              ],
+              "ci95": [
+                0.0,
+                0.0
+              ]
+            }
+          }
+        }
+      },
+      "PI-T-1": {
+        "utility_diff": 0.02148507196279814,
+        "success_diff": 0.0166015625,
+        "utility_diff_ci": {
+          "n": 1024,
+          "clusters": 1024,
+          "mean": 0.02148507196279813,
+          "ci90": [
+            0.014037056181693206,
+            0.029073337786038392
+          ],
+          "ci95": [
+            0.012699192133913687,
+            0.030524658349149227
+          ]
+        },
+        "pass": true
+      },
+      "PI-T-2": {
+        "comparators_utility": {
+          "teacher": 0.90434892578125,
+          "r1": 0.90549658203125,
+          "r2": 0.905523046875,
+          "random": 0.89639375
+        },
+        "best_comparator": "r2",
+        "utility_diff_vs_best": -0.001817662412201826,
+        "utility_diff_vs_best_ci": {
+          "n": 1024,
+          "clusters": 1024,
+          "mean": -0.0018176624122018701,
+          "ci90": [
+            -0.004651322791027216,
+            0.00022735424812520198
+          ],
+          "ci95": [
+            -0.005185296744422362,
+            0.00033067551781836355
+          ]
+        },
+        "delegated_step_fraction": {
+          "pit": 0.07412302999491611,
+          "teacher": 1.0
+        },
+        "pass": false
+      },
+      "delegation_regret": {
+        "label": "branch-evaluated delegation decisions of pi_T (1/16 world subsample; Q = utility-to-go under pi_T continuation; hidden-state rollouts, evaluation only)",
+        "decisions": 1376,
+        "fired": 111,
+        "regret_per_decision": {
+          "n": 1376,
+          "clusters": 139,
+          "mean": 0.00016738929469665675,
+          "ci90": [
+            9.43416386239268e-05,
+            0.00024894665337968466
+          ],
+          "ci95": [
+            8.455540124358026e-05,
+            0.0002709047040578284
+          ]
+        },
+        "adv_delegate_where_fired": {
+          "n": 111,
+          "clusters": 71,
+          "mean": 0.0012648928155859448,
+          "ci90": [
+            0.000931983899439698,
+            0.0016114905912018938
+          ],
+          "ci95": [
+            0.0008749673259287696,
+            0.00168929933168374
+          ]
+        },
+        "adv_delegate_where_not_fired": {
+          "n": 1265,
+          "clusters": 138,
+          "mean": 0.0001510101780890543,
+          "ci90": [
+            7.061229598017237e-05,
+            0.00024232421229854558
+          ],
+          "ci95": [
+            5.838237088397613e-05,
+            0.00026776678884557183
+          ]
+        },
+        "false_positive_rate": 0.0,
+        "missed_rate": 0.0047430830039525695,
+        "by_anchor": {
+          "call": {
+            "decisions": 338,
+            "fired": 54,
+            "mean_adv_delegate": 0.0006565392229118757,
+            "mean_adv_where_fired": 0.0020092838825135455,
+            "mean_regret": 0.00037132762644279165
+          },
+          "commit_revise": {
+            "decisions": 16,
+            "fired": 10,
+            "mean_adv_delegate": 0.001306271765197974,
+            "mean_adv_where_fired": 0.00198001899508187,
+            "mean_regret": 6.875989327180532e-05
+          },
+          "reuse_recompute": {
+            "decisions": 1022,
+            "fired": 47,
+            "mean_adv_delegate": 8.671269297975734e-05,
+            "mean_adv_where_fired": 0.000257480487733824,
+            "mean_regret": 0.0001014860797187742
+          }
+        }
+      }
+    },
+    "x1-r5": {
+      "coverage": [
+        [
+          "events_train_kinds_p1",
+          0
+        ],
+        [
+          "events_train_kinds_p1",
+          1
+        ],
+        [
+          "events_train_kinds_p1",
+          2
+        ],
+        [
+          "events_train_kinds_p1",
+          3
+        ],
+        [
+          "events_train_kinds_p1",
+          4
+        ],
+        [
+          "events_train_kinds_p1",
+          5
+        ],
+        [
+          "events_train_kinds_p1",
+          6
+        ],
+        [
+          "events_train_kinds_p1",
+          7
+        ],
+        [
+          "events_train_kinds_p1",
+          8
+        ],
+        [
+          "events_train_kinds_p1",
+          9
+        ],
+        [
+          "events_train_kinds_p1",
+          10
+        ],
+        [
+          "events_train_kinds_p1",
+          11
+        ],
+        [
+          "events_train_kinds_p1",
+          12
+        ],
+        [
+          "events_train_kinds_p1",
+          13
+        ],
+        [
+          "events_train_kinds_p1",
+          14
+        ],
+        [
+          "events_train_kinds_p1",
+          15
+        ],
+        [
+          "foreign4",
+          0
+        ],
+        [
+          "foreign4",
+          1
+        ],
+        [
+          "foreign4",
+          2
+        ],
+        [
+          "foreign4",
+          3
+        ],
+        [
+          "foreign4",
+          4
+        ],
+        [
+          "foreign4",
+          5
+        ],
+        [
+          "foreign4",
+          6
+        ],
+        [
+          "foreign4",
+          7
+        ],
+        [
+          "foreign4",
+          8
+        ],
+        [
+          "foreign4",
+          9
+        ],
+        [
+          "foreign4",
+          10
+        ],
+        [
+          "foreign4",
+          11
+        ],
+        [
+          "foreign4",
+          12
+        ],
+        [
+          "foreign4",
+          13
+        ],
+        [
+          "foreign4",
+          14
+        ],
+        [
+          "foreign4",
+          15
+        ],
+        [
+          "iid_f0",
+          0
+        ],
+        [
+          "iid_f0",
+          1
+        ],
+        [
+          "iid_f0",
+          2
+        ],
+        [
+          "iid_f0",
+          3
+        ],
+        [
+          "iid_f0",
+          4
+        ],
+        [
+          "iid_f0",
+          5
+        ],
+        [
+          "iid_f0",
+          6
+        ],
+        [
+          "iid_f0",
+          7
+        ],
+        [
+          "iid_f0",
+          8
+        ],
+        [
+          "iid_f0",
+          9
+        ],
+        [
+          "iid_f0",
+          10
+        ],
+        [
+          "iid_f0",
+          11
+        ],
+        [
+          "iid_f0",
+          12
+        ],
+        [
+          "iid_f0",
+          13
+        ],
+        [
+          "iid_f0",
+          14
+        ],
+        [
+          "iid_f0",
+          15
+        ],
+        [
+          "iid_f2",
+          0
+        ],
+        [
+          "iid_f2",
+          1
+        ],
+        [
+          "iid_f2",
+          2
+        ],
+        [
+          "iid_f2",
+          3
+        ],
+        [
+          "iid_f2",
+          4
+        ],
+        [
+          "iid_f2",
+          5
+        ],
+        [
+          "iid_f2",
+          6
+        ],
+        [
+          "iid_f2",
+          7
+        ],
+        [
+          "iid_f2",
+          8
+        ],
+        [
+          "iid_f2",
+          9
+        ],
+        [
+          "iid_f2",
+          10
+        ],
+        [
+          "iid_f2",
+          11
+        ],
+        [
+          "iid_f2",
+          12
+        ],
+        [
+          "iid_f2",
+          13
+        ],
+        [
+          "iid_f2",
+          14
+        ],
+        [
+          "iid_f2",
+          15
+        ]
+      ],
+      "conditions": {
+        "iid_f0": {
+          "policies": {
+            "d": {
+              "episodes": 512,
+              "utility": 0.87665703125,
+              "success": 0.958984375,
+              "cost": 0.08232734375,
+              "delegation_rate_per_eligible": 0.0,
+              "delegations_per_episode": 0.0,
+              "delegated_step_fraction": 0.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {}
+            },
+            "pit": {
+              "episodes": 512,
+              "utility": 0.9046275364786474,
+              "success": 0.982421875,
+              "cost": 0.07779433852135266,
+              "delegation_rate_per_eligible": 0.018278394000937354,
+              "delegations_per_episode": 0.228515625,
+              "delegated_step_fraction": 0.03193043016463091,
+              "controller_evals_per_episode": 12.501953125,
+              "consults_per_episode": 12.501953125,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1697,
+                  "delegations": 79
+                },
+                "reuse_recompute": {
+                  "eligible": 4635,
+                  "delegations": 12
+                },
+                "commit_revise": {
+                  "eligible": 69,
+                  "delegations": 26
+                }
+              },
+              "delegation_ends": {
+                "commit": 98,
+                "episode_end": 19
+              }
+            },
+            "r1": {
+              "episodes": 512,
+              "utility": 0.904633984375,
+              "success": 0.982421875,
+              "cost": 0.077787890625,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 3.1484375,
+              "delegated_step_fraction": 0.37533191715347847,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 3.1484375,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1612,
+                  "delegations": 1612
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {
+                "commit": 1141,
+                "episode_end": 471
+              }
+            },
+            "r2": {
+              "episodes": 512,
+              "utility": 0.904655859375,
+              "success": 0.982421875,
+              "cost": 0.077766015625,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 0.13671875,
+              "delegated_step_fraction": 0.0253156146179402,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.13671875,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 70,
+                  "delegations": 70
+                }
+              },
+              "delegation_ends": {
+                "commit": 61,
+                "episode_end": 9
+              }
+            },
+            "random": {
+              "episodes": 512,
+              "utility": 0.8912017578125,
+              "success": 0.97265625,
+              "cost": 0.0814544921875,
+              "delegation_rate_per_eligible": 0.01905972045743329,
+              "delegations_per_episode": 0.263671875,
+              "delegated_step_fraction": 0.03174502997791101,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 13.833984375,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1791,
+                  "delegations": 33
+                },
+                "reuse_recompute": {
+                  "eligible": 5159,
+                  "delegations": 96
+                },
+                "commit_revise": {
+                  "eligible": 133,
+                  "delegations": 6
+                }
+              },
+              "delegation_ends": {
+                "commit": 99,
+                "episode_end": 36
+              }
+            },
+            "teacher": {
+              "episodes": 512,
+              "utility": 0.9046361328125,
+              "success": 0.982421875,
+              "cost": 0.07778574218749999,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 1.0,
+              "delegated_step_fraction": 1.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0
+            }
+          },
+          "pit_minus": {
+            "d": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.027970505228647344,
+                "ci90": [
+                  0.016315291756042977,
+                  0.04070736106221174
+                ],
+                "ci95": [
+                  0.014441606508682956,
+                  0.043308259704533364
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0234375,
+                "ci90": [
+                  0.013671875,
+                  0.03515625
+                ],
+                "ci95": [
+                  0.01171875,
+                  0.037109375
+                ]
+              }
+            },
+            "r1": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -6.4478963526636436e-06,
+                "ci90": [
+                  -2.3247402344633656e-05,
+                  4.1001241027145285e-06
+                ],
+                "ci95": [
+                  -2.5395652027051942e-05,
+                  6.246955491869005e-06
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            },
+            "r2": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -2.8322896352664053e-05,
+                "ci90": [
+                  -4.629212246637178e-05,
+                  -1.2306602010990709e-05
+                ],
+                "ci95": [
+                  -5.156320103937488e-05,
+                  -9.380067218472755e-06
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            },
+            "random": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.013425778666147338,
+                "ci90": [
+                  0.006367772821480936,
+                  0.021495966007723678
+                ],
+                "ci95": [
+                  0.005212551574600804,
+                  0.02331839591934485
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.009765625,
+                "ci90": [
+                  0.00390625,
+                  0.017578125
+                ],
+                "ci95": [
+                  0.001953125,
+                  0.01953125
+                ]
+              }
+            },
+            "teacher": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -8.596333852663678e-06,
+                "ci90": [
+                  -2.5394477973937496e-05,
+                  -1.9600890189895962e-07
+                ],
+                "ci95": [
+                  -2.5396118092903212e-05,
+                  -1.9560853356134532e-07
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            }
+          }
+        },
+        "iid_f2": {
+          "policies": {
+            "d": {
+              "episodes": 512,
+              "utility": 0.8784458984375,
+              "success": 0.955078125,
+              "cost": 0.0766322265625,
+              "delegation_rate_per_eligible": 0.0,
+              "delegations_per_episode": 0.0,
+              "delegated_step_fraction": 0.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {}
+            },
+            "pit": {
+              "episodes": 512,
+              "utility": 0.9058424063839847,
+              "success": 0.978515625,
+              "cost": 0.07267321861601532,
+              "delegation_rate_per_eligible": 0.04464446444644465,
+              "delegations_per_episode": 0.484375,
+              "delegated_step_fraction": 0.08343806730903505,
+              "controller_evals_per_episode": 10.849609375,
+              "consults_per_episode": 10.849609375,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1349,
+                  "delegations": 139
+                },
+                "reuse_recompute": {
+                  "eligible": 4143,
+                  "delegations": 70
+                },
+                "commit_revise": {
+                  "eligible": 63,
+                  "delegations": 39
+                }
+              },
+              "delegation_ends": {
+                "commit": 208,
+                "episode_end": 39,
+                "max_steps": 1
+              }
+            },
+            "r1": {
+              "episodes": 512,
+              "utility": 0.9063763671875,
+              "success": 0.978515625,
+              "cost": 0.0721392578125,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 2.578125,
+              "delegated_step_fraction": 0.3385427666314678,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 2.578125,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1320,
+                  "delegations": 1320
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {
+                "commit": 932,
+                "episode_end": 386,
+                "max_steps": 2
+              }
+            },
+            "r2": {
+              "episodes": 512,
+              "utility": 0.9080552734375,
+              "success": 0.98046875,
+              "cost": 0.0724134765625,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 0.16015625,
+              "delegated_step_fraction": 0.03529328721677137,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.16015625,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 82,
+                  "delegations": 82
+                }
+              },
+              "delegation_ends": {
+                "commit": 72,
+                "episode_end": 10
+              }
+            },
+            "random": {
+              "episodes": 512,
+              "utility": 0.89914453125,
+              "success": 0.974609375,
+              "cost": 0.07546484375,
+              "delegation_rate_per_eligible": 0.04618146214099217,
+              "delegations_per_episode": 0.552734375,
+              "delegated_step_fraction": 0.07466216216216216,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 11.96875,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1421,
+                  "delegations": 66
+                },
+                "reuse_recompute": {
+                  "eligible": 4585,
+                  "delegations": 215
+                },
+                "commit_revise": {
+                  "eligible": 122,
+                  "delegations": 2
+                }
+              },
+              "delegation_ends": {
+                "episode_end": 79,
+                "commit": 201,
+                "max_steps": 3
+              }
+            },
+            "teacher": {
+              "episodes": 512,
+              "utility": 0.90406171875,
+              "success": 0.9765625,
+              "cost": 0.07250078125,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 1.0,
+              "delegated_step_fraction": 1.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0
+            }
+          },
+          "pit_minus": {
+            "d": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.027396507946484686,
+                "ci90": [
+                  0.01580732061113818,
+                  0.04034969105948351
+                ],
+                "ci95": [
+                  0.013731712706169996,
+                  0.04349612654993591
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0234375,
+                "ci90": [
+                  0.013671875,
+                  0.03515625
+                ],
+                "ci95": [
+                  0.01171875,
+                  0.0390625
+                ]
+              }
+            },
+            "r1": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0005339608035153158,
+                "ci90": [
+                  -0.0011596368761763612,
+                  -0.00011560007282791303
+                ],
+                "ci95": [
+                  -0.0012835801327308089,
+                  -7.748682560930668e-05
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            },
+            "r2": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0022128670535153157,
+                "ci90": [
+                  -0.005894508058787947,
+                  5.5258911078685624e-05
+                ],
+                "ci95": [
+                  -0.00651661170309114,
+                  0.00016222886103598344
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.001953125,
+                "ci90": [
+                  -0.005859375,
+                  0.0
+                ],
+                "ci95": [
+                  -0.005859375,
+                  0.0
+                ]
+              }
+            },
+            "random": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.006697875133984685,
+                "ci90": [
+                  0.0016678247322111349,
+                  0.01278178911839732
+                ],
+                "ci95": [
+                  0.0011628949202955987,
+                  0.01377268740363368
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.00390625,
+                "ci90": [
+                  0.0,
+                  0.009765625
+                ],
+                "ci95": [
+                  0.0,
+                  0.009765625
+                ]
+              }
+            },
+            "teacher": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0017806876339846844,
+                "ci90": [
+                  -0.00022460687285991585,
+                  0.005579934281889217
+                ],
+                "ci95": [
+                  -0.00026462436053095755,
+                  0.005667055448316202
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.001953125,
+                "ci90": [
+                  0.0,
+                  0.005859375
+                ],
+                "ci95": [
+                  0.0,
+                  0.005859375
+                ]
+              }
+            }
+          }
+        },
+        "events_train_kinds_p1": {
+          "policies": {
+            "d": {
+              "episodes": 512,
+              "utility": 0.8701880859375,
+              "success": 0.947265625,
+              "cost": 0.0770775390625,
+              "delegation_rate_per_eligible": 0.0,
+              "delegations_per_episode": 0.0,
+              "delegated_step_fraction": 0.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {}
+            },
+            "pit": {
+              "episodes": 512,
+              "utility": 0.8936679895699184,
+              "success": 0.966796875,
+              "cost": 0.07312888543008153,
+              "delegation_rate_per_eligible": 0.050318922749822824,
+              "delegations_per_episode": 0.5546875,
+              "delegated_step_fraction": 0.09727254084352997,
+              "controller_evals_per_episode": 11.0234375,
+              "consults_per_episode": 11.0234375,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1393,
+                  "delegations": 158
+                },
+                "reuse_recompute": {
+                  "eligible": 4188,
+                  "delegations": 83
+                },
+                "commit_revise": {
+                  "eligible": 63,
+                  "delegations": 43
+                }
+              },
+              "delegation_ends": {
+                "commit": 238,
+                "episode_end": 43,
+                "max_steps": 3
+              }
+            },
+            "r1": {
+              "episodes": 512,
+              "utility": 0.89405390625,
+              "success": 0.966796875,
+              "cost": 0.07274296875,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 2.69921875,
+              "delegated_step_fraction": 0.3537573842560791,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 2.69921875,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1382,
+                  "delegations": 1382
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {
+                "commit": 959,
+                "episode_end": 421,
+                "max_steps": 2
+              }
+            },
+            "r2": {
+              "episodes": 512,
+              "utility": 0.9033736328125,
+              "success": 0.9765625,
+              "cost": 0.0731888671875,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 0.173828125,
+              "delegated_step_fraction": 0.039853823346893746,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.173828125,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 89,
+                  "delegations": 89
+                }
+              },
+              "delegation_ends": {
+                "commit": 76,
+                "episode_end": 12,
+                "max_steps": 1
+              }
+            },
+            "random": {
+              "episodes": 512,
+              "utility": 0.892683984375,
+              "success": 0.96875,
+              "cost": 0.076066015625,
+              "delegation_rate_per_eligible": 0.054377880184331796,
+              "delegations_per_episode": 0.69140625,
+              "delegated_step_fraction": 0.08343110415851909,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 12.71484375,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1532,
+                  "delegations": 80
+                },
+                "reuse_recompute": {
+                  "eligible": 4821,
+                  "delegations": 266
+                },
+                "commit_revise": {
+                  "eligible": 157,
+                  "delegations": 8
+                }
+              },
+              "delegation_ends": {
+                "commit": 260,
+                "episode_end": 93,
+                "max_steps": 1
+              }
+            },
+            "teacher": {
+              "episodes": 512,
+              "utility": 0.8939611328125,
+              "success": 0.966796875,
+              "cost": 0.0728357421875,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 1.0,
+              "delegated_step_fraction": 1.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0
+            }
+          },
+          "pit_minus": {
+            "d": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.02347990363241846,
+                "ci90": [
+                  0.008822697429729975,
+                  0.039098494041893396
+                ],
+                "ci95": [
+                  0.0061380348531413905,
+                  0.04177962967397586
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.01953125,
+                "ci90": [
+                  0.005859375,
+                  0.03515625
+                ],
+                "ci95": [
+                  0.001953125,
+                  0.037109375
+                ]
+              }
+            },
+            "r1": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.000385916680081538,
+                "ci90": [
+                  -0.00057069259474078,
+                  -0.00022730072455649872
+                ],
+                "ci95": [
+                  -0.0006183701498234957,
+                  -0.0002048602326612355
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            },
+            "r2": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.009705643242581538,
+                "ci90": [
+                  -0.01749400124179843,
+                  -0.0037957907672959024
+                ],
+                "ci95": [
+                  -0.01926679573473062,
+                  -0.002087998154858271
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.009765625,
+                "ci90": [
+                  -0.017578125,
+                  -0.00390625
+                ],
+                "ci95": [
+                  -0.01953125,
+                  -0.001953125
+                ]
+              }
+            },
+            "random": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0009840051949184631,
+                "ci90": [
+                  -0.009120210730861607,
+                  0.011166388517540284
+                ],
+                "ci95": [
+                  -0.010984121234968476,
+                  0.012886587163937417
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.001953125,
+                "ci90": [
+                  -0.01171875,
+                  0.0078125
+                ],
+                "ci95": [
+                  -0.013671875,
+                  0.009765625
+                ]
+              }
+            },
+            "teacher": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0002931432425815376,
+                "ci90": [
+                  -0.00041502947055577585,
+                  -0.00019037642186361709
+                ],
+                "ci95": [
+                  -0.00045193328513377733,
+                  -0.00017711486973430348
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            }
+          }
+        },
+        "foreign4": {
+          "policies": {
+            "d": {
+              "episodes": 512,
+              "utility": 0.8643345703125,
+              "success": 0.935546875,
+              "cost": 0.0712123046875,
+              "delegation_rate_per_eligible": 0.0,
+              "delegations_per_episode": 0.0,
+              "delegated_step_fraction": 0.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {}
+            },
+            "pit": {
+              "episodes": 512,
+              "utility": 0.9078252669591024,
+              "success": 0.974609375,
+              "cost": 0.06678410804089761,
+              "delegation_rate_per_eligible": 0.1775,
+              "delegations_per_episode": 1.38671875,
+              "delegated_step_fraction": 0.24435542607428987,
+              "controller_evals_per_episode": 7.8125,
+              "consults_per_episode": 7.8125,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 820,
+                  "delegations": 241
+                },
+                "reuse_recompute": {
+                  "eligible": 3126,
+                  "delegations": 424
+                },
+                "commit_revise": {
+                  "eligible": 54,
+                  "delegations": 45
+                }
+              },
+              "delegation_ends": {
+                "episode_end": 184,
+                "commit": 524,
+                "max_steps": 2
+              }
+            },
+            "r1": {
+              "episodes": 512,
+              "utility": 0.9116794921875,
+              "success": 0.978515625,
+              "cost": 0.0668361328125,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 2.11328125,
+              "delegated_step_fraction": 0.30538614152399146,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 2.11328125,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 1082,
+                  "delegations": 1082
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 0,
+                  "delegations": 0
+                }
+              },
+              "delegation_ends": {
+                "commit": 750,
+                "episode_end": 327,
+                "max_steps": 5
+              }
+            },
+            "r2": {
+              "episodes": 512,
+              "utility": 0.9130501953125,
+              "success": 0.98046875,
+              "cost": 0.0674185546875,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 0.1875,
+              "delegated_step_fraction": 0.0493087898277519,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.1875,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "reuse_recompute": {
+                  "eligible": 0,
+                  "delegations": 0
+                },
+                "commit_revise": {
+                  "eligible": 96,
+                  "delegations": 96
+                }
+              },
+              "delegation_ends": {
+                "max_steps": 2,
+                "episode_end": 10,
+                "commit": 84
+              }
+            },
+            "random": {
+              "episodes": 512,
+              "utility": 0.9107568359375,
+              "success": 0.978515625,
+              "cost": 0.0677587890625,
+              "delegation_rate_per_eligible": 0.18453309560953868,
+              "delegations_per_episode": 1.6171875,
+              "delegated_step_fraction": 0.2189340507525631,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 8.763671875,
+              "truncated": 0,
+              "unsupported": 0,
+              "by_anchor": {
+                "call": {
+                  "eligible": 975,
+                  "delegations": 192
+                },
+                "reuse_recompute": {
+                  "eligible": 3441,
+                  "delegations": 629
+                },
+                "commit_revise": {
+                  "eligible": 71,
+                  "delegations": 7
+                }
+              },
+              "delegation_ends": {
+                "commit": 589,
+                "episode_end": 233,
+                "max_steps": 6
+              }
+            },
+            "teacher": {
+              "episodes": 512,
+              "utility": 0.908121484375,
+              "success": 0.974609375,
+              "cost": 0.066487890625,
+              "delegation_rate_per_eligible": 1.0,
+              "delegations_per_episode": 1.0,
+              "delegated_step_fraction": 1.0,
+              "controller_evals_per_episode": 0.0,
+              "consults_per_episode": 0.0,
+              "truncated": 0,
+              "unsupported": 0
+            }
+          },
+          "pit_minus": {
+            "d": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.04349069664660239,
+                "ci90": [
+                  0.02742506200928075,
+                  0.060993596728062635
+                ],
+                "ci95": [
+                  0.02404261935941557,
+                  0.0635992918968243
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0390625,
+                "ci90": [
+                  0.0234375,
+                  0.056640625
+                ],
+                "ci95": [
+                  0.021484375,
+                  0.05859375
+                ]
+              }
+            },
+            "r1": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0038542252283976165,
+                "ci90": [
+                  -0.008085330416603882,
+                  -6.279981196201655e-05
+                ],
+                "ci95": [
+                  -0.009588158684546032,
+                  8.580609151599708e-05
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.00390625,
+                "ci90": [
+                  -0.0078125,
+                  0.0
+                ],
+                "ci95": [
+                  -0.009765625,
+                  0.0
+                ]
+              }
+            },
+            "r2": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.005224928353397618,
+                "ci90": [
+                  -0.010809525582204086,
+                  -0.0003119883886049653
+                ],
+                "ci95": [
+                  -0.0120193113451899,
+                  0.00027176531706277424
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.005859375,
+                "ci90": [
+                  -0.01171875,
+                  0.0
+                ],
+                "ci95": [
+                  -0.013671875,
+                  0.0
+                ]
+              }
+            },
+            "random": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.0029315689783976162,
+                "ci90": [
+                  -0.007249213242969752,
+                  0.0008263277980915273
+                ],
+                "ci95": [
+                  -0.008630148924424503,
+                  0.001109660202681223
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.00390625,
+                "ci90": [
+                  -0.0078125,
+                  0.0
+                ],
+                "ci95": [
+                  -0.009765625,
+                  0.0
+                ]
+              }
+            },
+            "teacher": {
+              "utility": {
+                "n": 512,
+                "clusters": 512,
+                "mean": -0.00029621741589761646,
+                "ci90": [
+                  -0.0003966184310353984,
+                  -0.0002098782901594643
+                ],
+                "ci95": [
+                  -0.00042182655907060175,
+                  -0.0001997159129588676
+                ]
+              },
+              "success": {
+                "n": 512,
+                "clusters": 512,
+                "mean": 0.0,
+                "ci90": [
+                  0.0,
+                  0.0
+                ],
+                "ci95": [
+                  0.0,
+                  0.0
+                ]
+              }
+            }
+          }
+        }
+      },
+      "iid_group": {
+        "policies": {
+          "d": {
+            "episodes": 1024,
+            "utility": 0.87755146484375,
+            "success": 0.95703125,
+            "cost": 0.07947978515625,
+            "delegation_rate_per_eligible": 0.0,
+            "delegations_per_episode": 0.0,
+            "delegated_step_fraction": 0.0,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 0.0,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "reuse_recompute": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "commit_revise": {
+                "eligible": 0,
+                "delegations": 0
+              }
+            },
+            "delegation_ends": {}
+          },
+          "pit": {
+            "episodes": 1024,
+            "utility": 0.905234971431316,
+            "success": 0.98046875,
+            "cost": 0.07523377856868399,
+            "delegation_rate_per_eligible": 0.03052860488457678,
+            "delegations_per_episode": 0.3564453125,
+            "delegated_step_fraction": 0.05703396175049343,
+            "controller_evals_per_episode": 11.67578125,
+            "consults_per_episode": 11.67578125,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 3046,
+                "delegations": 218
+              },
+              "reuse_recompute": {
+                "eligible": 8778,
+                "delegations": 82
+              },
+              "commit_revise": {
+                "eligible": 132,
+                "delegations": 65
+              }
+            },
+            "delegation_ends": {
+              "commit": 306,
+              "episode_end": 58,
+              "max_steps": 1
+            }
+          },
+          "r1": {
+            "episodes": 1024,
+            "utility": 0.90550517578125,
+            "success": 0.98046875,
+            "cost": 0.07496357421875,
+            "delegation_rate_per_eligible": 1.0,
+            "delegations_per_episode": 2.86328125,
+            "delegated_step_fraction": 0.3574771943011377,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 2.86328125,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 2932,
+                "delegations": 2932
+              },
+              "reuse_recompute": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "commit_revise": {
+                "eligible": 0,
+                "delegations": 0
+              }
+            },
+            "delegation_ends": {
+              "commit": 2073,
+              "episode_end": 857,
+              "max_steps": 2
+            }
+          },
+          "r2": {
+            "episodes": 1024,
+            "utility": 0.90635556640625,
+            "success": 0.9814453125,
+            "cost": 0.07508974609374999,
+            "delegation_rate_per_eligible": 1.0,
+            "delegations_per_episode": 0.1484375,
+            "delegated_step_fraction": 0.030153677653420953,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 0.1484375,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "reuse_recompute": {
+                "eligible": 0,
+                "delegations": 0
+              },
+              "commit_revise": {
+                "eligible": 152,
+                "delegations": 152
+              }
+            },
+            "delegation_ends": {
+              "commit": 133,
+              "episode_end": 19
+            }
+          },
+          "random": {
+            "episodes": 1024,
+            "utility": 0.89517314453125,
+            "success": 0.9736328125,
+            "cost": 0.07845966796875,
+            "delegation_rate_per_eligible": 0.03164029975020816,
+            "delegations_per_episode": 0.408203125,
+            "delegated_step_fraction": 0.05247185511502692,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 12.9013671875,
+            "truncated": 0,
+            "unsupported": 0,
+            "by_anchor": {
+              "call": {
+                "eligible": 3212,
+                "delegations": 99
+              },
+              "reuse_recompute": {
+                "eligible": 9744,
+                "delegations": 311
+              },
+              "commit_revise": {
+                "eligible": 255,
+                "delegations": 8
+              }
+            },
+            "delegation_ends": {
+              "commit": 300,
+              "episode_end": 115,
+              "max_steps": 3
+            }
+          },
+          "teacher": {
+            "episodes": 1024,
+            "utility": 0.90434892578125,
+            "success": 0.9794921875,
+            "cost": 0.07514326171874999,
+            "delegation_rate_per_eligible": 1.0,
+            "delegations_per_episode": 1.0,
+            "delegated_step_fraction": 1.0,
+            "controller_evals_per_episode": 0.0,
+            "consults_per_episode": 0.0,
+            "truncated": 0,
+            "unsupported": 0
+          }
+        },
+        "pit_minus": {
+          "d": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.027683506587566013,
+              "ci90": [
+                0.019189704723887858,
+                0.035958960435613425
+              ],
+              "ci95": [
+                0.01780496882820705,
+                0.03816793871261934
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.0234375,
+              "ci90": [
+                0.015625,
+                0.03125
+              ],
+              "ci95": [
+                0.0146484375,
+                0.033203125
+              ]
+            }
+          },
+          "r1": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": -0.00027020434993398973,
+              "ci90": [
+                -0.0005908878532532984,
+                -5.427362174307469e-05
+              ],
+              "ci95": [
+                -0.0006615765168604709,
+                -3.2872912854165806e-05
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.0,
+              "ci90": [
+                0.0,
+                0.0
+              ],
+              "ci95": [
+                0.0,
+                0.0
+              ]
+            }
+          },
+          "r2": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": -0.0011205949749339898,
+              "ci90": [
+                -0.002973235754891182,
+                3.115525097898215e-06
+              ],
+              "ci95": [
+                -0.003399874103888071,
+                6.291933727521444e-05
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": -0.0009765625,
+              "ci90": [
+                -0.0029296875,
+                0.0
+              ],
+              "ci95": [
+                -0.0029296875,
+                0.0
+              ]
+            }
+          },
+          "random": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.01006182690006601,
+              "ci90": [
+                0.00545995672027265,
+                0.0150786272102146
+              ],
+              "ci95": [
+                0.004784377298361456,
+                0.016390215962425632
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.0068359375,
+              "ci90": [
+                0.0029296875,
+                0.01171875
+              ],
+              "ci95": [
+                0.001953125,
+                0.0126953125
+              ]
+            }
+          },
+          "teacher": {
+            "utility": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.0008860456500660104,
+              "ci90": [
+                -0.00011546783321849462,
+                0.0027760986684744826
+              ],
+              "ci95": [
+                -0.0001308591615682895,
+                0.002829704150551397
+              ]
+            },
+            "success": {
+              "n": 1024,
+              "clusters": 1024,
+              "mean": 0.0009765625,
+              "ci90": [
+                0.0,
+                0.0029296875
+              ],
+              "ci95": [
+                0.0,
+                0.0029296875
+              ]
+            }
+          }
+        }
+      },
+      "PI-T-1": {
+        "utility_diff": 0.02768350658756602,
+        "success_diff": 0.0234375,
+        "utility_diff_ci": {
+          "n": 1024,
+          "clusters": 1024,
+          "mean": 0.027683506587566013,
+          "ci90": [
+            0.019189704723887858,
+            0.035958960435613425
+          ],
+          "ci95": [
+            0.01780496882820705,
+            0.03816793871261934
+          ]
+        },
+        "pass": true
+      },
+      "PI-T-2": {
+        "comparators_utility": {
+          "teacher": 0.90434892578125,
+          "r1": 0.90550517578125,
+          "r2": 0.90635556640625,
+          "random": 0.89517314453125
+        },
+        "best_comparator": "r2",
+        "utility_diff_vs_best": -0.0011205949749339972,
+        "utility_diff_vs_best_ci": {
+          "n": 1024,
+          "clusters": 1024,
+          "mean": -0.0011205949749339898,
+          "ci90": [
+            -0.002973235754891182,
+            3.115525097898215e-06
+          ],
+          "ci95": [
+            -0.003399874103888071,
+            6.291933727521444e-05
+          ]
+        },
+        "delegated_step_fraction": {
+          "pit": 0.05703396175049343,
+          "teacher": 1.0
+        },
+        "pass": false
+      },
+      "delegation_regret": {
+        "label": "branch-evaluated delegation decisions of pi_T (1/16 world subsample; Q = utility-to-go under pi_T continuation; hidden-state rollouts, evaluation only)",
+        "decisions": 1391,
+        "fired": 93,
+        "regret_per_decision": {
+          "n": 1391,
+          "clusters": 139,
+          "mean": 1.0300470473636555e-05,
+          "ci90": [
+            3.8032462531401745e-06,
+            1.798200907995082e-05
+          ],
+          "ci95": [
+            3.11655580801703e-06,
+            2.0064064770414045e-05
+          ]
+        },
+        "adv_delegate_where_fired": {
+          "n": 93,
+          "clusters": 58,
+          "mean": 0.0007709956558550901,
+          "ci90": [
+            0.00043844974680087964,
+            0.0011222595168772162
+          ],
+          "ci95": [
+            0.00038106445390202027,
+            0.0011954407228944326
+          ]
+        },
+        "adv_delegate_where_not_fired": {
+          "n": 1298,
+          "clusters": 136,
+          "mean": -5.910544898938545e-06,
+          "ci90": [
+            -1.757291842958035e-05,
+            2.5405833329743064e-06
+          ],
+          "ci95": [
+            -1.9495563284623632e-05,
+            3.4194491289328096e-06
+          ]
+        },
+        "false_positive_rate": 0.0,
+        "missed_rate": 0.0,
+        "by_anchor": {
+          "call": {
+            "decisions": 319,
+            "fired": 35,
+            "mean_adv_delegate": 0.00011131623022751175,
+            "mean_adv_where_fired": 0.0010143114933254022,
+            "mean_regret": 2.4165669411623284e-05
+          },
+          "commit_revise": {
+            "decisions": 16,
+            "fired": 14,
+            "mean_adv_delegate": 0.0016437737438523585,
+            "mean_adv_where_fired": 0.0018785929111045205,
+            "mean_regret": 4.9466359029748386e-09
+          },
+          "reuse_recompute": {
+            "decisions": 1056,
+            "fired": 44,
+            "mean_adv_delegate": 2.102700162393143e-06,
+            "mean_adv_where_fired": 0.00022503165846979564,
+            "mean_regret": 6.268017746539937e-06
+          }
+        }
+      }
+    }
+  },
+  "summary": {
+    "PI-T-1_pass_lineages": 3,
+    "PI-T-2_pass_lineages": 0,
+    "lineages": 3
+  }
+}
