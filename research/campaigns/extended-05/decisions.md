@@ -55,3 +55,13 @@
   - **Reading:** broader exposure to other condition combinations partly improves probing and lowers regret on the unseen U+C combination, but below the registered threshold. Supplied belief does not fix probing (as predicted: belief = prior at the first decision); it makes the policy more conservative. The modular encoder hurts.
   - Together with B-LOC (value-estimate errors dominate), the failure looks like **acquisition of computation values under unseen interactions**, partly helped by combination diversity. It is not belief tracking and not a lack of factorized inputs.
   - Realized regret is noisy (it goes negative on the flag-sensitive subset); gap regret is the steadier measure.
+- 2026-09-27T02:57Z: **A-HR2 PASSES both gates** (12 jobs, exit 0; research/results/campaign-05/a-hr2/analysis.json; 1,536 episodes, 512 clusters).
+  - **G1a-multi** (hindsight, delegate option T): **.0261 per episode** (90% CI .0159–.0375), ≥ .02. T + O(I): .0283. The budget option B read from A-HR: .0061.
+  - **G1b-multi** (cross-fitted same-information single deviation to T): **+.0214** (CI .0105–.0332). ≥ .01 and the CI excludes 0.
+  - The gain comes from D-failure episodes (+.535, n = 70), with −.003 on D successes (n = 1,466). By firing anchor: call +.12, commit_revise +.19, reuse_recompute +.04 (CI includes 0).
+  - Per design, proceed to A-PI with the passing option class: **learn when to delegate to the supplied teacher sub-policy**.
+  - **Registered before A-PI (A-PI-T):**
+    - the teacher alone (always-teacher, ~.90 vs D ~.87) plus simple trigger rules and random-matched delegation are comparators;
+    - PI-T-1 = improvement over D;
+    - PI-T-2 = value beyond simple rules (it must beat always-teacher and the rules while delegating less than always-teacher).
+  - Scope: supplied sub-policy; the learned component is only when to invoke it.

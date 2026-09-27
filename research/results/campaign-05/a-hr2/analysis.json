@@ -1,0 +1,2203 @@
+{
+  "version": "e05-hr-analysis-v2",
+  "thr": 0.01,
+  "groups": {
+    "x1-r0/iid_f0/hr": {
+      "hindsight": {
+        "label": "HINDSIGHT hidden-state bound (max over realized true-world branches): optimistic, non-deployable; a necessary condition only (G1a); abstain is its own class and never counts toward G1",
+        "states": 1834,
+        "episodes": 256,
+        "worlds": 256,
+        "state_H_excl_abstain": {
+          "n": 1834,
+          "clusters": 256,
+          "mean": 0.0006193565976008718,
+          "ci90": [
+            0.00034882315876521355,
+            0.0009477777788652474
+          ],
+          "ci95": [
+            0.00031193057391165,
+            0.0010165068506710004
+          ],
+          "quantiles": {
+            "0.5": 0.0,
+            "0.9": 0.0,
+            "0.95": 0.0007000000000000339,
+            "0.99": 0.026337000000000048
+          },
+          "frac_ge_thr": 0.014721919302071973
+        },
+        "state_H_incl_abstain": {
+          "n": 1834,
+          "clusters": 256,
+          "mean": 0.006984296619411123,
+          "ci90": [
+            0.0035751846463275942,
+            0.010949281283620495
+          ],
+          "ci95": [
+            0.003104242344312078,
+            0.011723936774095464
+          ],
+          "quantiles": {
+            "0.5": 0.0,
+            "0.9": 0.0006999999999999229,
+            "0.95": 0.008849999999999861,
+            "0.99": 0.1858
+          },
+          "frac_ge_thr": 0.04961832061068702
+        },
+        "state_H_excl_abstain_by_anchor": {
+          "call": {
+            "states": 329,
+            "mean": 0.0029486322188449813,
+            "frac_ge_thr": 0.06382978723404255
+          },
+          "commit_revise": {
+            "states": 16,
+            "mean": 0.0034250000000000044,
+            "frac_ge_thr": 0.125
+          },
+          "other": {
+            "states": 588,
+            "mean": 0.00011258503401360551,
+            "frac_ge_thr": 0.003401360544217687
+          },
+          "reuse_recompute": {
+            "states": 901,
+            "mean": 4.972253052164272e-05,
+            "frac_ge_thr": 0.0022197558268590455
+          }
+        },
+        "state_H_excl_abstain_by_D_episode_outcome": {
+          "D_failure": {
+            "states": 72,
+            "mean": 0.007504166666666667,
+            "frac_ge_thr": 0.1111111111111111
+          },
+          "D_success": {
+            "states": 1762,
+            "mean": 0.000338024971623155,
+            "frac_ge_thr": 0.010783200908059024
+          }
+        },
+        "state_best_gain_by_option_class": {
+          "abstain": {
+            "states_with_class": 1834,
+            "mean": -0.9171922573609597,
+            "mean_positive_part": 0.0066595419847328245,
+            "frac_ge_thr": 0.03925845147219193
+          },
+          "budget": {
+            "states_with_class": 329,
+            "mean": -0.0028802431610942237,
+            "mean_positive_part": 0.0011507598784194534,
+            "frac_ge_thr": 0.0364741641337386
+          },
+          "call_now": {
+            "states_with_class": 160,
+            "mean": -0.011566875000000008,
+            "mean_positive_part": 0.0004137500000000002,
+            "frac_ge_thr": 0.0125
+          },
+          "call_other": {
+            "states_with_class": 4,
+            "mean": 0.0074750000000000025,
+            "mean_positive_part": 0.008275000000000005,
+            "frac_ge_thr": 0.5
+          },
+          "not_call": {
+            "states_with_class": 329,
+            "mean": -0.017196048632218845,
+            "mean_positive_part": 0.0017978723404255283,
+            "frac_ge_thr": 0.02735562310030395
+          },
+          "recompute": {
+            "states_with_class": 602,
+            "mean": -0.002645681063122926,
+            "mean_positive_part": 6.64451827242544e-07,
+            "frac_ge_thr": 0.0
+          },
+          "reuse": {
+            "states_with_class": 50,
+            "mean": -0.050238000000000005,
+            "mean_positive_part": 0.0008880000000000015,
+            "frac_ge_thr": 0.04
+          },
+          "revise_select": {
+            "states_with_class": 11,
+            "mean": -0.09408181818181817,
+            "mean_positive_part": 0.004981818181818188,
+            "frac_ge_thr": 0.18181818181818182
+          }
+        },
+        "episode_single_deviation_H_excl_abstain": {
+          "n": 256,
+          "clusters": 256,
+          "mean": 0.0029695312499999947,
+          "ci90": [
+            0.0019643359374999962,
+            0.004108046874999996
+          ],
+          "ci95": [
+            0.001774541015624995,
+            0.004315390624999995
+          ]
+        },
+        "episode_single_deviation_H_incl_abstain": {
+          "n": 256,
+          "clusters": 256,
+          "mean": 0.009420312499999995,
+          "ci90": [
+            0.005552128906249997,
+            0.013894492187499996
+          ],
+          "ci95": [
+            0.004936933593749992,
+            0.014730078124999994
+          ]
+        },
+        "episode_single_deviation_H_by_class": {
+          "abstain": 0.00759921875,
+          "budget": 0.0014789062500000006,
+          "call_now": 0.00025859375000000014,
+          "call_other": 0.00012929687500000007,
+          "not_call": 0.0016328124999999945,
+          "recompute": 7.812500000000224e-07,
+          "reuse": 0.00015820312500000025,
+          "revise_select": 0.00021406250000000028
+        },
+        "all_states_episodes_H_excl_abstain": {
+          "n": 17,
+          "clusters": 17,
+          "mean": 0.0006176470588235332,
+          "ci90": [
+            0.0005352941176470456,
+            0.0007000000000000078
+          ],
+          "ci95": [
+            0.0004941176470588279,
+            0.0007000000000000143
+          ]
+        },
+        "all_states_episodes_H_incl_abstain": {
+          "n": 17,
+          "clusters": 17,
+          "mean": 0.0006176470588235332,
+          "ci90": [
+            0.0005352941176470456,
+            0.0007000000000000078
+          ],
+          "ci95": [
+            0.0004941176470588279,
+            0.0007000000000000143
+          ]
+        },
+        "G1_hindsight_excl_abstain_ge_.02": false,
+        "thr": 0.01
+      }
+    },
+    "x1-r0/iid_f2/hr": {
+      "hindsight": {
+        "label": "HINDSIGHT hidden-state bound (max over realized true-world branches): optimistic, non-deployable; a necessary condition only (G1a); abstain is its own class and never counts toward G1",
+        "states": 1934,
+        "episodes": 256,
+        "worlds": 256,
+        "state_H_excl_abstain": {
+          "n": 1934,
+          "clusters": 256,
+          "mean": 0.002094725956566701,
+          "ci90": [
+            0.0008778115951480376,
+            0.003592799018776569
+          ],
+          "ci95": [
+            0.0007099797208139457,
+            0.003995191880674036
+          ],
+          "quantiles": {
+            "0.5": 0.0,
+            "0.9": 0.0,
+            "0.95": 0.0007000000000000339,
+            "0.99": 0.03218100000000032
+          },
+          "frac_ge_thr": 0.025853154084798345
+        },
+        "state_H_incl_abstain": {
+          "n": 1934,
+          "clusters": 256,
+          "mean": 0.018340486039296795,
+          "ci90": [
+            0.00887798266426761,
+            0.027513781153460908
+          ],
+          "ci95": [
+            0.007281883308981983,
+            0.029137223829472755
+          ],
+          "quantiles": {
+            "0.5": 0.0,
+            "0.9": 0.06910000000000001,
+            "0.95": 0.13591499999999995,
+            "0.99": 0.18073900000000015
+          },
+          "frac_ge_thr": 0.18200620475698034
+        },
+        "state_H_excl_abstain_by_anchor": {
+          "call": {
+            "states": 303,
+            "mean": 0.00393102310231023,
+            "frac_ge_thr": 0.0924092409240924
+          },
+          "commit_revise": {
+            "states": 43,
+            "mean": 0.001525581395348839,
+            "frac_ge_thr": 0.09302325581395349
+          },
+          "other": {
+            "states": 574,
+            "mean": 0.0045667247386759575,
+            "frac_ge_thr": 0.024390243902439025
+          },
+          "reuse_recompute": {
+            "states": 1014,
+            "mean": 0.00017080867850098618,
+            "frac_ge_thr": 0.0039447731755424065
+          }
+        },
+        "state_H_excl_abstain_by_D_episode_outcome": {
+          "D_failure": {
+            "states": 366,
+            "mean": 0.00940191256830601,
+            "frac_ge_thr": 0.09016393442622951
+          },
+          "D_success": {
+            "states": 1568,
+            "mean": 0.00038909438775510194,
+            "frac_ge_thr": 0.010841836734693877
+          }
+        },
+        "state_best_gain_by_option_class": {
+          "abstain": {
+            "states_with_class": 1934,
+            "mean": -0.7660338159255429,
+            "mean_positive_part": 0.017049172699069286,
+            "frac_ge_thr": 0.17321613236814892
+          },
+          "budget": {
+            "states_with_class": 303,
+            "mean": 0.0013633663366336628,
+            "mean_positive_part": 0.0022290429042904282,
+            "frac_ge_thr": 0.0594059405940594
+          },
+          "call_now": {
+            "states_with_class": 374,
+            "mean": -0.044980481283422476,
+            "mean_positive_part": 0.007008823529411764,
+            "frac_ge_thr": 0.0374331550802139
+          },
+          "call_other": {
+            "states_with_class": 115,
+            "mean": -0.002273043478260873,
+            "mean_positive_part": 0.0015739130434782604,
+            "frac_ge_thr": 0.043478260869565216
+          },
+          "not_call": {
+            "states_with_class": 303,
+            "mean": -0.009213861386138618,
+            "mean_positive_part": 0.00196996699669967,
+            "frac_ge_thr": 0.0429042904290429
+          },
+          "recompute": {
+            "states_with_class": 784,
+            "mean": -0.0020360969387755146,
+            "mean_positive_part": 0.0001857142857142857,
+            "frac_ge_thr": 0.003826530612244898
+          },
+          "reuse": {
+            "states_with_class": 191,
+            "mean": -0.009286910994764398,
+            "mean_positive_part": 0.000763350785340314,
+            "frac_ge_thr": 0.015706806282722512
+          },
+          "reuse_retrieve": {
+            "states_with_class": 310,
+            "mean": -0.0004951612903225858,
+            "mean_positive_part": 0.000416774193548387,
+            "frac_ge_thr": 0.0064516129032258064
+          },
+          "revise_select": {
+            "states_with_class": 14,
+            "mean": -0.1455,
+            "mean_positive_part": 0.004685714285714291,
+            "frac_ge_thr": 0.2857142857142857
+          }
+        },
+        "episode_single_deviation_H_excl_abstain": {
+          "n": 256,
+          "clusters": 256,
+          "mean": 0.011025,
+          "ci90": [
+            0.0025826562499999994,
+            0.021194003906249988
+          ],
+          "ci95": [
+            0.0021423730468749995,
+            0.023913740234374998
+          ]
+        },
+        "episode_single_deviation_H_incl_abstain": {
+          "n": 256,
+          "clusters": 256,
+          "mean": 0.018708984375,
+          "ci90": [
+            0.009599863281250003,
+            0.030420507812499997
+          ],
+          "ci95": [
+            0.007997080078125,
+            0.03367910156249999
+          ]
+        },
+        "episode_single_deviation_H_by_class": {
+          "abstain": 0.00976015625,
+          "budget": 0.0017734374999999994,
+          "call_now": 0.0086234375,
+          "call_other": 0.00041484374999999974,
+          "not_call": 0.0012734374999999998,
+          "recompute": 0.00033320312499999984,
+          "reuse": 0.00025234374999999996,
+          "reuse_retrieve": 0.00025234374999999996,
+          "revise_select": 0.00019140625000000028
+        },
+        "all_states_episodes_H_excl_abstain": {
+          "n": 17,
+          "clusters": 17,
+          "mean": 0.010311764705882347,
+          "ci90": [
+            0.002405882352941176,
+            0.02007647058823529
+          ],
+          "ci95": [
+            0.0004941176470588148,
+            0.021982499999999995
+          ]
+        },
+        "all_states_episodes_H_incl_abstain": {
+          "n": 17,
+          "clusters": 17,
+          "mean": 0.032070588235294115,
+          "ci90": [
+            0.010470588235294117,
+            0.06314794117647057
+          ],
+          "ci95": [
+            0.0004941176470588148,
+            0.06433632352941177
+          ]
+        },
+        "G1_hindsight_excl_abstain_ge_.02": false,
+        "thr": 0.01
+      }
+    },
+    "x1-r1/iid_f0/hr": {
+      "hindsight": {
+        "label": "HINDSIGHT hidden-state bound (max over realized true-world branches): optimistic, non-deployable; a necessary condition only (G1a); abstain is its own class and never counts toward G1",
+        "states": 1828,
+        "episodes": 256,
+        "worlds": 256,
+        "state_H_excl_abstain": {
+          "n": 1828,
+          "clusters": 256,
+          "mean": 0.0003969365426695834,
+          "ci90": [
+            0.0002678484013970976,
+            0.0005443062324273658
+          ],
+          "ci95": [
+            0.0002458743960710945,
+            0.0005814680841067288
+          ],
+          "quantiles": {
+            "0.5": 0.0,
+            "0.9": 0.0,
+            "0.95": 0.0007000000000000339,
+            "0.99": 0.015492000000000008
+          },
+          "frac_ge_thr": 0.014223194748358862
+        },
+        "state_H_incl_abstain": {
+          "n": 1828,
+          "clusters": 256,
+          "mean": 0.005055251641137856,
+          "ci90": [
+            0.0023323240677688233,
+            0.008304094880207823
+          ],
+          "ci95": [
+            0.001858111594196119,
+            0.009155605188594113
+          ],
+          "quantiles": {
+            "0.5": 0.0,
+            "0.9": 0.0,
+            "0.95": 0.0021999999999999797,
+            "0.99": 0.16383
+          },
+          "frac_ge_thr": 0.04540481400437637
+        },
+        "state_H_excl_abstain_by_anchor": {
+          "call": {
+            "states": 329,
+            "mean": 0.0016489361702127618,
+            "frac_ge_thr": 0.057750759878419454
+          },
+          "commit_revise": {
+            "states": 17,
+            "mean": 0.0019941176470588194,
+            "frac_ge_thr": 0.058823529411764705
+          },
+          "other": {
+            "states": 587,
+            "mean": 0.00013901192504258954,
+            "frac_ge_thr": 0.0068143100511073255
+          },
+          "reuse_recompute": {
+            "states": 895,
+            "mean": 7.55307262569831e-05,
+            "frac_ge_thr": 0.0022346368715083797
+          }
+        },
+        "state_H_excl_abstain_by_D_episode_outcome": {
+          "D_failure": {
+            "states": 69,
+            "mean": 0.003621739130434784,
+            "frac_ge_thr": 0.15942028985507245
+          },
+          "D_success": {
+            "states": 1759,
+            "mean": 0.0002704377487208632,
+            "frac_ge_thr": 0.008527572484366117
+          }
+        },
+        "state_best_gain_by_option_class": {
+          "abstain": {
+            "states_with_class": 1827,
+            "mean": -0.9213211822660098,
+            "mean_positive_part": 0.004797646414887794,
+            "frac_ge_thr": 0.037219485495347565
+          },
+          "budget": {
+            "states_with_class": 329,
+            "mean": -0.005122188449848023,
+            "mean_positive_part": 0.0011340425531914896,
+            "frac_ge_thr": 0.04559270516717325
+          },
+          "call_now": {
+            "states_with_class": 159,
+            "mean": -0.006111320754716985,
+            "mean_positive_part": 0.0005132075471698117,
+            "frac_ge_thr": 0.025157232704402517
+          },
+          "call_other": {
+            "states_with_class": 4,
+            "mean": 0.003925000000000001,
+            "mean_positive_part": 0.0050000000000000044,
+            "frac_ge_thr": 0.25
+          },
+          "not_call": {
+            "states_with_class": 329,
+            "mean": -0.018620668693009122,
+            "mean_positive_part": 0.0005404255319148891,
+            "frac_ge_thr": 0.0121580547112462
+          },
+          "recompute": {
+            "states_with_class": 598,
+            "mean": -0.0024769230769230792,
+            "mean_positive_part": 9.548494983277594e-05,
+            "frac_ge_thr": 0.0033444816053511705
+          },
+          "reuse": {
+            "states_with_class": 40,
+            "mean": -0.02898250000000001,
+            "mean_positive_part": 0.0006624999999999964,
+            "frac_ge_thr": 0.025
+          },
+          "revise_select": {
+            "states_with_class": 11,
+            "mean": -0.003990909090909106,
+            "mean_positive_part": 0.0030818181818181756,
+            "frac_ge_thr": 0.09090909090909091
+          }
+        },
+        "episode_single_deviation_H_excl_abstain": {
+          "n": 256,
+          "clusters": 256,
+          "mean": 0.002105859374999994,
+          "ci90": [
+            0.0014601171874999914,
+            0.002762558593749994
+          ],
+          "ci95": [
+            0.0013550195312499892,
+            0.002908652343749994
+          ]
+        },
+        "episode_single_deviation_H_incl_abstain": {
+          "n": 256,
+          "clusters": 256,
+          "mean": 0.007371093749999994,
+          "ci90": [
+            0.0042003515624999925,
+            0.01119306640624999
+          ],
+          "ci95": [
+            0.0035807226562499963,
+            0.012049218749999993
+          ]
+        },
+        "episode_single_deviation_H_by_class": {
+          "abstain": 0.00582734375,
+          "budget": 0.0013964843750000006,
+          "call_now": 0.0002593750000000003,
+          "call_other": 7.812500000000007e-05,
+          "not_call": 0.0005964843749999937,
+          "recompute": 8.398437500000029e-05,
+          "reuse": 0.00010351562499999944,
+          "revise_select": 0.00013242187499999973
+        },
+        "all_states_episodes_H_excl_abstain": {
+          "n": 17,
+          "clusters": 17,
+          "mean": 0.0005764705882352959,
+          "ci90": [
+            0.0004529411764705906,
+            0.000658823529411777
+          ],
+          "ci95": [
+            0.000452941176470571,
+            0.0006999999999999948
+          ]
+        },
+        "all_states_episodes_H_incl_abstain": {
+          "n": 17,
+          "clusters": 17,
+          "mean": 0.0005764705882352959,
+          "ci90": [
+            0.0004529411764705906,
+            0.000658823529411777
+          ],
+          "ci95": [
+            0.000452941176470571,
+            0.0006999999999999948
+          ]
+        },
+        "G1_hindsight_excl_abstain_ge_.02": false,
+        "thr": 0.01
+      }
+    },
+    "x1-r1/iid_f2/hr": {
+      "hindsight": {
+        "label": "HINDSIGHT hidden-state bound (max over realized true-world branches): optimistic, non-deployable; a necessary condition only (G1a); abstain is its own class and never counts toward G1",
+        "states": 1802,
+        "episodes": 256,
+        "worlds": 256,
+        "state_H_excl_abstain": {
+          "n": 1802,
+          "clusters": 256,
+          "mean": 0.002942730299667036,
+          "ci90": [
+            0.001331920867235355,
+            0.004932491976521348
+          ],
+          "ci95": [
+            0.001024812161210909,
+            0.005280548005954502
+          ],
+          "quantiles": {
+            "0.5": 0.0,
+            "0.9": 0.0,
+            "0.95": 0.0007000000000000339,
+            "0.99": 0.026700000000000057
+          },
+          "frac_ge_thr": 0.021642619311875694
+        },
+        "state_H_incl_abstain": {
+          "n": 1802,
+          "clusters": 256,
+          "mean": 0.01390416204217536,
+          "ci90": [
+            0.006552366096317831,
+            0.02275457046689353
+          ],
+          "ci95": [
+            0.005398817800111116,
+            0.024399640238011375
+          ],
+          "quantiles": {
+            "0.5": 0.0,
+            "0.9": 0.04565000000000005,
+            "0.95": 0.0951449999999998,
+            "0.99": 0.179189
+          },
+          "frac_ge_thr": 0.14206437291897892
+        },
+        "state_H_excl_abstain_by_anchor": {
+          "call": {
+            "states": 290,
+            "mean": 0.006018275862068966,
+            "frac_ge_thr": 0.07931034482758621
+          },
+          "commit_revise": {
+            "states": 33,
+            "mean": 0.0015696969696969683,
+            "frac_ge_thr": 0.06060606060606061
+          },
+          "other": {
+            "states": 563,
+            "mean": 0.006006039076376555,
+            "frac_ge_thr": 0.021314387211367674
+          },
+          "reuse_recompute": {
+            "states": 916,
+            "mean": 0.00013569868995633177,
+            "frac_ge_thr": 0.002183406113537118
+          }
+        },
+        "state_H_excl_abstain_by_D_episode_outcome": {
+          "D_failure": {
+            "states": 257,
+            "mean": 0.019049027237354084,
+            "frac_ge_thr": 0.10116731517509728
+          },
+          "D_success": {
+            "states": 1545,
+            "mean": 0.00026355987055016176,
+            "frac_ge_thr": 0.008414239482200648
+          }
+        },
+        "state_best_gain_by_option_class": {
+          "abstain": {
+            "states_with_class": 1800,
+            "mean": -0.8181279444444445,
+            "mean_positive_part": 0.011759833333333334,
+            "frac_ge_thr": 0.135
+          },
+          "budget": {
+            "states_with_class": 290,
+            "mean": 0.0009427586206896548,
+            "mean_positive_part": 0.0013803448275862063,
+            "frac_ge_thr": 0.04482758620689655
+          },
+          "call_now": {
+            "states_with_class": 363,
+            "mean": -0.0460426997245179,
+            "mean_positive_part": 0.009315151515151516,
+            "frac_ge_thr": 0.03305785123966942
+          },
+          "call_other": {
+            "states_with_class": 108,
+            "mean": -0.003253703703703707,
+            "mean_positive_part": 0.0007333333333333328,
+            "frac_ge_thr": 0.037037037037037035
+          },
+          "not_call": {
+            "states_with_class": 290,
+            "mean": -0.017271724137931037,
+            "mean_positive_part": 0.004596551724137931,
+            "frac_ge_thr": 0.03103448275862069
+          },
+          "recompute": {
+            "states_with_class": 683,
+            "mean": -0.0029739385065885833,
+            "mean_positive_part": 2.9721815519765717e-05,
+            "frac_ge_thr": 0.0014641288433382138
+          },
+          "reuse": {
+            "states_with_class": 87,
+            "mean": -0.0034919540229885115,
+            "mean_positive_part": 0.001017241379310345,
+            "frac_ge_thr": 0.011494252873563218
+          },
+          "reuse_retrieve": {
+            "states_with_class": 292,
+            "mean": -0.0010965753424657591,
+            "mean_positive_part": 6.50684931506846e-05,
+            "frac_ge_thr": 0.0
+          },
+          "revise_select": {
+            "states_with_class": 14,
+            "mean": -0.0010500000000000112,
+            "mean_positive_part": 0.003699999999999997,
+            "frac_ge_thr": 0.14285714285714285
+          }
+        },
+        "episode_single_deviation_H_excl_abstain": {
+          "n": 256,
+          "clusters": 256,
+          "mean": 0.017243359375,
+          "ci90": [
+            0.006210703124999998,
+            0.030675058593749995
+          ],
+          "ci95": [
+            0.005532363281249998,
+            0.032764892578124996
+          ]
+        },
+        "episode_single_deviation_H_incl_abstain": {
+          "n": 256,
+          "clusters": 256,
+          "mean": 0.022231640625,
+          "ci90": [
+            0.011298007812499998,
+            0.03577931640625
+          ],
+          "ci95": [
+            0.009623242187500002,
+            0.039039179687499995
+          ]
+        },
+        "episode_single_deviation_H_by_class": {
+          "abstain": 0.007303906249999999,
+          "budget": 0.0013859374999999991,
+          "call_now": 0.01136171875,
+          "call_other": 0.0001749999999999998,
+          "not_call": 0.004460546875000001,
+          "recompute": 7.929687499999994e-05,
+          "reuse": 0.00031796874999999995,
+          "reuse_retrieve": 1.7968749999999973e-05,
+          "revise_select": 0.0001898437499999998
+        },
+        "all_states_episodes_H_excl_abstain": {
+          "n": 17,
+          "clusters": 17,
+          "mean": 0.009929411764705872,
+          "ci90": [
+            0.0005235294117646947,
+            0.023423529411764697
+          ],
+          "ci95": [
+            0.0004411764705882202,
+            0.025923529411764692
+          ]
+        },
+        "all_states_episodes_H_incl_abstain": {
+          "n": 17,
+          "clusters": 17,
+          "mean": 0.02409411764705881,
+          "ci90": [
+            0.005723529411764676,
+            0.0473155882352941
+          ],
+          "ci95": [
+            0.0004529411764705775,
+            0.051299117647058794
+          ]
+        },
+        "G1_hindsight_excl_abstain_ge_.02": false,
+        "thr": 0.01
+      }
+    },
+    "x1-r2/iid_f0/hr": {
+      "hindsight": {
+        "label": "HINDSIGHT hidden-state bound (max over realized true-world branches): optimistic, non-deployable; a necessary condition only (G1a); abstain is its own class and never counts toward G1",
+        "states": 1839,
+        "episodes": 256,
+        "worlds": 256,
+        "state_H_excl_abstain": {
+          "n": 1839,
+          "clusters": 256,
+          "mean": 0.0009305057096247962,
+          "ci90": [
+            0.00029252831552015575,
+            0.0019904866610536195
+          ],
+          "ci95": [
+            0.00025758734472951033,
+            0.002200989937924298
+          ],
+          "quantiles": {
+            "0.5": 0.0,
+            "0.9": 0.0,
+            "0.95": 0.0,
+            "0.99": 0.021031999999999565
+          },
+          "frac_ge_thr": 0.012506797172376292
+        },
+        "state_H_incl_abstain": {
+          "n": 1839,
+          "clusters": 256,
+          "mean": 0.006273626971179989,
+          "ci90": [
+            0.003133666089747528,
+            0.00996967711107669
+          ],
+          "ci95": [
+            0.00268957124239061,
+            0.010747004617307546
+          ],
+          "quantiles": {
+            "0.5": 0.0,
+            "0.9": 0.0,
+            "0.95": 0.026699999999999956,
+            "0.99": 0.1830959999999999
+          },
+          "frac_ge_thr": 0.054377379010331704
+        },
+        "state_H_excl_abstain_by_anchor": {
+          "call": {
+            "states": 329,
+            "mean": 0.004812765957446809,
+            "frac_ge_thr": 0.057750759878419454
+          },
+          "commit_revise": {
+            "states": 17,
+            "mean": 0.0017000000000000047,
+            "frac_ge_thr": 0.058823529411764705
+          },
+          "other": {
+            "states": 593,
+            "mean": 0.0001357504215851604,
+            "frac_ge_thr": 0.00505902192242833
+          },
+          "reuse_recompute": {
+            "states": 900,
+            "mean": 2.0444444444444507e-05,
+            "frac_ge_thr": 0.0
+          }
+        },
+        "state_H_excl_abstain_by_D_episode_outcome": {
+          "D_failure": {
+            "states": 88,
+            "mean": 0.015297727272727274,
+            "frac_ge_thr": 0.11363636363636363
+          },
+          "D_success": {
+            "states": 1751,
+            "mean": 0.00020845231296402075,
+            "frac_ge_thr": 0.0074243289548829245
+          }
+        },
+        "state_best_gain_by_option_class": {
+          "abstain": {
+            "states_with_class": 1839,
+            "mean": -0.9106771071234365,
+            "mean_positive_part": 0.005604241435562806,
+            "frac_ge_thr": 0.04730831973898858
+          },
+          "budget": {
+            "states_with_class": 329,
+            "mean": 0.003561094224924013,
+            "mean_positive_part": 0.004033130699088146,
+            "frac_ge_thr": 0.0364741641337386
+          },
+          "call_now": {
+            "states_with_class": 165,
+            "mean": -0.005315151515151517,
+            "mean_positive_part": 0.00048787878787878865,
+            "frac_ge_thr": 0.01818181818181818
+          },
+          "call_other": {
+            "states_with_class": 9,
+            "mean": 0.0010000000000000087,
+            "mean_positive_part": 0.0079,
+            "frac_ge_thr": 0.1111111111111111
+          },
+          "not_call": {
+            "states_with_class": 329,
+            "mean": -0.001642553191489363,
+            "mean_positive_part": 0.0007805471124620058,
+            "frac_ge_thr": 0.02127659574468085
+          },
+          "recompute": {
+            "states_with_class": 596,
+            "mean": -0.0028942953020134245,
+            "mean_positive_part": 1.291946308724825e-05,
+            "frac_ge_thr": 0.0
+          },
+          "reuse": {
+            "states_with_class": 50,
+            "mean": -0.01240599999999999,
+            "mean_positive_part": 0.00021400000000000198,
+            "frac_ge_thr": 0.0
+          },
+          "revise_select": {
+            "states_with_class": 11,
+            "mean": -0.005718181818181811,
+            "mean_positive_part": 0.0026272727272727346,
+            "frac_ge_thr": 0.09090909090909091
+          }
+        },
+        "episode_single_deviation_H_excl_abstain": {
+          "n": 256,
+          "clusters": 256,
+          "mean": 0.0061234375,
+          "ci90": [
+            0.0018013281250000006,
+            0.0137087109375
+          ],
+          "ci95": [
+            0.0016222070312500011,
+            0.014592949218749993
+          ]
+        },
+        "episode_single_deviation_H_incl_abstain": {
+          "n": 256,
+          "clusters": 256,
+          "mean": 0.011316406250000001,
+          "ci90": [
+            0.0053689257812500005,
+            0.01947830078125
+          ],
+          "ci95": [
+            0.0044613671875,
+            0.021766064453125
+          ]
+        },
+        "episode_single_deviation_H_by_class": {
+          "abstain": 0.006837500000000001,
+          "budget": 0.005177734375000001,
+          "call_now": 0.0003144531250000005,
+          "call_other": 0.00027773437500000004,
+          "not_call": 0.0010031249999999997,
+          "recompute": 3.007812499999983e-05,
+          "reuse": 4.1796875000000384e-05,
+          "revise_select": 0.0001128906250000003
+        },
+        "all_states_episodes_H_excl_abstain": {
+          "n": 17,
+          "clusters": 17,
+          "mean": 0.0,
+          "ci90": [
+            0.0,
+            0.0
+          ],
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "all_states_episodes_H_incl_abstain": {
+          "n": 17,
+          "clusters": 17,
+          "mean": 0.0,
+          "ci90": [
+            0.0,
+            0.0
+          ],
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        "G1_hindsight_excl_abstain_ge_.02": false,
+        "thr": 0.01
+      }
+    },
+    "x1-r2/iid_f2/hr": {
+      "hindsight": {
+        "label": "HINDSIGHT hidden-state bound (max over realized true-world branches): optimistic, non-deployable; a necessary condition only (G1a); abstain is its own class and never counts toward G1",
+        "states": 1776,
+        "episodes": 256,
+        "worlds": 256,
+        "state_H_excl_abstain": {
+          "n": 1776,
+          "clusters": 256,
+          "mean": 0.0012657094594594597,
+          "ci90": [
+            0.0004693890027514178,
+            0.002376408310453367
+          ],
+          "ci95": [
+            0.0004007821010824024,
+            0.0026587523925664155
+          ],
+          "quantiles": {
+            "0.5": 0.0,
+            "0.9": 0.0,
+            "0.95": 0.0,
+            "0.99": 0.026699999999999946
+          },
+          "frac_ge_thr": 0.02027027027027027
+        },
+        "state_H_incl_abstain": {
+          "n": 1776,
+          "clusters": 256,
+          "mean": 0.00936024774774775,
+          "ci90": [
+            0.004124787723107008,
+            0.015312795926402068
+          ],
+          "ci95": [
+            0.003366130219313066,
+            0.01662419919213887
+          ],
+          "quantiles": {
+            "0.5": 0.0,
+            "0.9": 0.026699999999999946,
+            "0.95": 0.07950000000000002,
+            "0.99": 0.14392500000000003
+          },
+          "frac_ge_thr": 0.10754504504504504
+        },
+        "state_H_excl_abstain_by_anchor": {
+          "call": {
+            "states": 287,
+            "mean": 0.003224041811846689,
+            "frac_ge_thr": 0.08362369337979095
+          },
+          "commit_revise": {
+            "states": 32,
+            "mean": 0.002143750000000003,
+            "frac_ge_thr": 0.09375
+          },
+          "other": {
+            "states": 563,
+            "mean": 0.001874422735346359,
+            "frac_ge_thr": 0.0053285968028419185
+          },
+          "reuse_recompute": {
+            "states": 894,
+            "mean": 0.00022225950782997795,
+            "frac_ge_thr": 0.006711409395973154
+          }
+        },
+        "state_H_excl_abstain_by_D_episode_outcome": {
+          "D_failure": {
+            "states": 199,
+            "mean": 0.008908542713567844,
+            "frac_ge_thr": 0.11055276381909548
+          },
+          "D_success": {
+            "states": 1577,
+            "mean": 0.00030126823081800863,
+            "frac_ge_thr": 0.008877615726062143
+          }
+        },
+        "state_best_gain_by_option_class": {
+          "abstain": {
+            "states_with_class": 1772,
+            "mean": -0.850896106094808,
+            "mean_positive_part": 0.008599887133182844,
+            "frac_ge_thr": 0.09988713318284424
+          },
+          "budget": {
+            "states_with_class": 287,
+            "mean": -0.002574564459930313,
+            "mean_positive_part": 0.0014306620209059231,
+            "frac_ge_thr": 0.05226480836236934
+          },
+          "call_now": {
+            "states_with_class": 363,
+            "mean": -0.051942699724517906,
+            "mean_positive_part": 0.002907162534435262,
+            "frac_ge_thr": 0.008264462809917356
+          },
+          "call_other": {
+            "states_with_class": 116,
+            "mean": -0.001988793103448279,
+            "mean_positive_part": 0.0017922413793103444,
+            "frac_ge_thr": 0.05172413793103448
+          },
+          "not_call": {
+            "states_with_class": 287,
+            "mean": -0.010366550522648088,
+            "mean_positive_part": 0.0018306620209059224,
+            "frac_ge_thr": 0.03832752613240418
+          },
+          "recompute": {
+            "states_with_class": 655,
+            "mean": -0.0029607633587786283,
+            "mean_positive_part": 0.0002112977099236645,
+            "frac_ge_thr": 0.004580152671755725
+          },
+          "reuse": {
+            "states_with_class": 72,
+            "mean": -0.03430277777777777,
+            "mean_positive_part": 0.0008375000000000007,
+            "frac_ge_thr": 0.041666666666666664
+          },
+          "reuse_retrieve": {
+            "states_with_class": 287,
+            "mean": -0.0014982578397212567,
+            "mean_positive_part": 0.0,
+            "frac_ge_thr": 0.0
+          },
+          "revise_select": {
+            "states_with_class": 12,
+            "mean": -0.08399166666666667,
+            "mean_positive_part": 0.005716666666666675,
+            "frac_ge_thr": 0.25
+          }
+        },
+        "episode_single_deviation_H_excl_abstain": {
+          "n": 256,
+          "clusters": 256,
+          "mean": 0.006710546874999998,
+          "ci90": [
+            0.002054433593749999,
+            0.014335156249999993
+          ],
+          "ci95": [
+            0.0017550292968749985,
+            0.015453378906249994
+          ]
+        },
+        "episode_single_deviation_H_incl_abstain": {
+          "n": 256,
+          "clusters": 256,
+          "mean": 0.011274609375,
+          "ci90": [
+            0.005259902343749999,
+            0.019420097656249993
+          ],
+          "ci95": [
+            0.004673515624999997,
+            0.021273974609374996
+          ]
+        },
+        "episode_single_deviation_H_by_class": {
+          "abstain": 0.005921875,
+          "budget": 0.0013214843749999997,
+          "call_now": 0.00390234375,
+          "call_other": 0.00027109374999999974,
+          "not_call": 0.0014003906249999989,
+          "recompute": 0.00019453125000000048,
+          "reuse": 3.281250000000002e-05,
+          "reuse_retrieve": 0.0,
+          "revise_select": 0.0001941406250000003
+        },
+        "all_states_episodes_H_excl_abstain": {
+          "n": 17,
+          "clusters": 17,
+          "mean": 0.008205882352941164,
+          "ci90": [
+            0.0016411764705882275,
+            0.017335294117647053
+          ],
+          "ci95": [
+            0.00016470588235292303,
+            0.019147058823529406
+          ]
+        },
+        "all_states_episodes_H_incl_abstain": {
+          "n": 17,
+          "clusters": 17,
+          "mean": 0.022523529411764692,
+          "ci90": [
+            0.005858823529411756,
+            0.04339647058823527
+          ],
+          "ci95": [
+            0.00016470588235292303,
+            0.048032794117647
+          ]
+        },
+        "G1_hindsight_excl_abstain_ge_.02": false,
+        "thr": 0.01
+      }
+    }
+  },
+  "notes": [
+    "HINDSIGHT H is a hidden-state rollout bound (max over realized true-world branches): optimistic and non-deployable by construction; G1a (H excl. abstain >= .02 per episode) is a necessary condition only.",
+    "G1b is the SAME-INFORMATION estimate (public features only) of the single-deviation-from-D policy class; its episode gain equals the true branched advantage at the first firing sampled point.",
+    "Abstain is its own class everywhere and never pooled into G1/G1b (reported separately).",
+    "Per-state headroom is never summed along trajectories."
+  ],
+  "pooled": {
+    "hindsight": {
+      "label": "HINDSIGHT hidden-state bound (max over realized true-world branches): optimistic, non-deployable; a necessary condition only (G1a); abstain is its own class and never counts toward G1",
+      "states": 11013,
+      "episodes": 1536,
+      "worlds": 512,
+      "state_H_excl_abstain": {
+        "n": 11013,
+        "clusters": 512,
+        "mean": 0.0013778806864614543,
+        "ci90": [
+          0.0008492071813591175,
+          0.002026969107395374
+        ],
+        "ci95": [
+          0.0007525424877658775,
+          0.00215814151609878
+        ],
+        "quantiles": {
+          "0.5": 0.0,
+          "0.9": 0.0,
+          "0.95": 0.0006999999999999229,
+          "0.99": 0.026699999999999946
+        },
+        "frac_ge_thr": 0.018251157722691366
+      },
+      "state_H_incl_abstain": {
+        "n": 11013,
+        "clusters": 512,
+        "mean": 0.010055116680286934,
+        "ci90": [
+          0.006272006557359178,
+          0.014290045326349744
+        ],
+        "ci95": [
+          0.005716933528355701,
+          0.015127808487376129
+        ],
+        "quantiles": {
+          "0.5": 0.0,
+          "0.9": 0.005660000000000217,
+          "0.95": 0.07983999999999997,
+          "0.99": 0.17785199999999968
+        },
+        "frac_ge_thr": 0.09743030963406883
+      },
+      "state_H_excl_abstain_by_anchor": {
+        "call": {
+          "states": 1867,
+          "mean": 0.0037266738082485256,
+          "frac_ge_thr": 0.07177289769683985
+        },
+        "commit_revise": {
+          "states": 158,
+          "mean": 0.0019215189873417735,
+          "frac_ge_thr": 0.08227848101265822
+        },
+        "other": {
+          "states": 3468,
+          "mean": 0.0021010092272203,
+          "frac_ge_thr": 0.010957324106113034
+        },
+        "reuse_recompute": {
+          "states": 5520,
+          "mean": 0.00011358695652173917,
+          "frac_ge_thr": 0.002898550724637681
+        }
+      },
+      "state_H_excl_abstain_by_D_episode_outcome": {
+        "D_failure": {
+          "states": 1051,
+          "mean": 0.011651665080875357,
+          "frac_ge_thr": 0.10466222645099905
+        },
+        "D_success": {
+          "states": 9962,
+          "mean": 0.00029398715117446265,
+          "frac_ge_thr": 0.009134711905239911
+        }
+      },
+      "state_best_gain_by_option_class": {
+        "abstain": {
+          "states_with_class": 11006,
+          "mean": -0.863351553697983,
+          "mean_positive_part": 0.009146365618753408,
+          "frac_ge_thr": 0.08922405960385245
+        },
+        "budget": {
+          "states_with_class": 1867,
+          "mean": -0.000810712372790573,
+          "mean_positive_part": 0.0019094268880557042,
+          "frac_ge_thr": 0.04552758435993572
+        },
+        "call_now": {
+          "states_with_class": 1584,
+          "mean": -0.035410858585858594,
+          "mean_positive_part": 0.004599936868686869,
+          "frac_ge_thr": 0.023989898989898988
+        },
+        "call_other": {
+          "states_with_class": 356,
+          "mean": -0.0022160112359550592,
+          "mean_positive_part": 0.0016637640449438198,
+          "frac_ge_thr": 0.05337078651685393
+        },
+        "not_call": {
+          "states_with_class": 1867,
+          "mean": -0.012372737011247994,
+          "mean_positive_part": 0.00186470273165506,
+          "frac_ge_thr": 0.028387787895018748
+        },
+        "recompute": {
+          "states_with_class": 3918,
+          "mean": -0.0026456610515569194,
+          "mean_positive_part": 9.430832057172031e-05,
+          "frac_ge_thr": 0.002297090352220521
+        },
+        "reuse": {
+          "states_with_class": 490,
+          "mean": -0.018038571428571435,
+          "mean_positive_part": 0.0007677551020408165,
+          "frac_ge_thr": 0.02040816326530612
+        },
+        "reuse_retrieve": {
+          "states_with_class": 889,
+          "mean": -0.0010165354330708707,
+          "mean_positive_part": 0.00016670416197975241,
+          "frac_ge_thr": 0.0022497187851518562
+        },
+        "revise_select": {
+          "states_with_class": 73,
+          "mean": -0.057552054794520545,
+          "mean_positive_part": 0.004158904109589044,
+          "frac_ge_thr": 0.1780821917808219
+        }
+      },
+      "episode_single_deviation_H_excl_abstain": {
+        "n": 1536,
+        "clusters": 512,
+        "mean": 0.007696289062499998,
+        "ci90": [
+          0.0041239290364583295,
+          0.012200976562499997
+        ],
+        "ci95": [
+          0.00369026204427083,
+          0.013141484374999996
+        ]
+      },
+      "episode_single_deviation_H_incl_abstain": {
+        "n": 1536,
+        "clusters": 512,
+        "mean": 0.013387174479166666,
+        "ci90": [
+          0.009086123046874997,
+          0.018353486328124995
+        ],
+        "ci95": [
+          0.008504923502604164,
+          0.019221748046874997
+        ]
+      },
+      "episode_single_deviation_H_by_class": {
+        "abstain": 0.007208333333333334,
+        "budget": 0.002088997395833333,
+        "call_now": 0.004119986979166666,
+        "call_other": 0.00022434895833333326,
+        "not_call": 0.0017277994791666648,
+        "recompute": 0.00012031250000000007,
+        "reuse": 0.00015110677083333333,
+        "reuse_retrieve": 4.5052083333333325e-05,
+        "revise_select": 0.0001724609375000001
+      },
+      "all_states_episodes_H_excl_abstain": {
+        "n": 102,
+        "clusters": 102,
+        "mean": 0.004940196078431369,
+        "ci90": [
+          0.002322058823529401,
+          0.00780411764705882
+        ],
+        "ci95": [
+          0.001907598039215683,
+          0.008530147058823519
+        ]
+      },
+      "all_states_episodes_H_incl_abstain": {
+        "n": 102,
+        "clusters": 102,
+        "mean": 0.013313725490196075,
+        "ci90": [
+          0.006869803921568627,
+          0.02024034313725491
+        ],
+        "ci95": [
+          0.005720906862745095,
+          0.021789975490196074
+        ]
+      },
+      "G1_hindsight_excl_abstain_ge_.02": false,
+      "thr": 0.01
+    },
+    "G1b_excl_abstain": {
+      "label": "SAME-INFORMATION single-deviation-from-D estimate (public features; per-type ridge Q-hat^D; cross-fitted by world, 5 outer / 3 inner folds; margin from inner folds); episode gain = true branched advantage of the chosen option",
+      "allow_abstain": false,
+      "episodes": 1536,
+      "gain_per_episode": {
+        "n": 1536,
+        "clusters": 512,
+        "mean": -0.0021267578125,
+        "ci90": [
+          -0.0041696289062499985,
+          -0.00038890950520833393
+        ],
+        "ci95": [
+          -0.004614427083333332,
+          -0.0001268033854166682
+        ]
+      },
+      "G1b_ge_.01_and_ci90_excludes_0": false,
+      "deviation_rate": 0.2890625,
+      "deviation_types": {
+        "D": 1092,
+        "budget": 243,
+        "call_now": 40,
+        "call_other": 53,
+        "not_call": 58,
+        "recompute": 1,
+        "reuse": 27,
+        "reuse_retrieve": 10,
+        "revise_select": 12
+      },
+      "harmful_rate": 0.12109375,
+      "chosen_margins": {
+        "0.0": 615,
+        "0.005": 306,
+        "0.02": 306,
+        "0.05": 309
+      },
+      "fixed_margin_gain": {
+        "0.0": -0.0011103515624999987,
+        "0.01": -0.0003011718749999993
+      },
+      "constant_per_type_baseline_gain": 0.0,
+      "ridge": 1.0
+    },
+    "G1b_abstain_class_included_(separate)": {
+      "label": "SAME-INFORMATION single-deviation-from-D estimate (public features; per-type ridge Q-hat^D; cross-fitted by world, 5 outer / 3 inner folds; margin from inner folds); episode gain = true branched advantage of the chosen option",
+      "allow_abstain": true,
+      "episodes": 1536,
+      "gain_per_episode": {
+        "n": 1536,
+        "clusters": 512,
+        "mean": -0.0014071614583333327,
+        "ci90": [
+          -0.0034771940104166674,
+          0.00041945963541666694
+        ],
+        "ci95": [
+          -0.0037688899739583338,
+          0.0005910921223958335
+        ]
+      },
+      "G1b_ge_.01_and_ci90_excludes_0": false,
+      "deviation_rate": 0.2786458333333333,
+      "deviation_types": {
+        "D": 1108,
+        "abstain": 10,
+        "budget": 237,
+        "call_now": 39,
+        "call_other": 48,
+        "not_call": 54,
+        "recompute": 1,
+        "reuse": 21,
+        "reuse_retrieve": 10,
+        "revise_select": 8
+      },
+      "harmful_rate": 0.11067708333333333,
+      "chosen_margins": {
+        "0.0": 615,
+        "0.005": 306,
+        "0.05": 615
+      },
+      "fixed_margin_gain": {
+        "0.0": -0.00042604166666666544,
+        "0.01": 0.000491536458333334
+      },
+      "constant_per_type_baseline_gain": 0.0,
+      "ridge": 1.0
+    }
+  },
+  "multi": {
+    "pairing": {
+      "multi_episodes": 1536,
+      "paired_episodes": 1536,
+      "main_line_mismatch": 0,
+      "point_mismatch": 0,
+      "unpaired_points": 0
+    },
+    "label": "A-HR2 multi-step options. G1a-multi = HINDSIGHT single-deviation bound (true-world branches; optimistic, non-deployable; necessary condition only). G1b-multi = SAME-INFORMATION cross-fitted estimate (public features; per-option-type ridge; margin from inner folds). Abstain excluded.",
+    "thr": 0.01,
+    "G1a_multi_T": {
+      "n": 1536,
+      "clusters": 512,
+      "mean": 0.026045507812500004,
+      "ci90": [
+        0.015941839192708335,
+        0.037488994140625
+      ],
+      "ci95": [
+        0.014236892903645834,
+        0.04030112955729166
+      ],
+      "by_D_episode_outcome": {
+        "D_failure": {
+          "n": 70,
+          "clusters": 28,
+          "mean": 0.5589514285714287,
+          "ci90": [
+            0.38896823593073593,
+            0.7328413257575758
+          ],
+          "ci95": [
+            0.3583000853978979,
+            0.7670607499999998
+          ]
+        },
+        "D_success": {
+          "n": 1466,
+          "clusters": 491,
+          "mean": 0.0005997953615279689,
+          "ci90": [
+            0.00025938347036156114,
+            0.0010197120473263766
+          ],
+          "ci95": [
+            0.00022394250191544394,
+            0.0011059801280105257
+          ]
+        }
+      },
+      "by_base": {
+        "x1-r0": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.025593164062500003,
+          "ci90": [
+            0.015027236328125002,
+            0.03784966796875
+          ],
+          "ci95": [
+            0.013157172851562503,
+            0.040015566406249974
+          ]
+        },
+        "x1-r1": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.029223437499999998,
+          "ci90": [
+            0.017403486328125006,
+            0.0416058203125
+          ],
+          "ci95": [
+            0.015562207031250002,
+            0.04504536621093749
+          ]
+        },
+        "x1-r2": {
+          "n": 512,
+          "clusters": 512,
+          "mean": 0.023319921875000003,
+          "ci90": [
+            0.01333029296875,
+            0.034958974609375
+          ],
+          "ci95": [
+            0.011496420898437503,
+            0.037207524414062505
+          ]
+        }
+      },
+      "gate_ge_.02": true
+    },
+    "state_delegate_advantage": {
+      "n": 11013,
+      "clusters": 512,
+      "mean": 0.02550291473712885,
+      "ci90": [
+        0.010566676909695873,
+        0.045766423302942456
+      ],
+      "ci95": [
+        0.009210714665035147,
+        0.05063595733556047
+      ],
+      "positive_part_mean": 0.02715693271588123,
+      "frac_ge_thr": 0.04521928629801144,
+      "frac_le_minus_thr": 0.018341959502406247,
+      "by_anchor": {
+        "call": {
+          "n": 1867,
+          "clusters": 378,
+          "mean": 0.034745956079271556,
+          "ci90": [
+            0.017123340174092148,
+            0.05438952451118792
+          ],
+          "ci95": [
+            0.014634190911644763,
+            0.05930316557436984
+          ],
+          "frac_ge_thr": 0.06320299946438136
+        },
+        "commit_revise": {
+          "n": 158,
+          "clusters": 41,
+          "mean": 0.23629430379746838,
+          "ci90": [
+            0.13165422604973503,
+            0.36405242070652394
+          ],
+          "ci95": [
+            0.11467738846544717,
+            0.3887239987849574
+          ],
+          "frac_ge_thr": 0.4430379746835443
+        },
+        "other": {
+          "n": 3468,
+          "clusters": 387,
+          "mean": 0.015431199538638985,
+          "ci90": [
+            0.0003582639648968453,
+            0.04070980896625222
+          ],
+          "ci95": [
+            -0.0004042302134161952,
+            0.04629479508199312
+          ],
+          "frac_ge_thr": 0.024798154555940023
+        },
+        "reuse_recompute": {
+          "n": 5520,
+          "clusters": 501,
+          "mean": 0.022670833333333335,
+          "ci90": [
+            0.009452392855524593,
+            0.03884457393136776
+          ],
+          "ci95": [
+            0.0076833739491504885,
+            0.04361589182498221
+          ],
+          "frac_ge_thr": 0.04057971014492753
+        }
+      },
+      "by_D_episode_outcome": {
+        "D_failure": {
+          "n": 1051,
+          "clusters": 28,
+          "mean": 0.27654890580399616,
+          "ci90": [
+            0.13178116607129575,
+            0.494080455329712
+          ],
+          "ci95": [
+            0.11098037536708788,
+            0.5354923776967581
+          ]
+        },
+        "D_success": {
+          "n": 9962,
+          "clusters": 491,
+          "mean": -0.0009826641236699454,
+          "ci90": [
+            -0.002576765914519227,
+            0.0001990478152785979
+          ],
+          "ci95": [
+            -0.002958832559629782,
+            0.00029120260616351295
+          ]
+        }
+      },
+      "by_delegate_end": {
+        "commit": {
+          "n": 7447,
+          "clusters": 506,
+          "mean": 0.03694638109305761,
+          "ci90": [
+            0.01642585989998558,
+            0.06273015790479947
+          ],
+          "ci95": [
+            0.014431008707328672,
+            0.06915975152892777
+          ]
+        },
+        "episode_end": {
+          "n": 2344,
+          "clusters": 381,
+          "mean": -0.00016139078498293472,
+          "ci90": [
+            -0.004839346819417695,
+            0.0032835387144569054
+          ],
+          "ci95": [
+            -0.006242079223497251,
+            0.0038275152482092033
+          ]
+        },
+        "max_steps": {
+          "n": 1222,
+          "clusters": 198,
+          "mean": 0.004993617021276597,
+          "ci90": [
+            -0.004970159872102317,
+            0.018994102174503247
+          ],
+          "ci95": [
+            -0.0061278077944784525,
+            0.02243735734031425
+          ]
+        }
+      },
+      "teacher_steps_mean": 5.229546899119223,
+      "teacher_agree_rate": 0.9461045613182157,
+      "teacher_first_is_d_rate": 0.9276309815672387,
+      "delegate_end_counts": {
+        "commit": 7447,
+        "episode_end": 2344,
+        "max_steps": 1222
+      },
+      "points_without_delegate": 0
+    },
+    "G1a_multi_paired": {
+      "O(I)_excl_abstain": {
+        "n": 1536,
+        "clusters": 512,
+        "mean": 0.007696289062499998,
+        "ci90": [
+          0.0041239290364583295,
+          0.012200976562499997
+        ],
+        "ci95": [
+          0.00369026204427083,
+          0.013141484374999996
+        ],
+        "by_D_episode_outcome": {
+          "D_failure": {
+            "n": 70,
+            "clusters": 28,
+            "mean": 0.13322714285714288,
+            "ci90": [
+              0.06012577962577962,
+              0.2300717741935484
+            ],
+            "ci95": [
+              0.049842195945945945,
+              0.2507701102941175
+            ]
+          },
+          "D_success": {
+            "n": 1466,
+            "clusters": 491,
+            "mean": 0.001702319236016369,
+            "ci90": [
+              0.0012691666535280418,
+              0.002179546082482184
+            ],
+            "ci95": [
+              0.0012033027768149085,
+              0.0022634205247689583
+            ]
+          }
+        },
+        "gate_ge_.02": false
+      },
+      "T_plus_O(I)_excl_abstain": {
+        "n": 1536,
+        "clusters": 512,
+        "mean": 0.028306640625,
+        "ci90": [
+          0.018158496093749997,
+          0.03972680989583333
+        ],
+        "ci95": [
+          0.016271427408854164,
+          0.042408819986979165
+        ],
+        "by_D_episode_outcome": {
+          "D_failure": {
+            "n": 70,
+            "clusters": 28,
+            "mean": 0.5781257142857144,
+            "ci90": [
+              0.4092164041353384,
+              0.743428088235294
+            ],
+            "ci95": [
+              0.37945867647058823,
+              0.7851101775210083
+            ]
+          },
+          "D_success": {
+            "n": 1466,
+            "clusters": 491,
+            "mean": 0.0020533424283765336,
+            "ci90": [
+              0.0015252133757167536,
+              0.0026188418762631916
+            ],
+            "ci95": [
+              0.001446216388762308,
+              0.00274713504036704
+            ]
+          }
+        },
+        "gate_ge_.02": true
+      },
+      "B_from_A-HR_labels": {
+        "n": 1536,
+        "clusters": 512,
+        "mean": 0.006081315104166666,
+        "ci90": [
+          0.002766702473958333,
+          0.010474658203124999
+        ],
+        "ci95": [
+          0.002388621419270833,
+          0.011244991861979168
+        ],
+        "by_D_episode_outcome": {
+          "D_failure": {
+            "n": 70,
+            "clusters": 28,
+            "mean": 0.10863571428571428,
+            "ci90": [
+              0.03843972899159664,
+              0.19924370071684583
+            ],
+            "ci95": [
+              0.03104521726190476,
+              0.2226658219696969
+            ]
+          },
+          "D_success": {
+            "n": 1466,
+            "clusters": 491,
+            "mean": 0.0011844474761255118,
+            "ci90": [
+              0.0008037802981331668,
+              0.0016057536094695483
+            ],
+            "ci95": [
+              0.0007427923176826192,
+              0.0017074485501874337
+            ]
+          }
+        },
+        "gate_ge_.02": false
+      },
+      "T_on_paired_episodes": {
+        "n": 1536,
+        "clusters": 512,
+        "mean": 0.026045507812500004,
+        "ci90": [
+          0.015941839192708335,
+          0.037488994140625
+        ],
+        "ci95": [
+          0.014236892903645834,
+          0.04030112955729166
+        ],
+        "by_D_episode_outcome": {
+          "D_failure": {
+            "n": 70,
+            "clusters": 28,
+            "mean": 0.5589514285714287,
+            "ci90": [
+              0.38896823593073593,
+              0.7328413257575758
+            ],
+            "ci95": [
+              0.3583000853978979,
+              0.7670607499999998
+            ]
+          },
+          "D_success": {
+            "n": 1466,
+            "clusters": 491,
+            "mean": 0.0005997953615279689,
+            "ci90": [
+              0.00025938347036156114,
+              0.0010197120473263766
+            ],
+            "ci95": [
+              0.00022394250191544394,
+              0.0011059801280105257
+            ]
+          }
+        },
+        "gate_ge_.02": true
+      }
+    },
+    "G1b_multi_T": {
+      "label": "SAME-INFORMATION single-deviation-from-D estimate (public features; per-type ridge Q-hat^D; cross-fitted by world, 5 outer / 3 inner folds; margin from inner folds); episode gain = true branched advantage of the chosen option",
+      "allow_abstain": false,
+      "episodes": 1536,
+      "gain_per_episode": {
+        "n": 1536,
+        "clusters": 512,
+        "mean": 0.021401302083333334,
+        "ci90": [
+          0.010447496744791665,
+          0.033226181640625005
+        ],
+        "ci95": [
+          0.00882310546875,
+          0.03530890136718749
+        ]
+      },
+      "G1b_ge_.01_and_ci90_excludes_0": true,
+      "deviation_rate": 0.2903645833333333,
+      "deviation_types": {
+        "D": 1090,
+        "delegate": 446
+      },
+      "harmful_rate": 0.05859375,
+      "chosen_margins": {
+        "0.05": 1536
+      },
+      "fixed_margin_gain": {
+        "0.0": 0.007559830729166668,
+        "0.01": 0.010999609374999999
+      },
+      "constant_per_type_baseline_gain": 0.002174023437500001,
+      "ridge": 1.0,
+      "by_D_episode_outcome": {
+        "D_failure": {
+          "n": 70,
+          "clusters": 28,
+          "mean": 0.5350142857142858,
+          "ci90": [
+            0.36205606283422465,
+            0.7104543778801844
+          ],
+          "ci95": [
+            0.33114844980694974,
+            0.7381977164502161
+          ],
+          "share_of_total_gain": 0.024382161458333333,
+          "deviations": 69
+        },
+        "D_success": {
+          "n": 1466,
+          "clusters": 491,
+          "mean": -0.0031231923601637113,
+          "ci90": [
+            -0.00762680430187706,
+            0.00022565518865115064
+          ],
+          "ci95": [
+            -0.008494515912684174,
+            0.00037077768852702823
+          ],
+          "share_of_total_gain": -0.0029808593750000004,
+          "deviations": 377
+        }
+      },
+      "by_firing_anchor": {
+        "call": {
+          "n": 135,
+          "clusters": 60,
+          "mean": 0.1216325925925926,
+          "ci90": [
+            0.05121916756118507,
+            0.20237446640316203
+          ],
+          "ci95": [
+            0.0393326833776989,
+            0.22290167872592434
+          ],
+          "share_of_total_gain": 0.010690364583333334,
+          "deviations": 135
+        },
+        "commit_revise": {
+          "n": 47,
+          "clusters": 20,
+          "mean": 0.18852765957446807,
+          "ci90": [
+            0.05686852842809365,
+            0.3329158857142857
+          ],
+          "ci95": [
+            0.03520404013539652,
+            0.35906176968584247
+          ],
+          "share_of_total_gain": 0.0057687500000000004,
+          "deviations": 47
+        },
+        "none": {
+          "n": 1090,
+          "clusters": 382,
+          "mean": 0.0,
+          "ci90": [
+            0.0,
+            0.0
+          ],
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "share_of_total_gain": 0.0,
+          "deviations": 0
+        },
+        "other": {
+          "n": 62,
+          "clusters": 28,
+          "mean": 8.709677419354954e-05,
+          "ci90": [
+            0.0,
+            0.00025714285714286057
+          ],
+          "ci95": [
+            0.0,
+            0.0002842105263157932
+          ],
+          "share_of_total_gain": 3.5156250000000465e-06,
+          "deviations": 62
+        },
+        "reuse_recompute": {
+          "n": 202,
+          "clusters": 93,
+          "mean": 0.03755346534653465,
+          "ci90": [
+            -0.015059713541666669,
+            0.09317294683257912
+          ],
+          "ci95": [
+            -0.02176101710171017,
+            0.1065774780999308
+          ],
+          "share_of_total_gain": 0.004938671874999999,
+          "deviations": 202
+        }
+      }
+    },
+    "G1b_multi_T_plus_O(I)_excl_abstain": {
+      "label": "SAME-INFORMATION single-deviation-from-D estimate (public features; per-type ridge Q-hat^D; cross-fitted by world, 5 outer / 3 inner folds; margin from inner folds); episode gain = true branched advantage of the chosen option",
+      "allow_abstain": false,
+      "episodes": 1536,
+      "gain_per_episode": {
+        "n": 1536,
+        "clusters": 512,
+        "mean": 0.02136822916666667,
+        "ci90": [
+          0.010442893880208332,
+          0.03316072916666666
+        ],
+        "ci95": [
+          0.008785722656250002,
+          0.035275929361979166
+        ]
+      },
+      "G1b_ge_.01_and_ci90_excludes_0": true,
+      "deviation_rate": 0.2903645833333333,
+      "deviation_types": {
+        "D": 1090,
+        "delegate": 444,
+        "revise_select": 2
+      },
+      "harmful_rate": 0.05859375,
+      "chosen_margins": {
+        "0.05": 1536
+      },
+      "fixed_margin_gain": {
+        "0.0": 0.0068990885416666675,
+        "0.01": 0.010270312500000002
+      },
+      "constant_per_type_baseline_gain": 0.002174023437500001,
+      "ridge": 1.0,
+      "by_D_episode_outcome": {
+        "D_failure": {
+          "n": 70,
+          "clusters": 28,
+          "mean": 0.5350142857142858,
+          "ci90": [
+            0.36205606283422465,
+            0.7104543778801844
+          ],
+          "ci95": [
+            0.33114844980694974,
+            0.7381977164502161
+          ],
+          "share_of_total_gain": 0.024382161458333333,
+          "deviations": 69
+        },
+        "D_success": {
+          "n": 1466,
+          "clusters": 491,
+          "mean": -0.0031578444747612554,
+          "ci90": [
+            -0.0076704689333796814,
+            0.00018368785105441648
+          ],
+          "ci95": [
+            -0.008530023260018837,
+            0.0003263000019529273
+          ],
+          "share_of_total_gain": -0.003013932291666667,
+          "deviations": 377
+        }
+      },
+      "by_firing_anchor": {
+        "call": {
+          "n": 134,
+          "clusters": 60,
+          "mean": 0.122444776119403,
+          "ci90": [
+            0.05150614536340852,
+            0.2037366813135985
+          ],
+          "ci95": [
+            0.03933747206911961,
+            0.22379644049147257
+          ],
+          "share_of_total_gain": 0.01068203125,
+          "deviations": 134
+        },
+        "commit_revise": {
+          "n": 48,
+          "clusters": 21,
+          "mean": 0.18380833333333335,
+          "ci90": [
+            0.058948333333333325,
+            0.3341377083333334
+          ],
+          "ci95": [
+            0.038907421985815614,
+            0.35813611938775497
+          ],
+          "share_of_total_gain": 0.005744010416666667,
+          "deviations": 48
+        },
+        "none": {
+          "n": 1090,
+          "clusters": 382,
+          "mean": 0.0,
+          "ci90": [
+            0.0,
+            0.0
+          ],
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "share_of_total_gain": 0.0,
+          "deviations": 0
+        },
+        "other": {
+          "n": 62,
+          "clusters": 28,
+          "mean": 8.709677419354954e-05,
+          "ci90": [
+            0.0,
+            0.00025714285714286057
+          ],
+          "ci95": [
+            0.0,
+            0.0002842105263157932
+          ],
+          "share_of_total_gain": 3.5156250000000465e-06,
+          "deviations": 62
+        },
+        "reuse_recompute": {
+          "n": 202,
+          "clusters": 93,
+          "mean": 0.03755346534653465,
+          "ci90": [
+            -0.015059713541666669,
+            0.09317294683257912
+          ],
+          "ci95": [
+            -0.02176101710171017,
+            0.1065774780999308
+          ],
+          "share_of_total_gain": 0.004938671874999999,
+          "deviations": 202
+        }
+      }
+    }
+  }
+}

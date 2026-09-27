@@ -152,6 +152,36 @@
    },
    "worlds": "same A-HR worlds (220M; r0-r2; iid_f0/iid_f2; 256 each) for pairing",
    "metric_checks": "option T uses a supplied better sub-policy: a pass would show value in learning WHEN to delegate, not in learning the teacher's skill"
+  },
+  {
+   "id": "A-PI-T",
+   "status": "registered (A-HR2 gates passed)",
+   "hypothesis": "A learned public-information controller deciding WHEN to delegate to the supplied dep_reuse sub-policy (until next commit) improves deployed utility over D and adds value beyond simple rules.",
+   "intervention": "learned delegation controller: at each public decision point in a registered trigger set (D anchor in {call, reuse_recompute, commit_revise}), estimate Q-hat(delegate) - Q-hat(D) from public features (model family fixed before evaluation: per-anchor ridge as in A-HR2 G1b, plus optionally a small MLP; chosen on development worlds); delegate if gain > margin m (registered on development worlds); multiple delegations per episode allowed; delegation ends at next successful commit or 12 steps",
+   "training_data": "A-HR/A-HR2 branch labels on the 220M screening worlds (r0-r2); development/selection on held-out folds of those worlds only",
+   "comparators": [
+    "D (greedy+R-mask)",
+    "always-teacher: dep_reuse for the whole episode",
+    "simple rule R1: delegate at every call anchor",
+    "simple rule R2: delegate at every commit_revise anchor",
+    "random delegation at the learned controller's matched rate",
+    "A3-style teacher-action supervision comparator is superseded: the teacher itself is included"
+   ],
+   "endpoints": [
+    "utility",
+    "success",
+    "cost",
+    "delegation rate and delegated-step fraction",
+    "regret of delegation decisions (branch-evaluated on a subsample)",
+    "per-anchor gains"
+   ],
+   "primary_claims": {
+    "PI-T-1 (improvement over imitation deployment)": "utility >= D + .015, success >= D - .01 (screen, r0-r2, fresh worlds 240M, 512/condition IID group)",
+    "PI-T-2 (regulator beyond simple rules)": "utility >= max(always-teacher, R1, R2, random-matched) + .005 AND delegated-step fraction < always-teacher's (i.e., not reducible to 'use the teacher')"
+   },
+   "scope": "supplied sub-policy (teacher) and supplied option; the learned component is only the decision of when to invoke it",
+   "confirmation": "if PI-T-1 (and ideally PI-T-2) pass on screen: A-CF on r3-r5 with new labels, sealed worlds >= 250M, 512/condition",
+   "metric_checks": "always-teacher is the key comparator: a controller that approximates always-delegate passes PI-T-1 trivially but fails PI-T-2; delegated-step fraction reported"
   }
  ]
 }
