@@ -58,3 +58,8 @@
   - Per trackb-screen §8's allowance, UCE is relaunched at 160 octets into a separate labels dir, e06-tb-labels-uce: cap 14k core-s, deterministic seeds; its SCE sets 0–159 are regenerated and ignored.
   - Model evals proceed now on the main labels dir (SCE counterfactuals only). The UCE counterfactual scoring is a secondary endpoint, added by a later cf pass.
   - Smoke: e06-tb-b0-eval-s30.
+- 2026-09-27T10:03Z: **Incident: 1 eval OOM-killed.**
+  - Cause: I launched 33 evals concurrently, against the plan's 4–8 limit.
+  - e06-tb-dose2-eval-s30 was killed by the global OOM killer at 09:33Z (about 180 core-s, no occupancy receipt; relabelled *-oomkilled-process with OOM_KILLED.txt).
+  - The kernel log shows this one kill only; no non-campaign process was affected.
+  - It is rerun alone. **Rule going forward:** at most 8 concurrent Track B jobs, with memory checked first.
