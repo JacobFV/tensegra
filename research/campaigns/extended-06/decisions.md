@@ -66,9 +66,9 @@
 - 2026-09-27T10:25Z: e06-tb-score failed at its final write because the output directory was missing (exit 1, 1,068 core-s, charged). The directory was created and the job relaunched as e06-tb-score2, with identical inputs.
 - 2026-09-27T10:47Z: **B-ARMS primary NOT SUPPORTED** (research/tools/campaign06_bprimary.py pools the pairs, as registered; campaign06_bscore reports per pair only).
   - B2 − B0 over 5 pairs: gap regret −1.65 [−6.1, +3.1]; later-decision accuracy +.010 [−.002, +.022]; near-miss accuracy −.085.
-  - Broader variety at matched volume **did not** yield composition on the untouched S+C+E triple. B2's first-decision gain (+.075) came with worse near-miss accuracy, i.e. a shift.
+  - Broader variety at matched volume **did not** yield composition on the untouched S+C+E triple. B2's first-decision gain (+.075) is on non-flip units (first-decision flip accuracy .59 vs .68) and comes from a higher build rate (first-action build 28% vs 10%; B1 shows the same rise with no added variety). The same preference costs after a solved probe (commit accuracy .52 vs .81). Balanced octet accuracy is lower in 5/5 pairs (−.075), and near-miss accuracy is lower by .085 (4/5 pairs). This is an input-specific action-preference change concentrated on S∧C inputs, not a global action-rate shift (false change +.006) and not composition. *(Corrected per the independent Track B audit.)*
   - **Descriptive:** LRN (learned derived-quantity heads) is the only arm with a consistent sign on gap, later accuracy and near-miss across its 3 pairs.
-  - **Caveat:** the configuration-only CIs omit seed variance. B0 seed 32 is an outlier (gap 40.9), and it drives the B0 comparisons.
+  - **Caveat:** the configuration-only CIs omit seed variance, which is large: B0 gap regret per seed 20.2/29.9/40.9/41.2/29.0 (SD 8.9), B2 20.0/62.2/15.6/31.8/23.3 (SD 18.7). The B2−B0 per-pair swing (+32.4 / −25.3) comes from B2 seed 31 and B0 seed 32. A two-level (seed pair + configuration) bootstrap gives gap −1.6 [−17.5, +19.3] and later-decision +.010 [−.009, +.030]; the verdict is unchanged. The descriptive gap-regret wins vs B0 do not depend on B0 seed 32 (they are unchanged vs B0 without s32 or vs all five B0 seeds). What is seed-fragile is near-miss accuracy (B0 per seed .47–.80). *(Corrected per the independent Track B audit.)*
   - **Adaptive B-FACT-C registered before any new data:** LRN vs RAWF (same architecture) on fresh seeds 35–39 and a fresh S+C+E pool and octets, with a two-level bootstrap and ≥ 4/5 pair sign consistency.
   - Budget: 65k / 172.8k core-s used. Estimate ~21k core-s (20 trainings ~10k, labels ~7k, evals ~4k), leaving > 34.5k reserve.
 - 2026-09-27T11:04Z: **UCE octets built** (e06-tb-labels-cf-uce, 160 octets, 4,634 core-s). **UCE octet evaluation not run.**
@@ -76,3 +76,10 @@
   - U+C+E is reported from the held-out pool (b6_hold_UCE regret and accuracy, already in score.json).
   - Also: the b6c fresh-confirm tooling was merged (9795f9a2). Hold base moved to 6.42e9, CF base 6.65e9, and the training-world range for seeds 35–39 is registered. Snapshot 096b6ff5.
   - e06-tbc-labels-eval and e06-tbc-labels-cf launched (caps 8,000 core-s each).
+- 2026-09-27T11:17Z: **Independent Track B audit merged and adopted** (review/b-independent-audit.md).
+  - B-ARMS NOT SUPPORTED reproduces exactly, and holds under alternative later-decision definitions and a two-level bootstrap.
+  - Matching and disjointness are confirmed. Corrections C1–C5 are applied to the 10:47Z entry and to registry B-ARMS / B-FACT.
+  - cf_SCE.json sha256 prefix: c365186f; it is identical across all 34 evals.
+  - B2 − B0 also changes the single-type mix (S 106 vs 64; C and E 43 vs 64).
+  - Note for B-FACT-C: on the development split, LRN − RAWF near-miss is −.022, just outside Q3's −.02 margin. Q3 is registered and unchanged.
+  - Commit e8537d2d is misnamed: it holds only ledger budget/receipt updates. The corrections are in the next commit.
