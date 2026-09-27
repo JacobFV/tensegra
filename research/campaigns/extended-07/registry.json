@@ -80,7 +80,7 @@
   },
   {
    "id": "P3-REPLICATE",
-   "status": "registered (DESCRIPTIVE fresh-configuration check; NOT a repair confirmation; registered after the P3 screen result, before any b6d evaluation)",
+   "status": "complete (descriptive)",
    "population": "b6d (400 configs at 6.43e9 + 320 SCE octets at 6.66e9; labels built 19:xxZ, never evaluated)",
    "models": "the P3 screen models (seeds 40-44) as trained; no retraining; same eval settings as P3-eval minus UCE",
    "expectations_stated_before_data": {
@@ -90,7 +90,8 @@
     "all_x_q2notH": "approximately 0 (|.| < .03)"
    },
    "statistics": "frontier v2 two-level, 20000 draws, seed 20260928; report means, CIs, seed signs; no pass/fail consequences for any repair claim",
-   "addendum": "Per the p23 audit (before any b6d output was read): the report also states the exact-contract contrast CONS3-bil-exact-pred - CONS3-mlp-exact-pred (reference CONS3-mlp-exact-pred@own is already in the frontier job's --refs)."
+   "addendum": "Per the p23 audit (before any b6d output was read): the report also states the exact-contract contrast CONS3-bil-exact-pred - CONS3-mlp-exact-pred (reference CONS3-mlp-exact-pred@own is already in the frontier job's --refs).",
+   "result": "b6d fresh configurations, screen models s40-44, frontier v2 20000 draws seed 20260928 (research/results/campaign-07/p3-replicate). bil - mlp (mix, predicted): pooled J_sub +.018 [-.018,+.056] 3/5 (expectation >0: point positive, NOT resolved); all_x_q2notH -.011 [-.061,+.034] (expected ~0: yes); q2_after_notH +.061 [-.036,+.166] 4/5 (expected >0: point positive, not resolved); after_probe_failed -.146 [-.255,-.049] 0/5 (expected <0: REPLICATED); after_b1_timeout -.091. FA -.043, H -.025, BA_nm -.004. Exact contract bil - mlp: pooled -.010 [-.061,+.038] 2/5; FA -.055, H -.065, near-miss +.065. Reading: the screen's pooled bil gain does not replicate on fresh configurations; what replicates is that bil is more conservative (fewer false AND fewer correct changes under both contracts) and loses discrimination after failed probes. No evidence that explicit bilinear factor interactions improve composition over a matched MLP consumer."
   }
  ]
 }

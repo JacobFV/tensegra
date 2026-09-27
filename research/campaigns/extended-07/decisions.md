@@ -155,3 +155,11 @@
     - The pooled gain is false-change suppression.
   - The pool +.018 is unresolved and is not a composition effect.
   - P3-REPLICATE is to report the exact-contract contrast as well (added before any b6d output was read).
+- 2026-09-27T22:14Z: **P3-REPLICATE (descriptive, b6d):** the pooled bil − mlp gain **does not replicate**.
+  - Mix contract: +.018 [−.018, +.056], 3/5 seeds. Exact contract: −.010.
+  - **Replicated:** bil is more conservative (FA −.043 to −.055, with H also lower), and after_probe_failed J −.146 (0/5).
+  - q2_after_notH +.061 is not resolved.
+  - **Conclusion:** no evidence that explicit bilinear factor interactions improve composition over a matched ordinary consumer.
+  - **Incident:** the runner wait-loop stalled again (suspected ssh status call without a timeout). Its evals were done at 21:47Z; the frontier was launched by hand, and the watcher now uses timeout 60 on status calls.
+  - Staged in research/results/campaign-07/p3-replicate (sha256 verified).
+  - **Experimental phase closed;** writing the final report. The b6d labels were used only for this descriptive check; P2-CONFIRM's lineages 50–54 were never trained.
