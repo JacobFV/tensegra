@@ -41,3 +41,8 @@
     **LRN − RAWF therefore bundled** shaping, reading, init and dead-vs-live columns.
   - A 2×2 spec with copied init, separate optimizers/clips and per-decision sampling RNG is ready for Phase 2.
   - Seed block 6.870–6.880e9 registered (dev_smoke).
+- 2026-09-27T16:32Z: **P1 diagnostic runner merged** (campaign/e07-diag 1aa9c388; 22 tests; bit-identical reproduction of historical eval; 196 metered + ~50 local core-s).
+  - **P1-DIAG registered:** protocols, the frozen semantic tolerances, the interventions and the readouts are registered before any diagnostic output.
+  - **Labelling:** b6c is diagnostic, not confirmation, because extended-06 already scored it.
+  - **Seed ranges registered:** the support-reference worlds, and dev block 6.880–6.890e9.
+  - **Estimated tranche:** ~2.3–3.8k core-s (cap 10.8k), ≤ 1.8 GB/job, 4 concurrent.

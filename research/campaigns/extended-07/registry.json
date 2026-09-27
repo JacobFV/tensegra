@@ -1,5 +1,23 @@
 {
  "version": 1,
  "campaign": "extended-07",
- "entries": []
+ "entries": [
+  {
+   "id": "P1-DIAG",
+   "status": "registered (diagnostic; not confirmatory)",
+   "registered_before": "any e07 diagnostic output on b6c or b6 hold pools",
+   "populations": "dev: b6_hold_SCE (400) + 160 b6 SCE octets, lineages s30-32 (inspected in ext-06); diagnostic: b6c_hold_SCE (400) + 320 SCE octets + 160 UCE octets, lineages s35-39 (b6c pool/octets were inspected by ext-06 end-to-end scoring, so these are DIAGNOSTIC, not confirmation)",
+   "models": "historical LRN, RAWF, SUP, B0 checkpoints (read-only; campaign06)",
+   "protocols": "B free-running (bit-identical to historical eval required); A common-history (pi* histories and each arm's own histories replayed through every model, own recurrent state rebuilt; low (<.05) / unsupported (<1e-3) history probabilities flagged). Denominators never mixed.",
+   "tolerances_frozen": "campaign07_diagscore.semantic_tol at merge 1aa9c388: cost-unit coords .005 (= decision eps .5 price units / R); probabilities .05; remaining_queries_rel 1/16; steps_left_rel .25; binary flags .5. Fixed now, before any dev/b6c output; any later tolerance is reported as a sensitivity, not a substitute.",
+   "interventions": "LRN only, same frozen model + reconstructed state, at the aux output before fusion: pred (identity), exact (all), group replacements G1-G4 (iso/dep/up/keep, dependency closure from factor-contract.json), gauss / gauss_pred / scale_err / mirror perturbations at training-error scale; immediate vs rollout named separately; support membership (range / Mahalanobis / kNN vs 99th pct of LRN's own training predictions) logged for every replaced vector",
+   "primary_descriptive_readouts": [
+    "per-group prediction error and tolerance-hit rate on flip vs near-miss vs invariance octet decisions and by context (query2_after_H / notH, initial, later_query_start)",
+    "immediate rescue/harm of exact and group replacement on the same frozen LRN, split by in-support vs out-of-support replacement",
+    "common-history decision accuracy LRN vs RAWF vs SUP on pi* histories by context"
+   ],
+   "statistics": "two-level bootstrap (seed, then configuration / whole octet), n_boot 20000, boot seed 7, half-split MC check",
+   "order": "support refs -> dev-s30 smoke -> dev s31/32 -> score-dev -> b6c-s35 smoke (historical check 'identical' for all 4 models) -> b6c s36-39 -> score b6c"
+  }
+ ]
 }
