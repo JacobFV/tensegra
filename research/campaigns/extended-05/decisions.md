@@ -95,3 +95,4 @@
   - **PI-T-2 FAILS 3/3:** π_T is slightly *below* the best simple rule R1 ('delegate at every call anchor') by −.0011/−.0012/−.0017 (pooled CI90 −.0037 to −.0004). It matches always-teacher (.893) while delegating only **6.4–7.7% of steps** (teacher 100%).
   - **Reading:** delegating to the better supplied sub-policy improves the deployed policy. The learned *timing* recovers the gain with little delegation but adds no utility beyond a simple trigger rule.
   - **A-CF-T registered (amends A-CF before any run):** the frozen controller is applied unchanged to fresh lineages r3–r5 on sealed worlds from 260M; primary PI-T-1 in 3/3. Launched.
+- 2026-09-27T03:54Z: **A-CF-T launched** (12 jobs, source-63d52c02). The first launch (acf61800) failed at startup on a missing 'acf' address namespace; receipts renamed *-nons-process (charged, seconds). Fixed and smoke-verified on one job before launching the rest.
