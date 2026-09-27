@@ -71,3 +71,8 @@
   - **Caveat:** the configuration-only CIs omit seed variance. B0 seed 32 is an outlier (gap 40.9), and it drives the B0 comparisons.
   - **Adaptive B-FACT-C registered before any new data:** LRN vs RAWF (same architecture) on fresh seeds 35–39 and a fresh S+C+E pool and octets, with a two-level bootstrap and ≥ 4/5 pair sign consistency.
   - Budget: 65k / 172.8k core-s used. Estimate ~21k core-s (20 trainings ~10k, labels ~7k, evals ~4k), leaving > 34.5k reserve.
+- 2026-09-27T11:04Z: **UCE octets built** (e06-tb-labels-cf-uce, 160 octets, 4,634 core-s). **UCE octet evaluation not run.**
+  - Reason: cf_eval runs only inside a full eval, which would rewrite the runs' primary eval.json / episode files, and it is a descriptive secondary endpoint.
+  - U+C+E is reported from the held-out pool (b6_hold_UCE regret and accuracy, already in score.json).
+  - Also: the b6c fresh-confirm tooling was merged (9795f9a2). Hold base moved to 6.42e9, CF base 6.65e9, and the training-world range for seeds 35–39 is registered. Snapshot 096b6ff5.
+  - e06-tbc-labels-eval and e06-tbc-labels-cf launched (caps 8,000 core-s each).
