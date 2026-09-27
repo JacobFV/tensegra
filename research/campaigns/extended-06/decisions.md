@@ -63,3 +63,4 @@
   - e06-tb-dose2-eval-s30 was killed by the global OOM killer at 09:33Z (about 180 core-s, no occupancy receipt; relabelled *-oomkilled-process with OOM_KILLED.txt).
   - The kernel log shows this one kill only; no non-campaign process was affected.
   - It is rerun alone. **Rule going forward:** at most 8 concurrent Track B jobs, with memory checked first.
+- 2026-09-27T10:25Z: e06-tb-score failed at its final write because the output directory was missing (exit 1, 1,068 core-s, charged). The directory was created and the job relaunched as e06-tb-score2, with identical inputs.
