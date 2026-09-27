@@ -12,7 +12,7 @@ Subcommands:
   status                         list campaign units and finished receipts
 Guards: job names must start with 'e07-'; the snapshot must exist; output paths outside ROOT/results are refused.
 """
-import argparse, re, subprocess, sys
+import argparse, re, shlex, subprocess, sys
 from pathlib import Path
 
 ROOT = "/home/brand/structured-latent-dynamics-campaign07"
@@ -97,7 +97,7 @@ def launch_cmd(argv):
         checks.append(f"mkdir -p {d}")
     script = "set -e\n" + "\n".join(checks) + "\n" + (
         f"{DETACH} {a.job} {ROOT}/source-{a.sha} {PY} {ROOT}/bin/job.py --output {ROOT}/results/{a.job}-process "
-        f"--wall-cap {a.wall_cap} --cpu-cap {a.cpu_cap} -- {' '.join(a.cmd)}\necho LAUNCHED {a.job}\n")
+        f"--wall-cap {a.wall_cap} --cpu-cap {a.cpu_cap} -- {shlex.join(a.cmd)}\necho LAUNCHED {a.job}\n")
     out = subprocess.run(["ssh", "pro6000", "wsl -d Ubuntu -- bash -s"], input=script.encode(), capture_output=True)
     txt = out.stdout.decode(errors="replace").replace("\0", "") + out.stderr.decode(errors="replace").replace("\0", "")
     print(txt.strip())
