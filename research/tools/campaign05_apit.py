@@ -64,7 +64,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 CONDITIONS = ("iid_f0", "iid_f2", "events_train_kinds_p1", "foreign4")
 IID = ("iid_f0", "iid_f2")
-WORLD_BASES = {"apit": 240_000_000, "dev": 2_250_500_000}
+WORLD_BASES = {"apit": 240_000_000, "acf": 260_000_000, "dev": 2_250_500_000}  # acf: A-CF-T sealed confirmation (r3-r5 only)
 STRIDE = 100_000
 NAMESPACES = {"apit": "e05apit", "dev": "e05apit-dev"}
 CHUNK = 32
@@ -112,12 +112,14 @@ def check_seed_ranges(path=None):
             raise ValueError(f"{kind} worlds [{lo}, {hi}) are not inside a registered extended-05 range")
         if kind == "apit" and not any("A-PI-T" in r["name"] for r in inside):
             raise ValueError("the A-PI-T evaluation range must be registered under its own entry")
+        if kind == "acf" and not any("A-CF-T" in r["name"] for r in inside):
+            raise ValueError("the A-CF-T confirmation range must be registered under its own entry")
     return rs
 
 
 def world_seeds(kind, condition, chunk, chunk_size, episodes=None):
     i = CONDITIONS.index(condition)
-    if chunk < 0 or (chunk + 1) * chunk_size > (PER_CONDITION if kind == "apit" else STRIDE):
+    if chunk < 0 or (chunk + 1) * chunk_size > (PER_CONDITION if kind in ("apit", "acf") else STRIDE):
         raise SystemExit("chunk outside the registered range")
     first = WORLD_BASES[kind] + STRIDE * i + chunk * chunk_size
     n = chunk_size if episodes is None else min(episodes, chunk_size)
@@ -389,16 +391,18 @@ def cmd_eval(a):
     torch.set_num_threads(a.threads)
     check_seed_ranges()
     h = hr()
-    if a.base in RESERVED_FOR_CONFIRMATION and a.binding is None:
+    if a.base in RESERVED_FOR_CONFIRMATION and a.binding is None and a.worlds != "acf":
         raise SystemExit(f"{a.base} is reserved for confirmation (design v2 revision 4); A-PI-T screens x1-r0..r2")
+    if a.worlds == "acf" and a.base not in RESERVED_FOR_CONFIRMATION:
+        raise SystemExit("A-CF-T sealed worlds are for the fresh lineages x1-r3..r5 only")
     binding = h.bases()[a.base] if a.binding is None else a.binding
     actor, train_cfg, info = a.load_actor(binding, verify=not a.no_verify_hash)
     controller = Controller.from_file(a.controller, margin=a.margin_override) if "pit" in a.policies else None
-    if controller is not None and a.worlds == "apit" and not controller.artifact.get("protocol"):
+    if controller is not None and a.worlds in ("apit", "acf") and not controller.artifact.get("protocol"):
         raise SystemExit("protocol worlds need the registered (protocol) controller artifact")
     if "random" in a.policies and "pit" not in a.policies:
         raise SystemExit("random is matched to pi_T's rate on the same chunk: include pit")
-    teacher = {"auto": a.base == "x1-r0", "yes": True, "no": False}[a.teacher]
+    teacher = {"auto": a.base in ("x1-r0", "x1-r3"), "yes": True, "no": False}[a.teacher]
     a.output.mkdir(parents=True, exist_ok=True)
     stem = _stem(a)
     if stem.with_suffix(".json.gz").exists():
