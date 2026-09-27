@@ -136,7 +136,7 @@
     - Every deployable P2 candidate is below S1R1 (−.037 to −.083).
   - **SUP-h:** J +.043 (CI includes 0), concentrated in q2_after_notH, i.e. a privileged belief-input effect.
   - **Factor inputs** act mainly as a "don't change" signal (they cut false changes) and never move near-miss discrimination.
-  - **The registered P2 flip-gain rule was passable by bias alone.** P3's metric is therefore fixed now, before any P3 eval:
+  - The registered P2 flip-gain rule was not bias-proof: along the observed trade-off a pure criterion shift reaching the +.03 flip minimum costs ≈ .053 near-miss, at the −.05 guard, and the rule had no discrimination requirement. *(audit-corrected)* P3's metric is therefore fixed now, before any P3 eval:
     - **Primary:** J_sub (bil − mlp, mix contract, predicted inputs) ≥ .03 with ≥ 4/5 seeds.
     - **Co-primary:** BA_nm ≥ −.02.
     - **Guards:** false changes ≤ +.02, near-miss ≥ −.05, pool ≥ −.02.
@@ -146,6 +146,12 @@
   - Primary J_sub bil − mlp +.046 [+.011, +.082] (5/5 seeds); the co-primary and all guards pass; pool .830 vs .812.
   - **The registered stratum condition fails:** without q2_after_notH the gain is +.011 [−.026, +.048].
   - Per type: +.119 in q2_after_notH, +.079 in q2_after_H; −.117 after_probe_failed (0/5 seeds positive), −.082 after_b1_timeout.
-  - The interaction consumer shifts discrimination toward the belief-update contexts. It is not a general composition gain.
+  - Under the mix contract only, the interaction consumer shifts discrimination toward q2_after_notH (+.119, 4/5 seeds) and away from after_probe_failed (−.117, 0/5); other per-type differences are unresolved. Under the exact contract bil does not beat mlp (−.014, 1/5), and the exact-contract mlp matches bil-mix, so the q2_after_notH advantage mostly reflects the mix-trained mlp's weakness there. No general composition gain (independent audit p23). *(audit-corrected)*
   - **Incident:** e07-p3-frontier failed at startup (0.1 core-s) because the launch's --mkdir pre-created the output dir the tool creates itself. It was rerun as e07-p3-frontier2 with a subdir, exit 0, 566 core-s.
   - **P3-REPLICATE registered:** a descriptive fresh-configuration check of this per-context pattern. The screen models are evaluated on b6d; expectations are stated before data. ~3.5k core-s.
+- 2026-09-27T21:38Z: **Independent P2/P3 audit merged** (98e7e221). All numbers reproduce; registration timing is verified; the 2×2 and the P3 matching are confirmed. **Corrections R1–R5 applied** (registry P3-SCREEN / P2-SCREEN, decisions 20:15Z / 21:28Z).
+  - **Main correction:** the bil − mlp J_sub gain is **contract-specific** (mix only).
+    - Under the exact contract it is −.014 (1/5 seeds), and the exact-trained mlp matches bil-mix. The q2_after_notH advantage mostly reflects the mix-trained mlp's weakness there.
+    - The pooled gain is false-change suppression.
+  - The pool +.018 is unresolved and is not a composition effect.
+  - P3-REPLICATE is to report the exact-contract contrast as well (added before any b6d output was read).
