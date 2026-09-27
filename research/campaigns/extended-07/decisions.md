@@ -55,3 +55,10 @@
     - Per-group nMAE: G1 .45, G2 1.03, G3 .33, G4 .11.
   - b6c s36–39 and the b6c scoring are running (≤ 4 concurrent).
   - **Analyst commissioned** (campaign/e07-p1analysis) for flip-level cross-tabs. It must freeze its code on dev before reading any b6c per-decision output.
+- 2026-09-27T17:06Z: **P1 diagnostic tranche complete:** 19 jobs, all exit 0; ~3.8k core-s including dev, within the 10.8k tranche.
+  - **b6c (diagnostic) reproduces extended-06:** LRN − RAWF flip −.048 [−.095, −.005], near-miss +.105, invariance +.037; SUP − RAWF flip +.109, near-miss −.108.
+  - **UCE octets** (descriptive; first evaluation): LRN − RAWF flip +.020 [−.055, +.098]; SUP − RAWF flip +.010. No flip effect.
+  - Scores staged in research/results/campaign-07/p1-score (sha256 verified).
+  - **Phase-2 infrastructure commissioned** (campaign/e07-p2infra): genuine S×R 2×2 per the gradient-flow spec, common history bank, controlled-consumer trainer.
+
+    It is built regardless of the diagnosis because the brief requires the 2×2. Which Phase-2 experiments run awaits the P1 analyst.
