@@ -67,7 +67,7 @@ def launch_cmd(a):
 
 
 def status(_):
-    print(wsl(f"""systemctl --user list-units --type=service --no-legend --plain 'e05-*' 'hr-*' 'hr2-*' 'api-*' 'acf-*' 'bloc-*' 'bx-*' 'bcf-*' | awk '{{print $1, $3, $4}}'
+    print(wsl(f"""systemctl --user list-units --type=service --no-legend --plain 'e05-*' 'hr-*' 'hr2-*' 'apit-*' 'bxc-*' 'api-*' 'acf-*' 'bloc-*' 'bx-*' 'bcf-*' | awk '{{print $1, $3, $4}}'
 cd {ROOT}/results
 for f in *-process/occupancy.json; do [ -e "$f" ] || continue
   python3 -c "import json,sys;o=json.load(open('$f'));print('$f'.split('/')[0], o['exit_code'], round(o['wall_seconds'],1), round(o['cpu_core_seconds'],1))"
