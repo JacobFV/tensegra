@@ -90,13 +90,15 @@
   },
   {
    "id": "A-CF-SMALL",
-   "status": "registered (after A-HS gate failure; labelled)",
+   "status": "complete: PASS (small)",
    "track": "A",
    "hypothesis": "A learned public-information method/budget selector beats the best tuned simple portfolio (inner-selected among thresholds, depth<=3 trees, tuned logistic, strong v2 baseline, hand portfolio, cascades) on fresh instances, charging selector compute \u2014 a small but real margin (gate estimate +.006)",
    "design": "3 lineages = 3 disjoint training populations from the train range (310M-320M); all selectors (learned one-shot, learned sequential, and every simple family) fit on the lineage's training population, hyperparameters/family chosen on the select range (320M-330M, shared), evaluated once on the untouched confirm range (330M-340M, 640 episodes, shared across lineages; paired)",
    "primary": "per lineage: U(learned one-shot) - U(best simple chosen on select range) > 0 with episode-clustered 95% LB > 0, in 3/3 lineages; same reported for sequential; GA-2 analogue vs best single reported",
    "practical_note": "a pass establishes a small margin below the registered .02 practical-headroom threshold; it is reported as such, not as meaningful metacontrol headroom",
-   "metric_checks": "selector feature/inference work charged; oracle certified fraction reported; uncertified instances scored vs UB"
+   "metric_checks": "selector feature/inference work charged; oracle certified fraction reported; uncertified instances scored vs UB",
+   "result": "Confirm population 330M (640 episodes, 2,852 instances, oracle certified .999). Best simple chosen on select = tree_d3 in all 3 lineages. One-shot \u2212 best simple: +.0032 [.0006,.0067], +.0025 [.0005,.0046], +.0043 [.0014,.0080]: 3/3 PASS; paired mean +.0033 [.0016,.0055]. Sequential +.0039 [.0021,.0062], 3/3. GA-2 analogue +.035. Learned ~.959 vs tree_d3 ~.956 vs hidden-state oracle .9826. Artifacts: research/results/campaign-06/a-cfsmall (hash-checked).",
+   "interpretation": "A real but practically negligible learned-selector margin (about 1/6 of the registered .02 practical threshold; ~12% of oracle \u2212 best-simple gap). Supports: a strong simple portfolio (depth-3 tree over public features) captures most public-information headroom in portworld."
   }
  ]
 }

@@ -40,3 +40,9 @@
 - 2026-09-27T07:29Z: A-CF-SMALL tooling merged (f2701dbd). The builder's metered dev cost was 549 core-s, and its dev_builder smoke is development-only. All 8 train/select evaluate chunks launched after a one-job smoke (train0-c0). The confirm chunks will launch only after the 3 fits are frozen and their hashes recorded.
 - 2026-09-27T07:29Z: Track B training labels done (e06-tb-labels-train, 1,100 core-s). Smoke e06-tb-b0-s30 started cleanly (L1, b6_B0). B0/B2 seeds 30–32 launched; seeds 33–34 follow as slots free (<= 6 trainings concurrently, well below the 57 GB free / 24 cores, and there are no other user workloads at load ~3.4).
 - 2026-09-27T07:40Z: A-CF-SMALL fits frozen before any confirm data exists: fit0 e0ff1ace…c63c, fit1 1bff3f53…1986, fit2 92460494…4848 (full sha256 in results fit.json). Confirm chunks launched now.
+- 2026-09-27T08:03Z: **A-CF-SMALL passes (small).**
+  - One-shot − best simple (tree_d3, chosen on the select set) is positive in 3/3 lineages; paired mean +.0033 [.0016, .0055]; sequential +.0039.
+  - This is about 1/6 of the .02 practical threshold, so **Track A closes** with the finding: a real but practically negligible learned-selection margin over a tuned depth-3 tree portfolio.
+  - Track C is not triggered (GA-1 failed).
+  - Artifacts are staged in research/results/campaign-06/a-cfsmall; sha256 verified against the remote.
+  - An independent audit of Track A is queued for close-out.
