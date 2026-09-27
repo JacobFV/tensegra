@@ -53,3 +53,8 @@
   - **(iii)** A-HS explicitly declined the optional generator revision.
   - **(iv)** The strong baseline's inspect-rule deviation is disclosed in portworld.md.
   - The registry has been updated. Track A stays closed.
+- 2026-09-27T09:23Z: **e06-tb-labels-cf hit its 8,000 core-s cap** (exit −9, receipted and charged).
+  - cf_SCE.json (320 octets, the primary family) was complete, written at 3,020 core-s. The secondary UCE family was not.
+  - Per trackb-screen §8's allowance, UCE is relaunched at 160 octets into a separate labels dir, e06-tb-labels-uce: cap 14k core-s, deterministic seeds; its SCE sets 0–159 are regenerated and ignored.
+  - Model evals proceed now on the main labels dir (SCE counterfactuals only). The UCE counterfactual scoring is a secondary endpoint, added by a later cf pass.
+  - Smoke: e06-tb-b0-eval-s30.
