@@ -335,6 +335,9 @@ UCE = f"{R6}/e06-tb-labels-uce/labels/cf_UCE.json"
 TRAIN = "research/tools/campaign04_probeworld_train.py"
 P2 = "research/tools/campaign07_p2.py"
 DIAG = "research/tools/campaign07_diag.py"
+SCORE = "research/tools/campaign07_diagscore.py"
+DIAG_VERSION = "diag-v1"
+PHIS = ("own", "exact", "zero", "mean")  # factor-channel evaluation conditions (P2-SCREEN addendum_2)
 ENV = ["env", "CUDA_VISIBLE_DEVICES=", "OMP_NUM_THREADS=1", "PYTHONPATH=src", PYR]
 ARMS = {"s0r0": (0, 0), "s1r0": (1, 0), "s0r1": (0, 1), "s1r1": (1, 1)}
 CONTRACTS = ("exact", "oof", "mix")
@@ -431,45 +434,70 @@ def job_matrix(sha, smoke=False, seeds=P2_SEEDS, bank_updates=4000, finetune=0, 
                     [TRAIN, "train", *common, "--seed", str(s), "--arch", "fuse", "--shape", str(sh), "--read",
                      str(rd), "--init-from", init, "--updates", "10" if smoke else str(onpolicy), *le,
                      "--out", f"{o}/run"])
-    # evaluation (diag runner): b6c_hold_SCE + SCE octets (+ UCE); B free-running + A-pistar; ivs none / exact.
-    # Near-miss members of every octet are logged (cf role 'near_miss').  evalA = consumers (exact / own predictor),
-    # evalX = consumers on historical-LRN predictions + SEP, evalB = the 2x2.
+    # evaluation (diag runner): b6c_hold_SCE + SCE octets (+ UCE); B free-running + A-pistar; ivs none / exact;
+    # factor-channel conditions phi in {own, exact, zero, mean} (P2-SCREEN addendum_2; mean = the P2 history bank's
+    # population mean of exact targets) on B and the octets for every factor-reading entry (the diag runner skips the
+    # R0 arms).  Near-miss members of every octet are logged (cf role 'near_miss').
+    #   eval  = the 2x2 + consumers (exact / own predictor): the combined job of the launched screen (c7d22aff names)
+    #   evalX = consumers on the historical LRN's predictions + SEP + the historical LRN / SUP references (paired
+    #           lineage 35 + i)
+    #   score = campaign07_diagscore over every eval / evalX output, by (model, phi), 20000 draws, seed 7
     sub = ["--n-configs", "24", "--n-octets", "8"] if smoke else []
     pops = ["--labels", TBC, "--pool", "b6c_hold_SCE", "--cf", f"{TBC}/cf_SCE.json", *([] if smoke else ["--cf", UCE])]
-    tail = ["--protocols", "B", "A-pistar", "--ivs", "none", "exact", "--no-latent", *sub]
-    popneeds = [f"{TBC}/b6c_hold_SCE.shards.json", f"{TBC}/cf_SCE.json"]
+    tail = ["--protocols", "B", "A-pistar", "--ivs", "none", "exact", "--phis", *PHIS, "--phi-mean-bank", bank,
+            "--no-latent", *sub]
+    popneeds = [f"{TBC}/b6c_hold_SCE.shards.json", f"{TBC}/cf_SCE.json", bank]
+    kinds = ("bank",) + (("onp",) if smoke or onpolicy else ())
+    score_dirs, score_needs = [], []
     for i, s in enumerate(seeds):
         m, needs = [], []
+        for arm in ARMS:
+            for kind in kinds:
+                m += ["--model", f"{arm.upper()}-{kind}-s{s}={R7}/{tag}-{arm}-{kind}-s{s}/run"]
+                needs.append(f"{R7}/{tag}-{arm}-{kind}-s{s}/run/model.pt")
         pred = f"{R7}/{tag}-pred-ffull-s{s}/run"
-        lrn = f"{R6}/e06-tb-lrn-s{35 + i}/run"  # historical LRN of the paired lineage: its aux predictions
         for c in CONTRACTS:
             run = f"{R7}/{tag}-cons-{c}-s{s}/run"
             m += ["--model", f"CONS-{c}-exact-s{s}={run}::exact", "--model", f"CONS-{c}-pred-s{s}={run}::pred={pred}"]
             needs.append(f"{run}/model.pt")
-        o = f"{R7}/{tag}-evalA-s{s}"
-        add("evalA", f"{tag}-evalA-s{s}", (7200, 7200), needs + [f"{pred}/model.pt"] + popneeds, [o],
-            [DIAG, "run", *pops, *m, *tail, "--tag", f"{tag}-A-s{s}", "--out", o])
+        o = f"{R7}/{tag}-eval-s{s}"
+        add("eval", f"{tag}-eval-s{s}", (7200, 7200), needs + [f"{pred}/model.pt"] + popneeds, [o],
+            [DIAG, "run", *pops, *m, *tail, "--tag", f"{tag}-s{s}", "--out", o])
+        score_dirs.append(o)
+        score_needs.append(f"{o}/{DIAG_VERSION}-summary-{tag}-s{s}.json")
         # evalX: the consumers on the historical LRN's own aux predictions (paired lineage 35 + i, replayed on the
-        # same public history; the predictor is not the consumer's trunk) + the separate-predictor READ arm
+        # same public history; the predictor is not the consumer's trunk) + the separate-predictor READ arm + the
+        # historical LRN / SUP references of the same lineage
         m, needs = [], []
+        lrn = f"{R6}/e06-tb-lrn-s{35 + i}/run"
+        sup = f"{R6}/e06-tb-sup-s{35 + i}/run"
         for c in CONTRACTS:
             run = f"{R7}/{tag}-cons-{c}-s{s}/run"
             m += ["--model", f"CONS-{c}-predLRN{35 + i}-s{s}={run}::pred={lrn}"]
             needs.append(f"{run}/model.pt")
-        for kind in ("bank",) + (("onp",) if smoke or onpolicy else ()):
+        for kind in kinds:
             m += ["--model", f"SEP-{kind}-s{s}={R7}/{tag}-sep-{kind}-s{s}/run"]
             needs.append(f"{R7}/{tag}-sep-{kind}-s{s}/run/model.pt")
+        m += ["--model", f"LRN-h-s{35 + i}={lrn}", "--model", f"SUP-h-s{35 + i}={sup}"]
         o = f"{R7}/{tag}-evalX-s{s}"
-        add("evalX", f"{tag}-evalX-s{s}", (7200, 7200), needs + [f"{lrn}/model.pt"] + popneeds, [o],
-            [DIAG, "run", *pops, *m, *tail, "--tag", f"{tag}-X-s{s}", "--out", o])
-        m, needs = [], []
-        for arm in ARMS:
-            for kind in ("bank",) + (("onp",) if smoke or onpolicy else ()):
-                m += ["--model", f"{arm.upper()}-{kind}-s{s}={R7}/{tag}-{arm}-{kind}-s{s}/run"]
-                needs.append(f"{R7}/{tag}-{arm}-{kind}-s{s}/run/model.pt")
-        o = f"{R7}/{tag}-evalB-s{s}"
-        add("evalB", f"{tag}-evalB-s{s}", (7200, 7200), needs + popneeds, [o],
-            [DIAG, "run", *pops, *m, *tail, "--tag", f"{tag}-B-s{s}", "--out", o])
+        add("evalX", f"{tag}-evalX-s{s}", (7200, 7200), needs + [f"{lrn}/model.pt", f"{sup}/model.pt"] + popneeds,
+            [o], [DIAG, "run", *pops, *m, *tail, "--tag", f"{tag}-X-s{s}", "--out", o])
+        score_dirs.append(o)
+        score_needs.append(f"{o}/{DIAG_VERSION}-summary-{tag}-X-s{s}.json")
+    # score: every screen output by (model, phi); own - phi contrasts are added by the scorer; candidate - reference
+    # contrasts (selection rule: reference = S1R1 / S1R0 under own; deployable candidates under every phi)
+    o = f"{R7}/{tag}-score"
+    con = []
+    cands = ["S0R1-bank", "S1R1-bank", "SEP-bank"] + [f"CONS-{c}-pred" for c in CONTRACTS] + \
+        [f"CONS-{c}-predLRN" for c in CONTRACTS]
+    for ref in ("S1R1-bank", "S1R0-bank"):
+        for cand in cands:
+            for ph in PHIS:
+                if cand != ref:
+                    con += ["--contrast", f"{cand}@{ph}", f"{ref}@own"]
+    add("score", f"{tag}-score", (7200, 7200), score_needs, [o],
+        [SCORE, "--dirs", *score_dirs, "--by-model-phi", "--n-boot", "2000" if smoke else "20000", "--boot-seed", "7",
+         *con, "--out", f"{o}/score.json", "--md", f"{o}/score.md"])
     return jobs
 
 

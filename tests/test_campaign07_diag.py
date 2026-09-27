@@ -381,3 +381,135 @@ def test_cf_reproduces_historical_cf_eval_b6c(tmp_path):
         assert r["a"] == h["a"] and r["ok"] == h["ok"], (c, r["a"], h)
         n += 1
     assert n > 100
+
+
+# ------------------------------------------------------------------ factor-channel conditions (P2-SCREEN addendum_2)
+
+def _bank(tmp, rows_per_ep=(3, 5, 2), seed=0):
+    rng = np.random.default_rng(seed)
+    eps = [{"id": f"x:{j}", "phi": rng.normal(size=(n, D.NF)).tolist()} for j, n in enumerate(rows_per_ep)]
+    d = tmp / "bank"
+    d.mkdir()
+    with open(d / "bank.pkl", "wb") as f:
+        pickle.dump({"meta": {"format": T.BANK_FORMAT}, "episodes": eps}, f)
+    return d / "bank.pkl", np.array([r for e in eps for r in e["phi"]]).mean(0)
+
+
+def _cf_file(tmp):
+    base = 6_884_000_000
+    idx = next(i for i in range(100) if pw6.draw_params(base + i, pw.TRAIN_CELLS, pw6.V3_K, ("SCE",))[1] == 2)
+    (tmp / "cflabels").mkdir()
+    p = tmp / "cflabels" / "cf_SCE.json"
+    p.write_text(json.dumps([pw6.counterfactual_set("SCE", idx, base=base)]))
+    return p
+
+
+def _lines(path):
+    with gzip.open(path, "rt") as f:
+        return f.read().splitlines()
+
+
+def test_phi_conditions(tmp_path, pool, dev_worlds):
+    lab = _labels(tmp_path, pool)
+    cf = _cf_file(tmp_path)
+    runs = {"LRN-s1": _save_run(tmp_path, "lrn", "LRN", 1), "SUP-s1": _save_run(tmp_path, "sup", "SUP", 1),
+            "RAWF-s1": _save_run(tmp_path, "rawf", "RAWF", 1)}
+    bank, mean = _bank(tmp_path)
+    base = ["run", "--labels", str(lab), "--pool", "b6_dev", "--cf", str(cf), "--protocols", "B", "A-pistar",
+            "--ivs", "none", "exact", "--tag", "t"] + sum((["--model", f"{k}={v}"] for k, v in runs.items()), [])
+    D.main(base + ["--out", str(tmp_path / "o1")])
+    argv = base + ["--phis", "own", "exact", "zero", "mean", "--phi-mean-bank", str(bank), "--out", str(tmp_path / "o2")]
+    D.main(argv)
+    o1, o2 = tmp_path / "o1", tmp_path / "o2"
+    f1 = {p.name for p in o1.iterdir()}
+    f2 = {p.name for p in o2.iterdir()}
+    # own == the default files: every default file exists and its records are bit-identical (header: + phi_conditions)
+    assert f1 <= f2
+    for n in f1:
+        if not n.endswith(".gz"):
+            continue
+        l1, l2 = _lines(o1 / n), _lines(o2 / n)
+        assert l1[1:] == l2[1:] and len(l1) > 1, n
+        h1, h2 = json.loads(l1[0])["_meta"], json.loads(l2[0])["_meta"]
+        pc = h2.pop("phi_conditions")
+        assert h1 == h2 and "phi_conditions" not in h1
+    new = f2 - f1
+    exp = {f"diag-v1-{p}-{m}@phi={c}.jsonl.gz" for p in ("B", "cf-SCE") for m in ("LRN-s1", "SUP-s1")
+           for c in ("exact", "zero", "mean")}
+    assert new == exp  # RAWF skipped (no error); A-pistar only under own
+    assert pc["skipped_models"] == ["RAWF-s1"]
+    pm = pc["phi_mean"]
+    assert pm["sha256"] == D._sha_file(bank) and pm["n_decisions"] == 10
+    assert np.allclose(pm["values"], mean, rtol=0, atol=1e-12)
+    for n in exp:
+        head, recs = _recs(o2 / n)
+        c = n.split("@phi=")[1].split(".")[0]
+        assert head["phi"] == c and head["model"] in ("LRN-s1", "SUP-s1")
+        dec = [r for r in recs if r["kind"] == "decision"]
+        assert dec and all(r["phi"] == c and r["model"] == head["model"] and "iv" not in r for r in dec)
+        if n.startswith("diag-v1-B-"):
+            assert sum(r["kind"] == "episode" and r["phi"] == c for r in recs) == len(pool)
+    # SUP reads exact factors: phi=exact reproduces its own decisions
+    _, a = _recs(o2 / "diag-v1-B-SUP-s1.jsonl.gz")
+    _, b = _recs(o2 / "diag-v1-B-SUP-s1@phi=exact.jsonl.gz")
+    key = lambda rs: [(r["cfg_id"], r["t"], r["a"], r["probs"]) for r in rs if r["kind"] == "decision"]  # noqa: E731
+    assert key(a) == key(b)
+    # no-overwrite: a second identical run refuses and changes nothing
+    before = {p.name: p.read_bytes() for p in o2.iterdir()}
+    with pytest.raises(SystemExit, match="refusing to overwrite"):
+        D.main(argv)
+    assert before == {p.name: p.read_bytes() for p in o2.iterdir()}
+    with pytest.raises(SystemExit, match="phi-mean-bank"):
+        D.main(base + ["--phis", "mean", "--out", str(tmp_path / "o3")])
+    # scorer by (model, phi)
+    sc = tmp_path / "score.json"
+    S.main(["--dirs", str(o2), "--by-model-phi", "--out", str(sc), "--md", str(tmp_path / "score.md"),
+            "--n-boot", "200", "--contrast", "LRN@zero", "SUP@own"])
+    res = json.loads(sc.read_text())
+    for m in ("LRN", "SUP"):
+        for c in ("own", "exact", "zero", "mean"):
+            assert f"B|{m}@{c}" in res["cells"] and f"cf-SCE|{m}@{c}" in res["cells"]
+            if c != "own":
+                assert f"B|{m}@own-{m}@{c}" in res["contrasts"]
+        assert set(res["phi_readout"]["cf-SCE"][m]) == {"own", "exact", "zero", "mean"}
+    assert set(res["phi_readout"]["B"]["RAWF"]) == {"own"} and "B|LRN@zero-SUP@own" in res["contrasts"]
+    assert res["phi_readout"]["B"]["SUP"]["exact"]["own_minus_this"]["acc"]["mean"] == 0.0
+    assert "factor-channel conditions" in (tmp_path / "score.md").read_text()
+
+
+@pytest.mark.parametrize("cond", ["exact", "zero", "mean"])
+def test_phi_condition_inputs(pool, monkeypatch, cond):
+    """The fusion input the policy acts on under a condition is exactly the exact targets / zeros / the mean vector, at
+    every decision of the free-running episode and at the counterfactual decision; 'own' is the default path."""
+    m = _model("LRN", seed=5)
+    mean = [0.01 * j - 0.1 for j in range(D.NF)]
+    seen = []
+    orig = D.fuse_out
+    monkeypatch.setattr(D, "fuse_out", lambda model, z, phi: (seen.append(phi.clone()), orig(model, z, phi))[1])
+    tr = [D.Track(c, s, f"x:{j}", ws) for j, (c, s, ws) in enumerate(_items(pool))]
+    D.drive(m, tr, {"protocol": "B", "model": "L"}, latent=False, phi_cond=cond, phi_mean=mean)
+    # two fuse_out calls per step: the model's own phi (inside forward), then the condition's (acted on)
+    acted = torch.cat(seen[1::2])
+    recs = [r for t in tr for r in t.recs]
+    assert len(acted) == len(recs) and all(r["phi"] == cond for r in recs)
+    order = []
+    for step in range(max(len(t.recs) for t in tr)):  # batch order: the active tracks of every step
+        order += [t.recs[step]["target"] for t in tr if step < len(t.recs)]
+    for row, tg in zip(acted.tolist(), order):
+        want = {"exact": tg, "zero": [0.0] * D.NF, "mean": mean}[cond]
+        assert np.allclose(row, want, atol=1e-5)
+    monkeypatch.setattr(D, "fuse_out", orig)
+    tr2 = [D.Track(c, s, f"x:{j}", ws) for j, (c, s, ws) in enumerate(_items(pool))]
+    tr3 = [D.Track(c, s, f"x:{j}", ws) for j, (c, s, ws) in enumerate(_items(pool))]
+    D.drive(m, tr2, {}, latent=False, phi_cond="own")
+    D.drive(m, tr3, {}, latent=False)
+    assert [t.recs for t in tr2] == [t.recs for t in tr3]
+    # counterfactual decision (empty history: the initial decision)
+    monkeypatch.setattr(D, "fuse_out", lambda model, z, phi: (seen.append(phi.clone()), orig(model, z, phi))[1])
+    cfg = pool[1][1]
+    st = pw.initial_state(cfg)
+    q = {str(a): 0.0 for a in pw6.available(cfg, st)}
+    seen.clear()
+    rec = D.cf_decision(m, cfg, [], q, "c", {}, None, None, False, cond, mean)
+    want = {"exact": pw6.factor_features(cfg, st), "zero": [0.0] * D.NF, "mean": mean}[cond]
+    assert np.allclose(seen[-1][0].tolist(), want, atol=1e-5) and rec["phi"] == cond

@@ -233,10 +233,10 @@ This revision builds on top of the snapshot c7d22aff that was launched as P2-SCR
 2. P1-predictor, P1-oof, P1-consumer;
 3. P2-sep (+ P2-sep-onpolicy with `--onpolicy U`);
 4. P3-2x2-bank (+ P3-2x2-onpolicy);
-5. evaluation:
-   - evalA: consumers on exact and own-predictor inputs;
-   - evalX: consumers on historical-LRN predictions, plus SEP;
-   - evalB: the 2×2.
+5. evaluation (every job with factor-channel conditions `--phis own exact zero mean --phi-mean-bank e07-p2-bank/bank.pkl`, P2-SCREEN addendum_2; files `diag-v1-<protocol>-<model>@phi=<c>.jsonl.gz` for B and the octets; R0 arms skipped):
+   - eval (`e07-p2-eval-s4x`, the combined job of the launched screen): the 2×2 + consumers on exact and own-predictor inputs;
+   - evalX: consumers on historical-LRN predictions, plus SEP, plus the historical LRN / SUP references (lineage 35+i);
+   - score (`e07-p2-score`): `campaign07_diagscore.py --by-model-phi` over every eval/evalX output (20000 draws, seed 7): arms `<model>@<phi>`, own − φ contrasts, candidate@φ − reference@own contrasts, and a `phi_readout` table (pool / flip / near-miss / invariance).
 
 The launched P2-SCREEN (c7d22aff) already has bank, init, predictors, oof, consumers, the 2×2 and a combined `e07-p2-eval-s*`. **The only additions it needs are `--stages P2-sep evalX`** (10 jobs, names `e07-p2-sep-bank-s4x` and `e07-p2-evalX-s4x`).
 
