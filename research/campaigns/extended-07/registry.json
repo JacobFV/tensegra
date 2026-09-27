@@ -17,7 +17,8 @@
     "common-history decision accuracy LRN vs RAWF vs SUP on pi* histories by context"
    ],
    "statistics": "two-level bootstrap (seed, then configuration / whole octet), n_boot 20000, boot seed 7, half-split MC check",
-   "order": "support refs -> dev-s30 smoke -> dev s31/32 -> score-dev -> b6c-s35 smoke (historical check 'identical' for all 4 models) -> b6c s36-39 -> score b6c"
+   "order": "support refs -> dev-s30 smoke -> dev s31/32 -> score-dev -> b6c-s35 smoke (historical check 'identical' for all 4 models) -> b6c s36-39 -> score b6c",
+   "audit": "review/p1-independent-audit.md: numbers reproduce; Q3/Q4/Q5 analyses exploratory; SUP flip advantage mostly survives phi=0/mean (training-induced), corrections applied"
   },
   {
    "id": "P2-SCREEN",
@@ -41,7 +42,8 @@
    ],
    "selection_rule": "Reference = the better (screen pool eps-optimal accuracy) of S1R1 and S1R0 (strong ordinary equal-information baselines). Candidates = DEPLOYABLE arms/consumers (predicted-factor inputs only; exact-factor evaluations never selected). Choose the candidate with the largest mean screen flip-accuracy gain over the reference subject to: near-miss mean diff >= -.05, invariance mean diff >= -.03, pool accuracy >= reference - .02 and >= .70 absolute. If none qualifies (or best flip gain < .03) -> no confirmation of a repair; report branch E / negative and use remaining budget only for a localized follow-up.",
    "budget": "~12k core-s (bank mode); on-policy variants not run in screen",
-   "addendum_1": "Added before any P2 evaluation output exists (the screen is at the training stages): (a) SEP arm (--factor-mode sep): separately encoded predictor trained only by factor loss, policy reads its detached output (non-redundant READ), bank mode, seeds 40-44; (b) evalX: consumers evaluated with the HISTORICAL LRN-s(35+i) predictions replayed on the same history (P2 seed 40+i paired with LRN lineage 35+i), plus SEP-bank. SEP is a deployable candidate under the selection rule."
+   "addendum_1": "Added before any P2 evaluation output exists (the screen is at the training stages): (a) SEP arm (--factor-mode sep): separately encoded predictor trained only by factor loss, policy reads its detached output (non-redundant READ), bank mode, seeds 40-44; (b) evalX: consumers evaluated with the HISTORICAL LRN-s(35+i) predictions replayed on the same history (P2 seed 40+i paired with LRN lineage 35+i), plus SEP-bank. SEP is a deployable candidate under the selection rule.",
+   "addendum_2": "Added after the independent P1 audit, before any P2 evaluation output: every factor-reading model (R1 arms, SEP, consumers, historical LRN/SUP references) is evaluated with factor channel phi in {own (its deployable input), exact, zero, population-mean (training-bank mean of exact targets)} on pool, flips, near-misses, invariances. Selection uses 'own' only; zero/mean separate decision-time reading from training-induced trunk/head effects. A candidate whose flip gain over the reference is not larger under 'own' than under 'zero'/'mean' is reported as a training-induced effect, not factor-mediated reading."
   },
   {
    "id": "P2-CONFIRM",

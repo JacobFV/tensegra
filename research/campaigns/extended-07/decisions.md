@@ -63,17 +63,17 @@
 
     It is built regardless of the diagnosis because the brief requires the 2×2. Which Phase-2 experiments run awaits the P1 analyst.
 - 2026-09-27T17:31Z: **P1 diagnosis merged** (campaign/e07-p1analysis b9199fcd; analysis code frozen at 97cc728e before any b6c per-decision read; one pooling bug fixed in ae189416 and re-run once; 971 metered + ~150 local core-s).
-  - **Localization:** **consumption is the primary flip failure.**
-    - The frozen LRN barely reads its factor channel: zeroing the factors changes .045 of its actions vs .24 for SUP; factor columns carry 2–3% of fusion variance vs 18–21%.
+  - **Localization (audit-corrected):** the frozen LRN does not read its factor channel, but most of the SUP − LRN flip gap is carried by SUP's learned network even with its factor inputs zeroed or mean-filled. *(audit-corrected)*
+    - The frozen LRN barely reads its factor channel: zeroing the factors changes .045 of its actions vs .24 for SUP; factor columns carry 2–3% of fusion variance vs 18–22% *(audit-corrected)*.
     - Exact replacement fixes 7/640 flips (+.011 [.000, .029]).
-    - SUP's consumer fed LRN's *predicted* factors reaches flip .511 vs LRN .405 (SUP exact .562; 5/5 seeds, post hoc).
-  - **Acquisition is a secondary limit:**
+    - SUP's consumer fed LRN's *predicted* factors reaches flip .511 vs LRN .405 (SUP exact .562), but reaches .514 with φ = 0 and .539 with φ = mean. LRN's predictions add nothing for SUP's consumer (post hoc, 5/5 seeds). *(audit-corrected)*
+  - **Acquisition limits the factor-value-dependent part (≈ .02–.05) entirely:** *(audit-corrected)*
     - errors grow with the number of combined factors (full − single +.22);
     - interaction terms are absent from the predictions (slope ≤ .2);
     - the not-H belief update is never learned.
   - The factor prediction is a function of the same trunk state the fusion sees, so the channel is redundant by construction.
-  - LRN's gains over RAWF (invariance, pool) point to auxiliary shaping (D), not reading.
-  - **Benchmark scope:** only 9/128 SCE flip units differ from every pair's optimum; pairwise Q sums recover the full optimum in 94–96%. It supports full-vs-single composition, **not irreducible third-order** interaction.
+  - LRN's gains and its flip deficit vs RAWF are both outside the factor channel. This is consistent with shaping (D), but is not separated from the bundled init/RNG/optimizer differences. *(audit-corrected)*
+  - **Benchmark scope:** only 9/128 SCE flip units differ from every pair's optimum; pairwise Q sums recover the full optimum in 91% (SCE) / 83% (UCE) of flip units (first-order baseline 70% / 44%). *(audit-corrected)* It supports full-vs-single composition, **not irreducible third-order** interaction.
   - **Next:** Phase 2 = branch B (the consumer must rely on factors), with the S×R 2×2 to test D. The independent P1 audit is commissioned.
 - 2026-09-27T17:33Z: **P2 infrastructure merged** (campaign/e07-p2infra aca42d90; 106 tests pass; 443 metered core-s). **P2-SCREEN and P2-CONFIRM registered before any P2 data.**
   - **Screen:** seeds 40–44 in bank mode.
@@ -94,3 +94,9 @@
   - **Adds:** the SEP arm (separate-encoder predictor, a non-redundant READ) and evalX (consumers on replayed historical LRN predictions).
   - **Registered as P2-SCREEN addendum_1** before any P2 evaluation output.
   - **Seed ranges:** smoke bank range widened to [12.95e9, 12.96e9) (the smokes used up to 12,952,024,000); test seed 97 registered.
+- 2026-09-27T17:42Z: **Independent P1 audit merged** (a1ec73f8). All numbers reproduce, with no leakage, and the freeze was verified. **Key correction:**
+  - SUP keeps most of its flip advantage with its factor inputs blanked: .514 with φ = 0, .539 with φ = mean, vs .562 exact and LRN .405.
+  - So the gap is mostly **training-induced** (SUP's trunk and heads, trained with exact factors), not decision-time reading.
+  - LRN's predictions give SUP's consumer nothing beyond zero/mean.
+  - decisions.md corrections applied; p1-diagnosis.md corrections delegated.
+  - **P2-SCREEN addendum_2:** every factor-reading model is evaluated with φ ∈ {own, exact, zero, mean}. This is registered before any P2 eval output; evaluation-condition support is being added before the screen's eval stage.
