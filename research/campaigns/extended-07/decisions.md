@@ -108,3 +108,8 @@
   - **b6d confirmation split merged** (d61ebb59). The merge conflicts in seed-ranges.json and campaign07_p2.py were resolved by union and keeping both flags; no markers, verified.
   - The seed-range test passes after the registrations (it failed only against the pre-registration table).
   - **Confirmation labels launched** (snapshot 27b1ea24): e07-p2c-labels-eval (400 configs) and -cf (320 octets). No model is evaluated on them until P2-SCREEN selection is recorded.
+- 2026-09-27T17:55Z: **φ-condition evaluation merged** (campaign/e07-phicond b9e4942b; 8 new tests; own = bit-identical to default). Also merged: the audit's p1-diagnosis corrections, plus the leftover 94–96% figure in the localization table corrected by root.
+  - The diag.py conflict with b6d was resolved by keeping both the population and phi_conditions headers. **70 passed, 1 skipped** on merged snapshot 21ab15a6.
+  - Screen eval / evalX / score are regenerated from 21ab15a6: {own, exact, zero, mean} for every factor-reading model, plus historical LRN/SUP references in evalX.
+  - A runner waits for all 15 consumers before launching them.
+  - s0r0-bank-s43 exited 0 (146 core-s); the predictor stage is running.
